@@ -4,8 +4,6 @@
 //
 //  Created by Barto on 21.10.25.
 //
-
-
 import Foundation
 import SwiftData
 
