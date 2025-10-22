@@ -1,30 +1,23 @@
 //---------------------------------------------------------------------------------/
 //  # CrossStats                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : WorkoutEntry.swift                                               /
+// Filename . . : CrossStatsApp.swift                                              /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
-// Function . . : Model Workout Entry                                              /
+// Function . . : Main Application File                                            /
 //---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
 //---------------------------------------------------------------------------------/
 //
-import Foundation
+import SwiftUI
 import SwiftData
 
-@Model
-final class WorkoutEntry {
-    var date: Date
-    var duration: Int // Minuten
-    var distance: Double // Kilometer
-    var calories: Int // kcal
-    var intensity: Int = 0 // 0=Default --> Keine Belastung
-
-    init(date: Date = Date(), duration: Int, distance: Double, calories: Int, intensity: Int) {
-        self.date = date
-        self.duration = duration
-        self.distance = distance
-        self.calories = calories
-        self.intensity = intensity
+@main
+struct CrossStatsApp: App {
+    var body: some Scene {
+        WindowGroup {
+            WorkoutListView()
+        }
+        .modelContainer(for: WorkoutEntry.self)
     }
 }

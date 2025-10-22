@@ -1,52 +1,64 @@
+//---------------------------------------------------------------------------------/
+//  # CrossStats                                                                   /
+//---------------------------------------------------------------------------------/
+// Filename . . : WorkoutListView.swift                                            /
+// Author . . . : Bartosz Stryjewski                                               /
+// Created on . : 22.10.2025                                                       /
+// Function . . : Workout List View                                                /
+//---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                             /
+//---------------------------------------------------------------------------------/
 //
-//  WorkoutListView.swift
-//  Crosstrainer
-//
-//  Created by Barto on 21.10.25.
-//
-
 import SwiftUI
 import SwiftData
 
 struct WorkoutListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \WorkoutEntry.date, order: .reverse) private var workouts: [WorkoutEntry]
+
     @State private var showingAddView = false
     @State private var showingExport = false
     @State private var exportText = ""
-    
+
+    // Local draft for Add flow; will be reset when sheet opens
+    @State private var draft = WorkoutEntry(date: .now, duration: 0, distance: 0.0, calories: 0, intensity: 0)
+
     var body: some View {
         NavigationStack {
             List {
                 ForEach(workouts) { workout in
                     NavigationLink {
-                        EditWorkoutView(workout: workout)
+                        // EDIT → use the shared form in edit mode
+                        WorkoutFormView(mode: .edit, workout: workout)
                     } label: {
                         WorkoutRowView(workout: workout)
                     }
                 }
                 .onDelete(perform: deleteWorkouts)
             }
-            .navigationTitle("Crosstrainer")
+            .navigationTitle("Crosstrainer Stats")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showingAddView = true
-                    } label: {
+                    Button { showingAddView = true } label: {
                         Image(systemName: "plus")
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        exportToNotes()
-                    } label: {
+                    Button { exportToNotes() } label: {
                         Image(systemName: "square.and.arrow.up")
                     }
                     .disabled(workouts.isEmpty)
                 }
             }
+            // ADD → shared form in add mode with fresh draft
             .sheet(isPresented: $showingAddView) {
-                AddWorkoutView()
+                NavigationStack {
+                    WorkoutFormView(mode: .add, workout: draft)
+                }
+                .onAppear {
+                    // reset draft each time the sheet is shown
+                    draft = WorkoutEntry(date: .now, duration: 0, distance: 0.0, calories: 0, intensity: 0)
+                }
             }
             .sheet(isPresented: $showingExport) {
                 ShareSheet(items: [exportText])
@@ -62,21 +74,19 @@ struct WorkoutListView: View {
             }
         }
     }
-    
+
     private func deleteWorkouts(at offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(workouts[index])
-        }
+        for index in offsets { modelContext.delete(workouts[index]) }
+        try? modelContext.save()
     }
-    
+
     private func exportToNotes() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
         dateFormatter.timeStyle = .short
-        
+
         var text = "Crosstrainer Training\n"
         text += "===================\n\n"
-        
         for workout in workouts {
             text += "📅 \(dateFormatter.string(from: workout.date))\n"
             text += "⏱️ \(workout.duration) Min\n"
@@ -85,57 +95,17 @@ struct WorkoutListView: View {
             text += "💪 Belastung: \(workout.intensity)/5\n"
             text += "-------------------\n"
         }
-        
         exportText = text
         showingExport = true
     }
 }
 
-struct WorkoutRowView: View {
-    let workout: WorkoutEntry
-    
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        return formatter
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(dateFormatter.string(from: workout.date))
-                .font(.headline)
-            
-            HStack(spacing: 12) {
-                Label("\(workout.duration) Min", systemImage: "clock")
-                Label(String(format: "%.2f km", workout.distance), systemImage: "map")
-                Label("\(workout.calories) kcal", systemImage: "flame")
-            }
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            
-            HStack {
-                Text("Belastung:")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                ForEach(0..<5) { index in
-                    Image(systemName: index < workout.intensity ? "star.fill" : "star")
-                        .font(.caption2)
-                        .foregroundStyle(index < workout.intensity ? .orange : .gray)
-                }
-            }
-        }
-        .padding(.vertical, 4)
-    }
-}
-
 struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
-    
+
     func makeUIViewController(context: Context) -> UIActivityViewController {
         let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         return controller
     }
-    
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
+ }
