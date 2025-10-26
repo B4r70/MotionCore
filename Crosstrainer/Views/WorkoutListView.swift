@@ -14,14 +14,24 @@ import SwiftData
 
 struct WorkoutListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \WorkoutEntry.date, order: .reverse) private var workouts: [WorkoutEntry]
+    @Query(sort: \WorkoutSession.date, order: .reverse) private var workouts: [WorkoutSession]
 
     @State private var showingAddView = false
     @State private var showingExport = false
     @State private var exportText = ""
 
     // Local draft for Add flow; will be reset when sheet opens
-    @State private var draft = WorkoutEntry(date: .now, duration: 0, distance: 0.0, calories: 0, intensity: 0)
+    @State private var draft = WorkoutSession(
+        date: .now,
+        duration: 0,
+        distance: 0.0,
+        calories: 0,
+        difficulty: 1,
+        heartRate: 0,
+        bodyWeight: 0,
+        intensity: .none,
+        trainingProgram: .manual
+    )
 
     var body: some View {
         NavigationStack {
@@ -57,7 +67,17 @@ struct WorkoutListView: View {
                 }
                 .onAppear {
                     // reset draft each time the sheet is shown
-                    draft = WorkoutEntry(date: .now, duration: 0, distance: 0.0, calories: 0, intensity: 0)
+                    draft = WorkoutSession(
+                        date: .now,
+                        duration: 0,
+                        distance: 0.0,
+                        calories: 0,
+                        difficulty: 0,
+                        heartRate: 0,
+                        bodyWeight: 0,
+                        intensity: .none,
+                        trainingProgram: .manual
+                    )
                 }
             }
             .sheet(isPresented: $showingExport) {

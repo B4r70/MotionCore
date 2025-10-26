@@ -18,6 +18,6 @@ struct CrossStatsApp: App {
         WindowGroup {
             WorkoutListView()
         }
-        .modelContainer(for: WorkoutEntry.self)
+        .modelContainer(for: WorkoutSession.self)
     }
 }

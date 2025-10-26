@@ -10,9 +10,22 @@
 		4EBA616D2EA7C87D002426EE /* CrossStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrossStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "CrossStats" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 4EBA616B2EA7C87D002426EE /* Resources */;
+			membershipExceptions = (
+				Extensions/WorkoutSessionUI.swift,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4EBA616F2EA7C87D002426EE /* Crosstrainer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "CrossStats" target */,
+			);
 			path = Crosstrainer;
 			sourceTree = "<group>";
 		};
