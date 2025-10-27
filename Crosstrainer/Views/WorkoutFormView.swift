@@ -32,7 +32,17 @@ struct WorkoutFormView: View {
             Section("Workout-Daten") {
 
                 DatePicker("Datum", selection: $workout.date)
-
+                    // 🆕 Trainingsprogramm
+                Picker("Programm", selection: Binding<TrainingProgram>(
+                    get: { workout.trainingProgram },
+                    set: { workout.trainingProgram = $0 }
+                )) {
+                    ForEach(TrainingProgram.allCases, id: \.self) { p in
+                        Label(p.description, systemImage: p.symbol)
+                            .tag(p)
+                        }
+                    }
+                    .pickerStyle(.menu)
                     // MARK: Dauer mit Wheel
                 DisclosureGroup(
                     isExpanded: $showDurationWheel,

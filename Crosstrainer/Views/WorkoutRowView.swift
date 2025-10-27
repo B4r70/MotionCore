@@ -23,20 +23,28 @@ struct WorkoutRowView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            // MARK: - Überschrift mit Datum
-            Text(dateFormatter.string(from: workout.date))
-                .font(.headline)
-                .padding(.bottom, 4)
-
+                // MARK: - Überschrift mit Datum + Programm-Icon rechts
+            HStack { // // geändert: HStack statt nur Text
+                Text(dateFormatter.string(from: workout.date))
+                    .font(.headline).bold()
+                    .foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: workout.trainingProgram.symbol) // // NEU: Programm-Icon
+                    .imageScale(.medium)
+                    .font(.headline)                               // optisch zur Headline passend
+                    .foregroundStyle(.secondary)
+                    .accessibilityLabel(workout.trainingProgram.description)
+            }
+            .padding(.bottom, 4)
             // MARK: - Werte im Grid
-            Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 6) {
+            Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 5) {
                 // 1. Zeile – Zeit, Distanz, Tempo
                 GridRow {
                     Label(workout.durationFormatted, systemImage: "clock")
                     Label(workout.distanceFormatted, systemImage: "point.bottomleft.forward.to.point.topright.scurvepath")
                     Label(workout.averageSpeedFormatted, systemImage: "gauge.with.dots.needle.67percent")
                 }
-
+                .gridCellColumns(1)
                 // 2. Zeile – Puls, Kalorien, METs
                 GridRow {
                     Label(workout.heartRateFormatted, systemImage: "heart")
@@ -45,6 +53,7 @@ struct WorkoutRowView: View {
                 }
             }
             .font(.caption)
+            .monospacedDigit()
             .foregroundStyle(.secondary)
             .padding(.bottom, 6)
 

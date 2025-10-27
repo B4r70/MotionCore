@@ -17,7 +17,7 @@ struct WorkoutStarRatingView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(Intensity.allCases, id: \.self) { level in
+            ForEach(Intensity.allCases.filter { $0 != .none }, id: \.self) { level in
                 Image(systemName: level.rawValue <= rating.rawValue ? "star.fill" : "star")
                     .foregroundColor(level.rawValue <= rating.rawValue ? .yellow : .gray)
                     .font(.system(size: 20))

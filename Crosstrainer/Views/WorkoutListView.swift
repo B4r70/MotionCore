@@ -46,7 +46,7 @@ struct WorkoutListView: View {
                 }
                 .onDelete(perform: deleteWorkouts)
             }
-            .navigationTitle("Crosstrainer Stats")
+            .navigationTitle("Crosstrainer")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingAddView = true } label: {

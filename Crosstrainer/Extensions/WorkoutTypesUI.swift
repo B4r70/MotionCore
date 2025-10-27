@@ -56,7 +56,7 @@ extension TrainingProgram {
             case .manual: "slider.horizontal.3"
             case .fatBurn: "flame.fill"
             case .cardio: "heart.fill"
-            case .hill: "mountain2.fill"
+            case .hill: "mountain.2.fill"
             case .random: "dice.fill"
             case .fitTest: "figure.run.treadmill"
         }
