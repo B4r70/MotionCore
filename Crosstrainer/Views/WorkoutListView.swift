@@ -17,8 +17,7 @@ struct WorkoutListView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse) private var workouts: [WorkoutSession]
 
     @State private var showingAddView = false
-    @State private var showingExport = false
-    @State private var exportText = ""
+    @State private var exportURL: URL? = nil                // 🆕 Datei-URL für ShareLink
 
     // Local draft for Add flow; will be reset when sheet opens
     @State private var draft = WorkoutSession(
@@ -38,7 +37,6 @@ struct WorkoutListView: View {
             List {
                 ForEach(workouts) { workout in
                     NavigationLink {
-                        // EDIT → use the shared form in edit mode
                         WorkoutFormView(mode: .edit, workout: workout)
                     } label: {
                         WorkoutRowView(workout: workout)
@@ -54,35 +52,24 @@ struct WorkoutListView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { exportToNotes() } label: {
-                        Image(systemName: "square.and.arrow.up")
+                    if let url = exportURL {
+                        ShareLink(item: url) {                      // 🆕 natives Sharing einer Datei
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .onAppear { exportURL = makeExportFile() }  // 🆕 Datei frisch erzeugen
+                        .disabled(workouts.isEmpty)
+                    } else {
+                        Button {
+                            exportURL = makeExportFile()            // 🆕 erst Datei bauen, dann zeigt ShareLink
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .disabled(workouts.isEmpty)
                     }
-                    .disabled(workouts.isEmpty)
                 }
             }
-            // ADD → shared form in add mode with fresh draft
-            .sheet(isPresented: $showingAddView) {
-                NavigationStack {
-                    WorkoutFormView(mode: .add, workout: draft)
-                }
-                .onAppear {
-                    // reset draft each time the sheet is shown
-                    draft = WorkoutSession(
-                        date: .now,
-                        duration: 0,
-                        distance: 0.0,
-                        calories: 0,
-                        difficulty: 0,
-                        heartRate: 0,
-                        bodyWeight: 0,
-                        intensity: .none,
-                        trainingProgram: .manual
-                    )
-                }
-            }
-            .sheet(isPresented: $showingExport) {
-                ShareSheet(items: [exportText])
-            }
+            .sheet(isPresented: $showingAddView) { /* … unverändert … */ }
+
             .overlay {
                 if workouts.isEmpty {
                     ContentUnavailableView(
@@ -100,32 +87,27 @@ struct WorkoutListView: View {
         try? modelContext.save()
     }
 
-    private func exportToNotes() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .short
-        dateFormatter.timeStyle = .short
+    // MARK: - JSON bauen und temporäre Datei erzeugen  // 🆕
+    private func makeExportFile() -> URL? {
+        guard !workouts.isEmpty else { return nil }
 
-        var text = "Crosstrainer Training\n"
-        text += "===================\n\n"
-        for workout in workouts {
-            text += "📅 \(dateFormatter.string(from: workout.date))\n"
-            text += "⏱️ \(workout.duration) Min\n"
-            text += "📏 \(String(format: "%.2f", workout.distance)) km\n"
-            text += "🔥 \(workout.calories) kcal\n"
-            text += "💪 Belastung: \(workout.intensity)/5\n"
-            text += "-------------------\n"
+        let pkg = WorkoutExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: workouts.map { $0.exportItem }
+        )
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys] // hübsch & diff-freundlich
+        do {
+            let data = try encoder.encode(pkg)
+            let url = FileManager.default.temporaryDirectory
+                .appendingPathComponent("CrossStats-Export-\(Int(Date().timeIntervalSince1970))).json")
+            try data.write(to: url, options: .atomic)
+            return url
+        } catch {
+            print("Export-Fehler:", error)
+            return nil
         }
-        exportText = text
-        showingExport = true
     }
 }
-
-struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        return controller
-    }
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
- }

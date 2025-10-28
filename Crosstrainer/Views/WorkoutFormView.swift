@@ -43,6 +43,7 @@ struct WorkoutFormView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    .tint(.secondary)
                     // MARK: Dauer mit Wheel
                 DisclosureGroup(
                     isExpanded: $showDurationWheel,
