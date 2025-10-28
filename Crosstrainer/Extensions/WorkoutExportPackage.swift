@@ -9,7 +9,6 @@
 // (C) Copyright by Bartosz Stryjewski                                             /
 //---------------------------------------------------------------------------------/
 //
-
 import Foundation
 
 // MARK: - Paket (für Versionierung & Metadaten)

@@ -17,9 +17,9 @@ struct WorkoutListView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse) private var workouts: [WorkoutSession]
 
     @State private var showingAddView = false
-    @State private var exportURL: URL? = nil                // 🆕 Datei-URL für ShareLink
+    @State private var exportURL: URL? = nil   // Datei-URL für ShareLink
 
-    // Local draft for Add flow; will be reset when sheet opens
+    // Lokaler Draft für "Add"
     @State private var draft = WorkoutSession(
         date: .now,
         duration: 0,
@@ -46,21 +46,22 @@ struct WorkoutListView: View {
             }
             .navigationTitle("Crosstrainer")
             .toolbar {
+                // Hinzufügen
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingAddView = true } label: {
                         Image(systemName: "plus")
                     }
                 }
+                // Export
                 ToolbarItem(placement: .topBarLeading) {
                     if let url = exportURL {
-                        ShareLink(item: url) {                      // 🆕 natives Sharing einer Datei
+                        ShareLink(item: url) {
                             Image(systemName: "square.and.arrow.up")
                         }
-                        .onAppear { exportURL = makeExportFile() }  // 🆕 Datei frisch erzeugen
                         .disabled(workouts.isEmpty)
                     } else {
                         Button {
-                            exportURL = makeExportFile()            // 🆕 erst Datei bauen, dann zeigt ShareLink
+                            exportURL = makeExportFile()
                         } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
@@ -68,8 +69,29 @@ struct WorkoutListView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingAddView) { /* … unverändert … */ }
-
+            // Add-Sheet
+            .sheet(isPresented: $showingAddView) {
+                NavigationStack {
+                    WorkoutFormView(mode: .add, workout: draft)
+                        .navigationTitle("Neues Workout")
+                        .navigationBarTitleDisplayMode(.inline)
+                }
+                .onAppear {
+                    // Draft sauber zurücksetzen, bevor der Nutzer editiert
+                    draft = WorkoutSession(
+                        date: .now,
+                        duration: 0,
+                        distance: 0.0,
+                        calories: 0,
+                        difficulty: 1,
+                        heartRate: 0,
+                        bodyWeight: 0,
+                        intensity: .none,
+                        trainingProgram: .manual
+                    )
+                }
+            }
+            // Empty-State
             .overlay {
                 if workouts.isEmpty {
                     ContentUnavailableView(
@@ -82,12 +104,13 @@ struct WorkoutListView: View {
         }
     }
 
+    // MARK: - Aktionen
     private func deleteWorkouts(at offsets: IndexSet) {
         for index in offsets { modelContext.delete(workouts[index]) }
         try? modelContext.save()
     }
 
-    // MARK: - JSON bauen und temporäre Datei erzeugen  // 🆕
+    // MARK: - JSON-Export-Datei erzeugen
     private func makeExportFile() -> URL? {
         guard !workouts.isEmpty else { return nil }
 
@@ -98,11 +121,12 @@ struct WorkoutListView: View {
         )
 
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys] // hübsch & diff-freundlich
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+
         do {
             let data = try encoder.encode(pkg)
-            let url = FileManager.default.temporaryDirectory
-                .appendingPathComponent("CrossStats-Export-\(Int(Date().timeIntervalSince1970))).json")
+            let filename = "CrossStats-Export-\(Int(Date().timeIntervalSince1970)).json"
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
             try data.write(to: url, options: .atomic)
             return url
         } catch {
