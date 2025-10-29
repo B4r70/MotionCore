@@ -29,6 +29,7 @@ struct WorkoutExportItem: Codable {
     let bodyWeight: Int
     let intensity: Int           // Enum als rawValue (0...5)
     let trainingProgram: String  // Enum als rawValue ("manual", ...)
+    let workoutDevice: Int
 }
 
 // MARK: - Mapper zwischen Model und DTO
@@ -44,7 +45,8 @@ extension WorkoutSession {
             heartRate: heartRate,
             bodyWeight: bodyWeight,
             intensity: intensity.rawValue,
-            trainingProgram: trainingProgram.rawValue
+            trainingProgram: trainingProgram.rawValue,
+            workoutDevice: workoutDevice.rawValue
         )
     }
 
@@ -60,7 +62,8 @@ extension WorkoutSession {
             heartRate: e.heartRate,
             bodyWeight: e.bodyWeight,
             intensity: Intensity(rawValue: e.intensity) ?? .none,
-            trainingProgram: TrainingProgram(rawValue: e.trainingProgram) ?? .manual
+            trainingProgram: TrainingProgram(rawValue: e.trainingProgram) ?? .manual,
+            workoutDevice: WorkoutDevice(rawValue: e.workoutDevice) ?? .none
         )
     }
 }
