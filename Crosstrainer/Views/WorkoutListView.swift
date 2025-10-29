@@ -29,7 +29,8 @@ struct WorkoutListView: View {
         heartRate: 0,
         bodyWeight: 0,
         intensity: .none,
-        trainingProgram: .manual
+        trainingProgram: .manual,
+        workoutDevice: .none
     )
 
     var body: some View {
@@ -87,7 +88,8 @@ struct WorkoutListView: View {
                         heartRate: 0,
                         bodyWeight: 0,
                         intensity: .none,
-                        trainingProgram: .manual
+                        trainingProgram: .manual,
+                        workoutDevice: .none
                     )
                 }
             }

@@ -32,6 +32,14 @@ struct WorkoutFormView: View {
             Section("Workout-Daten") {
 
                 DatePicker("Datum", selection: $workout.date)
+                // Gerätetyp: 0=Crosstrainer / 1=Ergometer
+                Picker("Gerätetyp", selection: $workout.workoutDevice) {
+                    ForEach(WorkoutDevice.allCases.filter { $0 != .none }, id: \.self) { type in
+                        Label(type.description, systemImage: type.symbol)
+                            .tag(type)
+                    }
+                }
+                .pickerStyle(.segmented)
                     // 🆕 Trainingsprogramm
                 Picker("Programm", selection: Binding<TrainingProgram>(
                     get: { workout.trainingProgram },

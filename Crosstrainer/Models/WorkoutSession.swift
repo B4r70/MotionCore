@@ -17,7 +17,7 @@
 import Foundation
 import SwiftData
 
-// Erweiterung für Wertebegrenzung – universell einsetzbar
+// Universelle Wertebegrenzung
 extension Comparable {
     func clamped(to range: ClosedRange<Self>) -> Self {
         min(max(self, range.lowerBound), range.upperBound)
@@ -29,26 +29,32 @@ final class WorkoutSession {
 
     // MARK: - Grunddaten
     var date: Date
-    var duration: Int // Minuten
-    var distance: Double {
+    var duration: Int                               // Minuten
+    var distance: Double {                          // Zurückgelegte Strecke
         didSet { distance = max(distance, 0) }
-    } // Zurückgelegte Strecke
-    var calories: Int {
+    }
+    var calories: Int {                             // Kalorien
         didSet { calories = max(calories, 0) }
-    } // Kalorien
+    }
 
     // MARK: - Trainingsparameter
-    var difficulty: Int = 1 {
+    var difficulty: Int = 1 {                       // Schwierigkeitsgrad (1–25)
         didSet { difficulty = difficulty.clamped(to: 1...25) }
-    } // Schwierigkeitsgrad
-    var heartRate: Int // durchschnittliche Herzfrequenz lt. Apple Watch
-    var bodyWeight: Int // Eingegebenes Körpergewicht am Life Fitness Gerät
+    }
+    var heartRate: Int                              // ∅ Herzfrequenz (Apple Watch)
+    var bodyWeight: Int                             // Körpergewicht (am Gerät eingegeben)
 
-    // MARK: - Persistente ENUM-Werte
-    private var intensityRaw: Int = Intensity.none.rawValue // 0=Default --> Keine Belastung
-    private var trainingProgramRaw: String = TrainingProgram.random.rawValue // Default --> Zufall
+    // MARK: - Persistente ENUM-Rohwerte
+    private var workoutDeviceRaw: Int = WorkoutDevice.none.rawValue      // 0=none, 1=Crosstrainer, 2=Ergometer
+    private var intensityRaw: Int = Intensity.none.rawValue              // 0=none … 5=veryHard
+    private var trainingProgramRaw: String = TrainingProgram.random.rawValue
 
-    // MARK: - Berechnete ENUM-Werte
+    // MARK: - Typisierte ENUM-Properties
+    var workoutDevice: WorkoutDevice {
+        get { WorkoutDevice(rawValue: workoutDeviceRaw) ?? .none }
+        set { workoutDeviceRaw = newValue.rawValue }
+    }
+
     var intensity: Intensity {
         get { Intensity(rawValue: intensityRaw) ?? .none }
         set { intensityRaw = newValue.rawValue }
@@ -60,16 +66,16 @@ final class WorkoutSession {
     }
 
     // MARK: - Abgeleitete Trainingsergebnisse
+    /// METs (Metabolisches Äquivalent) ≈ kcal pro Stunde pro kg
     var mets: Double {
         guard bodyWeight > 0, duration > 0 else { return 0 }
-        return (Double(calories) / (Double(duration) / 60)) / Double(bodyWeight)
+        return (Double(calories) / (Double(duration) / 60.0)) / Double(bodyWeight)
     }
 
-        // Durchschnittliche Geschwindigkeit Meter/Minute
+    /// Durchschnittliche Geschwindigkeit (m/min)
     var averageSpeed: Double {
         guard duration > 0 else { return 0 }
-        // km -> m -> geteilt durch die Minuten
-        return (distance * 1000) / Double(duration)
+        return (distance * 1000.0) / Double(duration) // km → m, dann / Minuten
     }
 
     // MARK: - Initialisierung
@@ -82,7 +88,8 @@ final class WorkoutSession {
         heartRate: Int,
         bodyWeight: Int,
         intensity: Intensity,
-        trainingProgram: TrainingProgram
+        trainingProgram: TrainingProgram,
+        workoutDevice: WorkoutDevice = .none
     ) {
         self.date = date
         self.duration = duration
@@ -93,5 +100,6 @@ final class WorkoutSession {
         self.bodyWeight = bodyWeight
         self.intensity = intensity
         self.trainingProgram = trainingProgram
+        self.workoutDevice = workoutDevice
     }
 }

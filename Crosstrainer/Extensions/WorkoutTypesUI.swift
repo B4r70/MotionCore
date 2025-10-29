@@ -63,3 +63,24 @@ extension TrainingProgram {
     }
 }
 
+    // MARK: TrainingProgramm UI-Erweiterungen für die Anzeige im Display
+extension WorkoutDevice {
+            // Beschreibung des Trainingsprogramms
+        var description: String {
+            switch self {
+                case .none: "Unbekannt"
+                case .crosstrainer: "Crosstrainer"
+                case .ergometer: "Ergometer"
+            }
+        }
+
+        var symbol: String {
+            switch self {
+            case .none: "questionmark.circle"
+            case .crosstrainer: "figure.run"
+            case .ergometer: "bicycle"
+        }
+    }
+}
+
+
