@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------/
-//  # CrossStats                                                                   /
+//  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
 // Filename . . : WorkoutFormView.swift                                            /
 // Author . . . : Bartosz Stryjewski                                               /
@@ -30,9 +30,10 @@ struct WorkoutFormView: View {
         Form {
             // MARK: - Workout-Daten
             Section("Workout-Daten") {
-
+                    // MARK: Datum und Uhrzeit auswählen
                 DatePicker("Datum", selection: $workout.date)
-                // Gerätetyp: 0=Crosstrainer / 1=Ergometer
+
+                    // MARK: Gerätetyp: 0=Crosstrainer / 1=Ergometer
                 Picker("Gerätetyp", selection: $workout.workoutDevice) {
                     ForEach(WorkoutDevice.allCases.filter { $0 != .none }, id: \.self) { type in
                         Label(type.description, systemImage: type.symbol)
@@ -40,7 +41,8 @@ struct WorkoutFormView: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                    // 🆕 Trainingsprogramm
+
+                    // MARK: Trainingsprogramm
                 Picker("Programm", selection: Binding<TrainingProgram>(
                     get: { workout.trainingProgram },
                     set: { workout.trainingProgram = $0 }
@@ -52,6 +54,7 @@ struct WorkoutFormView: View {
                     }
                     .pickerStyle(.menu)
                     .tint(.secondary)
+
                     // MARK: Dauer mit Wheel
                 DisclosureGroup(
                     isExpanded: $showDurationWheel,
@@ -75,6 +78,7 @@ struct WorkoutFormView: View {
                         }
                     }
                 )
+
                     // MARK: Schwierigkeitsgrad mit Wheel
                 DisclosureGroup(
                     isExpanded: $showLevelWheel,
@@ -99,7 +103,7 @@ struct WorkoutFormView: View {
                     }
                 )
 
-                    // Distanz (Double) mit Komma/ Punkt toleranz
+                    // MARK: Distanz (Double) mit Komma/ Punkt toleranz
                 HStack {
                     Text("Distanz")
                     Spacer()
@@ -139,6 +143,7 @@ struct WorkoutFormView: View {
                         }
                     }
                 )
+
                     // MARK: Kalorien mit Wheel
                 DisclosureGroup(
                     isExpanded: $showCaloriesWheel,
@@ -162,7 +167,8 @@ struct WorkoutFormView: View {
                         }
                     }
                 )
-                    // MARK: Herzfrequenz: EIN Feld, NumPad – keine 3 Zeilen mehr
+
+                    // MARK: Herzfrequenz mit Wheel
                 DisclosureGroup(
                     isExpanded: $showHrWheel,
                     content: {
@@ -187,7 +193,7 @@ struct WorkoutFormView: View {
                 )
             }
 
-            // Belastungsintensität
+            // MARK: Belastungsintensität
             Section("Belastungsintensität") {
                 WorkoutStarRatingView(rating: $workout.intensity)
             }

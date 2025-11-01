@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------/
-//  # CrossStats                                                                   /
+//  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
 // Filename . . : WorkoutListView.swift                                            /
 // Author . . . : Bartosz Stryjewski                                               /
@@ -45,15 +45,26 @@ struct WorkoutListView: View {
                 }
                 .onDelete(perform: deleteWorkouts)
             }
-            .navigationTitle("Crosstrainer")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                // Hinzufügen
+                // Center title between the buttons
+                ToolbarItem(placement: .principal) {
+                    Text("MotionCore")
+                        .font(.title)          // inline-Bar: headline ist die visuelle Norm
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                        .accessibilityAddTraits(.isHeader)
+                }
+
+                // Trailing: Add
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showingAddView = true } label: {
                         Image(systemName: "plus")
                     }
+                    .accessibilityLabel("Neues Workout")
                 }
-                // Export
+
+                // Leading: Export / Share
                 ToolbarItem(placement: .topBarLeading) {
                     if let url = exportURL {
                         ShareLink(item: url) {
@@ -61,9 +72,7 @@ struct WorkoutListView: View {
                         }
                         .disabled(workouts.isEmpty)
                     } else {
-                        Button {
-                            exportURL = makeExportFile()
-                        } label: {
+                        Button { exportURL = makeExportFile() } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .disabled(workouts.isEmpty)
@@ -127,7 +136,7 @@ struct WorkoutListView: View {
 
         do {
             let data = try encoder.encode(pkg)
-            let filename = "CrossStats-Export-\(Int(Date().timeIntervalSince1970)).json"
+            let filename = "MotionCores-Export-\(Int(Date().timeIntervalSince1970)).json"
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
             try data.write(to: url, options: .atomic)
             return url

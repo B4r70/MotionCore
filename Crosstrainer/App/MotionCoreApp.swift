@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------/
-//  # CrossStats                                                                   /
+//  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : CrossStatsApp.swift                                              /
+// Filename . . : MotionCoreApp.swift                                              /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Main Application File                                            /
@@ -13,7 +13,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct CrossStatsApp: App {
+struct MotionCoreApp: App {
     var body: some Scene {
         WindowGroup {
             WorkoutListView()

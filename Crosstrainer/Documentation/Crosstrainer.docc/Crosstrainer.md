@@ -1,7 +1,7 @@
-# ``CrossStats``
+# ``MotionCore``
 
 ## Beschreibung
-Die persönliche App "CrossStats" dient zum Tracken meiner Leistungswerte im Fitnessstudio am Crosstrainer "Life Fitness". 
+Die persönliche App "MotionCore" dient zum Tracken meiner Leistungswerte im Fitnessstudio am Crosstrainer "Life Fitness". 
 Hierbei geht es darum, dass ich bereits bei der Aufwärmphase (meist 15 Minuten) eine Verbesserung meines Trainings tracke und jederzeit einsehen kann.
 Wichtig hierbei ist, dass ich innerhalb von 12 Minuten Power und 3 Minuten Cooldown immer wieder längere Strecken zurücklege. Darüber hinaus berechnet
 die App Pace-Werte um auch hier eiunsehen zu können, ob sich meine Leistung auf verschiedenen Ebenen verbessert hat.
@@ -31,7 +31,7 @@ Durch die Abbildung dieser Anzeigen im Datenmodell können Trainingseinheiten st
 Optionale Felder wie `watts` oder `heartRate` dürfen fehlen, ohne dass die Datenspeicherung beeinträchtigt wird.  
 Abgeleitete Kennzahlen – z. B. *Tempo pro Minute*, *Kilokalorien pro Minute* oder *Durchschnittspuls* – lassen sich über berechnete Eigenschaften ergänzen.
 
-## Data Model der CrossStats-App
+## Data Model der MotionCore-App
 ### Persistierte Eigenschaften (SwiftData)
 
 | Feldname | Typ | Einheit/Format | Beschreibung | Validierung / Bereich | Standardwert |

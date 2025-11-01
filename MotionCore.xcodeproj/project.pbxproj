@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		4EBA616D2EA7C87D002426EE /* CrossStats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrossStats.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EBA616D2EA7C87D002426EE /* MotionCore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionCore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "CrossStats" target */ = {
+		4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "MotionCore" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 4EBA616B2EA7C87D002426EE /* Resources */;
 			membershipExceptions = (
@@ -24,7 +24,7 @@
 		4EBA616F2EA7C87D002426EE /* Crosstrainer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "CrossStats" target */,
+				4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "MotionCore" target */,
 			);
 			path = Crosstrainer;
 			sourceTree = "<group>";
@@ -54,7 +54,7 @@
 		4EBA616E2EA7C87D002426EE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4EBA616D2EA7C87D002426EE /* CrossStats.app */,
+				4EBA616D2EA7C87D002426EE /* MotionCore.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -62,9 +62,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4EBA616C2EA7C87D002426EE /* CrossStats */ = {
+		4EBA616C2EA7C87D002426EE /* MotionCore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4EBA617A2EA7C87E002426EE /* Build configuration list for PBXNativeTarget "CrossStats" */;
+			buildConfigurationList = 4EBA617A2EA7C87E002426EE /* Build configuration list for PBXNativeTarget "MotionCore" */;
 			buildPhases = (
 				4EBA61692EA7C87D002426EE /* Sources */,
 				4EBA616A2EA7C87D002426EE /* Frameworks */,
@@ -77,11 +77,11 @@
 			fileSystemSynchronizedGroups = (
 				4EBA616F2EA7C87D002426EE /* Crosstrainer */,
 			);
-			name = CrossStats;
+			name = MotionCore;
 			packageProductDependencies = (
 			);
 			productName = Crosstrainer;
-			productReference = 4EBA616D2EA7C87D002426EE /* CrossStats.app */;
+			productReference = 4EBA616D2EA7C87D002426EE /* MotionCore.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,7 +99,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4EBA61682EA7C87D002426EE /* Build configuration list for PBXProject "CrossStats" */;
+			buildConfigurationList = 4EBA61682EA7C87D002426EE /* Build configuration list for PBXProject "MotionCore" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -113,7 +113,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4EBA616C2EA7C87D002426EE /* CrossStats */,
+				4EBA616C2EA7C87D002426EE /* MotionCore */,
 			);
 		};
 /* End PBXProject section */
@@ -271,7 +271,7 @@
 				DEVELOPMENT_TEAM = 6XVYRUG73C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CrossStats;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionCore;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -284,7 +284,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = b4rt0.Crosstrainer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.barto.motioncore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -312,7 +312,7 @@
 				DEVELOPMENT_TEAM = 6XVYRUG73C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CrossStats;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionCore;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -325,7 +325,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = b4rt0.Crosstrainer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.barto.motioncore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -345,7 +345,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4EBA61682EA7C87D002426EE /* Build configuration list for PBXProject "CrossStats" */ = {
+		4EBA61682EA7C87D002426EE /* Build configuration list for PBXProject "MotionCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4EBA61782EA7C87E002426EE /* Debug */,
@@ -354,7 +354,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4EBA617A2EA7C87E002426EE /* Build configuration list for PBXNativeTarget "CrossStats" */ = {
+		4EBA617A2EA7C87E002426EE /* Build configuration list for PBXNativeTarget "MotionCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4EBA617B2EA7C87E002426EE /* Debug */,

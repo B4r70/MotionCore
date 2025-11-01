@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------/
-//  # CrossStats                                                                   /
+//  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
 // Filename . . : WorkoutRowView.swift                                             /
 // Author . . . : Bartosz Stryjewski                                               /
@@ -25,10 +25,13 @@ struct WorkoutRowView: View {
         VStack(alignment: .leading, spacing: 6) {
                 // MARK: - Überschrift mit Datum + Programm-Icon rechts
             HStack { // // geändert: HStack statt nur Text
+                     // Gerätetyp-Badge
+                WorkoutDeviceBadge(device: workout.workoutDevice, compact: true)
                 Text(dateFormatter.string(from: workout.date))
                     .font(.headline).bold()
                     .foregroundStyle(.primary)
                 Spacer()
+
                 Image(systemName: workout.trainingProgram.symbol) // // NEU: Programm-Icon
                     .imageScale(.medium)
                     .font(.headline)                               // optisch zur Headline passend

@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Crosstrainer-iOS-Default-1024x1024@1x.png",
+      "filename" : "MotionCoreAppIcon-iOS-Default-1024x1024@1x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Crosstrainer-iOS-Dark-1024x1024@1x.png",
+      "filename" : "MotionCoreAppIcon-iOS-Dark-1024x1024@1x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "Crosstrainer-iOS-TintedLight-1024x1024@1x.png",
+      "filename" : "MotionCoreAppIcon-iOS-TintedLight-1024x1024@1x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

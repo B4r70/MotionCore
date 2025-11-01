@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------/
-//  # CrossStats                                                                   /
+//  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
 // Filename . . : WorkoutTypesUI.swift                                             /
 // Author . . . : Bartosz Stryjewski                                               /
@@ -65,20 +65,28 @@ extension TrainingProgram {
 
     // MARK: TrainingProgramm UI-Erweiterungen für die Anzeige im Display
 extension WorkoutDevice {
-            // Beschreibung des Trainingsprogramms
-        var description: String {
-            switch self {
-                case .none: "Unbekannt"
-                case .crosstrainer: "Crosstrainer"
-                case .ergometer: "Ergometer"
-            }
+        // Beschreibung des Trainingsprogramms
+    var description: String {
+        switch self {
+            case .none: "Unbekannt"
+            case .crosstrainer: "Crosstrainer"
+            case .ergometer: "Ergometer"
         }
-
-        var symbol: String {
-            switch self {
+    }
+    
+    var symbol: String {
+        switch self {
             case .none: "questionmark.circle"
-            case .crosstrainer: "figure.run"
-            case .ergometer: "bicycle"
+            case .crosstrainer: "figure.elliptical"
+            case .ergometer: "figure.indoor.cycle"
+        }
+    }
+    
+    var tint: Color {
+        switch self {
+            case .crosstrainer: .blue
+            case .ergometer:    .green
+            case .none:         .secondary
         }
     }
 }
