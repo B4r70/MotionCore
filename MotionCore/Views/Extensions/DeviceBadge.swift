@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : WorkoutDeviceBadge.swift                                         /
+// Filename . . : DeviceBadge.swift                                                /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout List View                                                /
@@ -11,7 +11,7 @@
 //
 import SwiftUI
 
-struct WorkoutDeviceBadge: View {
+struct DeviceBadge: View {
     let device: WorkoutDevice
     var compact: Bool = false
 

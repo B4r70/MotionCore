@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : WorkoutRowView.swift                                             /
+// Filename . . : RowView.swift                                                    /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout Row View                                                 /
@@ -11,7 +11,7 @@
 //
 import SwiftUI
 
-struct WorkoutRowView: View {
+struct RowView: View {
     let workout: WorkoutSession
 
     private var dateFormatter: DateFormatter {
@@ -26,7 +26,7 @@ struct WorkoutRowView: View {
                 // MARK: - Überschrift mit Datum + Programm-Icon rechts
             HStack { // // geändert: HStack statt nur Text
                      // Gerätetyp-Badge
-                WorkoutDeviceBadge(device: workout.workoutDevice, compact: true)
+                DeviceBadge(device: workout.workoutDevice, compact: true)
                 Text(dateFormatter.string(from: workout.date))
                     .font(.headline).bold()
                     .foregroundStyle(.primary)

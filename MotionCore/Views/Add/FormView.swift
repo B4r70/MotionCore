@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : WorkoutFormView.swift                                            /
+// Filename . . : FormView.swift                                                   /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout List View                                                /
@@ -14,7 +14,7 @@ import SwiftData
 
 enum WorkoutFormMode { case add, edit }
 
-struct WorkoutFormView: View {
+struct FormView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     let mode: WorkoutFormMode
@@ -195,21 +195,23 @@ struct WorkoutFormView: View {
 
             // MARK: Belastungsintensität
             Section("Belastungsintensität") {
-                WorkoutStarRatingView(rating: $workout.intensity)
+                StarRatingView(rating: $workout.intensity)
             }
-        } // <- Form korrekt geschlossen  // 🆕
+        }
 
-        // Eindeutige Toolbar-Platzierung, damit nichts doppelt erscheint  // 🆕
+        // Toolbarplatzierung und Beschriftung
         .navigationTitle(mode == .add ? "Neues Workout" : "Bearbeiten")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Speichern") {
+                Button {
                     if mode == .add { context.insert(workout) }
                     try? context.save()
                     dismiss()
+                } label: {
+                    Image(systemName: "checkmark")
                 }
-                .tint(.orange)
+                .tint(.blue)
             }
         }
     }

@@ -11,22 +11,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "MotionCore" target */ = {
+		4ECEA4252EAE53220087D186 /* Exceptions for "MotionCore" folder in "Copy Bundle Resources" phase from "MotionCore" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 4EBA616B2EA7C87D002426EE /* Resources */;
 			membershipExceptions = (
-				Extensions/WorkoutSessionUI.swift,
+				Models/Extensions/SessionUI.swift,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4EBA616F2EA7C87D002426EE /* Crosstrainer */ = {
+		4EBA616F2EA7C87D002426EE /* MotionCore */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				4ECEA4252EAE53220087D186 /* Exceptions for "Crosstrainer" folder in "Copy Bundle Resources" phase from "MotionCore" target */,
+				4ECEA4252EAE53220087D186 /* Exceptions for "MotionCore" folder in "Copy Bundle Resources" phase from "MotionCore" target */,
 			);
-			path = Crosstrainer;
+			path = MotionCore;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -45,7 +45,7 @@
 		4EBA61642EA7C87D002426EE = {
 			isa = PBXGroup;
 			children = (
-				4EBA616F2EA7C87D002426EE /* Crosstrainer */,
+				4EBA616F2EA7C87D002426EE /* MotionCore */,
 				4EBA616E2EA7C87D002426EE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -75,7 +75,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4EBA616F2EA7C87D002426EE /* Crosstrainer */,
+				4EBA616F2EA7C87D002426EE /* MotionCore */,
 			);
 			name = MotionCore;
 			packageProductDependencies = (

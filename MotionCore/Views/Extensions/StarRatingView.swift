@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : WorkoutStarRatingView.swift                                      /
+// Filename . . : StarRatingView.swift                                             /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout Edit View                                                /
@@ -11,7 +11,7 @@
 //
 import SwiftUI
 
-struct WorkoutStarRatingView: View {
+struct StarRatingView: View {
     @Binding var rating: Intensity
     let maximumRating = 5
 

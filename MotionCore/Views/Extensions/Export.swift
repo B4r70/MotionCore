@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : WorkoutExportPackage.swift                                       /
+// Filename . . : Export.swift                                                     /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout List View                                                /
@@ -12,7 +12,7 @@
 import Foundation
 
 // MARK: - Paket (für Versionierung & Metadaten)
-struct WorkoutExportPackage: Codable {
+struct ExportPackage: Codable {
     let version: Int
     let exportedAt: String   // ISO8601
     let items: [WorkoutExportItem]

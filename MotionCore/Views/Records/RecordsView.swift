@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : WorkoutListView.swift                                            /
+// Filename . . : RecordsView.swift                                                /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout List View                                                /
@@ -12,35 +12,21 @@
 import SwiftUI
 import SwiftData
 
-struct WorkoutListView: View {
+struct RecordsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \WorkoutSession.date, order: .reverse) private var workouts: [WorkoutSession]
 
     @State private var showingAddView = false
     @State private var exportURL: URL? = nil   // Datei-URL für ShareLink
 
-    // Lokaler Draft für "Add"
-    @State private var draft = WorkoutSession(
-        date: .now,
-        duration: 0,
-        distance: 0.0,
-        calories: 0,
-        difficulty: 1,
-        heartRate: 0,
-        bodyWeight: 0,
-        intensity: .none,
-        trainingProgram: .manual,
-        workoutDevice: .none
-    )
-
     var body: some View {
         NavigationStack {
             List {
                 ForEach(workouts) { workout in
                     NavigationLink {
-                        WorkoutFormView(mode: .edit, workout: workout)
+                        FormView(mode: .edit, workout: workout)
                     } label: {
-                        WorkoutRowView(workout: workout)
+                        RowView(workout: workout)
                     }
                 }
                 .onDelete(perform: deleteWorkouts)
@@ -49,19 +35,7 @@ struct WorkoutListView: View {
             .toolbar {
                 // Center title between the buttons
                 ToolbarItem(placement: .principal) {
-                    Text("MotionCore")
-                        .font(.title)          // inline-Bar: headline ist die visuelle Norm
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.secondary)
-                        .accessibilityAddTraits(.isHeader)
-                }
-
-                // Trailing: Add
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { showingAddView = true } label: {
-                        Image(systemName: "plus")
-                    }
-                    .accessibilityLabel("Neues Workout")
+                    HeaderView()
                 }
 
                 // Leading: Export / Share
@@ -77,29 +51,6 @@ struct WorkoutListView: View {
                         }
                         .disabled(workouts.isEmpty)
                     }
-                }
-            }
-            // Add-Sheet
-            .sheet(isPresented: $showingAddView) {
-                NavigationStack {
-                    WorkoutFormView(mode: .add, workout: draft)
-                        .navigationTitle("Neues Workout")
-                        .navigationBarTitleDisplayMode(.inline)
-                }
-                .onAppear {
-                    // Draft sauber zurücksetzen, bevor der Nutzer editiert
-                    draft = WorkoutSession(
-                        date: .now,
-                        duration: 0,
-                        distance: 0.0,
-                        calories: 0,
-                        difficulty: 1,
-                        heartRate: 0,
-                        bodyWeight: 0,
-                        intensity: .none,
-                        trainingProgram: .manual,
-                        workoutDevice: .none
-                    )
                 }
             }
             // Empty-State
@@ -125,7 +76,7 @@ struct WorkoutListView: View {
     private func makeExportFile() -> URL? {
         guard !workouts.isEmpty else { return nil }
 
-        let pkg = WorkoutExportPackage(
+        let pkg = ExportPackage(
             version: 1,
             exportedAt: ISO8601DateFormatter().string(from: .now),
             items: workouts.map { $0.exportItem }
