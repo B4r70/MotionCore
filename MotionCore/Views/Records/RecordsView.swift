@@ -14,7 +14,8 @@ import SwiftData
 
 struct RecordsView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \WorkoutSession.date, order: .reverse) private var workouts: [WorkoutSession]
+    @Query(sort: \WorkoutSession.date, order: .reverse)
+    private var workouts: [WorkoutSession]
 
     @State private var showingAddView = false
     @State private var exportURL: URL? = nil   // Datei-URL für ShareLink

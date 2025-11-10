@@ -4,7 +4,7 @@
 // Filename . . : DeviceBadge.swift                                                /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
-// Function . . : Workout List View                                                /
+// Function . . : Icon für das Trainingsgerät                                      /
 //---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
 //---------------------------------------------------------------------------------/

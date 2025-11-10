@@ -34,13 +34,24 @@ struct FormView: View {
                 DatePicker("Datum", selection: $workout.date)
 
                     // MARK: Gerätetyp: 0=Crosstrainer / 1=Ergometer
-                Picker("Gerätetyp", selection: $workout.workoutDevice) {
-                    ForEach(WorkoutDevice.allCases.filter { $0 != .none }, id: \.self) { type in
-                        Label(type.description, systemImage: type.symbol)
-                            .tag(type)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Gerätetyp")
+                        .font(.headline)
+                    HStack(spacing: 12) {
+                        DeviceButton(
+                            device: .crosstrainer,
+                            isSelected: workout.workoutDevice == .crosstrainer
+                        ) {
+                            workout.workoutDevice = .crosstrainer
+                        }
+                        DeviceButton(
+                            device: .ergometer,
+                            isSelected: workout.workoutDevice == .ergometer
+                        ) {
+                            workout.workoutDevice = .ergometer
+                        }
                     }
                 }
-                .pickerStyle(.segmented)
 
                     // MARK: Trainingsprogramm
                 Picker("Programm", selection: Binding<TrainingProgram>(
@@ -214,5 +225,35 @@ struct FormView: View {
                 .tint(.blue)
             }
         }
+    }
+}
+
+struct DeviceButton: View {
+    let device: WorkoutDevice
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                Image(systemName: device.symbol)
+                    .font(.title2)
+                Text(device.description)
+                    .font(.caption)
+                    .fontWeight(.medium)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? Color.blue.opacity(0.15) : Color(.secondarySystemGroupedBackground))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2)
+            )
+            .foregroundStyle(isSelected ? .blue : .primary)
+        }
+        .buttonStyle(.plain)
     }
 }

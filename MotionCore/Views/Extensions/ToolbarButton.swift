@@ -1,23 +1,32 @@
 //---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 //---------------------------------------------------------------------------------/
-// Filename . . : HeaderView.swift                                                 /
+// Filename . . : ToolbarButton.swift                                              /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
-// Function . . : Header View                                                      /
+// Function . . : Toolbar Button in Liquid Glass                                   /
 //---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
 //---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
-struct HeaderView: View {
+// Glass Button (für Toolbar)
+struct ToolbarButton: View {
+    let icon: String
+
     var body: some View {
-        Text("MotionCore")
-            .font(.title)
-            .fontWeight(.semibold)
+        Image(systemName: icon)
+            .font(.body)
             .foregroundStyle(.primary)
-            .fixedSize() // ← Füge das hinzu
-            .accessibilityAddTraits(.isHeader)
+            .frame(width: 36, height: 36)
+            .background {
+                Circle()
+                    .fill(.ultraThinMaterial)
+            }
+            .overlay {
+                Circle()
+                    .stroke(.white.opacity(0.2), lineWidth: 1)
+            }
     }
 }

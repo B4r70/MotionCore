@@ -13,7 +13,7 @@
 //                Die formatierten Werte aus dem Model sind in WorkoutSessionUI    /
 //                Die UI-Ausgabe dieser Enums im File WorkoutTypesUI.swift         /
 //---------------------------------------------------------------------------------/
-
+//
 import Foundation
 import SwiftData
 
@@ -28,26 +28,20 @@ extension Comparable {
 final class WorkoutSession {
 
     // MARK: - Grunddaten
-    var date: Date
-    var duration: Int                               // Minuten
-    var distance: Double {                          // Zurückgelegte Strecke
-        didSet { distance = max(distance, 0) }
-    }
-    var calories: Int {                             // Kalorien
-        didSet { calories = max(calories, 0) }
-    }
+    var date: Date = Date()
+    var duration: Int = 0                           // Minuten
+    var distance: Double = 0.0                      // Zurückgelegte Strecke
+    var calories: Int = 0                           // Kalorien
 
     // MARK: - Trainingsparameter
-    var difficulty: Int = 1 {                       // Schwierigkeitsgrad (1–25)
-        didSet { difficulty = difficulty.clamped(to: 1...25) }
-    }
-    var heartRate: Int                              // ∅ Herzfrequenz (Apple Watch)
-    var bodyWeight: Int                             // Körpergewicht (am Gerät eingegeben)
+    var difficulty: Int = 1                         // Schwierigkeitsgrad (1–25)
+    var heartRate: Int = 0                          // ∅ Herzfrequenz (Apple Watch)
+    var bodyWeight: Int = 0                         // Körpergewicht (am Gerät eingegeben)
 
     // MARK: - Persistente ENUM-Rohwerte
-    private var workoutDeviceRaw: Int = WorkoutDevice.none.rawValue      // 0=none, 1=Crosstrainer, 2=Ergometer
-    private var intensityRaw: Int = Intensity.none.rawValue              // 0=none … 5=veryHard
-    private var trainingProgramRaw: String = TrainingProgram.random.rawValue
+    var workoutDeviceRaw: Int = 0                   // 0=none, 1=Crosstrainer, 2=Ergometer
+    var intensityRaw: Int = 0                       // 0=none … 5=veryHard
+    var trainingProgramRaw: String = "random"
 
     // MARK: - Typisierte ENUM-Properties
     var workoutDevice: WorkoutDevice {
@@ -78,28 +72,28 @@ final class WorkoutSession {
         return (distance * 1000.0) / Double(duration) // km → m, dann / Minuten
     }
 
-    // MARK: - Initialisierung
+    // MARK: - Initialisierung mit Default-Werten für CloudKit
     init(
-        date: Date = .now,
-        duration: Int,
-        distance: Double,
-        calories: Int,
+        date: Date = Date(),
+        duration: Int = 0,
+        distance: Double = 0.0,
+        calories: Int = 0,
         difficulty: Int = 1,
-        heartRate: Int,
-        bodyWeight: Int,
-        intensity: Intensity,
-        trainingProgram: TrainingProgram,
+        heartRate: Int = 0,
+        bodyWeight: Int = 0,
+        intensity: Intensity = .none,
+        trainingProgram: TrainingProgram = .random,
         workoutDevice: WorkoutDevice = .none
     ) {
         self.date = date
-        self.duration = duration
-        self.distance = distance
-        self.calories = calories
-        self.difficulty = difficulty
+        self.duration = max(duration, 0)
+        self.distance = max(distance, 0.0)
+        self.calories = max(calories, 0)
+        self.difficulty = difficulty.clamped(to: 1...25)
         self.heartRate = heartRate
         self.bodyWeight = bodyWeight
-        self.intensity = intensity
-        self.trainingProgram = trainingProgram
-        self.workoutDevice = workoutDevice
+        self.intensityRaw = intensity.rawValue
+        self.trainingProgramRaw = trainingProgram.rawValue
+        self.workoutDeviceRaw = workoutDevice.rawValue
     }
 }

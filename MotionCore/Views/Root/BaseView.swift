@@ -65,16 +65,6 @@ struct BaseView: View {
                         ToolbarItem(placement: .principal) {
                             HeaderView()
                         }
-
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Menu {
-                                Button("Alle Workouts") { }
-                                Button("Crosstrainer") { }
-                                Button("Ergometer") { }
-                            } label: {
-                                Image(systemName: "line.3.horizontal.decrease.circle")
-                            }
-                        }
                     }
             }
             .tabItem {
