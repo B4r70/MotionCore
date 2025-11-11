@@ -3,8 +3,8 @@
 //---------------------------------------------------------------------------------/
 // Filename . . : StatisticView.swift                                              /
 // Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Workout List View                                                /
+// Created on . : 11.11.2025                                                       /
+// Function . . : Statistik-Übersicht                                              /
 //---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
 //---------------------------------------------------------------------------------/
@@ -13,87 +13,77 @@ import SwiftUI
 import SwiftData
 
 struct StatisticView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query(sort: \WorkoutSession.date, order: .reverse) private var workouts: [WorkoutSession]
+    @Query(sort: \WorkoutSession.date, order: .reverse)
+    private var workouts: [WorkoutSession]
 
-    @State private var showingAddView = false
-    @State private var exportURL: URL? = nil   // Datei-URL für ShareLink
+    @ObservedObject private var settings = AppSettings.shared
+
+    // Berechnung: Gesamtzahl Workouts
+    private var totalWorkouts: Int {
+        workouts.count
+    }
+
+    // Berechnung: Gesamtzahl Kalorien
+    private var totalCalories: Int {
+        workouts.reduce(0) { $0 + $1.calories }
+    }
+
+    // Berechnung: Gesamtzahl Distanz
+    private var totalDistance: Double {
+        workouts.reduce(0.0) { $0 + $1.distance }
+    }
 
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(workouts) { workout in
-                    NavigationLink {
-                        FormView(mode: .edit, workout: workout)
-                    } label: {
-                        RowView(workout: workout)
-                    }
-                }
-                .onDelete(perform: deleteWorkouts)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                // Center title between the buttons
-                ToolbarItem(placement: .principal) {
-                    HeaderView()
-                }
+        ZStack {
+            // Hintergrund
+            AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
 
-                // Leading: Export / Share
-                ToolbarItem(placement: .topBarLeading) {
-                    if let url = exportURL {
-                        ShareLink(item: url) {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .disabled(workouts.isEmpty)
-                    } else {
-                        Button { exportURL = makeExportFile() } label: {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .disabled(workouts.isEmpty)
-                    }
-                }
-            }
-            // Empty-State
-            .overlay {
-                if workouts.isEmpty {
-                    ContentUnavailableView(
-                        "Keine Einträge",
-                        systemImage: "figure.run",
-                        description: Text("Füge dein erstes Training hinzu")
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Eine einzelne Statistik-Card
+                    StatisticCard(
+                        icon: "figure.run",
+                        title: "Gesamt Workouts",
+                        value: "\(totalWorkouts)",
+                        color: .blue
                     )
+                    .padding(.horizontal)
+                    .padding(.top, 5)
+                     // Verbrauchte Gesamtkalorien
+                    StatisticCard(
+                            icon: "flame.fill",
+                            title: "Gesamt Kalorien",
+                            value: "\(totalCalories)",
+                            color: .orange
+                        )
+                        .padding(.horizontal)
+                        .padding(.top, 5)
+                    // Trainierte Distanz
+                    StatisticCard(
+                            icon: "arrow.left.and.right",
+                            title: "Gesamt Strecke",
+                            value: "\(totalDistance)",
+                            color: .green
+                        )
+                        .padding(.horizontal)
+                        .padding(.top, 5)
+                    // Hier kannst du später weitere Cards hinzufügen
                 }
+                .padding(.bottom, 100)
+            }
+            .scrollIndicators(.hidden)
+
+            // Empty State
+            if workouts.isEmpty {
+                EmptyState()
             }
         }
     }
+}
 
-    // MARK: - Aktionen
-    private func deleteWorkouts(at offsets: IndexSet) {
-        for index in offsets { modelContext.delete(workouts[index]) }
-        try? modelContext.save()
-    }
-
-    // MARK: - JSON-Export-Datei erzeugen
-    private func makeExportFile() -> URL? {
-        guard !workouts.isEmpty else { return nil }
-
-        let pkg = ExportPackage(
-            version: 1,
-            exportedAt: ISO8601DateFormatter().string(from: .now),
-            items: workouts.map { $0.exportItem }
-        )
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-
-        do {
-            let data = try encoder.encode(pkg)
-            let filename = "MotionCores-Export-\(Int(Date().timeIntervalSince1970)).json"
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-            try data.write(to: url, options: .atomic)
-            return url
-        } catch {
-            print("Export-Fehler:", error)
-            return nil
-        }
+// MARK: - Preview
+#Preview {
+    NavigationStack {
+        StatisticView()
     }
 }

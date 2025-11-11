@@ -10,10 +10,16 @@
 //---------------------------------------------------------------------------------/
 //
 import SwiftUI
+import Foundation
 
-// Neu: Glassmorphic Workout Card
+// Workout Card
 struct WorkoutCard: View {
     let workout: WorkoutSession
+    let deFormat = Date.FormatStyle.dateTime
+      .day(.twoDigits)
+      .month(.wide)
+      .year()
+      .locale(Locale(identifier: "de_DE"))
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -29,9 +35,9 @@ struct WorkoutCard: View {
                         .font(.title3)
                         .foregroundStyle(workout.workoutDevice.tint)
                 }
-
+                // Anzeige Datum und Uhrzeit
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(workout.date, style: .date)
+                    Text(workout.date.formatted(deFormat))
                         .font(.headline)
                         .foregroundStyle(.primary)
 
@@ -57,36 +63,37 @@ struct WorkoutCard: View {
                 GridItem(.flexible()),
                 GridItem(.flexible())
             ], spacing: 12) {
+                // Workout-Dauer
                 StatBubble(
                     icon: "clock.fill",
                     value: workout.durationFormatted,
                     color: .blue
                 )
-
+                // Workout-Distanz
                 StatBubble(
                     icon: "arrow.left.and.right",
                     value: workout.distanceFormatted,
                     color: .green
                 )
-
+                // Workout-Geschwindigkeit
                 StatBubble(
                     icon: "gauge.with.dots.needle.67percent",
                     value: workout.averageSpeedFormatted,
                     color: .orange
                 )
-
+                // Workout-Herzfrequenz (Durchschnitt)
                 StatBubble(
                     icon: "heart.fill",
                     value: workout.heartRateFormatted,
                     color: .red
                 )
-
+                // Workout-Kalorien
                 StatBubble(
                     icon: "flame.fill",
                     value: workout.caloriesFormatted,
                     color: .orange
                 )
-
+                // Workout-METS
                 StatBubble(
                     icon: "bolt.fill",
                     value: workout.metsFormatted,
@@ -98,7 +105,7 @@ struct WorkoutCard: View {
             HStack(spacing: 4) {
                 Text("Belastung:")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary)
 
                 ForEach(0..<5) { index in
                     Image(systemName: index < workout.intensity.rawValue ? "star.fill" : "star")

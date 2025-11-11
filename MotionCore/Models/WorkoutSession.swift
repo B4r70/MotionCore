@@ -28,7 +28,7 @@ extension Comparable {
 final class WorkoutSession {
 
     // MARK: - Grunddaten
-    var date: Date = Date()
+    var date: Date = Date()                         // Datum
     var duration: Int = 0                           // Minuten
     var distance: Double = 0.0                      // Zurückgelegte Strecke
     var calories: Int = 0                           // Kalorien

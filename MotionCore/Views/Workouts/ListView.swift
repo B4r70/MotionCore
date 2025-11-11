@@ -18,7 +18,10 @@ struct ListView: View {
     private var allWorkouts: [WorkoutSession]
 
     @State private var exportURL: URL?
-    @State private var selectedFilter: WorkoutDevice = .none // Neu
+    @State private var selectedFilter: WorkoutDevice = .none
+
+    // Abruf aus Einstellungen
+    @State private var settings = AppSettings.shared
 
     // Neu: Gefilterte Workouts basierend auf Auswahl
     var filteredWorkouts: [WorkoutSession] {
@@ -28,50 +31,37 @@ struct ListView: View {
         return allWorkouts.filter { $0.workoutDevice == selectedFilter }
     }
 
+    // Ansicht "Workouts"
     var body: some View {
-        ZStack { // Neu
-            // Neu: Gradient Background
-            LinearGradient(
-                colors: [
-                    Color.blue.opacity(0.1),
-                    Color.purple.opacity(0.05),
-                    Color.cyan.opacity(0.1)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+        ZStack {
+            // Hintergrund aufrufen
+            AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
 
-            // Neu: Animated Blob (optional für mehr Liquid-Effekt)
-           // AnimatedBlob()
-
-            // Neu: ScrollView statt List
             ScrollView {
-                LazyVStack(spacing: 16) { // Neu
-                    // Neu: Filter Chips (Glassmorphic)
+                LazyVStack(spacing: 16) {
+                    // Filter Chips (Glassmorphic)
                     FilterSection(selectedFilter: $selectedFilter, allWorkouts: allWorkouts)
                         .padding(.horizontal)
                         .padding(.top, 8)
 
-                    // Neu: Workout Cards mit ForEach
-                    ForEach(filteredWorkouts) { workout in // Geändert: filteredWorkouts statt allWorkouts
+                    // Workout Cards mit ForEach
+                    ForEach(filteredWorkouts) { workout in
                         NavigationLink {
                             FormView(mode: .edit, workout: workout)
                         } label: {
-                            WorkoutCard(workout: workout) // Neu: Custom Card statt RowView
+                            WorkoutCard(workout: workout)
                         }
-                        .buttonStyle(.plain) // Neu
+                        .buttonStyle(.plain)
                     }
-                    .onDelete(perform: deleteWorkouts)
                 }
-                .padding(.horizontal) // Neu
-                .padding(.bottom, 100) // Neu
+                .padding(.horizontal)
+                .padding(.bottom, 100)
             }
-            .scrollIndicators(.hidden) // Neu
-        } // Neu: Ende ZStack
+            .scrollIndicators(.hidden)
+        }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                // Neu: Glassmorphic Export Button
+                // Glassmorphic Export Button
                 if let url = exportURL {
                     ShareLink(item: url) {
                         ToolbarButton(icon: "square.and.arrow.up") // Neu: Custom Button
@@ -89,18 +79,9 @@ struct ListView: View {
         }
         .overlay {
             if filteredWorkouts.isEmpty { // Geändert: filteredWorkouts statt allWorkouts
-                EmptyState() // Neu: Custom Empty State
+                EmptyState()
             }
         }
-    }
-
-    // MARK: - Aktionen
-    private func deleteWorkouts(at offsets: IndexSet) {
-        let workoutsToDelete = offsets.map { filteredWorkouts[$0] } // Neu: filteredWorkouts
-        for workout in workoutsToDelete { // Geändert
-            modelContext.delete(workout) // Geändert
-        }
-        try? modelContext.save()
     }
 
     // MARK: - JSON-Export

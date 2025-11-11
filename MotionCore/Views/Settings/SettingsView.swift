@@ -74,9 +74,9 @@ struct SettingsView: View {
                 }
 
                 NavigationLink {
-                    Text("Anzeigeeinstellungen")
+                    DisplaySettingsView()
                 } label: {
-                    Label("Anzeige", systemImage: "eye")
+                    Label("Displayeinstellungen", systemImage: "display")
                 }
             }
 

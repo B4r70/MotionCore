@@ -18,7 +18,9 @@ struct FormView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     let mode: WorkoutFormMode
+
     @Bindable var workout: WorkoutSession
+
         // 🆕 Lokaler Zustand für aufklappbare Wheels
     @State private var showDurationWheel = false
     @State private var showHrWheel = false
@@ -26,12 +28,18 @@ struct FormView: View {
     @State private var showWeightWheel = false
     @State private var showCaloriesWheel = false
 
+        // Lösch-Bestätigung
+    @State private var showDeleteAlert = false
+
     var body: some View {
         Form {
-            // MARK: - Workout-Daten
+                // MARK: - Workout-Daten
             Section("Workout-Daten") {
                     // MARK: Datum und Uhrzeit auswählen
-                DatePicker("Datum", selection: $workout.date)
+                DatePicker("Datum",
+                           selection: $workout.date,
+                           displayedComponents: [.date, .hourAndMinute])
+                .environment(\.locale, Locale(identifier: "de_DE"))
 
                     // MARK: Gerätetyp: 0=Crosstrainer / 1=Ergometer
                 VStack(alignment: .leading, spacing: 8) {
@@ -61,10 +69,10 @@ struct FormView: View {
                     ForEach(TrainingProgram.allCases, id: \.self) { p in
                         Label(p.description, systemImage: p.symbol)
                             .tag(p)
-                        }
                     }
-                    .pickerStyle(.menu)
-                    .tint(.secondary)
+                }
+                .pickerStyle(.menu)
+                .tint(.secondary)
 
                     // MARK: Dauer mit Wheel
                 DisclosureGroup(
@@ -204,13 +212,13 @@ struct FormView: View {
                 )
             }
 
-            // MARK: Belastungsintensität
+                // MARK: Belastungsintensität
             Section("Belastungsintensität") {
                 StarRatingView(rating: $workout.intensity)
             }
         }
 
-        // Toolbarplatzierung und Beschriftung
+            // Toolbarplatzierung und Beschriftung
         .navigationTitle(mode == .add ? "Neues Workout" : "Bearbeiten")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -224,36 +232,32 @@ struct FormView: View {
                 }
                 .tint(.blue)
             }
+                // ⭐ NEU: Löschen-Button (nur im Edit-Modus)
+            if mode == .edit {
+                ToolbarItem(placement: .destructiveAction) {
+                    Button(role: .destructive) {
+                        showDeleteAlert = true
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .tint(.red)
+                }
+            }
+        }
+            // ⭐ NEU: Lösch-Bestätigung Alert
+        .alert("Workout löschen?", isPresented: $showDeleteAlert) {
+            Button("Abbrechen", role: .cancel) { }
+            Button("Löschen", role: .destructive) {
+                deleteWorkout()
+            }
+        } message: {
+            Text("Dieses Workout wird unwiderruflich gelöscht.")
         }
     }
-}
-
-struct DeviceButton: View {
-    let device: WorkoutDevice
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 8) {
-                Image(systemName: device.symbol)
-                    .font(.title2)
-                Text(device.description)
-                    .font(.caption)
-                    .fontWeight(.medium)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.blue.opacity(0.15) : Color(.secondarySystemGroupedBackground))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2)
-            )
-            .foregroundStyle(isSelected ? .blue : .primary)
-        }
-        .buttonStyle(.plain)
+        // Lösch-Funktion
+    private func deleteWorkout() {
+        context.delete(workout)
+        try? context.save()
+        dismiss()
     }
 }

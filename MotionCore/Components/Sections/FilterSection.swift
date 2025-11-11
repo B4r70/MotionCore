@@ -31,7 +31,7 @@ struct FilterSection: View {
 
                 FilterChip(
                     title: "Crosstrainer",
-                    icon: "figure.step.training",
+                    icon: "figure.elliptical",
                     count: allWorkouts.filter { $0.workoutDevice == .crosstrainer }.count,
                     isSelected: selectedFilter == .crosstrainer
                 ) {

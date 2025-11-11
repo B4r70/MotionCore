@@ -3,8 +3,8 @@
 //---------------------------------------------------------------------------------/
 // Filename . . : RecordsView.swift                                                /
 // Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Workout List View                                                /
+// Created on . : 11.11.2025                                                       /
+// Function . . : Persönliche Rekorde                                              /
 //---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
 //---------------------------------------------------------------------------------/
@@ -13,88 +13,52 @@ import SwiftUI
 import SwiftData
 
 struct RecordsView: View {
-    @Environment(\.modelContext) private var modelContext
     @Query(sort: \WorkoutSession.date, order: .reverse)
     private var workouts: [WorkoutSession]
 
-    @State private var showingAddView = false
-    @State private var exportURL: URL? = nil   // Datei-URL für ShareLink
+    @ObservedObject private var settings = AppSettings.shared
+
+    // Berechnung: Workout mit der längsten Distanz
+    private var bestWorkout: WorkoutSession? {
+        workouts.max(by: { $0.distance < $1.distance })
+    }
 
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(workouts) { workout in
-                    NavigationLink {
-                        FormView(mode: .edit, workout: workout)
-                    } label: {
-                        RowView(workout: workout)
-                    }
-                }
-                .onDelete(perform: deleteWorkouts)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                // Center title between the buttons
-                ToolbarItem(placement: .principal) {
-                    HeaderView()
-                }
+        ZStack {
+            // Hintergrund
+            AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
 
-                // Leading: Export / Share
-                ToolbarItem(placement: .topBarLeading) {
-                    if let url = exportURL {
-                        ShareLink(item: url) {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .disabled(workouts.isEmpty)
-                    } else {
-                        Button { exportURL = makeExportFile() } label: {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .disabled(workouts.isEmpty)
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Beste Leistung Card
+                    if let best = bestWorkout {
+                        RecordCard(
+                            title: "Beste Leistung",
+                            subtitle: "Meiste Kalorien",
+                            icon: "trophy.fill",
+                            color: .orange,
+                            workout: best
+                        )
+                        .padding(.horizontal)
+                        .padding(.top, 20)
                     }
+
+                    // Hier kannst du später weitere Rekord-Cards hinzufügen
                 }
+                .padding(.bottom, 100)
             }
-            // Empty-State
-            .overlay {
-                if workouts.isEmpty {
-                    ContentUnavailableView(
-                        "Keine Einträge",
-                        systemImage: "figure.run",
-                        description: Text("Füge dein erstes Training hinzu")
-                    )
-                }
+            .scrollIndicators(.hidden)
+
+            // Empty State
+            if workouts.isEmpty {
+                EmptyState()
             }
         }
     }
-
-    // MARK: - Aktionen
-    private func deleteWorkouts(at offsets: IndexSet) {
-        for index in offsets { modelContext.delete(workouts[index]) }
-        try? modelContext.save()
-    }
-
-    // MARK: - JSON-Export-Datei erzeugen
-    private func makeExportFile() -> URL? {
-        guard !workouts.isEmpty else { return nil }
-
-        let pkg = ExportPackage(
-            version: 1,
-            exportedAt: ISO8601DateFormatter().string(from: .now),
-            items: workouts.map { $0.exportItem }
-        )
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-
-        do {
-            let data = try encoder.encode(pkg)
-            let filename = "MotionCores-Export-\(Int(Date().timeIntervalSince1970)).json"
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-            try data.write(to: url, options: .atomic)
-            return url
-        } catch {
-            print("Export-Fehler:", error)
-            return nil
-        }
+}
+// MARK: - Preview
+#Preview {
+    NavigationStack {
+        RecordsView()
     }
 }
