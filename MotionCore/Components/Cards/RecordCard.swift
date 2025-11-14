@@ -9,7 +9,6 @@
 // (C) Copyright by Bartosz Stryjewski                                             /
 //---------------------------------------------------------------------------------/
 //
-
 import SwiftUI
 
 // MARK: - Record Card Component
@@ -41,27 +40,35 @@ struct RecordCard: View {
 
             // Workout Details
             VStack(alignment: .leading, spacing: 12) {
+                // Trainingsgerät mit Icon, Beschreibung und entsprechender Farbe
+                DetailRow(
+                    icon: workout.workoutDevice.symbol,
+                    label: "Gerät",
+                    value: workout.workoutDevice.description,
+                    color: workout.workoutDevice.tint
+                )
+                // Kalorien
                 DetailRow(
                     icon: "flame.fill",
                     label: "Kalorien",
                     value: "\(workout.calories) kcal",
                     color: .orange
                 )
-
+                // Dauer des Workouts
                 DetailRow(
                     icon: "clock.fill",
                     label: "Dauer",
                     value: "\(workout.duration) min",
                     color: .blue
                 )
-
+                // Zurückgelegte Distanz
                 DetailRow(
                     icon: "arrow.left.and.right",
                     label: "Distanz",
                     value: String(format: "%.2f km", workout.distance),
                     color: .green
                 )
-
+                // Datum des Workouts
                 DetailRow(
                     icon: "calendar",
                     label: "Datum",

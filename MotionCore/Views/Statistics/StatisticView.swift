@@ -33,6 +33,11 @@ struct StatisticView: View {
         workouts.reduce(0.0) { $0 + $1.distance }
     }
 
+    // Berechnung der Workouts je Gerät
+    private func workoutsPerDevice(for device: WorkoutDevice) -> Int {
+        workouts.filter{ $0.workoutDevice == device}.count
+    }
+
     var body: some View {
         ZStack {
             // Hintergrund
@@ -67,6 +72,22 @@ struct StatisticView: View {
                         )
                         .padding(.horizontal)
                         .padding(.top, 5)
+                    // Anzahl Trainings je Gerät
+                    DeviceStatisticsRow(
+                        device: .crosstrainer,
+                        count: workoutsPerDevice(for: .crosstrainer),
+                        total: totalWorkouts
+                    )
+                    .padding(.horizontal)
+                    .padding(.top, 5)
+                    // Anzahl Trainings je Gerät
+                    DeviceStatisticsRow(
+                        device: .ergometer,
+                        count: workoutsPerDevice(for: .ergometer),
+                        total: totalWorkouts
+                    )
+                    .padding(.horizontal)
+                    .padding(.top, 5)
                     // Hier kannst du später weitere Cards hinzufügen
                 }
                 .padding(.bottom, 100)

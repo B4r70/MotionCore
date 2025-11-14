@@ -18,10 +18,20 @@ struct RecordsView: View {
 
     @ObservedObject private var settings = AppSettings.shared
 
-    // Berechnung: Workout mit der längsten Distanz
-    private var bestWorkout: WorkoutSession? {
-        workouts.max(by: { $0.distance < $1.distance })
+    // Berechnung: Bestes Workout mit der längsten Distanz (geräteübergreifend)
+    private var bestErgometerWorkout: WorkoutSession? {
+        workouts
+            .filter {$0.workoutDevice == .ergometer}
+            .max(by: { $0.distance < $1.distance })
     }
+
+    // Berechnung: Bestes Crosstrainer Workout mit der längsten Distanz
+    private var bestCrosstrainerWorkout: WorkoutSession? {
+        workouts
+            .filter {$0.workoutDevice == .crosstrainer}
+            .max(by: { $0.distance < $1.distance })
+    }
+
 
     var body: some View {
         ZStack {
@@ -30,19 +40,30 @@ struct RecordsView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    // Beste Leistung Card
-                    if let best = bestWorkout {
+                    // Beste Leistung nach Distanz auf dem Crosstrainer
+                    if let best = bestCrosstrainerWorkout {
                         RecordCard(
                             title: "Beste Leistung",
-                            subtitle: "Meiste Kalorien",
-                            icon: "trophy.fill",
-                            color: .orange,
+                            subtitle: "Längste Distanz auf dem Crosstrainer",
+                            icon: best.workoutDevice.symbol,
+                            color: best.workoutDevice.tint,
                             workout: best
                         )
                         .padding(.horizontal)
                         .padding(.top, 20)
                     }
-
+                    // Beste Leistung nach Distanz auf dem Ergometer
+                    if let best = bestErgometerWorkout {
+                        RecordCard(
+                            title: "Beste Leistung",
+                            subtitle: "Längste Distanz auf dem Ergometer",
+                            icon: best.workoutDevice.symbol,
+                            color: best.workoutDevice.tint,
+                            workout: best
+                        )
+                        .padding(.horizontal)
+                        .padding(.top, 20)
+                    }
                     // Hier kannst du später weitere Rekord-Cards hinzufügen
                 }
                 .padding(.bottom, 100)

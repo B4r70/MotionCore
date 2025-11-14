@@ -1,8 +1,13 @@
-//
-//  DetailRow.swift
-//  MotionCore
-//
-//  Created by Barto on 11.11.25.
+//---------------------------------------------------------------------------------/
+//  # MotionCore                                                                   /
+//---------------------------------------------------------------------------------/
+// Filename . . : DeviceStatisticsRow.swift                                        /
+// Author . . . : Bartosz Stryjewski                                               /
+// Created on . : 11.11.2025                                                       /
+// Function . . : Statistik Card Ansicht mit diversen Werten                       /
+//---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                             /
+//---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
