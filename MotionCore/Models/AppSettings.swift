@@ -12,24 +12,76 @@
 import SwiftUI
 import Combine
 
-// MARK: - App Settings Manager
+    // MARK: - App Settings Manager
 class AppSettings: ObservableObject {
     // Singleton
     static let shared = AppSettings()
 
     // MARK: - Display Settings
-    @AppStorage("display.showAnimatedBlob")
-    var showAnimatedBlob: Bool = false
+    @Published var showAnimatedBlob: Bool {
+        didSet {
+            UserDefaults.standard.set(showAnimatedBlob, forKey: "display.showAnimatedBlob")
+        }
+    }
 
     // MARK: - Workout Settings
-    @AppStorage("workout.defaultDevice")
-    var defaultDevice: Int = 0  // WorkoutDevice.none
+    // Default Device als Enum
+    @Published var defaultDevice: WorkoutDevice {
+        didSet {
+            UserDefaults.standard.set(defaultDevice.rawValue, forKey: "workout.defaultDevice")
+        }
+    }
 
-    @AppStorage("workout.defaultProgram")
-    var defaultProgram: String = "manual"
+    // Default Program als Enum
+    @Published var defaultProgram: TrainingProgram {
+        didSet {
+            UserDefaults.standard.set(defaultProgram.rawValue, forKey: "workout.defaultProgram")
+        }
+    }
 
-    @AppStorage("workout.showEmptyFields")
-    var showEmptyFields: Bool = false
+    // Default Duration in Minuten
+    @Published var defaultDuration: Int {
+        didSet {
+            UserDefaults.standard.set(defaultDuration, forKey: "workout.defaultDuration")
+        }
+    }
 
-    private init() {}
+        // Default Schwierigkeitsgrad
+    @Published var defaultDifficulty: Int {
+            didSet {
+                UserDefaults.standard.set(defaultDifficulty, forKey: "workout.defaultDifficulty")
+            }
+        }
+
+    @Published var showEmptyFields: Bool {
+        didSet {
+            UserDefaults.standard.set(showEmptyFields, forKey: "workout.showEmptyFields")
+        }
+    }
+
+    // MARK: - Init
+
+    private init() {
+        let defaults = UserDefaults.standard
+
+        // Display
+        self.showAnimatedBlob = defaults.bool(forKey: "display.showAnimatedBlob")
+
+        // Workout: Device
+        let deviceRaw = defaults.integer(forKey: "workout.defaultDevice")
+        self.defaultDevice = WorkoutDevice(rawValue: deviceRaw) ?? .none
+
+        // Workout: Program
+        let programRaw = defaults.string(forKey: "workout.defaultProgram") ?? "manual"
+        self.defaultProgram = TrainingProgram(rawValue: programRaw) ?? .manual
+
+        // Workout: Duration
+        self.defaultDuration = defaults.integer(forKey: "workout.defaultDuration")
+
+        // Workout: Intensity
+        self.defaultDifficulty = defaults.integer(forKey: "workout.defaultDifficulty")
+
+        // Workout: Show Empty Fields
+        self.showEmptyFields = defaults.bool(forKey: "workout.showEmptyFields")
+    }
 }

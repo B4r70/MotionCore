@@ -68,7 +68,7 @@ struct SettingsView: View {
             // MARK: - Einstellungen
             Section("Einstellungen") {
                 NavigationLink {
-                    Text("Trainingseinstellungen")
+                    WorkoutSettingsView()
                 } label: {
                     Label("Training", systemImage: "figure.run")
                 }

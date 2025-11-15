@@ -45,7 +45,6 @@ struct WorkoutCard: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-
                 Spacer()
 
                 // Training Program Icon
@@ -53,7 +52,6 @@ struct WorkoutCard: View {
                     .font(.title3)
                     .foregroundStyle(.secondary)
             }
-
             Divider()
                 .background(.white.opacity(0.2))
 

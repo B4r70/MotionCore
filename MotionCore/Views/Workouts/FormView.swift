@@ -20,11 +20,12 @@ struct FormView: View {
     let mode: WorkoutFormMode
 
     @Bindable var workout: WorkoutSession
+    @ObservedObject private var settings = AppSettings.shared
 
         // 🆕 Lokaler Zustand für aufklappbare Wheels
     @State private var showDurationWheel = false
     @State private var showHrWheel = false
-    @State private var showLevelWheel = false
+    @State private var showDifficultyWheel = false
     @State private var showWeightWheel = false
     @State private var showCaloriesWheel = false
 
@@ -100,9 +101,9 @@ struct FormView: View {
 
                     // MARK: Schwierigkeitsgrad mit Wheel
                 DisclosureGroup(
-                    isExpanded: $showLevelWheel,
+                    isExpanded: $showDifficultyWheel,
                     content: {
-                        Picker("Level", selection: $workout.difficulty) {
+                        Picker("Difficulty", selection: $workout.difficulty) {
                             ForEach(1...25, id: \.self) { v in
                                 Text("Stufe \(v)").tag(v)
                             }
@@ -217,6 +218,11 @@ struct FormView: View {
                 StarRatingView(rating: $workout.intensity)
             }
         }
+        .onAppear {
+                    if mode == .add {
+                        applyDefaultsIfNeeded()
+                    }
+                }
 
             // Toolbarplatzierung und Beschriftung
         .navigationTitle(mode == .add ? "Neues Workout" : "Bearbeiten")
@@ -259,5 +265,22 @@ struct FormView: View {
         context.delete(workout)
         try? context.save()
         dismiss()
+    }
+    // Defaulteinstellungen für neue Workouts
+    private func applyDefaultsIfNeeded() {
+        if workout.workoutDevice == .none {
+            workout.workoutDevice = settings.defaultDevice
+        }
+
+        if workout.trainingProgram == .manual {
+            workout.trainingProgram = settings.defaultProgram
+        }
+
+        if workout.duration == 0 {
+            workout.duration = settings.defaultDuration
+        }
+        if workout.difficulty == 1 {
+            workout.difficulty = settings.defaultDifficulty
+        }
     }
 }
