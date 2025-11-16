@@ -55,28 +55,28 @@ struct StatisticView: View {
                 VStack(spacing: 20) {
                     LazyVGrid(columns: gridColumns) {
                             // Eine einzelne Statistik-Card
-                            StatisticCard(
+                            StatisticCardDoubleGrid(
                                 icon: "figure.run",
                                 title: "Gesamt Workouts",
                                 value: "\(totalWorkouts)",
                                 color: .blue
                             )
                             // Verbrauchte Gesamtkalorien
-                            StatisticCard(
+                            StatisticCardDoubleGrid(
                                 icon: "flame.fill",
                                 title: "Gesamt Kalorien",
                                 value: "\(totalCalories)",
                                 color: .orange
-                            )
+                        )
                             // Trainierte Distanz
-                            StatisticCard(
+                        StatisticCardDoubleGrid(
                                 icon: "arrow.left.and.right",
                                 title: "Gesamt Strecke",
                                 value: "\(totalDistance)",
                                 color: .green
                             )
                             // Durchschnittliche Herzfrequenz
-                            StatisticCard(
+                        StatisticCardDoubleGrid(
                                 icon: "heart.fill",
                                 title: "⌀ Herzfrequenz",
                                 value: "\(averageHeartRate)",

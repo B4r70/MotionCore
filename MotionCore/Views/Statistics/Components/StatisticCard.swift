@@ -45,25 +45,26 @@ struct StatisticCardDoubleGrid: View {
     let color: Color
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top) {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundStyle(color)
+        VStack(spacing: 10) {
 
-                Spacer()
+            // Icon oben
+            Image(systemName: icon)
+                .font(.system(size: 40))        
+                .foregroundStyle(color)
 
-                Text(value)
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
-                    .minimumScaleFactor(0.7)
-                    .lineLimit(1)
-            }
+            // Wert in groß, aber nicht riesig
+            Text(value)
+                .font(.system(size: 26, weight: .bold, design: .rounded))
+                .minimumScaleFactor(0.7)
+                .lineLimit(1)
 
+            // Subtitle klein
             Text(title)
-                .font(.subheadline)
+                .font(.caption)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity, minHeight: 120)   // gut für 2-Spalten-Grid
+        .frame(maxWidth: .infinity, minHeight: 140, maxHeight: 140) // EINHEITLICHE HÖHE
         .glassCardStyle()
     }
 }
