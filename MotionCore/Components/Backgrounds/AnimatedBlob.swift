@@ -1,13 +1,13 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : AnimatedBlob.swift                                               /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 10.11.2025                                                       /
 // Function . . : Animierter Hintergrund im Liquid Effekt                          /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
@@ -23,7 +23,7 @@ struct AnimatedBlob: View {
                         colors: [
                             Color.blue.opacity(0.3),
                             Color.purple.opacity(0.2),
-                            Color.clear
+                            Color.clear,
                         ],
                         center: .center,
                         startRadius: 0,
@@ -35,7 +35,7 @@ struct AnimatedBlob: View {
                 .offset(x: animate ? -100 : 100, y: animate ? -150 : 150)
                 .animation(
                     .easeInOut(duration: 8)
-                    .repeatForever(autoreverses: true),
+                        .repeatForever(autoreverses: true),
                     value: animate
                 )
 
@@ -45,7 +45,7 @@ struct AnimatedBlob: View {
                         colors: [
                             Color.cyan.opacity(0.3),
                             Color.blue.opacity(0.2),
-                            Color.clear
+                            Color.clear,
                         ],
                         center: .center,
                         startRadius: 0,
@@ -57,7 +57,7 @@ struct AnimatedBlob: View {
                 .offset(x: animate ? 120 : -120, y: animate ? 100 : -100)
                 .animation(
                     .easeInOut(duration: 7)
-                    .repeatForever(autoreverses: true),
+                        .repeatForever(autoreverses: true),
                     value: animate
                 )
         }

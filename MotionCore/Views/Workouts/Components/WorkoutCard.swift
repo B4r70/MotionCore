@@ -1,25 +1,25 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : WorkoutCard.swift                                                /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout Card Ansicht mit diversen Werten                         /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
-import SwiftUI
 import Foundation
+import SwiftUI
 
 // Workout Card
 struct WorkoutCard: View {
     let workout: WorkoutSession
     let deFormat = Date.FormatStyle.dateTime
-      .day(.twoDigits)
-      .month(.wide)
-      .year()
-      .locale(Locale(identifier: "de_DE"))
+        .day(.twoDigits)
+        .month(.wide)
+        .year()
+        .locale(Locale(identifier: "de_DE"))
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -59,7 +59,7 @@ struct WorkoutCard: View {
             LazyVGrid(columns: [
                 GridItem(.flexible()),
                 GridItem(.flexible()),
-                GridItem(.flexible())
+                GridItem(.flexible()),
             ], spacing: 12) {
                 // Workout-Dauer
                 StatBubble(
@@ -105,7 +105,7 @@ struct WorkoutCard: View {
                     .font(.caption2)
                     .foregroundStyle(.primary)
 
-                ForEach(0..<5) { index in
+                ForEach(0 ..< 5) { index in
                     Image(systemName: index < workout.intensity.rawValue ? "star.fill" : "star")
                         .font(.caption2)
                         .foregroundStyle(index < workout.intensity.rawValue ? workout.intensity.color : .gray.opacity(0.3))
@@ -114,15 +114,6 @@ struct WorkoutCard: View {
                 Spacer()
             }
         }
-        .padding(16)
-        .background {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(.white.opacity(0.2), lineWidth: 1)
-        }
+        .glassCardStyle()
     }
 }

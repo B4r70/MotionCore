@@ -1,13 +1,13 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : WorkoutSettingsView.swift                                        /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 15.11.2025                                                       /
 // Function . . : Workout Settings View                                            /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
@@ -21,6 +21,7 @@ struct WorkoutSettingsView: View {
     var body: some View {
         List {
             // MARK: - Defaults for new workouts
+
             Section("Defaultwerte für neue Workouts") {
                 // Default Gerätetyp
                 Picker("Gerätetyp", selection: $settings.defaultDevice) {
@@ -47,7 +48,7 @@ struct WorkoutSettingsView: View {
                     isExpanded: $showDurationWheel,
                     content: {
                         Picker("Trainingsdauer", selection: $settings.defaultDuration) {
-                            ForEach(0...300, id: \.self) { min in
+                            ForEach(0 ... 300, id: \.self) { min in
                                 Text("\(min) min").tag(min)
                             }
                         }
@@ -71,7 +72,7 @@ struct WorkoutSettingsView: View {
                     isExpanded: $showDifficultyWheel,
                     content: {
                         Picker("Difficulty", selection: $settings.defaultDifficulty) {
-                            ForEach(1...25, id: \.self) { v in
+                            ForEach(1 ... 25, id: \.self) { v in
                                 Text("Stufe \(v)").tag(v)
                             }
                         }
@@ -90,7 +91,7 @@ struct WorkoutSettingsView: View {
                     }
                 )
             }
-            Section ("Sonstige Einstellungen"){
+            Section("Sonstige Einstellungen") {
                 // Show empty fields option – gehört inhaltlich auch zu den Defaults
                 Toggle("Leere Felder anzeigen", isOn: $settings.showEmptyFields)
             }

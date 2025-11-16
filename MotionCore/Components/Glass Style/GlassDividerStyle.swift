@@ -1,23 +1,24 @@
 // ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
 // ---------------------------------------------------------------------------------/
-// Filename . . : HeaderView.swift                                                 /
+// Filename . . : GlassDivider.swift                                               /
 // Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Header View                                                      /
+// Created on . : 16.11.2025                                                       /
+// Function . . : Trennlinie in Liquid Glass Optik                                 /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
-struct HeaderView: View {
+struct GlassDivider: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
-        Text("MotionCore")
-            .font(.title)
-            .fontWeight(.semibold)
-            .foregroundStyle(.primary)
-            .fixedSize() // ← Füge das hinzu
-            .accessibilityAddTraits(.isHeader)
+        Rectangle()
+            .frame(height: 0.35)
+            .foregroundStyle(
+                Color.white.opacity(colorScheme == .light ? 0.22 : 0.35)
+            )
     }
 }

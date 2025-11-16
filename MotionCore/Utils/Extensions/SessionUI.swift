@@ -1,13 +1,13 @@
-//---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
-// Filename . . : WorkoutSessionUI.swift                                           /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Formatierte Werte für die Ausgabe aus @Model WorkoutSession      /
-//---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
+//  # MotionCore                                                                    /
+// ---------------------------------------------------------------------------------/
+// Filename . . : SessionUI.swift                                                   /
+// Author . . . : Bartosz Stryjewski                                                /
+// Created on . : 22.10.2025                                                        /
+// Function . . : Formatierte Werte für die Ausgabe aus @Model WorkoutSession       /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
 import Foundation
 
@@ -43,6 +43,7 @@ extension WorkoutSession {
     }
 
     // MARK: - Kompakte Zusammenfassung für UI-Elemente
+
     var summaryLine: String {
         "\(distanceFormatted) • \(durationFormatted) • \(caloriesFormatted)"
     }

@@ -1,17 +1,17 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
-// Filename . . : DeviceStatisticsRow.swift                                        /
+// ---------------------------------------------------------------------------------/
+// Filename . . : StatisticDeviceRow.swift                                         /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 11.11.2025                                                       /
 // Function . . : Statistik Card Ansicht mit diversen Werten                       /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
-struct DeviceStatisticsRow: View {
+struct StatisticDeviceRow: View {
     let device: WorkoutDevice
     let count: Int
     let total: Int
@@ -49,6 +49,5 @@ struct DeviceStatisticsRow: View {
 }
 
 #Preview {
-    DeviceStatisticsRow(device: .crosstrainer, count: 5, total: 50)
+    StatisticDeviceRow(device: .crosstrainer, count: 5, total: 50)
 }
-

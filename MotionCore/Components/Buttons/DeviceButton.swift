@@ -1,10 +1,14 @@
+// ---------------------------------------------------------------------------------/
+//  # MotionCore                                                                   /
+// ---------------------------------------------------------------------------------/
+// Filename . . : DeviceButton.swift                                               /
+// Author . . . : Bartosz Stryjewski                                               /
+// Created on . : 22.10.2025                                                       /
+// Function . . : Toolbar Button in Liquid Glass                                   /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                             /
+// ---------------------------------------------------------------------------------/
 //
-//  DeviceButton.swift
-//  MotionCore
-//
-//  Created by Barto on 11.11.25.
-//
-
 import SwiftUI
 
 struct DeviceButton: View {
@@ -17,6 +21,7 @@ struct DeviceButton: View {
             VStack(spacing: 8) {
                 Image(systemName: device.symbol)
                     .font(.title2)
+
                 Text(device.description)
                     .font(.caption)
                     .fontWeight(.medium)
@@ -25,11 +30,18 @@ struct DeviceButton: View {
             .padding(.vertical, 16)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.blue.opacity(0.15) : Color(.secondarySystemGroupedBackground))
+                    .fill(
+                        isSelected
+                            ? Color.blue.opacity(0.15)
+                            : Color.white.opacity(0.22) // HELLER statt grau
+                    )
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2)
+                    .stroke(
+                        isSelected ? Color.blue : Color.white.opacity(0.25),
+                        lineWidth: isSelected ? 2 : 1
+                    )
             )
             .foregroundStyle(isSelected ? .blue : .primary)
         }

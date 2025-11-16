@@ -1,18 +1,18 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
-// Filename . . : RecordsView.swift                                                /
+// ---------------------------------------------------------------------------------/
+// Filename . . : RecordView.swift                                                 /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 11.11.2025                                                       /
 // Function . . : Persönliche Rekorde                                              /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
-import SwiftUI
 import SwiftData
+import SwiftUI
 
-struct RecordsView: View {
+struct RecordView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse)
     private var workouts: [WorkoutSession]
 
@@ -21,17 +21,16 @@ struct RecordsView: View {
     // Berechnung: Bestes Workout mit der längsten Distanz (geräteübergreifend)
     private var bestErgometerWorkout: WorkoutSession? {
         workouts
-            .filter {$0.workoutDevice == .ergometer}
+            .filter { $0.workoutDevice == .ergometer }
             .max(by: { $0.distance < $1.distance })
     }
 
     // Berechnung: Bestes Crosstrainer Workout mit der längsten Distanz
     private var bestCrosstrainerWorkout: WorkoutSession? {
         workouts
-            .filter {$0.workoutDevice == .crosstrainer}
+            .filter { $0.workoutDevice == .crosstrainer }
             .max(by: { $0.distance < $1.distance })
     }
-
 
     var body: some View {
         ZStack {
@@ -77,9 +76,11 @@ struct RecordsView: View {
         }
     }
 }
+
 // MARK: - Preview
+
 #Preview {
     NavigationStack {
-        RecordsView()
+        RecordView()
     }
 }

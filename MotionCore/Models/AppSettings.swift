@@ -1,26 +1,34 @@
-///---------------------------------------------------------------------------------/
+/// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : AppSettings.swift                                                /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 11.11.2025                                                       /
 // Function . . : Zentrale Verwaltung der App-Einstellungen                        /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
-import SwiftUI
 import Combine
+import SwiftUI
 
-    // MARK: - App Settings Manager
+// MARK: - App Settings Manager
+
 class AppSettings: ObservableObject {
     // Singleton
     static let shared = AppSettings()
 
     // MARK: - Display Settings
+    // Animationen anzeigen
     @Published var showAnimatedBlob: Bool {
         didSet {
             UserDefaults.standard.set(showAnimatedBlob, forKey: "display.showAnimatedBlob")
+        }
+    }
+    // Erscheinungsbild
+    @Published var appTheme: AppTheme {
+        didSet {
+            UserDefaults.standard.set(appTheme.rawValue, forKey: "display.appTheme")
         }
     }
 
@@ -46,13 +54,14 @@ class AppSettings: ObservableObject {
         }
     }
 
-        // Default Schwierigkeitsgrad
+    // Default Schwierigkeitsgrad
     @Published var defaultDifficulty: Int {
-            didSet {
-                UserDefaults.standard.set(defaultDifficulty, forKey: "workout.defaultDifficulty")
-            }
+        didSet {
+            UserDefaults.standard.set(defaultDifficulty, forKey: "workout.defaultDifficulty")
         }
+    }
 
+    // Konfig Anzeige leerer Felder
     @Published var showEmptyFields: Bool {
         didSet {
             UserDefaults.standard.set(showEmptyFields, forKey: "workout.showEmptyFields")
@@ -60,28 +69,35 @@ class AppSettings: ObservableObject {
     }
 
     // MARK: - Init
-
     private init() {
         let defaults = UserDefaults.standard
 
-        // Display
-        self.showAnimatedBlob = defaults.bool(forKey: "display.showAnimatedBlob")
+        // Display: Animierter Hintergrund
+        showAnimatedBlob = defaults.bool(forKey: "display.showAnimatedBlob")
+
+        // Theme aus UserDefaults laden (oder .system, wenn nichts gesetzt)
+        if let raw = UserDefaults.standard.string(forKey: "display.appTheme"),
+           let loaded = AppTheme(rawValue: raw) {
+            self.appTheme = loaded
+        } else {
+            self.appTheme = .system
+        }
 
         // Workout: Device
         let deviceRaw = defaults.integer(forKey: "workout.defaultDevice")
-        self.defaultDevice = WorkoutDevice(rawValue: deviceRaw) ?? .none
+        defaultDevice = WorkoutDevice(rawValue: deviceRaw) ?? .none
 
         // Workout: Program
         let programRaw = defaults.string(forKey: "workout.defaultProgram") ?? "manual"
-        self.defaultProgram = TrainingProgram(rawValue: programRaw) ?? .manual
+        defaultProgram = TrainingProgram(rawValue: programRaw) ?? .manual
 
         // Workout: Duration
-        self.defaultDuration = defaults.integer(forKey: "workout.defaultDuration")
+        defaultDuration = defaults.integer(forKey: "workout.defaultDuration")
 
         // Workout: Intensity
-        self.defaultDifficulty = defaults.integer(forKey: "workout.defaultDifficulty")
+        defaultDifficulty = defaults.integer(forKey: "workout.defaultDifficulty")
 
         // Workout: Show Empty Fields
-        self.showEmptyFields = defaults.bool(forKey: "workout.showEmptyFields")
+        showEmptyFields = defaults.bool(forKey: "workout.showEmptyFields")
     }
 }

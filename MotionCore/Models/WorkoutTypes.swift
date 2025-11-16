@@ -1,13 +1,13 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : WorkoutTypes.swift                                               /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Aufzählungstypen und Wertebereich aus WorkoutSession             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
 import Foundation
 
@@ -28,7 +28,7 @@ enum TrainingProgram: String, Codable, CaseIterable, Identifiable {
     case random
     case fitTest
 
-    var id:Self { self }
+    var id: Self { self }
 }
 
 enum WorkoutDevice: Int, Codable, CaseIterable, Identifiable {
@@ -38,4 +38,3 @@ enum WorkoutDevice: Int, Codable, CaseIterable, Identifiable {
 
     var id: Self { self }
 }
-

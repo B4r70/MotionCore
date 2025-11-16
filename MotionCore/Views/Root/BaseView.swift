@@ -1,16 +1,16 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : BaseView.swift                                                   /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 02.11.2025                                                       /
 // Function . . : Base View with Tab Navigation                                    /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct BaseView: View {
     @State private var selectedTab: Tab = .workouts
@@ -29,7 +29,9 @@ struct BaseView: View {
         trainingProgram: .manual,
         workoutDevice: .none
     )
+
     // MARK: Vorabeinstellungen Farbgebung Tabbar
+
     init() {
         // Tab Bar Appearance konfigurieren
         let appearance = UITabBarAppearance()
@@ -38,13 +40,13 @@ struct BaseView: View {
         // Farbe für ausgewählten Tab
         appearance.stackedLayoutAppearance.selected.iconColor = .systemBlue
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor.systemBlue
+            .foregroundColor: UIColor.systemBlue,
         ]
 
         // Farbe für nicht-ausgewählte Tabs
         appearance.stackedLayoutAppearance.normal.iconColor = .systemGray
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: UIColor.systemGray
+            .foregroundColor: UIColor.systemGray,
         ]
 
         UITabBar.appearance().standardAppearance = appearance
@@ -58,6 +60,7 @@ struct BaseView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             // MARK: Tab 1 - Workouts
+
             NavigationStack {
                 ListView()
                     .navigationBarTitleDisplayMode(.inline)
@@ -73,6 +76,7 @@ struct BaseView: View {
             .tag(Tab.workouts)
 
             // MARK: Tab 2 - Statistiken
+
             NavigationStack {
                 StatisticView()
                     .navigationBarTitleDisplayMode(.inline)
@@ -88,6 +92,7 @@ struct BaseView: View {
             .tag(Tab.statistics)
 
             // MARK: Tab 3 - Neues Workout
+
             Color.clear
                 .tabItem {
                     Label("Neu", systemImage: "plus.diamond.fill")
@@ -95,8 +100,9 @@ struct BaseView: View {
                 .tag(Tab.add)
 
             // MARK: Tab 4 - Rekorde
+
             NavigationStack {
-                RecordsView()
+                RecordView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
@@ -110,8 +116,9 @@ struct BaseView: View {
             .tag(Tab.records)
 
             // MARK: Tab 5 - Einstellungen
+
             NavigationStack {
-                SettingsView()
+                MainSettingsView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
@@ -124,7 +131,7 @@ struct BaseView: View {
             }
             .tag(Tab.settings)
         }
-        .onChange(of: selectedTab) { oldValue, newValue in
+        .onChange(of: selectedTab) { _, newValue in
             if newValue == .add {
                 showingAddWorkout = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

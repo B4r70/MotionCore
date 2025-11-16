@@ -1,16 +1,16 @@
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : ListView.swift                                                   /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 22.10.2025                                                       /
 // Function . . : Workout List View with Glassmorphic Design                       /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -36,7 +36,6 @@ struct ListView: View {
         ZStack {
             // Hintergrund aufrufen
             AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
-
             ScrollView {
                 LazyVStack(spacing: 16) {
                     // Filter Chips (Glassmorphic)
@@ -85,6 +84,7 @@ struct ListView: View {
     }
 
     // MARK: - JSON-Export
+
     private func makeExportFile() -> URL? {
         guard !allWorkouts.isEmpty else { return nil }
 
@@ -109,5 +109,3 @@ struct ListView: View {
         }
     }
 }
-
-

@@ -1,18 +1,18 @@
-///---------------------------------------------------------------------------------/
+/// ---------------------------------------------------------------------------------/
 //  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // Filename . . : SettingsView.swift                                               /
 // Author . . . : Bartosz Stryjewski                                               /
 // Created on . : 02.11.2025                                                       /
 // Function . . : Settings View                                                    /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+// ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 internal import UniformTypeIdentifiers
 
-struct SettingsView: View {
+struct MainSettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var exportURL: URL?
     @State private var showingImportPicker = false
@@ -20,6 +20,7 @@ struct SettingsView: View {
     var body: some View {
         List {
             // MARK: - App Information
+
             Section("App") {
                 HStack {
                     Label("Version", systemImage: "info.circle")
@@ -36,6 +37,7 @@ struct SettingsView: View {
             }
 
             // MARK: - Daten
+
             Section("Daten") {
                 // Export Button
                 if let url = exportURL {
@@ -66,6 +68,7 @@ struct SettingsView: View {
             }
 
             // MARK: - Einstellungen
+
             Section("Einstellungen") {
                 NavigationLink {
                     WorkoutSettingsView()
@@ -81,6 +84,7 @@ struct SettingsView: View {
             }
 
             // MARK: - Support
+
             Section("Support") {
                 Link(destination: URL(string: "mailto:bartosz@stryjewski.email")!) {
                     Label("Kontakt", systemImage: "envelope")
@@ -97,12 +101,13 @@ struct SettingsView: View {
             isPresented: $showingImportPicker,
             allowedContentTypes: [.json],
             allowsMultipleSelection: false
-        ) { result in
+        ) { _ in
             // TODO: Import-Logik
         }
     }
 
     // MARK: - Export Function
+
     private func makeExportFile() -> URL? {
         // TODO: Diese Funktion aus ListView hierher verschieben
         // oder über ein SharedViewModel teilen
@@ -111,6 +116,7 @@ struct SettingsView: View {
 }
 
 // MARK: - Info Row Component
+
 struct InfoRow: View {
     let title: String
     let value: String
