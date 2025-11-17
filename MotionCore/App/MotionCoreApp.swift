@@ -15,6 +15,7 @@ import SwiftUI
 @main
 struct MotionCoreApp: App {
     @StateObject private var settings = AppSettings.shared
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             WorkoutSession.self,

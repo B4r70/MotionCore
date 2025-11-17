@@ -9,7 +9,6 @@
 // (C) Copyright by Bartosz Stryjewski                                             /
 // ---------------------------------------------------------------------------------/
 //
-
 import SwiftUI
 
 // Neu: Glassmorphic Empty State

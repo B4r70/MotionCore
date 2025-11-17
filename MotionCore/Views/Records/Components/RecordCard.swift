@@ -18,7 +18,7 @@ struct RecordCard: View {
     let subtitle: String
     let icon: String
     let color: Color
-    let workout: WorkoutSession
+    let allWorkouts: WorkoutSession
 
     var body: some View {
         VStack(spacing: 20) {
@@ -43,37 +43,37 @@ struct RecordCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 // Trainingsgerät mit Icon, Beschreibung und entsprechender Farbe
                 RecordDetailRow(
-                    icon: workout.workoutDevice.symbol,
+                    icon: allWorkouts.workoutDevice.symbol,
                     label: "Gerät",
-                    value: workout.workoutDevice.description,
-                    color: workout.workoutDevice.tint
+                    value: allWorkouts.workoutDevice.description,
+                    color: allWorkouts.workoutDevice.tint
                 )
                 // Kalorien
                 RecordDetailRow(
                     icon: "flame.fill",
                     label: "Kalorien",
-                    value: "\(workout.calories) kcal",
+                    value: "\(allWorkouts.calories) kcal",
                     color: .orange
                 )
                 // Dauer des Workouts
                 RecordDetailRow(
                     icon: "clock.fill",
                     label: "Dauer",
-                    value: "\(workout.duration) min",
+                    value: "\(allWorkouts.duration) min",
                     color: .blue
                 )
                 // Zurückgelegte Distanz
                 RecordDetailRow(
                     icon: "arrow.left.and.right",
                     label: "Distanz",
-                    value: String(format: "%.2f km", workout.distance),
+                    value: String(format: "%.2f km", allWorkouts.distance),
                     color: .green
                 )
                 // Datum des Workouts
                 RecordDetailRow(
                     icon: "calendar",
                     label: "Datum",
-                    value: workout.date.formatted(date: .abbreviated, time: .omitted),
+                    value: allWorkouts.date.formatted(date: .abbreviated, time: .omitted),
                     color: .purple
                 )
             }

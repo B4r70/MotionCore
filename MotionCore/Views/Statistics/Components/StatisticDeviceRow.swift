@@ -1,12 +1,13 @@
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+//  # MotionCore                                                                    /
 // ---------------------------------------------------------------------------------/
-// Filename . . : StatisticDeviceRow.swift                                         /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 11.11.2025                                                       /
-// Function . . : Statistik Card Ansicht mit diversen Werten                       /
+// Section  . . : Statistik                                                         /
+// Filename . . : StatisticDeviceRow.swift                                          /
+// Author . . . : Bartosz Stryjewski                                                /
+// Created on . : 11.11.2025                                                        /
+// Function . . : Statistik Card Ansicht mit diversen Werten                        /
 // ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

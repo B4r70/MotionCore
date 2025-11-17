@@ -14,22 +14,12 @@ import SwiftUI
 
 struct RecordView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse)
-    private var workouts: [WorkoutSession]
+    private var allWorkouts: [WorkoutSession]
 
     @ObservedObject private var settings = AppSettings.shared
 
-    // Berechnung: Bestes Workout mit der längsten Distanz (geräteübergreifend)
-    private var bestErgometerWorkout: WorkoutSession? {
-        workouts
-            .filter { $0.workoutDevice == .ergometer }
-            .max(by: { $0.distance < $1.distance })
-    }
-
-    // Berechnung: Bestes Crosstrainer Workout mit der längsten Distanz
-    private var bestCrosstrainerWorkout: WorkoutSession? {
-        workouts
-            .filter { $0.workoutDevice == .crosstrainer }
-            .max(by: { $0.distance < $1.distance })
+    private var calcRecords: RecordCalcEngine {
+        RecordCalcEngine(workouts: allWorkouts)
     }
 
     var body: some View {
@@ -40,25 +30,25 @@ struct RecordView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     // Beste Leistung nach Distanz auf dem Crosstrainer
-                    if let best = bestCrosstrainerWorkout {
+                    if let best = calcRecords.bestCrosstrainerWorkout {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Crosstrainer",
                             icon: best.workoutDevice.symbol,
                             color: best.workoutDevice.tint,
-                            workout: best
+                            allWorkouts: best
                         )
                         .padding(.horizontal)
                         .padding(.top, 20)
                     }
                     // Beste Leistung nach Distanz auf dem Ergometer
-                    if let best = bestErgometerWorkout {
+                    if let best = calcRecords.bestErgometerWorkout {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Ergometer",
                             icon: best.workoutDevice.symbol,
                             color: best.workoutDevice.tint,
-                            workout: best
+                            allWorkouts: best
                         )
                         .padding(.horizontal)
                         .padding(.top, 20)
@@ -70,7 +60,7 @@ struct RecordView: View {
             .scrollIndicators(.hidden)
 
             // Empty State
-            if workouts.isEmpty {
+            if allWorkouts.isEmpty {
                 EmptyState()
             }
         }

@@ -14,8 +14,12 @@ import SwiftUI
 
 struct StatisticView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse)
-    private var workouts: [WorkoutSession]
+    private var allWorkouts: [WorkoutSession]
 
+    private var calcStatistics: StatisticCalcEngine {
+        StatisticCalcEngine(workouts: allWorkouts)
+    }
+    
     @ObservedObject private var settings = AppSettings.shared
 
     // Anzahl der Cards je Zeile im Grid
@@ -23,28 +27,6 @@ struct StatisticView: View {
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-
-    // Berechnung: Gesamtzahl Workouts
-    private var totalWorkouts: Int {
-        workouts.count
-    }
-
-    // Berechnung: Gesamtzahl Kalorien
-    private var totalCalories: Int {
-        workouts.reduce(0) { $0 + $1.calories }
-    }
-
-    // Berechnung: Gesamtzahl Distanz
-    private var totalDistance: Double {
-        workouts.reduce(0.0) { $0 + $1.distance }
-    }
-
-    // Durchschnittliche Herzfrequenz
-    private var averageHeartRate: Int {
-        guard !workouts.isEmpty else { return 0 }
-        let total = workouts.reduce(0) { $0 + $1.heartRate }
-        return total / workouts.count
-    }
 
     var body: some View {
         ZStack {
@@ -58,42 +40,62 @@ struct StatisticView: View {
                             StatisticCardDoubleGrid(
                                 icon: "figure.run",
                                 title: "Gesamt Workouts",
-                                value: "\(totalWorkouts)",
+                                value: "\(calcStatistics.totalWorkouts)",
                                 color: .blue
                             )
                             // Verbrauchte Gesamtkalorien
                             StatisticCardDoubleGrid(
                                 icon: "flame.fill",
                                 title: "Gesamt Kalorien",
-                                value: "\(totalCalories)",
+                                value: "\(calcStatistics.totalCalories)",
                                 color: .orange
                         )
                             // Trainierte Distanz
                         StatisticCardDoubleGrid(
                                 icon: "arrow.left.and.right",
                                 title: "Gesamt Strecke",
-                                value: "\(totalDistance)",
+                                value: "\(calcStatistics.totalDistance)",
                                 color: .green
                             )
                             // Durchschnittliche Herzfrequenz
                         StatisticCardDoubleGrid(
                                 icon: "heart.fill",
                                 title: "⌀ Herzfrequenz",
-                                value: "\(averageHeartRate)",
+                                value: "\(calcStatistics.averageHeartRate)",
                                 color: .red
                             )
                     }
                     .padding(.horizontal)
                     .padding(.top, 5)
                     // Anzahl Trainings je Gerät
-                    StatisticDeviceCard(workouts: workouts)
+                    StatisticDeviceCard(allWorkouts: allWorkouts)
                         .padding(.horizontal)
                         .padding(.top, 5)
 
                     // Workouts je Belastungsintensität
-                    StatisticIntensityCard(workouts: workouts)
+                    StatisticIntensityCard(allWorkouts: allWorkouts)
                         .padding(.horizontal)
                         .padding(.top, 5)
+                    // Trend Chart für die Herzfrequenz
+                    StatisticTrendChart(
+                        title: "Herzfrequenz-Trend",
+                        yLabel: "Puls",
+                        data: calcStatistics.trendHeartRate
+                    )
+                    .padding(.horizontal)
+                    .padding(.top, 5)
+                    // Trend Chart Kalorien
+                    StatisticTrendChart(
+                        title: "Kalorien-Trend",
+                        yLabel: "kcal",
+                        data: calcStatistics.trendCalories
+                    )
+
+                    StatisticTrendChart(
+                        title: "Distanz-Trend",
+                        yLabel: "km",
+                        data: calcStatistics.trendDistance
+                    )
                     // Hier kannst du später weitere Cards hinzufügen
                 }
                 .padding(.bottom, 100)
@@ -101,17 +103,14 @@ struct StatisticView: View {
             .scrollIndicators(.hidden)
 
             // Empty State
-            if workouts.isEmpty {
+            if allWorkouts.isEmpty {
                 EmptyState()
             }
         }
     }
 }
-
-// MARK: - Preview
-
-#Preview {
-    NavigationStack {
-        StatisticView()
-    }
+// MARK: Statistic Preview
+#Preview("Statistiken") {
+    StatisticView()
+        .modelContainer(PreviewData.sharedContainer)
 }

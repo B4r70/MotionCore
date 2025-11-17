@@ -23,13 +23,13 @@ struct ListView: View {
     // Abruf aus Einstellungen
     @State private var settings = AppSettings.shared
 
-    // Neu: Gefilterte Workouts basierend auf Auswahl
     var filteredWorkouts: [WorkoutSession] {
         if selectedFilter == .none {
             return allWorkouts
         }
         return allWorkouts.filter { $0.workoutDevice == selectedFilter }
     }
+
 
     // Ansicht "Workouts"
     var body: some View {
@@ -48,7 +48,7 @@ struct ListView: View {
                         NavigationLink {
                             FormView(mode: .edit, workout: workout)
                         } label: {
-                            WorkoutCard(workout: workout)
+                            WorkoutCard(allWorkouts: workout)
                         }
                         .buttonStyle(.plain)
                     }

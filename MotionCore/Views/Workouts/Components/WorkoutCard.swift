@@ -14,7 +14,7 @@ import SwiftUI
 
 // Workout Card
 struct WorkoutCard: View {
-    let workout: WorkoutSession
+    let allWorkouts: WorkoutSession
     let deFormat = Date.FormatStyle.dateTime
         .day(.twoDigits)
         .month(.wide)
@@ -31,24 +31,24 @@ struct WorkoutCard: View {
                         .fill(.ultraThinMaterial)
                         .frame(width: 44, height: 44)
 
-                    Image(systemName: workout.workoutDevice.symbol)
+                    Image(systemName: allWorkouts.workoutDevice.symbol)
                         .font(.title3)
-                        .foregroundStyle(workout.workoutDevice.tint)
+                        .foregroundStyle(allWorkouts.workoutDevice.tint)
                 }
                 // Anzeige Datum und Uhrzeit
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(workout.date.formatted(deFormat))
+                    Text(allWorkouts.date.formatted(deFormat))
                         .font(.headline)
                         .foregroundStyle(.primary)
 
-                    Text(workout.date, style: .time)
+                    Text(allWorkouts.date, style: .time)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
 
                 // Training Program Icon
-                Image(systemName: workout.trainingProgram.symbol)
+                Image(systemName: allWorkouts.trainingProgram.symbol)
                     .font(.title3)
                     .foregroundStyle(.secondary)
             }
@@ -64,37 +64,37 @@ struct WorkoutCard: View {
                 // Workout-Dauer
                 StatBubble(
                     icon: "clock.fill",
-                    value: workout.durationFormatted,
+                    value: allWorkouts.durationFormatted,
                     color: .blue
                 )
                 // Workout-Distanz
                 StatBubble(
                     icon: "arrow.left.and.right",
-                    value: workout.distanceFormatted,
+                    value: allWorkouts.distanceFormatted,
                     color: .green
                 )
                 // Workout-Geschwindigkeit
                 StatBubble(
                     icon: "gauge.with.dots.needle.67percent",
-                    value: workout.averageSpeedFormatted,
+                    value: allWorkouts.averageSpeedFormatted,
                     color: .orange
                 )
                 // Workout-Herzfrequenz (Durchschnitt)
                 StatBubble(
                     icon: "heart.fill",
-                    value: workout.heartRateFormatted,
+                    value: allWorkouts.heartRateFormatted,
                     color: .red
                 )
                 // Workout-Kalorien
                 StatBubble(
                     icon: "flame.fill",
-                    value: workout.caloriesFormatted,
+                    value: allWorkouts.caloriesFormatted,
                     color: .orange
                 )
                 // Workout-METS
                 StatBubble(
                     icon: "bolt.fill",
-                    value: workout.metsFormatted,
+                    value: allWorkouts.metsFormatted,
                     color: .yellow
                 )
             }
@@ -106,9 +106,9 @@ struct WorkoutCard: View {
                     .foregroundStyle(.primary)
 
                 ForEach(0 ..< 5) { index in
-                    Image(systemName: index < workout.intensity.rawValue ? "star.fill" : "star")
+                    Image(systemName: index < allWorkouts.intensity.rawValue ? "star.fill" : "star")
                         .font(.caption2)
-                        .foregroundStyle(index < workout.intensity.rawValue ? workout.intensity.color : .gray.opacity(0.3))
+                        .foregroundStyle(index < allWorkouts.intensity.rawValue ? allWorkouts.intensity.color : .gray.opacity(0.3))
                 }
 
                 Spacer()

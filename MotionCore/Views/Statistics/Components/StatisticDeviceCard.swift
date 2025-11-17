@@ -1,25 +1,22 @@
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+//  # MotionCore                                                                    /
 // ---------------------------------------------------------------------------------/
-// Filename . . : StatisticDeviceCard.swift                                        /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 11.11.2025                                                       /
-// Function . . : Statistik Card Ansicht mit diversen Werten                       /
+// Section  . . : Statistik                                                         /
+// Filename . . : StatisticDeviceCard.swift                                         /
+// Author . . . : Bartosz Stryjewski                                                /
+// Created on . : 11.11.2025                                                        /
+// Function . . : Statistik Card Ansicht mit diversen Werten                        /
 // ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
 struct StatisticDeviceCard: View {
-    let workouts: [WorkoutSession]
+    let allWorkouts: [WorkoutSession]
 
-    private var totalWorkouts: Int {
-        workouts.count
-    }
-
-    private func count(for device: WorkoutDevice) -> Int {
-        workouts.filter { $0.workoutDevice == device }.count
+    private var calcStatistics: StatisticCalcEngine {
+        StatisticCalcEngine(workouts: allWorkouts)
     }
 
     var body: some View {
@@ -32,8 +29,8 @@ struct StatisticDeviceCard: View {
                 ForEach([WorkoutDevice.crosstrainer, .ergometer], id: \.self) { device in
                     StatisticDeviceRow(
                         device: device,
-                        count: count(for: device),
-                        total: totalWorkouts
+                        count: calcStatistics.workoutCountDevice(for: device),
+                        total: calcStatistics.totalWorkouts
                     )
                 }
             }
@@ -43,5 +40,5 @@ struct StatisticDeviceCard: View {
 }
 
 #Preview {
-    StatisticDeviceCard(workouts: [])
+    StatisticDeviceCard(allWorkouts: [])
 }
