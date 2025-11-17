@@ -90,12 +90,16 @@ struct StatisticView: View {
                         yLabel: "kcal",
                         data: calcStatistics.trendCalories
                     )
+                    .padding(.horizontal)
+                    .padding(.top, 5)
 
                     StatisticTrendChart(
                         title: "Distanz-Trend",
                         yLabel: "km",
                         data: calcStatistics.trendDistance
                     )
+                    .padding(.horizontal)
+                    .padding(.top, 5)
                     // Hier kannst du später weitere Cards hinzufügen
                 }
                 .padding(.bottom, 100)

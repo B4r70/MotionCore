@@ -22,6 +22,7 @@ struct StatisticTrendChart: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.headline)
+                .padding(.horizontal, 4)
 
             Chart(data) { point in
                 LineMark(
