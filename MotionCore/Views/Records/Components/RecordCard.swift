@@ -73,7 +73,7 @@ struct RecordCard: View {
                 RecordDetailRow(
                     icon: "calendar",
                     label: "Datum",
-                    value: allWorkouts.date.formatted(date: .abbreviated, time: .omitted),
+                    value: allWorkouts.date.formatted(AppFormatters.dateGermanShort),
                     color: .purple
                 )
             }

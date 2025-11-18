@@ -15,11 +15,6 @@ import SwiftUI
 // Workout Card
 struct WorkoutCard: View {
     let allWorkouts: WorkoutSession
-    let deFormat = Date.FormatStyle.dateTime
-        .day(.twoDigits)
-        .month(.wide)
-        .year()
-        .locale(Locale(identifier: "de_DE"))
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -37,11 +32,13 @@ struct WorkoutCard: View {
                 }
                 // Anzeige Datum und Uhrzeit
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(allWorkouts.date.formatted(deFormat))
+                        // Datum
+                    Text(allWorkouts.date.formatted(AppFormatters.dateGermanLong))
                         .font(.headline)
                         .foregroundStyle(.primary)
 
-                    Text(allWorkouts.date, style: .time)
+                        // Uhrzeit
+                    Text(allWorkouts.date.formatted(AppFormatters.timeGermanLong))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

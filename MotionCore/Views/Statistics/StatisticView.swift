@@ -76,6 +76,7 @@ struct StatisticView: View {
                     StatisticIntensityCard(allWorkouts: allWorkouts)
                         .padding(.horizontal)
                         .padding(.top, 5)
+
                     // Trend Chart für die Herzfrequenz
                     StatisticTrendChart(
                         title: "Herzfrequenz-Trend",
@@ -84,6 +85,7 @@ struct StatisticView: View {
                     )
                     .padding(.horizontal)
                     .padding(.top, 5)
+
                     // Trend Chart Kalorien
                     StatisticTrendChart(
                         title: "Kalorien-Trend",
@@ -93,6 +95,7 @@ struct StatisticView: View {
                     .padding(.horizontal)
                     .padding(.top, 5)
 
+                    // Trend Chart Distanz
                     StatisticTrendChart(
                         title: "Distanz-Trend",
                         yLabel: "km",
@@ -100,6 +103,7 @@ struct StatisticView: View {
                     )
                     .padding(.horizontal)
                     .padding(.top, 5)
+                    
                     // Hier kannst du später weitere Cards hinzufügen
                 }
                 .padding(.bottom, 100)

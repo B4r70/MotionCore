@@ -69,8 +69,8 @@ struct RecordView: View {
 
 // MARK: - Preview
 
-#Preview {
-    NavigationStack {
-        RecordView()
-    }
+    // MARK: Statistic Preview
+#Preview("Statistiken") {
+    RecordView()
+        .modelContainer(PreviewData.sharedContainer)
 }

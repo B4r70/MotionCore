@@ -109,3 +109,9 @@ struct ListView: View {
         }
     }
 }
+
+    // MARK: Statistic Preview
+#Preview("Statistiken") {
+    ListView()
+        .modelContainer(PreviewData.sharedContainer)
+}

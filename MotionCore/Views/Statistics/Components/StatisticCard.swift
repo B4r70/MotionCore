@@ -65,7 +65,7 @@ struct StatisticCardDoubleGrid: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity, minHeight: 140, maxHeight: 140) // EINHEITLICHE HÖHE
+        .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120) // EINHEITLICHE HÖHE
         .glassCardStyle()
     }
 }
