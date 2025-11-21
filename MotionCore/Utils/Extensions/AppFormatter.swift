@@ -1,10 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Filename . . : AppFormatter.swift                                                /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 18.11.2025                                                        /
-// Function . . : Fest definierte Formate wie z. B. Datum, Uhrzeit, Ziffern         /
+// Abschnitt . . : Hilftools                                                        /
+// Datei . . . . : AppFormatter.swift                                               /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 18.11.2025                                                       /
+// Beschreibung  : Formatierung für Datum, Uhrzeit, Zahlen, etc.                    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

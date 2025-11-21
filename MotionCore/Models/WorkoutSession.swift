@@ -1,17 +1,18 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Daten-Modell                                                     /
+// Datei . . . . : WorkoutSession.swift                                             /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 22.10.2025                                                       /
+// Beschreibung  : Datenmodell SwiftData für die MotionCore-App                     /
 // ---------------------------------------------------------------------------------/
-// Filename . . : WorkoutSession.swift                                             /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Datenmodell zu MotionCore                                        /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
-// ---------------------------------------------------------------------------------/
-// Notes  . . . : Enums für dieses Model findet man im File WorkoutTypes.swift     /
-//                Die UI-Ausgabe dieser Enums im File WorkoutTypesUI.swift         /
-//                Die formatierten Werte aus dem Model sind in WorkoutSessionUI    /
-//                Die UI-Ausgabe dieser Enums im File WorkoutTypesUI.swift         /
+// Notes  . . . : Enums für dieses Model findet man im File WorkoutTypes.swift      /
+//                Die UI-Ausgabe dieser Enums im File WorkoutTypesUI.swift          /
+//                Die formatierten Werte aus dem Model sind in WorkoutSessionUI     /
+//                Die UI-Ausgabe dieser Enums im File WorkoutTypesUI.swift          /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation

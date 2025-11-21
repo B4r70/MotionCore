@@ -1,11 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Section  . . : Statistik                                                         /
-// Filename . . : StatisticsTrendChart.swift                                        /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 17.11.2025                                                        /
-// Function . . : Statistik Trend Chart                                             /
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticsTrendChart.swift                                       /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 16.11.2025                                                       /
+// Beschreibung  : Darstellung von Charts für diverse Werte                         /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

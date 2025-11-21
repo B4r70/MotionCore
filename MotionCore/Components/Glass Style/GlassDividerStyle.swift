@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : UI-Design                                                        /
+// Datei . . . . : GlassDivider.swift                                               /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 16.11.2025                                                       /
+// Beschreibung  : Zentrale Bereitstellung für Liquid-Glass-Effekt bei Trennlinien  /
 // ---------------------------------------------------------------------------------/
-// Filename . . : GlassDivider.swift                                               /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 16.11.2025                                                       /
-// Function . . : Trennlinie in Liquid Glass Optik                                 /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

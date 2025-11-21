@@ -1,11 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Section  . . : Statistik                                                         /
-// Filename . . : StatisticIntensityCard.swift                                      /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 16.11.2025                                                        /
-// Function . . : Belastungsintensität Card (je Stern die Anzahl der Workouts       /
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticIntensityCard.swift                                     /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 16.11.2025                                                       /
+// Beschreibung  : Darstellung von Cards mit Workouts je Belastungsintensität       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

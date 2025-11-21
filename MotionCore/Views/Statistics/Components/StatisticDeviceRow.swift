@@ -1,11 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Section  . . : Statistik                                                         /
-// Filename . . : StatisticDeviceRow.swift                                          /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 11.11.2025                                                        /
-// Function . . : Statistik Card Ansicht mit diversen Werten                        /
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticDeviceRow.swift                                         /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 11.11.2025                                                       /
+// Beschreibung  : Darstellung von Zeilen für Workouts je Gerätetyp                 /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

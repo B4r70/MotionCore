@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Workout-Liste                                                    /
+// Datei . . . . : WorkoutCard.swift                                                /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 22.10.2025                                                       /
+// Beschreibung  : Darstellung von Cards für Workouts in ListView                   /
 // ---------------------------------------------------------------------------------/
-// Filename . . : WorkoutCard.swift                                                /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Workout Card Ansicht mit diversen Werten                         /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation

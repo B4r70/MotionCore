@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticView.swift                                              /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 11.11.2025                                                       /
+// Beschreibung  : Hauptdisplay für den Bereich Statistik                           /
 // ---------------------------------------------------------------------------------/
-// Filename . . : StatisticView.swift                                              /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 11.11.2025                                                       /
-// Function . . : Statistik-Übersicht                                              /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftData
@@ -36,7 +37,8 @@ struct StatisticView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     LazyVGrid(columns: gridColumns) {
-                            // Eine einzelne Statistik-Card
+                            // 2er Grid mit jeweils einer Statistik-Card
+                            // Anzahl aller Workouts
                             StatisticCardDoubleGrid(
                                 icon: "figure.run",
                                 title: "Gesamt Workouts",
@@ -67,6 +69,7 @@ struct StatisticView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 5)
+
                     // Anzahl Trainings je Gerät
                     StatisticDeviceCard(allWorkouts: allWorkouts)
                         .padding(.horizontal)

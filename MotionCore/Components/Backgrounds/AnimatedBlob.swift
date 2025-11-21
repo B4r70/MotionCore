@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Hintergrundkonfiguration                                         /
+// Datei . . . . : AnimatedBlob.swift                                               /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 10.11.2025                                                       /
+// Beschreibung  : Animierter Hintergrund im Liquid-Glass-Effekt                    /
 // ---------------------------------------------------------------------------------/
-// Filename . . : AnimatedBlob.swift                                               /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 10.11.2025                                                       /
-// Function . . : Animierter Hintergrund im Liquid Effekt                          /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

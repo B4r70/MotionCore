@@ -1,14 +1,14 @@
-//---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
-// Section  . . : Mock Data                                                        /
-// Filename . . : WorkoutSessionPreview.swift                                      /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 17.11.2025                                                       /
-// Function . . : Beispieldaten für die Preview                                    /
-//---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Mock-Daten                                                       /
+// Datei . . . . : WorkoutSessionPreview.swift                                      /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 17.11.2025                                                       /
+// Beschreibung  : Beispieldaten für die Preview                                    /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
 // MARK: - Preview Data für Canvas
 import Foundation
@@ -21,10 +21,10 @@ extension WorkoutSession {
         return [
             WorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -14, to: now)!,
-                duration: 32,
-                distance: 6.12,
-                calories: 310,
-                difficulty: 12,
+                duration: 15,
+                distance: 3.12,
+                calories: 142,
+                difficulty: 8,
                 heartRate: 128,
                 bodyWeight: 96,
                 intensity: .medium,
@@ -33,7 +33,7 @@ extension WorkoutSession {
             ),
             WorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -12, to: now)!,
-                duration: 28,
+                duration: 30,
                 distance: 5.40,
                 calories: 280,
                 difficulty: 10,
@@ -68,11 +68,23 @@ extension WorkoutSession {
                 workoutDevice: .ergometer
             ),
             WorkoutSession(
+                date: Calendar.current.date(byAdding: .day, value: -8, to: now)!,
+                duration: 15,
+                distance: 3.22,
+                calories: 153,
+                difficulty: 8,
+                heartRate: 137,
+                bodyWeight: 96,
+                intensity: .hard,
+                trainingProgram: .random,
+                workoutDevice: .crosstrainer
+            ),
+            WorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -7, to: now)!,
                 duration: 40,
                 distance: 8.20,
                 calories: 410,
-                difficulty: 18,
+                difficulty: 8,
                 heartRate: 137,
                 bodyWeight: 96,
                 intensity: .hard,
@@ -136,7 +148,7 @@ extension WorkoutSession {
                 heartRate: 140,
                 bodyWeight: 96,
                 intensity: .hard,
-                trainingProgram: .cardio,
+                trainingProgram: .random,
                 workoutDevice: .ergometer
             )
         ]

@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Einstellungen                                                    /
+// Datei . . . . : AboutView.swift                                                  /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 02.11.2025                                                       /
+// Beschreibung  : Informationsdisplay für die App-Einstellungen                    /
 // ---------------------------------------------------------------------------------/
-// Filename . . : AboutView.swift                                                  /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : About page in application settings                               /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

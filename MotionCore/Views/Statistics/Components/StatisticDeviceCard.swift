@@ -1,11 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Section  . . : Statistik                                                         /
-// Filename . . : StatisticDeviceCard.swift                                         /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 11.11.2025                                                        /
-// Function . . : Statistik Card Ansicht mit diversen Werten                        /
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticDeviceCard.swift                                        /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 11.11.2025                                                       /
+// Beschreibung  : Darstellung von Cards für Gerätetypen im Bereich Statistik       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

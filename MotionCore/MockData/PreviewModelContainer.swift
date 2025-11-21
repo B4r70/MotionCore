@@ -1,14 +1,14 @@
-//---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
-// Section  . . : Mock Data                                                        /
-// Filename . . : PreviewModelContainer.swift                                      /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 17.11.2025                                                       /
-// Function . . : Modelcontainer für die Aufbereitung der Preview                  /
-//---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Mock-Daten                                                       /
+// Datei . . . . : PreviewModelContainer.swift                                      /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 17.11.2025                                                       /
+// Beschreibung  : Modelcontainer für die Aufbereitung der Preview                  /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
 import SwiftData
 import Foundation

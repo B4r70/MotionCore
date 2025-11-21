@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : UI-Elemente                                                      /
+// Datei . . . . : StatBubble.swift                                                 /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 22.10.2025                                                       /
+// Beschreibung  : Darstellung von Icons in Form einer Bubble                       /
 // ---------------------------------------------------------------------------------/
-// Filename . . : StatBubble.swift                                                 /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Workout Card Ansicht mit diversen Werten                         /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

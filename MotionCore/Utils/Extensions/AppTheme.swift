@@ -1,10 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Filename . . : AppTheme.swift                                                   /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 22.10.2025                                                        /
-// Function . . : Formatierte Werte für die Ausgabe aus @Model WorkoutSession       /
+// Abschnitt . . : Hilftools                                                        /
+// Datei . . . . : AppTheme.swift                                                   /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 18.11.2025                                                       /
+// Beschreibung  : Darstellungsschema für die App                                   /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

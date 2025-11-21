@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Daten-Modell                                                     /
+// Datei . . . . : WorkoutTypes.swift                                               /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 22.10.2025                                                       /
+// Beschreibung  : Wertebereiche für das Daten-Modell "WorkoutSession"              /
 // ---------------------------------------------------------------------------------/
-// Filename . . : WorkoutTypes.swift                                               /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Aufzählungstypen und Wertebereich aus WorkoutSession             /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation

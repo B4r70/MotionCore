@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Einstellungen                                                    /
+// Datei . . . . : WorkoutSettingsView.swift                                        /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 15.11.2025                                                       /
+// Beschreibung  : Konfigurationsdisplay für die Workouts                           /
 // ---------------------------------------------------------------------------------/
-// Filename . . : WorkoutSettingsView.swift                                        /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 15.11.2025                                                       /
-// Function . . : Workout Settings View                                            /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

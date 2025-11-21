@@ -1,14 +1,14 @@
-//---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
-// Section  . . : Records                                                          /
-// Filename . . : RecordCalcEngine.swift                                           /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 17.11.2025                                                       /
-// Function . . : Alle Berechnungen für den Rekordbereich                          /
-//---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Rekorde                                                          /
+// Datei . . . . : RecordCalcEngine.swift                                           /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 17.11.2025                                                       /
+// Beschreibung  : Zentrale Berechnungen für die Rekordanzeige                      /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
 import Foundation
 import SwiftData

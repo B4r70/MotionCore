@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : UI-Elemente                                                      /
+// Datei . . . . : StarRatingView.swift                                             /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 22.10.2025                                                       /
+// Beschreibung  : Intensitätsdarstellung in Sternen                                /
 // ---------------------------------------------------------------------------------/
-// Filename . . : StarRatingView.swift                                             /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Workout Edit View                                                /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

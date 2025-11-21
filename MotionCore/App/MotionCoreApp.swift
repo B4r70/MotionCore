@@ -1,12 +1,13 @@
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+//  # MotionCore                                                                    /
 // ---------------------------------------------------------------------------------/
-// Filename . . : MotionCoreApp.swift                                              /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Main Application File                                            /
+// Abschnitt . . : Hauptprogramm                                                    /
+// Datei . . . . : MotionCoreApp.swift                                              /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 22.10.2025                                                       /
+// Beschreibung  : Einstiegspunkt und Startkonfiguration für den Ablauf der App     /
 // ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftData

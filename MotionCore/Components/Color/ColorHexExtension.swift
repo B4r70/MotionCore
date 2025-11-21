@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Hintergrundkonfiguration                                         /
+// Datei . . . . : ColorHexExtension.swift                                          /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 16.11.2025                                                       /
+// Beschreibung  : Bereitstellung für Farbgebung in Hex-/Alphaformat                /
 // ---------------------------------------------------------------------------------/
-// Filename . . : ColorHexExtension.swift                                          /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 16.11.2025                                                       /
-// Function . . : Alpha und Hex Support bei Farbgebung                             /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

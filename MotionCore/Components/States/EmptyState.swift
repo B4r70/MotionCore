@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Basis-Darstellungen                                              /
+// Datei . . . . : EmptyState.swift                                                 /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 10.11.2025                                                       /
+// Beschreibung  : Display ohne Workout                                             /
 // ---------------------------------------------------------------------------------/
-// Filename . . : EmptyState.swift                                                 /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 10.11.2025                                                       /
-// Function . . : Anzeige ohne Workouts                                            /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Hilftools                                                        /
+// Datei . . . . : TypesUI.swift                                                    /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 23.10.2025                                                       /
+// Beschreibung  : Wertebereiche für Daten aus WorkoutSession                       /
 // ---------------------------------------------------------------------------------/
-// Filename . . : WorkoutTypesUI.swift                                             /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 22.10.2025                                                       /
-// Function . . : Zusätzliche Wertebereiche für Daten aus WorkoutSession           /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

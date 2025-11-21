@@ -1,11 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Section  . . : Utility                                                           /
-// Filename . . : SessionUI.swift                                                   /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 22.10.2025                                                        /
-// Function . . : Formatierte Werte für die Ausgabe aus @Model WorkoutSession       /
+// Abschnitt . . : Hilftools                                                        /
+// Datei . . . . : SessionUI.swift                                                  /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 23.10.2025                                                       /
+// Beschreibung  : Formatierte Werte für die Ausgabe in der UI                      /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

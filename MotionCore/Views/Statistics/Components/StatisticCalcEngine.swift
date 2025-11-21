@@ -1,14 +1,14 @@
-//---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
-//---------------------------------------------------------------------------------/
-// Section  . . : Statistics                                                       /
-// Filename . . : StatisticCalcEngine.swift                                        /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 17.11.2025                                                       /
-// Function . . : All statistic calculations for the statistics section            /
-//---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
-//---------------------------------------------------------------------------------/
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticCalcEngine.swift                                        /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 17.11.2025                                                       /
+// Beschreibung  : Zentrale Berechnungen für die Statistikanzeige                   /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
 import Foundation
 import SwiftData

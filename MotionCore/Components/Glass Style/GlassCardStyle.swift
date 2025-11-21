@@ -1,10 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Filename . . : GlassCardStyle.swift                                              /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 16.11.2025                                                        /
-// Function . . : Farbgebung von Cards innerhalb der App im LiquidGlass Style       /
+// Abschnitt . . : UI-Design                                                        /
+// Datei . . . . : GlassCardStyle.swift                                             /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 16.11.2025                                                       /
+// Beschreibung  : Zentrale Bereitstellung für Liquid-Glass-Effekt bei Cards        /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Basisdarstellung                                                 /
+// Datei . . . . : BaseView.swift                                                   /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 02.11.2025                                                       /
+// Beschreibung  : Hauptdisplay für die App                                         /
 // ---------------------------------------------------------------------------------/
-// Filename . . : BaseView.swift                                                   /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 02.11.2025                                                       /
-// Function . . : Base View with Tab Navigation                                    /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftData

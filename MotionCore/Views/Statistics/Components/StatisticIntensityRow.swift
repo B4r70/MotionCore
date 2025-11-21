@@ -1,11 +1,11 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                    /
-// ---------------------------------------------------------------------------------/
-// Section  . . : Statistik                                                         /
-// Filename . . : StatisticIntensityRow.swift                                       /
-// Author . . . : Bartosz Stryjewski                                                /
-// Created on . : 16.11.2025                                                        /
-// Function . . : Zeilen je Belastungsintensität                                    /
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticIntensityRow.swift                                      /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 16.11.2025                                                       /
+// Beschreibung  : Darstellung von Zeilen mit Workouts je Belastungsintensität      /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -1,12 +1,13 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-//  # MotionCore                                                                   /
+// Abschnitt . . : Rekorde                                                          /
+// Datei . . . . : RecordCard.swift                                                 /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 17.11.2025                                                       /
+// Beschreibung  : Darstellung von Cards für den Bereich Rekorde                    /
 // ---------------------------------------------------------------------------------/
-// Filename . . : RecordCard.swift                                                 /
-// Author . . . : Bartosz Stryjewski                                               /
-// Created on . : 11.11.2025                                                       /
-// Function . . : Record Card Ansicht mit diversen Werten                          /
-// ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                             /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
