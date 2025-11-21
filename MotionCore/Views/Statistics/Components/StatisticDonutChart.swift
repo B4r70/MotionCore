@@ -1,0 +1,64 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Statistik                                                        /
+// Datei . . . . : StatisticDonutChart.swift                                        /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 16.11.2025                                                       /
+// Beschreibung  : Darstellung von Charts für diverse Werte                         /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
+//
+import SwiftUI
+import Charts
+
+struct StatisticDonutChart: View {
+    let title: String
+    let data: [DonutChartData]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(title)
+                .font(.headline)
+                .padding(.horizontal, 4)
+
+            HStack {
+                // Chart
+                Chart(data) { item in
+                    SectorMark(
+                        angle: .value("Anzahl", item.value),
+                        innerRadius: .ratio(0.6), // Macht es zum Donut
+                        angularInset: 1.5 // Kleiner Abstand zwischen Sektoren
+                    )
+                    .cornerRadius(5)
+                    .foregroundStyle(by: .value("Kategorie", item.label))
+                }
+                .frame(height: 200)
+
+                // Dynamische Legende (Top 4)
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(data.prefix(4)) { item in
+                        HStack {
+                            Circle()
+                                .fill(Color.gray.opacity(0.5)) // Simplifizierter Marker
+                                .frame(width: 8, height: 8)
+                            Text(item.label)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                            Spacer()
+                            Text("\(item.value)")
+                                .font(.caption.bold())
+                        }
+                    }
+                }
+                .frame(width: 120)
+            }
+            .padding()
+            .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+        }
+        .padding(.vertical)
+    }
+}

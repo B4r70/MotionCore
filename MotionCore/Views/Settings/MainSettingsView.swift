@@ -11,12 +11,22 @@
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
-internal import UniformTypeIdentifiers
+import SwiftData
+import UniformTypeIdentifiers
+import Foundation
 
 struct MainSettingsView: View {
     @Environment(\.modelContext) private var modelContext
+
+    // Zugriff auf alle Workouts für den Export
+    @Query(sort: \WorkoutSession.date, order: .reverse)
+    private var allWorkouts: [WorkoutSession]
+
+    // Import/Export Funktionen
     @State private var exportURL: URL?
     @State private var showingImportPicker = false
+
+
 
     var body: some View {
         List {
@@ -40,29 +50,33 @@ struct MainSettingsView: View {
             // MARK: - Daten
 
             Section("Daten") {
-                // Export Button
-                if let url = exportURL {
-                    ShareLink(item: url) {
-                        Label("Workouts exportieren", systemImage: "square.and.arrow.up")
-                    }
-                } else {
-                    Button {
-                        exportURL = makeExportFile()
-                    } label: {
-                        Label("Workouts exportieren", systemImage: "square.and.arrow.up")
+                    // Export Button
+                    // Wir nutzen hier eine Group, um dem Compiler bei der Typ-Erkennung zu helfen
+                Group {
+                    if let url = exportURL {
+                        ShareLink(item: url) {
+                            Label("Workouts exportieren", systemImage: "square.and.arrow.up")
+                        }
+                    } else {
+                        Button {
+                            exportURL = makeExportFile()
+                        } label: {
+                            Label("Workouts exportieren", systemImage: "square.and.arrow.up")
+                        }
+                        .disabled(allWorkouts.isEmpty)
                     }
                 }
 
-                // Import Button
+                    // Import Button
                 Button {
                     showingImportPicker = true
                 } label: {
                     Label("Workouts importieren", systemImage: "square.and.arrow.down")
                 }
 
-                // Alle Daten löschen
+                    // Alle Daten löschen
                 Button(role: .destructive) {
-                    // TODO: Confirmation Dialog + Delete all
+                        // TODO: Confirmation Dialog + Delete all
                 } label: {
                     Label("Alle Daten löschen", systemImage: "trash")
                 }
@@ -100,7 +114,7 @@ struct MainSettingsView: View {
         }
         .fileImporter(
             isPresented: $showingImportPicker,
-            allowedContentTypes: [.json],
+            allowedContentTypes: [UTType.json],
             allowsMultipleSelection: false
         ) { _ in
             // TODO: Import-Logik
@@ -108,11 +122,28 @@ struct MainSettingsView: View {
     }
 
     // MARK: - Export Function
-
     private func makeExportFile() -> URL? {
-        // TODO: Diese Funktion aus ListView hierher verschieben
-        // oder über ein SharedViewModel teilen
-        return nil
+        guard !allWorkouts.isEmpty else { return nil }
+
+        let pkg = ExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: allWorkouts.map { $0.exportItem }
+        )
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+
+        do {
+            let data = try encoder.encode(pkg)
+            let filename = "MotionCore-Export-\(Int(Date().timeIntervalSince1970)).json" // Geändert: "MotionCores" → "MotionCore"
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+            try data.write(to: url, options: .atomic)
+            return url
+        } catch {
+            print("Export-Fehler:", error)
+            return nil
+        }
     }
 }
 

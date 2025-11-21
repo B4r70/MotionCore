@@ -31,7 +31,6 @@ struct ListView: View {
         return allWorkouts.filter { $0.workoutDevice == selectedFilter }
     }
 
-
     // Ansicht "Workouts"
     var body: some View {
         ZStack {
@@ -59,60 +58,15 @@ struct ListView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                // Glassmorphic Export Button
-                if let url = exportURL {
-                    ShareLink(item: url) {
-                        ToolbarButton(icon: "square.and.arrow.up") // Neu: Custom Button
-                    }
-                    .disabled(allWorkouts.isEmpty)
-                } else {
-                    Button {
-                        exportURL = makeExportFile()
-                    } label: {
-                        ToolbarButton(icon: "square.and.arrow.up") // Neu: Custom Button
-                    }
-                    .disabled(allWorkouts.isEmpty)
-                }
-            }
-        }
         .overlay {
             if filteredWorkouts.isEmpty { // Geändert: filteredWorkouts statt allWorkouts
                 EmptyState()
             }
         }
     }
-
-    // MARK: - JSON-Export
-
-    private func makeExportFile() -> URL? {
-        guard !allWorkouts.isEmpty else { return nil }
-
-        let pkg = ExportPackage(
-            version: 1,
-            exportedAt: ISO8601DateFormatter().string(from: .now),
-            items: allWorkouts.map { $0.exportItem }
-        )
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-
-        do {
-            let data = try encoder.encode(pkg)
-            let filename = "MotionCore-Export-\(Int(Date().timeIntervalSince1970)).json" // Geändert: "MotionCores" → "MotionCore"
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-            try data.write(to: url, options: .atomic)
-            return url
-        } catch {
-            print("Export-Fehler:", error)
-            return nil
-        }
-    }
 }
-
     // MARK: Statistic Preview
-#Preview("Statistiken") {
+#Preview("List View") {
     ListView()
         .modelContainer(PreviewData.sharedContainer)
 }

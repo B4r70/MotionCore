@@ -20,7 +20,17 @@ struct StatisticView: View {
     private var calcStatistics: StatisticCalcEngine {
         StatisticCalcEngine(workouts: allWorkouts)
     }
-    
+
+    // Aufbereitung der Daten für Donut-Chart
+    private var programData: [DonutChartData] {
+        calcStatistics.programDistribution.map { summary in
+            DonutChartData(
+                label: summary.program.rawValue.capitalized,
+                value: summary.count
+            )
+        }
+    }
+
     @ObservedObject private var settings = AppSettings.shared
 
     // Anzahl der Cards je Zeile im Grid
@@ -106,8 +116,13 @@ struct StatisticView: View {
                     )
                     .padding(.horizontal)
                     .padding(.top, 5)
-                    
-                    // Hier kannst du später weitere Cards hinzufügen
+
+                    // Donut für Anzahl Workouts je Programm
+                    StatisticDonutChart(
+                        title: "Anzahl Workouts je Programm",
+                        data: programData
+                    )
+                        // Hier kannst du später weitere Cards hinzufügen
                 }
                 .padding(.bottom, 100)
             }
