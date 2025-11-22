@@ -38,7 +38,7 @@ struct RecordCard: View {
                 }
             }
 
-            Divider()
+            .glassDivider(paddingTop: 15, paddingBottom: 2, paddingHorizontal: 0)
 
             // Workout Details
             VStack(alignment: .leading, spacing: 12) {
@@ -79,6 +79,55 @@ struct RecordCard: View {
                 )
             }
         }
-        .glassCardStyle()
+        .glassCard()
     }
 }
+
+struct RecordGridCard: View {
+    let metricTitle: String
+    let recordValue: String
+    let bestWorkout: WorkoutSession
+    let metricIcon: String
+    let metricColor: Color
+
+    var body: some View {
+            ZStack(alignment: .topLeading) {
+                VStack(spacing: 5) {
+                    Image(systemName: metricIcon)
+                        .font(.system(size: 30)) // Etwas größer für mehr Fokus
+                        .foregroundStyle(metricColor)
+                        .padding(.top, 10)
+
+                    // Wert (Record Value) in groß
+                    Text(recordValue)
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .minimumScaleFactor(0.7)
+                        .lineLimit(1)
+
+                    // Titel der Metrik
+                    Text(metricTitle)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+
+                    // Datum des Rekords (kompakt)
+                    Text(bestWorkout.date.formatted(AppFormatters.dateGermanShort))
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+                // Stellt sicher, dass dieser VStack das Zentrum der Kachel einnimmt
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                // 2. ECKEN-ELEMENT (DeviceBadge)
+                // Wird durch alignment: .topLeading in die obere linke Ecke platziert
+                DeviceBadge(
+                    device: bestWorkout.workoutDevice,
+                    compact: true
+                )
+                .padding([.top, .leading], 1) // Abstand vom Rand der Card
+            }
+            // Einheitliche Größe und Card-Style
+            .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120)
+            .glassCard()
+        }
+    }

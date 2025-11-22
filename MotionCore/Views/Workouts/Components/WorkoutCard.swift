@@ -48,10 +48,9 @@ struct WorkoutCard: View {
                 // Training Program Icon
                 Image(systemName: allWorkouts.trainingProgram.symbol)
                     .font(.title3)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(allWorkouts.trainingProgram.tint)
             }
-            Divider()
-                .background(.white.opacity(0.2))
+            .glassDivider(paddingTop: 5, paddingBottom: 2)
 
             // Stats Grid mit Icons
             LazyVGrid(columns: [
@@ -96,6 +95,7 @@ struct WorkoutCard: View {
                     color: .yellow
                 )
             }
+            .glassDivider(paddingTop: 15, paddingBottom: 2)
 
             // Intensity Stars
             HStack(spacing: 4) {
@@ -112,6 +112,6 @@ struct WorkoutCard: View {
                 Spacer()
             }
         }
-        .glassCardStyle()
+        .glassCard()
     }
 }

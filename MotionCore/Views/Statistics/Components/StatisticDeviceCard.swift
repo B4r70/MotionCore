@@ -33,12 +33,14 @@ struct StatisticDeviceCard: View {
                         total: calcStatistics.totalWorkouts
                     )
                 }
+                .padding(.vertical, 5)
             }
         }
-        .glassCardStyle()
+        .glassCard()
     }
 }
 
 #Preview {
-    StatisticDeviceCard(allWorkouts: [])
+    StatisticDeviceCard(
+        allWorkouts: [])
 }

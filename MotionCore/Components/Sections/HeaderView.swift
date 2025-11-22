@@ -13,12 +13,25 @@
 import SwiftUI
 
 struct HeaderView: View {
+    let title: String
+    let subtitle: String
+
     var body: some View {
-        Text("MotionCore")
-            .font(.title)
-            .fontWeight(.semibold)
-            .foregroundStyle(.primary)
-            .fixedSize() // ← Füge das hinzu
-            .accessibilityAddTraits(.isHeader)
+        VStack(spacing: 5) {
+            Text(title)
+                .font(.title)
+                .fontWeight(.regular)
+                .foregroundStyle(.primary)
+                .fixedSize()
+                .accessibilityAddTraits(.isHeader)
+            Text(subtitle)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize()
+        }
     }
+}
+    // MARK: - Preview
+#Preview("Header") {
+    HeaderView(title: "MotionCore", subtitle: "Workouts")
 }

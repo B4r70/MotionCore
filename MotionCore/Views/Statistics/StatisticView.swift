@@ -21,16 +21,6 @@ struct StatisticView: View {
         StatisticCalcEngine(workouts: allWorkouts)
     }
 
-    // Aufbereitung der Daten für Donut-Chart
-    private var programData: [DonutChartData] {
-        calcStatistics.programDistribution.map { summary in
-            DonutChartData(
-                label: summary.program.rawValue.capitalized,
-                value: summary.count
-            )
-        }
-    }
-
     @ObservedObject private var settings = AppSettings.shared
 
     // Anzahl der Cards je Zeile im Grid
@@ -46,49 +36,42 @@ struct StatisticView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    LazyVGrid(columns: gridColumns) {
+                    LazyVGrid(columns: gridColumns, spacing: 20) {
                             // 2er Grid mit jeweils einer Statistik-Card
                             // Anzahl aller Workouts
-                            StatisticCardDoubleGrid(
+                            StatisticGridCard(
                                 icon: "figure.run",
                                 title: "Gesamt Workouts",
                                 value: "\(calcStatistics.totalWorkouts)",
                                 color: .blue
                             )
                             // Verbrauchte Gesamtkalorien
-                            StatisticCardDoubleGrid(
+                            StatisticGridCard(
                                 icon: "flame.fill",
                                 title: "Gesamt Kalorien",
                                 value: "\(calcStatistics.totalCalories)",
                                 color: .orange
                         )
                             // Trainierte Distanz
-                        StatisticCardDoubleGrid(
+                        StatisticGridCard(
                                 icon: "arrow.left.and.right",
                                 title: "Gesamt Strecke",
                                 value: "\(calcStatistics.totalDistance)",
                                 color: .green
                             )
                             // Durchschnittliche Herzfrequenz
-                        StatisticCardDoubleGrid(
+                        StatisticGridCard(
                                 icon: "heart.fill",
                                 title: "⌀ Herzfrequenz",
                                 value: "\(calcStatistics.averageHeartRate)",
                                 color: .red
                             )
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 5)
-
                     // Anzahl Trainings je Gerät
                     StatisticDeviceCard(allWorkouts: allWorkouts)
-                        .padding(.horizontal)
-                        .padding(.top, 5)
 
                     // Workouts je Belastungsintensität
                     StatisticIntensityCard(allWorkouts: allWorkouts)
-                        .padding(.horizontal)
-                        .padding(.top, 5)
 
                     // Trend Chart für die Herzfrequenz
                     StatisticTrendChart(
@@ -96,8 +79,6 @@ struct StatisticView: View {
                         yLabel: "Puls",
                         data: calcStatistics.trendHeartRate
                     )
-                    .padding(.horizontal)
-                    .padding(.top, 5)
 
                     // Trend Chart Kalorien
                     StatisticTrendChart(
@@ -105,25 +86,28 @@ struct StatisticView: View {
                         yLabel: "kcal",
                         data: calcStatistics.trendCalories
                     )
-                    .padding(.horizontal)
-                    .padding(.top, 5)
 
-                    // Trend Chart Distanz
+                    // Trend Chart Distanz auf dem Crosstrainer
                     StatisticTrendChart(
-                        title: "Distanz-Trend",
+                        title: "Distanz auf dem Crosstrainer",
                         yLabel: "km",
-                        data: calcStatistics.trendDistance
+                        data: calcStatistics.trendDistanceDevice(for: .crosstrainer)
                     )
-                    .padding(.horizontal)
-                    .padding(.top, 5)
+                    // Trend Chart Distanz auf dem Ergometer
+                    StatisticTrendChart(
+                        title: "Distanz auf dem Ergometer",
+                        yLabel: "km",
+                        data: calcStatistics.trendDistanceDevice(for: .ergometer)
+                    )
 
                     // Donut für Anzahl Workouts je Programm
                     StatisticDonutChart(
-                        title: "Anzahl Workouts je Programm",
-                        data: programData
+                        title: "Workouts je Trainingsprogramm",
+                        data: calcStatistics.programData
                     )
                         // Hier kannst du später weitere Cards hinzufügen
                 }
+                .padding(.horizontal, 10)
                 .padding(.bottom, 100)
             }
             .scrollIndicators(.hidden)

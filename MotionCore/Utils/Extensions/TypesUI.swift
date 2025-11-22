@@ -66,6 +66,18 @@ extension TrainingProgram {
         case .fitTest: "figure.run.treadmill"
         }
     }
+
+    // Symbolfarbe für das Trainingsprogramm
+    var tint: Color {
+        switch self {
+            case .manual: .blue
+            case .fatBurn: .red
+            case .cardio: .pink
+            case .hill: .mint
+            case .random: .indigo
+            case .fitTest: .yellow
+        }
+    }
 }
 
 // MARK: TrainingProgramm UI-Erweiterungen für die Anzeige im Display

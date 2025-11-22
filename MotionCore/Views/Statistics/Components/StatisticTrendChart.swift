@@ -20,10 +20,20 @@ struct StatisticTrendChart: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
-                .padding(.horizontal, 4)
 
+                // Titelzeile und Ausgabeeinheit
+            HStack {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Text(yLabel)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .padding()
+
+                // Chart Bereich
             Chart(data) { point in
                 LineMark(
                     x: .value("Datum", point.trendDate),
@@ -41,9 +51,7 @@ struct StatisticTrendChart: View {
             }
             .frame(minHeight: 250)
             .padding()
-            .background(.thinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
-        .padding(.vertical)
+        .glassCard()
     }
 }

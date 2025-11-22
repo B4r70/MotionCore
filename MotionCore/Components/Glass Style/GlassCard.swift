@@ -15,28 +15,40 @@ import SwiftUI
 private struct GlassCardModifier: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
 
+    private let cardPadding: CGFloat = 16
+    private let cornerRadius: CGFloat = 22
+    private let lineWidth: CGFloat = 0.8
+
+    private var cardShape: some Shape {
+            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        }
+
     func body(content: Content) -> some View {
         content
-            .padding(16)
+            .padding(cardPadding)
+
+            // 1. Explizite Füllung/Tönung (für den "Liquid"-Effekt)
             .background(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                cardShape
                     .fill(
                         Color.white.opacity(
                             colorScheme == .light ? 0.20 : 0.08
                         )
                     )
             )
+            // 2. Material (Blur-Effekt)
             .background(
                 colorScheme == .light ? .thinMaterial : .ultraThinMaterial,
-                in: RoundedRectangle(cornerRadius: 22, style: .continuous)
+                in: cardShape
             )
+            // 3. Overlay (Highlight-Stroke)
             .overlay(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                cardShape
                     .stroke(
                         Color.white.opacity(
                             colorScheme == .light ? 0.45 : 0.30
                         ),
-                        lineWidth: 0.8
+                        lineWidth: lineWidth
                     )
             )
             .shadow(
@@ -51,7 +63,7 @@ private struct GlassCardModifier: ViewModifier {
 }
 
 extension View {
-    func glassCardStyle() -> some View {
+    func glassCard() -> some View {
         self.modifier(GlassCardModifier())
     }
 }

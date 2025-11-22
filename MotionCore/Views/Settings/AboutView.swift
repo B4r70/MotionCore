@@ -17,11 +17,12 @@ import SwiftUI
 struct AboutView: View {
     var body: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: 10) {
                 Image(.appIcon)
-                    .font(.system(size: 80))
+                    .font(.system(size: 10))
+                    .scaleEffect(0.5)
                     .foregroundStyle(.orange)
-                    .padding(.top, 40)
+                    .padding(.top, 5)
 
                 Text("MotionCore")
                     .font(.largeTitle.bold())
@@ -32,8 +33,7 @@ struct AboutView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
 
-                Divider()
-                    .padding(.vertical)
+                    Divider()
 
                 VStack(alignment: .leading, spacing: 16) {
                     InfoRow(title: "Version", value: "1.0.0")
@@ -45,5 +45,10 @@ struct AboutView: View {
         }
         .navigationTitle("Über MotionCore")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+#Preview {
+    NavigationStack {
+        AboutView()
     }
 }

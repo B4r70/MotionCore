@@ -18,30 +18,35 @@ struct StatisticDonutChart: View {
     let data: [DonutChartData]
 
     var body: some View {
+            // Äußerer VStack umschließt nun ALLES (Titel & Inhalt)
         VStack(alignment: .leading, spacing: 16) {
+
+                // 1. Titel (ist jetzt Teil des Hintergrunds)
             Text(title)
                 .font(.headline)
                 .padding(.horizontal, 4)
+                .padding(.top, 4)
 
+                // 2. Inhalt (Chart und Legende)
             HStack {
-                // Chart
+                    // Chart
                 Chart(data) { item in
                     SectorMark(
                         angle: .value("Anzahl", item.value),
-                        innerRadius: .ratio(0.6), // Macht es zum Donut
-                        angularInset: 1.5 // Kleiner Abstand zwischen Sektoren
+                        innerRadius: .ratio(0.6),
+                        angularInset: 1.5
                     )
                     .cornerRadius(5)
                     .foregroundStyle(by: .value("Kategorie", item.label))
                 }
                 .frame(height: 200)
 
-                // Dynamische Legende (Top 4)
+                    // Dynamische Legende (Top 4)
                 VStack(alignment: .leading, spacing: 8) {
                     ForEach(data.prefix(4)) { item in
                         HStack {
                             Circle()
-                                .fill(Color.gray.opacity(0.5)) // Simplifizierter Marker
+                                .fill(Color.gray.opacity(0.5))
                                 .frame(width: 8, height: 8)
                             Text(item.label)
                                 .font(.caption)
@@ -55,10 +60,8 @@ struct StatisticDonutChart: View {
                 }
                 .frame(width: 120)
             }
-            .padding()
-            .background(.thinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .padding([.horizontal, .bottom]) // Fügt horizontalen und unteren Abstand zum Inhalt hinzu
         }
-        .padding(.vertical)
+        .glassCard()
     }
 }

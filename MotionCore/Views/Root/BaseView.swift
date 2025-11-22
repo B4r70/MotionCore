@@ -67,7 +67,10 @@ struct BaseView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
-                            HeaderView()
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Workouts"
+                            )
                         }
                     }
             }
@@ -83,7 +86,10 @@ struct BaseView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
-                            HeaderView()
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Statistik"
+                            )
                         }
                     }
             }
@@ -107,7 +113,10 @@ struct BaseView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
-                            HeaderView()
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Rekorde"
+                            )
                         }
                     }
             }
@@ -123,7 +132,10 @@ struct BaseView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
-                            HeaderView()
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Einstellungen"
+                            )
                         }
                     }
             }
@@ -162,4 +174,9 @@ struct BaseView: View {
             }
         }
     }
+}
+    // MARK: Statistic Preview
+#Preview("Base View") {
+    BaseView()
+        .modelContainer(PreviewData.sharedContainer)
 }

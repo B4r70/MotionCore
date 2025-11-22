@@ -50,5 +50,14 @@ struct StatisticDeviceRow: View {
 }
 
 #Preview {
-    StatisticDeviceRow(device: .crosstrainer, count: 5, total: 50)
+    StatisticDeviceRow(
+        device: .crosstrainer,
+        count: 12,
+        total: 20
+    );
+    StatisticDeviceRow(
+        device: .ergometer,
+        count: 5,
+        total: 20
+    );
 }

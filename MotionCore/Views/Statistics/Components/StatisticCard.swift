@@ -34,12 +34,12 @@ struct StatisticCard: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .glassCardStyle()
+        .glassCard()
     }
 }
 
 // Alternativ im Grid Format 2 Cards pro Zeile
-struct StatisticCardDoubleGrid: View {
+struct StatisticGridCard: View {
     let icon: String
     let title: String
     let value: String
@@ -66,6 +66,6 @@ struct StatisticCardDoubleGrid: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120) // EINHEITLICHE HÖHE
-        .glassCardStyle()
+        .glassCard()
     }
 }

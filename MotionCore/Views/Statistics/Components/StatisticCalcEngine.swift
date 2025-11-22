@@ -148,13 +148,38 @@ struct StatisticCalcEngine {
             }
     }
 
-    // MARK: Donut-Chart
+    // MARK: Trends gerätespezifisch
 
-    // Berechnung für die verwendeten Programme je Workout
+    func trendDistanceDevice(for device: WorkoutDevice) -> [TrendPoint] {
+        allWorkouts
+            .filter { $0.workoutDevice == device }
+            .filter { $0.distance > 0 }
+            .sorted { $0.date < $1.date }
+            .map { workout in
+                TrendPoint(
+                    trendDate: workout.date,
+                    trendValue: workout.distance
+                )
+            }
+    }
+
+        // MARK: Donut-Chart
+
+        // Berechnung für die verwendeten Programme je Workout
     var programDistribution: [ProgramSummary] {
         let grouped = Dictionary(grouping: allWorkouts, by: { $0.trainingProgram })
         return grouped.map { key, value in
             ProgramSummary(program: key, count: value.count)
         }.sorted { $0.count > $1.count } // Meistgenutzte zuerst
+    }
+    
+        // Aufbereitung der Daten für Donut-Chart
+    var programData: [DonutChartData] {
+        programDistribution.map { summary in
+            DonutChartData(
+                label: summary.program.description,
+                value: summary.count
+            )
+        }
     }
 }

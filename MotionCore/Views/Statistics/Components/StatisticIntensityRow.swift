@@ -56,9 +56,37 @@ struct StatisticIntensityRow: View {
 #Preview {
     StatisticIntensityRow(
         summary: IntensitySummary(
+            intensity: .veryEasy,
+            count: 10,
+            total: 20
+        )
+    );
+    StatisticIntensityRow(
+        summary: IntensitySummary(
             intensity: .easy,
-            count: 5,
-            total: 8
+            count: 2,
+            total: 20
+        )
+    );
+    StatisticIntensityRow(
+        summary: IntensitySummary(
+            intensity: .medium,
+            count: 2,
+            total: 20
+        )
+    );
+    StatisticIntensityRow(
+        summary: IntensitySummary(
+            intensity: .hard,
+            count: 4,
+            total: 20
+        )
+    );
+    StatisticIntensityRow(
+        summary: IntensitySummary(
+            intensity: .veryHard,
+            count: 2,
+            total: 20
         )
     )
 }

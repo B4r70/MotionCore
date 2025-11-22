@@ -23,55 +23,104 @@ struct RecordView: View {
         RecordCalcEngine(workouts: allWorkouts)
     }
 
+        // Anzahl der Cards je Zeile im Grid
+    private let gridColumns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+
     var body: some View {
         ZStack {
-            // Hintergrund
+                // Hintergrund
             AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
 
             ScrollView {
                 VStack(spacing: 20) {
-                    // Beste Leistung nach Distanz auf dem Crosstrainer
-                    if let best = calcRecords.bestCrosstrainerWorkout {
+                        // Beste Leistung nach Distanz auf dem Crosstrainer
+                    if let bestCrosstrainer = calcRecords.bestCrosstrainerWorkout {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Crosstrainer",
-                            icon: best.workoutDevice.symbol,
-                            color: best.workoutDevice.tint,
-                            allWorkouts: best
+                            icon: bestCrosstrainer.workoutDevice.symbol,
+                            color: bestCrosstrainer.workoutDevice.tint,
+                            allWorkouts: bestCrosstrainer
                         )
                         .padding(.horizontal)
-                        .padding(.top, 20)
+                        .padding(.top, 10)
                     }
-                    // Beste Leistung nach Distanz auf dem Ergometer
-                    if let best = calcRecords.bestErgometerWorkout {
+                        // Beste Leistung nach Distanz auf dem Ergometer
+                    if let bestErgometer = calcRecords.bestErgometerWorkout {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Ergometer",
-                            icon: best.workoutDevice.symbol,
-                            color: best.workoutDevice.tint,
-                            allWorkouts: best
+                            icon: bestErgometer.workoutDevice.symbol,
+                            color: bestErgometer.workoutDevice.tint,
+                            allWorkouts: bestErgometer
                         )
                         .padding(.horizontal)
-                        .padding(.top, 20)
+                        .padding(.top, 10)
                     }
-                    // Hier kannst du später weitere Rekord-Cards hinzufügen
-                }
-                .padding(.bottom, 100)
-            }
-            .scrollIndicators(.hidden)
+                    // Doppeltes Grid-Layout für andere Rekorde
+                    LazyVGrid(columns: gridColumns, spacing: 20) {
+                            // Absoluter Distanz-Rekord
+                        if let longestDistance = calcRecords.longestDistanceWorkout {
+                            RecordGridCard(
+                                metricTitle: "Längste Distanz",
+                                recordValue: String(format: "%.2f km", longestDistance.distance),
+                                bestWorkout: longestDistance,
+                                metricIcon: "arrow.left.and.right",
+                                metricColor: .green
+                            )
+                        }
 
-            // Empty State
-            if allWorkouts.isEmpty {
-                EmptyState()
+                            // Absoluter Kalorien-Rekord
+                        if let effectiveWorkout = calcRecords.highestBurnedCaloriesWorkout {
+                            RecordGridCard(
+                                metricTitle: "Effektivstes Workout",
+                                recordValue: "\(effectiveWorkout.calories) kcal",
+                                bestWorkout: effectiveWorkout,
+                                metricIcon: "flame.fill",
+                                metricColor: .red
+                            )
+                        }
+                            // Absoluter Kalorien-Rekord
+                        if let fastestCrosstrainer = calcRecords.fastestWorkoutDevice(for: .crosstrainer) {
+                            RecordGridCard(
+                                metricTitle: "Schnellste Crosstrainer",
+                                recordValue: String(format: "%.0f m/min", fastestCrosstrainer.averageSpeed),
+                                bestWorkout: fastestCrosstrainer,
+                                metricIcon: "gauge.open.with.lines.needle.67percent.and.arrowtriangle",
+                                metricColor: .indigo
+                            )
+                        }
+                            // Absoluter Kalorien-Rekord
+                        if let fastestErgometer = calcRecords.fastestWorkoutDevice(for: .ergometer) {
+                            RecordGridCard(
+                                metricTitle: "Schnellstes Ergometer",
+                                recordValue: String(format: "%.0f m/min", fastestErgometer.averageSpeed),
+                                bestWorkout: fastestErgometer,
+                                metricIcon: "gauge.open.with.lines.needle.67percent.and.arrowtriangle",
+                                metricColor: .orange
+                            )
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 10)
+                    .padding(.bottom, 100)
+                }
+                .scrollIndicators(.hidden)
+
+                    // Empty State
+                if allWorkouts.isEmpty {
+                    EmptyState()
+                }
             }
         }
     }
 }
 
 // MARK: - Preview
-
-    // MARK: Statistic Preview
-#Preview("Statistiken") {
+#Preview("Rekorde") {
     RecordView()
         .modelContainer(PreviewData.sharedContainer)
 }

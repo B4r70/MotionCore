@@ -9,10 +9,9 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Notes  . . . : Enums für dieses Model findet man im File WorkoutTypes.swift      /
-//                Die UI-Ausgabe dieser Enums im File WorkoutTypesUI.swift          /
-//                Die formatierten Werte aus dem Model sind in WorkoutSessionUI     /
-//                Die UI-Ausgabe dieser Enums im File WorkoutTypesUI.swift          /
+// Hinweis  . . : Enums für dieses Model findet man im File WorkoutTypes.swift      /
+//                Die UI-Ausgabe dieser Enums im File TypesUI.swift                 /
+//                Die formatierten Werte aus dem Model sind in SessionUI            /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation

@@ -37,7 +37,7 @@ struct StatisticIntensityCard: View {
                 }
             }
         }
-        .glassCardStyle()
+        .glassCard()
     }
 }
 

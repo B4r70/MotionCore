@@ -227,7 +227,6 @@ struct FormView: View {
                             .frame(height: 140)
                             .clipped()
                         }
-                        GlassDivider()
 
                         // MARK: Belastungsintensität
 
@@ -243,7 +242,7 @@ struct FormView: View {
                             .padding(.bottom, 4)
                         }
                     }
-                    .glassCardStyle()
+                    .glassCard()
                     .padding(.horizontal)
                     .padding(.top, 16)
                 }
@@ -318,14 +317,14 @@ struct FormView: View {
         }
     }
 
-    /// Löschen-Funktion
+    // Löschen-Funktion
     private func deleteWorkout() {
         context.delete(workout)
         try? context.save()
         dismiss()
     }
 
-    /// Defaulteinstellungen für neue Workouts
+    // Defaulteinstellungen für neue Workouts
     private func applyDefaultsIfNeeded() {
         if workout.workoutDevice == .none {
             workout.workoutDevice = settings.defaultDevice
