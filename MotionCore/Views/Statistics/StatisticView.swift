@@ -42,31 +42,64 @@ struct StatisticView: View {
                             StatisticGridCard(
                                 icon: "figure.run",
                                 title: "Gesamt Workouts",
-                                value: "\(calcStatistics.totalWorkouts)",
+                                valueView: Text("\(calcStatistics.totalWorkouts)"),
                                 color: .blue
                             )
                             // Verbrauchte Gesamtkalorien
                             StatisticGridCard(
                                 icon: "flame.fill",
                                 title: "Gesamt Kalorien",
-                                value: "\(calcStatistics.totalCalories)",
+                                valueView: Text("\(calcStatistics.totalCalories)"),
                                 color: .orange
                         )
                             // Trainierte Distanz
                         StatisticGridCard(
                                 icon: "arrow.left.and.right",
                                 title: "Gesamt Strecke",
-                                value: "\(calcStatistics.totalDistance)",
+                                valueView: Text(String(format: "%.2f km", calcStatistics.totalDistance)),
                                 color: .green
                             )
                             // Durchschnittliche Herzfrequenz
                         StatisticGridCard(
                                 icon: "heart.fill",
                                 title: "⌀ Herzfrequenz",
-                                value: "\(calcStatistics.averageHeartRate)",
+                                valueView: Text("\(calcStatistics.averageHeartRate)"),
                                 color: .red
                             )
+                        // Durchschnittles metabolisches Äquivalent
+                        StatisticGridCard(
+                            icon: "bolt.fill",
+                            title: "⌀ METs",
+                            valueView: Text(String(format: "%.2f METs", calcStatistics.averageMETS)),
+                            color: .yellow
+                        )
+                        // Durchschnittliche Workout-Dauer
+                        StatisticGridCard(
+                            icon: "clock.fill",
+                            title: "⌀ Dauer",
+                            valueView: Text("\(calcStatistics.averageDuration) min"
+                            ),
+                            color: .indigo
+                        )
                     }
+                    // Durchschnittliche Belastungsintensität in Sternen
+                    StatisticCard(
+                        icon: "figure.strengthtraining.traditional",
+                        title: "⌀ Belastung",
+                        valueView: ShowStarRating(
+                            starRating: calcStatistics.averageIntensity,
+                            starMaxRating: Intensity.maxRating,
+                            starColor: .orange
+                        ),
+                        color: .black
+                    )
+                    // Durchschnittliche relative Kaloriendichte zum Körpergewicht
+                    StatisticCard(
+                        icon: "flame.fill",
+                        title: "⌀ Kaloriendichte",
+                        valueView: Text(String(format: "%.3f", calcStatistics.averageCaloricDensity)),
+                        color: .purple
+                    )
                     // Anzahl Trainings je Gerät
                     StatisticDeviceCard(allWorkouts: allWorkouts)
 

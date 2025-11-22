@@ -69,6 +69,28 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // Benutzergröße in cm
+    @Published var userBodyHeight: Int {
+        didSet {
+            UserDefaults.standard.set(userBodyHeight, forKey: "user.userBodyHeight")
+        }
+    }
+
+    // Benutzeralter in Jahren
+    @Published var userAge: Int {
+        didSet {
+            UserDefaults.standard.set(userAge, forKey: "user.userAge")
+        }
+    }
+
+    // Benutzergeschlecht
+    @Published var userGender: Gender {
+        didSet {
+                // Speichert den RawValue (String) der Enum
+            UserDefaults.standard.set(userGender.rawValue, forKey: "user.userGender")
+        }
+    }
+
     // MARK: - Init
     private init() {
         let defaults = UserDefaults.standard
@@ -100,5 +122,19 @@ class AppSettings: ObservableObject {
 
         // Workout: Show Empty Fields
         showEmptyFields = defaults.bool(forKey: "workout.showEmptyFields")
+
+        // Initialisiere die Körpergröße
+        userBodyHeight = UserDefaults.standard.integer(forKey: "user.userBodyHeight")
+
+        // Initialisiere das Alter
+        userAge = UserDefaults.standard.integer(forKey: "user.userAge")
+
+        // Initialisiere das Geschlecht
+        if let rawGender = UserDefaults.standard.string(forKey: "user.userGender"),
+           let savedGender = Gender(rawValue: rawGender) {
+            userGender = savedGender
+        } else {
+            userGender = .male // Default-Wert
+        }
     }
 }

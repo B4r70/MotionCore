@@ -100,7 +100,7 @@ struct RecordGridCard: View {
 
                     // Wert (Record Value) in groß
                     Text(recordValue)
-                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
                         .minimumScaleFactor(0.7)
                         .lineLimit(1)
 

@@ -12,7 +12,7 @@
 //
 import SwiftUI
 
-struct StarRatingView: View {
+struct InputStarRating: View {
     @Binding var rating: Intensity
     let maximumRating = 5
 

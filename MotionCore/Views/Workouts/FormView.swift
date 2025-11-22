@@ -236,7 +236,7 @@ struct FormView: View {
                                 .foregroundStyle(.primary)
 
                             HStack {
-                                StarRatingView(rating: $workout.intensity)
+                                InputStarRating(rating: $workout.intensity)
                                     .scaleEffect(1.0)
                             }
                             .padding(.bottom, 4)

@@ -26,7 +26,7 @@ extension WorkoutSession {
                 calories: 142,
                 difficulty: 8,
                 heartRate: 128,
-                bodyWeight: 96,
+                bodyWeight: 101,
                 intensity: .medium,
                 trainingProgram: .random,
                 workoutDevice: .crosstrainer
@@ -38,7 +38,7 @@ extension WorkoutSession {
                 calories: 280,
                 difficulty: 10,
                 heartRate: 122,
-                bodyWeight: 96,
+                bodyWeight: 99,
                 intensity: .easy,
                 trainingProgram: .random,
                 workoutDevice: .ergometer
@@ -86,7 +86,7 @@ extension WorkoutSession {
                 calories: 410,
                 difficulty: 8,
                 heartRate: 137,
-                bodyWeight: 96,
+                bodyWeight: 97,
                 intensity: .hard,
                 trainingProgram: .random,
                 workoutDevice: .crosstrainer
@@ -98,7 +98,7 @@ extension WorkoutSession {
                 calories: 300,
                 difficulty: 12,
                 heartRate: 124,
-                bodyWeight: 96,
+                bodyWeight: 98,
                 intensity: .medium,
                 trainingProgram: .fatBurn,
                 workoutDevice: .ergometer
@@ -110,7 +110,7 @@ extension WorkoutSession {
                 calories: 260,
                 difficulty: 10,
                 heartRate: 120,
-                bodyWeight: 96,
+                bodyWeight: 105,
                 intensity: .easy,
                 trainingProgram: .random,
                 workoutDevice: .crosstrainer
@@ -122,7 +122,7 @@ extension WorkoutSession {
                 calories: 330,
                 difficulty: 13,
                 heartRate: 129,
-                bodyWeight: 96,
+                bodyWeight: 89,
                 intensity: .medium,
                 trainingProgram: .manual,
                 workoutDevice: .ergometer
@@ -134,7 +134,7 @@ extension WorkoutSession {
                 calories: 235,
                 difficulty: 9,
                 heartRate: 116,
-                bodyWeight: 96,
+                bodyWeight: 110,
                 intensity: .easy,
                 trainingProgram: .random,
                 workoutDevice: .crosstrainer
@@ -146,7 +146,7 @@ extension WorkoutSession {
                 calories: 385,
                 difficulty: 16,
                 heartRate: 140,
-                bodyWeight: 96,
+                bodyWeight: 91,
                 intensity: .hard,
                 trainingProgram: .random,
                 workoutDevice: .ergometer

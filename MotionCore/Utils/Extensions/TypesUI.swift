@@ -38,6 +38,12 @@ extension Intensity {
         case .veryHard: .red
         }
     }
+    // Anzahl der maximalen Belastungsintensität
+    static var maxRating: Int {
+            return Intensity.allCases
+                .max(by: { $0.rawValue < $1.rawValue })?
+                .rawValue ?? 5
+        }
 }
 
 // MARK: TrainingProgramm UI-Erweiterungen für die Anzeige im Display

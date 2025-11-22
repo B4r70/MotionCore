@@ -103,6 +103,26 @@ struct RecordView: View {
                                 metricColor: .orange
                             )
                         }
+                            // Niedrigstes Körpergewicht
+                        if let lowestBodyWeight = calcRecords.lowestBodyWeight {
+                            RecordGridCard(
+                                metricTitle: "Niedrigstes Gewicht",
+                                recordValue: "\(lowestBodyWeight.bodyWeight) kg",
+                                bestWorkout: lowestBodyWeight,
+                                metricIcon: "arrow.down.circle.fill",
+                                metricColor: .green
+                            )
+                        }
+                            // Höchstes Körpergewicht
+                        if let highestBodyWeight = calcRecords.highestBodyWeight {
+                            RecordGridCard(
+                                metricTitle: "Höchstes Gewicht",
+                                recordValue: "\(highestBodyWeight.bodyWeight) kg",
+                                bestWorkout: highestBodyWeight,
+                                metricIcon: "arrow.up.circle.fill",
+                                metricColor: .red
+                            )
+                        }
                     }
                     .padding(.horizontal)
                     .padding(.top, 10)

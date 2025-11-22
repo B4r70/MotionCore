@@ -12,6 +12,7 @@
 //
 import Foundation
 import SwiftData
+import SwiftUI
 
 // MARK: - Helper Types
 // Summary for a given workout intensity.
@@ -44,6 +45,10 @@ struct ProgramSummary: Identifiable {
 
 // MARK: - Statistic Calculation Engine
 struct StatisticCalcEngine {
+
+    // Abruf aus Einstellungen der Körpergröße, Geschlecht und Alter
+    @ObservedObject private var settings = AppSettings.shared
+    
         // MARK: - Input
 
         // All workouts used as data source for the statistics.
@@ -57,22 +62,22 @@ struct StatisticCalcEngine {
 
         // MARK: - Basic totals
 
-        // Total number of workouts.
+    // Berechnung: Summe aller Workouts
     var totalWorkouts: Int {
         allWorkouts.count
     }
 
-        // Total burned calories across all workouts.
+    // Berechnung: Summe aller verbrannter Kalorien
     var totalCalories: Int {
         allWorkouts.reduce(0) { $0 + $1.calories }
     }
 
-        /// Total distance across all workouts.
+    // Berechnung: Gesamt-Distanz aller Workouts
     var totalDistance: Double {
         allWorkouts.reduce(0.0) { $0 + $1.distance }
     }
 
-        // Average heart rate across all workouts.
+    // Berechnung: Durchschnittliche Herzfrequenz
     var averageHeartRate: Int {
         let valid = allWorkouts.filter { $0.heartRate > 0 }
         guard !valid.isEmpty else { return 0 }
@@ -80,6 +85,40 @@ struct StatisticCalcEngine {
         let total = valid.reduce(0) { $0 + $1.heartRate }
         return total / valid.count
     }
+
+    // Berechnung: Durchschnittliche Workout-Zeit
+    var averageDuration: Int {
+        let valid = allWorkouts.filter { $0.duration > 0 }
+        guard !valid.isEmpty else { return 0 }
+
+        let total = valid.reduce(0) { $0 + $1.duration }
+        return total / valid.count
+    }
+
+    // Berechnung: Durchschnittliche metabolisches Äquivalent
+    var averageMETS: Double {
+            let relevantWorkouts = allWorkouts.filter { $0.mets > 0.0 }
+            guard !relevantWorkouts.isEmpty else {
+                return 0.0
+            }
+            let totalMETSValue = relevantWorkouts.reduce(0) { sum, workout in
+                sum + workout.mets // Zugriff auf den numerischen Wert
+            }
+            return Double(totalMETSValue) / Double(relevantWorkouts.count)
+        }
+
+    // Berechnung: Relative Kaloriendichte
+    var averageCaloricDensity: Double {
+            guard !allWorkouts.isEmpty else { return 0.0 }
+
+            // Summiere die relative Dichte aller Workouts
+            let totalDensity = allWorkouts.reduce(0.0) { sum, session in
+                sum + session.relativeCaloricDensity
+            }
+
+            // Teile durch die Anzahl der Workouts, um den Durchschnitt zu erhalten
+            return totalDensity / Double(allWorkouts.count)
+        }
 
         // MARK: - Device based calculations
 
@@ -105,6 +144,18 @@ struct StatisticCalcEngine {
             count: count,
             total: total
         )
+    }
+
+    // Berechnung: Durchschnittliche Belastungsintensität in den Workouts
+    var averageIntensity: Double {
+        let relevantWorkouts = allWorkouts.filter { $0.intensity.rawValue > 0 }
+        guard !relevantWorkouts.isEmpty else {
+            return 0.0
+        }
+        let totalIntensityValue = relevantWorkouts.reduce(0) { sum, workout in
+            sum + workout.intensity.rawValue // Zugriff auf den numerischen Wert
+        }
+        return Double(totalIntensityValue) / Double(relevantWorkouts.count)
     }
 
         // MARK: - Trend data for charts
@@ -135,7 +186,7 @@ struct StatisticCalcEngine {
             }
     }
 
-        // Distance trend over time (date vs. distance in km).
+    // Berechnung: Distanz sortiert nach Datum
     var trendDistance: [TrendPoint] {
         allWorkouts
             .filter { $0.distance > 0 }
@@ -161,6 +212,13 @@ struct StatisticCalcEngine {
                     trendValue: workout.distance
                 )
             }
+    }
+
+    // Berechnung: Kaloriendichte für Chart
+    var trendCaloricDensity: [(Date, Double)] {
+        allWorkouts
+            .sorted(by: { $0.date < $1.date })
+            .map { ($0.date, $0.relativeCaloricDensity) }
     }
 
         // MARK: Donut-Chart

@@ -47,9 +47,21 @@ struct RecordCalcEngine {
                 .max(by: { $0.averageSpeed < $1.averageSpeed }) // <-- Logik korrigiert
         }
 
-        // MARK: Geräteübergreifende Rekorde
+    // MARK: Geräteübergreifende Rekorde
 
-        // Höchster Kalorienverbrauch im Workout
+    // Berechnung: Niedrigstes Körpergewicht
+    var lowestBodyWeight: WorkoutSession? {
+        let recordedWorkouts = allWorkouts.filter { $0.bodyWeight > 0 }
+        return recordedWorkouts.min(by: { $0.bodyWeight < $1.bodyWeight })
+    }
+
+    // Berechnung: Höchstes Körpergewicht
+    var highestBodyWeight: WorkoutSession? {
+        let recordedWorkouts = allWorkouts.filter { $0.bodyWeight > 0 }
+        return recordedWorkouts.max(by: { $0.bodyWeight < $1.bodyWeight })
+    }
+
+    // Höchster Kalorienverbrauch im Workout
     var highestBurnedCaloriesWorkout: WorkoutSession? {
         allWorkouts
             .max(by: { $0.calories < $1.calories })

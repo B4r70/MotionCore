@@ -12,10 +12,10 @@
 //
 import SwiftUI
 
-struct StatisticCard: View {
+struct StatisticCard<ValueContent: View>: View {
     let icon: String
     let title: String
-    let value: String
+    let valueView: ValueContent
     let color: Color
 
     var body: some View {
@@ -25,7 +25,7 @@ struct StatisticCard: View {
                 .foregroundStyle(color)
 
             VStack(spacing: 8) {
-                Text(value)
+                valueView
                     .font(.system(size: 48, weight: .bold))
 
                 Text(title)
@@ -39,10 +39,10 @@ struct StatisticCard: View {
 }
 
 // Alternativ im Grid Format 2 Cards pro Zeile
-struct StatisticGridCard: View {
+struct StatisticGridCard<ValueContent: View>: View {
     let icon: String
     let title: String
-    let value: String
+    let valueView: ValueContent
     let color: Color
 
     var body: some View {
@@ -54,10 +54,10 @@ struct StatisticGridCard: View {
                 .foregroundStyle(color)
 
             // Wert in groß, aber nicht riesig
-            Text(value)
-                .font(.system(size: 26, weight: .bold, design: .rounded))
+            valueView
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
+                .font(.system(size: 26, weight: .bold, design: .rounded))
 
             // Subtitle klein
             Text(title)
