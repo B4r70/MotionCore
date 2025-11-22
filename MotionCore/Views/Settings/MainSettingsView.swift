@@ -18,20 +18,74 @@ import Foundation
 struct MainSettingsView: View {
     @Environment(\.modelContext) private var modelContext
 
-    // Zugriff auf alle Workouts für den Export
+    // Daten für Prüfung der Export-Aktivierung abrufen
     @Query(sort: \WorkoutSession.date, order: .reverse)
     private var allWorkouts: [WorkoutSession]
 
     // Import/Export Funktionen
-    @State private var exportURL: URL?
     @State private var showingImportPicker = false
+    @State private var exportURL: URL?
+    @State private var showingShareSheet = false
 
+    // UI-Meldungen für Import/Export
+    @State private var showingImportSuccess = false
+    @State private var showingImportError = false
+    @State private var importErrorMessage = ""
 
+    private let dataManager = IODataManager()
+
+    // MARK: - Helper Functions
+
+    private func handleExport() {
+        do {
+            exportURL = try dataManager.exportWorkouts(context: modelContext)
+            showingShareSheet = true
+        } catch let error as DataIOError {
+            importErrorMessage = error.errorDescription ?? "Export fehlgeschlagen"
+            showingImportError = true
+        } catch {
+            importErrorMessage = "Export-Fehler: \(error.localizedDescription)"
+            showingImportError = true
+        }
+    }
 
     var body: some View {
         List {
-            // MARK: - App Information
 
+            // MARK: - Allgemeine Einstellungen
+            Section("Allgemeine Einstellungen") {
+                NavigationLink {
+                    WorkoutSettingsView()
+                } label: {
+                    Label("Training", systemImage: "figure.run")
+                }
+
+                NavigationLink {
+                    DisplaySettingsView()
+                } label: {
+                    Label("Displayeinstellungen", systemImage: "display")
+                }
+            }
+
+            // MARK: - Daten-Management
+            Section("Daten-Management") {
+                // Export-Funktion
+                Button {
+                    handleExport()
+                } label: {
+                    Label("Workouts exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allWorkouts.isEmpty)
+
+                // Import-Funktion
+                Button {
+                    showingImportPicker = true
+                } label: {
+                    Label("Workouts importieren", systemImage: "square.and.arrow.down")
+                }
+            }
+
+            // MARK: - App Information
             Section("App") {
                 HStack {
                     Label("Version", systemImage: "info.circle")
@@ -46,120 +100,66 @@ struct MainSettingsView: View {
                     Label("Über MotionCore", systemImage: "app.badge")
                 }
             }
-
-            // MARK: - Daten
-
-            Section("Daten") {
-                    // Export Button
-                    // Wir nutzen hier eine Group, um dem Compiler bei der Typ-Erkennung zu helfen
-                Group {
-                    if let url = exportURL {
-                        ShareLink(item: url) {
-                            Label("Workouts exportieren", systemImage: "square.and.arrow.up")
-                        }
-                    } else {
-                        Button {
-                            exportURL = makeExportFile()
-                        } label: {
-                            Label("Workouts exportieren", systemImage: "square.and.arrow.up")
-                        }
-                        .disabled(allWorkouts.isEmpty)
-                    }
-                }
-
-                    // Import Button
-                Button {
-                    showingImportPicker = true
-                } label: {
-                    Label("Workouts importieren", systemImage: "square.and.arrow.down")
-                }
-
-                    // Alle Daten löschen
-                Button(role: .destructive) {
-                        // TODO: Confirmation Dialog + Delete all
-                } label: {
-                    Label("Alle Daten löschen", systemImage: "trash")
-                }
-            }
-
-            // MARK: - Einstellungen
-
-            Section("Einstellungen") {
-                NavigationLink {
-                    WorkoutSettingsView()
-                } label: {
-                    Label("Training", systemImage: "figure.run")
-                }
-
-                NavigationLink {
-                    DisplaySettingsView()
-                } label: {
-                    Label("Displayeinstellungen", systemImage: "display")
-                }
-            }
-
-            // MARK: - Support
-
-            Section("Support") {
-                Link(destination: URL(string: "mailto:bartosz@stryjewski.email")!) {
-                    Label("Kontakt", systemImage: "envelope")
-                }
-
-                NavigationLink {
-                    Text("Datenschutz")
-                } label: {
-                    Label("Datenschutz", systemImage: "hand.raised")
-                }
+        }
+        .navigationTitle("Einstellungen")
+        // Share Sheet für Export
+        .sheet(isPresented: $showingShareSheet) {
+            if let url = exportURL {
+                ShareSheet(items: [url])
             }
         }
+        // File Importer Aufruf
         .fileImporter(
             isPresented: $showingImportPicker,
-            allowedContentTypes: [UTType.json],
+            allowedContentTypes: [.json],
             allowsMultipleSelection: false
-        ) { _ in
-            // TODO: Import-Logik
+        ) { result in
+            switch result {
+            case .success(let urls):
+                guard let url = urls.first else { return }
+                do {
+                    let count = try dataManager.importWorkouts(context: modelContext, url: url)
+                    if count > 0 {
+                        importErrorMessage = "Import erfolgreich! \(count) Workouts wurden hinzugefügt."
+                        showingImportSuccess = true
+                    } else {
+                        importErrorMessage = "Die Datei enthielt keine Workouts zum Importieren."
+                        showingImportError = true
+                    }
+                } catch let error as DataIOError {
+                    importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
+                    showingImportError = true
+                } catch {
+                    importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
+                    showingImportError = true
+                }
+            case .failure(let error):
+                importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
+                showingImportError = true
+            }
         }
-    }
-
-    // MARK: - Export Function
-    private func makeExportFile() -> URL? {
-        guard !allWorkouts.isEmpty else { return nil }
-
-        let pkg = ExportPackage(
-            version: 1,
-            exportedAt: ISO8601DateFormatter().string(from: .now),
-            items: allWorkouts.map { $0.exportItem }
-        )
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-
-        do {
-            let data = try encoder.encode(pkg)
-            let filename = "MotionCore-Export-\(Int(Date().timeIntervalSince1970)).json" // Geändert: "MotionCores" → "MotionCore"
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-            try data.write(to: url, options: .atomic)
-            return url
-        } catch {
-            print("Export-Fehler:", error)
-            return nil
+        // UI-Meldungen für Import
+        .alert("Import erfolgreich", isPresented: $showingImportSuccess) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(importErrorMessage)
+        }
+        .alert("Fehler", isPresented: $showingImportError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(importErrorMessage)
         }
     }
 }
 
-// MARK: - Info Row Component
+// MARK: - ShareSheet UIKit Wrapper
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
 
-struct InfoRow: View {
-    let title: String
-    let value: String
-
-    var body: some View {
-        HStack {
-            Text(title)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(value)
-                .fontWeight(.medium)
-        }
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        return controller
     }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
