@@ -54,12 +54,19 @@ struct MainSettingsView: View {
 
             // MARK: - Allgemeine Einstellungen
             Section("Allgemeine Einstellungen") {
+                // Benutzerspezifische Angaben
+                NavigationLink {
+                    UserSettingsView()
+                } label: {
+                    Label("Benutzerspezifische Angaben", systemImage: "person.fill")
+                }
+                // Workouteinstellungen
                 NavigationLink {
                     WorkoutSettingsView()
                 } label: {
                     Label("Training", systemImage: "figure.run")
                 }
-
+                // Displayeinstellungen
                 NavigationLink {
                     DisplaySettingsView()
                 } label: {
