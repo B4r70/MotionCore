@@ -13,14 +13,14 @@
 import SwiftUI
 
 struct DisplaySettingsView: View {
-    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var appSettings = AppSettings.shared
 
     var body: some View {
         List {
             // MARK: Erscheinungsbild
             Section {
                 VStack(alignment: .leading, spacing: 4) {
-                    Picker("Thema", selection: $settings.appTheme) {
+                    Picker("Thema", selection: $appSettings.appTheme) {
                         ForEach(AppTheme.allCases) { appTheme in
                             Text(appTheme.label).tag(appTheme)
                         }
@@ -39,7 +39,7 @@ struct DisplaySettingsView: View {
 
             // MARK: Animierter Hintergrund
             Section {
-                Toggle(isOn: $settings.showAnimatedBlob) {
+                Toggle(isOn: $appSettings.showAnimatedBlob) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Animierter Hintergrund")
                             .font(.body)

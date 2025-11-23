@@ -17,7 +17,7 @@ struct RecordView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse)
     private var allWorkouts: [WorkoutSession]
 
-    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var appSettings = AppSettings.shared
 
     private var calcRecords: RecordCalcEngine {
         RecordCalcEngine(workouts: allWorkouts)
@@ -32,7 +32,7 @@ struct RecordView: View {
     var body: some View {
         ZStack {
                 // Hintergrund
-            AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
+            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             ScrollView {
                 VStack(spacing: 20) {

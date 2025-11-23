@@ -15,7 +15,7 @@ import SwiftUI
 
 @main
 struct MotionCoreApp: App {
-    @StateObject private var settings = AppSettings.shared
+    @StateObject private var appSettings = AppSettings.shared
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -37,7 +37,7 @@ struct MotionCoreApp: App {
     var body: some Scene {
         WindowGroup {
             BaseView()
-                .preferredColorScheme(settings.appTheme.colorScheme)
+                .preferredColorScheme(appSettings.appTheme.colorScheme)
         }
         .modelContainer(sharedModelContainer)
     }

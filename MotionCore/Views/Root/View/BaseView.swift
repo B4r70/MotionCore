@@ -25,7 +25,7 @@ struct BaseView: View {
         calories: 0,
         difficulty: 1,
         heartRate: 0,
-        bodyWeight: 0,
+        bodyWeight: 0.0,
         intensity: .none,
         trainingProgram: .manual,
         workoutDevice: .none
@@ -55,7 +55,7 @@ struct BaseView: View {
     }
 
     enum Tab: Hashable {
-        case workouts, statistics, add, records, settings
+        case workouts, statistics, add, records, health, settings
     }
 
     var body: some View {
@@ -125,7 +125,26 @@ struct BaseView: View {
             }
             .tag(Tab.records)
 
-            // MARK: Tab 5 - Einstellungen
+                // MARK: Tab 5 - Gesundheitsdaten
+
+            NavigationStack {
+                HealthMetricView()
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Gesundheitsdaten"
+                            )
+                        }
+                    }
+            }
+            .tabItem {
+                Label("Health", systemImage: "bolt.heart")
+            }
+            .tag(Tab.health)
+
+            // MARK: Tab 6 - Einstellungen
 
             NavigationStack {
                 MainSettingsView()
@@ -166,7 +185,7 @@ struct BaseView: View {
                     calories: 0,
                     difficulty: 1,
                     heartRate: 0,
-                    bodyWeight: 0,
+                    bodyWeight: 0.0,
                     intensity: .none,
                     trainingProgram: .manual,
                     workoutDevice: .none

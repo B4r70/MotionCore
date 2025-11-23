@@ -51,13 +51,13 @@ struct RecordCalcEngine {
 
     // Berechnung: Niedrigstes Körpergewicht
     var lowestBodyWeight: WorkoutSession? {
-        let recordedWorkouts = allWorkouts.filter { $0.bodyWeight > 0 }
+        let recordedWorkouts = allWorkouts.filter { $0.bodyWeight > 0.0 }
         return recordedWorkouts.min(by: { $0.bodyWeight < $1.bodyWeight })
     }
 
     // Berechnung: Höchstes Körpergewicht
     var highestBodyWeight: WorkoutSession? {
-        let recordedWorkouts = allWorkouts.filter { $0.bodyWeight > 0 }
+        let recordedWorkouts = allWorkouts.filter { $0.bodyWeight > 0.0 }
         return recordedWorkouts.max(by: { $0.bodyWeight < $1.bodyWeight })
     }
 

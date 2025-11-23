@@ -42,7 +42,7 @@ Abgeleitete Kennzahlen – z. B. *Tempo pro Minute*, *Kilokalorien pro Minute* o
 | `calories` | `Int` | kcal | Geschätzter Energieverbrauch. | `didSet`: `>= 0` | – |
 | `difficulty` | `Int` | Stufe | Gerätestufe/Widerstand. | `didSet`: geklemmt auf `1…25` | `1` |
 | `heartRate` | `Int` | bpm | Durchschnittspuls (Apple Watch). | sinnvoller Bereich z. B. `40…220` | – |
-| `bodyWeight` | `Int` | kg | Am Gerät eingestelltes Körpergewicht. | `> 0` empfohlen | – |
+| `bodyWeight` | `Double` | kg | Am Gerät eingestelltes Körpergewicht. | `> 0` empfohlen | – |
 | `intensityRaw` | `Int` | Enum-RawValue | Persistente Speicherung von `Intensity`. | indirekt über `var intensity` gesetzt | `Intensity.none.rawValue` |
 | `trainingProgramRaw` | `String` | Enum-RawValue | Persistente Speicherung von `TrainingProgram`. | indirekt über `var trainingProgram` gesetzt | `TrainingProgram.random.rawValue` |
 

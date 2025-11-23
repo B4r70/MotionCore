@@ -31,11 +31,12 @@ struct MainSettingsView: View {
     @State private var showingImportSuccess = false
     @State private var showingImportError = false
     @State private var importErrorMessage = ""
+    @State private var showingDeleteConfirmation = false
 
     private let dataManager = IODataManager()
 
     // MARK: - Helper Functions
-
+    // Exportfunktion
     private func handleExport() {
         do {
             exportURL = try dataManager.exportWorkouts(context: modelContext)
@@ -46,6 +47,31 @@ struct MainSettingsView: View {
         } catch {
             importErrorMessage = "Export-Fehler: \(error.localizedDescription)"
             showingImportError = true
+        }
+    }
+    // Löschfunktion
+    private func handleDeleteAllData() {
+        do {
+            // Ruft die Funktion des Managers auf und übergibt den ModelContext.
+            let count = try dataManager.deleteAllWorkouts(context: modelContext)
+
+            // Erfolg: Manager hat die Anzahl der gelöschten Workouts zurückgegeben.
+            if count > 0 {
+                importErrorMessage = "Alle \(count) Workouts wurden erfolgreich gelöscht."
+            } else {
+                importErrorMessage = "Es waren keine Workouts vorhanden. Nichts gelöscht."
+            }
+
+            // Zeigt den Erfolgs-Alert an
+            showingImportSuccess = true
+
+        } catch {
+            // Fehler wird hier abgefangen. DataIOError wurde im Manager geworfen.
+            let deleteError = error as? DataIOError
+
+            // Zeigt die entsprechende Fehlermeldung an
+            importErrorMessage = deleteError?.errorDescription ?? "Unbekannter Fehler beim Löschen."
+            showingImportError = true // Zeigt den Fehler-Alert an
         }
     }
 
@@ -89,6 +115,11 @@ struct MainSettingsView: View {
                     showingImportPicker = true
                 } label: {
                     Label("Workouts importieren", systemImage: "square.and.arrow.down")
+                }
+                Button(role: .destructive) { // Rote Farbe für destruktive Aktion
+                    showingDeleteConfirmation = true
+                } label: {
+                    Label("Alle Workouts löschen", systemImage: "trash.fill")
                 }
             }
 
@@ -155,6 +186,15 @@ struct MainSettingsView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(importErrorMessage)
+        }
+        .confirmationDialog("Workouts löschen", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+            Button("ALLE Workouts unwiderruflich löschen", role: .destructive) {
+                // HIER erfolgt der Aufruf der Funktion
+                handleDeleteAllData()
+            }
+            Button("Abbrechen", role: .cancel) {}
+        } message: {
+            Text("Diese Aktion kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie alle gespeicherten Trainingsdaten unwiderruflich löschen möchten?")
         }
     }
 }

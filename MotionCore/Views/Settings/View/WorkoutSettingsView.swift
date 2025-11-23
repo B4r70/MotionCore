@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct WorkoutSettingsView: View {
-    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var appSettings = AppSettings.shared
 
     // Local state for duration wheel
     @State private var showDurationWheel = false
@@ -25,7 +25,7 @@ struct WorkoutSettingsView: View {
 
             Section("Defaultwerte für neue Workouts") {
                 // Default Gerätetyp
-                Picker("Gerätetyp", selection: $settings.defaultDevice) {
+                Picker("Gerätetyp", selection: $appSettings.defaultDevice) {
                     ForEach(WorkoutDevice.allCases, id: \.self) { device in
                         Label(device.description, systemImage: device.symbol)
                             .tag(device)
@@ -35,7 +35,7 @@ struct WorkoutSettingsView: View {
                 .tint(.secondary)
 
                 // Default Trainingsprogramm
-                Picker("Trainingsprogramm", selection: $settings.defaultProgram) {
+                Picker("Trainingsprogramm", selection: $appSettings.defaultProgram) {
                     ForEach(TrainingProgram.allCases, id: \.self) { program in
                         Label(program.description, systemImage: program.symbol)
                             .tag(program)
@@ -48,7 +48,7 @@ struct WorkoutSettingsView: View {
                 DisclosureGroup(
                     isExpanded: $showDurationWheel,
                     content: {
-                        Picker("Trainingsdauer", selection: $settings.defaultDuration) {
+                        Picker("Trainingsdauer", selection: $appSettings.defaultDuration) {
                             ForEach(0 ... 300, id: \.self) { min in
                                 Text("\(min) min").tag(min)
                             }
@@ -62,7 +62,7 @@ struct WorkoutSettingsView: View {
                         HStack {
                             Text("Trainingsdauer")
                             Spacer()
-                            Text("\(settings.defaultDuration) min")
+                            Text("\(appSettings.defaultDuration) min")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -72,7 +72,7 @@ struct WorkoutSettingsView: View {
                 DisclosureGroup(
                     isExpanded: $showDifficultyWheel,
                     content: {
-                        Picker("Difficulty", selection: $settings.defaultDifficulty) {
+                        Picker("Difficulty", selection: $appSettings.defaultDifficulty) {
                             ForEach(1 ... 25, id: \.self) { v in
                                 Text("Stufe \(v)").tag(v)
                             }
@@ -86,7 +86,7 @@ struct WorkoutSettingsView: View {
                         HStack {
                             Text("Schwierigkeitsgrad")
                             Spacer()
-                            Text("\(settings.defaultDifficulty)")
+                            Text("\(appSettings.defaultDifficulty)")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -94,7 +94,7 @@ struct WorkoutSettingsView: View {
             }
             Section("Sonstige Einstellungen") {
                 // Show empty fields option – gehört inhaltlich auch zu den Defaults
-                Toggle("Leere Felder anzeigen", isOn: $settings.showEmptyFields)
+                Toggle("Leere Felder anzeigen", isOn: $appSettings.showEmptyFields)
             }
         }
         .navigationTitle("Defaultwerte für Workouts")

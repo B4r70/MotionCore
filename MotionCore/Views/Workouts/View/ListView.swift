@@ -22,7 +22,7 @@ struct ListView: View {
     @State private var selectedFilter: WorkoutDevice = .none
 
     // Abruf aus Einstellungen
-    @State private var settings = AppSettings.shared
+    @State private var appSettings = AppSettings.shared
 
     var filteredWorkouts: [WorkoutSession] {
         if selectedFilter == .none {
@@ -35,7 +35,7 @@ struct ListView: View {
     var body: some View {
         ZStack {
             // Hintergrund aufrufen
-            AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
+            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
             ScrollView {
                 LazyVStack(spacing: 16) {
                     // Filter Chips (Glassmorphic)

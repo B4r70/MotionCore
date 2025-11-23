@@ -21,7 +21,7 @@ struct StatisticView: View {
         StatisticCalcEngine(workouts: allWorkouts)
     }
 
-    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var appSettings = AppSettings.shared
 
     // Anzahl der Cards je Zeile im Grid
     private let gridColumns: [GridItem] = [
@@ -32,7 +32,7 @@ struct StatisticView: View {
     var body: some View {
         ZStack {
             // Hintergrund
-            AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
+            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             ScrollView {
                 VStack(spacing: 20) {

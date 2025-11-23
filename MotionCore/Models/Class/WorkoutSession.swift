@@ -37,7 +37,7 @@ final class WorkoutSession {
 
     var difficulty: Int = 1 // Schwierigkeitsgrad (1–25)
     var heartRate: Int = 0 // ∅ Herzfrequenz (Apple Watch)
-    var bodyWeight: Int = 0 // Körpergewicht (am Gerät eingegeben)
+    var bodyWeight: Double = 0.0 // Körpergewicht (am Gerät eingegeben)
 
     // MARK: - Persistente ENUM-Rohwerte
 
@@ -66,8 +66,8 @@ final class WorkoutSession {
 
     /// METs (Metabolisches Äquivalent) ≈ kcal pro Stunde pro kg
     var mets: Double {
-        guard bodyWeight > 0, duration > 0 else { return 0 }
-        return (Double(calories) / (Double(duration) / 60.0)) / Double(bodyWeight)
+        guard bodyWeight > 0.0, duration > 0 else { return 0 }
+        return (Double(calories) / (Double(duration) / 60.0)) / bodyWeight
     }
 
     /// Durchschnittliche Geschwindigkeit (m/min)
@@ -85,7 +85,7 @@ final class WorkoutSession {
         calories: Int = 0,
         difficulty: Int = 1,
         heartRate: Int = 0,
-        bodyWeight: Int = 0,
+        bodyWeight: Double = 0.0,
         intensity: Intensity = .none,
         trainingProgram: TrainingProgram = .random,
         workoutDevice: WorkoutDevice = .none

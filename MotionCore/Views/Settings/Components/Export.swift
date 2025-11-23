@@ -29,7 +29,7 @@ struct WorkoutExportItem: Codable {
     let calories: Int?
     let difficulty: Int?
     let heartRate: Int?
-    let bodyWeight: Int?
+    let bodyWeight: Double?
     let intensity: Int? // Enum als rawValue (0...5)
     let trainingProgram: String? // Enum als rawValue ("manual", ...)
     let workoutDevice: Int?
@@ -49,7 +49,7 @@ extension WorkoutSession {
             calories: calories > 0 ? calories : nil,
             difficulty: difficulty > 1 ? difficulty : nil, // Annahme: 1 ist der Standard
             heartRate: heartRate > 0 ? heartRate : nil,
-            bodyWeight: bodyWeight > 0 ? bodyWeight : nil,
+            bodyWeight: bodyWeight > 0.0 ? bodyWeight : nil,
 
             // Enum rawValues können oft 0 sein, daher prüfen wir auf .none/Standard
             intensity: intensity != .none ? intensity.rawValue : nil,
@@ -69,7 +69,7 @@ extension WorkoutSession {
             calories: e.calories ?? 0,
             difficulty: e.difficulty ?? 1,
             heartRate: e.heartRate ?? 0,
-            bodyWeight: e.bodyWeight ?? 0,
+            bodyWeight: e.bodyWeight ?? 0.0,
             intensity: e.intensity.flatMap { Intensity(rawValue: $0) } ?? .none,
             trainingProgram: e.trainingProgram.flatMap { TrainingProgram(rawValue: $0) } ?? .manual,
             workoutDevice: e.workoutDevice.flatMap { WorkoutDevice(rawValue: $0) } ?? .none

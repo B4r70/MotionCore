@@ -14,7 +14,7 @@ import SwiftUI
 import SwiftData
 
 struct UserSettingsView: View {
-    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var appSettings = AppSettings.shared
 
     @State private var showBodyHeightWheel = false
 
@@ -26,10 +26,11 @@ struct UserSettingsView: View {
                 HStack {
                     DisclosureRow(
                         title: "Größe",
-                        value: "\(settings.userBodyHeight) cm",
-                        isExpanded: $showBodyHeightWheel
+                        value: "\(appSettings.userBodyHeight) cm",
+                        isExpanded: $showBodyHeightWheel,
+                        valueColor: .primary
                     ){
-                        Picker("Körpergröße", selection: $settings.userBodyHeight) {
+                        Picker("Körpergröße", selection: $appSettings.userBodyHeight) {
                             ForEach(0 ... 250,id: \.self) { cm in
                                 Text("\(cm) cm").tag(cm)
                             }
@@ -44,12 +45,12 @@ struct UserSettingsView: View {
                 HStack {
                     Text("Geburtsdatum")
                     Spacer()
-                    Text("(\(settings.userAge) Jahre)")
+                    Text("(\(appSettings.userAge) Jahre)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     DatePicker(
                         "",
-                        selection: $settings.userBirthdayDate,
+                        selection: $appSettings.userBirthdayDate,
                         displayedComponents: .date
                     )
                     .environment(\.locale, Locale(identifier: "de_DE"))
@@ -62,7 +63,7 @@ struct UserSettingsView: View {
                     Text("Geschlecht")
                     Spacer()
 
-                    Picker("", selection: $settings.userGender) {
+                    Picker("", selection: $appSettings.userGender) {
                         ForEach(Gender.allCases,id: \.self) { gender in
                             Text(gender.description)
                         }

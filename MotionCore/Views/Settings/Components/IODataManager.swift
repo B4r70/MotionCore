@@ -93,6 +93,28 @@ final class IODataManager {
 
         return importedCount
     }
+
+        /// Löscht alle gespeicherten WorkoutSession-Objekte aus dem ModelContext.
+        /// - Parameter context: Der ModelContext, aus dem die Daten gelöscht werden sollen.
+        /// - Throws: Einen Fehler, falls die Operation fehlschlägt.
+    func deleteAllWorkouts(context: ModelContext) throws -> Int {
+
+            // 1. Alle Objekte vom Typ WorkoutSession abrufen
+            // Wir benötigen keine Sortierung, nur die Objekte selbst.
+        let workoutsToDelete = try context.fetch(FetchDescriptor<WorkoutSession>())
+
+        let deletedCount = workoutsToDelete.count
+
+            // 2. Alle Workouts löschen
+        for workout in workoutsToDelete {
+            context.delete(workout)
+        }
+
+            // 3. Änderungen speichern, um die Löschung zu persistieren
+        try context.save()
+
+        return deletedCount // Gibt die Anzahl der gelöschten Elemente zurück
+    }
 }
 
 // MARK: - Fehlerbehandlung
@@ -101,20 +123,45 @@ enum DataIOError: LocalizedError {
     case accessDenied
     case importFailed
     case unsupportedVersion
+    case deleteError(Error)
     case generalError(Error)
 
     var errorDescription: String? {
         switch self {
-        case .noDataToExport:
-            return "Es sind keine Workouts zum Exportieren vorhanden."
-        case .accessDenied:
-            return "Zugriff auf die ausgewählte Datei verweigert."
-        case .importFailed:
-            return "Der Importvorgang ist fehlgeschlagen."
-        case .unsupportedVersion:
-            return "Das Format der Datei wird von dieser App-Version nicht unterstützt."
-        case .generalError(let error):
-            return "Ein allgemeiner Fehler ist aufgetreten: \(error.localizedDescription)"
+            case .noDataToExport:
+                return "Es sind keine Workouts zum Exportieren vorhanden."
+            case .accessDenied:
+                return "Zugriff auf die ausgewählte Datei verweigert."
+            case .importFailed:
+                return "Der Importvorgang ist fehlgeschlagen."
+            case .unsupportedVersion:
+                return "Das Format der Datei wird von dieser App-Version nicht unterstützt."
+            case .deleteError(let error): // <-- NEU
+                return "Löschen fehlgeschlagen: \(error.localizedDescription)"
+            case .generalError(let error):
+                return "Ein allgemeiner Fehler ist aufgetreten: \(error.localizedDescription)"
         }
+    }
+}
+
+func deleteAllWorkouts(context: ModelContext) throws -> Int {
+
+    // Wir nutzen einen do-catch-Block innerhalb der Funktion,
+    // um generische Fehler in unseren spezifischen Fehler zu verpacken.
+    do {
+        let workoutsToDelete = try context.fetch(FetchDescriptor<WorkoutSession>())
+        let deletedCount = workoutsToDelete.count
+
+        for workout in workoutsToDelete {
+            context.delete(workout)
+        }
+
+        try context.save()
+
+        return deletedCount
+    } catch {
+        // Jeden Fehler, der während des Fetches oder Speicherns auftritt,
+        // verpacken wir in den neuen DataIOError.deleteError.
+        throw DataIOError.deleteError(error)
     }
 }

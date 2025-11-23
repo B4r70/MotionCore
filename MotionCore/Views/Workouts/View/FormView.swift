@@ -21,13 +21,12 @@ struct FormView: View {
     let mode: WorkoutFormMode
 
     @Bindable var workout: WorkoutSession
-    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var appSettings = AppSettings.shared
 
     // Lokaler Zustand für aufklappbare Wheels
     @State private var showDurationWheel = false
     @State private var showHrWheel = false
     @State private var showDifficultyWheel = false
-    @State private var showWeightWheel = false
     @State private var showCaloriesWheel = false
 
     // Lösch-Bestätigung
@@ -36,7 +35,7 @@ struct FormView: View {
     var body: some View {
         ZStack {
             // Hintergrund
-            AnimatedBackground(showAnimatedBlob: settings.showAnimatedBlob)
+            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -117,13 +116,15 @@ struct FormView: View {
                                 }
                             }
                         }
+                        .foregroundStyle(.primary)
 
                         // MARK: Dauer
 
                         DisclosureRow(
                             title: "Dauer",
                             value: "\(workout.duration) min",
-                            isExpanded: $showDurationWheel
+                            isExpanded: $showDurationWheel,
+                            valueColor: .primary
                         ) {
                             Picker("Dauer", selection: $workout.duration) {
                                 ForEach(0 ... 300, id: \.self) { min in
@@ -141,7 +142,8 @@ struct FormView: View {
                         DisclosureRow(
                             title: "Schwierigkeitsgrad",
                             value: "\(workout.difficulty)",
-                            isExpanded: $showDifficultyWheel
+                            isExpanded: $showDifficultyWheel,
+                            valueColor: .primary
                         ) {
                             Picker("Schwierigkeitsgrad", selection: $workout.difficulty) {
                                 ForEach(1 ... 25, id: \.self) { v in
@@ -177,21 +179,14 @@ struct FormView: View {
                                 .foregroundStyle(.secondary)
                         }
 
-                        // MARK: Gewicht
-
-                        DisclosureRow(
-                            title: "Gewicht",
-                            value: "\(workout.bodyWeight) kg",
-                            isExpanded: $showWeightWheel
-                        ) {
-                            Picker("Gewicht", selection: $workout.bodyWeight) {
-                                ForEach(0 ... 300, id: \.self) { kg in
-                                    Text("\(kg) kg").tag(kg)
-                                }
-                            }
-                            .pickerStyle(.wheel)
-                            .frame(height: 140)
-                            .clipped()
+                        // MARK: Körpergewicht
+                        HStack {
+                            Text("Gewicht")
+                            Spacer()
+                            TextField("0.0", value: $workout.bodyWeight, format: .number) // Bindet direkt an Double
+                                .keyboardType(.decimalPad) // Wichtig: Ziffernblock mit Dezimalpunkt/Komma
+                                .multilineTextAlignment(.trailing)
+                            Text("kg")
                         }
 
                         // MARK: Kalorien
@@ -199,7 +194,8 @@ struct FormView: View {
                         DisclosureRow(
                             title: "Kalorien",
                             value: "\(workout.calories) kcal",
-                            isExpanded: $showCaloriesWheel
+                            isExpanded: $showCaloriesWheel,
+                            valueColor: .primary
                         ) {
                             Picker("Kalorien", selection: $workout.calories) {
                                 ForEach(0 ... 2000, id: \.self) { kcal in
@@ -216,7 +212,8 @@ struct FormView: View {
                         DisclosureRow(
                             title: "Herzfrequenz",
                             value: "\(workout.heartRate) bpm",
-                            isExpanded: $showHrWheel
+                            isExpanded: $showHrWheel,
+                            valueColor: .primary
                         ) {
                             Picker("Herzfrequenz", selection: $workout.heartRate) {
                                 ForEach(60 ... 200, id: \.self) { bpm in
@@ -224,6 +221,7 @@ struct FormView: View {
                                 }
                             }
                             .pickerStyle(.wheel)
+                            .tint(.primary)
                             .frame(height: 140)
                             .clipped()
                         }
@@ -304,16 +302,16 @@ struct FormView: View {
     // Defaulteinstellungen für neue Workouts
     private func applyDefaultsIfNeeded() {
         if workout.workoutDevice == .none {
-            workout.workoutDevice = settings.defaultDevice
+            workout.workoutDevice = appSettings.defaultDevice
         }
         if workout.trainingProgram == .manual {
-            workout.trainingProgram = settings.defaultProgram
+            workout.trainingProgram = appSettings.defaultProgram
         }
         if workout.duration == 0 {
-            workout.duration = settings.defaultDuration
+            workout.duration = appSettings.defaultDuration
         }
         if workout.difficulty == 1 {
-            workout.difficulty = settings.defaultDifficulty
+            workout.difficulty = appSettings.defaultDifficulty
         }
     }
 }

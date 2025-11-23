@@ -57,10 +57,10 @@ extension WorkoutSession {
 
     // Relative Kaloriendichte im Verhältnis zum Körpergewicht
     var relativeCaloricDensity: Double {
-        guard distance > 0 && Double(bodyWeight) > 0.0 else {
+        guard distance > 0 && bodyWeight > 0.0 else {
             return 0.0 // Keinen gültigen Wert, wenn Distanz oder Gewicht fehlen
         }
         let caloriesPerKm = Double(calories) / distance
-        return caloriesPerKm / Double(bodyWeight)
+        return caloriesPerKm / bodyWeight
     }
 }
