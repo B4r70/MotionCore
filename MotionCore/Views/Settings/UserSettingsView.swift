@@ -11,48 +11,69 @@
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
+import SwiftData
 
 struct UserSettingsView: View {
     @ObservedObject private var settings = AppSettings.shared
+
+    @State private var showBodyHeightWheel = false
 
     var body: some View {
         List {
                 // MARK: Benutzerangaben
             Section {
+                // Userdefault: Körpergröße des Benutzers
                 HStack {
-                    Text("Körpergröße")
-                    Spacer()
-
-                    TextField(
-                        "0",
-                        value: $settings.userBodyHeight, // <-- Bindet direkt an den Int-Wert
-                        format: .number // Stellt sicher, dass die Eingabe als Zahl behandelt wird
-                    )
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.trailing)
-                    Text("cm") // <-- Einheit von "km" auf "cm" korrigiert
-                        .foregroundStyle(.secondary)
+                    DisclosureRow(
+                        title: "Größe",
+                        value: "\(settings.userBodyHeight) cm",
+                        isExpanded: $showBodyHeightWheel
+                    ){
+                        Picker("Körpergröße", selection: $settings.userBodyHeight) {
+                            ForEach(0 ... 250,id: \.self) { cm in
+                                Text("\(cm) cm").tag(cm)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .labelsHidden()
+                        .frame(width: 90, height: 100)
+                        .clipped()
+                    }
                 }
                     // 2. Alter
                 HStack {
-                    Text("Alter")
+                    Text("Geburtsdatum")
                     Spacer()
-                    TextField("0", value: $settings.userAge, format: .number)
-                        .keyboardType(.numberPad)
-                        .multilineTextAlignment(.trailing)
-                    Text("Jahre")
+                    Text("(\(settings.userAge) Jahre)")
+                        .font(.caption)
                         .foregroundStyle(.secondary)
+                    DatePicker(
+                        "",
+                        selection: $settings.userBirthdayDate,
+                        displayedComponents: .date
+                    )
+                    .environment(\.locale, Locale(identifier: "de_DE"))
+                    .datePickerStyle(.automatic)
+                    .labelsHidden()
                 }
 
-                    // 3. Geschlecht (Als Picker oder Segmented Control)
-                Picker("Geschlecht", selection: $settings.userGender) {
-                    ForEach(Gender.allCases) { gender in
-                        Text(gender.description)
+                // Geschlecht (Wichtig für die Berechnung von Fitness-Werten)
+                HStack {
+                    Text("Geschlecht")
+                    Spacer()
+
+                    Picker("", selection: $settings.userGender) {
+                        ForEach(Gender.allCases,id: \.self) { gender in
+                            Text(gender.description)
+                        }
+                        .foregroundColor(.primary)
                     }
                 }
+                .pickerStyle(.automatic) // Zeigt den ausgewählten Wert als Menüpunkt
+                .labelsHidden()
             }
             header: {
-                Text("Benutzerangaben")
+                Text("Persönliche Daten")
             }
         }
         .navigationTitle("Benutzerspezifische Werte")

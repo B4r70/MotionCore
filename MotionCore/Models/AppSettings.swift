@@ -16,74 +16,85 @@ import SwiftUI
 // MARK: - App Settings Manager
 
 class AppSettings: ObservableObject {
-    // Singleton
+
     static let shared = AppSettings()
 
-    // MARK: - Display Settings
-    // Animationen anzeigen
+    // MARK: Anzeigedefaults in AppSettings
+
+    // Anzeigedefaults: Animationen anzeigen
     @Published var showAnimatedBlob: Bool {
         didSet {
             UserDefaults.standard.set(showAnimatedBlob, forKey: "display.showAnimatedBlob")
         }
     }
-    // Erscheinungsbild
+    // Anzeigedefaults: Erscheinungsbild der App
     @Published var appTheme: AppTheme {
         didSet {
             UserDefaults.standard.set(appTheme.rawValue, forKey: "display.appTheme")
         }
     }
 
-    // MARK: - Workout Settings
-    // Default Device als Enum
+    // MARK: Workoutdefaults in AppSettings
+    // Workoutdefaults: Trainingsgerät aus Enumeration
     @Published var defaultDevice: WorkoutDevice {
         didSet {
             UserDefaults.standard.set(defaultDevice.rawValue, forKey: "workout.defaultDevice")
         }
     }
 
-    // Default Program als Enum
+    // Workoutdefaults: Trainingsprogram als Enum
     @Published var defaultProgram: TrainingProgram {
         didSet {
             UserDefaults.standard.set(defaultProgram.rawValue, forKey: "workout.defaultProgram")
         }
     }
 
-    // Default Duration in Minuten
+    // Workoutdefaults: Trainingsdauer in Minuten
     @Published var defaultDuration: Int {
         didSet {
             UserDefaults.standard.set(defaultDuration, forKey: "workout.defaultDuration")
         }
     }
 
-    // Default Schwierigkeitsgrad
+    // Workoutdefaults: Schwierigkeitsgrad
     @Published var defaultDifficulty: Int {
         didSet {
             UserDefaults.standard.set(defaultDifficulty, forKey: "workout.defaultDifficulty")
         }
     }
 
-    // Konfig Anzeige leerer Felder
+    // Workoutdefaults: Anzeige leerer Felder
     @Published var showEmptyFields: Bool {
         didSet {
             UserDefaults.standard.set(showEmptyFields, forKey: "workout.showEmptyFields")
         }
     }
 
-    // Benutzergröße in cm
+    // MARK: Userdefaults in AppSettings
+
+    // Userdefault: Körpergröße in cm
     @Published var userBodyHeight: Int {
         didSet {
             UserDefaults.standard.set(userBodyHeight, forKey: "user.userBodyHeight")
         }
     }
-
-    // Benutzeralter in Jahren
-    @Published var userAge: Int {
+    // Userdefault: Geburtsdatum des Benutzers
+    @Published var userBirthdayDate: Date {
         didSet {
-            UserDefaults.standard.set(userAge, forKey: "user.userAge")
+            UserDefaults.standard.set(userBirthdayDate, forKey: "user.userBirthdayDate")
         }
     }
+    // Userdefaults: Berechnung des Alters auf Basis des Geburtsdatums
+    var userAge: Int {
+        let now = Date()
+        let calendar = Calendar.current
 
-    // Benutzergeschlecht
+        let ageComponents = calendar.dateComponents([.year], from: userBirthdayDate, to: now)
+
+        return ageComponents.year ?? 0
+    }
+
+    // Userdefault: Benutzergeschlecht
     @Published var userGender: Gender {
         didSet {
                 // Speichert den RawValue (String) der Enum
@@ -126,8 +137,8 @@ class AppSettings: ObservableObject {
         // Initialisiere die Körpergröße
         userBodyHeight = UserDefaults.standard.integer(forKey: "user.userBodyHeight")
 
-        // Initialisiere das Alter
-        userAge = UserDefaults.standard.integer(forKey: "user.userAge")
+        // Initialisiere das Geburtsdatum des Benutzers
+        self.userBirthdayDate = AppSettings.loadInitialBirthdayDate()
 
         // Initialisiere das Geschlecht
         if let rawGender = UserDefaults.standard.string(forKey: "user.userGender"),
@@ -138,3 +149,4 @@ class AppSettings: ObservableObject {
         }
     }
 }
+

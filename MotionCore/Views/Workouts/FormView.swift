@@ -120,7 +120,7 @@ struct FormView: View {
 
                         // MARK: Dauer
 
-                        disclosureRow(
+                        DisclosureRow(
                             title: "Dauer",
                             value: "\(workout.duration) min",
                             isExpanded: $showDurationWheel
@@ -138,7 +138,7 @@ struct FormView: View {
 
                         // MARK: Schwierigkeitsgrad
 
-                        disclosureRow(
+                        DisclosureRow(
                             title: "Schwierigkeitsgrad",
                             value: "\(workout.difficulty)",
                             isExpanded: $showDifficultyWheel
@@ -179,7 +179,7 @@ struct FormView: View {
 
                         // MARK: Gewicht
 
-                        disclosureRow(
+                        DisclosureRow(
                             title: "Gewicht",
                             value: "\(workout.bodyWeight) kg",
                             isExpanded: $showWeightWheel
@@ -196,7 +196,7 @@ struct FormView: View {
 
                         // MARK: Kalorien
 
-                        disclosureRow(
+                        DisclosureRow(
                             title: "Kalorien",
                             value: "\(workout.calories) kcal",
                             isExpanded: $showCaloriesWheel
@@ -213,7 +213,7 @@ struct FormView: View {
 
                         // MARK: Herzfrequenz
 
-                        disclosureRow(
+                        DisclosureRow(
                             title: "Herzfrequenz",
                             value: "\(workout.heartRate) bpm",
                             isExpanded: $showHrWheel
@@ -293,29 +293,6 @@ struct FormView: View {
     }
 
     // MARK: - Hilfsfunktionen
-
-    /// Generische DisclosureGroup-Zeile mit Label rechts
-    @ViewBuilder
-    private func disclosureRow<Content: View>(
-        title: String,
-        value: String,
-        isExpanded: Binding<Bool>,
-        content: @escaping () -> Content
-    ) -> some View {
-        DisclosureGroup(isExpanded: isExpanded) {
-            content()
-        } label: {
-            HStack {
-                Text(title)
-                    .foregroundStyle(.primary)
-                    .tint(.primary)
-                Spacer()
-                Text(value)
-                    .foregroundStyle(.primary)
-                    .tint(.primary)
-            }
-        }
-    }
 
     // Löschen-Funktion
     private func deleteWorkout() {
