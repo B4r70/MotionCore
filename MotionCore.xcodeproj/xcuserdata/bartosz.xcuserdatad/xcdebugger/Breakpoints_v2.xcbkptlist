@@ -3,4 +3,47 @@
    uuid = "1D3B9C2A-1A52-48B7-A638-0A9DDE82F752"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2EDCBF82-3173-4C23-A664-1110FD9D4500"
+            shouldBeEnabled = "No"
+            nameForDebugger = "UserAge"
+            ignoreCount = "0"
+            continueAfterRunningActions = "Yes"
+            filePath = "MotionCore/Views/Statistics/User Statistic/Components/HealthMetricCalcEngine.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "userAge"
+            landmarkType = "24">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent>
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "27EEB26A-59CD-4886-B66B-9661724C2C80"
+            shouldBeEnabled = "No"
+            nameForDebugger = "SetUserAge"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MotionCore/Views/Statistics/User Statistic/Components/HealthMetricCalcEngine.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "userAge"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

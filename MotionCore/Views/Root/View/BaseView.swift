@@ -55,7 +55,7 @@ struct BaseView: View {
     }
 
     enum Tab: Hashable {
-        case workouts, statistics, add, records, health, settings
+        case workouts, statistics, add, health, records, settings
     }
 
     var body: some View {
@@ -106,26 +106,7 @@ struct BaseView: View {
                 }
                 .tag(Tab.add)
 
-            // MARK: Tab 4 - Rekorde
-
-            NavigationStack {
-                RecordView()
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            HeaderView(
-                                title: "MotionCore",
-                                subtitle: "Rekorde"
-                            )
-                        }
-                    }
-            }
-            .tabItem {
-                Label("Rekorde", systemImage: "trophy.fill")
-            }
-            .tag(Tab.records)
-
-                // MARK: Tab 5 - Gesundheitsdaten
+            // MARK: Tab 4 - Gesundheitsdaten
 
             NavigationStack {
                 HealthMetricView()
@@ -143,6 +124,25 @@ struct BaseView: View {
                 Label("Health", systemImage: "bolt.heart")
             }
             .tag(Tab.health)
+
+            // MARK: Tab 5 - Rekorde
+
+            NavigationStack {
+                RecordView()
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Rekorde"
+                            )
+                        }
+                    }
+            }
+            .tabItem {
+                Label("Rekorde", systemImage: "trophy.fill")
+            }
+            .tag(Tab.records)
 
             // MARK: Tab 6 - Einstellungen
 

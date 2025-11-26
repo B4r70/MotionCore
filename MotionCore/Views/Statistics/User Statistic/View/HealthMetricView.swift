@@ -74,9 +74,7 @@ struct HealthMetricView: View {
                         HealthMetricGridCard(
                             icon: "flame.fill", // Beispiel-Icon
                             title: "Alter",
-                            valueView: Text(
-                                String(format: "%.0f Jahre", calcHealthMetrics.userAge)
-                            ),
+                            valueView: Text(String(format: "%d Jahre", calcHealthMetrics.userAge)),
                             color: .red // Kann nach Belieben angepasst werden
                         )
                     }

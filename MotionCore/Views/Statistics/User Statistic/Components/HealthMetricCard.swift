@@ -21,12 +21,12 @@ struct HealthMetricCard<ValueContent: View>: View {
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.system(size: 50))
+                .font(.system(size: 40))
                 .foregroundStyle(color)
 
             VStack(spacing: 8) {
                 valueView
-                    .font(.system(size: 48, weight: .bold))
+                    .font(.system(size: 40, weight: .bold))
 
                 Text(title)
                     .font(.headline)
@@ -50,7 +50,7 @@ struct HealthMetricGridCard<ValueContent: View>: View {
 
             // Icon oben
             Image(systemName: icon)
-                .font(.system(size: 40))        
+                .font(.system(size: 30))        
                 .foregroundStyle(color)
 
             // Wert in groß, aber nicht riesig

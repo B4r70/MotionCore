@@ -84,6 +84,7 @@ class AppSettings: ObservableObject {
             UserDefaults.standard.set(userBirthdayDate, forKey: "user.userBirthdayDate")
         }
     }
+
     // Userdefaults: Berechnung des Alters auf Basis des Geburtsdatums
     var userAge: Int {
         let now = Date()
@@ -137,8 +138,12 @@ class AppSettings: ObservableObject {
         // Initialisiere die Körpergröße
         userBodyHeight = UserDefaults.standard.integer(forKey: "user.userBodyHeight")
 
-        // Initialisiere das Geburtsdatum des Benutzers
-        self.userBirthdayDate = AppSettings.loadInitialBirthdayDate()
+        if let savedDate = UserDefaults.standard.object(forKey: "user.userBirthdayDate") as? Date {
+            self.userBirthdayDate = savedDate
+        } else {
+                // Default-Wert, z. B. heute
+            self.userBirthdayDate = Date()
+        }
 
         // Initialisiere das Geschlecht
         if let rawGender = UserDefaults.standard.string(forKey: "user.userGender"),
