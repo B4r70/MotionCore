@@ -23,6 +23,8 @@ struct HealthMetricView: View {
 
     // Lesen der Einstellungen für Userdefaults
     @ObservedObject private var appSettings = AppSettings.shared
+    // Lesen der HealthKit-Daten
+    @ObservedObject private var healthKitManager = HealthKitManager.shared
 
     // Anzahl der Cards je Zeile im Grid
     private let gridColumns: [GridItem] = [
@@ -77,6 +79,28 @@ struct HealthMetricView: View {
                             valueView: Text(String(format: "%d Jahre", calcHealthMetrics.userAge)),
                             color: .red // Kann nach Belieben angepasst werden
                         )
+                        // Letzte Herzfrequenz (aus HealthKit)
+                        HealthMetricGridCard(
+                            icon: "heart.fill",
+                            title: "Aktuelle Herzfrequenz",
+                            valueView: Text(
+                                healthKitManager.latestHeartRate != nil
+                                ? String(format: "%d bpm", healthKitManager.latestHeartRate!)
+                                : "-"
+                            ),
+                            color: .red
+                        )
+                        // Schritte (aus HealthKit)
+                        HealthMetricGridCard(
+                            icon: "figure.walk",
+                            title: "Schritte",
+                            valueView: Text(
+                                healthKitManager.latestStepCount != nil
+                                ? String(format: "%.0f", healthKitManager.latestStepCount ?? 0)
+                                : "-"
+                            ),
+                            color: .black
+                        )
                     }
                         // HealthMetricGridCard für den Grundumsatz (BMR)
                     HealthMetricCard(
@@ -102,6 +126,16 @@ struct HealthMetricView: View {
                 .padding(.bottom, 100)
             }
             .scrollIndicators(.hidden)
+            // Berechtigungsanfrage für HealthKit
+            .onAppear {
+                Task {
+                    let authorized = await healthKitManager.requestAuthorization()
+                    if authorized {
+                        await healthKitManager.fetchLatestHeartRate()
+                        await healthKitManager.fetchTodayStepCount()
+                    }
+                }
+            }
 
             // Empty State
             if allWorkouts.isEmpty {
