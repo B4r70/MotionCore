@@ -15,10 +15,9 @@ import SwiftUI
 
 struct BaseView: View {
     @State private var selectedTab: Tab = .workouts
-    @State private var showingAddWorkout = false
-    @State private var previousTab: Tab = .workouts
+    @State private var showingAddWorkout = false  // Bleibt!
 
-    @State private var draft = WorkoutSession(
+    @State private var draft = WorkoutSession(    // Bleibt!
         date: .now,
         duration: 0,
         distance: 0.0,
@@ -31,20 +30,16 @@ struct BaseView: View {
         workoutDevice: .none
     )
 
-    // MARK: Vorabeinstellungen Farbgebung Tabbar
-
+        // MARK: Vorabeinstellungen Farbgebung Tabbar
     init() {
-        // Tab Bar Appearance konfigurieren
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
 
-        // Farbe für ausgewählten Tab
         appearance.stackedLayoutAppearance.selected.iconColor = .systemBlue
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor.systemBlue,
         ]
 
-        // Farbe für nicht-ausgewählte Tabs
         appearance.stackedLayoutAppearance.normal.iconColor = .systemGray
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor.systemGray,
@@ -55,22 +50,32 @@ struct BaseView: View {
     }
 
     enum Tab: Hashable {
-        case workouts, statistics, add, health, records, settings
+        case workouts, statistics, health, records, settings
     }
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // MARK: Tab 1 - Workouts
+                // MARK: Tab 1 - Workouts
 
             NavigationStack {
                 ListView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
+                            // Mitte: HeaderView (wie bisher)
                         ToolbarItem(placement: .principal) {
                             HeaderView(
                                 title: "MotionCore",
                                 subtitle: "Workouts"
                             )
+                        }
+
+                            // NEU: Rechts der Plus-Button
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                showingAddWorkout = true
+                            } label: {
+                                ToolbarButton(icon: "plus")
+                            }
                         }
                     }
             }
@@ -79,7 +84,7 @@ struct BaseView: View {
             }
             .tag(Tab.workouts)
 
-            // MARK: Tab 2 - Statistiken
+                // MARK: Tab 2 - Statistiken
 
             NavigationStack {
                 StatisticView()
@@ -98,15 +103,7 @@ struct BaseView: View {
             }
             .tag(Tab.statistics)
 
-            // MARK: Tab 3 - Neues Workout
-
-            Color.clear
-                .tabItem {
-                    Label("Neu", systemImage: "plus.diamond.fill")
-                }
-                .tag(Tab.add)
-
-            // MARK: Tab 4 - Gesundheitsdaten
+                // MARK: Tab 3 - Gesundheitsdaten
 
             NavigationStack {
                 HealthMetricView()
@@ -125,7 +122,7 @@ struct BaseView: View {
             }
             .tag(Tab.health)
 
-            // MARK: Tab 5 - Rekorde
+                // MARK: Tab 4 - Rekorde
 
             NavigationStack {
                 RecordView()
@@ -144,7 +141,7 @@ struct BaseView: View {
             }
             .tag(Tab.records)
 
-            // MARK: Tab 6 - Einstellungen
+                // MARK: Tab 5 - Einstellungen
 
             NavigationStack {
                 MainSettingsView()
@@ -162,16 +159,6 @@ struct BaseView: View {
                 Label("Mehr", systemImage: "gearshape.fill")
             }
             .tag(Tab.settings)
-        }
-        .onChange(of: selectedTab) { _, newValue in
-            if newValue == .add {
-                showingAddWorkout = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    selectedTab = previousTab
-                }
-            } else {
-                previousTab = newValue
-            }
         }
         .sheet(isPresented: $showingAddWorkout) {
             NavigationStack {
@@ -194,7 +181,8 @@ struct BaseView: View {
         }
     }
 }
-    // MARK: Statistic Preview
+
+    // MARK: Preview
 #Preview("Base View") {
     BaseView()
         .modelContainer(PreviewData.sharedContainer)

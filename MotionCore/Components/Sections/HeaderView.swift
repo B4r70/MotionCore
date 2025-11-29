@@ -31,6 +31,7 @@ struct HeaderView: View {
         }
     }
 }
+
     // MARK: - Preview
 #Preview("Header") {
     HeaderView(title: "MotionCore", subtitle: "Workouts")

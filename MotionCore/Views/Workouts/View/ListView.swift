@@ -59,13 +59,14 @@ struct ListView: View {
             .scrollIndicators(.hidden)
         }
         .overlay {
-            if filteredWorkouts.isEmpty { // Geändert: filteredWorkouts statt allWorkouts
+            if filteredWorkouts.isEmpty {
                 EmptyState()
             }
         }
     }
 }
-    // MARK: Statistic Preview
+
+// MARK: Preview
 #Preview("List View") {
     ListView()
         .modelContainer(PreviewData.sharedContainer)
