@@ -29,6 +29,8 @@ struct HeaderView: View {
                 .foregroundStyle(.secondary)
                 .fixedSize()
         }
+        .padding(.top, 20)
+        .padding(.bottom, 20)
     }
 }
 

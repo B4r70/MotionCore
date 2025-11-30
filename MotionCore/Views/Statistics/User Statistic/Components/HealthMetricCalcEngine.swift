@@ -44,19 +44,20 @@ class HealthMetricCalcEngine: ObservableObject {
         return appSettings.userGender
     }
 
+    // Größe des Benutzers in cm
     var userBodyHeight: Int {
         return appSettings.userBodyHeight
     }
 
-        // Berechnung: Letztes erfasstes Körpergewicht
+    // Berechnung: Letztes erfasstes Körpergewicht in kg
     var userBodyWeight: Double? {
-        return allWorkouts.sorted(by: { $0.date > $1.date })
+        return allWorkouts
             .filter { $0.bodyWeight > 0.0 }
             .sorted(by: { $0.date > $1.date })
             .first?.bodyWeight
     }
 
-        /// Berechnung: Body-Mass-Index (BMI)
+    // Berechnung: Body-Mass-Index (BMI)
     var userBodyMassIndex: Double? {
             // 1. Gewicht in Kilogramm (muss existieren)
         guard let userWeight = userBodyWeight else {
@@ -74,7 +75,6 @@ class HealthMetricCalcEngine: ObservableObject {
 
     // Berechnung: Kalorien Grundumsatz nach Mifflin St. Jeor
     var userCalorieMetabolicRate: Double? {
-
         // 1. Vorabprüfung der notwendigen Daten
         guard let userWeight = userBodyWeight, userWeight > 0.0,
               userBodyHeight > 0,
@@ -105,6 +105,13 @@ class HealthMetricCalcEngine: ObservableObject {
             // 3. Rundung und Rückgabe
             // Der Grundumsatz wird üblicherweise auf ganze Kalorien gerundet
         return bmr.rounded()
+    }
+
+    // Berechnung des TDEE
+    // Nutzt automatisch das Aktivitätslevel aus AppSettings
+    var userTotalDailyEnergyExpenditure: Double? {
+        guard let bmr = userCalorieMetabolicRate else { return nil }
+        return bmr * appSettings.userActivityLevel.rawValue
     }
 }
 

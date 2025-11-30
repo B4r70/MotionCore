@@ -16,51 +16,52 @@ import HealthKit
 
 class HealthKitManager: ObservableObject {
 
-        // Singleton für globalen Zugriff
+    // Singleton für globalen Zugriff
     static let shared = HealthKitManager()
 
-        // Der HealthStore ist das "Tor" zu HealthKit
+    // HealthStore
     private let healthStore = HKHealthStore()
 
-        // Status der Berechtigung
+    // Status der Berechtigung
     @Published var isAuthorized = false
 
-    // MARK: Daten aus Apple HealthKit
-
-    // Letzte gemessene Herzfrequenz
+    // MARK: Properties aus Apple HealthKit
     @Published var latestHeartRate: Double?
-
-    // Schrittzähler
+    @Published var restingHeartRate: Double?
     @Published var latestStepCount: Int?
+    @Published var activeBurnedCalories: Int?
+    @Published var exerciseMinutesToday: Int?
 
     private init() {}
 
-        // Prüft, ob HealthKit auf diesem Gerät verfügbar ist
+    // Prüft, ob HealthKit auf diesem Gerät verfügbar ist
     var isHealthKitAvailable: Bool {
         HKHealthStore.isHealthDataAvailable()
     }
 
-        // Berechtigungsfreigabe des Benutzers anfragen für HealthKit-Werte
+    // Berechtigungsfreigabe des Benutzers anfragen für HealthKit-Werte
     private var typesToRead: Set<HKObjectType> {
         let types: Set<HKObjectType?> = [
             HKObjectType.quantityType(forIdentifier: .heartRate),
+            HKObjectType.quantityType(forIdentifier: .restingHeartRate),
             HKObjectType.quantityType(forIdentifier: .stepCount),
-            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)
+            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned),
+            HKObjectType.quantityType(forIdentifier: .appleExerciseTime)
         ]
         return Set(types.compactMap { $0 })
     }
 
-        // Dialog: Berechtigungen beim Benutzer anfragen
+    // Dialog: Berechtigungen beim Benutzer anfragen
     func requestAuthorization() async -> Bool {
-            // Prüfen, ob HealthKit verfügbar ist
+        // Prüfen, ob HealthKit verfügbar ist
         guard isHealthKitAvailable else {
             print("HealthKit ist auf diesem Gerät nicht verfügbar")
             return false
         }
         do {
-                // Dialog anzeigen
+            // Dialog anzeigen
             try await healthStore.requestAuthorization(toShare: [], read: typesToRead)
-                // Auf dem Main-Thread Status aktualiseren
+            // Auf dem Main-Thread Status aktualiseren
             await MainActor.run {
                 self.isAuthorized = true
             }
@@ -79,7 +80,6 @@ class HealthKitManager: ObservableObject {
         guard let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate) else {
             return
         }
-
         // 2. Nur Daten von heute
         let now = Date()
         let startOfDay = Calendar.current.startOfDay(for: now)
@@ -120,7 +120,7 @@ class HealthKitManager: ObservableObject {
         }
     }
 
-        // Schritte
+    // Abrufen des Tagesschrittzählers (tagesweise)
     func fetchTodayStepCount() async {
         guard let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
             return
@@ -156,7 +156,46 @@ class HealthKitManager: ObservableObject {
 
                 continuation.resume()
             }
+            healthStore.execute(query)
+        }
+    }
 
+    func fetchTodayBurnedCalories() async {
+        // KORRIGIERT: .activeEnergyBurned statt .stepCount
+        guard let burnedCaloriesType = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned) else {
+            return
+        }
+
+        let now = Date()
+        let startOfDay = Calendar.current.startOfDay(for: now)
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: now, options: .strictStartDate)
+
+        return await withCheckedContinuation { continuation in
+            let query = HKStatisticsQuery(
+                quantityType: burnedCaloriesType,
+                quantitySamplePredicate: predicate,
+                options: .cumulativeSum
+            ) { _, result, error in
+
+                if let error = error {
+                    print("Fehler beim Abrufen der verbrannten Kalorien: \(error.localizedDescription)")
+                    continuation.resume()
+                    return
+                }
+
+                if let sum = result?.sumQuantity() {
+                    let value = sum.doubleValue(for: .kilocalorie())
+                    print("Aktiver Kalorienverbrauch heute: \(value) kcal")
+
+                    Task { @MainActor in
+                        self.activeBurnedCalories = Int(value)
+                    }
+                } else {
+                    print("Keine Kalorien-Daten gefunden")
+                }
+
+                continuation.resume()
+            }
             healthStore.execute(query)
         }
     }

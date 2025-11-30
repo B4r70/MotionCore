@@ -17,6 +17,7 @@ struct UserSettingsView: View {
     @ObservedObject private var appSettings = AppSettings.shared
 
     @State private var showBodyHeightWheel = false
+    @State private var showUserActivityLevelWheel = false
 
     var body: some View {
         List {
@@ -58,7 +59,7 @@ struct UserSettingsView: View {
                     .labelsHidden()
                 }
 
-                // Geschlecht (Wichtig für die Berechnung von Fitness-Werten)
+                // Userdefault: Geschlecht (Wichtig für die Berechnung von Fitness-Werten)
                 HStack {
                     Text("Geschlecht")
                     Spacer()
@@ -72,9 +73,68 @@ struct UserSettingsView: View {
                 }
                 .pickerStyle(.automatic) // Zeigt den ausgewählten Wert als Menüpunkt
                 .labelsHidden()
+
+                // Userdefault: Tägliches Ziel an Aktivkalorien
+                HStack {
+                    Text("Tagesziel Kalorien")
+                    Spacer()
+                    TextField(
+                        "500",
+                        value: $appSettings.dailyActiveCalorieGoal,
+                        format: .number
+                    )
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 80)
+
+                    Text("kcal")
+                        .foregroundStyle(.secondary)
+                }
+                // Userdefault: Tägliches Ziel an Schritten
+                HStack {
+                    Text("Tagesziel Schritte")
+                    Spacer()
+                    TextField(
+                        "5000",
+                        value: $appSettings.dailyStepsGoal,
+                        format: .number
+                    )
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 80)
+
+                    Text("Schritte")
+                        .foregroundStyle(.secondary)
+                }
+                // Userdefault: Aktivitätslevel
+                HStack {
+                    DisclosureRow(
+                        title: "Aktivitätslevel",
+                        value: "\(appSettings.userActivityLevel.shortDescription)",
+                        isExpanded: $showUserActivityLevelWheel,
+                        valueColor: .primary
+                    ){
+                        Picker("Aktivitätslevel", selection: $appSettings.userActivityLevel) {
+                            ForEach(UserActivityLevel.allCases, id: \.self) { level in
+                                Text(level.shortDescription)
+                                    .tag(level)
+                                    .font(.caption)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .labelsHidden()
+                        .frame(height: 120)
+                        .clipped()
+                    }
+                }
             }
             header: {
                 Text("Persönliche Daten")
+            }
+            footer: {
+                Text("Das Aktivitätslevel wird für die Berechnung deines täglichen Gesamtumsatzes (TDEE) verwendet.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .navigationTitle("Benutzerspezifische Werte")

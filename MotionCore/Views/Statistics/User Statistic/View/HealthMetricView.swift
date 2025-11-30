@@ -44,27 +44,28 @@ struct HealthMetricView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     LazyVGrid(columns: gridColumns, spacing: 20) {
-                            // 2er Grid mit jeweils einer Statistik-Card
-                            // Anzahl aller Workouts
+
+                        // Anzahl aller Workouts
                         HealthMetricGridCard(
-                                icon: "figure.wave",
-                                title: "Körpergröße",
-                                valueView: Text(
-                                    String(
-                                        format: "%.2f m",
-                                        Double(calcHealthMetrics.userBodyHeight) / 100.0
-                                    )
-                                ),
-                                color: .indigo
-                            )
-                            // Verbrauchte Gesamtkalorien
+                            icon: "figure.wave",
+                            title: "Körpergröße",
+                            valueView: Text(
+                                String(
+                                    format: "%.2f m",
+                                    Double(calcHealthMetrics.userBodyHeight) / 100.0
+                                )
+                            ),
+                            color: .indigo
+                        )
+
+                        // Körpergewicht des Benutzers
                         HealthMetricGridCard(
                                 icon: "figure",
                                 title: "Körpergewicht",
                                 valueView: Text(String(format: "%.1f kg", calcHealthMetrics.userBodyWeight ?? 0.0)),
                                 color: .gray
                         )
-                        // Gender
+                        // Geschlecht des Benutzers
                         HealthMetricGridCard(
                             icon: genderMetrics.name,
                             title: "Geschlecht",
@@ -72,53 +73,64 @@ struct HealthMetricView: View {
                             color: genderMetrics.color
                         )
 
-                        // NEU: HealthMetricGridCard für den Grundumsatz (BMR)
+                        // Alter des Benutzers
                         HealthMetricGridCard(
                             icon: "flame.fill", // Beispiel-Icon
                             title: "Alter",
                             valueView: Text(String(format: "%d Jahre", calcHealthMetrics.userAge)),
                             color: .red // Kann nach Belieben angepasst werden
                         )
+
                         // Letzte Herzfrequenz (aus HealthKit)
                         HealthMetricGridCard(
                             icon: "heart.fill",
                             title: "Aktuelle Herzfrequenz",
                             valueView: Text(
-                                healthKitManager.latestHeartRate != nil
-                                ? String(format: "%d bpm", healthKitManager.latestHeartRate!)
-                                : "-"
+                                healthKitManager.latestHeartRate.map { String(format: "%.0f bpm", $0) } ?? "-"
                             ),
                             color: .red
                         )
-                        // Schritte (aus HealthKit)
-                        HealthMetricGridCard(
-                            icon: "figure.walk",
-                            title: "Schritte",
-                            valueView: Text(
-                                healthKitManager.latestStepCount != nil
-                                ? String(format: "%.0f", healthKitManager.latestStepCount ?? 0)
-                                : "-"
-                            ),
-                            color: .black
-                        )
                     }
-                        // HealthMetricGridCard für den Grundumsatz (BMR)
-                    HealthMetricCard(
-                        icon: "flame.fill", // Beispiel-Icon
-                        title: "Grundumsatz (BMR)",
-                        valueView: Text(
-                            String(format: "%.0f kcal/Tag", calcHealthMetrics.userCalorieMetabolicRate ?? 0.0)
-                        ),
-                        color: .red // Kann nach Belieben angepasst werden
+
+                    // Kalorien-Fortschritt vs. Kalorienumsatz
+                    HealthMetricProgressCard(
+                        icon: "flame.fill",
+                        title: "Aktive Kalorien / Tagesziel",
+                        currentValue: Double(healthKitManager.activeBurnedCalories ?? 0),
+                        targetValue: Double(appSettings.dailyActiveCalorieGoal),
+                        unit: "kcal",
+                        color: .orange,
+                        showPercentage: true
                     )
-                        // HealthMetricGridCard für den Grundumsatz (BMR)
+
+                    // Schritte-Fortschritt
+                    HealthMetricProgressCard(
+                        icon: "shoeprints.fill",
+                        title: "Schritte / Tagesziel",
+                        currentValue: Double(healthKitManager.latestStepCount ?? 0),
+                        targetValue: Double(appSettings.dailyStepsGoal),
+                        unit: "Schritte",
+                        color: .black,
+                        showPercentage: true
+                    )
+
+                    // Body-Mass-Index (BMI)
                     HealthMetricCard(
-                        icon: "figure", // Beispiel-Icon
+                        icon: "figure", 
                         title: "Body-Mass-Index (BMI)",
                         valueView: Text(
                             String(format: "%.2f", calcHealthMetrics.userBodyMassIndex ?? 0.0)
                         ),
                         color: .blue // Kann nach Belieben angepasst werden
+                    )
+                    // BMR Card
+                    HealthMetricCard(
+                        icon: "flame.fill",
+                        title: "Grundumsatz (BMR)",
+                        valueView: Text(
+                            String(format: "%.0f kcal/Tag", calcHealthMetrics.userCalorieMetabolicRate ?? 0.0)
+                        ),
+                        color: .red
                     )
                         // Hier kannst du später weitere Cards hinzufügen
                 }
@@ -133,6 +145,7 @@ struct HealthMetricView: View {
                     if authorized {
                         await healthKitManager.fetchLatestHeartRate()
                         await healthKitManager.fetchTodayStepCount()
+                        await healthKitManager.fetchTodayBurnedCalories()
                     }
                 }
             }

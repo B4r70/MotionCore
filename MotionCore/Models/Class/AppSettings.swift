@@ -103,6 +103,30 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // MARK: Health Metrics Einstellungen
+    // Userdefaults: Aktivitätslevel
+    @Published var userActivityLevel: UserActivityLevel {
+        didSet {
+            UserDefaults.standard.set(userActivityLevel.rawValue, forKey: "user.activityLevel")
+        }
+    }
+
+    // Tägliches Kalorienziel
+    @Published var dailyActiveCalorieGoal: Int {
+        didSet {
+            UserDefaults.standard.set(dailyActiveCalorieGoal, forKey: "user.dailyActiveCalorieGoal")
+        }
+    }
+
+    // Tägliches Ziel an Schritten
+    @Published var dailyStepsGoal: Int {
+        didSet {
+            UserDefaults.standard.set(dailyStepsGoal, forKey: "user.dailyStepsGoal")
+        }
+    }
+
+        // Im init():
+
     // MARK: - Init
     private init() {
         let defaults = UserDefaults.standard
@@ -152,6 +176,20 @@ class AppSettings: ObservableObject {
         } else {
             userGender = .male // Default-Wert
         }
+
+        // Initialisierung des Aktivitätslevel des Benutzers
+        if let rawLevel = UserDefaults.standard.object(forKey: "user.activityLevel") as? Double,
+           let savedLevel = UserActivityLevel(rawValue: rawLevel) {
+            userActivityLevel = savedLevel
+        } else {
+            userActivityLevel = .moderatelyActive // Default
+        }
+
+        // Initialisiere das tägliche Kalorienziel
+        dailyActiveCalorieGoal = UserDefaults.standard.integer(forKey: "user.dailyActiveCalorieGoal")
+
+        // Initialisiere das tägliche Ziel an Schritten
+        dailyStepsGoal = UserDefaults.standard.integer(forKey: "user.dailyStepsGoal")
     }
 }
 
