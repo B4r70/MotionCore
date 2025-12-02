@@ -17,7 +17,8 @@ struct RecordView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse)
     private var allWorkouts: [WorkoutSession]
 
-    @ObservedObject private var appSettings = AppSettings.shared
+    // Globaler Zugriff auf AppSettings
+    @EnvironmentObject private var appSettings: AppSettings
 
     private var calcRecords: RecordCalcEngine {
         RecordCalcEngine(workouts: allWorkouts)

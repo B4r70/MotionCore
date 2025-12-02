@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct WorkoutSettingsView: View {
-    @ObservedObject private var appSettings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
 
     // Local state for duration wheel
     @State private var showDurationWheel = false

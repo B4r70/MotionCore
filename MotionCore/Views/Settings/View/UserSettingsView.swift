@@ -14,7 +14,7 @@ import SwiftUI
 import SwiftData
 
 struct UserSettingsView: View {
-    @ObservedObject private var appSettings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
 
     @State private var showBodyHeightWheel = false
     @State private var showUserActivityLevelWheel = false

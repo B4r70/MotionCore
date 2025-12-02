@@ -47,7 +47,7 @@ struct ProgramSummary: Identifiable {
 struct StatisticCalcEngine {
 
     // Abruf aus Einstellungen der Körpergröße, Geschlecht und Alter
-    @ObservedObject private var settings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
     
         // MARK: - Input
 

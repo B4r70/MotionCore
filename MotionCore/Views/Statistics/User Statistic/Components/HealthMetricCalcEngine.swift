@@ -17,7 +17,7 @@ import SwiftUI
 class HealthMetricCalcEngine: ObservableObject {
 
     // Die statischen Benutzerdaten kommen von hier (Singleton)
-    @ObservedObject private var appSettings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
 
     // Die dynamischen Daten (Workouts) kommen als Input in den Initializer
     let allWorkouts: [WorkoutSession] // Angenommen, das ist eine SwiftData/Model-Collection

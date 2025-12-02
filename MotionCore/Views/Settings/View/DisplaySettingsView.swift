@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct DisplaySettingsView: View {
-    @ObservedObject private var appSettings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
 
     var body: some View {
         List {

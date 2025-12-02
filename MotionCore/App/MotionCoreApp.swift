@@ -37,6 +37,7 @@ struct MotionCoreApp: App {
     var body: some Scene {
         WindowGroup {
             BaseView()
+                .environmentObject(appSettings) // AppSettings sind Userdefaults und von überall zugreifbar
                 .preferredColorScheme(appSettings.appTheme.colorScheme)
         }
         .modelContainer(sharedModelContainer)

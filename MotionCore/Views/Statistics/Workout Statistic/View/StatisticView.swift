@@ -21,7 +21,7 @@ struct StatisticView: View {
         StatisticCalcEngine(workouts: allWorkouts)
     }
 
-    @ObservedObject private var appSettings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
 
     // Anzahl der Cards je Zeile im Grid
     private let gridColumns: [GridItem] = [

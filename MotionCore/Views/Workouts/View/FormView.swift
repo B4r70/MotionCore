@@ -21,7 +21,7 @@ struct FormView: View {
     let mode: WorkoutFormMode
 
     @Bindable var workout: WorkoutSession
-    @ObservedObject private var appSettings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
 
     // Lokaler Zustand für aufklappbare Wheels
     @State private var showDurationWheel = false

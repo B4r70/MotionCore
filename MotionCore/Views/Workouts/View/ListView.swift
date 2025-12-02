@@ -22,7 +22,7 @@ struct ListView: View {
     @State private var selectedFilter: WorkoutDevice = .none
 
     // Abruf aus Einstellungen
-    @State private var appSettings = AppSettings.shared
+    @EnvironmentObject private var appSettings: AppSettings
 
     var filteredWorkouts: [WorkoutSession] {
         if selectedFilter == .none {

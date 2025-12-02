@@ -21,8 +21,8 @@ struct HealthMetricView: View {
         HealthMetricCalcEngine(workouts: allWorkouts)
     }
 
-    // Lesen der Einstellungen für Userdefaults
-    @ObservedObject private var appSettings = AppSettings.shared
+    // Lesen der globalen Einstellungen für Userdefaults
+    @EnvironmentObject private var appSettings: AppSettings
     // Lesen der HealthKit-Daten
     @ObservedObject private var healthKitManager = HealthKitManager.shared
 
