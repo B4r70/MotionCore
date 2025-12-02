@@ -14,6 +14,11 @@ import Foundation
 import Combine
 import HealthKit
 
+/* Das sind die HealthKit Identifier:
+    .activeEnergyBurned        // "Aktive Energie"
+    .dietaryEnergyConsumed     // "Nahrungsenergie"
+    .basalEnergyBurned         // "Ruhenergie" (Grundumsatz)
+*/
 class HealthKitManager: ObservableObject {
 
     // Singleton für globalen Zugriff
@@ -29,8 +34,11 @@ class HealthKitManager: ObservableObject {
     @Published var latestHeartRate: Double?
     @Published var restingHeartRate: Double?
     @Published var latestStepCount: Int?
-    @Published var activeBurnedCalories: Int?
     @Published var exerciseMinutesToday: Int?
+    // Aktiv
+    @Published var activeBurnedCalories: Int?
+    @Published var dietaryConsumedCalories: Int?
+    @Published var basalBurnedCalories: Int?
 
     private init() {}
 
@@ -45,8 +53,10 @@ class HealthKitManager: ObservableObject {
             HKObjectType.quantityType(forIdentifier: .heartRate),
             HKObjectType.quantityType(forIdentifier: .restingHeartRate),
             HKObjectType.quantityType(forIdentifier: .stepCount),
+            HKObjectType.quantityType(forIdentifier: .appleExerciseTime),
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned),
-            HKObjectType.quantityType(forIdentifier: .appleExerciseTime)
+            HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed),
+            HKObjectType.quantityType(forIdentifier: .basalEnergyBurned)
         ]
         return Set(types.compactMap { $0 })
     }
@@ -194,6 +204,84 @@ class HealthKitManager: ObservableObject {
                     print("Keine Kalorien-Daten gefunden")
                 }
 
+                continuation.resume()
+            }
+            healthStore.execute(query)
+        }
+    }
+
+    func fetchTodayConsumedCalories() async {
+        // KORRIGIERT: .activeEnergyBurned statt .stepCount
+        guard let consumedCaloriesType = HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed) else {
+            return
+        }
+
+        let now = Date()
+        let startOfDay = Calendar.current.startOfDay(for: now)
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: now, options: .strictStartDate)
+
+        return await withCheckedContinuation { continuation in
+            let query = HKStatisticsQuery(
+                quantityType: consumedCaloriesType,
+                quantitySamplePredicate: predicate,
+                options: .cumulativeSum
+            ) { _, result, error in
+
+                if let error = error {
+                    print("Fehler beim Abrufen der eingenommenen Kalorien: \(error.localizedDescription)")
+                    continuation.resume()
+                    return
+                }
+
+                if let sum = result?.sumQuantity() {
+                    let value = sum.doubleValue(for: .kilocalorie())
+                    print("Aktuelle Kalorienaufnahme heute: \(value) kcal")
+
+                    Task { @MainActor in
+                        self.dietaryConsumedCalories = Int(value)
+                    }
+                } else {
+                    print("Keine Kalorien-Daten gefunden")
+                }
+                continuation.resume()
+            }
+            healthStore.execute(query)
+        }
+    }
+
+    func fetchTodayBasalBurnedCalories() async {
+        // KORRIGIERT: .activeEnergyBurned statt .stepCount
+        guard let basalBurnedCaloriesType = HKQuantityType.quantityType(forIdentifier: .basalEnergyBurned) else {
+            return
+        }
+
+        let now = Date()
+        let startOfDay = Calendar.current.startOfDay(for: now)
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: now, options: .strictStartDate)
+
+        return await withCheckedContinuation { continuation in
+            let query = HKStatisticsQuery(
+                quantityType: basalBurnedCaloriesType,
+                quantitySamplePredicate: predicate,
+                options: .cumulativeSum
+            ) { _, result, error in
+
+                if let error = error {
+                    print("Fehler beim Abrufen des Gesamtumsatzes: \(error.localizedDescription)")
+                    continuation.resume()
+                    return
+                }
+
+                if let sum = result?.sumQuantity() {
+                    let value = sum.doubleValue(for: .kilocalorie())
+                    print("Kalorien-Gesamtumsatz heute: \(value) kcal")
+
+                    Task { @MainActor in
+                        self.basalBurnedCalories = Int(value)
+                    }
+                } else {
+                    print("Keine Kalorien-Daten gefunden")
+                }
                 continuation.resume()
             }
             healthStore.execute(query)

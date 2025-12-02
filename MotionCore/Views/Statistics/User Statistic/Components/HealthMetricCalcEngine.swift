@@ -16,37 +16,32 @@ import SwiftUI
 
 class HealthMetricCalcEngine: ObservableObject {
 
-    // Die statischen Benutzerdaten kommen von hier (Singleton)
-    @EnvironmentObject private var appSettings: AppSettings
-
     // Die dynamischen Daten (Workouts) kommen als Input in den Initializer
-    let allWorkouts: [WorkoutSession] // Angenommen, das ist eine SwiftData/Model-Collection
+    let allWorkouts: [WorkoutSession]
+
+    // Statische Werte direkt speichern (nicht @EnvironmentObject!)
+    private let userBirthdayDate: Date
+    private let userAge: Int
+    private let userGender: Gender
+    private let userBodyHeight: Int
+    private let userActivityLevel: UserActivityLevel
 
     // MARK: - Initializer
-    init(workouts: [WorkoutSession]) {
+    init(workouts: [WorkoutSession], settings: AppSettings) {
         self.allWorkouts = workouts
+            // Werte beim Init kopieren
+        self.userBirthdayDate = settings.userBirthdayDate
+        self.userAge = settings.userAge
+        self.userGender = settings.userGender
+        self.userBodyHeight = settings.userBodyHeight
+        self.userActivityLevel = settings.userActivityLevel
     }
 
-    // MARK: Statische Daten direkt aus AppSettings
+    // MARK: Statische Daten direkt aus gespeicherten Werten
 
     // Geburtsdatum des Benutzers
     var userBirthday: Date {
-        return appSettings.userBirthdayDate
-    }
-
-    // Alter des Benutzers
-    var userAge: Int {
-        return appSettings.userAge
-    }
-
-    // Geschlecht des Benutzers
-    var userGender: Gender {
-        return appSettings.userGender
-    }
-
-    // Größe des Benutzers in cm
-    var userBodyHeight: Int {
-        return appSettings.userBodyHeight
+        return userBirthdayDate
     }
 
     // Berechnung: Letztes erfasstes Körpergewicht in kg
@@ -59,9 +54,8 @@ class HealthMetricCalcEngine: ObservableObject {
 
     // Berechnung: Body-Mass-Index (BMI)
     var userBodyMassIndex: Double? {
-            // 1. Gewicht in Kilogramm (muss existieren)
         guard let userWeight = userBodyWeight else {
-            return nil // Kein Gewicht gefunden
+            return nil
         }
         let userHeightInMeters = Double(userBodyHeight) / 100.0
         guard userHeightInMeters > 0.0 else {
@@ -75,43 +69,35 @@ class HealthMetricCalcEngine: ObservableObject {
 
     // Berechnung: Kalorien Grundumsatz nach Mifflin St. Jeor
     var userCalorieMetabolicRate: Double? {
-        // 1. Vorabprüfung der notwendigen Daten
         guard let userWeight = userBodyWeight, userWeight > 0.0,
               userBodyHeight > 0,
               userAge > 0
         else {
-                // Rückgabe von nil, falls notwendige Eingaben fehlen
             return nil
         }
-        // Mifflin St. Jeor Formel:
-        // BMR = (10 * Gewicht [kg]) + (6.25 * Größe [cm]) - (5 * Alter [Jahre]) + Gender-Faktor
+
         let weightTerm = 10.0 * userWeight
-        let heightTerm = 6.25 * Double(userBodyHeight) // cm zu Double
-        let ageTerm = 5.0 * Double(userAge) // Alter zu Double
+        let heightTerm = 6.25 * Double(userBodyHeight)
+        let ageTerm = 5.0 * Double(userAge)
 
         var bmr = weightTerm + heightTerm - ageTerm
 
-        // 2. Addition des Gender-Faktors
         switch userGender {
             case .male:
-                bmr += 5.0 // Männer: +5
+                bmr += 5.0
             case .female:
-                bmr -= 161.0 // Frauen: -161
+                bmr -= 161.0
             case .other:
-                    // Für den Fall "Divers" wird standardmäßig der männliche Wert (+5)
-                    // oder der Durchschnitt (0) verwendet. Wir wählen hier +5.
                 bmr += 5.0
         }
-            // 3. Rundung und Rückgabe
-            // Der Grundumsatz wird üblicherweise auf ganze Kalorien gerundet
+
         return bmr.rounded()
     }
 
     // Berechnung des TDEE
-    // Nutzt automatisch das Aktivitätslevel aus AppSettings
     var userTotalDailyEnergyExpenditure: Double? {
         guard let bmr = userCalorieMetabolicRate else { return nil }
-        return bmr * appSettings.userActivityLevel.rawValue
+        return bmr * userActivityLevel.rawValue
     }
 }
 

@@ -17,12 +17,13 @@ struct HealthMetricView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse)
     private var allWorkouts: [WorkoutSession]
 
-    private var calcHealthMetrics: HealthMetricCalcEngine {
-        HealthMetricCalcEngine(workouts: allWorkouts)
-    }
-
     // Lesen der globalen Einstellungen für Userdefaults
     @EnvironmentObject private var appSettings: AppSettings
+
+    private var calcHealthMetrics: HealthMetricCalcEngine {
+        HealthMetricCalcEngine(workouts: allWorkouts, settings: appSettings)
+    }
+
     // Lesen der HealthKit-Daten
     @ObservedObject private var healthKitManager = HealthKitManager.shared
 
@@ -34,7 +35,7 @@ struct HealthMetricView: View {
 
     var body: some View {
 
-        let userGender = calcHealthMetrics.userGender
+        let userGender = appSettings.userGender
         let genderMetrics = GenderSymbolView(gender: userGender).iconMetrics
 
         ZStack {
@@ -52,7 +53,7 @@ struct HealthMetricView: View {
                             valueView: Text(
                                 String(
                                     format: "%.2f m",
-                                    Double(calcHealthMetrics.userBodyHeight) / 100.0
+                                    Double(appSettings.userBodyHeight) / 100.0
                                 )
                             ),
                             color: .indigo
@@ -77,7 +78,7 @@ struct HealthMetricView: View {
                         HealthMetricGridCard(
                             icon: "flame.fill", // Beispiel-Icon
                             title: "Alter",
-                            valueView: Text(String(format: "%d Jahre", calcHealthMetrics.userAge)),
+                            valueView: Text(String(format: "%d Jahre", appSettings.userAge)),
                             color: .red // Kann nach Belieben angepasst werden
                         )
 
@@ -89,6 +90,17 @@ struct HealthMetricView: View {
                                 healthKitManager.latestHeartRate.map { String(format: "%.0f bpm", $0) } ?? "-"
                             ),
                             color: .red
+                        )
+                        // Eingenommene Kalorien
+                        HealthMetricGridCard(
+                            icon: "fork.knife",
+                            title: "Eingenommene Kalorien",
+                            valueView: Text(
+                                healthKitManager.dietaryConsumedCalories.map {
+                                    String(format: "%d kcal", $0)
+                                } ?? "-"
+                            ),
+                            color: .green
                         )
                     }
 
@@ -112,6 +124,16 @@ struct HealthMetricView: View {
                         unit: "Schritte",
                         color: .black,
                         showPercentage: true
+                    )
+
+                    // Gesamtumsatz Kalorien Card
+                    HealthMetricCard(
+                        icon: "flame.fill",
+                        title: "Grundumsatz (BMR)",
+                        valueView: Text(
+                            healthKitManager.basalBurnedCalories.map { "\($0) kcal" } ?? "-"
+                        ),
+                        color: .green
                     )
 
                     // Body-Mass-Index (BMI)
@@ -146,6 +168,8 @@ struct HealthMetricView: View {
                         await healthKitManager.fetchLatestHeartRate()
                         await healthKitManager.fetchTodayStepCount()
                         await healthKitManager.fetchTodayBurnedCalories()
+                        await healthKitManager.fetchTodayConsumedCalories()
+                        await healthKitManager.fetchTodayBasalBurnedCalories()
                     }
                 }
             }

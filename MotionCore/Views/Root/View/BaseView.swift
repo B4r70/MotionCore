@@ -14,6 +14,8 @@ import SwiftData
 import SwiftUI
 
 struct BaseView: View {
+    @EnvironmentObject private var appSettings: AppSettings
+
     @State private var selectedTab: Tab = .workouts
     @State private var showingAddWorkout = false  // Bleibt!
 
@@ -164,6 +166,7 @@ struct BaseView: View {
             NavigationStack {
                 FormView(mode: .add, workout: draft)
             }
+            .environmentObject(appSettings)
             .onDisappear {
                 draft = WorkoutSession(
                     date: .now,

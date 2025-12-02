@@ -152,6 +152,7 @@ struct StatisticView: View {
         }
     }
 }
+
 // MARK: Statistic Preview
 #Preview("Statistiken") {
     StatisticView()
