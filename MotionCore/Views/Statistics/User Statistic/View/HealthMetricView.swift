@@ -44,6 +44,23 @@ struct HealthMetricView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
+                    // Hero Card für Kalorienbilanz (nur wenn HealthKit-Daten verfügbar)
+                    if let consumed = healthKitManager.dietaryConsumedCalories,
+                       let basal = healthKitManager.basalBurnedCalories,
+                       let active = healthKitManager.activeBurnedCalories {
+                        // Berechnung in CalcEngine
+                        let balance = calcHealthMetrics.calculateCalorieBalance(
+                            consumed: consumed,
+                            basal: basal,
+                            active: active
+                        )
+
+                        HealthMetricHeroCard(
+                            date: Date(),
+                            calorieBalance: balance
+                        )
+                        .padding(.top, 10)
+                    }
                     LazyVGrid(columns: gridColumns, spacing: 20) {
 
                         // Anzahl aller Workouts
@@ -172,6 +189,14 @@ struct HealthMetricView: View {
                         await healthKitManager.fetchTodayBasalBurnedCalories()
                     }
                 }
+            }
+            // Aktualisierung der Daten aus HealthKit
+            .refreshable {
+                await healthKitManager.fetchLatestHeartRate()
+                await healthKitManager.fetchTodayStepCount()
+                await healthKitManager.fetchTodayBurnedCalories()
+                await healthKitManager.fetchTodayConsumedCalories()
+                await healthKitManager.fetchTodayBasalBurnedCalories()
             }
 
             // Empty State
