@@ -12,28 +12,15 @@
 //
 import SwiftUI
 
-struct GenderSymbolView: View {
+struct GenderIconView: View {
     let gender: Gender
     var size: CGFloat = 20
 
-    // Eine berechnete Eigenschaft, die Icon-Namen und Farbe liefert
-    var iconMetrics: (name: String, color: Color) {
-        switch gender {
-        case .male:
-            return (name: "male.fill", color: .blue)
-        case .female:
-            return (name: "female.fill", color: .pink)
-        case .other:
-            // Standard-Symbol für Divers oder Unbekannt (ab SF Symbols 5)
-            return (name: "figure.stand.line.vertical.figure.fill", color: .purple)
-        }
-    }
-
     var body: some View {
-        Image(systemName: iconMetrics.name)
+        Image(gender.icon)
             .resizable()
             .scaledToFit()
             .frame(width: size, height: size)
-            .foregroundStyle(iconMetrics.color)
+            .foregroundStyle(gender.color)
     }
 }

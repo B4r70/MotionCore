@@ -17,7 +17,7 @@ import SwiftUI
 struct RecordCard: View {
     let title: String
     let subtitle: String
-    let icon: String
+    let icon: IconTypes
     let color: Color
     let allWorkouts: WorkoutSession
 
@@ -25,9 +25,8 @@ struct RecordCard: View {
         VStack(spacing: 20) {
             // Header mit Icon
             VStack(spacing: 12) {
-                Image(systemName: icon)
-                    .font(.system(size: 50))
-                    .foregroundStyle(color)
+                // Unterscheidung Icon-Typen
+                IconType(icon: icon, color: color, size: 50)
 
                 VStack(spacing: 4) {
                     Text(title)
@@ -44,35 +43,35 @@ struct RecordCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 // Trainingsgerät mit Icon, Beschreibung und entsprechender Farbe
                 RecordDetailRow(
-                    icon: allWorkouts.workoutDevice.symbol,
+                    icon: .system(allWorkouts.workoutDevice.symbol),
                     label: "Gerät",
                     value: allWorkouts.workoutDevice.description,
                     color: allWorkouts.workoutDevice.tint
                 )
                 // Kalorien
                 RecordDetailRow(
-                    icon: "flame.fill",
+                    icon: .system("flame.fill"),
                     label: "Kalorien",
                     value: "\(allWorkouts.calories) kcal",
                     color: .orange
                 )
                 // Dauer des Workouts
                 RecordDetailRow(
-                    icon: "clock.fill",
+                    icon: .system("clock.fill"),
                     label: "Dauer",
                     value: "\(allWorkouts.duration) min",
                     color: .blue
                 )
                 // Zurückgelegte Distanz
                 RecordDetailRow(
-                    icon: "arrow.left.and.right",
+                    icon: .system("arrow.left.and.right"),
                     label: "Distanz",
                     value: String(format: "%.2f km", allWorkouts.distance),
                     color: .green
                 )
                 // Datum des Workouts
                 RecordDetailRow(
-                    icon: "calendar",
+                    icon: .system("calendar"),
                     label: "Datum",
                     value: allWorkouts.date.formatted(AppFormatters.dateGermanShort),
                     color: .purple
@@ -87,15 +86,15 @@ struct RecordGridCard: View {
     let metricTitle: String
     let recordValue: String
     let bestWorkout: WorkoutSession
-    let metricIcon: String
+    let metricIcon: IconTypes
     let metricColor: Color
 
     var body: some View {
             ZStack(alignment: .topLeading) {
                 VStack(spacing: 5) {
-                    Image(systemName: metricIcon)
-                        .font(.system(size: 30)) // Etwas größer für mehr Fokus
-                        .foregroundStyle(metricColor)
+
+                    // Unterscheidung Icon-Typen
+                    IconType(icon: metricIcon, color: metricColor, size: 30)
                         .padding(.top, 10)
 
                     // Wert (Record Value) in groß

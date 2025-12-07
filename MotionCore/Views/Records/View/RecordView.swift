@@ -42,7 +42,7 @@ struct RecordView: View {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Crosstrainer",
-                            icon: bestCrosstrainer.workoutDevice.symbol,
+                            icon: .system(bestCrosstrainer.workoutDevice.symbol),
                             color: bestCrosstrainer.workoutDevice.tint,
                             allWorkouts: bestCrosstrainer
                         )
@@ -54,7 +54,7 @@ struct RecordView: View {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Ergometer",
-                            icon: bestErgometer.workoutDevice.symbol,
+                            icon: .system(bestErgometer.workoutDevice.symbol),
                             color: bestErgometer.workoutDevice.tint,
                             allWorkouts: bestErgometer
                         )
@@ -69,7 +69,7 @@ struct RecordView: View {
                                 metricTitle: "Längste Distanz",
                                 recordValue: String(format: "%.2f km", longestDistance.distance),
                                 bestWorkout: longestDistance,
-                                metricIcon: "arrow.left.and.right",
+                                metricIcon: .system("arrow.left.and.right"),
                                 metricColor: .green
                             )
                         }
@@ -80,7 +80,7 @@ struct RecordView: View {
                                 metricTitle: "Effektivstes Workout",
                                 recordValue: "\(effectiveWorkout.calories) kcal",
                                 bestWorkout: effectiveWorkout,
-                                metricIcon: "flame.fill",
+                                metricIcon: .system("flame.fill"),
                                 metricColor: .red
                             )
                         }
@@ -90,7 +90,7 @@ struct RecordView: View {
                                 metricTitle: "Schnellste Crosstrainer",
                                 recordValue: String(format: "%.0f m/min", fastestCrosstrainer.averageSpeed),
                                 bestWorkout: fastestCrosstrainer,
-                                metricIcon: "gauge.open.with.lines.needle.67percent.and.arrowtriangle",
+                                metricIcon: .system("gauge.open.with.lines.needle.67percent.and.arrowtriangle"),
                                 metricColor: .indigo
                             )
                         }
@@ -100,7 +100,7 @@ struct RecordView: View {
                                 metricTitle: "Schnellstes Ergometer",
                                 recordValue: String(format: "%.0f m/min", fastestErgometer.averageSpeed),
                                 bestWorkout: fastestErgometer,
-                                metricIcon: "gauge.open.with.lines.needle.67percent.and.arrowtriangle",
+                                metricIcon: .system("gauge.open.with.lines.needle.67percent.and.arrowtriangle"),
                                 metricColor: .orange
                             )
                         }
@@ -110,7 +110,7 @@ struct RecordView: View {
                                 metricTitle: "Niedrigstes Gewicht",
                                 recordValue: "\(lowestBodyWeight.bodyWeight) kg",
                                 bestWorkout: lowestBodyWeight,
-                                metricIcon: "arrow.down.circle.fill",
+                                metricIcon: .system("arrow.down.circle.fill"),
                                 metricColor: .green
                             )
                         }
@@ -120,7 +120,7 @@ struct RecordView: View {
                                 metricTitle: "Höchstes Gewicht",
                                 recordValue: "\(highestBodyWeight.bodyWeight) kg",
                                 bestWorkout: highestBodyWeight,
-                                metricIcon: "arrow.up.circle.fill",
+                                metricIcon: .system("arrow.up.circle.fill"),
                                 metricColor: .red
                             )
                         }

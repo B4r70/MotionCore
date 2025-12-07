@@ -15,16 +15,15 @@ import SwiftUI
 // MARK: - Detail Row Component
 
 struct RecordDetailRow: View {
-    let icon: String
+    let icon: IconTypes
     let label: String
     let value: String
     let color: Color
 
     var body: some View {
         HStack {
-            Image(systemName: icon)
-                .foregroundStyle(color)
-                .frame(width: 24)
+            // Unterscheidung Icon-Typen
+            IconType(icon: icon, color: color, size: 15)
 
             Text(label)
                 .foregroundStyle(.secondary)

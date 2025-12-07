@@ -13,17 +13,15 @@
 import SwiftUI
 
 struct HealthMetricCard<ValueContent: View>: View {
-    let icon: String
+    let icon: IconTypes
     let title: String
     let valueView: ValueContent
     let color: Color
 
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.system(size: 40))
-                .foregroundStyle(color)
-
+               // Eigene View für Icons
+            IconType(icon: icon, color: color, size: 40)
             VStack(spacing: 8) {
                 valueView
                     .font(.system(size: 40, weight: .bold))
@@ -40,32 +38,27 @@ struct HealthMetricCard<ValueContent: View>: View {
 
 // Alternativ im Grid Format 2 Cards pro Zeile
 struct HealthMetricGridCard<ValueContent: View>: View {
-    let icon: String
+    let icon: IconTypes
     let title: String
     let valueView: ValueContent
     let color: Color
 
     var body: some View {
         VStack(spacing: 10) {
+            // Unterscheidung System-/Asset-Icon
+            IconType(icon: icon, color: color, size: 40)
 
-            // Icon oben
-            Image(systemName: icon)
-                .font(.system(size: 30))        
-                .foregroundStyle(color)
-
-            // Wert in groß, aber nicht riesig
             valueView
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
                 .font(.system(size: 26, weight: .bold, design: .rounded))
 
-            // Subtitle klein
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120) // EINHEITLICHE HÖHE
+        .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120)
         .glassCard()
     }
 }

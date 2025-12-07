@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Statistik                                                        /
+// Abschnitt . . : Gesundheitsmetriken                                              /
 // Datei . . . . : HealthMetricView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 23.11.2025                                                       /
@@ -36,7 +36,7 @@ struct HealthMetricView: View {
     var body: some View {
 
         let userGender = appSettings.userGender
-        let genderMetrics = GenderSymbolView(gender: userGender).iconMetrics
+        let genderMetrics = GenderIconView(gender: userGender)
 
         ZStack {
             // Hintergrund
@@ -48,7 +48,7 @@ struct HealthMetricView: View {
 
                         // Anzahl aller Workouts
                         HealthMetricGridCard(
-                            icon: "figure.wave",
+                            icon: .system("figure.wave"),
                             title: "Körpergröße",
                             valueView: Text(
                                 String(
@@ -61,22 +61,22 @@ struct HealthMetricView: View {
 
                         // Körpergewicht des Benutzers
                         HealthMetricGridCard(
-                                icon: "figure",
+                            icon: .system("figure"),
                                 title: "Körpergewicht",
                                 valueView: Text(String(format: "%.1f kg", calcHealthMetrics.userBodyWeight ?? 0.0)),
                                 color: .gray
                         )
                         // Geschlecht des Benutzers
                         HealthMetricGridCard(
-                            icon: genderMetrics.name,
+                            icon: .asset(genderMetrics.gender.icon),
                             title: "Geschlecht",
                             valueView: Text(userGender.description), // Nutzt die description Eigenschaft der Enum
-                            color: genderMetrics.color
+                            color: genderMetrics.gender.color
                         )
 
                         // Alter des Benutzers
                         HealthMetricGridCard(
-                            icon: "flame.fill", // Beispiel-Icon
+                            icon: .system("flame.fill"), // Beispiel-Icon
                             title: "Alter",
                             valueView: Text(String(format: "%d Jahre", appSettings.userAge)),
                             color: .red // Kann nach Belieben angepasst werden
@@ -84,7 +84,7 @@ struct HealthMetricView: View {
 
                         // Letzte Herzfrequenz (aus HealthKit)
                         HealthMetricGridCard(
-                            icon: "heart.fill",
+                            icon: .system("heart.fill"),
                             title: "Aktuelle Herzfrequenz",
                             valueView: Text(
                                 healthKitManager.latestHeartRate.map { String(format: "%.0f bpm", $0) } ?? "-"
@@ -93,7 +93,7 @@ struct HealthMetricView: View {
                         )
                         // Body-Mass-Index (BMI)
                         HealthMetricGridCard(
-                            icon: "figure",
+                            icon: .system("figure"),
                             title: "Body-Mass-Index (BMI)",
                             valueView: Text(
                                 String(format: "%.2f", calcHealthMetrics.userBodyMassIndex ?? 0.0)
@@ -112,7 +112,7 @@ struct HealthMetricView: View {
 
                     // Kalorien-Fortschritt vs. Kalorienumsatz
                     HealthMetricProgressCard(
-                        icon: "flame.fill",
+                        icon: .system("flame.fill"),
                         title: "Aktive Kalorien / Tagesziel",
                         currentValue: Double(healthKitManager.activeBurnedCalories ?? 0),
                         targetValue: Double(appSettings.dailyActiveCalorieGoal),
@@ -123,7 +123,7 @@ struct HealthMetricView: View {
 
                     // Schritte-Fortschritt
                     HealthMetricProgressCard(
-                        icon: "shoeprints.fill",
+                        icon: .system("shoeprints.fill"),
                         title: "Schritte / Tagesziel",
                         currentValue: Double(healthKitManager.latestStepCount ?? 0),
                         targetValue: Double(appSettings.dailyStepsGoal),
