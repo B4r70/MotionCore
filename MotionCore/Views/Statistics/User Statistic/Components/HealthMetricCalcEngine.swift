@@ -100,11 +100,16 @@ class HealthMetricCalcEngine: ObservableObject {
         return bmr * userActivityLevel.rawValue
     }
 
-    func calculateCalorieBalance(
-        consumed: Int,
-        basal: Int,
-        active: Int
-    ) -> CalorieBalance {
+    // Berechnung: Kalorienbilanz aus HealthKit
+    func calculateTodayCalorieBalance(from healthKit: HealthKitManager) -> CalorieBalance? {
+        // NEU: Guard-Statement prüft alle notwendigen HealthKit-Werte
+        guard let consumed = healthKit.dietaryConsumedCalories,
+              let basal = healthKit.basalBurnedCalories,
+              let active = healthKit.activeBurnedCalories else {
+            return nil
+        }
+
+        // NEU: Berechnungen durchführen
         let totalBurned = basal + active
         let balance = totalBurned - consumed
         let isDeficit = balance > 0
@@ -116,6 +121,7 @@ class HealthMetricCalcEngine: ObservableObject {
             percentage = 0.0
         }
 
+        // NEU: Jetzt mit allen berechneten Werten
         return CalorieBalance(
             consumedCalories: consumed,
             basalEnergy: basal,
@@ -126,9 +132,10 @@ class HealthMetricCalcEngine: ObservableObject {
             consumedPercentage: percentage
         )
     }
-
 }
 
+// MARK: Berechnung der Kalorienbilanz
+// Anhand der aufgenommenen und verbrannten Kalorien wird ein Defizit berechnet
 struct CalorieBalance {
     let consumedCalories: Int
     let basalEnergy: Int
@@ -138,18 +145,18 @@ struct CalorieBalance {
     let isDeficit: Bool
     let consumedPercentage: Double
 
-    /// Formatiert die Bilanz als String mit Vorzeichen
+    // Formatiert die Bilanz als String mit Vorzeichen
     var balanceFormatted: String {
         let sign = isDeficit ? "+" : ""
         return "\(sign)\(abs(balance)) kcal"
     }
 
-    /// Gibt den Status als Text zurück
+    // Gibt den Status als Text zurück
     var statusText: String {
         isDeficit ? "Kaloriendefizit" : "Kalorienüberschuss"
     }
 
-    /// Farbe für die Bilanz-Anzeige
+    // Farbe für die Bilanz-Anzeige
     var statusColor: Color {
         isDeficit ? .green : .red
     }

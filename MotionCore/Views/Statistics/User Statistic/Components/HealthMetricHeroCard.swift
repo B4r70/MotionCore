@@ -21,27 +21,20 @@ struct HealthMetricHeroCard: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // MARK: - Kompakte Ansicht (immer sichtbar)
-            Button {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                    isExpanded.toggle()
-                }
-            } label: {
                 VStack(spacing: 16) {
                     // Header
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Aktuelle Kalorienbilanz")
+                            Text("Kalorienbilanz")
                                 .font(.headline)
                                 .foregroundStyle(.primary)
                         }
-
                         Spacer()
 
                         // Expand/Collapse Icon
-                        Image(systemName: isExpanded ? "chevron.down.circle.fill" : "chevron.up.circle.fill")
+                        Image(systemName: "chevron.down.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.blue)
                             .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     }
 
@@ -49,11 +42,11 @@ struct HealthMetricHeroCard: View {
                     VStack(spacing: 8) {
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
                             Text(calorieBalance.isDeficit ? "+" : "-")
-                                .font(.system(size: 28, weight: .semibold))
+                                .font(.system(size: 35, weight: .semibold))
                                 .foregroundStyle(calorieBalance.isDeficit ? .green : .red)
 
                             Text("\(abs(calorieBalance.balance))")
-                                .font(.system(size: 30, weight: .bold, design: .rounded))
+                                .font(.system(size: 40, weight: .bold, design: .rounded))
                                 .foregroundStyle(calorieBalance.isDeficit ? .green : .red)
 
                             Text("kcal")
@@ -74,8 +67,6 @@ struct HealthMetricHeroCard: View {
                     }
                 }
                 .padding(20)
-            }
-            .buttonStyle(.plain)
 
             // MARK: - Erweiterte Ansicht (nur wenn ausgeklappt)
             if isExpanded {
@@ -232,6 +223,12 @@ struct HealthMetricHeroCard: View {
             }
         }
         .glassCard()
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                isExpanded.toggle()
+            }
+        }
     }
 }
 
@@ -258,7 +255,7 @@ struct HealthMetricHeroCard: View {
         consumedPercentage: 1.19
     )
 
-    return VStack(spacing: 20) {
+    VStack(spacing: 20) {
         HealthMetricHeroCard(
             date: Date(),
             calorieBalance: balance1

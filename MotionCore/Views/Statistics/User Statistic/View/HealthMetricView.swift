@@ -44,23 +44,6 @@ struct HealthMetricView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    // Hero Card für Kalorienbilanz (nur wenn HealthKit-Daten verfügbar)
-                    if let consumed = healthKitManager.dietaryConsumedCalories,
-                       let basal = healthKitManager.basalBurnedCalories,
-                       let active = healthKitManager.activeBurnedCalories {
-                        // Berechnung in CalcEngine
-                        let balance = calcHealthMetrics.calculateCalorieBalance(
-                            consumed: consumed,
-                            basal: basal,
-                            active: active
-                        )
-
-                        HealthMetricHeroCard(
-                            date: Date(),
-                            calorieBalance: balance
-                        )
-                        .padding(.top, 10)
-                    }
                     LazyVGrid(columns: gridColumns, spacing: 20) {
 
                         // Anzahl aller Workouts
@@ -108,17 +91,23 @@ struct HealthMetricView: View {
                             ),
                             color: .red
                         )
-                        // Eingenommene Kalorien
+                        // Body-Mass-Index (BMI)
                         HealthMetricGridCard(
-                            icon: "fork.knife",
-                            title: "Eingenommene Kalorien",
+                            icon: "figure",
+                            title: "Body-Mass-Index (BMI)",
                             valueView: Text(
-                                healthKitManager.dietaryConsumedCalories.map {
-                                    String(format: "%d kcal", $0)
-                                } ?? "-"
+                                String(format: "%.2f", calcHealthMetrics.userBodyMassIndex ?? 0.0)
                             ),
-                            color: .green
+                            color: .blue // Kann nach Belieben angepasst werden
                         )
+                    }
+                    // Kalorienbilanz als Übersicht
+                    if let balance = calcHealthMetrics.calculateTodayCalorieBalance(from: healthKitManager) {
+                        HealthMetricHeroCard(
+                            date: Date(),
+                            calorieBalance: balance
+                        )
+                        .padding(.top, 10)
                     }
 
                     // Kalorien-Fortschritt vs. Kalorienumsatz
@@ -141,35 +130,6 @@ struct HealthMetricView: View {
                         unit: "Schritte",
                         color: .black,
                         showPercentage: true
-                    )
-
-                    // Gesamtumsatz Kalorien Card
-                    HealthMetricCard(
-                        icon: "flame.fill",
-                        title: "Grundumsatz (BMR)",
-                        valueView: Text(
-                            healthKitManager.basalBurnedCalories.map { "\($0) kcal" } ?? "-"
-                        ),
-                        color: .green
-                    )
-
-                    // Body-Mass-Index (BMI)
-                    HealthMetricCard(
-                        icon: "figure", 
-                        title: "Body-Mass-Index (BMI)",
-                        valueView: Text(
-                            String(format: "%.2f", calcHealthMetrics.userBodyMassIndex ?? 0.0)
-                        ),
-                        color: .blue // Kann nach Belieben angepasst werden
-                    )
-                    // BMR Card
-                    HealthMetricCard(
-                        icon: "flame.fill",
-                        title: "Grundumsatz (BMR)",
-                        valueView: Text(
-                            String(format: "%.0f kcal/Tag", calcHealthMetrics.userCalorieMetabolicRate ?? 0.0)
-                        ),
-                        color: .red
                     )
                         // Hier kannst du später weitere Cards hinzufügen
                 }
@@ -206,6 +166,7 @@ struct HealthMetricView: View {
         }
     }
 }
+
 // MARK: Statistic Preview
 #Preview("HealthMetric") {
     HealthMetricView()
