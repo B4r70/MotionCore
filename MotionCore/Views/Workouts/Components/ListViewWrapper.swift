@@ -1,10 +1,15 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Workout-Liste                                                    /
+// Datei . . . . : ListViewWrapper.swift                                            /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 09.12.2025                                                       /
+// Beschreibung  : Wrapper für ListView mit Bindings für Filter                     /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
-//  ListViewWrapper.swift
-//  MotionCore
-//
-//  Created by Barto on 09.12.25.
-//
-
 import SwiftUI
 
 // Wrapper für ListView mit Bindings
