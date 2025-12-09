@@ -25,14 +25,14 @@ enum Gender: String, CaseIterable, Identifiable {
     }
 
     // Anzeige des passenden GenderIcons aus Assetts
-    var icon: String {
+    var icon: IconTypes {
         switch self {
-            case .male:
-                return "GenderMetrics/male"
-            case .female:
-                return "GenderMetrics/female"
-            case .other:
-                return "GenderMetrics/divers"
+        case .male:
+            return .asset("GenderMetrics/male")
+        case .female:
+            return .asset("GenderMetrics/female")
+        case .other:
+            return .asset("GenderMetrics/divers")
         }
     }
     // Gender Color

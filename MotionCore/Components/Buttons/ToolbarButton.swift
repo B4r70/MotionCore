@@ -14,13 +14,11 @@ import SwiftUI
 
 // Glass Button (für Toolbar)
 struct ToolbarButton: View {
-    let icon: String
+    let icon: IconTypes
 
     var body: some View {
-        Image(systemName: icon)
-            .font(.body)
-            .foregroundStyle(.primary)
-            .frame(width: 36, height: 36)
+        IconType(icon: icon, color: .primary, size: 16)   // Icon selbst
+            .frame(width: 36, height: 36)                 // Button-Fläche
             .background {
                 Circle()
                     .fill(.ultraThinMaterial)
@@ -28,7 +26,7 @@ struct ToolbarButton: View {
             .overlay {
                 Circle()
                     .stroke(.white.opacity(0.2), lineWidth: 1)
-                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4) // NEU und zu Testen
+                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
             }
     }
 }

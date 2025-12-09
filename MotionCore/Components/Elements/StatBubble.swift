@@ -13,15 +13,17 @@
 import SwiftUI
 
 struct StatBubble: View {
-    let icon: String
+    let icon: IconTypes
     let value: String
     let color: Color
 
     var body: some View {
         VStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.caption)
-                .foregroundStyle(color)
+            IconType(icon: icon, color: color, size: 12)
+
+          //  Image(systemName: icon)
+          //      .font(.caption)
+          //      .foregroundStyle(color)
 
             Text(value)
                 .font(.caption2.weight(.semibold))

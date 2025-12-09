@@ -15,12 +15,8 @@ import SwiftUI
 struct GenderIconView: View {
     let gender: Gender
     var size: CGFloat = 20
-
+    
     var body: some View {
-        Image(gender.icon)
-            .resizable()
-            .scaledToFit()
-            .frame(width: size, height: size)
-            .foregroundStyle(gender.color)
+        IconType(icon: gender.icon, color: gender.color, size: size)
     }
 }

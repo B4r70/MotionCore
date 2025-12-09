@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Gesundheitsdaten                                                 /
-// Datei . . . . : HealthMetricHeroCard.swift                                       /
+// Datei . . . . : HealthMetricCalorieHeroCard.swift                                /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 11.11.2025                                                       /
 // Beschreibung  : Darstellung einer mehrzeiligen Card für die Kalorienbilanz       /

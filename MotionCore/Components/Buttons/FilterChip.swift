@@ -16,7 +16,7 @@ import SwiftUI
 // Filter Chip (Glassmorphic)
 struct FilterChip: View {
     let title: String
-    var icon: String? = nil
+    var icon: IconTypes? = nil
     let count: Int
     let isSelected: Bool
     let action: () -> Void
@@ -25,8 +25,9 @@ struct FilterChip: View {
         Button(action: action) {
             HStack(spacing: 8) {
                 if let icon {
-                    Image(systemName: icon)
-                        .font(.subheadline)
+                    IconType(icon: icon,
+                             color: isSelected ? .primary : .secondary,
+                             size: 14)
                 }
 
                 Text(title)

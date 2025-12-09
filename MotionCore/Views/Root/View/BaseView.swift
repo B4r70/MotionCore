@@ -91,7 +91,7 @@ struct BaseView: View {
                             Button {
                                 showingAddWorkout = true
                             } label: {
-                                ToolbarButton(icon: "plus")
+                                ToolbarButton(icon: .system("plus"))
                             }
                         }
                     }

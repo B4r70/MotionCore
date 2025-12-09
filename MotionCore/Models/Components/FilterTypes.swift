@@ -39,13 +39,13 @@ enum TimeFilter: String, CaseIterable, Identifiable {
     var intervalSymbol: String {
         switch self {
             case .all: return "calendar"
-            case .today: return "calendar.badge"
-            case .thisWeek: return "7.calendar"
-            case .thisMonth: return "30.calendar"
-            case .last30Days: return "30.calendar"
-            case .last90Days: return "calendar.badge"
-            case .last180Days: return "calendar.badge"
-            case .thisYear: return "calendar"
+            case .today: return "sun.max"
+            case .thisWeek: return "calendar.badge.clock"
+            case .thisMonth: return "calendar.badge.minus"
+            case .last30Days: return "clock.arrow.circlepath"
+            case .last90Days: return "clock.arrow.circlepath"
+            case .last180Days: return "clock.arrow.circlepath"
+            case .thisYear: return "clock.arrow.circlepath"
         }
     }
 

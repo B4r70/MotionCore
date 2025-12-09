@@ -60,37 +60,37 @@ struct WorkoutCard: View {
             ], spacing: 12) {
                 // Workout-Dauer
                 StatBubble(
-                    icon: "clock.fill",
+                    icon: .system("clock.fill"),
                     value: allWorkouts.durationFormatted,
                     color: .blue
                 )
                 // Workout-Distanz
                 StatBubble(
-                    icon: "arrow.left.and.right",
+                    icon: .system("arrow.left.and.right"),
                     value: allWorkouts.distanceFormatted,
                     color: .green
                 )
                 // Workout-Geschwindigkeit
                 StatBubble(
-                    icon: "gauge.with.dots.needle.67percent",
+                    icon: .system("gauge.with.dots.needle.67percent"),
                     value: allWorkouts.averageSpeedFormatted,
                     color: .orange
                 )
                 // Workout-Herzfrequenz (Durchschnitt)
                 StatBubble(
-                    icon: "heart.fill",
+                    icon: .system("heart.fill"),
                     value: allWorkouts.heartRateFormatted,
                     color: .red
                 )
                 // Workout-Kalorien
                 StatBubble(
-                    icon: "flame.fill",
+                    icon: .system("flame.fill"),
                     value: allWorkouts.caloriesFormatted,
                     color: .orange
                 )
                 // Workout-METS
                 StatBubble(
-                    icon: "bolt.fill",
+                    icon: .system("bolt.fill"),
                     value: allWorkouts.metsFormatted,
                     color: .yellow
                 )
