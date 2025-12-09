@@ -91,7 +91,7 @@ struct StatisticView: View {
                             starMaxRating: Intensity.maxRating,
                             starColor: .orange
                         ),
-                        color: .black
+                        color: .cyan
                     )
                     // Durchschnittliche relative Kaloriendichte zum Körpergewicht
                     StatisticCard(
@@ -140,8 +140,7 @@ struct StatisticView: View {
                     )
                         // Hier kannst du später weitere Cards hinzufügen
                 }
-                .padding(.horizontal, 10)
-                .padding(.bottom, 100)
+                .scrollViewContentPadding() // Einheitlicher Abstand
             }
             .scrollIndicators(.hidden)
 

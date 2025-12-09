@@ -47,7 +47,7 @@ struct RecordView: View {
                             allWorkouts: bestCrosstrainer
                         )
                         .padding(.horizontal)
-                        .padding(.top, 10)
+                        .padding(.top)
                     }
                         // Beste Leistung nach Distanz auf dem Ergometer
                     if let bestErgometer = calcRecords.bestErgometerWorkout {
@@ -59,7 +59,6 @@ struct RecordView: View {
                             allWorkouts: bestErgometer
                         )
                         .padding(.horizontal)
-                        .padding(.top, 10)
                     }
                     // Doppeltes Grid-Layout für andere Rekorde
                     LazyVGrid(columns: gridColumns, spacing: 20) {
@@ -125,9 +124,7 @@ struct RecordView: View {
                             )
                         }
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 10)
-                    .padding(.bottom, 100)
+                    .scrollViewContentPadding()
                 }
                 .scrollIndicators(.hidden)
 

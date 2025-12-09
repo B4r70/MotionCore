@@ -32,7 +32,11 @@ struct BaseView: View {
         workoutDevice: .none
     )
 
-        // MARK: Vorabeinstellungen Farbgebung Tabbar
+    //Filter-States für die Toolbar
+    @State private var selectedDeviceFilter: WorkoutDevice = .none
+    @State private var selectedTimeFilter: TimeFilter = .all
+
+    // MARK: Vorabeinstellungen Farbgebung Tabbar
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithDefaultBackground()
@@ -58,12 +62,23 @@ struct BaseView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
                 // MARK: Tab 1 - Workouts
-
             NavigationStack {
-                ListView()
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                            // Mitte: HeaderView (wie bisher)
+                    // NEU: ListView bekommt Bindings übergeben
+                ListViewWrapper(
+                    selectedDeviceFilter: $selectedDeviceFilter,
+                    selectedTimeFilter: $selectedTimeFilter
+                )
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                        // Links - Filter-Button
+                    ToolbarItem(placement: .topBarLeading) {
+                        FilterSection(
+                            selectedDeviceFilter: $selectedDeviceFilter,
+                            selectedTimeFilter: $selectedTimeFilter
+                        )
+                    }
+
+                        // Mitte: HeaderView (wie bisher)
                         ToolbarItem(placement: .principal) {
                             HeaderView(
                                 title: "MotionCore",
@@ -71,7 +86,7 @@ struct BaseView: View {
                             )
                         }
 
-                            // NEU: Rechts der Plus-Button
+                        // Rechts der Plus-Button
                         ToolbarItem(placement: .topBarTrailing) {
                             Button {
                                 showingAddWorkout = true

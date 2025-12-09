@@ -19,17 +19,33 @@ struct ListView: View {
     private var allWorkouts: [WorkoutSession]
 
     @State private var exportURL: URL?
-    @State private var selectedFilter: WorkoutDevice = .none
+
+    // Filter-States
+    @Binding var selectedDeviceFilter: WorkoutDevice
+    @Binding var selectedTimeFilter: TimeFilter
 
     // Abruf aus Einstellungen
     @EnvironmentObject private var appSettings: AppSettings
 
+    // Kombinierte Filterlogik (beide Filter)
     var filteredWorkouts: [WorkoutSession] {
-        if selectedFilter == .none {
-            return allWorkouts
+        var workouts = allWorkouts
+
+            // Gerätefilter anwenden
+        if selectedDeviceFilter != .none {
+            workouts = workouts.filter { $0.workoutDevice == selectedDeviceFilter }
         }
-        return allWorkouts.filter { $0.workoutDevice == selectedFilter }
+
+            // Zeitfilter anwenden
+        if let dateRange = selectedTimeFilter.dateRange() {
+            workouts = workouts.filter {
+                $0.date >= dateRange.start && $0.date <= dateRange.end
+            }
+        }
+
+        return workouts
     }
+
 
     // Ansicht "Workouts"
     var body: some View {
@@ -38,11 +54,6 @@ struct ListView: View {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
             ScrollView {
                 LazyVStack(spacing: 16) {
-                    // Filter Chips (Glassmorphic)
-                    FilterSection(selectedFilter: $selectedFilter, allWorkouts: allWorkouts)
-                        .padding(.horizontal)
-                        .padding(.top, 8)
-
                     // Workout Cards mit ForEach
                     ForEach(filteredWorkouts) { workout in
                         NavigationLink {
@@ -53,8 +64,7 @@ struct ListView: View {
                         .buttonStyle(.plain)
                     }
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 100)
+                .scrollViewContentPadding() // Einheitlicher Abstand
             }
             .scrollIndicators(.hidden)
         }
@@ -64,10 +74,4 @@ struct ListView: View {
             }
         }
     }
-}
-
-// MARK: Preview
-#Preview("List View") {
-    ListView()
-        .modelContainer(PreviewData.sharedContainer)
 }

@@ -128,13 +128,12 @@ struct HealthMetricView: View {
                         currentValue: Double(healthKitManager.latestStepCount ?? 0),
                         targetValue: Double(appSettings.dailyStepsGoal),
                         unit: "Schritte",
-                        color: .black,
+                        color: .cyan,
                         showPercentage: true
                     )
                         // Hier kannst du später weitere Cards hinzufügen
                 }
-                .padding(.horizontal, 10)
-                .padding(.bottom, 100)
+                .scrollViewContentPadding() // Einheitlicher Abstand
             }
             .scrollIndicators(.hidden)
             // Berechtigungsanfrage für HealthKit

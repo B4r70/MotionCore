@@ -139,6 +139,7 @@ struct MainSettingsView: View {
                 }
             }
         }
+        .padding(.top, 20)
         .navigationTitle("Einstellungen")
         // Share Sheet für Export
         .sheet(isPresented: $showingShareSheet) {
