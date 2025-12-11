@@ -477,9 +477,9 @@ class HealthKitManager: ObservableObject {
             case .asleepUnspecified, .asleep:
                 return ("Schlaf", "moon.zzz.fill")
             case .inBed:
-                return ("Im Bett", "bed.double.fill")
+                return ("Im Bett", "bed.double.badge.checkmark.fill")
             case .awake:
-                return ("Wach", "eye.circle")
+                return ("Wach", "eye.trianglebadge.exclamationmark")
             @unknown default:
                 return ("Unbekannt", "questionmark.circle")
         }
