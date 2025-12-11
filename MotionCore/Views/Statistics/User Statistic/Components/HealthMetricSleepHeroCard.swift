@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct HealthMetricSleepHeroCard: View {
-    let summary: SleepSummary
+    let sleepSummary: SleepStagesSummary
 
     @State private var isExpanded = false
     @Environment(\.colorScheme) private var colorScheme
@@ -26,7 +26,7 @@ struct HealthMetricSleepHeroCard: View {
                 // Header
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Schlaf")
+                        Text("Schlafanalyse")
                             .font(.headline)
                             .foregroundStyle(.primary)
 
@@ -50,7 +50,7 @@ struct HealthMetricSleepHeroCard: View {
                             .foregroundStyle(.indigo)
                             .font(.title2)
 
-                        Text(summary.formattedTotal)
+                        Text(sleepSummary.formattedTotal)
                             .font(.system(size: 34, weight: .bold, design: .rounded))
                             .foregroundStyle(.primary)
                     }
@@ -79,22 +79,22 @@ struct HealthMetricSleepHeroCard: View {
 
                     VStack(spacing: 14) {
                             // Optional: Zeit im Bett anzeigen, falls vorhanden
-                        if let inBed = summary.inBedMinutes {
+                        if let inBed = sleepSummary.inBedMinutes {
                             phaseRow(
                                 icon: "bed.double.circle.fill",
                                 color: .blue,
                                 title: "Im Bett",
                                 minutes: inBed,
-                                percent: Double(summary.totalMinutes) > 0
-                                ? Double(summary.totalMinutes) / Double(inBed)
+                                percent: Double(sleepSummary.totalMinutes) > 0
+                                ? Double(sleepSummary.totalMinutes) / Double(inBed)
                                 : nil,
                                 isEfficiencyRow: true
                             )
                         }
 
                             // Einzelne Schlafphasen (Anteile innerhalb der Schlafzeit)
-                        ForEach(summary.phases) { phase in
-                            let percentage = phase.percentage(of: summary.totalMinutes)
+                        ForEach(sleepSummary.phases) { phase in
+                            let percentage = phase.percentage(of: sleepSummary.totalMinutes)
                             phaseRow(
                                 icon: phase.systemIcon,
                                 color: color(for: phase.name),
@@ -108,13 +108,13 @@ struct HealthMetricSleepHeroCard: View {
                     .padding(.horizontal, 20)
 
                     // Optional: kleiner Fortschrittsbalken über Phasen-Anteilen
-                    if !summary.phases.isEmpty {
+                    if !sleepSummary.phases.isEmpty {
                         VStack(spacing: 8) {
                             GeometryReader { geometry in
                                 let totalWidth = geometry.size.width
                                 HStack(spacing: 0) {
-                                    ForEach(summary.phases) { phase in
-                                        let fraction = phase.percentage(of: summary.totalMinutes)
+                                    ForEach(sleepSummary.phases) { phase in
+                                        let fraction = phase.percentage(of: sleepSummary.totalMinutes)
                                         RoundedRectangle(cornerRadius: 0)
                                             .fill(color(for: phase.name).opacity(0.8))
                                             .frame(width: max(totalWidth * fraction, 0))
@@ -125,7 +125,7 @@ struct HealthMetricSleepHeroCard: View {
                             .frame(height: 12)
 
                             HStack(spacing: 12) {
-                                ForEach(summary.phases) { phase in
+                                ForEach(sleepSummary.phases) { phase in
                                     HStack(spacing: 4) {
                                         Circle()
                                             .fill(color(for: phase.name))
@@ -160,7 +160,7 @@ struct HealthMetricSleepHeroCard: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         formatter.locale = Locale(identifier: "de_DE")
-        return formatter.string(from: summary.date)
+        return formatter.string(from: sleepSummary.date)
     }
 
     @ViewBuilder
@@ -213,8 +213,8 @@ struct HealthMetricSleepHeroCard: View {
         }
     }
 
-    private func color(for phaseName: String) -> Color {
-        switch phaseName.lowercased() {
+    private func color(for sleepStageName: String) -> Color {
+        switch sleepStageName.lowercased() {
         case "rem":
             return .purple
         case "tiefschlaf", "deep":

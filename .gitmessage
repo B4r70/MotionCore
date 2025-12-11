@@ -1,0 +1,38 @@
+# -------------------------------------------------------------------------------------------------------------------
+# Developments Commit Message Template
+# -------------------------------------------------------------------------------------------------------------------
+# Verwendung von Keywords bei der Ausführung eines >>commit<<:
+#
+# feat:     neues Feature, neue Funktion oder Komponente
+# fix:      Fehlerbehebung, Bugfix
+# chore:    interne Änderung (Build, Farben, Struktur, Config)
+# docs:     Dokumentation oder README-Änderung
+# style:    UI-/Layoutänderung ohne Logikänderung (z. B. Farbe, Padding)
+# refactor: Code-Umstrukturierung ohne neues Verhalten
+# review:   Code-Review
+# perf:     Performance-Optimierung, schnellere Abläufe
+# test:     neue oder geänderte Tests
+# sync:     Tages- oder Zwischenstand, mehrere gemischte Änderungen
+# backup:   vollständige Sicherung vor Umbauten oder Refactoring
+# release:  Vorbereitung auf eine neue Version (z. B. v1.2.0)
+# -------------------------------------------------------------------------------------------------------------------
+# Folgende Scopes können hierfür bspw. verwendet werden:
+#
+# dashboard, statistics, activities, medications, configurations, healthmanager, *
+#
+# Format:
+# <type>(scope): <kurze Beschreibung der Anpassungen/Änderungen>
+#
+# Regeln:
+# 1. Die erste Commit-Zeile muss immer mit einem o.g. Keyword beginnen.
+# 2. Nach dem Keyword soll der Tab oder die Funktionalität genannt werden, in der die Änderung durchgeführt wurde.
+#    Sofern mehrere Änderungen durchgeführt wurden, soll in den Klammern ein (*) gesetzt werden.
+# 3. 72 Zeichen als Richtwert für die erste Zeile.
+#
+# Beispiele für Commits:
+#
+# feat(dashboard): Erweiterung um zusätzliche MetricTiles und Cards
+# fix(dashboard): Fehlerhafte Ausgabe der Blutdruckwerte
+# sync(*): Tagesupdate – Layoutanpassungen und Performanceverbesserungen
+# -------------------------------------------------------------------------------------------------------------------
+

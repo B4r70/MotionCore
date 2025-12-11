@@ -113,14 +113,13 @@ struct HealthMetricView: View {
                     }
                     //Schlafzusammenfassung
                     if let summary = healthManager.todaySleepSummary {
-                        HealthMetricSleepHeroCard(summary: summary)
+                        HealthMetricSleepHeroCard(sleepSummary: summary)
                     } else {
                             // Optional: Placeholder
                         Text("Keine Schlafdaten verfügbar")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-
 
                         // Kalorien-Fortschritt vs. Kalorienumsatz
                     HealthMetricProgressCard(

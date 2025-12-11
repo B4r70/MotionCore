@@ -41,7 +41,7 @@ class HealthKitManager: ObservableObject {
     @Published var basalBurnedCalories: Int?
 
     // NEU: Schlafzusammenfassung für die letzte Nacht / letzten 24h
-    @Published var todaySleepSummary: SleepSummary?    // NEU
+    @Published var todaySleepSummary: SleepStagesSummary?    // NEU
 
     private init() {}
 
@@ -445,7 +445,7 @@ class HealthKitManager: ObservableObject {
                     Self.phaseOrderIndex(for: lhs.name) < Self.phaseOrderIndex(for: rhs.name)
                 }
 
-                let summary = SleepSummary(
+                let summary = SleepStagesSummary(
                     date: targetDayStart,          // Datum der „Nacht“
                     totalMinutes: totalMinutes,
                     inBedMinutes: inBedMinutes,

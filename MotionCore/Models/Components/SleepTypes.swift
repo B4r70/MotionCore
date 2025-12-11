@@ -35,11 +35,11 @@ struct SleepStagesBreakdown: Identifiable {
 }
 
 /// Gesamtübersicht einer Nacht
-struct SleepSummary {
+struct SleepStagesSummary {
     let date: Date               // Nacht/Tag
     let totalMinutes: Int        // Gesamtschlafzeit (nur „schlafend“)
     let inBedMinutes: Int?       // Optional: Zeit im Bett
-    let awakeMinutes: Int?
+    let awakeMinutes: Int?       // Optional: Wach-Zeit
     let phases: [SleepStagesBreakdown]  // REM/Core/Deep/Wach/etc.
 
     var formattedTotal: String {
