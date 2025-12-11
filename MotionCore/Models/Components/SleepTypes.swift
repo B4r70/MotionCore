@@ -11,7 +11,7 @@
 import Foundation
 
 /// Einzelne Schlafphase (z. B. REM, Tiefschlaf, Kernschlaf, Wach)
-struct SleepPhaseBreakdown: Identifiable {
+struct SleepStagesBreakdown: Identifiable {
     let id = UUID()
     let name: String              // z. B. "REM", "Tiefschlaf"
     let systemIcon: String        // SF Symbol, z. B. "brain.head.profile"
@@ -39,7 +39,8 @@ struct SleepSummary {
     let date: Date               // Nacht/Tag
     let totalMinutes: Int        // Gesamtschlafzeit (nur „schlafend“)
     let inBedMinutes: Int?       // Optional: Zeit im Bett
-    let phases: [SleepPhaseBreakdown]  // REM/Core/Deep/Wach/etc.
+    let awakeMinutes: Int?
+    let phases: [SleepStagesBreakdown]  // REM/Core/Deep/Wach/etc.
 
     var formattedTotal: String {
         let h = totalMinutes / 60

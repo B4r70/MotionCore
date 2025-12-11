@@ -291,30 +291,39 @@ class HealthKitManager: ObservableObject {
             healthStore.execute(query)
         }
     }
-        // NEU: Schlafdaten für die letzten 24 Stunden abrufen
+
+    // Schlafdaten für die letzten 24 Stunden abrufen
     func fetchTodaySleepSummary() async {
         guard let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
             return
         }
 
         let now = Date()
-            // Fenster: letzte 24 Stunden (typischer "letzte Nacht"-Usecase)
-        guard let start = Calendar.current.date(byAdding: .day, value: -1, to: now) else {
+
+        // Wir schauen z.B. 7 Tage zurück – reicht in der Praxis völlig
+        guard let start = Calendar.current.date(byAdding: .day, value: -7, to: now) else {
             return
         }
 
+        // Alle Schlafdaten der letzten 7 Tage, vollständig bis "jetzt"
         let predicate = HKQuery.predicateForSamples(
             withStart: start,
             end: now,
-            options: .strictStartDate
+            options: .strictEndDate
         )
 
         return await withCheckedContinuation { continuation in
+            // Neu: Nach Enddatum sortiert, neueste zuerst
+            let sortDescriptor = NSSortDescriptor(
+                key: HKSampleSortIdentifierEndDate,
+                ascending: false
+            )
+
             let query = HKSampleQuery(
                 sampleType: sleepType,
                 predicate: predicate,
                 limit: HKObjectQueryNoLimit,
-                sortDescriptors: nil
+                sortDescriptors: [sortDescriptor]
             ) { _, samples, error in
 
                 if let error = error {
@@ -327,7 +336,7 @@ class HealthKitManager: ObservableObject {
                 }
 
                 guard let samples = samples as? [HKCategorySample], !samples.isEmpty else {
-                    print("Keine Schlafdaten in den letzten 24 Stunden gefunden")
+                    print("Keine Schlafdaten gefunden")
                     Task { @MainActor in
                         self.todaySleepSummary = nil
                     }
@@ -335,14 +344,59 @@ class HealthKitManager: ObservableObject {
                     return
                 }
 
-                    // Sekunden-Zähler für Gesamt-Schlaf und "im Bett"
+                let calendar = Calendar.current
+
+                // 1. Letzte Schlafprobe (REM/Core/Deep/Schlaf) finden
+                guard let lastSleepSample = samples.first(where: { sample in
+                    guard let value = HKCategoryValueSleepAnalysis(rawValue: sample.value) else {
+                        return false
+                    }
+                    switch value {
+                        case .awake, .inBed:
+                            return false
+                        default:
+                            return true
+                    }
+                }) else {
+                    print("Keine echte Schlafepisode gefunden")
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                // 2. Tag bestimmen, an dem diese letzte Schlafepisode liegt
+                let targetDayStart = calendar.startOfDay(for: lastSleepSample.startDate)
+                guard let targetDayEnd = calendar.date(byAdding: .day, value: 1, to: targetDayStart) else {
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                // 3. Alle Samples dieses Tages herausfiltern
+                let episodeSamples = samples.filter { sample in
+                    sample.startDate >= targetDayStart && sample.startDate < targetDayEnd
+                }
+
+                guard !episodeSamples.isEmpty else {
+                    print("Keine Schlafdaten für die letzte Episode gefunden")
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                // Ab hier: Deine bestehende Auswertelogik, nur mit "episodeSamples"
                 var totalSleepSeconds: TimeInterval = 0
                 var inBedSeconds: TimeInterval = 0
-
-                    // Buckets für Phasen
+                var awakeSeconds: TimeInterval = 0
                 var phaseBuckets: [HKCategoryValueSleepAnalysis: TimeInterval] = [:]
 
-                for sample in samples {
+                for sample in episodeSamples {
                     guard let value = HKCategoryValueSleepAnalysis(rawValue: sample.value) else {
                         continue
                     }
@@ -351,15 +405,11 @@ class HealthKitManager: ObservableObject {
 
                     switch value {
                         case .inBed:
-                                // Zeit im Bett separat sammeln
                             inBedSeconds += duration
-
                         case .awake:
-                                // Wachphasen nicht in den Gesamtschlaf zählen
-                            continue
-
+                            awakeSeconds += duration
+                            phaseBuckets[value, default: 0] += duration
                         default:
-                                // Alles andere zählt als Schlaf (REM/Core/Deep/unspezifiziert)
                             totalSleepSeconds += duration
                             phaseBuckets[value, default: 0] += duration
                     }
@@ -367,8 +417,8 @@ class HealthKitManager: ObservableObject {
 
                 let totalMinutes = Int(totalSleepSeconds / 60)
                 let inBedMinutes: Int? = inBedSeconds > 0 ? Int(inBedSeconds / 60) : nil
+                let awakeMinutes: Int? = awakeSeconds > 0 ? Int(awakeSeconds / 60) : nil
 
-                    // Falls keine Schlafminuten vorhanden sind
                 guard totalMinutes > 0 else {
                     print("Keine relevante Schlafdauer gefunden")
                     Task { @MainActor in
@@ -378,13 +428,12 @@ class HealthKitManager: ObservableObject {
                     return
                 }
 
-                    // Aus den Buckets SleepPhaseBreakdown erzeugen
-                var phases: [SleepPhaseBreakdown] = []
+                var phases: [SleepStagesBreakdown] = []
 
                 for (value, seconds) in phaseBuckets {
                     let minutes = Int(seconds / 60)
                     let (name, icon) = Self.sleepPhaseMeta(for: value)
-                    let phase = SleepPhaseBreakdown(
+                    let phase = SleepStagesBreakdown(
                         name: name,
                         systemIcon: icon,
                         minutes: minutes
@@ -392,15 +441,15 @@ class HealthKitManager: ObservableObject {
                     phases.append(phase)
                 }
 
-                    // Feste Reihenfolge: Tiefschlaf, Core, REM, sonstige
                 let sortedPhases = phases.sorted { lhs, rhs in
                     Self.phaseOrderIndex(for: lhs.name) < Self.phaseOrderIndex(for: rhs.name)
                 }
 
                 let summary = SleepSummary(
-                    date: now,
+                    date: targetDayStart,          // Datum der „Nacht“
                     totalMinutes: totalMinutes,
                     inBedMinutes: inBedMinutes,
+                    awakeMinutes: awakeMinutes,
                     phases: sortedPhases
                 )
 

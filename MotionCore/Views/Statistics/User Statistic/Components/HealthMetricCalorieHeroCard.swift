@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Gesundheitsdaten                                                 /
+// Abschnitt . . : Gesundheitsmetriken                                              /
 // Datei . . . . : HealthMetricCalorieHeroCard.swift                                /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 11.11.2025                                                       /

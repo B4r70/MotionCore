@@ -1,13 +1,15 @@
 //----------------------------------------------------------------------------------/
-// # MotionCore
-//----------------------------------------------------------------------------------/
-// Abschnitt . . : Gesundheitsdaten
-// Datei . . . . : HealthMetricSleepHeroCard.swift
-// Autor  . . . : Bartosz Stryjewski
-// Erstellt am . : 09.12.2025
-// Beschreibung  : Darstellung einer mehrzeiligen Card für Schlafdaten
-//----------------------------------------------------------------------------------/
-
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Gesundheitsmetriken                                              /
+// Datei . . . . : HealthMetricSleepHeroCard.swift                                  /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 30.11.2025                                                       /
+// Beschreibung  : HealthMetricCard mit Fortschrittsbalken                          /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
+//
 import SwiftUI
 
 struct HealthMetricSleepHeroCard: View {
@@ -76,7 +78,7 @@ struct HealthMetricSleepHeroCard: View {
                         .padding(.horizontal, 20)
 
                     VStack(spacing: 14) {
-                        // Optional: Zeit im Bett anzeigen, falls vorhanden
+                            // Optional: Zeit im Bett anzeigen, falls vorhanden
                         if let inBed = summary.inBedMinutes {
                             phaseRow(
                                 icon: "bed.double.circle.fill",
@@ -84,13 +86,13 @@ struct HealthMetricSleepHeroCard: View {
                                 title: "Im Bett",
                                 minutes: inBed,
                                 percent: Double(summary.totalMinutes) > 0
-                                    ? Double(summary.totalMinutes) / Double(inBed)
-                                    : nil,
+                                ? Double(summary.totalMinutes) / Double(inBed)
+                                : nil,
                                 isEfficiencyRow: true
                             )
                         }
 
-                        // Einzelne Schlafphasen
+                            // Einzelne Schlafphasen (Anteile innerhalb der Schlafzeit)
                         ForEach(summary.phases) { phase in
                             let percentage = phase.percentage(of: summary.totalMinutes)
                             phaseRow(

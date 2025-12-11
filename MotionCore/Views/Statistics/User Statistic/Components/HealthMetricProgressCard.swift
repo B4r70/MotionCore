@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Gesundheitsdaten                                                 /
+// Abschnitt . . : Gesundheitsmetriken                                              /
 // Datei . . . . : HealthMetricProgressCard.swift                                   /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 30.11.2025                                                       /
