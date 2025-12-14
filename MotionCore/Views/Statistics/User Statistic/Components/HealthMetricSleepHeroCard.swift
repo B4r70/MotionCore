@@ -110,6 +110,7 @@ struct HealthMetricSleepHeroCard: View {
                     // Optional: kleiner Fortschrittsbalken über Phasen-Anteilen
                     if !sleepSummary.phases.isEmpty {
                         VStack(spacing: 8) {
+                            // NEU: Explizite Padding-Angabe für die GeometryReader
                             GeometryReader { geometry in
                                 let totalWidth = geometry.size.width
                                 HStack(spacing: 0) {
@@ -123,6 +124,8 @@ struct HealthMetricSleepHeroCard: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             .frame(height: 12)
+                            // NEU: Padding direkt auf die GeometryReader-Ebene verschoben
+                            .padding(.horizontal, 20)
 
                             HStack(spacing: 12) {
                                 ForEach(sleepSummary.phases) { phase in
@@ -136,8 +139,8 @@ struct HealthMetricSleepHeroCard: View {
                                     }
                                 }
                             }
+                            .padding(.horizontal, 20) // Dieser bleibt hier
                         }
-                        .padding(.horizontal, 20)
                         .padding(.bottom, 16)
                     }
                 }
