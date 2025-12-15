@@ -12,9 +12,9 @@ body:
     attributes:
       value: |
         ### 🧭 Hinweis
-        Dieses Formular erfasst **Type, Status und Priorität**.
+        Dieses Formular erfasst **Meta, Type, Status, Priorität und Bereich**.
         👉 Labels werden **nach dem Erstellen automatisch gesetzt** (GitHub Action).
-        👉 Bitte nichts manuell labeln.
+        👉 Bitte **keine Labels manuell** setzen.
 
   # -------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ body:
     id: priority
     attributes:
       label: Priorität
-      description: Wie kritisch ist Nicht-Umsetzung?
+      description: Wie kritisch ist die Nicht-Umsetzung?
       options:
         - "[prio] critical"
         - "[prio] high"

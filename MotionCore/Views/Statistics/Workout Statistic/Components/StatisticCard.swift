@@ -13,16 +13,15 @@
 import SwiftUI
 
 struct StatisticCard<ValueContent: View>: View {
-    let icon: String
+    let icon: IconTypes
     let title: String
     let valueView: ValueContent
     let color: Color
 
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: icon)
-                .font(.system(size: 50))
-                .foregroundStyle(color)
+            // Unterscheidung Icon-Typen
+            IconType(icon: icon, color: color, size: 50)
 
             VStack(spacing: 8) {
                 valueView
@@ -40,18 +39,15 @@ struct StatisticCard<ValueContent: View>: View {
 
 // Alternativ im Grid Format 2 Cards pro Zeile
 struct StatisticGridCard<ValueContent: View>: View {
-    let icon: String
+    let icon: IconTypes
     let title: String
     let valueView: ValueContent
     let color: Color
 
     var body: some View {
         VStack(spacing: 10) {
-
-            // Icon oben
-            Image(systemName: icon)
-                .font(.system(size: 40))        
-                .foregroundStyle(color)
+            // Unterscheidung Icon-Typen
+            IconType(icon: icon, color: color, size: 40)
 
             // Wert in groß, aber nicht riesig
             valueView

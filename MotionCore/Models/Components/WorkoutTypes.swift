@@ -31,11 +31,3 @@ enum TrainingProgram: String, Codable, CaseIterable, Identifiable {
 
     var id: Self { self }
 }
-
-enum WorkoutDevice: Int, Codable, CaseIterable, Identifiable {
-    case none = 0
-    case crosstrainer = 1
-    case ergometer = 2
-
-    var id: Self { self }
-}

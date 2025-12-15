@@ -4,7 +4,7 @@
 // Abschnitt . . : Einstellungen                                                    /
 // Datei . . . . : AboutView.swift                                                  /
 // Autor . . . . : Bartosz Stryjewski                                               /
-// Erstellt am . : 02.11.2025                                                       /
+// Erstellt am . : 03.11.2025                                                       /
 // Beschreibung  : Informationsdisplay für die App-Einstellungen                    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /

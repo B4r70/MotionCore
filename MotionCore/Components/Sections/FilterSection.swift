@@ -12,92 +12,108 @@
 //
 import SwiftUI
 
-// Neu: Filter Section
+    // NEU: Apple Mail Style Filter Section (minimalistisch)
 struct FilterSection: View {
-    @Binding var selectedFilter: WorkoutDevice
-    let allWorkouts: [WorkoutSession]
+    @Binding var selectedDeviceFilter: WorkoutDevice
+    @Binding var selectedTimeFilter: TimeFilter
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                FilterChip(
-                    title: "Alle",
-                    count: allWorkouts.count,
-                    isSelected: selectedFilter == .none
-                ) {
+        // Kein HStack, kein Spacer, kein padding - nur das Menu
+        Menu {
+            // Zeitfilter-Sektion
+            Section("Zeitraum") {
+                ForEach(TimeFilter.allCases) { filter in
+                    Button {
+                        withAnimation(.spring(response: 0.3)) {
+                            selectedTimeFilter = filter
+                        }
+                    } label: {
+                        Label {
+                            HStack {
+                                Text(filter.description)
+                                Spacer()
+                                if selectedTimeFilter == filter {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        } icon: {
+                            Image(systemName: filter.intervalSymbol)
+                        }
+                    }
+                }
+            }
+
+                // Gerätefilter-Sektion
+            Section("Gerät") {
+                Button {
                     withAnimation(.spring(response: 0.3)) {
-                        selectedFilter = .none
+                        selectedDeviceFilter = .none
+                    }
+                } label: {
+                    Label {
+                        HStack {
+                            Text("Alle Geräte")
+                            Spacer()
+                            if selectedDeviceFilter == .none {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    } icon: {
+                        Image(systemName: "rectangle.3.group")
                     }
                 }
 
-                FilterChip(
-                    title: "Crosstrainer",
-                    icon: "figure.elliptical",
-                    count: allWorkouts.filter { $0.workoutDevice == .crosstrainer }.count,
-                    isSelected: selectedFilter == .crosstrainer
-                ) {
-                    withAnimation(.spring(response: 0.3)) {
-                        selectedFilter = .crosstrainer
+                ForEach([WorkoutDevice.crosstrainer, .ergometer], id: \.self) { device in
+                    Button {
+                        withAnimation(.spring(response: 0.3)) {
+                            selectedDeviceFilter = device
+                        }
+                    } label: {
+                        Label {
+                            HStack {
+                                Text(device.description)
+                                Spacer()
+                                if selectedDeviceFilter == device {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        } icon: {
+                            Image(systemName: device.symbol)
+                        }
                     }
                 }
-
-                FilterChip(
-                    title: "Ergometer",
-                    icon: "figure.indoor.cycle",
-                    count: allWorkouts.filter { $0.workoutDevice == .ergometer }.count,
-                    isSelected: selectedFilter == .ergometer
-                ) {
-                    withAnimation(.spring(response: 0.3)) {
-                        selectedFilter = .ergometer
+            }
+        } label: {
+                // NEU: Nur das Icon, wie bei ToolbarButton
+            ZStack {
+                    // Filter-Icon
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                    .font(.body)
+                    .foregroundStyle(isFiltered ? .blue : .primary)
+                    .frame(width: 36, height: 36)
+                    .background {
+                        Circle()
+                            .fill(.ultraThinMaterial)
                     }
+                    .overlay {
+                        Circle()
+                            .stroke(.white.opacity(0.2), lineWidth: 1)
+                    }
+
+                    // NEU: Blauer Punkt wenn Filter aktiv (rechts oben)
+                if isFiltered {
+                    Circle()
+                        .fill(.blue)
+                        .frame(width: 10, height: 10)
+                        .offset(x: 10, y: -10)
                 }
             }
         }
     }
-}
 
-// Neu: Filter Chip (Glassmorphic)
-struct FilterChip: View {
-    let title: String
-    var icon: String? = nil
-    let count: Int
-    let isSelected: Bool
-    let action: () -> Void
+        // MARK: - Computed Properties
 
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 8) {
-                if let icon {
-                    Image(systemName: icon)
-                        .font(.subheadline)
-                }
-
-                Text(title)
-                    .font(.subheadline.weight(isSelected ? .semibold : .regular))
-
-                // Count Badge
-                Text("\(count)")
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(isSelected ? .white : .secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background {
-                        Capsule()
-                            .fill(isSelected ? Color.blue.opacity(0.5) : Color.gray.opacity(0.2))
-                    }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background {
-                Capsule()
-                    .fill(isSelected ? .ultraThinMaterial : .thinMaterial)
-            }
-            .overlay {
-                Capsule()
-                    .stroke(isSelected ? Color.blue.opacity(0.5) : Color.clear, lineWidth: 1.5)
-            }
-            .foregroundStyle(isSelected ? .primary : .secondary)
-        }
-        .buttonStyle(.plain)
+    private var isFiltered: Bool {
+        selectedTimeFilter != .all || selectedDeviceFilter != .none
     }
 }

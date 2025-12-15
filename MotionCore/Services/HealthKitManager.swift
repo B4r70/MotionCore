@@ -40,6 +40,9 @@ class HealthKitManager: ObservableObject {
     @Published var dietaryConsumedCalories: Int?
     @Published var basalBurnedCalories: Int?
 
+    // NEU: Schlafzusammenfassung für die letzte Nacht / letzten 24h
+    @Published var todaySleepSummary: SleepStagesSummary?    // NEU
+
     private init() {}
 
     // Prüft, ob HealthKit auf diesem Gerät verfügbar ist
@@ -56,7 +59,8 @@ class HealthKitManager: ObservableObject {
             HKObjectType.quantityType(forIdentifier: .appleExerciseTime),
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned),
             HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed),
-            HKObjectType.quantityType(forIdentifier: .basalEnergyBurned)
+            HKObjectType.quantityType(forIdentifier: .basalEnergyBurned),
+            HKObjectType.categoryType(forIdentifier: .sleepAnalysis)
         ]
         return Set(types.compactMap { $0 })
     }
@@ -285,6 +289,210 @@ class HealthKitManager: ObservableObject {
                 continuation.resume()
             }
             healthStore.execute(query)
+        }
+    }
+
+    // Schlafdaten für die letzten 24 Stunden abrufen
+    func fetchTodaySleepSummary() async {
+        guard let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
+            return
+        }
+
+        let now = Date()
+
+        // Wir schauen z.B. 7 Tage zurück – reicht in der Praxis völlig
+        guard let start = Calendar.current.date(byAdding: .day, value: -7, to: now) else {
+            return
+        }
+
+        // Alle Schlafdaten der letzten 7 Tage, vollständig bis "jetzt"
+        let predicate = HKQuery.predicateForSamples(
+            withStart: start,
+            end: now,
+            options: .strictEndDate
+        )
+
+        return await withCheckedContinuation { continuation in
+            // Neu: Nach Enddatum sortiert, neueste zuerst
+            let sortDescriptor = NSSortDescriptor(
+                key: HKSampleSortIdentifierEndDate,
+                ascending: false
+            )
+
+            let query = HKSampleQuery(
+                sampleType: sleepType,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [sortDescriptor]
+            ) { _, samples, error in
+
+                if let error = error {
+                    print("Fehler beim Abrufen der Schlafdaten: \(error.localizedDescription)")
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                guard let samples = samples as? [HKCategorySample], !samples.isEmpty else {
+                    print("Keine Schlafdaten gefunden")
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                let calendar = Calendar.current
+
+                // 1. Letzte Schlafprobe (REM/Core/Deep/Schlaf) finden
+                guard let lastSleepSample = samples.first(where: { sample in
+                    guard let value = HKCategoryValueSleepAnalysis(rawValue: sample.value) else {
+                        return false
+                    }
+                    switch value {
+                        case .awake, .inBed:
+                            return false
+                        default:
+                            return true
+                    }
+                }) else {
+                    print("Keine echte Schlafepisode gefunden")
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                // 2. Tag bestimmen, an dem diese letzte Schlafepisode liegt
+                let targetDayStart = calendar.startOfDay(for: lastSleepSample.startDate)
+                guard let targetDayEnd = calendar.date(byAdding: .day, value: 1, to: targetDayStart) else {
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                // 3. Alle Samples dieses Tages herausfiltern
+                let episodeSamples = samples.filter { sample in
+                    sample.startDate >= targetDayStart && sample.startDate < targetDayEnd
+                }
+
+                guard !episodeSamples.isEmpty else {
+                    print("Keine Schlafdaten für die letzte Episode gefunden")
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                // Ab hier: Deine bestehende Auswertelogik, nur mit "episodeSamples"
+                var totalSleepSeconds: TimeInterval = 0
+                var inBedSeconds: TimeInterval = 0
+                var awakeSeconds: TimeInterval = 0
+                var phaseBuckets: [HKCategoryValueSleepAnalysis: TimeInterval] = [:]
+
+                for sample in episodeSamples {
+                    guard let value = HKCategoryValueSleepAnalysis(rawValue: sample.value) else {
+                        continue
+                    }
+
+                    let duration = sample.endDate.timeIntervalSince(sample.startDate)
+
+                    switch value {
+                        case .inBed:
+                            inBedSeconds += duration
+                        case .awake:
+                            awakeSeconds += duration
+                            phaseBuckets[value, default: 0] += duration
+                        default:
+                            totalSleepSeconds += duration
+                            phaseBuckets[value, default: 0] += duration
+                    }
+                }
+
+                let totalMinutes = Int(totalSleepSeconds / 60)
+                let inBedMinutes: Int? = inBedSeconds > 0 ? Int(inBedSeconds / 60) : nil
+                let awakeMinutes: Int? = awakeSeconds > 0 ? Int(awakeSeconds / 60) : nil
+
+                guard totalMinutes > 0 else {
+                    print("Keine relevante Schlafdauer gefunden")
+                    Task { @MainActor in
+                        self.todaySleepSummary = nil
+                    }
+                    continuation.resume()
+                    return
+                }
+
+                var phases: [SleepStagesBreakdown] = []
+
+                for (value, seconds) in phaseBuckets {
+                    let minutes = Int(seconds / 60)
+                    let (name, icon) = Self.sleepPhaseMeta(for: value)
+                    let phase = SleepStagesBreakdown(
+                        name: name,
+                        systemIcon: icon,
+                        minutes: minutes
+                    )
+                    phases.append(phase)
+                }
+
+                let sortedPhases = phases.sorted { lhs, rhs in
+                    Self.phaseOrderIndex(for: lhs.name) < Self.phaseOrderIndex(for: rhs.name)
+                }
+
+                let summary = SleepStagesSummary(
+                    date: targetDayStart,          // Datum der „Nacht“
+                    totalMinutes: totalMinutes,
+                    inBedMinutes: inBedMinutes,
+                    awakeMinutes: awakeMinutes,
+                    phases: sortedPhases
+                )
+
+                Task { @MainActor in
+                    self.todaySleepSummary = summary
+                }
+
+                continuation.resume()
+            }
+
+            self.healthStore.execute(query)
+        }
+    }
+
+        // MARK: - Hilfsfunktionen für Schlafphasen (NEU)
+
+    private static func sleepPhaseMeta(for value: HKCategoryValueSleepAnalysis) -> (String, String) {
+        switch value {
+            case .asleepREM:
+                return ("REM", "brain.head.profile")
+            case .asleepDeep:
+                return ("Tiefschlaf", "waveform.path.ecg")
+            case .asleepCore:
+                return ("Kernschlaf", "moonphase.waning.gibbous")
+            case .asleepUnspecified, .asleep:
+                return ("Schlaf", "moon.zzz.fill")
+            case .inBed:
+                return ("Im Bett", "bed.double.badge.checkmark.fill")
+            case .awake:
+                return ("Wach", "eye.trianglebadge.exclamationmark")
+            @unknown default:
+                return ("Unbekannt", "questionmark.circle")
+        }
+    }
+
+    private static func phaseOrderIndex(for name: String) -> Int {
+        switch name.lowercased() {
+            case "tiefschlaf": return 0
+            case "kernschlaf", "core": return 1
+            case "rem": return 2
+            case "schlaf": return 3
+            case "wach": return 4
+            default: return 99
         }
     }
 }

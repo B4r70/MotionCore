@@ -1,22 +1,26 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : UI-Elemente                                                      /
-// Datei . . . . : GenderIconView.swift                                             /
+// Abschnitt . . : Workout-Liste                                                    /
+// Datei . . . . : ListViewWrapper.swift                                            /
 // Autor . . . . : Bartosz Stryjewski                                               /
-// Erstellt am . : 23.11.2025                                                       /
-// Beschreibung  : Ausgabe des Gender-Icons                                         /
+// Erstellt am . : 09.12.2025                                                       /
+// Beschreibung  : Wrapper für ListView mit Bindings für Filter                     /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
-struct GenderIconView: View {
-    let gender: Gender
-    var size: CGFloat = 20
+// Wrapper für ListView mit Bindings
+struct ListViewWrapper: View {
+    @Binding var selectedDeviceFilter: WorkoutDevice
+    @Binding var selectedTimeFilter: TimeFilter
     
     var body: some View {
-        IconType(icon: gender.icon, color: gender.color, size: size)
+        ListView(
+            selectedDeviceFilter: $selectedDeviceFilter,
+            selectedTimeFilter: $selectedTimeFilter
+        )
     }
 }

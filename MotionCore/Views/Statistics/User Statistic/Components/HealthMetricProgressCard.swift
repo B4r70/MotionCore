@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Gesundheitsdaten                                                 /
+// Abschnitt . . : Gesundheitsmetriken                                              /
 // Datei . . . . : HealthMetricProgressCard.swift                                   /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 30.11.2025                                                       /
@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct HealthMetricProgressCard: View {
-    let icon: String
+    let icon: IconTypes
     let title: String
     let currentValue: Double
     let targetValue: Double
@@ -23,7 +23,7 @@ struct HealthMetricProgressCard: View {
 
         // Initializer mit Defaults
     init(
-        icon: String,
+        icon: IconTypes,
         title: String,
         currentValue: Double,
         targetValue: Double,
@@ -51,10 +51,8 @@ struct HealthMetricProgressCard: View {
 
     var body: some View {
         VStack(spacing: 16) {
-                // Icon
-            Image(systemName: icon)
-                .font(.system(size: 40))
-                .foregroundStyle(color)
+            // Icon
+            IconType(icon: icon, color: color, size: 40)
 
                 // Werte
             VStack(spacing: 4) {
@@ -117,7 +115,7 @@ struct HealthMetricProgressCard: View {
         .glassCard()
     }
 
-        // Formatierung der Werte mit Einheit
+    // Formatierung der Werte mit Einheit
     private func formatValue(_ value: Double) -> String {
             // Ganzzahlen ohne Dezimalstellen
         if value.truncatingRemainder(dividingBy: 1) == 0 {
@@ -135,7 +133,7 @@ struct HealthMetricProgressCard: View {
         VStack(spacing: 20) {
                 // Kalorien
             HealthMetricProgressCard(
-                icon: "flame.fill",
+                icon: .system("flame.fill"),
                 title: "Aktive Kalorien / Grundumsatz",
                 currentValue: 240,
                 targetValue: 2000,
@@ -145,7 +143,7 @@ struct HealthMetricProgressCard: View {
 
                 // Schritte
             HealthMetricProgressCard(
-                icon: "figure.walk",
+                icon: .system("figure.walk"),
                 title: "Schritte / Tagesziel",
                 currentValue: 8450,
                 targetValue: 10000,
@@ -155,7 +153,7 @@ struct HealthMetricProgressCard: View {
 
                 // Distanz
             HealthMetricProgressCard(
-                icon: "arrow.left.and.right",
+                icon: .system("arrow.left.and.right"),
                 title: "Gelaufene Distanz / Wochenziel",
                 currentValue: 12.5,
                 targetValue: 25.0,
@@ -165,7 +163,7 @@ struct HealthMetricProgressCard: View {
 
                 // Trainingszeit
             HealthMetricProgressCard(
-                icon: "clock.fill",
+                icon: .system("clock.fill"),
                 title: "Trainingszeit / Wochenziel",
                 currentValue: 180,
                 targetValue: 300,
@@ -176,7 +174,7 @@ struct HealthMetricProgressCard: View {
 
                 // Ziel überschritten
             HealthMetricProgressCard(
-                icon: "flame.fill",
+                icon: .system("flame.fill"),
                 title: "Aktive Kalorien",
                 currentValue: 2150,
                 targetValue: 2000,

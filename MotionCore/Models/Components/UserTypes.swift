@@ -5,11 +5,12 @@
 // Datei . . . . : UserTypes.swift                                                  /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 22.11.2025                                                       /
-// Beschreibung  : Benutzerspezifische Angaben                                      /
+// Beschreibung  : Benutzerspezifische Angaben wie Gender, Activity, etc.           /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
+import SwiftUI
 
 enum Gender: String, CaseIterable, Identifiable {
     case male = "Männlich"
@@ -21,6 +22,26 @@ enum Gender: String, CaseIterable, Identifiable {
     // Für die Anzeige in der Picker-View
     var description: String {
         self.rawValue
+    }
+
+    // Anzeige des passenden GenderIcons aus Assetts
+    var icon: IconTypes {
+        switch self {
+        case .male:
+            return .asset("GenderMetrics/male")
+        case .female:
+            return .asset("GenderMetrics/female")
+        case .other:
+            return .asset("GenderMetrics/divers")
+        }
+    }
+    // Gender Color
+    var color: Color {
+        switch self {
+        case .male: return .blue
+        case .female: return .pink
+        case .other: return .purple
+        }
     }
 }
 

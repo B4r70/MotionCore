@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Statistik                                                        /
+// Abschnitt . . : Gesundheitsmetriken                                              /
 // Datei . . . . : HealthMetricView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 23.11.2025                                                       /
@@ -17,17 +17,19 @@ struct HealthMetricView: View {
     @Query(sort: \WorkoutSession.date, order: .reverse)
     private var allWorkouts: [WorkoutSession]
 
-    // Lesen der globalen Einstellungen für Userdefaults
+    @StateObject private var healthManager = HealthKitManager.shared
+
+        // Lesen der globalen Einstellungen für Userdefaults
     @EnvironmentObject private var appSettings: AppSettings
 
     private var calcHealthMetrics: HealthMetricCalcEngine {
         HealthMetricCalcEngine(workouts: allWorkouts, settings: appSettings)
     }
 
-    // Lesen der HealthKit-Daten
+        // Lesen der HealthKit-Daten
     @ObservedObject private var healthKitManager = HealthKitManager.shared
 
-    // Anzahl der Cards je Zeile im Grid
+        // Anzahl der Cards je Zeile im Grid
     private let gridColumns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -36,19 +38,19 @@ struct HealthMetricView: View {
     var body: some View {
 
         let userGender = appSettings.userGender
-        let genderMetrics = GenderSymbolView(gender: userGender).iconMetrics
+        let genderMetrics = GenderIconView(gender: userGender)
 
         ZStack {
-            // Hintergrund
+                // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             ScrollView {
                 VStack(spacing: 20) {
                     LazyVGrid(columns: gridColumns, spacing: 20) {
 
-                        // Anzahl aller Workouts
+                            // Anzahl aller Workouts
                         HealthMetricGridCard(
-                            icon: "figure.wave",
+                            icon: .system("figure.wave"),
                             title: "Körpergröße",
                             valueView: Text(
                                 String(
@@ -59,54 +61,69 @@ struct HealthMetricView: View {
                             color: .indigo
                         )
 
-                        // Körpergewicht des Benutzers
+                            // Körpergewicht des Benutzers
                         HealthMetricGridCard(
-                                icon: "figure",
-                                title: "Körpergewicht",
-                                valueView: Text(String(format: "%.1f kg", calcHealthMetrics.userBodyWeight ?? 0.0)),
-                                color: .gray
+                            icon: .system("figure"),
+                            title: "Körpergewicht",
+                            valueView: Text(String(format: "%.1f kg", calcHealthMetrics.userBodyWeight ?? 0.0)),
+                            color: .gray
                         )
-                        // Geschlecht des Benutzers
+                            // Geschlecht des Benutzers
                         HealthMetricGridCard(
-                            icon: genderMetrics.name,
+                            icon: genderMetrics.gender.icon,
                             title: "Geschlecht",
                             valueView: Text(userGender.description), // Nutzt die description Eigenschaft der Enum
-                            color: genderMetrics.color
+                            color: genderMetrics.gender.color
                         )
 
-                        // Alter des Benutzers
+                            // Alter des Benutzers
                         HealthMetricGridCard(
-                            icon: "flame.fill", // Beispiel-Icon
+                            icon: .system("flame.fill"), // Beispiel-Icon
                             title: "Alter",
                             valueView: Text(String(format: "%d Jahre", appSettings.userAge)),
                             color: .red // Kann nach Belieben angepasst werden
                         )
 
-                        // Letzte Herzfrequenz (aus HealthKit)
+                            // Letzte Herzfrequenz (aus HealthKit)
                         HealthMetricGridCard(
-                            icon: "heart.fill",
+                            icon: .system("heart.fill"),
                             title: "Aktuelle Herzfrequenz",
                             valueView: Text(
                                 healthKitManager.latestHeartRate.map { String(format: "%.0f bpm", $0) } ?? "-"
                             ),
                             color: .red
                         )
-                        // Eingenommene Kalorien
+                            // Body-Mass-Index (BMI)
                         HealthMetricGridCard(
-                            icon: "fork.knife",
-                            title: "Eingenommene Kalorien",
+                            icon: .system("figure"),
+                            title: "Body-Mass-Index (BMI)",
                             valueView: Text(
-                                healthKitManager.dietaryConsumedCalories.map {
-                                    String(format: "%d kcal", $0)
-                                } ?? "-"
+                                String(format: "%.2f", calcHealthMetrics.userBodyMassIndex ?? 0.0)
                             ),
-                            color: .green
+                            color: .blue // Kann nach Belieben angepasst werden
                         )
                     }
+                        // Kalorienbilanz als Übersicht
+                    if let balance = calcHealthMetrics.calculateTodayCalorieBalance(from: healthKitManager) {
+                        HealthMetricHeroCard(
+                            date: Date(),
+                            calorieBalance: balance
+                        )
+                        .padding(.top, 10)
+                    }
+                    //Schlafzusammenfassung
+                    if let summary = healthManager.todaySleepSummary {
+                        HealthMetricSleepHeroCard(sleepSummary: summary)
+                    } else {
+                            // Optional: Placeholder
+                        Text("Keine Schlafdaten verfügbar")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
 
-                    // Kalorien-Fortschritt vs. Kalorienumsatz
+                        // Kalorien-Fortschritt vs. Kalorienumsatz
                     HealthMetricProgressCard(
-                        icon: "flame.fill",
+                        icon: .system("flame.fill"),
                         title: "Aktive Kalorien / Tagesziel",
                         currentValue: Double(healthKitManager.activeBurnedCalories ?? 0),
                         targetValue: Double(appSettings.dailyActiveCalorieGoal),
@@ -115,52 +132,22 @@ struct HealthMetricView: View {
                         showPercentage: true
                     )
 
-                    // Schritte-Fortschritt
+                        // Schritte-Fortschritt
                     HealthMetricProgressCard(
-                        icon: "shoeprints.fill",
+                        icon: .system("shoeprints.fill"),
                         title: "Schritte / Tagesziel",
                         currentValue: Double(healthKitManager.latestStepCount ?? 0),
                         targetValue: Double(appSettings.dailyStepsGoal),
                         unit: "Schritte",
-                        color: .black,
+                        color: .cyan,
                         showPercentage: true
-                    )
-
-                    // Gesamtumsatz Kalorien Card
-                    HealthMetricCard(
-                        icon: "flame.fill",
-                        title: "Grundumsatz (BMR)",
-                        valueView: Text(
-                            healthKitManager.basalBurnedCalories.map { "\($0) kcal" } ?? "-"
-                        ),
-                        color: .green
-                    )
-
-                    // Body-Mass-Index (BMI)
-                    HealthMetricCard(
-                        icon: "figure", 
-                        title: "Body-Mass-Index (BMI)",
-                        valueView: Text(
-                            String(format: "%.2f", calcHealthMetrics.userBodyMassIndex ?? 0.0)
-                        ),
-                        color: .blue // Kann nach Belieben angepasst werden
-                    )
-                    // BMR Card
-                    HealthMetricCard(
-                        icon: "flame.fill",
-                        title: "Grundumsatz (BMR)",
-                        valueView: Text(
-                            String(format: "%.0f kcal/Tag", calcHealthMetrics.userCalorieMetabolicRate ?? 0.0)
-                        ),
-                        color: .red
                     )
                         // Hier kannst du später weitere Cards hinzufügen
                 }
-                .padding(.horizontal, 10)
-                .padding(.bottom, 100)
+                .scrollViewContentPadding() // Einheitlicher Abstand
             }
             .scrollIndicators(.hidden)
-            // Berechtigungsanfrage für HealthKit
+                // Berechtigungsanfrage für HealthKit
             .onAppear {
                 Task {
                     let authorized = await healthKitManager.requestAuthorization()
@@ -170,18 +157,29 @@ struct HealthMetricView: View {
                         await healthKitManager.fetchTodayBurnedCalories()
                         await healthKitManager.fetchTodayConsumedCalories()
                         await healthKitManager.fetchTodayBasalBurnedCalories()
+                        await healthManager.fetchTodaySleepSummary()
                     }
                 }
             }
+                // Aktualisierung der Daten aus HealthKit
+            .refreshable {
+                await healthKitManager.fetchLatestHeartRate()
+                await healthKitManager.fetchTodayStepCount()
+                await healthKitManager.fetchTodayBurnedCalories()
+                await healthKitManager.fetchTodayConsumedCalories()
+                await healthKitManager.fetchTodayBasalBurnedCalories()
+                await healthManager.fetchTodaySleepSummary()
+            }
 
-            // Empty State
+                // Empty State
             if allWorkouts.isEmpty {
                 EmptyState()
             }
         }
     }
 }
-// MARK: Statistic Preview
+
+    // MARK: Statistic Preview
 #Preview("HealthMetric") {
     HealthMetricView()
         .modelContainer(PreviewData.sharedContainer)

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Gesundheitsdaten                                                 /
+// Abschnitt . . : Gesundheitsmetriken                                              /
 // Datei . . . . : HealthMetricsCalcEngine.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 17.11.2025                                                       /
@@ -99,5 +99,65 @@ class HealthMetricCalcEngine: ObservableObject {
         guard let bmr = userCalorieMetabolicRate else { return nil }
         return bmr * userActivityLevel.rawValue
     }
+
+    // Berechnung: Kalorienbilanz aus HealthKit
+    func calculateTodayCalorieBalance(from healthKit: HealthKitManager) -> CalorieBalance? {
+        // NEU: Guard-Statement prüft alle notwendigen HealthKit-Werte
+        guard let consumed = healthKit.dietaryConsumedCalories,
+              let basal = healthKit.basalBurnedCalories,
+              let active = healthKit.activeBurnedCalories else {
+            return nil
+        }
+
+        // NEU: Berechnungen durchführen
+        let totalBurned = basal + active
+        let balance = totalBurned - consumed
+        let isDeficit = balance > 0
+
+        let percentage: Double
+        if totalBurned > 0 {
+            percentage = min(Double(consumed) / Double(totalBurned), 1.0)
+        } else {
+            percentage = 0.0
+        }
+
+        // NEU: Jetzt mit allen berechneten Werten
+        return CalorieBalance(
+            consumedCalories: consumed,
+            basalEnergy: basal,
+            activeEnergy: active,
+            totalBurned: totalBurned,
+            balance: balance,
+            isDeficit: isDeficit,
+            consumedPercentage: percentage
+        )
+    }
 }
 
+// MARK: Berechnung der Kalorienbilanz
+// Anhand der aufgenommenen und verbrannten Kalorien wird ein Defizit berechnet
+struct CalorieBalance {
+    let consumedCalories: Int
+    let basalEnergy: Int
+    let activeEnergy: Int
+    let totalBurned: Int
+    let balance: Int
+    let isDeficit: Bool
+    let consumedPercentage: Double
+
+    // Formatiert die Bilanz als String mit Vorzeichen
+    var balanceFormatted: String {
+        let sign = isDeficit ? "+" : ""
+        return "\(sign)\(abs(balance)) kcal"
+    }
+
+    // Gibt den Status als Text zurück
+    var statusText: String {
+        isDeficit ? "Kaloriendefizit" : "Kalorienüberschuss"
+    }
+
+    // Farbe für die Bilanz-Anzeige
+    var statusColor: Color {
+        isDeficit ? .green : .red
+    }
+}
