@@ -28,6 +28,10 @@ extension Comparable {
 final class WorkoutSession {
     // MARK: - Grunddaten
 
+    // Trainingsblöcke innerhalb einer Session (z. B. Cardio + Kraft)
+    @Relationship(deleteRule: .cascade, inverse: \WorkoutEntry.session)
+    var entries: [WorkoutEntry]?
+
     var date: Date = Date() // Datum
     var duration: Int = 0 // Minuten
     var distance: Double = 0.0 // Zurückgelegte Strecke

@@ -20,11 +20,14 @@ struct MotionCoreApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             WorkoutSession.self,
+            WorkoutEntry.self,
+            StrengthSet.self,
+            Exercise.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: false,
-            cloudKitDatabase: .automatic
+            cloudKitDatabase: .none
         )
 
         do {

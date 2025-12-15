@@ -31,3 +31,18 @@ enum TrainingProgram: String, Codable, CaseIterable, Identifiable {
 
     var id: Self { self }
 }
+
+/// Art eines Trainingsblocks innerhalb einer Workout-Session
+///
+/// - cardio: Klassisches Cardiotraining (z. B. Crosstrainer, Ergometer)
+/// - strength: Krafttraining mit Übungen, Sätzen und Gewichten
+/// - outdoor: Outdoor-Training (z. B. Laufen, Radfahren, Wandern)
+///
+/// Hinweis:
+/// Der Enum wird als Int persistiert (SwiftData-kompatibel).
+/// Die Reihenfolge der RawValues darf sich später NICHT ändern.
+enum WorkoutEntryKind: Int, Codable {
+    case cardio = 0
+    case strength = 1
+    case outdoor = 2
+}
