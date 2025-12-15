@@ -1,0 +1,109 @@
+name: 📌 Issue
+description: Einheitliche Struktur für alle Aufgaben in MotionCore
+title: "[Area] Kurze, präzise Beschreibung"
+labels: ["status: backlog"]
+assignees:
+  - B4r70
+
+body:
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      description: Was für eine Art Arbeit ist das?
+      options:
+        - type: feature
+        - type: bug
+        - type: refactor
+        - type: ui
+        - type: performance
+        - type: docs
+        - type: chore
+        - type: research
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Welcher Bereich von MotionCore ist betroffen?
+      options:
+        - area: workout
+        - area: healthkit
+        - area: statistics
+        - area: models
+        - area: persistence
+        - area: ui-core
+        - area: settings
+        - area: export-import
+        - area: infrastructure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: Wie kritisch ist Nicht-Umsetzung?
+      options:
+        - prio: critical
+        - prio: high
+        - prio: medium
+        - prio: low
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Ziel
+      description: Was soll nach Abschluss dieses Issues konkret erreicht sein?
+      placeholder: Klarer Zielzustand, kein Lösungsweg.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Abgrenzung
+      description: Was gehört explizit NICHT zu diesem Issue?
+      placeholder: Verhindert Scope Creep.
+    validations:
+      required: false
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Aufgaben / Sub-Issues
+      description: Optional – grobe Schritte oder Checkliste.
+      placeholder: |
+        - [ ] Schritt 1
+        - [ ] Schritt 2
+        - [ ] Schritt 3
+    validations:
+      required: false
+
+  - type: textarea
+    id: blockers
+    attributes:
+      label: Blocker / Abhängigkeiten
+      description: Was verhindert aktuell die Umsetzung?
+      placeholder: Externe APIs, Architekturentscheidungen, andere Issues.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: meta
+    attributes:
+      label: Meta (optional)
+      description: Beziehung oder Risiko dieses Issues.
+      options:
+        - none
+        - meta: epic
+        - meta: subtask
+        - meta: tech-debt
+        - meta: breaking-change
+    validations:
+      required: false
