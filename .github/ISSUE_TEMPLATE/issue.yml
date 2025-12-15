@@ -163,7 +163,7 @@ body:
       label: Meta
       description: Übergeordnete Einordnung des Issues
       options:
-        - ""
+        - "[meta] none"
         - "[meta] epic"
         - "[meta] subtask"
         - "[meta] tech-debt"
