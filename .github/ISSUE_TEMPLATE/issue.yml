@@ -144,22 +144,6 @@ body:
   - type: dropdown
     id: meta
     attributes:
-      label: Meta (optional)
-      description: Übergeordnete Einordnung oder Risiko
-      options:
-        - ""
-        - "[meta] epic"
-        - "[meta] subtask"
-        - "[meta] tech-debt"
-        - "[meta] breaking-change"
-    validations:
-      required: false
-
-  # -------------------------------------------------------------------
-
-  - type: dropdown
-    id: meta
-    attributes:
       label: Meta
       description: Übergeordnete Einordnung des Issues
       options:
