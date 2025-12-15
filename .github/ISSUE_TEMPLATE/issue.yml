@@ -30,7 +30,7 @@ body:
         - "[meta] tech-debt"
         - "[meta] breaking-change"
     validations:
-      required: false
+      required: true
 
   # -------------------------------------------------------------------
 

@@ -36,7 +36,7 @@ jobs:
               status: extract("Status"),
               prio: extract("Priorität"),
               area: extract("Bereich \\(Area\\)"),
-              meta: extract("Meta \\(optional\\)")
+              meta: extract("Meta")
             };
 
             // Normalize empty meta
