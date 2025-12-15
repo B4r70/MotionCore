@@ -1,83 +1,125 @@
-name: 📌 Issue
-description: Einheitliche Struktur für alle Aufgaben in MotionCore
-title: "[Area] Kurze, präzise Beschreibung"
-labels: ["status: backlog"]
+name: "📌 MotionCore Issue"
+description: "Strukturiertes Issue für Planung, Umsetzung und Nachverfolgung"
+title: "[area] Kurze, präzise Beschreibung"
+labels:
+  - "[status] backlog"
 assignees:
   - B4r70
 
 body:
 
+  - type: markdown
+    attributes:
+      value: |
+        ### 🧭 Hinweis
+        Dieses Formular erfasst **Type, Status und Priorität**.
+        👉 Labels werden **nach dem Erstellen automatisch gesetzt** (GitHub Action).
+        👉 Bitte nichts manuell labeln.
+
+  # -------------------------------------------------------------------
+
   - type: dropdown
     id: type
     attributes:
       label: Type
-      description: Was für eine Art Arbeit ist das?
+      description: Welche Art von Issue ist das?
       options:
-        - type: feature
-        - type: bug
-        - type: refactor
-        - type: ui
-        - type: performance
-        - type: docs
-        - type: chore
-        - type: research
+        - "[type] idea"
+        - "[type] feature"
+        - "[type] bug"
+        - "[type] refactor"
+        - "[type] ui"
+        - "[type] performance"
+        - "[type] docs"
+        - "[type] chore"
+        - "[type] research"
     validations:
       required: true
 
+  # -------------------------------------------------------------------
+
   - type: dropdown
-    id: area
+    id: status
     attributes:
-      label: Area
-      description: Welcher Bereich von MotionCore ist betroffen?
+      label: Status
+      description: In welchem Zustand befindet sich das Issue?
       options:
-        - area: workout
-        - area: healthkit
-        - area: statistics
-        - area: models
-        - area: persistence
-        - area: ui-core
-        - area: settings
-        - area: export-import
-        - area: infrastructure
+        - "[status] backlog"
+        - "[status] ready"
+        - "[status] in-progress"
+        - "[status] blocked"
+        - "[status] review"
+        - "[status] done"
     validations:
       required: true
+
+  # -------------------------------------------------------------------
 
   - type: dropdown
     id: priority
     attributes:
-      label: Priority
+      label: Priorität
       description: Wie kritisch ist Nicht-Umsetzung?
       options:
-        - prio: critical
-        - prio: high
-        - prio: medium
-        - prio: low
+        - "[prio] critical"
+        - "[prio] high"
+        - "[prio] medium"
+        - "[prio] low"
     validations:
       required: true
+
+  # -------------------------------------------------------------------
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Bereich (Area)
+      description: Welcher Bereich von MotionCore ist betroffen?
+      options:
+        - "[area] workout"
+        - "[area] healthKit"
+        - "[area] statistics"
+        - "[area] models"
+        - "[area] persistence"
+        - "[area] ui-core"
+        - "[area] settings"
+        - "[area] export/import"
+        - "[area] infrastructure"
+    validations:
+      required: true
+
+  # -------------------------------------------------------------------
 
   - type: textarea
     id: goal
     attributes:
       label: Ziel
-      description: Was soll nach Abschluss dieses Issues konkret erreicht sein?
-      placeholder: Klarer Zielzustand, kein Lösungsweg.
+      description: Was ist nach Abschluss objektiv erreicht?
+      placeholder: |
+        Klarer Zielzustand.
+        Kein Lösungsweg, keine technische Detailplanung.
     validations:
       required: true
+
+  # -------------------------------------------------------------------
 
   - type: textarea
     id: scope
     attributes:
-      label: Abgrenzung
+      label: Abgrenzung (Out of Scope)
       description: Was gehört explizit NICHT zu diesem Issue?
-      placeholder: Verhindert Scope Creep.
+      placeholder: |
+        Verhindert Scope Creep.
     validations:
       required: false
+
+  # -------------------------------------------------------------------
 
   - type: textarea
     id: tasks
     attributes:
       label: Aufgaben / Sub-Issues
-      description: Optional – grobe Schritte oder Checkliste.
+      description: Optional – grobe Schritte oder geplante Sub-Issues.
       placeholder: |
         - [ ] Schritt 1
         - [ ] Schritt 2
@@ -85,25 +127,30 @@ body:
     validations:
       required: false
 
+  # -------------------------------------------------------------------
+
   - type: textarea
     id: blockers
     attributes:
       label: Blocker / Abhängigkeiten
       description: Was verhindert aktuell die Umsetzung?
-      placeholder: Externe APIs, Architekturentscheidungen, andere Issues.
+      placeholder: |
+        Andere Issues, offene Entscheidungen, externe Limits.
     validations:
       required: false
+
+  # -------------------------------------------------------------------
 
   - type: dropdown
     id: meta
     attributes:
       label: Meta (optional)
-      description: Beziehung oder Risiko dieses Issues.
+      description: Übergeordnete Einordnung oder Risiko
       options:
-        - none
-        - meta: epic
-        - meta: subtask
-        - meta: tech-debt
-        - meta: breaking-change
+        - ""
+        - "[meta] epic"
+        - "[meta] subtask"
+        - "[meta] tech-debt"
+        - "[meta] breaking-change"
     validations:
       required: false
