@@ -19,6 +19,22 @@ body:
   # -------------------------------------------------------------------
 
   - type: dropdown
+    id: meta
+    attributes:
+      label: Meta
+      description: Übergeordnete Einordnung des Issues
+      options:
+        - "[meta] none"
+        - "[meta] epic"
+        - "[meta] subtask"
+        - "[meta] tech-debt"
+        - "[meta] breaking-change"
+    validations:
+      required: false
+
+  # -------------------------------------------------------------------
+
+  - type: dropdown
     id: type
     attributes:
       label: Type
@@ -136,21 +152,5 @@ body:
       description: Was verhindert aktuell die Umsetzung?
       placeholder: |
         Andere Issues, offene Entscheidungen, externe Limits.
-    validations:
-      required: false
-
-  # -------------------------------------------------------------------
-
-  - type: dropdown
-    id: meta
-    attributes:
-      label: Meta
-      description: Übergeordnete Einordnung des Issues
-      options:
-        - "[meta] none"
-        - "[meta] epic"
-        - "[meta] subtask"
-        - "[meta] tech-debt"
-        - "[meta] breaking-change"
     validations:
       required: false
