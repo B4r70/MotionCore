@@ -1,0 +1,80 @@
+name: Auto-label issues from Issue Form
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels from issue form
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.issue.number;
+            const body = context.payload.issue.body || "";
+
+            // Extract value under a markdown heading (### Heading)
+            function extract(heading) {
+              const re = new RegExp(
+                `^###\\s+${heading}\\s*\\n\\n([\\s\\S]*?)(?=\\n\\n###\\s+|$)`,
+                "m"
+              );
+              const m = body.match(re);
+              if (!m) return null;
+              return m[1].trim().split("\n")[0].trim();
+            }
+
+            // Read selections from the form
+            const picked = {
+              type: extract("Type"),
+              status: extract("Status"),
+              prio: extract("Priorität"),
+              area: extract("Bereich \\(Area\\)"),
+              meta: extract("Meta \\(optional\\)")
+            };
+
+            // Normalize empty meta
+            if (picked.meta === "" || picked.meta === null) picked.meta = null;
+
+            // Only accept labels that match your schema
+            const isValidLabel = (v) =>
+              typeof v === "string" &&
+              (
+                v.startsWith("[type]") ||
+                v.startsWith("[status]") ||
+                v.startsWith("[prio]") ||
+                v.startsWith("[area]") ||
+                v.startsWith("[meta]")
+              );
+
+            // Desired labels from the form
+            const desired = Object.values(picked).filter(isValidLabel);
+
+            // Fetch current labels
+            const { data } = await github.rest.issues.get({
+              owner, repo, issue_number
+            });
+            const current = (data.labels || []).map(l => l.name);
+
+            // Categories to manage
+            const categories = ["[type]", "[status]", "[prio]", "[area]", "[meta]"];
+
+            // Remove existing labels of these categories
+            const keep = current.filter(
+              name => !categories.some(c => name.startsWith(c))
+            );
+
+            // Final label set
+            const labels = Array.from(new Set([...keep, ...desired]));
+
+            // Apply labels
+            await github.rest.issues.setLabels({
+              owner, repo, issue_number,
+              labels
+            });
