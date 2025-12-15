@@ -154,3 +154,19 @@ body:
         - "[meta] breaking-change"
     validations:
       required: false
+
+  # -------------------------------------------------------------------
+
+  - type: dropdown
+    id: meta
+    attributes:
+      label: Meta
+      description: Übergeordnete Einordnung des Issues
+      options:
+        - ""
+        - "[meta] epic"
+        - "[meta] subtask"
+        - "[meta] tech-debt"
+        - "[meta] breaking-change"
+    validations:
+      required: false
