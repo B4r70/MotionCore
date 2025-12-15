@@ -7,8 +7,8 @@
 // Erstellt am . : 09.12.2025
 // Beschreibung  : Datentypen für Schlafauswertung
 //----------------------------------------------------------------------------------/
-
 import Foundation
+import SwiftUI
 
 /// Einzelne Schlafphase (z. B. REM, Tiefschlaf, Kernschlaf, Wach)
 struct SleepStagesBreakdown: Identifiable {
