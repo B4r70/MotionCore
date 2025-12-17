@@ -14,8 +14,8 @@ import SwiftData
 import SwiftUI
 
 struct StatisticView: View {
-    @Query(sort: \WorkoutSession.date, order: .reverse)
-    private var allWorkouts: [WorkoutSession]
+    @Query(sort: \CardioWorkoutSession.date, order: .reverse)
+    private var allWorkouts: [CardioWorkoutSession]
 
     private var calcStatistics: StatisticCalcEngine {
         StatisticCalcEngine(workouts: allWorkouts)

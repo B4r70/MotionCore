@@ -32,12 +32,12 @@ struct WorkoutExportItem: Codable {
     let bodyWeight: Double?
     let intensity: Int? // Enum als rawValue (0...5)
     let trainingProgram: String? // Enum als rawValue ("manual", ...)
-    let workoutDevice: Int?
+    let cardioDevice: Int?
 }
 
 // MARK: - Mapper zwischen Model und DTO
 
-extension WorkoutSession {
+extension CardioWorkoutSession {
     // → DTO (Export)
     var exportItem: WorkoutExportItem {
         // Wir verwenden nil, wenn der Wert 0 oder der Standardwert ist,
@@ -54,15 +54,15 @@ extension WorkoutSession {
             // Enum rawValues können oft 0 sein, daher prüfen wir auf .none/Standard
             intensity: intensity != .none ? intensity.rawValue : nil,
             trainingProgram: trainingProgram != .manual ? trainingProgram.rawValue : nil,
-            workoutDevice: workoutDevice != .none ? workoutDevice.rawValue : nil
+            cardioDevice: cardioDevice != .none ? cardioDevice.rawValue : nil
         )
     }
     
     // ← DTO
-    static func fromExportItem(_ e: WorkoutExportItem) -> WorkoutSession {
+    static func fromExportItem(_ e: WorkoutExportItem) -> CardioWorkoutSession {
         let iso = ISO8601DateFormatter()
 
-        return WorkoutSession(
+        return CardioWorkoutSession(
             date: e.date.flatMap { iso.date(from: $0) } ?? .now,
             duration: e.duration ?? 0,
             distance: e.distance ?? 0.0,
@@ -72,7 +72,7 @@ extension WorkoutSession {
             bodyWeight: e.bodyWeight ?? 0.0,
             intensity: e.intensity.flatMap { Intensity(rawValue: $0) } ?? .none,
             trainingProgram: e.trainingProgram.flatMap { TrainingProgram(rawValue: $0) } ?? .manual,
-            workoutDevice: e.workoutDevice.flatMap { WorkoutDevice(rawValue: $0) } ?? .none
+            cardioDevice: e.cardioDevice.flatMap { CardioDevice(rawValue: $0) } ?? .none
         )
     }
 }

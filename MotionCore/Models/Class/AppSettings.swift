@@ -36,7 +36,7 @@ class AppSettings: ObservableObject {
 
     // MARK: Workoutdefaults in AppSettings
     // Workoutdefaults: Trainingsgerät aus Enumeration
-    @Published var defaultDevice: WorkoutDevice {
+    @Published var defaultDevice: CardioDevice {
         didSet {
             UserDefaults.standard.set(defaultDevice.rawValue, forKey: "workout.defaultDevice")
         }
@@ -144,7 +144,7 @@ class AppSettings: ObservableObject {
 
         // Workout: Device
         let deviceRaw = defaults.integer(forKey: "workout.defaultDevice")
-        defaultDevice = WorkoutDevice(rawValue: deviceRaw) ?? .none
+        defaultDevice = CardioDevice(rawValue: deviceRaw) ?? .none
 
         // Workout: Program
         let programRaw = defaults.string(forKey: "workout.defaultProgram") ?? "manual"

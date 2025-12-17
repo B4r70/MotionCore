@@ -14,7 +14,7 @@ import SwiftUI
 
     // NEU: Apple Mail Style Filter Section (minimalistisch)
 struct FilterSection: View {
-    @Binding var selectedDeviceFilter: WorkoutDevice
+    @Binding var selectedDeviceFilter: CardioDevice
     @Binding var selectedTimeFilter: TimeFilter
 
     var body: some View {
@@ -63,7 +63,7 @@ struct FilterSection: View {
                     }
                 }
 
-                ForEach([WorkoutDevice.crosstrainer, .ergometer], id: \.self) { device in
+                ForEach([CardioDevice.crosstrainer, .ergometer], id: \.self) { device in
                     Button {
                         withAnimation(.spring(response: 0.3)) {
                             selectedDeviceFilter = device

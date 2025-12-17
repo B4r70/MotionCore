@@ -13,7 +13,7 @@
 import Foundation
 
 // Filter für die Anzeige der Workouts je Trainingsgerät
-enum WorkoutDevice: Int, Codable, CaseIterable, Identifiable {
+enum CardioDevice: Int, Codable, CaseIterable, Identifiable {
     case none = 0
     case crosstrainer = 1
     case ergometer = 2

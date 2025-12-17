@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct StatisticDeviceCard: View {
-    let allWorkouts: [WorkoutSession]
+    let allWorkouts: [CardioWorkoutSession]
 
     private var calcStatistics: StatisticCalcEngine {
         StatisticCalcEngine(workouts: allWorkouts)
@@ -26,7 +26,7 @@ struct StatisticDeviceCard: View {
                 .padding(.horizontal, 4)
 
             VStack(spacing: 8) {
-                ForEach([WorkoutDevice.crosstrainer, .ergometer], id: \.self) { device in
+                ForEach([CardioDevice.crosstrainer, .ergometer], id: \.self) { device in
                     StatisticDeviceRow(
                         device: device,
                         count: calcStatistics.workoutCountDevice(for: device),

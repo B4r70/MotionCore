@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct DeviceBadge: View {
-    let device: WorkoutDevice
+    let device: CardioDevice
     var compact: Bool = false
 
     var body: some View {

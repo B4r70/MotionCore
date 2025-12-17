@@ -15,25 +15,25 @@ import SwiftUI
 
 struct ListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \WorkoutSession.date, order: .reverse)
-    private var allWorkouts: [WorkoutSession]
+    @Query(sort: \CardioWorkoutSession.date, order: .reverse)
+    private var allWorkouts: [CardioWorkoutSession]
 
     @State private var exportURL: URL?
 
     // Filter-States
-    @Binding var selectedDeviceFilter: WorkoutDevice
+    @Binding var selectedDeviceFilter: CardioDevice
     @Binding var selectedTimeFilter: TimeFilter
 
     // Abruf aus Einstellungen
     @EnvironmentObject private var appSettings: AppSettings
 
     // Kombinierte Filterlogik (beide Filter)
-    var filteredWorkouts: [WorkoutSession] {
+    var filteredWorkouts: [CardioWorkoutSession] {
         var workouts = allWorkouts
 
             // Gerätefilter anwenden
         if selectedDeviceFilter != .none {
-            workouts = workouts.filter { $0.workoutDevice == selectedDeviceFilter }
+            workouts = workouts.filter { $0.cardioDevice == selectedDeviceFilter }
         }
 
             // Zeitfilter anwenden

@@ -17,7 +17,7 @@ import SwiftUI
 class HealthMetricCalcEngine: ObservableObject {
 
     // Die dynamischen Daten (Workouts) kommen als Input in den Initializer
-    let allWorkouts: [WorkoutSession]
+    let allWorkouts: [CardioWorkoutSession]
 
     // Statische Werte direkt speichern (nicht @EnvironmentObject!)
     private let userBirthdayDate: Date
@@ -27,7 +27,7 @@ class HealthMetricCalcEngine: ObservableObject {
     private let userActivityLevel: UserActivityLevel
 
     // MARK: - Initializer
-    init(workouts: [WorkoutSession], settings: AppSettings) {
+    init(workouts: [CardioWorkoutSession], settings: AppSettings) {
         self.allWorkouts = workouts
             // Werte beim Init kopieren
         self.userBirthdayDate = settings.userBirthdayDate

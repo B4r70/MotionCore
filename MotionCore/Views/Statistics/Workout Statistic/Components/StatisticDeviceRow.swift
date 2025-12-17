@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct StatisticDeviceRow: View {
-    let device: WorkoutDevice
+    let device: CardioDevice
     let count: Int
     let total: Int
 

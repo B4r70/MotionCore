@@ -19,7 +19,7 @@ struct BaseView: View {
     @State private var selectedTab: Tab = .workouts
     @State private var showingAddWorkout = false  // Bleibt!
 
-    @State private var draft = WorkoutSession(    // Bleibt!
+    @State private var draft = CardioWorkoutSession(    // Bleibt!
         date: .now,
         duration: 0,
         distance: 0.0,
@@ -29,11 +29,11 @@ struct BaseView: View {
         bodyWeight: 0.0,
         intensity: .none,
         trainingProgram: .manual,
-        workoutDevice: .none
+        cardioDevice: .none
     )
 
     //Filter-States für die Toolbar
-    @State private var selectedDeviceFilter: WorkoutDevice = .none
+    @State private var selectedDeviceFilter: CardioDevice = .none
     @State private var selectedTimeFilter: TimeFilter = .all
 
     // MARK: Vorabeinstellungen Farbgebung Tabbar
@@ -183,7 +183,7 @@ struct BaseView: View {
             }
             .environmentObject(appSettings)
             .onDisappear {
-                draft = WorkoutSession(
+                draft = CardioWorkoutSession(
                     date: .now,
                     duration: 0,
                     distance: 0.0,
@@ -193,7 +193,7 @@ struct BaseView: View {
                     bodyWeight: 0.0,
                     intensity: .none,
                     trainingProgram: .manual,
-                    workoutDevice: .none
+                    cardioDevice: .none
                 )
             }
         }

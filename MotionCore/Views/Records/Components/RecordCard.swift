@@ -19,7 +19,7 @@ struct RecordCard: View {
     let subtitle: String
     let icon: IconTypes
     let color: Color
-    let allWorkouts: WorkoutSession
+    let allWorkouts: CardioWorkoutSession
 
     var body: some View {
         VStack(spacing: 20) {
@@ -43,10 +43,10 @@ struct RecordCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 // Trainingsgerät mit Icon, Beschreibung und entsprechender Farbe
                 RecordDetailRow(
-                    icon: .system(allWorkouts.workoutDevice.symbol),
+                    icon: .system(allWorkouts.cardioDevice.symbol),
                     label: "Gerät",
-                    value: allWorkouts.workoutDevice.description,
-                    color: allWorkouts.workoutDevice.tint
+                    value: allWorkouts.cardioDevice.description,
+                    color: allWorkouts.cardioDevice.tint
                 )
                 // Kalorien
                 RecordDetailRow(
@@ -85,7 +85,7 @@ struct RecordCard: View {
 struct RecordGridCard: View {
     let metricTitle: String
     let recordValue: String
-    let bestWorkout: WorkoutSession
+    let bestWorkout: CardioWorkoutSession
     let metricIcon: IconTypes
     let metricColor: Color
 
@@ -120,7 +120,7 @@ struct RecordGridCard: View {
                 // 2. ECKEN-ELEMENT (DeviceBadge)
                 // Wird durch alignment: .topLeading in die obere linke Ecke platziert
                 DeviceBadge(
-                    device: bestWorkout.workoutDevice,
+                    device: bestWorkout.cardioDevice,
                     compact: true
                 )
                 .padding([.top, .leading], 1) // Abstand vom Rand der Card

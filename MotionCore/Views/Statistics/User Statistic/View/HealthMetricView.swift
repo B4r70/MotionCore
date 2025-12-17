@@ -14,8 +14,8 @@ import SwiftData
 import SwiftUI
 
 struct HealthMetricView: View {
-    @Query(sort: \WorkoutSession.date, order: .reverse)
-    private var allWorkouts: [WorkoutSession]
+    @Query(sort: \CardioWorkoutSession.date, order: .reverse)
+    private var allWorkouts: [CardioWorkoutSession]
 
     @StateObject private var healthManager = HealthKitManager.shared
 

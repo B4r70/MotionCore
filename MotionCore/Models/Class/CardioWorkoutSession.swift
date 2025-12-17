@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Daten-Modell                                                     /
-// Datei . . . . : WorkoutSession.swift                                             /
+// Datei . . . . : CardioWorkoutSession.swift                                       /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 22.10.2025                                                       /
 // Beschreibung  : Datenmodell SwiftData für die MotionCore-App                     /
@@ -17,43 +17,29 @@
 import Foundation
 import SwiftData
 
-// Universelle Wertebegrenzung
-extension Comparable {
-    func clamped(to range: ClosedRange<Self>) -> Self {
-        min(max(self, range.lowerBound), range.upperBound)
-    }
-}
-
 @Model
-final class WorkoutSession {
+final class CardioWorkoutSession {
     // MARK: - Grunddaten
-
     // Trainingsblöcke innerhalb einer Session (z. B. Cardio + Kraft)
-    @Relationship(deleteRule: .cascade, inverse: \WorkoutEntry.session)
-    var entries: [WorkoutEntry]?
-
     var date: Date = Date() // Datum
     var duration: Int = 0 // Minuten
     var distance: Double = 0.0 // Zurückgelegte Strecke
     var calories: Int = 0 // Kalorien
-
-    // MARK: - Trainingsparameter
-
     var difficulty: Int = 1 // Schwierigkeitsgrad (1–25)
     var heartRate: Int = 0 // ∅ Herzfrequenz (Apple Watch)
     var bodyWeight: Double = 0.0 // Körpergewicht (am Gerät eingegeben)
 
     // MARK: - Persistente ENUM-Rohwerte
 
-    var workoutDeviceRaw: Int = 0 // 0=none, 1=Crosstrainer, 2=Ergometer
+    var cardioDeviceRaw: Int = 0 // 0=none, 1=Crosstrainer, 2=Ergometer
     var intensityRaw: Int = 0 // 0=none … 5=veryHard
     var trainingProgramRaw: String = "random"
 
     // MARK: - Typisierte ENUM-Properties
 
-    var workoutDevice: WorkoutDevice {
-        get { WorkoutDevice(rawValue: workoutDeviceRaw) ?? .none }
-        set { workoutDeviceRaw = newValue.rawValue }
+    var cardioDevice: CardioDevice {
+        get { CardioDevice(rawValue: cardioDeviceRaw) ?? .none }
+        set { cardioDeviceRaw = newValue.rawValue }
     }
 
     var intensity: Intensity {
@@ -92,17 +78,17 @@ final class WorkoutSession {
         bodyWeight: Double = 0.0,
         intensity: Intensity = .none,
         trainingProgram: TrainingProgram = .random,
-        workoutDevice: WorkoutDevice = .none
+        cardioDevice: CardioDevice = .none
     ) {
         self.date = date
-        self.duration = max(duration, 0)
-        self.distance = max(distance, 0.0)
-        self.calories = max(calories, 0)
+        self.duration   = max(duration, 0)
+        self.distance   = max(distance, 0.0)
+        self.calories   = max(calories, 0)
         self.difficulty = difficulty.clamped(to: 1 ... 25)
-        self.heartRate = heartRate
+        self.heartRate  = heartRate
         self.bodyWeight = bodyWeight
-        intensityRaw = intensity.rawValue
+        intensityRaw    = intensity.rawValue
         trainingProgramRaw = trainingProgram.rawValue
-        workoutDeviceRaw = workoutDevice.rawValue
+        cardioDeviceRaw = cardioDevice.rawValue
     }
 }

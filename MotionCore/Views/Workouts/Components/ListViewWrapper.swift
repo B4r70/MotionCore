@@ -14,7 +14,7 @@ import SwiftUI
 
 // Wrapper für ListView mit Bindings
 struct ListViewWrapper: View {
-    @Binding var selectedDeviceFilter: WorkoutDevice
+    @Binding var selectedDeviceFilter: CardioDevice
     @Binding var selectedTimeFilter: TimeFilter
     
     var body: some View {

@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct DeviceButton: View {
-    let device: WorkoutDevice
+    let device: CardioDevice
     let isSelected: Bool
     let action: () -> Void
 

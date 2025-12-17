@@ -26,7 +26,7 @@ struct WorkoutSettingsView: View {
             Section("Defaultwerte für neue Workouts") {
                 // Default Gerätetyp
                 Picker("Gerätetyp", selection: $appSettings.defaultDevice) {
-                    ForEach(WorkoutDevice.allCases, id: \.self) { device in
+                    ForEach(CardioDevice.allCases, id: \.self) { device in
                         Label(device.description, systemImage: device.symbol)
                             .tag(device)
                     }

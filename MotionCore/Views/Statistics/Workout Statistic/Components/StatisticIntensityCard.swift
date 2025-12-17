@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct StatisticIntensityCard: View {
-    let allWorkouts: [WorkoutSession]
+    let allWorkouts: [CardioWorkoutSession]
 
     // MARK: Aufruf der Berechnungen für Statistiken
     private var calcStatistics: StatisticCalcEngine {

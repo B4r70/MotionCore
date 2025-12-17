@@ -20,7 +20,7 @@ struct FormView: View {
     @Environment(\.dismiss) private var dismiss
     let mode: WorkoutFormMode
 
-    @Bindable var workout: WorkoutSession
+    @Bindable var workout: CardioWorkoutSession
     @EnvironmentObject private var appSettings: AppSettings
 
     // Lokaler Zustand für aufklappbare Wheels
@@ -68,16 +68,16 @@ struct FormView: View {
                                 // Auswahl "Ergometer" als Button
                                 DeviceButton(
                                     device: .crosstrainer,
-                                    isSelected: workout.workoutDevice == .crosstrainer
+                                    isSelected: workout.cardioDevice == .crosstrainer
                                 ) {
-                                    workout.workoutDevice = .crosstrainer
+                                    workout.cardioDevice = .crosstrainer
                                 }
                                 // Auswahl "Ergometer" als Button
                                 DeviceButton(
                                     device: .ergometer,
-                                    isSelected: workout.workoutDevice == .ergometer
+                                    isSelected: workout.cardioDevice == .ergometer
                                 ) {
-                                    workout.workoutDevice = .ergometer
+                                    workout.cardioDevice = .ergometer
                                 }
                             }
                         }
@@ -301,8 +301,8 @@ struct FormView: View {
 
     // Defaulteinstellungen für neue Workouts
     private func applyDefaultsIfNeeded() {
-        if workout.workoutDevice == .none {
-            workout.workoutDevice = appSettings.defaultDevice
+        if workout.cardioDevice == .none {
+            workout.cardioDevice = appSettings.defaultDevice
         }
         if workout.trainingProgram == .manual {
             workout.trainingProgram = appSettings.defaultProgram

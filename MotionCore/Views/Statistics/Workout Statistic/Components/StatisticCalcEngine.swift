@@ -52,11 +52,11 @@ struct StatisticCalcEngine {
         // MARK: - Input
 
         // All workouts used as data source for the statistics.
-    let allWorkouts: [WorkoutSession]
+    let allWorkouts: [CardioWorkoutSession]
 
         // MARK: - Initializer
 
-    init(workouts: [WorkoutSession]) {
+    init(workouts: [CardioWorkoutSession]) {
         self.allWorkouts = workouts
     }
 
@@ -123,8 +123,8 @@ struct StatisticCalcEngine {
         // MARK: - Device based calculations
 
         // Number of workouts for a specific device.
-    func workoutCountDevice(for device: WorkoutDevice) -> Int {
-        allWorkouts.filter { $0.workoutDevice == device }.count
+    func workoutCountDevice(for device: CardioDevice) -> Int {
+        allWorkouts.filter { $0.cardioDevice == device }.count
     }
 
         // MARK: - Intensity based calculations
@@ -201,9 +201,9 @@ struct StatisticCalcEngine {
 
     // MARK: Trends gerätespezifisch
 
-    func trendDistanceDevice(for device: WorkoutDevice) -> [TrendPoint] {
+    func trendDistanceDevice(for device: CardioDevice) -> [TrendPoint] {
         allWorkouts
-            .filter { $0.workoutDevice == device }
+            .filter { $0.cardioDevice == device }
             .filter { $0.distance > 0 }
             .sorted { $0.date < $1.date }
             .map { workout in

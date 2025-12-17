@@ -15,7 +15,7 @@ import SwiftUI
 
 // Workout Card
 struct WorkoutCard: View {
-    let allWorkouts: WorkoutSession
+    let allWorkouts: CardioWorkoutSession
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -27,9 +27,9 @@ struct WorkoutCard: View {
                         .fill(.ultraThinMaterial)
                         .frame(width: 44, height: 44)
 
-                    Image(systemName: allWorkouts.workoutDevice.symbol)
+                    Image(systemName: allWorkouts.cardioDevice.symbol)
                         .font(.title3)
-                        .foregroundStyle(allWorkouts.workoutDevice.tint)
+                        .foregroundStyle(allWorkouts.cardioDevice.tint)
                 }
                 // Anzeige Datum und Uhrzeit
                 VStack(alignment: .leading, spacing: 2) {

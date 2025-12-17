@@ -88,7 +88,7 @@ extension TrainingProgram {
 
 // MARK: TrainingProgramm UI-Erweiterungen für die Anzeige im Display
 
-extension WorkoutDevice {
+extension CardioDevice {
     // Beschreibung des Trainingsprogramms
     var description: String {
         switch self {

@@ -14,12 +14,12 @@
 import Foundation
 
 #if DEBUG
-extension WorkoutSession {
-    static var previewMockData: [WorkoutSession] {
+extension CardioWorkoutSession {
+    static var previewMockData: [CardioWorkoutSession] {
         let now = Date()
 
         return [
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -14, to: now)!,
                 duration: 15,
                 distance: 3.12,
@@ -29,9 +29,9 @@ extension WorkoutSession {
                 bodyWeight: 101.0,
                 intensity: .medium,
                 trainingProgram: .random,
-                workoutDevice: .crosstrainer
+                cardioDevice: .crosstrainer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -12, to: now)!,
                 duration: 30,
                 distance: 5.40,
@@ -41,9 +41,9 @@ extension WorkoutSession {
                 bodyWeight: 99.0,
                 intensity: .easy,
                 trainingProgram: .random,
-                workoutDevice: .ergometer
+                cardioDevice: .ergometer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -10, to: now)!,
                 duration: 36,
                 distance: 7.30,
@@ -53,9 +53,9 @@ extension WorkoutSession {
                 bodyWeight: 96,
                 intensity: .medium,
                 trainingProgram: .hill,
-                workoutDevice: .crosstrainer
+                cardioDevice: .crosstrainer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -9, to: now)!,
                 duration: 22,
                 distance: 4.80,
@@ -65,9 +65,9 @@ extension WorkoutSession {
                 bodyWeight: 96.0,
                 intensity: .easy,
                 trainingProgram: .random,
-                workoutDevice: .ergometer
+                cardioDevice: .ergometer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -8, to: now)!,
                 duration: 15,
                 distance: 3.22,
@@ -77,9 +77,9 @@ extension WorkoutSession {
                 bodyWeight: 96.0,
                 intensity: .hard,
                 trainingProgram: .random,
-                workoutDevice: .crosstrainer
+                cardioDevice: .crosstrainer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -7, to: now)!,
                 duration: 40,
                 distance: 8.20,
@@ -89,9 +89,9 @@ extension WorkoutSession {
                 bodyWeight: 97.0,
                 intensity: .hard,
                 trainingProgram: .random,
-                workoutDevice: .crosstrainer
+                cardioDevice: .crosstrainer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -5, to: now)!,
                 duration: 30,
                 distance: 6.00,
@@ -101,9 +101,9 @@ extension WorkoutSession {
                 bodyWeight: 98.0,
                 intensity: .medium,
                 trainingProgram: .fatBurn,
-                workoutDevice: .ergometer
+                cardioDevice: .ergometer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -4, to: now)!,
                 duration: 26,
                 distance: 5.25,
@@ -113,9 +113,9 @@ extension WorkoutSession {
                 bodyWeight: 105.0,
                 intensity: .easy,
                 trainingProgram: .random,
-                workoutDevice: .crosstrainer
+                cardioDevice: .crosstrainer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -3, to: now)!,
                 duration: 34,
                 distance: 6.50,
@@ -125,9 +125,9 @@ extension WorkoutSession {
                 bodyWeight: 89.0,
                 intensity: .medium,
                 trainingProgram: .manual,
-                workoutDevice: .ergometer
+                cardioDevice: .ergometer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -2, to: now)!,
                 duration: 25,
                 distance: 4.90,
@@ -137,9 +137,9 @@ extension WorkoutSession {
                 bodyWeight: 110.0,
                 intensity: .easy,
                 trainingProgram: .random,
-                workoutDevice: .crosstrainer
+                cardioDevice: .crosstrainer
             ),
-            WorkoutSession(
+            CardioWorkoutSession(
                 date: Calendar.current.date(byAdding: .day, value: -1, to: now)!,
                 duration: 38,
                 distance: 7.70,
@@ -149,7 +149,7 @@ extension WorkoutSession {
                 bodyWeight: 91.0,
                 intensity: .hard,
                 trainingProgram: .random,
-                workoutDevice: .ergometer
+                cardioDevice: .ergometer
             )
         ]
     }

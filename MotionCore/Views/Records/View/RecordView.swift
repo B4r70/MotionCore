@@ -14,8 +14,8 @@ import SwiftData
 import SwiftUI
 
 struct RecordView: View {
-    @Query(sort: \WorkoutSession.date, order: .reverse)
-    private var allWorkouts: [WorkoutSession]
+    @Query(sort: \CardioWorkoutSession.date, order: .reverse)
+    private var allWorkouts: [CardioWorkoutSession]
 
     // Globaler Zugriff auf AppSettings
     @EnvironmentObject private var appSettings: AppSettings
@@ -42,8 +42,8 @@ struct RecordView: View {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Crosstrainer",
-                            icon: .system(bestCrosstrainer.workoutDevice.symbol),
-                            color: bestCrosstrainer.workoutDevice.tint,
+                            icon: .system(bestCrosstrainer.cardioDevice.symbol),
+                            color: bestCrosstrainer.cardioDevice.tint,
                             allWorkouts: bestCrosstrainer
                         )
                         .padding(.horizontal)
@@ -54,8 +54,8 @@ struct RecordView: View {
                         RecordCard(
                             title: "Beste Leistung",
                             subtitle: "Längste Distanz auf dem Ergometer",
-                            icon: .system(bestErgometer.workoutDevice.symbol),
-                            color: bestErgometer.workoutDevice.tint,
+                            icon: .system(bestErgometer.cardioDevice.symbol),
+                            color: bestErgometer.cardioDevice.tint,
                             allWorkouts: bestErgometer
                         )
                         .padding(.horizontal)
@@ -84,7 +84,7 @@ struct RecordView: View {
                             )
                         }
                             // Absoluter Kalorien-Rekord
-                        if let fastestCrosstrainer = calcRecords.fastestWorkoutDevice(for: .crosstrainer) {
+                        if let fastestCrosstrainer = calcRecords.fastestCardioDevice(for: .crosstrainer) {
                             RecordGridCard(
                                 metricTitle: "Schnellste Crosstrainer",
                                 recordValue: String(format: "%.0f m/min", fastestCrosstrainer.averageSpeed),
@@ -94,7 +94,7 @@ struct RecordView: View {
                             )
                         }
                             // Absoluter Kalorien-Rekord
-                        if let fastestErgometer = calcRecords.fastestWorkoutDevice(for: .ergometer) {
+                        if let fastestErgometer = calcRecords.fastestCardioDevice(for: .ergometer) {
                             RecordGridCard(
                                 metricTitle: "Schnellstes Ergometer",
                                 recordValue: String(format: "%.0f m/min", fastestErgometer.averageSpeed),
