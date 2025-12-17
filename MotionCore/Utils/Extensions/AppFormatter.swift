@@ -14,9 +14,9 @@ import Foundation
 import SwiftUI
 
 enum AppFormatters {
-    // MARK: - Dates
+        // MARK: - Dates
 
-    /// Datumsformat: DD.MM.YYYY
+    // Datumsformat: DD.MM.YYYY
     static let dateGermanShort: Date.FormatStyle = {
         Date.FormatStyle
             .dateTime
@@ -26,7 +26,7 @@ enum AppFormatters {
             .locale(Locale(identifier: "de_DE"))
     }()
 
-    /// 17. November 2025
+    // Format: 17. November 2025
     static let dateGermanLong: Date.FormatStyle = {
         Date.FormatStyle
             .dateTime
@@ -36,7 +36,7 @@ enum AppFormatters {
             .locale(Locale(identifier: "de_DE"))
     }()
 
-    /// Montag, 17. November 2025
+    // Format: Montag, 17. November 2025
     static let dateWithWeekday: Date.FormatStyle = {
         Date.FormatStyle
             .dateTime
@@ -47,7 +47,7 @@ enum AppFormatters {
             .locale(Locale(identifier: "de_DE"))
     }()
 
-    /// 17.11.2025 – 2:35 PM
+    // Format: 17.11.2025 – 2:35 PM
     static let timeGermanShort: Date.FormatStyle = {
         Date.FormatStyle
             .dateTime
@@ -56,12 +56,12 @@ enum AppFormatters {
             .locale(Locale(identifier: "de_DE"))
     }()
 
-        /// 17.11.2025 – 14:32
-        static let timeGermanLong: Date.FormatStyle = {
-            Date.FormatStyle
-                .dateTime
-                .hour(.twoDigits(amPM: .abbreviated))
-                .minute(.twoDigits)
-                .locale(Locale(identifier: "de_DE"))
-        }()
+    // Format: 17.11.2025 – 14:32
+    static let timeGermanLong: Date.FormatStyle = {
+        Date.FormatStyle
+            .dateTime
+            .hour(.twoDigits(amPM: .abbreviated))
+            .minute(.twoDigits)
+            .locale(Locale(identifier: "de_DE"))
+    }()
 }

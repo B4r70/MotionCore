@@ -13,14 +13,12 @@
 import Foundation
 
 extension AppSettings {
-    /**
-     Ruft das Geburtsdatum aus UserDefaults ab oder liefert ein Standarddatum.
-     */
+    
     static func loadInitialBirthdayDate() -> Date {
-            // 1. Abrufen des gespeicherten Datums
+        // 1. Abrufen des gespeicherten Datums
         let storedBirthdayDate = UserDefaults.standard.object(forKey: "user.userBirthdayDate") as? Date
 
-            // 2. Standard-Fallback-Datum festlegen (z.B. 01.01.2000)
+        // 2. Standard-Fallback-Datum festlegen (z.B. 01.01.2000)
         let defaultDate = {
             var components = DateComponents()
             components.year = 2000
@@ -29,7 +27,7 @@ extension AppSettings {
             return Calendar.current.date(from: components)!
         }()
 
-            // 3. Verwenden des gespeicherten Datums, ansonsten des Standarddatums
+        // 3. Verwenden des gespeicherten Datums, ansonsten des Standarddatums
         return storedBirthdayDate ?? defaultDate
     }
 }

@@ -45,6 +45,6 @@ struct SleepStagesSummary {
     var formattedTotal: String {
         let h = totalMinutes / 60
         let m = totalMinutes % 60
-        return String(format: "%dh %02dmin", h, m)
+        return String(format: "%d h %02d min", h, m)
     }
 }

@@ -5,7 +5,7 @@
 // Datei . . . . : HealthMetricSleepHeroCard.swift                                  /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 30.11.2025                                                       /
-// Beschreibung  : HealthMetricCard mit Fortschrittsbalken                          /
+// Beschreibung  : HealthMetricCard für Schlafphasen mit Fortschrittsbalken         /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -17,6 +17,14 @@ struct HealthMetricSleepHeroCard: View {
 
     @State private var isExpanded = false
     @Environment(\.colorScheme) private var colorScheme
+
+    // Layout-Konstanten als enum
+    private enum SleepProgressBar {
+        static let iconColumnWidth: CGFloat = 22
+        static let valueColumnWidth: CGFloat = 92
+        static let rowSpacing: CGFloat = 8
+        static let cardPadding: CGFloat = 20
+    }
 
     // MARK: - Body
     var body: some View {
@@ -78,7 +86,7 @@ struct HealthMetricSleepHeroCard: View {
                         .padding(.horizontal, 20)
 
                     VStack(spacing: 14) {
-                            // Optional: Zeit im Bett anzeigen, falls vorhanden
+                        // Zeit im Bett anzeigen, falls vorhanden
                         if let inBed = sleepSummary.inBedMinutes {
                             phaseRow(
                                 icon: "bed.double.circle.fill",
@@ -92,7 +100,7 @@ struct HealthMetricSleepHeroCard: View {
                             )
                         }
 
-                            // Einzelne Schlafphasen (Anteile innerhalb der Schlafzeit)
+                        // Einzelne Schlafphasen (Anteile innerhalb der Schlafzeit)
                         ForEach(sleepSummary.phases) { phase in
                             let percentage = phase.percentage(of: sleepSummary.totalMinutes)
                             phaseRow(
@@ -105,28 +113,40 @@ struct HealthMetricSleepHeroCard: View {
                             )
                         }
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, SleepProgressBar.cardPadding)
 
-                    // Optional: kleiner Fortschrittsbalken über Phasen-Anteilen
+                    // Fortschrittsbalken über Phasen-Anteilen farblich im Verhältnis gekennzeichnet
                     if !sleepSummary.phases.isEmpty {
                         VStack(spacing: 8) {
-                            // NEU: Explizite Padding-Angabe für die GeometryReader
                             GeometryReader { geometry in
                                 let totalWidth = geometry.size.width
-                                HStack(spacing: 0) {
-                                    ForEach(sleepSummary.phases) { phase in
-                                        let fraction = phase.percentage(of: sleepSummary.totalMinutes)
-                                        RoundedRectangle(cornerRadius: 0)
-                                            .fill(color(for: phase.name).opacity(0.8))
-                                            .frame(width: max(totalWidth * fraction, 0))
+                                let totalPhaseMinutes = sleepSummary.phases.reduce(0) { $0 + $1.minutes }                
+
+                                ZStack(alignment: .leading) {
+                                    // Background track (wie bei Calories)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.gray.opacity(colorScheme == .light ? 0.15 : 0.25))
+                                        .frame(width: totalWidth)
+
+                                    // Segmente füllen 100% (normalisiert)
+                                    HStack(spacing: 0) {
+                                        ForEach(sleepSummary.phases) { phase in
+                                            let fraction = totalPhaseMinutes > 0
+                                            ? Double(phase.minutes) / Double(totalPhaseMinutes)
+                                            : 0
+
+                                            Rectangle()
+                                                .fill(color(for: phase.name).opacity(0.8))
+                                                .frame(width: max(totalWidth * fraction, 0))
+                                        }
                                     }
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             .frame(height: 12)
-                            // NEU: Padding direkt auf die GeometryReader-Ebene verschoben
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, SleepProgressBar.cardPadding)
 
+                            // Legende
                             HStack(spacing: 12) {
                                 ForEach(sleepSummary.phases) { phase in
                                     HStack(spacing: 4) {
@@ -139,7 +159,7 @@ struct HealthMetricSleepHeroCard: View {
                                     }
                                 }
                             }
-                            .padding(.horizontal, 20) // Dieser bleibt hier
+                            .padding(.horizontal, SleepProgressBar.cardPadding)
                         }
                         .padding(.bottom, 16)
                     }
@@ -155,6 +175,7 @@ struct HealthMetricSleepHeroCard: View {
             }
         }
     }
+
 
     // MARK: - Hilfsfunktionen
 
@@ -175,14 +196,14 @@ struct HealthMetricSleepHeroCard: View {
         percent: Double?,
         isEfficiencyRow: Bool
     ) -> some View {
-        HStack {
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .foregroundStyle(color)
-                Text(title)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
+        HStack(spacing: SleepProgressBar.rowSpacing) {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+                .frame(width: SleepProgressBar.iconColumnWidth, alignment: .leading)
+
+            Text(title)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
 
             Spacer()
 
@@ -192,7 +213,7 @@ struct HealthMetricSleepHeroCard: View {
 
                 if let percent {
                     if isEfficiencyRow {
-                        // z. B. 88% Schlaf-Effizienz
+                            // z. B. 88% Schlaf-Effizienz
                         Text("\(Int(percent * 100))% Effizienz")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
@@ -203,31 +224,32 @@ struct HealthMetricSleepHeroCard: View {
                     }
                 }
             }
+            .frame(width: SleepProgressBar.valueColumnWidth, alignment: .trailing)
         }
     }
-
+    // Formatierung der Schlafphasen-Dauer (Stunden und Minuten)
     private func formattedMinutes(_ minutes: Int) -> String {
         let h = minutes / 60
         let m = minutes % 60
         if h > 0 {
-            return String(format: "%dh %02dmin", h, m)
+            return String(format: "%d h %02d min", h, m)
         } else {
-            return String(format: "%dmin", m)
+            return String(format: "%d min", m)
         }
     }
 
     private func color(for sleepStageName: String) -> Color {
         switch sleepStageName.lowercased() {
-        case "rem":
-            return .purple
-        case "tiefschlaf", "deep":
-            return .blue
-        case "kernschlaf", "core":
-            return .indigo
-        case "wach", "awake":
-            return .orange
-        default:
-            return .gray
+            case "rem":
+                return .purple
+            case "tiefschlaf", "deep":
+                return .blue
+            case "kernschlaf", "core":
+                return .indigo
+            case "wach", "awake":
+                return .orange
+            default:
+                return .gray
         }
     }
 }

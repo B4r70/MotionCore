@@ -71,7 +71,22 @@ final class StrengthWorkoutSession {
             sum + (set.weight * Double(set.reps))
         }
     }
-    
+
+    /// Trainierte Muskelgruppe
+    var trainedMuscleGroups: [MuscleGroup] {
+        var groups = Set<MuscleGroup>()
+
+        for set in exerciseSets {
+            // Später: Aus Exercise-Bibliothek holen
+            // Jetzt: Mapping über exerciseName
+            if let primary = set.primaryMuscleGroup {
+                groups.insert(primary)
+            }
+        }
+
+        return Array(groups).sorted { $0.rawValue < $1.rawValue }
+    }
+
     // MARK: - Initialisierung
     
     init(

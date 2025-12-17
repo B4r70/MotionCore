@@ -46,7 +46,19 @@ final class ExerciseSet {
     var volume: Double {
         weight * Double(reps)
     }
-    
+
+    // Muskelgruppen-Info (wird später durch Exercise-Bibliothek ersetzt)
+    var primaryMuscleGroup: MuscleGroup? {
+            // TODO: Später aus Exercise-Bibliothek holen
+            // Für jetzt: Einfaches Mapping
+        MuscleGroupMapper.primaryMuscle(for: exerciseName)
+    }
+
+    var secondaryMuscleGroups: [MuscleGroup] {
+        // TODO: Später aus Exercise-Bibliothek holen
+        MuscleGroupMapper.secondaryMuscles(for: exerciseName)
+    }
+
     // MARK: - Initialisierung
     
     init(

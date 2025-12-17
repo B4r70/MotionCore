@@ -88,13 +88,10 @@ struct HealthMetricHeroCard: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
-
                             Spacer()
-
                             Text("\(calorieBalance.consumedCalories) kcal")
                                 .font(.subheadline.weight(.semibold))
                         }
-
                         // Grundumsatz
                         HStack {
                             HStack(spacing: 8) {
@@ -105,13 +102,10 @@ struct HealthMetricHeroCard: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
-
                             Spacer()
-
                             Text("\(calorieBalance.basalEnergy) kcal")
                                 .font(.subheadline.weight(.semibold))
                         }
-
                         // Aktive Kalorien
                         HStack {
                             HStack(spacing: 8) {
@@ -122,13 +116,10 @@ struct HealthMetricHeroCard: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
-
                             Spacer()
-
                             Text("\(calorieBalance.activeEnergy) kcal")
                                 .font(.subheadline.weight(.semibold))
                         }
-
                         // Trennlinie
                         Rectangle()
                             .fill(Color.gray.opacity(colorScheme == .light ? 0.15 : 0.25))
@@ -139,13 +130,10 @@ struct HealthMetricHeroCard: View {
                             HStack(spacing: 8) {
                                 Image(systemName: "sum")
                                     .foregroundStyle(.purple)
-
                                 Text("Gesamtverbrauch")
                                     .font(.subheadline.weight(.medium))
                             }
-
                             Spacer()
-
                             Text("\(calorieBalance.totalBurned) kcal")
                                 .font(.subheadline.weight(.bold))
                         }
@@ -196,13 +184,11 @@ struct HealthMetricHeroCard: View {
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                             }
-
                             Spacer()
 
                             Text("\(Int(calorieBalance.consumedPercentage * 100))%")
                                 .font(.caption2.weight(.semibold))
                                 .foregroundStyle(calorieBalance.consumedPercentage > 1.0 ? .red : .green)
-
                             Spacer()
 
                             HStack(spacing: 4) {
