@@ -36,7 +36,7 @@ struct AboutView: View {
                     Divider()
 
                 VStack(alignment: .leading, spacing: 16) {
-                    InfoRow(title: "Version", value: "1.0.0")
+                    InfoRow(title: "Version", value: "1.0.1")
                     InfoRow(title: "Entwickler", value: "Bartosz Stryjewski")
                     InfoRow(title: "Erstellt", value: "2025")
                 }
