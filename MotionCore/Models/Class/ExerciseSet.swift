@@ -20,7 +20,8 @@ final class ExerciseSet {
     
     var exerciseName: String = ""       // Name der Übung
     var exerciseId: String = ""         // Optional: UUID der Exercise
-    
+    var exerciseGifAssetName: String = "" // Name des GIF-Assets um die Übung innerhalb der App darzustellen
+
     // MARK: - Set-Daten
     
     var setNumber: Int = 1              // Satznummer (1, 2, 3...)
@@ -64,6 +65,7 @@ final class ExerciseSet {
     init(
         exerciseName: String = "",
         exerciseId: String = "",
+        exerciseGifAssetName: String = "",
         setNumber: Int = 1,
         weight: Double = 0.0,
         reps: Int = 0,
@@ -76,6 +78,7 @@ final class ExerciseSet {
     ) {
         self.exerciseName = exerciseName
         self.exerciseId = exerciseId
+        self.exerciseGifAssetName = exerciseGifAssetName
         self.setNumber = setNumber
         self.weight = weight
         self.reps = reps

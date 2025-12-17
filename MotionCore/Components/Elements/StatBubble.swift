@@ -21,10 +21,6 @@ struct StatBubble: View {
         VStack(spacing: 6) {
             IconType(icon: icon, color: color, size: 12)
 
-          //  Image(systemName: icon)
-          //      .font(.caption)
-          //      .foregroundStyle(color)
-
             Text(value)
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.primary)
