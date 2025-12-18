@@ -21,6 +21,8 @@ struct FilterChip: View {
     let isSelected: Bool
     let action: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 8) {
@@ -46,14 +48,38 @@ struct FilterChip: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
-            .background {
+            // Liquid-Glass Hintergrund
+            .background(
                 Capsule()
-                    .fill(isSelected ? .ultraThinMaterial : .thinMaterial)
-            }
+                    .fill(
+                        Color.white.opacity(
+                            colorScheme == .light ? 0.20 : 0.08
+                        )
+                    )
+            )
+            .background(
+                isSelected
+                    ? (colorScheme == .light ? .ultraThinMaterial : .thinMaterial)
+                    : (colorScheme == .light ? .thinMaterial : .ultraThinMaterial),
+                in: Capsule()
+            )
             .overlay {
                 Capsule()
-                    .stroke(isSelected ? Color.blue.opacity(0.5) : Color.clear, lineWidth: 1.5)
+                    .stroke(
+                        isSelected
+                            ? Color.blue.opacity(0.5)
+                            : Color.white.opacity(colorScheme == .light ? 0.45 : 0.30),
+                        lineWidth: isSelected ? 1.5 : 0.8
+                    )
             }
+            .shadow(
+                color: isSelected
+                    ? Color.blue.opacity(0.2)
+                    : Color.black.opacity(colorScheme == .light ? 0.05 : 0.55),
+                radius: colorScheme == .light ? 8 : 12,
+                x: 0,
+                y: 4
+            )
             .foregroundStyle(isSelected ? .primary : .secondary)
         }
         .buttonStyle(.plain)

@@ -12,7 +12,7 @@
 //
 import SwiftUI
 
-struct GlassDivider: View {
+struct GlassDividerModifier: View {
     @Environment(\.colorScheme) private var colorScheme
 
     // Konstante für die Höhe der sichtbaren Linie
@@ -58,7 +58,7 @@ extension View {
             Spacer()
                 .frame(height: paddingTop)
             // 3. Der GlassDivider selbst
-            GlassDivider()
+            GlassDividerModifier()
                 .padding(.horizontal, paddingHorizontal)
             // 4. Abstand nach UNTEN (wird durch paddingBottom gesteuert)
             Spacer()

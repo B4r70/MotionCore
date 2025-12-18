@@ -61,6 +61,7 @@ struct BaseView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
+
                 // MARK: Tab 1 - Workouts
             NavigationStack {
                     // NEU: ListView bekommt Bindings übergeben
@@ -70,7 +71,8 @@ struct BaseView: View {
                 )
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                        // Links - Filter-Button
+                    // MARK: Aufbau des App-Headers
+                    // Links oben - Filter-Button
                     ToolbarItem(placement: .topBarLeading) {
                         FilterSection(
                             selectedDeviceFilter: $selectedDeviceFilter,
@@ -78,7 +80,7 @@ struct BaseView: View {
                         )
                     }
 
-                        // Mitte: HeaderView (wie bisher)
+                        // Mitte: HeaderView
                         ToolbarItem(placement: .principal) {
                             HeaderView(
                                 title: "MotionCore",
@@ -86,15 +88,21 @@ struct BaseView: View {
                             )
                         }
 
-                        // Rechts der Plus-Button
+                        // Rechts oben - Einstellungsbutton
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button {
-                                showingAddWorkout = true
+                            NavigationLink {
+                                MainSettingsView()
                             } label: {
-                                ToolbarButton(icon: .system("plus"))
+                                ToolbarButton(icon: .system("gearshape"))
                             }
                         }
                     }
+                .floatingActionButton(
+                    icon: .system("plus"),
+                    color: .blue
+                    ) {
+                        showingAddWorkout = true
+                }
             }
             .tabItem {
                 Label("Workouts", systemImage: "figure.run")

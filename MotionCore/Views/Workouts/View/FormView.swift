@@ -23,13 +23,13 @@ struct FormView: View {
     @Bindable var workout: CardioWorkoutSession
     @EnvironmentObject private var appSettings: AppSettings
 
-    // Lokaler Zustand für aufklappbare Wheels
+    // Lokaler Zustand fÃ¼r aufklappbare Wheels
     @State private var showDurationWheel = false
     @State private var showHrWheel = false
     @State private var showDifficultyWheel = false
     @State private var showCaloriesWheel = false
 
-    // Lösch-Bestätigung
+    // LÃ¶sch-BestÃ¤tigung
     @State private var showDeleteAlert = false
 
     var body: some View {
@@ -39,7 +39,7 @@ struct FormView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    // MARK: – Eine gemeinsame GlassCard für alle Eingaben
+                    // MARK: â€“ Eine gemeinsame GlassCard fÃ¼r alle Eingaben
 
                     VStack(alignment: .leading, spacing: 24) {
                         // Titel
@@ -57,10 +57,10 @@ struct FormView: View {
                         .environment(\.locale, Locale(identifier: "de_DE"))
                         .tint(.primary) // keine blaue Schrift mehr
 
-                        // MARK: Gerätetyp
+                        // MARK: GerÃ¤tetyp
 
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Gerätetyp")
+                            Text("GerÃ¤tetyp")
                                 .font(.headline)
                                 .foregroundStyle(.primary)
 
@@ -179,7 +179,7 @@ struct FormView: View {
                                 .foregroundStyle(.secondary)
                         }
 
-                        // MARK: Körpergewicht
+                        // MARK: KÃ¶rpergewicht
                         HStack {
                             Text("Gewicht")
                             Spacer()
@@ -226,10 +226,10 @@ struct FormView: View {
                             .clipped()
                         }
 
-                        // MARK: Belastungsintensität
+                        // MARK: BelastungsintensitÃ¤t
 
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Belastungsintensität")
+                            Text("BelastungsintensitÃ¤t")
                                 .font(.headline)
                                 .foregroundStyle(.primary)
 
@@ -263,9 +263,9 @@ struct FormView: View {
                     try? context.save()
                     dismiss()
                 } label: {
-                    Image(systemName: "checkmark")
+                    IconType(icon: .system("checkmark"), color: .blue, size: 16)
+                        .glassButton(size: 36, accentColor: .blue)
                 }
-                .tint(.blue) // Icon darf ruhig blau bleiben
             }
 
             // Löschen im Edit-Modus
@@ -274,32 +274,32 @@ struct FormView: View {
                     Button(role: .destructive) {
                         showDeleteAlert = true
                     } label: {
-                        Image(systemName: "trash")
+                        IconType(icon: .system("trash"), color: .red, size: 16)
+                            .glassButton(size: 36, accentColor: .red)
                     }
-                    .tint(.red)
                 }
             }
         }
-        .alert("Workout löschen?", isPresented: $showDeleteAlert) {
+        .alert("Workout lÃ¶schen?", isPresented: $showDeleteAlert) {
             Button("Abbrechen", role: .cancel) {}
-            Button("Löschen", role: .destructive) {
+            Button("LÃ¶schen", role: .destructive) {
                 deleteWorkout()
             }
         } message: {
-            Text("Dieses Workout wird unwiderruflich gelöscht.")
+            Text("Dieses Workout wird unwiderruflich gelÃ¶scht.")
         }
     }
 
     // MARK: - Hilfsfunktionen
 
-    // Löschen-Funktion
+    // LÃ¶schen-Funktion
     private func deleteWorkout() {
         context.delete(workout)
         try? context.save()
         dismiss()
     }
 
-    // Defaulteinstellungen für neue Workouts
+    // Defaulteinstellungen fÃ¼r neue Workouts
     private func applyDefaultsIfNeeded() {
         if workout.cardioDevice == .none {
             workout.cardioDevice = appSettings.defaultDevice

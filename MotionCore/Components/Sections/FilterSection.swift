@@ -43,8 +43,8 @@ struct FilterSection: View {
                 }
             }
 
-                // Gerätefilter-Sektion
-            Section("Gerät") {
+                // GerÃ¤tefilter-Sektion
+            Section("GerÃ¤t") {
                 Button {
                     withAnimation(.spring(response: 0.3)) {
                         selectedDeviceFilter = .none
@@ -52,7 +52,7 @@ struct FilterSection: View {
                 } label: {
                     Label {
                         HStack {
-                            Text("Alle Geräte")
+                            Text("Alle GerÃ¤te")
                             Spacer()
                             if selectedDeviceFilter == .none {
                                 Image(systemName: "checkmark")
@@ -84,23 +84,19 @@ struct FilterSection: View {
                 }
             }
         } label: {
-                // NEU: Nur das Icon, wie bei ToolbarButton
             ZStack {
-                    // Filter-Icon
-                Image(systemName: "line.3.horizontal.decrease.circle")
-                    .font(.body)
-                    .foregroundStyle(isFiltered ? .blue : .primary)
-                    .frame(width: 36, height: 36)
-                    .background {
-                        Circle()
-                            .fill(.ultraThinMaterial)
-                    }
-                    .overlay {
-                        Circle()
-                            .stroke(.white.opacity(0.2), lineWidth: 1)
-                    }
+                // Filter-Icon mit Glass-Effekt
+                IconType(
+                    icon: .system("line.3.horizontal.decrease.circle"),
+                    color: isFiltered ? .blue : .primary,
+                    size: 14
+                )
+                .glassButton(
+                    size: 36,
+                    accentColor: isFiltered ? .blue : .primary
+                )
 
-                    // NEU: Blauer Punkt wenn Filter aktiv (rechts oben)
+                // Blauer Punkt wenn Filter aktiv (rechts oben)
                 if isFiltered {
                     Circle()
                         .fill(.blue)

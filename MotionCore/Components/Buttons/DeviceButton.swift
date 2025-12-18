@@ -16,35 +16,52 @@ struct DeviceButton: View {
     let device: CardioDevice
     let isSelected: Bool
     let action: () -> Void
-
+    
+    @Environment(\.colorScheme) private var colorScheme
+    
     var body: some View {
         Button(action: action) {
             VStack(spacing: 8) {
                 Image(systemName: device.symbol)
                     .font(.title2)
-
+                
                 Text(device.description)
                     .font(.caption)
                     .fontWeight(.medium)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
+                // Liquid-Glass Hintergrund
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(
-                        isSelected
-                            ? Color.blue.opacity(0.15)
-                            : Color.white.opacity(0.22) // HELLER statt grau
+                        Color.white.opacity(
+                            colorScheme == .light ? 0.20 : 0.08
+                        )
                     )
+            )
+            .background(
+                colorScheme == .light ? .thinMaterial : .ultraThinMaterial,
+                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .stroke(
-                        isSelected ? Color.blue : Color.white.opacity(0.25),
-                        lineWidth: isSelected ? 2 : 1
+                        isSelected
+                        ? device.tint.opacity(0.5)
+                        : Color.white.opacity(colorScheme == .light ? 0.45 : 0.30),
+                        lineWidth: isSelected ? 2 : 0.8
                     )
             )
-            .foregroundStyle(isSelected ? .blue : .primary)
+            .shadow(
+                color: isSelected
+                ? device.tint.opacity(0.3)
+                : Color.black.opacity(colorScheme == .light ? 0.05 : 0.55),
+                radius: isSelected ? 16 : (colorScheme == .light ? 12 : 20),
+                x: 0,
+                y: 6
+            )
+            .foregroundStyle(isSelected ? device.tint : .primary)
         }
         .buttonStyle(.plain)
     }
