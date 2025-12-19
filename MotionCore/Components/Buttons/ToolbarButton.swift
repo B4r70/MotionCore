@@ -17,7 +17,7 @@ struct ToolbarButton: View {
     let icon: IconTypes
     
     var body: some View {
-        IconType(icon: icon, color: .primary, size: 14)
+        IconType(icon: icon, color: .blue, size: 14)
             .glassButton(size: 36, accentColor: .primary)
     }
 }

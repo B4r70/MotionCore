@@ -28,7 +28,7 @@ struct FilterChip: View {
             HStack(spacing: 8) {
                 if let icon {
                     IconType(icon: icon,
-                             color: isSelected ? .primary : .secondary,
+                             color: isSelected ? .blue : .blue,
                              size: 14)
                 }
 

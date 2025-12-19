@@ -128,7 +128,8 @@ struct MainSettingsView: View {
                 HStack {
                     Label("Version", systemImage: "info.circle")
                     Spacer()
-                    Text("1.0.0")
+                    // Automatische Version aus Xcode Target
+                    Text(Bundle.main.fullVersion)
                         .foregroundStyle(.secondary)
                 }
 

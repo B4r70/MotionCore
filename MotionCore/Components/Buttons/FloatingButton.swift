@@ -22,7 +22,7 @@ struct FloatingButton: View {
         Button(action: action) {
             // Icon mit Glass-Effekt
             IconType(icon: icon, color: color, size: size * 0.4)
-                .glassButton(size: size, accentColor: color)
+                .glassButton(size: size, accentColor: .blue)
         }
         .buttonStyle(.plain)
     }
@@ -31,12 +31,12 @@ struct FloatingButton: View {
 // MARK: - Extension für einfache Platzierung
 
 extension View {
-    /// Platziert einen Floating Action Button unten rechts über der Tab Bar
-    /// - Parameters:
-    ///   - icon: Das anzuzeigende Icon
-    ///   - color: Farbe für Glow und Icon (Standard: .blue)
-    ///   - size: Größe des Buttons (Standard: 60)
-    ///   - action: Aktion beim Tippen
+    // Platziert einen Floating Action Button unten rechts über der Tab Bar
+    // - Parameters:
+    //   - icon: Das anzuzeigende Icon
+    //   - color: Farbe für Glow und Icon (Standard: .blue)
+    //   - size: Größe des Buttons (Standard: 60)
+    //   - action: Aktion beim Tippen
     func floatingActionButton(
         icon: IconTypes,
         color: Color = .blue,

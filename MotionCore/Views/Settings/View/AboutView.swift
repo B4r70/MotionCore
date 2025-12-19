@@ -36,7 +36,8 @@ struct AboutView: View {
                     Divider()
 
                 VStack(alignment: .leading, spacing: 16) {
-                    InfoRow(title: "Version", value: "1.0.1")
+                    // Automatische Version aus Xcode Target
+                    InfoRow(title: "Version", value: Bundle.main.fullVersion)
                     InfoRow(title: "Entwickler", value: "Bartosz Stryjewski")
                     InfoRow(title: "Erstellt", value: "2025")
                 }
