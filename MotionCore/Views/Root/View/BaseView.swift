@@ -166,16 +166,16 @@ struct BaseView: View {
             }
             .tag(Tab.records)
 
-                // MARK: Tab 5 - Einstellungen
+                // MARK: Tab 5 - Trainingsplan
 
             NavigationStack {
-                MainSettingsView()
+                WorkoutPlanView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             HeaderView(
                                 title: "MotionCore",
-                                subtitle: "Einstellungen"
+                                subtitle: "Trainingsplan"
                             )
                         }
                     }
