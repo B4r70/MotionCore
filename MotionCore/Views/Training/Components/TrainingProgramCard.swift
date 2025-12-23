@@ -10,60 +10,10 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
-import SwiftData
 import SwiftUI
 
-struct WorkoutPlanView: View {
-    // Globaler Zugriff auf AppSettings
-    @EnvironmentObject private var appSettings: AppSettings
-    
-    // State für Beispieldaten (später durch @Query ersetzt)
-    @State private var samplePlans: [WorkoutPlanSample] = [
-        WorkoutPlanSample(
-            title: "Anfänger Cardio Plan",
-            description: "3x pro Woche, 15 Minuten",
-            workoutCount: 12,
-            completedCount: 5,
-            color: .blue
-        )
-    ]
-    
-    var body: some View {
-        ZStack {
-            // Hintergrund
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-            
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Beispiel-Plan Card
-                    ForEach(samplePlans) { plan in
-                        WorkoutPlanCard(plan: plan)
-                    }
-                }
-                .scrollViewContentPadding()
-            }
-            .scrollIndicators(.hidden)
-            
-            // Empty State (wenn keine Pläne vorhanden)
-            if samplePlans.isEmpty {
-                EmptyState()
-            }
-        }
-        // NEU: Floating Action Button zum Erstellen neuer Pläne
-        .floatingActionButton(
-            icon: .system("plus"),
-            color: .blue
-        ) {
-            // TODO: Sheet für neuen Plan öffnen
-            print("Neuen Trainingsplan erstellen")
-        }
-    }
-}
-
-// MARK: - Workout Plan Card
-
-struct WorkoutPlanCard: View {
-    let plan: WorkoutPlanSample
+struct TrainingProgramCard: View {
+    let plan: TrainingProgramSample
     
     // Fortschritt berechnen
     private var progress: Double {
@@ -186,34 +136,5 @@ struct WorkoutPlanCard: View {
             }
         }
         .glassCard()
-    }
-}
-
-// MARK: - Sample Data Model (Temporär)
-
-struct WorkoutPlanSample: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let workoutCount: Int
-    let completedCount: Int
-    let color: Color
-}
-
-// MARK: - Preview
-
-#Preview("Workout Plans") {
-    NavigationStack {
-        WorkoutPlanView()
-            .environmentObject(AppSettings.shared)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    HeaderView(
-                        title: "MotionCore",
-                        subtitle: "Trainingspläne"
-                    )
-                }
-            }
     }
 }

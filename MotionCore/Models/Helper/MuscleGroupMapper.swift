@@ -19,23 +19,23 @@ struct MuscleGroupMapper {
         let name = exerciseName.lowercased()
 
             // Brust
-        if name.contains("bankdrücken") || name.contains("bench press") ||
-            name.contains("fliegende") || name.contains("fly") ||
-            name.contains("dips") {
+        if name.contains("Bankdrücken") || name.contains("bench press") ||
+            name.contains("Fliegende") || name.contains("fly") ||
+            name.contains("Dips") {
             return .chest
         }
 
             // Rücken
-        if name.contains("klimmzug") || name.contains("pull") ||
-            name.contains("rudern") || name.contains("row") ||
-            name.contains("latzug") || name.contains("lat pulldown") ||
-            name.contains("kreuzheben") || name.contains("deadlift") {
+        if name.contains("Klimmzug") || name.contains("pull") ||
+            name.contains("Rudern") || name.contains("row") ||
+            name.contains("Latzug") || name.contains("lat pulldown") ||
+            name.contains("Kreuzheben") || name.contains("deadlift") {
             return .back
         }
 
             // Schultern
-        if name.contains("schulter") || name.contains("shoulder") ||
-            name.contains("military press") || name.contains("overhead") ||
+        if name.contains("Schulter") || name.contains("shoulder") ||
+            name.contains("Military Press") || name.contains("overhead") ||
             name.contains("seitheben") || name.contains("lateral raise") {
             return .shoulders
         }

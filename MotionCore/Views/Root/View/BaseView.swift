@@ -17,7 +17,7 @@ struct BaseView: View {
     @EnvironmentObject private var appSettings: AppSettings
 
     @State private var selectedTab: Tab = .workouts
-    @State private var showingAddWorkout = false  // Bleibt!
+    @State private var showingAddWorkout = false
 
     @State private var draft = CardioWorkoutSession(    // Bleibt!
         date: .now,
@@ -56,7 +56,7 @@ struct BaseView: View {
     }
 
     enum Tab: Hashable {
-        case workouts, statistics, health, records, settings
+        case workouts, statistics, health, records, training
     }
 
     var body: some View {
@@ -99,7 +99,7 @@ struct BaseView: View {
                     }
                 .floatingActionButton(
                     icon: .system("plus"),
-                    color: .blue
+                    color: .primary
                     ) {
                         showingAddWorkout = true
                 }
@@ -169,21 +169,21 @@ struct BaseView: View {
                 // MARK: Tab 5 - Trainingsplan
 
             NavigationStack {
-                WorkoutPlanView()
+                TrainingProgramView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             HeaderView(
                                 title: "MotionCore",
-                                subtitle: "Trainingsplan"
+                                subtitle: "Training"
                             )
                         }
                     }
             }
             .tabItem {
-                Label("Mehr", systemImage: "gearshape.fill")
+                Label("Training", systemImage: "figure.run.square.stack.fill")
             }
-            .tag(Tab.settings)
+            .tag(Tab.training)
         }
         .sheet(isPresented: $showingAddWorkout) {
             NavigationStack {

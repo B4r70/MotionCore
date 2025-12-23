@@ -22,7 +22,7 @@ struct FloatingButton: View {
         Button(action: action) {
             // Icon mit Glass-Effekt
             IconType(icon: icon, color: color, size: size * 0.4)
-                .glassButton(size: size, accentColor: .blue)
+                .glassButton(size: size, accentColor: .primary)
         }
         .buttonStyle(.plain)
     }
