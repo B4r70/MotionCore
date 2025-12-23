@@ -25,7 +25,7 @@ final class IODataManager {
     /// - Returns: Die temporäre URL zur exportierten JSON-Datei.
     func exportWorkouts(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
-        let descriptor = FetchDescriptor<CardioWorkoutSession>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+        let descriptor = FetchDescriptor<CardioSession>(sortBy: [SortDescriptor(\.date, order: .reverse)])
         let allWorkouts = try context.fetch(descriptor)
 
         guard !allWorkouts.isEmpty else {
@@ -83,7 +83,7 @@ final class IODataManager {
 
         // 3. Speichern der Workouts im ModelContext
         for exportItem in pkg.items {
-            let workout = CardioWorkoutSession.fromExportItem(exportItem)
+            let workout = CardioSession.fromExportItem(exportItem)
             context.insert(workout)
             importedCount += 1
         }
@@ -101,7 +101,7 @@ final class IODataManager {
 
             // 1. Alle Objekte vom Typ WorkoutSession abrufen
             // Wir benötigen keine Sortierung, nur die Objekte selbst.
-        let workoutsToDelete = try context.fetch(FetchDescriptor<CardioWorkoutSession>())
+        let workoutsToDelete = try context.fetch(FetchDescriptor<CardioSession>())
 
         let deletedCount = workoutsToDelete.count
 
@@ -149,7 +149,7 @@ func deleteAllWorkouts(context: ModelContext) throws -> Int {
     // Wir nutzen einen do-catch-Block innerhalb der Funktion,
     // um generische Fehler in unseren spezifischen Fehler zu verpacken.
     do {
-        let workoutsToDelete = try context.fetch(FetchDescriptor<CardioWorkoutSession>())
+        let workoutsToDelete = try context.fetch(FetchDescriptor<CardioSession>())
         let deletedCount = workoutsToDelete.count
 
         for workout in workoutsToDelete {

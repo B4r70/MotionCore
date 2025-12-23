@@ -19,8 +19,8 @@ struct MainSettingsView: View {
     @Environment(\.modelContext) private var modelContext
 
     // Daten für Prüfung der Export-Aktivierung abrufen
-    @Query(sort: \CardioWorkoutSession.date, order: .reverse)
-    private var allWorkouts: [CardioWorkoutSession]
+    @Query(sort: \CardioSession.date, order: .reverse)
+    private var allWorkouts: [CardioSession]
 
     // Import/Export Funktionen
     @State private var showingImportPicker = false

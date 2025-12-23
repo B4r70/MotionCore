@@ -12,7 +12,7 @@
 //
 import Foundation
 
-extension CardioWorkoutSession {
+extension CardioSession {
     // MARK: - Formatierte Werte für UI aus @Model WorkoutSession
 
     var distanceFormatted: String {

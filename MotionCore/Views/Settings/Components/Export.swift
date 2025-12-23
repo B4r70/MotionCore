@@ -37,7 +37,7 @@ struct WorkoutExportItem: Codable {
 
 // MARK: - Mapper zwischen Model und DTO
 
-extension CardioWorkoutSession {
+extension CardioSession {
     // → DTO (Export)
     var exportItem: WorkoutExportItem {
         // Wir verwenden nil, wenn der Wert 0 oder der Standardwert ist,
@@ -59,10 +59,10 @@ extension CardioWorkoutSession {
     }
     
     // ← DTO
-    static func fromExportItem(_ e: WorkoutExportItem) -> CardioWorkoutSession {
+    static func fromExportItem(_ e: WorkoutExportItem) -> CardioSession {
         let iso = ISO8601DateFormatter()
 
-        return CardioWorkoutSession(
+        return CardioSession(
             date: e.date.flatMap { iso.date(from: $0) } ?? .now,
             duration: e.duration ?? 0,
             distance: e.distance ?? 0.0,

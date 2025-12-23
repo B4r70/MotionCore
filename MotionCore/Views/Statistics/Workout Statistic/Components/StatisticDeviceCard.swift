@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct StatisticDeviceCard: View {
-    let allWorkouts: [CardioWorkoutSession]
+    let allWorkouts: [CardioSession]
 
     private var calcStatistics: StatisticCalcEngine {
         StatisticCalcEngine(workouts: allWorkouts)

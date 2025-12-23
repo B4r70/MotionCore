@@ -39,7 +39,7 @@ final class ExerciseSet {
     
     // MARK: - Beziehung
     
-    var session: StrengthWorkoutSession?
+    var session: StrengthSession?
     
     // MARK: - Berechnete Werte
     

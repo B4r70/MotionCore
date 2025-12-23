@@ -15,7 +15,7 @@ import SwiftUI
 
 // Workout Card
 struct WorkoutCard: View {
-    let allWorkouts: CardioWorkoutSession
+    let allWorkouts: CardioSession
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {

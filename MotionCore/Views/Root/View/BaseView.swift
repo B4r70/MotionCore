@@ -19,7 +19,7 @@ struct BaseView: View {
     @State private var selectedTab: Tab = .workouts
     @State private var showingAddWorkout = false
 
-    @State private var draft = CardioWorkoutSession(    // Bleibt!
+    @State private var draft = CardioSession(    // Bleibt!
         date: .now,
         duration: 0,
         distance: 0.0,
@@ -191,7 +191,7 @@ struct BaseView: View {
             }
             .environmentObject(appSettings)
             .onDisappear {
-                draft = CardioWorkoutSession(
+                draft = CardioSession(
                     date: .now,
                     duration: 0,
                     distance: 0.0,

@@ -19,12 +19,12 @@ struct PreviewData {
     static let sharedContainer: ModelContainer = {
         // In-Memory-Konfiguration für die Preview
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: CardioWorkoutSession.self,
+        let container = try! ModelContainer(for: CardioSession.self,
                                             configurations: config)
 
         // Mock-Daten in den Kontext einfügen
         let context = container.mainContext
-        CardioWorkoutSession.previewMockData.forEach { context.insert($0) }
+        CardioSession.previewMockData.forEach { context.insert($0) }
 
         return container
     }()

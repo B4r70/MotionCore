@@ -9,7 +9,7 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Hinweis  . . : Enums für dieses Model findet man im File WorkoutTypes.swift      /
+// Hinweis  . . : Enums für dieses Model findet man im File StrengthTypes.swift     /
 //                Die UI-Ausgabe dieser Enums im File TypesUI.swift                 /
 //                Die formatierten Werte aus dem Model sind in SessionUI            /
 // ---------------------------------------------------------------------------------/
@@ -18,7 +18,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class StrengthWorkoutSession {
+final class StrengthSession {
     // MARK: - Grunddaten
     
     var date: Date = Date()

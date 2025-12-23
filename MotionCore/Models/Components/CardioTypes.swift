@@ -5,7 +5,7 @@
 // Datei . . . . : CardioTypes.swift                                                /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 22.10.2025                                                       /
-// Beschreibung  : Wertebereiche für das Daten-Modell "CardioWorkoutSession"        /
+// Beschreibung  : Wertebereiche für das Daten-Modell "CardioSession"               /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

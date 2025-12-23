@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Daten-Modell                                                     /
-// Datei . . . . : CardioWorkoutSession.swift                                       /
+// Datei . . . . : CardioSession.swift                                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 22.10.2025                                                       /
 // Beschreibung  : Datenmodell SwiftData für die MotionCore-App                     /
@@ -18,7 +18,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class CardioWorkoutSession {
+final class CardioSession {
     // MARK: - Grunddaten
     // Trainingsblöcke innerhalb einer Session (z. B. Cardio + Kraft)
     var date: Date = Date() // Datum

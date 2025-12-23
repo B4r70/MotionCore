@@ -14,8 +14,8 @@ import SwiftData
 import SwiftUI
 
 struct RecordView: View {
-    @Query(sort: \CardioWorkoutSession.date, order: .reverse)
-    private var allWorkouts: [CardioWorkoutSession]
+    @Query(sort: \CardioSession.date, order: .reverse)
+    private var allWorkouts: [CardioSession]
 
     // Globaler Zugriff auf AppSettings
     @EnvironmentObject private var appSettings: AppSettings

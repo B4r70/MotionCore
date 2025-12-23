@@ -14,7 +14,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class OutdoorWorkoutSession {
+final class OutdoorSession {
     // MARK: - Grunddaten
     
     var date: Date = Date()

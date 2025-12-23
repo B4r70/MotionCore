@@ -19,9 +19,9 @@ struct MotionCoreApp: App {
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            CardioWorkoutSession.self,
-            StrengthWorkoutSession.self,
-            OutdoorWorkoutSession.self,
+            CardioSession.self,
+            StrengthSession.self,
+            OutdoorSession.self,
             ExerciseSet.self
         ])
         let modelConfiguration = ModelConfiguration(

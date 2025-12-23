@@ -15,8 +15,8 @@ import SwiftUI
 
 struct ListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \CardioWorkoutSession.date, order: .reverse)
-    private var allWorkouts: [CardioWorkoutSession]
+    @Query(sort: \CardioSession.date, order: .reverse)
+    private var allWorkouts: [CardioSession]
 
     @State private var exportURL: URL?
 
@@ -28,7 +28,7 @@ struct ListView: View {
     @EnvironmentObject private var appSettings: AppSettings
 
     // Kombinierte Filterlogik (beide Filter)
-    var filteredWorkouts: [CardioWorkoutSession] {
+    var filteredWorkouts: [CardioSession] {
         var workouts = allWorkouts
 
             // Gerätefilter anwenden

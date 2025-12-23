@@ -14,12 +14,12 @@
 import Foundation
 
 #if DEBUG
-extension CardioWorkoutSession {
-    static var previewMockData: [CardioWorkoutSession] {
+extension CardioSession {
+    static var previewMockData: [CardioSession] {
         let now = Date()
 
         return [
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -14, to: now)!,
                 duration: 15,
                 distance: 3.12,
@@ -31,7 +31,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .random,
                 cardioDevice: .crosstrainer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -12, to: now)!,
                 duration: 30,
                 distance: 5.40,
@@ -43,7 +43,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .random,
                 cardioDevice: .ergometer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -10, to: now)!,
                 duration: 36,
                 distance: 7.30,
@@ -55,7 +55,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .hill,
                 cardioDevice: .crosstrainer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -9, to: now)!,
                 duration: 22,
                 distance: 4.80,
@@ -67,7 +67,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .random,
                 cardioDevice: .ergometer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -8, to: now)!,
                 duration: 15,
                 distance: 3.22,
@@ -79,7 +79,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .random,
                 cardioDevice: .crosstrainer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -7, to: now)!,
                 duration: 40,
                 distance: 8.20,
@@ -91,7 +91,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .random,
                 cardioDevice: .crosstrainer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -5, to: now)!,
                 duration: 30,
                 distance: 6.00,
@@ -103,7 +103,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .fatBurn,
                 cardioDevice: .ergometer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -4, to: now)!,
                 duration: 26,
                 distance: 5.25,
@@ -115,7 +115,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .random,
                 cardioDevice: .crosstrainer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -3, to: now)!,
                 duration: 34,
                 distance: 6.50,
@@ -127,7 +127,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .manual,
                 cardioDevice: .ergometer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -2, to: now)!,
                 duration: 25,
                 distance: 4.90,
@@ -139,7 +139,7 @@ extension CardioWorkoutSession {
                 trainingProgram: .random,
                 cardioDevice: .crosstrainer
             ),
-            CardioWorkoutSession(
+            CardioSession(
                 date: Calendar.current.date(byAdding: .day, value: -1, to: now)!,
                 duration: 38,
                 distance: 7.70,

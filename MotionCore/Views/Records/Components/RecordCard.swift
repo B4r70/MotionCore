@@ -19,7 +19,7 @@ struct RecordCard: View {
     let subtitle: String
     let icon: IconTypes
     let color: Color
-    let allWorkouts: CardioWorkoutSession
+    let allWorkouts: CardioSession
 
     var body: some View {
         VStack(spacing: 20) {
@@ -85,7 +85,7 @@ struct RecordCard: View {
 struct RecordGridCard: View {
     let metricTitle: String
     let recordValue: String
-    let bestWorkout: CardioWorkoutSession
+    let bestWorkout: CardioSession
     let metricIcon: IconTypes
     let metricColor: Color
 

@@ -20,7 +20,7 @@ struct FormView: View {
     @Environment(\.dismiss) private var dismiss
     let mode: WorkoutFormMode
 
-    @Bindable var workout: CardioWorkoutSession
+    @Bindable var workout: CardioSession
     @EnvironmentObject private var appSettings: AppSettings
 
     // Lokaler Zustand fÃ¼r aufklappbare Wheels

@@ -52,11 +52,11 @@ struct StatisticCalcEngine {
         // MARK: - Input
 
         // All workouts used as data source for the statistics.
-    let allWorkouts: [CardioWorkoutSession]
+    let allWorkouts: [CardioSession]
 
         // MARK: - Initializer
 
-    init(workouts: [CardioWorkoutSession]) {
+    init(workouts: [CardioSession]) {
         self.allWorkouts = workouts
     }
 
