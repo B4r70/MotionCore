@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Trainingsplan                                                    /
-// Datei . . . . : TrainingProgramCard.swift                                        /
+// Datei . . . . : TrainingPlanCard.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 19.12.2025                                                       /
 // Beschreibung  : Card um einzelne Trainingsprogramme darzustellen                 /
@@ -12,7 +12,7 @@
 //
 import SwiftUI
 
-struct TrainingProgramCard: View {
+struct TrainingPlanCard: View {
     let plan: TrainingProgramSample
     
     // Fortschritt berechnen

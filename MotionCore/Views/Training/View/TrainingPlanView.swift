@@ -13,7 +13,7 @@
 import SwiftData
 import SwiftUI
 
-struct TrainingProgramView: View {
+struct TrainingPlanView: View {
     // Globaler Zugriff auf AppSettings
     @EnvironmentObject private var appSettings: AppSettings
 
@@ -53,21 +53,31 @@ struct TrainingProgramView: View {
         ZStack {
             // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-            
+
             ScrollView {
                 VStack(spacing: 20) {
                     // Beispiel-Plan Card
                     ForEach(samplePlans) { plan in
-                        TrainingProgramCard(plan: plan)
+                        TrainingPlanCard(plan: plan)
                     }
                 }
                 .scrollViewContentPadding()
             }
             .scrollIndicators(.hidden)
-            
+
             // Empty State (wenn keine Pläne vorhanden)
             if samplePlans.isEmpty {
                 EmptyState()
+            }
+        }
+        // NEU: Toolbar mit Exercise Library Button
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    ExerciseLibraryView()
+                } label: {
+                    ToolbarButton(icon: .system("figure.strengthtraining.traditional.circle"))
+                }
             }
         }
         // NEU: Floating Action Button zum Erstellen neuer Pläne
@@ -96,7 +106,7 @@ struct TrainingProgramSample: Identifiable {
 
 #Preview("Workout Plans") {
     NavigationStack {
-        TrainingProgramView()
+        TrainingPlanView()
             .environmentObject(AppSettings.shared)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -22,7 +22,10 @@ struct MotionCoreApp: App {
             CardioSession.self,
             StrengthSession.self,
             OutdoorSession.self,
-            ExerciseSet.self
+            ExerciseSet.self,
+            Exercise.self,
+            TrainingPlan.self,
+            TrainingEntry.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,
