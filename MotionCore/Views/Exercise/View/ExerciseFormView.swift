@@ -30,7 +30,6 @@ struct ExerciseFormView: View {
         ZStack {
             // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-            
             ScrollView {
                 VStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 24) {
@@ -294,7 +293,7 @@ struct ExerciseFormView: View {
             // Speichern
             ToolbarItem(placement: .confirmationAction) {
                 Button {
-                    if mode == .add { 
+                    if mode == .add {
                         exercise.isCustom = true
                         context.insert(exercise) 
                     }

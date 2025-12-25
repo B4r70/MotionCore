@@ -23,23 +23,36 @@ struct FormView: View {
     @Bindable var workout: CardioSession
     @EnvironmentObject private var appSettings: AppSettings
 
-    // Lokaler Zustand fÃ¼r aufklappbare Wheels
+    // Lokaler Zustand für aufklappbare Wheels
     @State private var showDurationWheel = false
     @State private var showHrWheel = false
     @State private var showDifficultyWheel = false
     @State private var showCaloriesWheel = false
 
-    // LÃ¶sch-BestÃ¤tigung
+    // Lösch-Bestatigung
     @State private var showDeleteAlert = false
+
+    // Focus State für Keyboard-Navigation
+    @FocusState private var focusedField: FocusedField?
+
+    // Reihenfolge der Felder definieren
+    private let fieldOrder: [FocusedField] = [
+        .duration,
+        .difficulty,
+        .distance,
+        .bodyWeight,
+        .calories,
+        .heartRate
+    ]
 
     var body: some View {
         ZStack {
             // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-
+                .hideKeyboardOnTap()
             ScrollView {
                 VStack(spacing: 20) {
-                    // MARK: â€“ Eine gemeinsame GlassCard fÃ¼r alle Eingaben
+                    // MARK: Eine gemeinsame GlassCard für alle Eingaben
 
                     VStack(alignment: .leading, spacing: 24) {
                         // Titel
@@ -57,10 +70,10 @@ struct FormView: View {
                         .environment(\.locale, Locale(identifier: "de_DE"))
                         .tint(.primary) // keine blaue Schrift mehr
 
-                        // MARK: GerÃ¤tetyp
+                        // MARK: Geratetyp
 
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("GerÃ¤tetyp")
+                            Text("Geratetyp")
                                 .font(.headline)
                                 .foregroundStyle(.primary)
 
@@ -135,6 +148,7 @@ struct FormView: View {
                             .tint(.primary)
                             .frame(height: 140)
                             .clipped()
+                            .focused($focusedField, equals: .duration)
                         }
 
                         // MARK: Schwierigkeitsgrad
@@ -153,6 +167,7 @@ struct FormView: View {
                             .pickerStyle(.wheel)
                             .frame(height: 140)
                             .clipped()
+                            .focused($focusedField, equals: .difficulty)
                         }
 
                         // MARK: Distanz (Double mit Komma-Punkt-Toleranz)
@@ -174,19 +189,23 @@ struct FormView: View {
                             )
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
+                            .focused($focusedField, equals: .distance)
 
                             Text("km")
                                 .foregroundStyle(.secondary)
                         }
 
-                        // MARK: KÃ¶rpergewicht
+                        // MARK: Körpergewicht
                         HStack {
                             Text("Gewicht")
                             Spacer()
                             TextField("0.0", value: $workout.bodyWeight, format: .number) // Bindet direkt an Double
                                 .keyboardType(.decimalPad) // Wichtig: Ziffernblock mit Dezimalpunkt/Komma
                                 .multilineTextAlignment(.trailing)
+                                .focused($focusedField, equals: .bodyWeight)
+
                             Text("kg")
+                                .foregroundStyle(.secondary)
                         }
 
                         // MARK: Kalorien
@@ -205,6 +224,7 @@ struct FormView: View {
                             .pickerStyle(.wheel)
                             .frame(height: 140)
                             .clipped()
+                            .focused($focusedField, equals: .calories)
                         }
 
                         // MARK: Herzfrequenz
@@ -224,12 +244,13 @@ struct FormView: View {
                             .tint(.primary)
                             .frame(height: 140)
                             .clipped()
+                            .focused($focusedField, equals: .heartRate)
                         }
 
-                        // MARK: BelastungsintensitÃ¤t
+                        // MARK: Belastungsintensitat
 
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("BelastungsintensitÃ¤t")
+                            Text("Belastungsintensität")
                                 .font(.headline)
                                 .foregroundStyle(.primary)
 
@@ -248,6 +269,7 @@ struct FormView: View {
             }
             .scrollIndicators(.hidden)
         }
+        .keyboardToolbar(focusedField: $focusedField, fields: fieldOrder)
         .onAppear {
             if mode == .add {
                 applyDefaultsIfNeeded()
@@ -280,26 +302,26 @@ struct FormView: View {
                 }
             }
         }
-        .alert("Workout lÃ¶schen?", isPresented: $showDeleteAlert) {
+        .alert("Workout löschen?", isPresented: $showDeleteAlert) {
             Button("Abbrechen", role: .cancel) {}
-            Button("LÃ¶schen", role: .destructive) {
+            Button("Löschen", role: .destructive) {
                 deleteWorkout()
             }
         } message: {
-            Text("Dieses Workout wird unwiderruflich gelÃ¶scht.")
+            Text("Dieses Workout wird unwiderruflich gelöscht.")
         }
     }
 
     // MARK: - Hilfsfunktionen
 
-    // LÃ¶schen-Funktion
+    // Löschen-Funktion
     private func deleteWorkout() {
         context.delete(workout)
         try? context.save()
         dismiss()
     }
 
-    // Defaulteinstellungen fÃ¼r neue Workouts
+    // Defaulteinstellungen für neue Workouts
     private func applyDefaultsIfNeeded() {
         if workout.cardioDevice == .none {
             workout.cardioDevice = appSettings.defaultDevice
