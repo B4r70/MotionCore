@@ -29,7 +29,7 @@ struct FormView: View {
     @State private var showDifficultyWheel = false
     @State private var showCaloriesWheel = false
 
-    // Lösch-Bestatigung
+    // Lösch-Bestätigung
     @State private var showDeleteAlert = false
 
     // Focus State für Keyboard-Navigation
@@ -50,10 +50,10 @@ struct FormView: View {
             // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
                 .hideKeyboardOnTap()
+
             ScrollView {
                 VStack(spacing: 20) {
                     // MARK: Eine gemeinsame GlassCard für alle Eingaben
-
                     VStack(alignment: .leading, spacing: 24) {
                         // Titel
                         Text("Workout-Daten")
@@ -61,205 +61,56 @@ struct FormView: View {
                             .foregroundStyle(.primary)
 
                         // MARK: Datum
+                        DateInputSection(date: $workout.date)
 
-                        DatePicker(
-                            "Datum",
-                            selection: $workout.date,
-                            displayedComponents: [.date, .hourAndMinute]
-                        )
-                        .environment(\.locale, Locale(identifier: "de_DE"))
-                        .tint(.primary) // keine blaue Schrift mehr
-
-                        // MARK: Geratetyp
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Geratetyp")
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-
-                            HStack(spacing: 12) {
-                                // Auswahl "Ergometer" als Button
-                                DeviceButton(
-                                    device: .crosstrainer,
-                                    isSelected: workout.cardioDevice == .crosstrainer
-                                ) {
-                                    workout.cardioDevice = .crosstrainer
-                                }
-                                // Auswahl "Ergometer" als Button
-                                DeviceButton(
-                                    device: .ergometer,
-                                    isSelected: workout.cardioDevice == .ergometer
-                                ) {
-                                    workout.cardioDevice = .ergometer
-                                }
-                            }
-                        }
+                        // MARK: Gerätetyp
+                        DeviceSelectionSection(selectedDevice: $workout.cardioDevice)
 
                         // MARK: Trainingsprogramm
-
-                        HStack {
-                            Text("Trainingsprogramm")
-                                .foregroundStyle(.primary)
-
-                            Spacer()
-
-                            Menu {
-                                Picker(
-                                    "",
-                                    selection: Binding<TrainingProgram>(
-                                        get: { workout.trainingProgram },
-                                        set: { workout.trainingProgram = $0 }
-                                    )
-                                ) {
-                                    ForEach(TrainingProgram.allCases, id: \.self) { p in
-                                        Label(p.description, systemImage: p.symbol)
-                                            .tag(p)
-                                    }
-                                }
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Text(workout.trainingProgram.description)
-                                        .foregroundStyle(.primary)
-                                        .tint(.primary)
-
-                                    Image(systemName: "chevron.up.chevron.down")
-                                        .font(.caption2)
-                                        .foregroundStyle(.primary)
-                                        .tint(.primary)
-                                }
-                            }
-                        }
-                        .foregroundStyle(.primary)
+                        ProgramSelectionSection(selectedProgram: $workout.trainingProgram)
 
                         // MARK: Dauer
-
-                        DisclosureRow(
-                            title: "Dauer",
-                            value: "\(workout.duration) min",
-                            isExpanded: $showDurationWheel,
-                            valueColor: .primary
-                        ) {
-                            Picker("Dauer", selection: $workout.duration) {
-                                ForEach(0 ... 300, id: \.self) { min in
-                                    Text("\(min) min").tag(min)
-                                }
-                            }
-                            .pickerStyle(.wheel)
-                            .tint(.primary)
-                            .frame(height: 140)
-                            .clipped()
-                            .focused($focusedField, equals: .duration)
-                        }
+                        DurationSection(
+                            duration: $workout.duration,
+                            showWheel: $showDurationWheel,
+                            focusedField: $focusedField
+                        )
 
                         // MARK: Schwierigkeitsgrad
+                        DifficultySection(
+                            difficulty: $workout.difficulty,
+                            showWheel: $showDifficultyWheel,
+                            focusedField: $focusedField
+                        )
 
-                        DisclosureRow(
-                            title: "Schwierigkeitsgrad",
-                            value: "\(workout.difficulty)",
-                            isExpanded: $showDifficultyWheel,
-                            valueColor: .primary
-                        ) {
-                            Picker("Schwierigkeitsgrad", selection: $workout.difficulty) {
-                                ForEach(1 ... 25, id: \.self) { v in
-                                    Text("Stufe \(v)").tag(v)
-                                }
-                            }
-                            .pickerStyle(.wheel)
-                            .frame(height: 140)
-                            .clipped()
-                            .focused($focusedField, equals: .difficulty)
-                        }
-
-                        // MARK: Distanz (Double mit Komma-Punkt-Toleranz)
-
-                        HStack {
-                            Text("Distanz")
-                            Spacer()
-                            TextField(
-                                "0,00",
-                                text: Binding(
-                                    get: { String(format: "%.2f", workout.distance) },
-                                    set: { raw in
-                                        let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                                        if let val = Double(normalized) {
-                                            workout.distance = val
-                                        }
-                                    }
-                                )
-                            )
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .focused($focusedField, equals: .distance)
-
-                            Text("km")
-                                .foregroundStyle(.secondary)
-                        }
+                        // MARK: Distanz
+                        DistanceInputRow(
+                            distance: $workout.distance,
+                            focusedField: $focusedField
+                        )
 
                         // MARK: Körpergewicht
-                        HStack {
-                            Text("Gewicht")
-                            Spacer()
-                            TextField("0.0", value: $workout.bodyWeight, format: .number) // Bindet direkt an Double
-                                .keyboardType(.decimalPad) // Wichtig: Ziffernblock mit Dezimalpunkt/Komma
-                                .multilineTextAlignment(.trailing)
-                                .focused($focusedField, equals: .bodyWeight)
-
-                            Text("kg")
-                                .foregroundStyle(.secondary)
-                        }
+                        BodyWeightInputRow(
+                            bodyWeight: $workout.bodyWeight,
+                            focusedField: $focusedField
+                        )
 
                         // MARK: Kalorien
-
-                        DisclosureRow(
-                            title: "Kalorien",
-                            value: "\(workout.calories) kcal",
-                            isExpanded: $showCaloriesWheel,
-                            valueColor: .primary
-                        ) {
-                            Picker("Kalorien", selection: $workout.calories) {
-                                ForEach(0 ... 2000, id: \.self) { kcal in
-                                    Text("\(kcal) kcal").tag(kcal)
-                                }
-                            }
-                            .pickerStyle(.wheel)
-                            .frame(height: 140)
-                            .clipped()
-                            .focused($focusedField, equals: .calories)
-                        }
+                        CaloriesSection(
+                            calories: $workout.calories,
+                            showWheel: $showCaloriesWheel,
+                            focusedField: $focusedField
+                        )
 
                         // MARK: Herzfrequenz
+                        HeartRateSection(
+                            heartRate: $workout.heartRate,
+                            showWheel: $showHrWheel,
+                            focusedField: $focusedField
+                        )
 
-                        DisclosureRow(
-                            title: "Herzfrequenz",
-                            value: "\(workout.heartRate) bpm",
-                            isExpanded: $showHrWheel,
-                            valueColor: .primary
-                        ) {
-                            Picker("Herzfrequenz", selection: $workout.heartRate) {
-                                ForEach(60 ... 200, id: \.self) { bpm in
-                                    Text("\(bpm) bpm").tag(bpm)
-                                }
-                            }
-                            .pickerStyle(.wheel)
-                            .tint(.primary)
-                            .frame(height: 140)
-                            .clipped()
-                            .focused($focusedField, equals: .heartRate)
-                        }
-
-                        // MARK: Belastungsintensitat
-
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Belastungsintensität")
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-
-                            HStack {
-                                InputStarRating(rating: $workout.intensity)
-                                    .scaleEffect(1.0)
-                            }
-                            .padding(.bottom, 4)
-                        }
+                        // MARK: Belastungsintensität
+                        IntensitySelectionSection(intensity: $workout.intensity)
                     }
                     .glassCard()
                     .padding(.horizontal)
@@ -281,6 +132,7 @@ struct FormView: View {
             // Speichern
             ToolbarItem(placement: .confirmationAction) {
                 Button {
+                    dismissKeyboard()
                     if mode == .add { context.insert(workout) }
                     try? context.save()
                     dismiss()
@@ -294,6 +146,7 @@ struct FormView: View {
             if mode == .edit {
                 ToolbarItem(placement: .destructiveAction) {
                     Button(role: .destructive) {
+                        dismissKeyboard() 
                         showDeleteAlert = true
                     } label: {
                         IconType(icon: .system("trash"), color: .red, size: 16)
