@@ -1,4 +1,4 @@
-//----------------------------------------------------------------------------------/
+///----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Trainingsplan                                                    /
@@ -28,8 +28,6 @@ struct TrainingPlanCard: View {
     }
 
     private var planAccent: Color {
-        // PlanType hat bei dir icon/description; Farbe ist (noch) nicht im Model.
-        // Minimal: Cardio blau, Kraft orange, sonst primary.
         switch plan.planType {
         case .cardio: return .blue
         case .strength: return .orange
@@ -40,7 +38,6 @@ struct TrainingPlanCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
 
-            // Header
             HStack {
                 ZStack {
                     Circle()
@@ -80,7 +77,6 @@ struct TrainingPlanCard: View {
 
             .glassDivider(paddingTop: 12, paddingBottom: 8)
 
-            // Meta-Infos
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Start")
@@ -121,10 +117,8 @@ struct TrainingPlanCard: View {
 
             .glassDivider(paddingTop: 12, paddingBottom: 8)
 
-            // Aktionen (Platzhalter – du hängst hier später Detail/Edit dran)
             HStack(spacing: 12) {
                 Button {
-                    // TODO: Plan starten/fortsetzen
                     print("Plan starten/fortsetzen: \(plan.title)")
                 } label: {
                     HStack {
@@ -139,17 +133,12 @@ struct TrainingPlanCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
-                Button {
-                    // TODO: Detail-/Edit-View
-                    print("Plan-Details: \(plan.title)")
-                } label: {
-                    Image(systemName: "info.circle")
-                        .font(.title3)
-                        .foregroundStyle(planAccent)
-                        .frame(width: 44, height: 44)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Circle())
-                }
+                Image(systemName: "chevron.right")
+                    .font(.title3)
+                    .foregroundStyle(planAccent)
+                    .frame(width: 44, height: 44)
+                    .background(.ultraThinMaterial)
+                    .clipShape(Circle())
             }
         }
         .glassCard()

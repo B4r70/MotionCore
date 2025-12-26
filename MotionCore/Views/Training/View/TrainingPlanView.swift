@@ -15,38 +15,37 @@ import SwiftUI
 
 struct TrainingPlanView: View {
 
-    // Globaler Zugriff auf AppSettings
     @EnvironmentObject private var appSettings: AppSettings
     @Environment(\.modelContext) private var modelContext
 
-    // Echte Daten aus SwiftData
     @Query(sort: \TrainingPlan.startDate, order: .reverse)
     private var plans: [TrainingPlan]
 
-    // UI State
     @State private var showingAddPlanSheet = false
 
     var body: some View {
         ZStack {
-            // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             ScrollView {
                 VStack(spacing: 20) {
                     ForEach(plans) { plan in
-                        TrainingPlanCard(plan: plan)
+                        NavigationLink {
+                            TrainingPlanDetailView(plan: plan)
+                        } label: {
+                            TrainingPlanCard(plan: plan)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .scrollViewContentPadding()
             }
             .scrollIndicators(.hidden)
 
-            // Empty State (wenn keine Pläne vorhanden)
             if plans.isEmpty {
                 EmptyState()
             }
         }
-        // Toolbar mit Exercise Library Button
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
@@ -56,7 +55,6 @@ struct TrainingPlanView: View {
                 }
             }
         }
-        // Floating Action Button zum Erstellen neuer Pläne
         .floatingActionButton(
             icon: .system("plus.circle.fill"),
             color: .primary
@@ -66,7 +64,6 @@ struct TrainingPlanView: View {
         .sheet(isPresented: $showingAddPlanSheet) {
             NavigationStack {
                 TrainingPlanFormView(mode: .add, plan: TrainingPlan())
-                    .environmentObject(AppSettings.shared)
             }
         }
     }
