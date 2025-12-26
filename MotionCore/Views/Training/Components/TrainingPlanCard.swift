@@ -13,101 +13,119 @@
 import SwiftUI
 
 struct TrainingPlanCard: View {
-    let plan: TrainingProgramSample
-    
-    // Fortschritt berechnen
-    private var progress: Double {
-        guard plan.workoutCount > 0 else { return 0 }
-        return Double(plan.completedCount) / Double(plan.workoutCount)
+    let plan: TrainingPlan
+
+    // TODO: Sobald du echte Plan-Inhalte hast (z.B. Trainings/Einheiten),
+    // kannst du hier Fortschritt berechnen.
+    private var progress: Double { 0.0 }
+
+    private var statusIcon: String {
+        progress >= 1.0 ? "checkmark.circle.fill" : "clock.fill"
     }
-    
+
+    private var statusColor: Color {
+        progress >= 1.0 ? .green : .orange
+    }
+
+    private var planAccent: Color {
+        // PlanType hat bei dir icon/description; Farbe ist (noch) nicht im Model.
+        // Minimal: Cardio blau, Kraft orange, sonst primary.
+        switch plan.planType {
+        case .cardio: return .blue
+        case .strength: return .orange
+        default: return .primary
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Header mit Icon
+
+            // Header
             HStack {
                 ZStack {
                     Circle()
                         .fill(.ultraThinMaterial)
                         .frame(width: 50, height: 50)
-                    
+
                     IconType(
-                        icon: .system("calendar.badge.checkmark"),
-                        color: plan.color,
+                        icon: .system(plan.planType.icon),
+                        color: planAccent,
                         size: 24
                     )
                 }
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(plan.title)
                         .font(.headline)
                         .foregroundStyle(.primary)
-                    
-                    Text(plan.description)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+
+                    if !plan.planDescription.isEmpty {
+                        Text(plan.planDescription)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    } else {
+                        Text(plan.planType.description)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
-                
+
                 Spacer()
-                
-                // Status Icon
-                Image(systemName: progress == 1.0 ? "checkmark.circle.fill" : "clock.fill")
+
+                Image(systemName: statusIcon)
                     .font(.title3)
-                    .foregroundStyle(progress == 1.0 ? .green : .orange)
+                    .foregroundStyle(statusColor)
             }
-            
+
             .glassDivider(paddingTop: 12, paddingBottom: 8)
-            
-            // Fortschrittsanzeige
+
+            // Meta-Infos
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Fortschritt")
+                    Text("Start")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    
                     Spacer()
-                    
-                    Text("\(plan.completedCount) / \(plan.workoutCount)")
+                    Text(plan.startDate, style: .date)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.primary)
                 }
-                
-                // Fortschrittsbalken
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        // Hintergrund
-                        Capsule()
-                            .fill(Color.gray.opacity(0.2))
-                            .frame(height: 8)
-                        
-                        // Fortschritt
-                        Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: [plan.color.opacity(0.7), plan.color],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .frame(width: geometry.size.width * progress, height: 8)
-                            .animation(.spring(response: 0.6), value: progress)
+
+                if let end = plan.endDate {
+                    HStack {
+                        Text("Ende")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(end, style: .date)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.primary)
                     }
                 }
-                .frame(height: 8)
-                
-                // Prozentanzeige
-                Text(String(format: "%.0f%%", progress * 100))
-                    .font(.caption.bold())
-                    .foregroundStyle(plan.color)
+
+                HStack {
+                    Text("Status")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    HStack(spacing: 6) {
+                        Image(systemName: plan.isActive ? "checkmark.circle.fill" : "pause.circle.fill")
+                            .foregroundStyle(plan.isActive ? .green : .secondary)
+                        Text(plan.isActive ? "Aktiv" : "Inaktiv")
+                            .foregroundStyle(.primary)
+                            .font(.subheadline.weight(.semibold))
+                    }
+                }
             }
-            
+
             .glassDivider(paddingTop: 12, paddingBottom: 8)
-            
-            // Aktionen
+
+            // Aktionen (Platzhalter – du hängst hier später Detail/Edit dran)
             HStack(spacing: 12) {
-                // Starten/Fortsetzen Button
                 Button {
                     // TODO: Plan starten/fortsetzen
-                    print("Plan starten/fortsetzen")
+                    print("Plan starten/fortsetzen: \(plan.title)")
                 } label: {
                     HStack {
                         Image(systemName: progress > 0 ? "play.circle.fill" : "play.fill")
@@ -116,19 +134,18 @@ struct TrainingPlanCard: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .background(plan.color.opacity(0.15))
-                    .foregroundStyle(plan.color)
+                    .background(planAccent.opacity(0.15))
+                    .foregroundStyle(planAccent)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-                
-                // Details Button
+
                 Button {
-                    // TODO: Plan-Details anzeigen
-                    print("Plan-Details anzeigen")
+                    // TODO: Detail-/Edit-View
+                    print("Plan-Details: \(plan.title)")
                 } label: {
                     Image(systemName: "info.circle")
                         .font(.title3)
-                        .foregroundStyle(plan.color)
+                        .foregroundStyle(planAccent)
                         .frame(width: 44, height: 44)
                         .background(.ultraThinMaterial)
                         .clipShape(Circle())

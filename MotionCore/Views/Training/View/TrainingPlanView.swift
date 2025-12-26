@@ -14,40 +14,17 @@ import SwiftData
 import SwiftUI
 
 struct TrainingPlanView: View {
+
     // Globaler Zugriff auf AppSettings
     @EnvironmentObject private var appSettings: AppSettings
+    @Environment(\.modelContext) private var modelContext
 
-    // State für Beispieldaten (später durch @Query ersetzt)
-    @State private var samplePlans: [TrainingProgramSample] = [
-        TrainingProgramSample(
-            title: "Cardio Plan",
-            description: "3× pro Woche · 15 Min · Crosstrainer",
-            workoutCount: 12,
-            completedCount: 5,
-            color: .blue
-        ),
-        TrainingProgramSample(
-            title: "Kraft Basics – Ganzkörper",
-            description: "3× pro Woche · Geräte · 45–60 Min",
-            workoutCount: 18,
-            completedCount: 2,
-            color: .orange
-        ),
-        TrainingProgramSample(
-            title: "Intervall-Training",
-            description: "2× pro Woche · HIIT · Ergometer",
-            workoutCount: 8,
-            completedCount: 8,
-            color: .green
-        ),
-        TrainingProgramSample(
-            title: "Aufbau – 4 Wochen Progression",
-            description: "4× pro Woche · Split · Steigerung",
-            workoutCount: 16,
-            completedCount: 11,
-            color: .purple
-        )
-    ]
+    // Echte Daten aus SwiftData
+    @Query(sort: \TrainingPlan.startDate, order: .reverse)
+    private var plans: [TrainingPlan]
+
+    // UI State
+    @State private var showingAddPlanSheet = false
 
     var body: some View {
         ZStack {
@@ -56,8 +33,7 @@ struct TrainingPlanView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    // Beispiel-Plan Card
-                    ForEach(samplePlans) { plan in
+                    ForEach(plans) { plan in
                         TrainingPlanCard(plan: plan)
                     }
                 }
@@ -66,11 +42,11 @@ struct TrainingPlanView: View {
             .scrollIndicators(.hidden)
 
             // Empty State (wenn keine Pläne vorhanden)
-            if samplePlans.isEmpty {
+            if plans.isEmpty {
                 EmptyState()
             }
         }
-        // NEU: Toolbar mit Exercise Library Button
+        // Toolbar mit Exercise Library Button
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
@@ -80,26 +56,20 @@ struct TrainingPlanView: View {
                 }
             }
         }
-        // NEU: Floating Action Button zum Erstellen neuer Pläne
+        // Floating Action Button zum Erstellen neuer Pläne
         .floatingActionButton(
             icon: .system("plus.circle.fill"),
             color: .primary
         ) {
-            // TODO: Sheet für neuen Plan öffnen
-            print("Neuen Trainingsplan erstellen")
+            showingAddPlanSheet = true
+        }
+        .sheet(isPresented: $showingAddPlanSheet) {
+            NavigationStack {
+                TrainingPlanFormView(mode: .add, plan: TrainingPlan())
+                    .environmentObject(AppSettings.shared)
+            }
         }
     }
-}
-
-// MARK: - Sample Data Model (Temporär)
-
-struct TrainingProgramSample: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let workoutCount: Int
-    let completedCount: Int
-    let color: Color
 }
 
 // MARK: - Preview
