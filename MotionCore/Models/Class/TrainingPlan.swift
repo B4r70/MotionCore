@@ -94,25 +94,30 @@ final class TrainingPlan {
     func createSession() -> StrengthSession {
         let session = StrengthSession(
             date: Date(),
-            workoutType: planType == .strength ? .custom : .fullBody
+            workoutType: .custom
         )
 
+        // Referenz zum Template setzen
+        session.sourceTrainingPlan = self
+        session.start()  // NEU: Direkt starten
+
         // Template-Sets kopieren
-        for (index, templateSet) in templateSets.enumerated() {
+        for templateSet in templateSets {
             let newSet = ExerciseSet(
                 exerciseName: templateSet.exerciseName,
                 exerciseId: templateSet.exerciseId,
                 exerciseGifAssetName: templateSet.exerciseGifAssetName,
-                setNumber: index + 1,
+                setNumber: templateSet.setNumber,
                 weight: templateSet.weight,
                 reps: templateSet.reps,
                 duration: templateSet.duration,
                 distance: templateSet.distance,
                 isWarmup: templateSet.isWarmup,
-                isCompleted: false,  // Noch nicht durchgeführt!
+                isCompleted: false,
                 rpe: 0,
                 notes: ""
             )
+            newSet.exercise = templateSet.exercise
             session.exerciseSets.append(newSet)
         }
 
