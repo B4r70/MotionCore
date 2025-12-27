@@ -15,7 +15,7 @@ import SwiftUI
 
 enum TrainingPlanFormMode { case add, edit }
 
-struct TrainingPlanFormView: View {
+struct TrainingFormView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     let mode: TrainingPlanFormMode
@@ -214,7 +214,7 @@ struct TrainingPlanFormView: View {
 
 #Preview("Training Plan Form - Add") {
     NavigationStack {
-        TrainingPlanFormView(mode: .add, plan: TrainingPlan())
+        TrainingFormView(mode: .add, plan: TrainingPlan())
             .environmentObject(AppSettings.shared)
     }
 }

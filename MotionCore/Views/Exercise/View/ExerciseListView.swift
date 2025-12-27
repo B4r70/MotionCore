@@ -13,7 +13,7 @@
 import SwiftData
 import SwiftUI
 
-struct ExerciseLibraryView: View {
+struct ExerciseListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Exercise.name, order: .forward)
     private var allExercises: [Exercise]
@@ -296,7 +296,7 @@ struct ExerciseLibraryView: View {
 
 #Preview("Exercise Library") {
     NavigationStack {
-        ExerciseLibraryView()
+        ExerciseListView()
             .environmentObject(AppSettings.shared)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

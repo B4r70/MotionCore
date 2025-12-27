@@ -20,6 +20,13 @@ struct ExportPackage: Codable {
     let items: [WorkoutExportItem]
 }
 
+// MARK: - Export-Paket für Trainingsübungen
+struct ExerciseExportPackage: Codable {
+    let version: Int
+    let exportedAt: String // ISO8601
+    let items: [ExerciseExportItem]
+}
+
 // MARK: - Einzelnes Workout (persistenzneutral)
 
 struct WorkoutExportItem: Codable {
@@ -35,8 +42,22 @@ struct WorkoutExportItem: Codable {
     let cardioDevice: Int?
 }
 
-// MARK: - Mapper zwischen Model und DTO
+// MARK: Trainingsübungen (persistenzneutral)
+struct ExerciseExportItem: Codable {
+    let name: String
+    let exerciseDescription: String?
+    let gifAssetName: String?
+    let category: String // Enum rawValue
+    let equipment: String // Enum rawValue
+    let difficulty: String // Enum rawValue
+    let primaryMuscles: [String] // Array of rawValues
+    let secondaryMuscles: [String] // Array of rawValues
+    let isFavorite: Bool
+    let isCustom: Bool
+}
 
+// MARK: - Mapper zwischen Model und DTO
+// CardioSession
 extension CardioSession {
     // → DTO (Export)
     var exportItem: WorkoutExportItem {
@@ -76,3 +97,43 @@ extension CardioSession {
         )
     }
 }
+// Trainingsübungen
+extension Exercise {
+    // DTO (Export)
+    var exportItem: ExerciseExportItem {
+        ExerciseExportItem(
+            name: name,
+            exerciseDescription: exerciseDescription.isEmpty ? nil : exerciseDescription,
+            gifAssetName: gifAssetName.isEmpty ? nil : gifAssetName,
+            category: category.rawValue,
+            equipment: equipment.rawValue,
+            difficulty: difficulty.rawValue,
+            primaryMuscles: primaryMuscles.map { $0.rawValue },
+            secondaryMuscles: secondaryMuscles.map { $0.rawValue },
+            isFavorite: isFavorite,
+            isCustom: isCustom
+        )
+    }
+
+    // DTO (Import)
+    static func fromExportItem(_ e: ExerciseExportItem) -> Exercise {
+        Exercise(
+            name: e.name,
+            exerciseDescription: e.exerciseDescription ?? "",
+            gifAssetName: e.gifAssetName ?? "",
+            category: ExerciseCategory(rawValue: e.category) ?? .compound,
+            equipment: ExerciseEquipment(rawValue: e.equipment) ?? .barbell,
+            difficulty: ExerciseDifficulty(rawValue: e.difficulty) ?? .intermediate,
+            primaryMuscles: e.primaryMuscles.compactMap { MuscleGroup(rawValue: $0) },
+            secondaryMuscles: e.secondaryMuscles.compactMap { MuscleGroup(rawValue: $0) },
+            isCustom: e.isCustom,
+            isFavorite: e.isFavorite
+        )
+    }
+}
+
+
+
+
+
+

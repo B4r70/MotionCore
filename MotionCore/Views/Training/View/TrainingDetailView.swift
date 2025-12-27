@@ -13,7 +13,7 @@
 import SwiftData
 import SwiftUI
 
-struct TrainingPlanDetailView: View {
+struct TrainingDetailView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
     @Environment(\.modelContext) private var context
@@ -111,7 +111,7 @@ struct TrainingPlanDetailView: View {
                     VStack(spacing: 12) {
 
                         NavigationLink {
-                            TrainingPlanFormView(mode: .edit, plan: plan)
+                            TrainingFormView(mode: .edit, plan: plan)
                         } label: {
                             HStack {
                                 Image(systemName: "pencil")

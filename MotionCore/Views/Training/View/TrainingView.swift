@@ -13,7 +13,7 @@
 import SwiftData
 import SwiftUI
 
-struct TrainingPlanView: View {
+struct TrainingView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
     @Environment(\.modelContext) private var modelContext
@@ -31,7 +31,7 @@ struct TrainingPlanView: View {
                 VStack(spacing: 20) {
                     ForEach(plans) { plan in
                         NavigationLink {
-                            TrainingPlanDetailView(plan: plan)
+                            TrainingDetailView(plan: plan)
                         } label: {
                             TrainingPlanCard(plan: plan)
                         }
@@ -49,7 +49,7 @@ struct TrainingPlanView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
-                    ExerciseLibraryView()
+                    ExerciseListView()
                 } label: {
                     ToolbarButton(icon: .system("figure.strengthtraining.traditional.circle"))
                 }
@@ -63,7 +63,7 @@ struct TrainingPlanView: View {
         }
         .sheet(isPresented: $showingAddPlanSheet) {
             NavigationStack {
-                TrainingPlanFormView(mode: .add, plan: TrainingPlan())
+                TrainingFormView(mode: .add, plan: TrainingPlan())
             }
         }
     }
@@ -73,7 +73,7 @@ struct TrainingPlanView: View {
 
 #Preview("Workout Plans") {
     NavigationStack {
-        TrainingPlanView()
+        TrainingView()
             .environmentObject(AppSettings.shared)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -54,6 +54,37 @@ final class IODataManager {
         return url
     }
 
+        /// Exportiert alle Ãœbungen als JSON-Datei
+        /// - Parameter context: Der ModelContext, um alle Exercises abzurufen
+        /// - Returns: Die temporÃ¤re URL zur exportierten JSON-Datei
+    func exportExercises(context: ModelContext) throws -> URL {
+            // 1. Daten abrufen
+        let descriptor = FetchDescriptor<Exercise>(sortBy: [SortDescriptor(\.name, order: .forward)])
+        let allExercises = try context.fetch(descriptor)
+
+        guard !allExercises.isEmpty else {
+            throw DataIOError.noDataToExport
+        }
+
+            // 2. Export-Paket erstellen
+        let pkg = ExerciseExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: allExercises.map { $0.exportItem }
+        )
+
+            // 3. Kodierung
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(pkg)
+
+            // 4. TemporÃ¤re Datei erstellen
+        let filename = "MotionCore-Exercises-\(Int(Date().timeIntervalSince1970)).json"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        try data.write(to: url, options: .atomic)
+
+        return url
+    }
 
     // MARK: - Import
 
@@ -89,6 +120,44 @@ final class IODataManager {
         }
 
         // 4. Speichern des Contexts
+        try context.save()
+
+        return importedCount
+    }
+
+    /// Importiert Übungen aus einer JSON-Datei
+    /// - Parameters:
+    ///   - context: Der ModelContext
+    ///   - url: Die URL der JSON-Datei
+    /// - Returns: Anzahl der importierten Ãœbungen
+    func importExercises(context: ModelContext, url: URL) throws -> Int {
+            // Sicherstellen, dass die Datei zugÃ¤nglich ist
+        guard url.startAccessingSecurityScopedResource() else {
+            throw DataIOError.accessDenied
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+
+            // 1. Daten lesen
+        let data = try Data(contentsOf: url)
+
+            // 2. Dekodierung
+        let decoder = JSONDecoder()
+        let pkg = try decoder.decode(ExerciseExportPackage.self, from: data)
+
+        guard pkg.version == 1 else {
+            throw DataIOError.unsupportedVersion
+        }
+
+        var importedCount = 0
+
+            // 3. Speichern der Exercises im ModelContext
+        for exportItem in pkg.items {
+            let exercise = Exercise.fromExportItem(exportItem)
+            context.insert(exercise)
+            importedCount += 1
+        }
+
+            // 4. Speichern
         try context.save()
 
         return importedCount

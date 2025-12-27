@@ -22,10 +22,18 @@ struct MainSettingsView: View {
     @Query(sort: \CardioSession.date, order: .reverse)
     private var allWorkouts: [CardioSession]
 
+    @Query(sort: \Exercise.name, order: .forward)
+    private var allExercises: [Exercise]
+
     // Import/Export Funktionen
     @State private var showingImportPicker = false
     @State private var exportURL: URL?
     @State private var showingShareSheet = false
+
+    // Exercise Import/Export
+    @State private var showingExerciseImportPicker = false
+    @State private var exerciseExportURL: URL?
+    @State private var showingExerciseShareSheet = false
 
     // UI-Meldungen für Import/Export
     @State private var showingImportSuccess = false
@@ -75,6 +83,19 @@ struct MainSettingsView: View {
         }
     }
 
+    private func handleExerciseExport() {
+            do {
+                exerciseExportURL = try dataManager.exportExercises(context: modelContext)
+                showingExerciseShareSheet = true
+            } catch let error as DataIOError {
+                importErrorMessage = error.errorDescription ?? "Exercise-Export fehlgeschlagen"
+                showingImportError = true
+            } catch {
+                importErrorMessage = "Exercise-Export-Fehler: \(error.localizedDescription)"
+                showingImportError = true
+            }
+        }
+
     var body: some View {
         List {
 
@@ -116,6 +137,22 @@ struct MainSettingsView: View {
                 } label: {
                     Label("Workouts importieren", systemImage: "square.and.arrow.down")
                 }
+
+                // Exercise Export
+                Button {
+                    handleExerciseExport()
+                } label: {
+                    Label("Übungen exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allExercises.isEmpty)
+
+                    // NEU: Exercise Import
+                Button {
+                    showingExerciseImportPicker = true
+                } label: {
+                    Label("Übungen importieren", systemImage: "square.and.arrow.down")
+                }
+
                 Button(role: .destructive) { // Rote Farbe für destruktive Aktion
                     showingDeleteConfirmation = true
                 } label: {
@@ -148,6 +185,13 @@ struct MainSettingsView: View {
                 ShareSheet(items: [url])
             }
         }
+        //
+        .sheet(isPresented: $showingExerciseShareSheet) {
+            if let url = exerciseExportURL {
+                ShareSheet(items: [url])
+            }
+        }
+
         // File Importer Aufruf
         .fileImporter(
             isPresented: $showingImportPicker,
@@ -176,6 +220,36 @@ struct MainSettingsView: View {
             case .failure(let error):
                 importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
                 showingImportError = true
+            }
+        }
+        // File Importer für Exercises
+        .fileImporter(
+            isPresented: $showingExerciseImportPicker,
+            allowedContentTypes: [.json],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+                case .success(let urls):
+                    guard let url = urls.first else { return }
+                    do {
+                        let count = try dataManager.importExercises(context: modelContext, url: url)
+                        if count > 0 {
+                            importErrorMessage = "Import erfolgreich! \(count) Übungen wurden hinzugefügt."
+                            showingImportSuccess = true
+                        } else {
+                            importErrorMessage = "Die Datei enthielt keine Übungen zum Importieren."
+                            showingImportError = true
+                        }
+                    } catch let error as DataIOError {
+                        importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
+                        showingImportError = true
+                    } catch {
+                        importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
+                        showingImportError = true
+                    }
+                case .failure(let error):
+                    importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
+                    showingImportError = true
             }
         }
         // UI-Meldungen für Import
