@@ -13,7 +13,7 @@
 import SwiftData
 import SwiftUI
 
-struct TrainingView: View {
+struct TrainingListView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
     @Environment(\.modelContext) private var modelContext
@@ -73,7 +73,7 @@ struct TrainingView: View {
 
 #Preview("Workout Plans") {
     NavigationStack {
-        TrainingView()
+        TrainingListView()
             .environmentObject(AppSettings.shared)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

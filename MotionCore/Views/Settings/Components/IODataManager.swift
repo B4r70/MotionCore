@@ -34,7 +34,7 @@ final class IODataManager {
         }
 
         // 2. Export-Paket erstellen
-        let pkg = ExportPackage(
+        let pkg = WorkoutExportPackage(
             version: 1,
             exportedAt: ISO8601DateFormatter().string(from: .now),
             items: allWorkouts.map { $0.exportItem }
@@ -104,7 +104,7 @@ final class IODataManager {
 
         // 2. Dekodierung
         let decoder = JSONDecoder()
-        let pkg = try decoder.decode(ExportPackage.self, from: data)
+        let pkg = try decoder.decode(WorkoutExportPackage.self, from: data)
 
         guard pkg.version == 1 else {
             throw DataIOError.unsupportedVersion

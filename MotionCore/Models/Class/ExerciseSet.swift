@@ -40,7 +40,32 @@ final class ExerciseSet {
     // MARK: - Beziehung
     
     var session: StrengthSession?
-    
+
+    // Beziehung zum TrainingPlan (wenn Template)
+    var trainingPlan: TrainingPlan?
+
+    // Direkte Referenz zur Übung aus der Bibliothek
+    @Relationship(deleteRule: .nullify)
+    var exercise: Exercise?
+
+    // Hilfsfunktion - Ist dies ein Template oder durchgeführt?
+    var isTemplate: Bool {
+        trainingPlan != nil && session == nil
+    }
+
+    // Convenience-Initializer mit Exercise
+    convenience init(from exercise: Exercise, setNumber: Int = 1, weight: Double = 0, reps: Int = 0) {
+        self.init(
+            exerciseName: exercise.name,
+            exerciseId: exercise.persistentModelID.hashValue.description,
+            exerciseGifAssetName: exercise.gifAssetName,
+            setNumber: setNumber,
+            weight: weight,
+            reps: reps
+        )
+        self.exercise = exercise
+    }
+
     // MARK: - Berechnete Werte
     
     /// Volumen dieses Sets (Gewicht × Reps)

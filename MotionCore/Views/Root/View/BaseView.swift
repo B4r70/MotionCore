@@ -169,7 +169,7 @@ struct BaseView: View {
                 // MARK: Tab 5 - Trainingsplan
 
             NavigationStack {
-                TrainingView()
+                TrainingListView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {

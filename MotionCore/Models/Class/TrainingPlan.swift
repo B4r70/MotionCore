@@ -40,6 +40,9 @@ final class TrainingPlan {
     @Relationship(deleteRule: .cascade)
     var entries: [TrainingEntry] = []       // Alle Einträge in diesem Plan
 
+    @Relationship(deleteRule: .cascade, inverse: \ExerciseSet.trainingPlan)
+    var templateSets: [ExerciseSet] = []
+
     // MARK: - Berechnete Werte
 
     /// Anzahl der geplanten Trainings
@@ -87,7 +90,41 @@ final class TrainingPlan {
             .sorted { $0.scheduledDate < $1.scheduledDate }
             .first
     }
+    // Erstellt eine neue StrengthSession basierend auf diesem Template
+    func createSession() -> StrengthSession {
+        let session = StrengthSession(
+            date: Date(),
+            workoutType: planType == .strength ? .custom : .fullBody
+        )
 
+        // Template-Sets kopieren
+        for (index, templateSet) in templateSets.enumerated() {
+            let newSet = ExerciseSet(
+                exerciseName: templateSet.exerciseName,
+                exerciseId: templateSet.exerciseId,
+                exerciseGifAssetName: templateSet.exerciseGifAssetName,
+                setNumber: index + 1,
+                weight: templateSet.weight,
+                reps: templateSet.reps,
+                duration: templateSet.duration,
+                distance: templateSet.distance,
+                isWarmup: templateSet.isWarmup,
+                isCompleted: false,  // Noch nicht durchgeführt!
+                rpe: 0,
+                notes: ""
+            )
+            session.exerciseSets.append(newSet)
+        }
+
+        return session
+    }
+
+    // Gruppierte Template-Sets nach Übungsname
+    var groupedTemplateSets: [[ExerciseSet]] {
+        let grouped = Dictionary(grouping: templateSets) { $0.exerciseName }
+        return grouped.values.sorted { ($0.first?.exerciseName ?? "") < ($1.first?.exerciseName ?? "") }
+    }
+    
     // MARK: - Initialisierung
 
     init(

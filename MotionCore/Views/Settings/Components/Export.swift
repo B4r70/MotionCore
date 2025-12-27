@@ -14,7 +14,7 @@ import Foundation
 
 // MARK: - Paket (für Versionierung & Metadaten)
 
-struct ExportPackage: Codable {
+struct WorkoutExportPackage: Codable {
     let version: Int
     let exportedAt: String // ISO8601
     let items: [WorkoutExportItem]
@@ -97,6 +97,7 @@ extension CardioSession {
         )
     }
 }
+
 // Trainingsübungen
 extension Exercise {
     // DTO (Export)
