@@ -54,7 +54,7 @@ final class IODataManager {
         return url
     }
 
-        /// Exportiert alle Ãœbungen als JSON-Datei
+        /// Exportiert alle Übungen als JSON-Datei
         /// - Parameter context: Der ModelContext, um alle Exercises abzurufen
         /// - Returns: Die temporÃ¤re URL zur exportierten JSON-Datei
     func exportExercises(context: ModelContext) throws -> URL {
@@ -129,7 +129,7 @@ final class IODataManager {
     /// - Parameters:
     ///   - context: Der ModelContext
     ///   - url: Die URL der JSON-Datei
-    /// - Returns: Anzahl der importierten Ãœbungen
+    /// - Returns: Anzahl der importierten Übungen
     func importExercises(context: ModelContext, url: URL) throws -> Int {
             // Sicherstellen, dass die Datei zugÃ¤nglich ist
         guard url.startAccessingSecurityScopedResource() else {

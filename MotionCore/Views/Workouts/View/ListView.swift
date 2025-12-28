@@ -253,7 +253,7 @@ struct ListView: View {
             // Nur Strength
             ForEach(filteredStrengthWorkouts) { session in
                 NavigationLink {
-                    StrengthSessionDetailView(session: session)
+                    StrengthDetailView(session: session)
                 } label: {
                     StrengthSessionCard(session: session)
                 }
@@ -293,7 +293,7 @@ struct ListView: View {
 
             case .strength(let session):
                 NavigationLink {
-                    StrengthSessionDetailView(session: session)
+                    StrengthDetailView(session: session)
                 } label: {
                     StrengthSessionCard(session: session)
                 }

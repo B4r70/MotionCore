@@ -18,6 +18,17 @@ struct SetConfigurationSheet: View {
     
     let exercise: Exercise
     let onSave: ([ExerciseSet]) -> Void
+
+    let initialWeight: Double?  // Optional: letztes Gewicht
+
+    init(exercise: Exercise, initialWeight: Double? = nil, onSave: @escaping ([ExerciseSet]) -> Void) {
+        self.exercise = exercise
+        self.initialWeight = initialWeight
+        self.onSave = onSave
+
+        // NEU: Setze targetWeight auf initialWeight falls vorhanden
+        _targetWeight = State(initialValue: initialWeight ?? 0)
+    }
     
     // Konfiguration
     @State private var numberOfSets: Int = 3
@@ -187,7 +198,7 @@ struct SetConfigurationSheet: View {
                 
                 HStack {
                     Button {
-                        if targetWeight >= 2.5 { targetWeight -= 2.5 }
+                        if targetWeight >= 0.5 { targetWeight -= 0.5 }
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
@@ -199,7 +210,7 @@ struct SetConfigurationSheet: View {
                         .frame(width: 80)
                     
                     Button {
-                        targetWeight += 2.5
+                        targetWeight += 0.5
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)

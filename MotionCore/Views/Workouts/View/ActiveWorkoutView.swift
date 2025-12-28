@@ -17,50 +17,69 @@ struct ActiveWorkoutView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
-    
+
     @Bindable var session: StrengthSession
-    
+
     // Timer
     @State private var elapsedSeconds: Int = 0
     @State private var timer: Timer?
     @State private var isTimerRunning = true
-    
+
     // UI States
     @State private var showFinishAlert = false
     @State private var showCancelAlert = false
     @State private var selectedSetForEdit: ExerciseSet?
-    
+    @State private var selectedExerciseIndex: Int? = nil  // Manuell ausgewählte Übung
+
+    private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
+
     // Aktueller Satz
+    // Falls eine Übung manuell ausgewählt wurde, verwende diese!
+    // Ansonsten automatisch den nächsten unerledigten Satz
     private var currentSet: ExerciseSet? {
-        session.nextUncompletedSet
+        if let selectedIndex = selectedExerciseIndex {
+            let grouped = session.groupedSets
+            guard selectedIndex < grouped.count else { return nil }
+            return grouped[selectedIndex].first { !$0.isCompleted }
+        }
+        return session.nextUncompletedSet
     }
-    
+
+    // NEU: Index der aktuellen Übung für Highlighting
     private var currentExerciseIndex: Int {
-        guard let current = currentSet else { return 0 }
+        if let selectedIndex = selectedExerciseIndex {
+            return selectedIndex
+        }
+
+        guard let current = session.nextUncompletedSet else { return 0 }
         let grouped = session.groupedSets
         return grouped.firstIndex { group in
             group.contains { $0.id == current.id }
         } ?? 0
     }
-    
+
     var body: some View {
         ZStack {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-            
+
             VStack(spacing: 0) {
                 // Header mit Timer und Fortschritt
                 headerSection
-                
+
                 // Hauptinhalt
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Aktueller Satz (groß)
+                        // Unterscheide zwischen einzelner Übung komplett und Training komplett
                         if let current = currentSet {
                             currentSetCard(current)
+                        } else if isSelectedExerciseComplete, !session.allSetsCompleted {
+                            // Einzelne Übung ist komplett, aber Training noch nicht
+                            exerciseCompletedCard
                         } else {
+                            // Komplettes Training ist fertig
                             allCompletedCard
                         }
-                        
+
                         // Übungen-Übersicht
                         exercisesOverview
                     }
@@ -70,7 +89,7 @@ struct ActiveWorkoutView: View {
                 }
                 .scrollIndicators(.hidden)
             }
-            
+
             // Bottom Action Bar
             VStack {
                 Spacer()
@@ -90,7 +109,10 @@ struct ActiveWorkoutView: View {
                 }
             }
         }
-        .onAppear { startTimer() }
+        .onAppear {
+            startTimer()
+            hapticGenerator.prepare()
+        }
         .onDisappear { stopTimer() }
         .alert("Training abbrechen?", isPresented: $showCancelAlert) {
             Button("Weiter trainieren", role: .cancel) {}
@@ -113,9 +135,9 @@ struct ActiveWorkoutView: View {
                 .environmentObject(appSettings)
         }
     }
-    
+
     // MARK: - Header Section
-    
+
     private var headerSection: some View {
         VStack(spacing: 12) {
             // Timer und Fortschritt
@@ -124,33 +146,33 @@ struct ActiveWorkoutView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "clock.fill")
                         .foregroundStyle(.blue)
-                    
+
                     Text(formatTime(elapsedSeconds))
                         .font(.title2.bold().monospacedDigit())
                         .foregroundStyle(.primary)
                 }
-                
+
                 Spacer()
-                
+
                 // Fortschritt
                 HStack(spacing: 8) {
                     Text("\(session.completedSets)/\(session.totalSets)")
                         .font(.title2.bold())
                         .foregroundStyle(.primary)
-                    
+
                     Text("Sätze")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
             }
-            
+
             // Fortschrittsbalken
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Color.primary.opacity(0.1))
                         .frame(height: 8)
-                    
+
                     RoundedRectangle(cornerRadius: 4)
                         .fill(
                             LinearGradient(
@@ -168,68 +190,68 @@ struct ActiveWorkoutView: View {
         .padding()
         .background(.ultraThinMaterial)
     }
-    
+
     // MARK: - Aktueller Satz Card
-    
+
     private func currentSetCard(_ set: ExerciseSet) -> some View {
         VStack(spacing: 20) {
             // Übungs-Info
             HStack(spacing: 16) {
                 ExerciseGifView(assetName: set.exerciseGifAssetName, size: 80)
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     if set.isWarmup {
-                        Text("AUFWÄRMEN")
+                        Text("AUFWÃ„RMEN")
                             .font(.caption.bold())
                             .foregroundStyle(.orange)
                     }
-                    
+
                     Text(set.exerciseName)
                         .font(.title2.bold())
                         .foregroundStyle(.primary)
-                    
+
                     Text("Satz \(set.setNumber) von \(setsForCurrentExercise)")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-                
+
                 Spacer()
             }
-            
+
             .glassDivider()
 
             // Zielwerte
             HStack(spacing: 24) {
                 // Gewicht
                 VStack(spacing: 4) {
-                    Text(set.weight > 0 ? String(format: "%.1f", set.weight) : "–")
+                    Text(set.weight > 0 ? String(format: "%.1f", set.weight) : "0.0")
                         .font(.system(size: 36, weight: .bold, design: .rounded))
-                        .foregroundStyle(.primary)
-                    
-                    Text("kg")
+                        .foregroundStyle(set.weight > 0 ? .primary : .secondary)
+
+                    Text(set.weight > 0 ? "kg" : "Körpergewicht")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
-                
+
                 // Trennlinie
                 Rectangle()
                     .fill(Color.primary.opacity(0.2))
                     .frame(width: 1, height: 50)
-                
+
                 // Wiederholungen
                 VStack(spacing: 4) {
                     Text("\(set.reps)")
                         .font(.system(size: 36, weight: .bold, design: .rounded))
                         .foregroundStyle(.primary)
-                    
+
                     Text("Wdh.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
             }
-            
+
             // Bearbeiten Button
             Button {
                 selectedSetForEdit = set
@@ -238,9 +260,9 @@ struct ActiveWorkoutView: View {
                     .font(.subheadline)
                     .foregroundStyle(.blue)
             }
-            
+
             .glassDivider()
-            
+
             // Satz abschließen Button
             Button {
                 completeSet(set)
@@ -258,29 +280,85 @@ struct ActiveWorkoutView: View {
         }
         .glassCard()
     }
-    
+    // Anzahl der Sets für die jeweilige Übung
     private var setsForCurrentExercise: Int {
         guard let current = currentSet else { return 0 }
         return session.exerciseSets.filter { $0.exerciseName == current.exerciseName }.count
     }
-    
+
+    // Prüft ob die aktuell ausgewählte Übung komplett ist
+    private var isSelectedExerciseComplete: Bool {
+        guard let selectedIndex = selectedExerciseIndex else { return false }
+        let grouped = session.groupedSets
+        guard selectedIndex < grouped.count else { return false }
+        return grouped[selectedIndex].allSatisfy { $0.isCompleted }
+    }
+
+    // Name der aktuell ausgewählten Übung (falls komplett)
+    private var selectedExerciseName: String? {
+        guard let selectedIndex = selectedExerciseIndex else { return nil }
+        let grouped = session.groupedSets
+        guard selectedIndex < grouped.count else { return nil }
+        return grouped[selectedIndex].first?.exerciseName
+    }
+
+    // MARK: - Einzelne Übung abgeschlossen
+
+    private var exerciseCompletedCard: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 60))
+                .foregroundStyle(.green)
+
+            if let exerciseName = selectedExerciseName {
+                Text("Übung \"\(exerciseName)\" abgeschlossen!")
+                    .font(.title2.bold())
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.center)
+            }
+
+            Text("Wähle die nächste Übung aus der Liste unten.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button {
+                // Zurück zum automatischen Modus
+                withAnimation(.easeInOut) {
+                    selectedExerciseIndex = nil
+                }
+            } label: {
+                HStack {
+                    Image(systemName: "arrow.right.circle.fill")
+                    Text("Nächste Übung")
+                        .font(.headline)
+                }
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(.blue, in: RoundedRectangle(cornerRadius: 16))
+            }
+        }
+        .glassCard()
+    }
+
     // MARK: - Alle Sätze abgeschlossen
-    
+
     private var allCompletedCard: some View {
         VStack(spacing: 20) {
             Image(systemName: "trophy.fill")
                 .font(.system(size: 60))
                 .foregroundStyle(.yellow)
-            
+
             Text("Alle Sätze abgeschlossen!")
                 .font(.title2.bold())
                 .foregroundStyle(.primary)
-            
+
             Text("Großartige Arbeit! Du kannst das Training jetzt beenden.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            
+
             Button {
                 finishWorkout()
             } label: {
@@ -297,16 +375,18 @@ struct ActiveWorkoutView: View {
         }
         .glassCard()
     }
-    
+
     // MARK: - Übungen-Übersicht
-    
+
     private var exercisesOverview: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Übersicht")
                 .font(.title3.bold())
                 .foregroundStyle(.primary)
-            
-            ForEach(Array(session.groupedSets.enumerated()), id: \.offset) { index, sets in
+
+            // Verwende firstSet.id als stabile ID statt .offset
+            // Dies verhindert das Springen der Liste bei Timer-Updates
+            ForEach(Array(session.groupedSets.enumerated()), id: \.element.first!.id) { index, sets in
                 if let firstSet = sets.first {
                     exerciseOverviewRow(
                         name: firstSet.exerciseName,
@@ -314,12 +394,16 @@ struct ActiveWorkoutView: View {
                         index: index + 1,
                         isCurrentExercise: index == currentExerciseIndex
                     )
+                    // Tap-Geste zur manuellen Übungsauswahl
+                    .onTapGesture {
+                        selectExercise(at: index)
+                    }
                 }
             }
         }
         .glassCard()
     }
-    
+    // Aufbau der Übungsübersicht
     private func exerciseOverviewRow(name: String, sets: [ExerciseSet], index: Int, isCurrentExercise: Bool) -> some View {
         VStack(spacing: 8) {
             // Header
@@ -327,9 +411,9 @@ struct ActiveWorkoutView: View {
                 Text("\(index). \(name)")
                     .font(.subheadline.bold())
                     .foregroundStyle(isCurrentExercise ? .blue : .primary)
-                
+
                 Spacer()
-                
+
                 let completed = sets.filter { $0.isCompleted }.count
                 if completed == sets.count {
                     Image(systemName: "checkmark.circle.fill")
@@ -340,7 +424,7 @@ struct ActiveWorkoutView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            
+
             // Sets als kleine Kreise
             HStack(spacing: 6) {
                 ForEach(sets, id: \.id) { set in
@@ -354,7 +438,7 @@ struct ActiveWorkoutView: View {
                             }
                         }
                 }
-                
+
                 Spacer()
             }
         }
@@ -363,10 +447,12 @@ struct ActiveWorkoutView: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(isCurrentExercise ? Color.blue.opacity(0.1) : Color.clear)
         )
+        // contentShape macht die gesamte Row tappbar, nicht nur den Text
+        .contentShape(Rectangle())
     }
-    
+
     // MARK: - Bottom Action Bar
-    
+
     private var bottomActionBar: some View {
         HStack(spacing: 16) {
             // Pause/Play Button
@@ -379,9 +465,9 @@ struct ActiveWorkoutView: View {
                     .frame(width: 56, height: 56)
                     .background(.ultraThinMaterial, in: Circle())
             }
-            
+
             Spacer()
-            
+
             // Training beenden
             Button {
                 if session.allSetsCompleted {
@@ -407,9 +493,9 @@ struct ActiveWorkoutView: View {
         .padding()
         .background(.ultraThinMaterial)
     }
-    
+
     // MARK: - Timer Funktionen
-    
+
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if isTimerRunning {
@@ -417,48 +503,83 @@ struct ActiveWorkoutView: View {
             }
         }
     }
-    
+
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
     }
-    
+
     private func toggleTimer() {
         isTimerRunning.toggle()
     }
-    
+
     private func formatTime(_ seconds: Int) -> String {
         let hours = seconds / 3600
         let minutes = (seconds % 3600) / 60
         let secs = seconds % 60
-        
+
         if hours > 0 {
             return String(format: "%d:%02d:%02d", hours, minutes, secs)
         } else {
             return String(format: "%02d:%02d", minutes, secs)
         }
     }
-    
+
     // MARK: - Aktionen
-    
+
+    // NEU: Übung manuell auswählen
+    private func selectExercise(at index: Int) {
+        withAnimation(.easeInOut) {
+            selectedExerciseIndex = index
+        }
+
+        // Haptic Feedback
+        hapticGenerator.impactOccurred()
+    }
+
     private func completeSet(_ set: ExerciseSet) {
         withAnimation(.easeInOut) {
             set.isCompleted = true
         }
         try? context.save()
-        
+
+        // Wenn noch kein Index ausgewählt ist, wähle automatisch die aktuelle Übung
+        // damit wir bei dieser Übung bleiben (kein Zirkeltraining)
+        if selectedExerciseIndex == nil {
+            let grouped = session.groupedSets
+            if let currentIndex = grouped.firstIndex(where: { group in
+                group.contains { $0.id == set.id }
+            }) {
+                selectedExerciseIndex = currentIndex
+            }
+        }
+
+        // Wenn alle Sätze der aktuellen Übung erledigt sind,
+        // setze selectedExerciseIndex zurück für automatische Fortsetzung zur nächsten Übung
+        if let selectedIndex = selectedExerciseIndex {
+            let grouped = session.groupedSets
+            guard selectedIndex < grouped.count else { return }
+            let allSetsComplete = grouped[selectedIndex].allSatisfy { $0.isCompleted }
+
+            if allSetsComplete {
+                withAnimation(.easeInOut) {
+                    selectedExerciseIndex = nil
+                }
+            }
+        }
+
         // Haptic Feedback
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
     }
-    
+
     private func finishWorkout() {
         session.complete()
         session.duration = elapsedSeconds / 60
         try? context.save()
         dismiss()
     }
-    
+
     private func cancelWorkout() {
         context.delete(session)
         try? context.save()
@@ -471,28 +592,28 @@ struct ActiveWorkoutView: View {
 struct SetEditSheet: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
-    
+
     @Bindable var set: ExerciseSet
-    
+
     @State private var weight: Double
     @State private var reps: Int
-    
+
     init(set: ExerciseSet) {
         self.set = set
         _weight = State(initialValue: set.weight)
         _reps = State(initialValue: set.reps)
     }
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
                 AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-                
+
                 VStack(spacing: 24) {
                     // Übungs-Info
                     HStack {
                         ExerciseGifView(assetName: set.exerciseGifAssetName, size: 60)
-                        
+
                         VStack(alignment: .leading) {
                             Text(set.exerciseName)
                                 .font(.headline)
@@ -500,16 +621,16 @@ struct SetEditSheet: View {
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
-                        
+
                         Spacer()
                     }
                     .glassCard()
-                    
+
                     // Gewicht
                     VStack(spacing: 12) {
                         Text("Gewicht (kg)")
                             .font(.headline)
-                        
+
                         HStack {
                             Button {
                                 if weight >= 2.5 { weight -= 2.5 }
@@ -518,11 +639,11 @@ struct SetEditSheet: View {
                                     .font(.title)
                                     .foregroundStyle(.blue)
                             }
-                            
+
                             Text(String(format: "%.1f", weight))
                                 .font(.system(size: 48, weight: .bold, design: .rounded))
                                 .frame(width: 150)
-                            
+
                             Button {
                                 weight += 2.5
                             } label: {
@@ -533,12 +654,12 @@ struct SetEditSheet: View {
                         }
                     }
                     .glassCard()
-                    
+
                     // Wiederholungen
                     VStack(spacing: 12) {
                         Text("Wiederholungen")
                             .font(.headline)
-                        
+
                         HStack {
                             Button {
                                 if reps > 1 { reps -= 1 }
@@ -547,11 +668,11 @@ struct SetEditSheet: View {
                                     .font(.title)
                                     .foregroundStyle(.blue)
                             }
-                            
+
                             Text("\(reps)")
                                 .font(.system(size: 48, weight: .bold, design: .rounded))
                                 .frame(width: 150)
-                            
+
                             Button {
                                 reps += 1
                             } label: {
@@ -562,7 +683,7 @@ struct SetEditSheet: View {
                         }
                     }
                     .glassCard()
-                    
+
                     Spacer()
                 }
                 .padding()
@@ -575,7 +696,7 @@ struct SetEditSheet: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Speichern") {
                         set.weight = weight
@@ -596,13 +717,13 @@ struct SetEditSheet: View {
         ActiveWorkoutView(session: {
             let session = StrengthSession(workoutType: .push)
             session.start()
-            
+
             let set1 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 1, weight: 60, reps: 10, isWarmup: true)
             let set2 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 2, weight: 80, reps: 8)
             let set3 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 3, weight: 80, reps: 8)
             let set4 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 4, weight: 60, reps: 10)
             let set5 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 5, weight: 60, reps: 10)
-            
+
             session.exerciseSets = [set1, set2, set3, set4, set5]
             return session
         }())

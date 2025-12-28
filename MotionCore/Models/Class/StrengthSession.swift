@@ -64,24 +64,24 @@ final class StrengthSession {
     
     // MARK: - Berechnete Werte
     
-    /// Anzahl der Sets in dieser Session
+    // Anzahl der Sets in dieser Session
     var totalSets: Int {
         exerciseSets.count
     }
     
-    /// Anzahl der verschiedenen Übungen
+    // Anzahl der verschiedenen Übungen
     var exercisesPerformed: Int {
         Set(exerciseSets.map { $0.exerciseName }).count
     }
     
-    /// Gesamtes Trainingsvolumen (Summe: Gewicht × Reps)
+    // Gesamtes Trainingsvolumen (Summe: Gewicht × Reps)
     var totalVolume: Double {
         exerciseSets.reduce(0.0) { sum, set in
             sum + (set.weight * Double(set.reps))
         }
     }
 
-    /// Trainierte Muskelgruppe
+    // Trainierte Muskelgruppe
     var trainedMuscleGroups: [MuscleGroup] {
         var groups = Set<MuscleGroup>()
 
@@ -126,11 +126,27 @@ final class StrengthSession {
     }
 
     // Gruppierte Sets nach Übungsname
+    // Stabile Sortierung in zwei Schritten:
+    // 1. Primär: nach der kleinsten setNumber in jeder Gruppe
+    // 2. Sekundär: nach Übungsname für absolute Stabilität
     var groupedSets: [[ExerciseSet]] {
         let grouped = Dictionary(grouping: exerciseSets) { $0.exerciseName }
         return grouped.values
             .map { sets in sets.sorted { $0.setNumber < $1.setNumber } }
-            .sorted { ($0.first?.setNumber ?? 0) < ($1.first?.setNumber ?? 0) }
+            .sorted { group1, group2 in
+                let minSet1 = group1.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+                let minSet2 = group2.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+
+                // Primär nach setNumber sortieren
+                if minSet1 != minSet2 {
+                    return minSet1 < minSet2
+                }
+
+                // Sekundär nach Übungsname für Stabilität
+                let name1 = group1.first?.exerciseName ?? ""
+                let name2 = group2.first?.exerciseName ?? ""
+                return name1 < name2
+            }
     }
 
     // MARK: - Initialisierung

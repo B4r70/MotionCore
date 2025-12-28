@@ -5,7 +5,7 @@
 // Datei . . . . : TrainingFormView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.12.2025                                                       /
-// Beschreibung  : Formular zum Erstellen/Bearbeiten von Trainingsplänen            /
+// Beschreibung  : Formular zum Erstellen/Bearbeiten von TrainingsplÃ¤nen           /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -30,6 +30,10 @@ struct TrainingFormView: View {
     // Sheet States
     @State private var showExercisePicker = false
     @State private var selectedExerciseForConfig: Exercise? = nil
+
+    // Backup für Edit-Modus - falls Benutzer abbricht
+    @State private var backupSetsForEdit: [ExerciseSet] = []
+    @State private var isEditingExercise = false
 
     // MARK: - Body
 
@@ -74,10 +78,17 @@ struct TrainingFormView: View {
             .environmentObject(appSettings)
         }
         .sheet(item: $selectedExerciseForConfig) { exercise in
-            SetConfigurationSheet(exercise: exercise) { sets in
+            SetConfigurationSheet(
+                exercise: exercise,
+                initialWeight: lastUsedWeight(for: exercise)  // NEU: Übergebe letztes Gewicht
+            ) { sets in
                 addSets(sets)
             }
             .environmentObject(appSettings)
+            // NEU: Bei Abbruch (Sheet schließt ohne Speichern) Backup wiederherstellen
+            .onDisappear {
+                restoreBackupIfCancelled()
+            }
         }
     }
 
@@ -126,10 +137,37 @@ struct TrainingFormView: View {
     }
 
     private func addSets(_ sets: [ExerciseSet]) {
+        // NEU: Wenn wir im Edit-Modus sind, alte Sets endgültig löschen
+        if isEditingExercise {
+            for oldSet in backupSetsForEdit {
+                context.delete(oldSet)
+            }
+            backupSetsForEdit = []
+            isEditingExercise = false
+        }
+
+        // Neue Sets hinzufügen
         for set in sets {
             set.trainingPlan = plan
             plan.templateSets.append(set)
         }
+    }
+
+    private func lastUsedWeight(for exercise: Exercise) -> Double? {
+        // Wenn wir im Edit-Modus sind, nutze das Backup
+        if isEditingExercise && !backupSetsForEdit.isEmpty {
+            let exerciseSets = backupSetsForEdit.filter {
+                $0.exerciseName == exercise.name && !$0.isWarmup
+            }
+            return exerciseSets.first?.weight  // ← Aus Backup! ✅
+        }
+
+        // Ansonsten: Normal aus dem Plan
+        let exerciseSets = plan.templateSets.filter {
+            $0.exerciseName == exercise.name && !$0.isWarmup
+        }
+
+        return exerciseSets.first?.weight
     }
 
     private func deleteExercise(_ exerciseName: String) {
@@ -143,8 +181,31 @@ struct TrainingFormView: View {
     private func editExercise(_ exerciseName: String) {
         if let existingSet = plan.templateSets.first(where: { $0.exerciseName == exerciseName }),
            let exercise = existingSet.exercise {
-            deleteExercise(exerciseName)
+
+            // NEU: Backup der bestehenden Sets erstellen
+            backupSetsForEdit = plan.templateSets.filter { $0.exerciseName == exerciseName }
+            isEditingExercise = true
+
+            // Sets temporär entfernen (aber nicht aus SwiftData löschen!)
+            plan.templateSets.removeAll { $0.exerciseName == exerciseName }
+
             selectedExerciseForConfig = exercise
+        }
+    }
+
+    // NEU: Stellt das Backup wieder her, wenn der Benutzer abbricht
+    private func restoreBackupIfCancelled() {
+        // Nur wiederherstellen wenn wir im Edit-Modus sind
+        // (isEditingExercise ist noch true = Benutzer hat nicht gespeichert)
+        if isEditingExercise {
+            // Sets aus Backup wiederherstellen
+            for set in backupSetsForEdit {
+                plan.templateSets.append(set)
+            }
+
+            // Cleanup
+            backupSetsForEdit = []
+            isEditingExercise = false
         }
     }
 }
