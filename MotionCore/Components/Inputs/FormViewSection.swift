@@ -912,22 +912,22 @@ struct SetTargetRIRSection: View {
 
     private var rirDescription: String {
         switch targetRIR {
-        case 0: return "Bis Muskelversagen"
-        case 1: return "Fast am Limit"
-        case 2: return "Moderate Intensität"
-        case 3: return "Kontrolliert"
-        case 4...5: return "Leicht bis Moderat"
-        default: return "Sehr leicht"
+            case 0: return "Bis Muskelversagen"
+            case 1: return "Fast am Limit"
+            case 2: return "Moderate Intensität"
+            case 3: return "Kontrolliert"
+            case 4...5: return "Leicht bis Moderat"
+            default: return "Sehr leicht"
         }
     }
 
     private var rirColor: Color {
         switch targetRIR {
-        case 0: return .red
-        case 1: return .orange
-        case 2: return .yellow
-        case 3: return .green
-        default: return .blue
+            case 0: return .red
+            case 1: return .orange
+            case 2: return .yellow
+            case 3: return .green
+            default: return .blue
         }
     }
 

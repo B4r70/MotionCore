@@ -78,6 +78,7 @@ class AppSettings: ObservableObject {
             UserDefaults.standard.set(userBodyHeight, forKey: "user.userBodyHeight")
         }
     }
+
     // Userdefault: Geburtsdatum des Benutzers
     @Published var userBirthdayDate: Date {
         didSet {

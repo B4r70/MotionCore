@@ -161,8 +161,7 @@ struct SetConfigurationSheet: View {
                 .frame(maxWidth: .infinity)
             }
 
-            .glassDivider()
-
+            GlassDivider.compact
             // Wiederholungen
             VStack(alignment: .leading, spacing: 8) {
                 Text("Wiederholungen pro Satz")
@@ -193,7 +192,7 @@ struct SetConfigurationSheet: View {
                 .frame(maxWidth: .infinity)
             }
 
-            .glassDivider()
+            GlassDivider.compact
 
             // Gewicht - Unterscheidung unilateral/bilateral
             VStack(alignment: .leading, spacing: 8) {
@@ -267,7 +266,7 @@ struct SetConfigurationSheet: View {
                 }
             }
 
-            .glassDivider()
+            GlassDivider.compact
 
             // Aufwärmsätze
             Toggle(isOn: $includeWarmup) {
@@ -305,7 +304,7 @@ struct SetConfigurationSheet: View {
             // Pausenzeit
             SetRestTimeSection(restSeconds: $restSeconds)
 
-            .glassDivider()
+            GlassDivider.compact
 
             // Ziel-RIR
             SetTargetRIRSection(targetRIR: $targetRIR)
