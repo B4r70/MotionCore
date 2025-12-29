@@ -102,14 +102,14 @@ class HealthMetricCalcEngine: ObservableObject {
 
     // Berechnung: Kalorienbilanz aus HealthKit
     func calculateTodayCalorieBalance(from healthKit: HealthKitManager) -> CalorieBalance? {
-        // NEU: Guard-Statement prüft alle notwendigen HealthKit-Werte
+        // Guard-Statement prüft alle notwendigen HealthKit-Werte
         guard let consumed = healthKit.dietaryConsumedCalories,
               let basal = healthKit.basalBurnedCalories,
               let active = healthKit.activeBurnedCalories else {
             return nil
         }
 
-        // NEU: Berechnungen durchführen
+        // Berechnungen durchführen
         let totalBurned = basal + active
         let balance = totalBurned - consumed
         let isDeficit = balance > 0
@@ -121,7 +121,7 @@ class HealthMetricCalcEngine: ObservableObject {
             percentage = 0.0
         }
 
-        // NEU: Jetzt mit allen berechneten Werten
+        // Jetzt mit allen berechneten Werten
         return CalorieBalance(
             consumedCalories: consumed,
             basalEnergy: basal,

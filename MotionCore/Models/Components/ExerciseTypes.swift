@@ -127,7 +127,7 @@ enum ExerciseDifficulty: String, Codable, CaseIterable, Identifiable {
     }
 }
 
-    // MARK: - NEU: Movement Pattern Enum (Push/Pull/etc.)
+    // MARK: - Movement Pattern Enum (Push/Pull/etc.)
 
 enum MovementPattern: String, Codable, CaseIterable, Identifiable {
     case push = "push"                      // Drückbewegung

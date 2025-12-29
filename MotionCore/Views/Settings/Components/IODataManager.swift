@@ -185,7 +185,7 @@ final class IODataManager {
         return deletedCount // Gibt die Anzahl der gelöschten Elemente zurück
     }
 
-    // MARK: - NEU: TrainingPlan Export/Import
+    // MARK: - TrainingPlan Export/Import
 
     /// Exportiert alle Trainingspläne als JSON-Datei
     /// - Parameter context: Der ModelContext, um alle TrainingPlans abzurufen
@@ -263,7 +263,7 @@ final class IODataManager {
         return importedCount
     }
 
-    // MARK: - NEU: ExerciseSet Export/Import (standalone)
+    // MARK: - ExerciseSet Export/Import (standalone)
 
     /// Exportiert alle ExerciseSets als JSON-Datei
     /// - Parameter context: Der ModelContext, um alle ExerciseSets abzurufen
@@ -335,7 +335,7 @@ final class IODataManager {
         return importedCount
     }
 
-    // MARK: - NEU: StrengthSession Export/Import
+    // MARK: - StrengthSession Export/Import
 
     /// Exportiert alle Krafttrainings als JSON-Datei
     /// - Parameter context: Der ModelContext, um alle StrengthSessions abzurufen

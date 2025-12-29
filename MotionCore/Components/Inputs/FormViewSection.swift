@@ -580,6 +580,457 @@ struct ExerciseFavoriteToggle: View {
     }
 }
 
+// MARK: - Exercise Movement Pattern Section
+struct ExerciseMovementPatternSection: View {
+    @Binding var movementPattern: MovementPattern
+
+    var body: some View {
+        HStack {
+            Text("Bewegungsmuster")
+                .foregroundStyle(.primary)
+
+            Spacer()
+
+            Menu {
+                Picker("", selection: $movementPattern) {
+                    ForEach(MovementPattern.allCases) { pattern in
+                        Label(pattern.description, systemImage: pattern.icon)
+                            .tag(pattern)
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: movementPattern.icon)
+                        .foregroundStyle(.blue)
+
+                    Text(movementPattern.description)
+                        .foregroundStyle(.primary)
+
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Exercise Body Position Section
+struct ExerciseBodyPositionSection: View {
+    @Binding var bodyPosition: BodyPosition
+
+    var body: some View {
+        HStack {
+            Text("Körperposition")
+                .foregroundStyle(.primary)
+
+            Spacer()
+
+            Menu {
+                Picker("", selection: $bodyPosition) {
+                    ForEach(BodyPosition.allCases) { position in
+                        Label(position.description, systemImage: position.icon)
+                            .tag(position)
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: bodyPosition.icon)
+                        .foregroundStyle(.blue)
+
+                    Text(bodyPosition.description)
+                        .foregroundStyle(.primary)
+
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Exercise Unilateral Toggle
+struct ExerciseUnilateralToggle: View {
+    @Binding var isUnilateral: Bool
+
+    var body: some View {
+        Toggle(isOn: $isUnilateral) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 8) {
+                    Image(systemName: isUnilateral ? "hand.raised.fingers.spread.fill" : "hands.clap.fill")
+                        .foregroundStyle(isUnilateral ? .orange : .secondary)
+
+                    Text("Unilaterale Übung")
+                        .foregroundStyle(.primary)
+                }
+
+                Text(isUnilateral ? "Einseitige Ausführung (z.B. einarmig)" : "Beidseitige Ausführung")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .tint(.orange)
+    }
+}
+
+// MARK: - Exercise Rep Range Section
+struct ExerciseRepRangeSection: View {
+    @Binding var repRangeMin: Int
+    @Binding var repRangeMax: Int
+
+    // Berechneter Trainingstyp
+    private var trainingType: String {
+        switch repRangeMax {
+        case 1...3: return "Maximalkraft"
+        case 4...6: return "Kraft"
+        case 7...12: return "Hypertrophie"
+        case 13...20: return "Kraftausdauer"
+        default: return "Ausdauer"
+        }
+    }
+
+    private var trainingTypeColor: Color {
+        switch repRangeMax {
+        case 1...3: return .red
+        case 4...6: return .orange
+        case 7...12: return .blue
+        case 13...20: return .green
+        default: return .teal
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Wiederholungsbereich")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                // Trainingstyp-Badge
+                Text(trainingType)
+                    .font(.caption.bold())
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(trainingTypeColor.opacity(0.2))
+                    .foregroundStyle(trainingTypeColor)
+                    .clipShape(Capsule())
+            }
+
+            // Rep Range Anzeige
+            HStack(spacing: 16) {
+                // Minimum
+                VStack(spacing: 4) {
+                    Text("Min")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    HStack(spacing: 8) {
+                        Button {
+                            if repRangeMin > 1 { repRangeMin -= 1 }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .foregroundStyle(.blue)
+                        }
+
+                        Text("\(repRangeMin)")
+                            .font(.title2.bold())
+                            .frame(width: 40)
+
+                        Button {
+                            if repRangeMin < repRangeMax - 1 { repRangeMin += 1 }
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundStyle(.blue)
+                        }
+                    }
+                }
+
+                Text("–")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+
+                // Maximum
+                VStack(spacing: 4) {
+                    Text("Max")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    HStack(spacing: 8) {
+                        Button {
+                            if repRangeMax > repRangeMin + 1 { repRangeMax -= 1 }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .foregroundStyle(.blue)
+                        }
+
+                        Text("\(repRangeMax)")
+                            .font(.title2.bold())
+                            .frame(width: 40)
+
+                        Button {
+                            if repRangeMax < 50 { repRangeMax += 1 }
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundStyle(.blue)
+                        }
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+
+            // Formatierte Anzeige
+            Text("\(repRangeMin)–\(repRangeMax) Wiederholungen empfohlen")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity)
+        }
+    }
+}
+
+// MARK: - Exercise Caution Note Section
+struct ExerciseCautionNoteSection: View {
+    @Binding var cautionNote: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.orange)
+
+                Text("Sicherheitshinweis (optional)")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+            }
+
+            TextField("z.B. Nicht bei Schulterproblemen", text: $cautionNote, axis: .vertical)
+                .lineLimit(2...4)
+                .textFieldStyle(.plain)
+                .padding(12)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 0.8)
+                )
+        }
+    }
+}
+
+// MARK: - Set Rest Time Section
+struct SetRestTimeSection: View {
+    @Binding var restSeconds: Int
+
+    private let presets = [30, 60, 90, 120, 180, 240]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "timer")
+                    .foregroundStyle(.blue)
+
+                Text("Pausenzeit")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                Text(formatTime(restSeconds))
+                    .font(.headline.monospacedDigit())
+                    .foregroundStyle(.blue)
+            }
+
+            // Preset-Buttons
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
+                ForEach(presets, id: \.self) { seconds in
+                    Button {
+                        restSeconds = seconds
+                    } label: {
+                        Text(formatTime(seconds))
+                            .font(.subheadline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(restSeconds == seconds ? Color.blue.opacity(0.2) : Color.clear)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(restSeconds == seconds ? Color.blue : Color.white.opacity(0.2), lineWidth: 1)
+                            )
+                    }
+                    .foregroundStyle(restSeconds == seconds ? .blue : .primary)
+                }
+            }
+
+            // Feineinstellung
+            HStack {
+                Button {
+                    if restSeconds >= 15 { restSeconds -= 15 }
+                } label: {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(.blue)
+                }
+
+                Spacer()
+
+                Text("±15 Sek.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Spacer()
+
+                Button {
+                    if restSeconds < 600 { restSeconds += 15 }
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(.blue)
+                }
+            }
+        }
+    }
+
+    private func formatTime(_ seconds: Int) -> String {
+        let mins = seconds / 60
+        let secs = seconds % 60
+        if mins > 0 && secs > 0 {
+            return "\(mins):\(String(format: "%02d", secs))"
+        } else if mins > 0 {
+            return "\(mins) Min"
+        } else {
+            return "\(secs) Sek"
+        }
+    }
+}
+
+// MARK: - Set Target RIR Section
+struct SetTargetRIRSection: View {
+    @Binding var targetRIR: Int
+
+    private var rirDescription: String {
+        switch targetRIR {
+        case 0: return "Bis Muskelversagen"
+        case 1: return "Fast am Limit"
+        case 2: return "Moderate Intensität"
+        case 3: return "Kontrolliert"
+        case 4...5: return "Leicht bis Moderat"
+        default: return "Sehr leicht"
+        }
+    }
+
+    private var rirColor: Color {
+        switch targetRIR {
+        case 0: return .red
+        case 1: return .orange
+        case 2: return .yellow
+        case 3: return .green
+        default: return .blue
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Ziel-RIR")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                Text(rirDescription)
+                    .font(.caption)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(rirColor.opacity(0.2))
+                    .foregroundStyle(rirColor)
+                    .clipShape(Capsule())
+            }
+
+            Text("Reps In Reserve – Wie viele Wiederholungen könntest du noch schaffen?")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            // RIR Auswahl
+            HStack(spacing: 8) {
+                ForEach(0...5, id: \.self) { rir in
+                    Button {
+                        targetRIR = rir
+                    } label: {
+                        Text("\(rir)")
+                            .font(.headline)
+                            .frame(width: 44, height: 44)
+                            .background(
+                                Circle()
+                                    .fill(targetRIR == rir ? rirColorFor(rir).opacity(0.2) : Color.clear)
+                            )
+                            .overlay(
+                                Circle()
+                                    .stroke(targetRIR == rir ? rirColorFor(rir) : Color.white.opacity(0.2), lineWidth: 2)
+                            )
+                    }
+                    .foregroundStyle(targetRIR == rir ? rirColorFor(rir) : .primary)
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    private func rirColorFor(_ rir: Int) -> Color {
+        switch rir {
+        case 0: return .red
+        case 1: return .orange
+        case 2: return .yellow
+        case 3: return .green
+        default: return .blue
+        }
+    }
+}
+
+// MARK: - Set Kind Selection Section
+struct SetKindSelectionSection: View {
+    @Binding var setKind: SetKind
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Satz-Typ")
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            // Set Kind Buttons
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
+                ForEach(SetKind.allCases) { kind in
+                    Button {
+                        setKind = kind
+                    } label: {
+                        VStack(spacing: 4) {
+                            Text(kind.shortName)
+                                .font(.title3.bold())
+
+                            Text(kind.description)
+                                .font(.caption2)
+                                .lineLimit(1)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(setKind == kind ? kind.color.opacity(0.2) : Color.clear)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(setKind == kind ? kind.color : Color.white.opacity(0.2), lineWidth: 1)
+                        )
+                    }
+                    .foregroundStyle(setKind == kind ? kind.color : .primary)
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Helper Extension für conditional modifiers
 
 extension View {

@@ -99,7 +99,7 @@ final class TrainingPlan {
 
         // Referenz zum Template setzen
         session.sourceTrainingPlan = self
-        session.start()  // NEU: Direkt starten
+        session.start()  // Direkt starten
 
         // Template-Sets kopieren
         for templateSet in templateSets {

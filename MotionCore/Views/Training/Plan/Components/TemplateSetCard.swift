@@ -113,6 +113,34 @@ struct TemplateSetCard: View {
                 .padding(.vertical, 6)
                 .padding(.horizontal, 10)
                 .background(Color.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+
+                // üPause und RIR Info
+                if let firstWork = workingSets.first {
+                    HStack(spacing: 16) {
+                        // Pausenzeit
+                        Label(formatRestTime(firstWork.restSeconds), systemImage: "timer")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Spacer()
+
+                        // RIR
+                        HStack(spacing: 4) {
+                            Text("RIR")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            Text("\(firstWork.targetRIR)")
+                                .font(.caption.bold())
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(rirColor(for: firstWork.targetRIR).opacity(0.2))
+                                .foregroundStyle(rirColor(for: firstWork.targetRIR))
+                                .clipShape(Capsule())
+                        }
+                    }
+                    .padding(.top, 4)
+                }
             }
         }
         .glassCard()
@@ -131,25 +159,63 @@ struct TemplateSetCard: View {
     private var warmupSummary: String {
         guard let first = warmupSets.first else { return "" }
         let reps = first.reps
-        let weights = warmupSets.map { $0.weight }
 
-        if Set(weights).count == 1 {
-            return "\(warmupSets.count) × \(reps) @ \(formatWeight(weights[0]))"
+        // üPrüfen ob unilateral (weightPerSide > 0)
+        if first.weightPerSide > 0 {
+            let weightsPerSide = warmupSets.map { $0.weightPerSide }
+            if Set(weightsPerSide).count == 1 {
+                return "\(warmupSets.count) × \(reps) @ 2×\(formatWeight(weightsPerSide[0]))"
+            } else {
+                return "\(warmupSets.count) × \(reps) (variabel)"
+            }
         } else {
-            return "\(warmupSets.count) × \(reps) (variabel)"
+            let weights = warmupSets.map { $0.weight }
+            if Set(weights).count == 1 {
+                return "\(warmupSets.count) × \(reps) @ \(formatWeight(weights[0]))"
+            } else {
+                return "\(warmupSets.count) × \(reps) (variabel)"
+            }
         }
     }
 
     private var workingSummary: String {
         guard let first = workingSets.first else { return "" }
         let reps = first.reps
-        let weight = first.weight
 
-        return "\(workingSets.count) × \(reps) @ \(formatWeight(weight))"
+        // üPrüfen ob unilateral (weightPerSide > 0)
+        if first.weightPerSide > 0 {
+            return "\(workingSets.count) × \(reps) @ 2×\(formatWeight(first.weightPerSide))"
+        } else {
+            return "\(workingSets.count) × \(reps) @ \(formatWeight(first.weight))"
+        }
     }
 
     private func formatWeight(_ weight: Double) -> String {
         weight > 0 ? String(format: "%.1f kg", weight) : "KG"
+    }
+
+    // üHelper für Zeitformatierung
+    private func formatRestTime(_ seconds: Int) -> String {
+        let mins = seconds / 60
+        let secs = seconds % 60
+        if mins > 0 && secs > 0 {
+            return "\(mins):\(String(format: "%02d", secs)) Pause"
+        } else if mins > 0 {
+            return "\(mins) Min Pause"
+        } else {
+            return "\(secs) Sek Pause"
+        }
+    }
+
+    // üRIR Farbe
+    private func rirColor(for rir: Int) -> Color {
+        switch rir {
+        case 0: return .red
+        case 1: return .orange
+        case 2: return .yellow
+        case 3: return .green
+        default: return .blue
+        }
     }
 }
 
@@ -190,3 +256,9 @@ struct TemplateSetCard: View {
     }
     .environmentObject(AppSettings.shared)
 }
+
+
+
+
+
+

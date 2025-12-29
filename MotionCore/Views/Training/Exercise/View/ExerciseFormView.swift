@@ -55,6 +55,12 @@ struct ExerciseFormView: View {
                         // MARK: Schwierigkeit
                         ExerciseDifficultySection(difficulty: $exercise.difficulty)
 
+                        // MARK: Bewegungsmuster
+                        ExerciseMovementPatternSection(movementPattern: $exercise.movementPattern)
+
+                        // MARK: Körperposition
+                        ExerciseBodyPositionSection(bodyPosition: $exercise.bodyPosition)
+
                         // MARK: Primäre Muskelgruppen
                         ExercisePrimaryMuscleGroupsSection(selectedMuscles: $exercise.primaryMuscles)
 
@@ -63,6 +69,18 @@ struct ExerciseFormView: View {
 
                         // MARK: GIF Asset Name
                         ExerciseGifAssetSection(gifAssetName: $exercise.gifAssetName)
+
+                        // MARK: Unilateral Toggle
+                        ExerciseUnilateralToggle(isUnilateral: $exercise.isUnilateral)
+
+                        // MARK: Wiederholungsbereich
+                        ExerciseRepRangeSection(
+                            repRangeMin: $exercise.repRangeMin,
+                            repRangeMax: $exercise.repRangeMax
+                        )
+
+                        // MARK: Sicherheitshinweis
+                        ExerciseCautionNoteSection(cautionNote: $exercise.cautionNote)
 
                         // MARK: Favorit
                         ExerciseFavoriteToggle(isFavorite: $exercise.isFavorite)
@@ -99,7 +117,7 @@ struct ExerciseFormView: View {
             if mode == .edit {
                 ToolbarItem(placement: .destructiveAction) {
                     Button(role: .destructive) {
-                        dismissKeyboard() 
+                        dismissKeyboard()
                         showDeleteAlert = true
                     } label: {
                         IconType(icon: .system("trash"), color: .red, size: 16)

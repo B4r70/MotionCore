@@ -24,7 +24,7 @@ final class Exercise {
     var isFavorite: Bool = false            // Favorit markiert?
     var createdAt: Date = Date()            // Erstellungsdatum
 
-    // NEU: Zusätzliche Felder
+    // Zusätzliche Felder
     var isUnilateral: Bool = false          // Unilateral (einseitig) oder bilateral?
     var repRangeMin: Int = 8                // Minimale Wiederholungen (z.B. 1 für Maximalkraft)
     var repRangeMax: Int = 12               // Maximale Wiederholungen (z.B. 12 für Hypertrophie)
@@ -38,7 +38,7 @@ final class Exercise {
     var equipmentRaw: String = "barbell"
     var difficultyRaw: String = "intermediate"
 
-    // NEU: Weitere Enum-Rohwerte
+    // Weitere Enum-Rohwerte
     var movementPatternRaw: String = "push"
     var bodyPositionRaw: String = "standing"
 
@@ -64,7 +64,7 @@ final class Exercise {
         set { difficultyRaw = newValue.rawValue }
     }
 
-    // NEU: Typisierte Properties für neue Enums
+    // Typisierte Properties für neue Enums
     var movementPattern: MovementPattern {
         get { MovementPattern(rawValue: movementPatternRaw) ?? .push }
         set { movementPatternRaw = newValue.rawValue }
@@ -102,7 +102,7 @@ final class Exercise {
         !gifAssetName.isEmpty
     }
 
-    // NEU: Berechnete Werte für Rep-Range
+    // Berechnete Werte für Rep-Range
     // Rep-Range als formatierter String
     var repRangeFormatted: String {
         "\(repRangeMin)-\(repRangeMax) Wdh."

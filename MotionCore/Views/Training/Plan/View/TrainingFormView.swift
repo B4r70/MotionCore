@@ -80,12 +80,12 @@ struct TrainingFormView: View {
         .sheet(item: $selectedExerciseForConfig) { exercise in
             SetConfigurationSheet(
                 exercise: exercise,
-                initialWeight: lastUsedWeight(for: exercise)  // NEU: Übergebe letztes Gewicht
+                initialWeight: lastUsedWeight(for: exercise)  // Übergebe letztes Gewicht
             ) { sets in
                 addSets(sets)
             }
             .environmentObject(appSettings)
-            // NEU: Bei Abbruch (Sheet schließt ohne Speichern) Backup wiederherstellen
+            // Bei Abbruch (Sheet schließt ohne Speichern) Backup wiederherstellen
             .onDisappear {
                 restoreBackupIfCancelled()
             }
@@ -137,7 +137,7 @@ struct TrainingFormView: View {
     }
 
     private func addSets(_ sets: [ExerciseSet]) {
-        // NEU: Wenn wir im Edit-Modus sind, alte Sets endgültig löschen
+        // Wenn wir im Edit-Modus sind, alte Sets endgültig löschen
         if isEditingExercise {
             for oldSet in backupSetsForEdit {
                 context.delete(oldSet)
@@ -182,7 +182,7 @@ struct TrainingFormView: View {
         if let existingSet = plan.templateSets.first(where: { $0.exerciseName == exerciseName }),
            let exercise = existingSet.exercise {
 
-            // NEU: Backup der bestehenden Sets erstellen
+            // Backup der bestehenden Sets erstellen
             backupSetsForEdit = plan.templateSets.filter { $0.exerciseName == exerciseName }
             isEditingExercise = true
 
@@ -193,7 +193,7 @@ struct TrainingFormView: View {
         }
     }
 
-    // NEU: Stellt das Backup wieder her, wenn der Benutzer abbricht
+    // Stellt das Backup wieder her, wenn der Benutzer abbricht
     private func restoreBackupIfCancelled() {
         // Nur wiederherstellen wenn wir im Edit-Modus sind
         // (isEditingExercise ist noch true = Benutzer hat nicht gespeichert)

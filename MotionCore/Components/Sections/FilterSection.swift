@@ -12,7 +12,7 @@
 //
 import SwiftUI
 
-    // NEU: Apple Mail Style Filter Section (minimalistisch)
+    // Apple Mail Style Filter Section (minimalistisch)
 struct FilterSection: View {
     @Binding var selectedDeviceFilter: CardioDevice
     @Binding var selectedTimeFilter: TimeFilter

@@ -40,7 +40,7 @@ class HealthKitManager: ObservableObject {
     @Published var dietaryConsumedCalories: Int?
     @Published var basalBurnedCalories: Int?
 
-    // NEU: Schlafzusammenfassung für die letzte Nacht / letzten 24h
+    // Schlafzusammenfassung für die letzte Nacht / letzten 24h
     @Published var todaySleepSummary: SleepStagesSummary?    // NEU
 
     private init() {}
@@ -313,7 +313,7 @@ class HealthKitManager: ObservableObject {
         )
 
         return await withCheckedContinuation { continuation in
-            // Neu: Nach Enddatum sortiert, neueste zuerst
+            // Nach Enddatum sortiert, neueste zuerst
             let sortDescriptor = NSSortDescriptor(
                 key: HKSampleSortIdentifierEndDate,
                 ascending: false

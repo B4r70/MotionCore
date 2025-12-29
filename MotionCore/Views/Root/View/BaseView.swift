@@ -64,7 +64,7 @@ struct BaseView: View {
 
                 // MARK: Tab 1 - Workouts
             NavigationStack {
-                    // NEU: ListView bekommt Bindings übergeben
+                    // ListView bekommt Bindings übergeben
                 ListViewWrapper(
                     selectedDeviceFilter: $selectedDeviceFilter,
                     selectedTimeFilter: $selectedTimeFilter

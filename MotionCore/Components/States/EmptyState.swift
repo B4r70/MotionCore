@@ -12,7 +12,7 @@
 //
 import SwiftUI
 
-// Neu: Glassmorphic Empty State
+// Glassmorphic Empty State
 struct EmptyState: View {
     var body: some View {
         VStack(spacing: 20) {

@@ -45,7 +45,7 @@ enum Gender: String, CaseIterable, Identifiable {
     }
 }
 
-    // NEU: Aktivitätslevel für TDEE-Berechnung
+    // Aktivitätslevel für TDEE-Berechnung
 enum UserActivityLevel: Double, CaseIterable, Identifiable {
     case sedentary = 1.2        // Sitzend, wenig Bewegung
     case lightlyActive = 1.375  // Leichtes Training 1-3x/Woche

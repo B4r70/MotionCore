@@ -73,7 +73,7 @@ struct RecordCalcEngine {
             .max(by: { $0.distance < $1.distance })
     }
 
-        // NEU: Berechnung: Bestes Workout mit der längsten Dauer (geräteübergreifend)
+        // Berechnung: Bestes Workout mit der längsten Dauer (geräteübergreifend)
     var longestDurationWorkout: CardioSession? {
         allWorkouts
             .max(by: { $0.duration < $1.duration })

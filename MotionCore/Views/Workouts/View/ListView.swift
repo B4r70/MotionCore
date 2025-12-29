@@ -40,7 +40,7 @@ struct ListView: View {
     @Query(sort: \CardioSession.date, order: .reverse)
     private var allCardioWorkouts: [CardioSession]
 
-    // NEU: Strength Sessions
+    // Strength Sessions
     @Query(sort: \StrengthSession.date, order: .reverse)
     private var allStrengthWorkouts: [StrengthSession]
 
@@ -50,7 +50,7 @@ struct ListView: View {
     @Binding var selectedDeviceFilter: CardioDevice
     @Binding var selectedTimeFilter: TimeFilter
 
-    // NEU: Workout-Typ Filter
+    // Workout-Typ Filter
     @State private var selectedWorkoutType: WorkoutTypeFilter = .all
 
     @EnvironmentObject private var appSettings: AppSettings
@@ -74,7 +74,7 @@ struct ListView: View {
         return workouts
     }
 
-    // NEU: Strength-Filter
+    // Strength-Filter
     var filteredStrengthWorkouts: [StrengthSession] {
         var workouts = allStrengthWorkouts
 
@@ -90,7 +90,7 @@ struct ListView: View {
         return workouts
     }
 
-    // NEU: Aktive (laufende) Workouts
+    // Aktive (laufende) Workouts
     var activeStrengthWorkouts: [StrengthSession] {
         allStrengthWorkouts.filter { !$0.isCompleted }
     }
@@ -114,7 +114,7 @@ struct ListView: View {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             VStack(spacing: 0) {
-                // NEU: Workout-Typ Segmented Control
+                // Workout-Typ Segmented Control
                 workoutTypeSelector
                     .padding(.horizontal)
                     .padding(.top, 8)
@@ -122,7 +122,7 @@ struct ListView: View {
                 // Workout-Liste
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        // NEU: Aktive Workouts (wenn vorhanden)
+                        // Aktive Workouts (wenn vorhanden)
                         if !activeStrengthWorkouts.isEmpty && selectedWorkoutType != .cardio {
                             activeWorkoutsSection
                         }
