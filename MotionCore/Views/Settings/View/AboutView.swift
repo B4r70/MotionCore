@@ -33,7 +33,7 @@ struct AboutView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
 
-                    Divider()
+                Divider()
 
                 VStack(alignment: .leading, spacing: 16) {
                     // Automatische Version aus Xcode Target

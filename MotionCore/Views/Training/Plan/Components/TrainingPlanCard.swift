@@ -29,9 +29,9 @@ struct TrainingPlanCard: View {
 
     private var planAccent: Color {
         switch plan.planType {
-        case .cardio: return .blue
-        case .strength: return .orange
-        default: return .primary
+            case .cardio: return .green
+            case .strength: return .red
+            default: return .primary
         }
     }
 
@@ -83,7 +83,7 @@ struct TrainingPlanCard: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Text(plan.startDate, style: .date)
+                    Text(plan.startDate.formatted(AppFormatters.dateGermanLong))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.primary)
                 }
@@ -94,7 +94,7 @@ struct TrainingPlanCard: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         Spacer()
-                        Text(end, style: .date)
+                        Text(end.formatted(AppFormatters.dateGermanLong))
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.primary)
                     }

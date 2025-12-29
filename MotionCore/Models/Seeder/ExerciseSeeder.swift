@@ -1,11 +1,3 @@
-//
-//  ExerciseSeeder.swift
-//  MotionCore
-//
-//  Created by Barto on 29.12.25.
-//
-
-
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
@@ -24,43 +16,127 @@ import SwiftData
 // MARK: - Exercise Seeder
 
 struct ExerciseSeeder {
-    
-    /// Prüft ob bereits Übungen existieren und seedet falls nötig
+
+    // Prüft ob bereits Übungen existieren und seedet falls nötig (Missing-only)
     static func seedIfNeeded(context: ModelContext) {
         let descriptor = FetchDescriptor<Exercise>()
         let existingCount = (try? context.fetchCount(descriptor)) ?? 0
-        
+
         if existingCount == 0 {
-            seed(context: context)
+            _ = seedMissing(context: context)
         }
     }
-    
-    /// Seedet alle Standard-Übungen
-    static func seed(context: ModelContext) {
-        let exercises = createAllExercises()
-        
-        for exercise in exercises {
-            context.insert(exercise)
+
+    /// Fügt nur Übungen hinzu, die anhand ihres Namens noch nicht existieren.
+    /// - Returns: Anzahl neu eingefügter Übungen
+    @discardableResult
+    static func seedMissing(context: ModelContext) -> Int {
+        let seeds = createAllExercises()
+
+        // Bestehende Namen laden
+        let descriptor = FetchDescriptor<Exercise>()
+        let existing = (try? context.fetch(descriptor)) ?? []
+
+        let existingNames = Set(existing.map { normalizeName($0.name) })
+
+        var inserted = 0
+        for seed in seeds {
+            let key = normalizeName(seed.name)
+            guard !existingNames.contains(key) else { continue }
+            context.insert(seed)
+            inserted += 1
         }
-        
-        try? context.save()
-        print("✅ ExerciseSeeder: \(exercises.count) Übungen erstellt")
+
+        if inserted > 0 {
+            try? context.save()
+        }
+
+        print("✅ ExerciseSeeder(seedMissing): \(inserted) neue Übungen ergänzt")
+        return inserted
     }
-    
-    /// Löscht alle Übungen und seedet neu (für Reset)
+
+    /// Optional: überschreibt bestehende Übungen (nach Name) mit den Seeder-Defaults.
+    /// - Returns: (inserted, updated)
+    @discardableResult
+    static func upsertAll(context: ModelContext) -> (inserted: Int, updated: Int) {
+        let seeds = createAllExercises()
+
+        let descriptor = FetchDescriptor<Exercise>()
+        let existing = (try? context.fetch(descriptor)) ?? []
+
+        // Index: Name(normalized) -> Exercise
+        var index: [String: Exercise] = [:]
+        index.reserveCapacity(existing.count)
+        for e in existing {
+            index[normalizeName(e.name)] = e
+        }
+
+        var inserted = 0
+        var updated = 0
+
+        for seed in seeds {
+            let key = normalizeName(seed.name)
+
+            if let current = index[key] {
+                // Update existing
+                apply(seed: seed, to: current)
+                updated += 1
+            } else {
+                // Insert missing
+                context.insert(seed)
+                inserted += 1
+            }
+        }
+
+        if inserted > 0 || updated > 0 {
+            try? context.save()
+        }
+
+        print("✅ ExerciseSeeder(upsertAll): inserted=\(inserted), updated=\(updated)")
+        return (inserted, updated)
+    }
+
+    // Löscht alle Übungen und seedet neu (für Reset)
     static func reseed(context: ModelContext) {
-        // Alle löschen
         let descriptor = FetchDescriptor<Exercise>()
         if let existing = try? context.fetch(descriptor) {
             for exercise in existing {
                 context.delete(exercise)
             }
         }
-        
-        // Neu seeden
-        seed(context: context)
+
+        // Danach sauber neu anlegen
+        _ = seedMissing(context: context) // oder: seed(context:) wenn du unbedingt willst
     }
-    
+
+    // MARK: - Helpers
+
+    private static func normalizeName(_ name: String) -> String {
+        name
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "  ", with: " ")
+            .lowercased()
+    }
+
+    /// Kopiert die Seeder-Werte in ein bestehendes Objekt.
+    /// Wichtig: wir ändern NICHT die Identität, nur die Felder.
+    private static func apply(seed: Exercise, to existing: Exercise) {
+        existing.name = seed.name
+        existing.exerciseDescription = seed.exerciseDescription
+        existing.category = seed.category
+        existing.equipment = seed.equipment
+        existing.difficulty = seed.difficulty
+        existing.movementPattern = seed.movementPattern
+        existing.bodyPosition = seed.bodyPosition
+        existing.primaryMuscles = seed.primaryMuscles
+        existing.secondaryMuscles = seed.secondaryMuscles
+        existing.isUnilateral = seed.isUnilateral
+        existing.repRangeMin = seed.repRangeMin
+        existing.repRangeMax = seed.repRangeMax
+        existing.sortIndex = seed.sortIndex
+        existing.cautionNote = seed.cautionNote
+    }
+
     // MARK: - Exercise Factory
     
     private static func createAllExercises() -> [Exercise] {

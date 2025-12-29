@@ -169,7 +169,7 @@ struct PlanActionRow: View {
             .padding(.horizontal)
             
             Divider()
-            
+
             // Einzelne Action Rows
             VStack(spacing: 12) {
                 PlanActionRow(

@@ -299,8 +299,8 @@ struct SetConfigurationSheet: View {
                 }
             }
 
-            Divider()
-
+            GlassDivider.compact
+            
             // Pausenzeit
             SetRestTimeSection(restSeconds: $restSeconds)
 

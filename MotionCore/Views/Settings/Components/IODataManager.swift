@@ -462,3 +462,52 @@ func deleteAllWorkouts(context: ModelContext) throws -> Int {
         throw DataIOError.deleteError(error)
     }
 }
+
+extension IODataManager {
+
+    // Generic helper: delete all objects of a given SwiftData model type
+    @discardableResult
+    private func deleteAll<T: PersistentModel>(_ type: T.Type, context: ModelContext) throws -> Int {
+        do {
+            let items = try context.fetch(FetchDescriptor<T>())
+            let count = items.count
+
+            for item in items {
+                context.delete(item)
+            }
+
+            try context.save()
+            return count
+        } catch {
+            throw DataIOError.deleteError(error)
+        }
+    }
+
+    // MARK: - Strength data deletes
+
+    func deleteAllExercises(context: ModelContext) throws -> Int {
+        try deleteAll(Exercise.self, context: context)
+    }
+
+    func deleteAllExerciseSets(context: ModelContext) throws -> Int {
+        try deleteAll(ExerciseSet.self, context: context)
+    }
+
+    func deleteAllTrainingPlans(context: ModelContext) throws -> Int {
+        try deleteAll(TrainingPlan.self, context: context)
+    }
+
+    func deleteAllStrengthSessions(context: ModelContext) throws -> Int {
+        try deleteAll(StrengthSession.self, context: context)
+    }
+
+    /// Convenience: delete all strength-related data in a safe-ish order.
+    /// (Parents first if they cascade; otherwise this still usually works with optional relationships.)
+    func deleteAllStrengthData(context: ModelContext) throws -> (sessions: Int, plans: Int, sets: Int, exercises: Int) {
+        let sessions = try deleteAllStrengthSessions(context: context)
+        let plans = try deleteAllTrainingPlans(context: context)
+        let sets = try deleteAllExerciseSets(context: context)
+        let exercises = try deleteAllExercises(context: context)
+        return (sessions, plans, sets, exercises)
+    }
+}

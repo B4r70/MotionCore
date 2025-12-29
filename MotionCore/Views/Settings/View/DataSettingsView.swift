@@ -18,14 +18,14 @@ import Foundation
 struct DataSettingsView: View {
     @Environment(\.modelContext) private var modelContext
 
-    // Daten für Prüfung der Export-Aktivierung abrufen
+        // Daten für Prüfung der Export-Aktivierung abrufen
     @Query(sort: \CardioSession.date, order: .reverse)
     private var allWorkouts: [CardioSession]
 
     @Query(sort: \Exercise.name, order: .forward)
     private var allExercises: [Exercise]
 
-    // Queries für weitere Datentypen
+        // Queries für weitere Datentypen
     @Query(sort: \StrengthSession.date, order: .reverse)
     private var allStrengthSessions: [StrengthSession]
 
@@ -68,8 +68,8 @@ struct DataSettingsView: View {
 
     private let dataManager = IODataManager()
 
-    // MARK: - Helper Functions
-    // Exportfunktion
+        // MARK: - Helper Functions
+        // Exportfunktion
     private func handleExport() {
         do {
             exportURL = try dataManager.exportWorkouts(context: modelContext)
@@ -82,46 +82,46 @@ struct DataSettingsView: View {
             showingImportError = true
         }
     }
-    // Löschfunktion
+        // Löschfunktion
     private func handleDeleteAllData() {
         do {
-            // Ruft die Funktion des Managers auf und übergibt den ModelContext.
+                // Ruft die Funktion des Managers auf und übergibt den ModelContext.
             let count = try dataManager.deleteAllWorkouts(context: modelContext)
 
-            // Erfolg: Manager hat die Anzahl der gelöschten Workouts zurückgegeben.
+                // Erfolg: Manager hat die Anzahl der gelöschten Workouts zurückgegeben.
             if count > 0 {
                 importErrorMessage = "Alle \(count) Workouts wurden erfolgreich gelöscht."
             } else {
                 importErrorMessage = "Es waren keine Workouts vorhanden. Nichts gelöscht."
             }
 
-            // Zeigt den Erfolgs-Alert an
+                // Zeigt den Erfolgs-Alert an
             showingImportSuccess = true
 
         } catch {
-            // Fehler wird hier abgefangen. DataIOError wurde im Manager geworfen.
+                // Fehler wird hier abgefangen. DataIOError wurde im Manager geworfen.
             let deleteError = error as? DataIOError
 
-            // Zeigt die entsprechende Fehlermeldung an
+                // Zeigt die entsprechende Fehlermeldung an
             importErrorMessage = deleteError?.errorDescription ?? "Unbekannter Fehler beim Löschen."
             showingImportError = true // Zeigt den Fehler-Alert an
         }
     }
 
     private func handleExerciseExport() {
-            do {
-                exerciseExportURL = try dataManager.exportExercises(context: modelContext)
-                showingExerciseShareSheet = true
-            } catch let error as DataIOError {
-                importErrorMessage = error.errorDescription ?? "Exercise-Export fehlgeschlagen"
-                showingImportError = true
-            } catch {
-                importErrorMessage = "Exercise-Export-Fehler: \(error.localizedDescription)"
-                showingImportError = true
-            }
+        do {
+            exerciseExportURL = try dataManager.exportExercises(context: modelContext)
+            showingExerciseShareSheet = true
+        } catch let error as DataIOError {
+            importErrorMessage = error.errorDescription ?? "Exercise-Export fehlgeschlagen"
+            showingImportError = true
+        } catch {
+            importErrorMessage = "Exercise-Export-Fehler: \(error.localizedDescription)"
+            showingImportError = true
         }
+    }
 
-    //  StrengthSession Export
+        //  StrengthSession Export
     private func handleStrengthExport() {
         do {
             strengthExportURL = try dataManager.exportStrengthSessions(context: modelContext)
@@ -135,7 +135,7 @@ struct DataSettingsView: View {
         }
     }
 
-    // TrainingPlan Export
+        // TrainingPlan Export
     private func handlePlanExport() {
         do {
             planExportURL = try dataManager.exportTrainingPlans(context: modelContext)
@@ -149,7 +149,7 @@ struct DataSettingsView: View {
         }
     }
 
-    // ExerciseSet Export
+        // ExerciseSet Export
     private func handleSetExport() {
         do {
             setExportURL = try dataManager.exportExerciseSets(context: modelContext)
@@ -166,131 +166,129 @@ struct DataSettingsView: View {
     var body: some View {
         List {
 
-            // MARK: - Allgemeine Einstellungen
-            Section("Allgemeine Einstellungen") {
-                // Benutzerspezifische Angaben
-                NavigationLink {
-                    UserSettingsView()
-                } label: {
-                    Label("Benutzerspezifische Angaben", systemImage: "person.fill")
-                }
-                // Workouteinstellungen
-                NavigationLink {
-                    WorkoutSettingsView()
-                } label: {
-                    Label("Training", systemImage: "figure.run")
-                }
-                // Displayeinstellungen
-                NavigationLink {
-                    DisplaySettingsView()
-                } label: {
-                    Label("Displayeinstellungen", systemImage: "display")
+                // MARK: - Allgemeine Einstellungen
+            Section("Workouts") {
+                VStack(alignment: .leading, spacing: 8) {
+                        // Export
+                    Button {
+                        handleExport()
+                    } label: {
+                        Label("Workouts exportieren", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(allWorkouts.isEmpty)
+
+                    Divider()
+                        .padding(8)
+
+                        // Import-Funktion
+                    Button {
+                        showingImportPicker = true
+                    } label: {
+                        Label("Workouts importieren", systemImage: "square.and.arrow.down")
+                    }
                 }
             }
 
-            // MARK: - Daten-Management
-            Section("Daten-Management") {
-                // Export-Funktion
-                Button {
-                    handleExport()
-                } label: {
-                    Label("Workouts exportieren", systemImage: "square.and.arrow.up")
-                }
-                .disabled(allWorkouts.isEmpty)
+            Section("Übungsbibliothek") {
+                VStack(alignment: .leading, spacing: 8) {
+                        // Exercise Export
+                    Button {
+                        handleExerciseExport()
+                    } label: {
+                        Label("Übungsbibliothek exportieren", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(allExercises.isEmpty)
 
-                // Import-Funktion
-                Button {
-                    showingImportPicker = true
-                } label: {
-                    Label("Workouts importieren", systemImage: "square.and.arrow.down")
-                }
+                    Divider()
+                        .padding(8)
 
-                // Exercise Export
-                Button {
-                    handleExerciseExport()
-                } label: {
-                    Label("Übungen exportieren", systemImage: "square.and.arrow.up")
-                }
-                .disabled(allExercises.isEmpty)
-
-                    // Exercise Import
-                Button {
-                    showingExerciseImportPicker = true
-                } label: {
-                    Label("Übungen importieren", systemImage: "square.and.arrow.down")
-                }
-
-                // StrengthSession Export
-                Button {
-                    handleStrengthExport()
-                } label: {
-                    Label("Krafttrainings exportieren", systemImage: "square.and.arrow.up")
-                }
-                .disabled(allStrengthSessions.isEmpty)
-
-                // StrengthSession Import
-                Button {
-                    showingStrengthImportPicker = true
-                } label: {
-                    Label("Krafttrainings importieren", systemImage: "square.and.arrow.down")
-                }
-
-                // TrainingPlan Export
-                Button {
-                    handlePlanExport()
-                } label: {
-                    Label("Trainingspläne exportieren", systemImage: "square.and.arrow.up")
-                }
-                .disabled(allTrainingPlans.isEmpty)
-
-                // TrainingPlan Import
-                Button {
-                    showingPlanImportPicker = true
-                } label: {
-                    Label("Trainingspläne importieren", systemImage: "square.and.arrow.down")
-                }
-
-                // ExerciseSet Export
-                Button {
-                    handleSetExport()
-                } label: {
-                    Label("Übungssätze exportieren", systemImage: "square.and.arrow.up")
-                }
-                .disabled(allExerciseSets.isEmpty)
-
-                // ExerciseSet Import
-                Button {
-                    showingSetImportPicker = true
-                } label: {
-                    Label("Übungssätze importieren", systemImage: "square.and.arrow.down")
-                }
-
-                Button(role: .destructive) { // Rote Farbe für destruktive Aktion
-                    showingDeleteConfirmation = true
-                } label: {
-                    Label("Alle Workouts löschen", systemImage: "trash.fill")
+                        // Exercise Import
+                    Button {
+                        showingExerciseImportPicker = true
+                    } label: {
+                        Label("Übungsbibliothek importieren", systemImage: "square.and.arrow.down")
+                    }
                 }
             }
 
-            // MARK: - App Information
-            Section("App") {
-                HStack {
-                    Label("Version", systemImage: "info.circle")
-                    Spacer()
-                    // Automatische Version aus Xcode Target
-                    Text(Bundle.main.fullVersion)
-                        .foregroundStyle(.secondary)
-                }
+            Section("Krafttrainings") {
+                VStack(alignment: .leading, spacing: 8) {
+                        // StrengthSession Export
+                    Button {
+                        handleStrengthExport()
+                    } label: {
+                        Label("Krafttrainings exportieren", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(allStrengthSessions.isEmpty)
 
-                NavigationLink {
-                    AboutView()
-                } label: {
-                    Label("Über MotionCore", systemImage: "app.badge")
+                    Divider()
+                        .padding(8)
+
+                        // StrengthSession Import
+                    Button {
+                        showingStrengthImportPicker = true
+                    } label: {
+                        Label("Krafttrainings importieren", systemImage: "square.and.arrow.down")
+                    }
+                }
+            }
+
+            Section("Trainingsplan") {
+                VStack(alignment: .leading, spacing: 8) {
+                        // TrainingPlan Export
+                    Button {
+                        handlePlanExport()
+                    } label: {
+                        Label("Trainingspläne exportieren", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(allTrainingPlans.isEmpty)
+
+                    Divider()
+                        .padding(8)
+
+                        // TrainingPlan Import
+                    Button {
+                        showingPlanImportPicker = true
+                    } label: {
+                        Label("Trainingspläne importieren", systemImage: "square.and.arrow.down")
+                    }
+                }
+            }
+
+            Section("Übungssätze") {
+                VStack(alignment: .leading, spacing: 8) {
+                        // ExerciseSet Export
+                    Button {
+                        handleSetExport()
+                    } label: {
+                        Label("Übungssätze exportieren", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(allExerciseSets.isEmpty)
+
+                    Divider()
+                        .padding(8)
+
+                        // ExerciseSet Import
+                    Button {
+                        showingSetImportPicker = true
+                    } label: {
+                        Label("Übungssätze importieren", systemImage: "square.and.arrow.down")
+                    }
+                }
+            }
+            // Workouts löschen
+            Section("Löschen") {
+                VStack(alignment: .leading, spacing: 8) {
+                    Button(role: .destructive) { // Rote Farbe für destruktive Aktion
+                        showingDeleteConfirmation = true
+                    } label: {
+                        Label("Alle Workouts löschen", systemImage: "trash.fill")
+                    }
                 }
             }
         }
         .padding(.top, 20)
-        .navigationTitle("Einstellungen")
+        .navigationTitle("Export-/Import")
         // Share Sheet für Export
         .sheet(isPresented: $showingShareSheet) {
             if let url = exportURL {
@@ -496,7 +494,7 @@ struct DataSettingsView: View {
 }
 
 // MARK: - ShareSheet UIKit Wrapper
-struct SharesSheet: UIViewControllerRepresentable {
+struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
@@ -505,4 +503,10 @@ struct SharesSheet: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+#Preview {
+    NavigationStack {
+        DataSettingsView()
+    }
 }
