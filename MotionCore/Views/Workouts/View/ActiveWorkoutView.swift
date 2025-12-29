@@ -45,7 +45,7 @@ struct ActiveWorkoutView: View {
         return session.nextUncompletedSet
     }
 
-    // NEU: Index der aktuellen Übung für Highlighting
+    // Index der aktuellen Übung für Highlighting
     private var currentExerciseIndex: Int {
         if let selectedIndex = selectedExerciseIndex {
             return selectedIndex
@@ -200,10 +200,11 @@ struct ActiveWorkoutView: View {
                 ExerciseGifView(assetName: set.exerciseGifAssetName, size: 80)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    if set.isWarmup {
-                        Text("AUFWÃ„RMEN")
+                    // SetKind Badge (falls nicht Arbeitssatz)
+                    if set.setKind != .work {
+                        Text(set.setKind.description.uppercased())
                             .font(.caption.bold())
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(set.setKind.color)
                     }
 
                     Text(set.exerciseName)
@@ -280,6 +281,7 @@ struct ActiveWorkoutView: View {
         }
         .glassCard()
     }
+
     // Anzahl der Sets für die jeweilige Übung
     private var setsForCurrentExercise: Int {
         guard let current = currentSet else { return 0 }
@@ -403,6 +405,7 @@ struct ActiveWorkoutView: View {
         }
         .glassCard()
     }
+
     // Aufbau der Übungsübersicht
     private func exerciseOverviewRow(name: String, sets: [ExerciseSet], index: Int, isCurrentExercise: Bool) -> some View {
         VStack(spacing: 8) {
@@ -432,7 +435,7 @@ struct ActiveWorkoutView: View {
                         .fill(set.isCompleted ? Color.green : Color.primary.opacity(0.2))
                         .frame(width: 12, height: 12)
                         .overlay {
-                            if set.isWarmup {
+                            if set.setKind == .warmup {
                                 Circle()
                                     .stroke(Color.orange, lineWidth: 2)
                             }
@@ -527,7 +530,7 @@ struct ActiveWorkoutView: View {
 
     // MARK: - Aktionen
 
-    // NEU: Übung manuell auswählen
+    // Übung manuell auswählen
     private func selectExercise(at index: Int) {
         withAnimation(.easeInOut) {
             selectedExerciseIndex = index
@@ -718,11 +721,11 @@ struct SetEditSheet: View {
             let session = StrengthSession(workoutType: .push)
             session.start()
 
-            let set1 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 1, weight: 60, reps: 10, isWarmup: true)
-            let set2 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 2, weight: 80, reps: 8)
-            let set3 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 3, weight: 80, reps: 8)
-            let set4 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 4, weight: 60, reps: 10)
-            let set5 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 5, weight: 60, reps: 10)
+            let set1 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 1, weight: 60, reps: 10, setKind: .warmup)
+            let set2 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 2, weight: 80, reps: 8, setKind: .work)
+            let set3 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 3, weight: 80, reps: 8, setKind: .work)
+            let set4 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 4, weight: 60, reps: 10, setKind: .work)
+            let set5 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 5, weight: 60, reps: 10, setKind: .work)
 
             session.exerciseSets = [set1, set2, set3, set4, set5]
             return session

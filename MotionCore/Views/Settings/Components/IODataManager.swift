@@ -56,7 +56,7 @@ final class IODataManager {
 
         /// Exportiert alle Übungen als JSON-Datei
         /// - Parameter context: Der ModelContext, um alle Exercises abzurufen
-        /// - Returns: Die temporÃ¤re URL zur exportierten JSON-Datei
+        /// - Returns: Die temporäre URL zur exportierten JSON-Datei
     func exportExercises(context: ModelContext) throws -> URL {
             // 1. Daten abrufen
         let descriptor = FetchDescriptor<Exercise>(sortBy: [SortDescriptor(\.name, order: .forward)])
@@ -78,7 +78,7 @@ final class IODataManager {
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(pkg)
 
-            // 4. TemporÃ¤re Datei erstellen
+            // 4. Temporäre Datei erstellen
         let filename = "MotionCore-Exercises-\(Int(Date().timeIntervalSince1970)).json"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
         try data.write(to: url, options: .atomic)
@@ -131,7 +131,7 @@ final class IODataManager {
     ///   - url: Die URL der JSON-Datei
     /// - Returns: Anzahl der importierten Übungen
     func importExercises(context: ModelContext, url: URL) throws -> Int {
-            // Sicherstellen, dass die Datei zugÃ¤nglich ist
+            // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
             throw DataIOError.accessDenied
         }
@@ -179,10 +179,238 @@ final class IODataManager {
             context.delete(workout)
         }
 
-            // 3. Änderungen speichern, um die Löschung zu persistieren
+            // 3. Ã„nderungen speichern, um die Löschung zu persistieren
         try context.save()
 
         return deletedCount // Gibt die Anzahl der gelöschten Elemente zurück
+    }
+
+    // MARK: - NEU: TrainingPlan Export/Import
+
+    /// Exportiert alle Trainingspläne als JSON-Datei
+    /// - Parameter context: Der ModelContext, um alle TrainingPlans abzurufen
+    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    func exportTrainingPlans(context: ModelContext) throws -> URL {
+        // 1. Daten abrufen
+        let descriptor = FetchDescriptor<TrainingPlan>(sortBy: [SortDescriptor(\.title, order: .forward)])
+        let allPlans = try context.fetch(descriptor)
+
+        guard !allPlans.isEmpty else {
+            throw DataIOError.noDataToExport
+        }
+
+        // 2. Export-Paket erstellen
+        let pkg = TrainingPlanExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: allPlans.map { $0.exportItem }
+        )
+
+        // 3. Kodierung
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(pkg)
+
+        // 4. Temporäre Datei erstellen
+        let filename = "MotionCore-TrainingPlans-\(Int(Date().timeIntervalSince1970)).json"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        try data.write(to: url, options: .atomic)
+
+        return url
+    }
+
+    /// Importiert Trainingspläne aus einer JSON-Datei
+    /// - Parameters:
+    ///   - context: Der ModelContext
+    ///   - url: Die URL der JSON-Datei
+    /// - Returns: Anzahl der importierten Trainingspläne
+    func importTrainingPlans(context: ModelContext, url: URL) throws -> Int {
+        // Sicherstellen, dass die Datei zugänglich ist
+        guard url.startAccessingSecurityScopedResource() else {
+            throw DataIOError.accessDenied
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        // 1. Daten lesen
+        let data = try Data(contentsOf: url)
+
+        // 2. Dekodierung
+        let decoder = JSONDecoder()
+        let pkg = try decoder.decode(TrainingPlanExportPackage.self, from: data)
+
+        guard pkg.version == 1 else {
+            throw DataIOError.unsupportedVersion
+        }
+
+        var importedCount = 0
+
+        // 3. Speichern der TrainingPlans im ModelContext
+        for exportItem in pkg.items {
+            let plan = TrainingPlan.fromExportItem(exportItem)
+            context.insert(plan)
+
+            // Template-Sets sind bereits verknüpft, müssen aber auch eingefügt werden
+            for templateSet in plan.templateSets {
+                context.insert(templateSet)
+            }
+
+            importedCount += 1
+        }
+
+        // 4. Speichern
+        try context.save()
+
+        return importedCount
+    }
+
+    // MARK: - NEU: ExerciseSet Export/Import (standalone)
+
+    /// Exportiert alle ExerciseSets als JSON-Datei
+    /// - Parameter context: Der ModelContext, um alle ExerciseSets abzurufen
+    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    func exportExerciseSets(context: ModelContext) throws -> URL {
+        // 1. Daten abrufen
+        let descriptor = FetchDescriptor<ExerciseSet>(sortBy: [SortDescriptor(\.exerciseName, order: .forward)])
+        let allSets = try context.fetch(descriptor)
+
+        guard !allSets.isEmpty else {
+            throw DataIOError.noDataToExport
+        }
+
+        // 2. Export-Paket erstellen
+        let pkg = ExerciseSetExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: allSets.map { $0.exportItem }
+        )
+
+        // 3. Kodierung
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(pkg)
+
+        // 4. Temporäre Datei erstellen
+        let filename = "MotionCore-ExerciseSets-\(Int(Date().timeIntervalSince1970)).json"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        try data.write(to: url, options: .atomic)
+
+        return url
+    }
+
+    /// Importiert ExerciseSets aus einer JSON-Datei
+    /// - Parameters:
+    ///   - context: Der ModelContext
+    ///   - url: Die URL der JSON-Datei
+    /// - Returns: Anzahl der importierten ExerciseSets
+    func importExerciseSets(context: ModelContext, url: URL) throws -> Int {
+        // Sicherstellen, dass die Datei zugänglich ist
+        guard url.startAccessingSecurityScopedResource() else {
+            throw DataIOError.accessDenied
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        // 1. Daten lesen
+        let data = try Data(contentsOf: url)
+
+        // 2. Dekodierung
+        let decoder = JSONDecoder()
+        let pkg = try decoder.decode(ExerciseSetExportPackage.self, from: data)
+
+        guard pkg.version == 1 else {
+            throw DataIOError.unsupportedVersion
+        }
+
+        var importedCount = 0
+
+        // 3. Speichern der ExerciseSets im ModelContext
+        for exportItem in pkg.items {
+            let exerciseSet = ExerciseSet.fromExportItem(exportItem)
+            context.insert(exerciseSet)
+            importedCount += 1
+        }
+
+        // 4. Speichern
+        try context.save()
+
+        return importedCount
+    }
+
+    // MARK: - NEU: StrengthSession Export/Import
+
+    /// Exportiert alle Krafttrainings als JSON-Datei
+    /// - Parameter context: Der ModelContext, um alle StrengthSessions abzurufen
+    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    func exportStrengthSessions(context: ModelContext) throws -> URL {
+        // 1. Daten abrufen
+        let descriptor = FetchDescriptor<StrengthSession>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+        let allSessions = try context.fetch(descriptor)
+
+        guard !allSessions.isEmpty else {
+            throw DataIOError.noDataToExport
+        }
+
+        // 2. Export-Paket erstellen
+        let pkg = StrengthSessionExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: allSessions.map { $0.exportItem }
+        )
+
+        // 3. Kodierung
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(pkg)
+
+        // 4. Temporäre Datei erstellen
+        let filename = "MotionCore-StrengthSessions-\(Int(Date().timeIntervalSince1970)).json"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        try data.write(to: url, options: .atomic)
+
+        return url
+    }
+
+    /// Importiert Krafttrainings aus einer JSON-Datei
+    /// - Parameters:
+    ///   - context: Der ModelContext
+    ///   - url: Die URL der JSON-Datei
+    /// - Returns: Anzahl der importierten StrengthSessions
+    func importStrengthSessions(context: ModelContext, url: URL) throws -> Int {
+        // Sicherstellen, dass die Datei zugänglich ist
+        guard url.startAccessingSecurityScopedResource() else {
+            throw DataIOError.accessDenied
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        // 1. Daten lesen
+        let data = try Data(contentsOf: url)
+
+        // 2. Dekodierung
+        let decoder = JSONDecoder()
+        let pkg = try decoder.decode(StrengthSessionExportPackage.self, from: data)
+
+        guard pkg.version == 1 else {
+            throw DataIOError.unsupportedVersion
+        }
+
+        var importedCount = 0
+
+        // 3. Speichern der StrengthSessions im ModelContext
+        for exportItem in pkg.items {
+            let session = StrengthSession.fromExportItem(exportItem)
+            context.insert(session)
+
+            // ExerciseSets sind bereits verknüpft, müssen aber auch eingefügt werden
+            for exerciseSet in session.exerciseSets {
+                context.insert(exerciseSet)
+            }
+
+            importedCount += 1
+        }
+
+        // 4. Speichern
+        try context.save()
+
+        return importedCount
     }
 }
 

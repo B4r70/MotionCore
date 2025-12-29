@@ -12,23 +12,18 @@
 //
 import Foundation
 
-// MARK: - Paket (für Versionierung & Metadaten)
+// ==================================================================================
+// MARK: - CardioSession (Workouts)
+// ==================================================================================
 
+// MARK: Paket
 struct WorkoutExportPackage: Codable {
     let version: Int
     let exportedAt: String // ISO8601
     let items: [WorkoutExportItem]
 }
 
-// MARK: - Export-Paket für Trainingsübungen
-struct ExerciseExportPackage: Codable {
-    let version: Int
-    let exportedAt: String // ISO8601
-    let items: [ExerciseExportItem]
-}
-
-// MARK: - Einzelnes Workout (persistenzneutral)
-
+// MARK: Struktur
 struct WorkoutExportItem: Codable {
     let date: String? // ISO8601
     let duration: Int?
@@ -42,44 +37,25 @@ struct WorkoutExportItem: Codable {
     let cardioDevice: Int?
 }
 
-// MARK: Trainingsübungen (persistenzneutral)
-struct ExerciseExportItem: Codable {
-    let name: String
-    let exerciseDescription: String?
-    let gifAssetName: String?
-    let category: String // Enum rawValue
-    let equipment: String // Enum rawValue
-    let difficulty: String // Enum rawValue
-    let primaryMuscles: [String] // Array of rawValues
-    let secondaryMuscles: [String] // Array of rawValues
-    let isFavorite: Bool
-    let isCustom: Bool
-}
-
-// MARK: - Mapper zwischen Model und DTO
-// CardioSession
+// MARK: Mapper
 extension CardioSession {
     // → DTO (Export)
     var exportItem: WorkoutExportItem {
-        // Wir verwenden nil, wenn der Wert 0 oder der Standardwert ist,
-        // um das Feld beim Export wegzulassen. Das hält die JSON-Datei schlank.
-        WorkoutExportItem( // KORRIGIERT: Muss WorkoutExportItem zurückgeben, nicht ExportPackage
+        WorkoutExportItem(
             date: ISO8601DateFormatter().string(from: date),
             duration: duration > 0 ? duration : nil,
             distance: distance > 0 ? distance : nil,
             calories: calories > 0 ? calories : nil,
-            difficulty: difficulty > 1 ? difficulty : nil, // Annahme: 1 ist der Standard
+            difficulty: difficulty > 1 ? difficulty : nil,
             heartRate: heartRate > 0 ? heartRate : nil,
             bodyWeight: bodyWeight > 0.0 ? bodyWeight : nil,
-
-            // Enum rawValues können oft 0 sein, daher prüfen wir auf .none/Standard
             intensity: intensity != .none ? intensity.rawValue : nil,
             trainingProgram: trainingProgram != .manual ? trainingProgram.rawValue : nil,
             cardioDevice: cardioDevice != .none ? cardioDevice.rawValue : nil
         )
     }
-    
-    // ← DTO
+
+    // ← DTO (Import)
     static func fromExportItem(_ e: WorkoutExportItem) -> CardioSession {
         let iso = ISO8601DateFormatter()
 
@@ -98,9 +74,43 @@ extension CardioSession {
     }
 }
 
-// Trainingsübungen
+// ==================================================================================
+// MARK: - Exercise (Übungsbibliothek)
+// ==================================================================================
+
+// MARK: Paket
+struct ExerciseExportPackage: Codable {
+    let version: Int
+    let exportedAt: String // ISO8601
+    let items: [ExerciseExportItem]
+}
+
+// MARK: Struktur
+struct ExerciseExportItem: Codable {
+    let name: String
+    let exerciseDescription: String?
+    let gifAssetName: String?
+    let category: String // Enum rawValue
+    let equipment: String // Enum rawValue
+    let difficulty: String // Enum rawValue
+    let primaryMuscles: [String] // Array of rawValues
+    let secondaryMuscles: [String] // Array of rawValues
+    let isFavorite: Bool
+    let isCustom: Bool
+    // Erweiterte Felder
+    let movementPattern: String?
+    let bodyPosition: String?
+    let isUnilateral: Bool?
+    let repRangeMin: Int?
+    let repRangeMax: Int?
+    let sortIndex: Int?
+    let cautionNote: String?
+    let isArchived: Bool?
+}
+
+// MARK: Mapper
 extension Exercise {
-    // DTO (Export)
+    // → DTO (Export)
     var exportItem: ExerciseExportItem {
         ExerciseExportItem(
             name: name,
@@ -112,11 +122,19 @@ extension Exercise {
             primaryMuscles: primaryMuscles.map { $0.rawValue },
             secondaryMuscles: secondaryMuscles.map { $0.rawValue },
             isFavorite: isFavorite,
-            isCustom: isCustom
+            isCustom: isCustom,
+            movementPattern: movementPatternRaw,
+            bodyPosition: bodyPositionRaw,
+            isUnilateral: isUnilateral,
+            repRangeMin: repRangeMin != 8 ? repRangeMin : nil,
+            repRangeMax: repRangeMax != 12 ? repRangeMax : nil,
+            sortIndex: sortIndex != 0 ? sortIndex : nil,
+            cautionNote: cautionNote.isEmpty ? nil : cautionNote,
+            isArchived: isArchived ? true : nil
         )
     }
 
-    // DTO (Import)
+    // ← DTO (Import)
     static func fromExportItem(_ e: ExerciseExportItem) -> Exercise {
         Exercise(
             name: e.name,
@@ -125,16 +143,275 @@ extension Exercise {
             category: ExerciseCategory(rawValue: e.category) ?? .compound,
             equipment: ExerciseEquipment(rawValue: e.equipment) ?? .barbell,
             difficulty: ExerciseDifficulty(rawValue: e.difficulty) ?? .intermediate,
+            movementPattern: e.movementPattern.flatMap { MovementPattern(rawValue: $0) } ?? .push,
+            bodyPosition: e.bodyPosition.flatMap { BodyPosition(rawValue: $0) } ?? .standing,
             primaryMuscles: e.primaryMuscles.compactMap { MuscleGroup(rawValue: $0) },
             secondaryMuscles: e.secondaryMuscles.compactMap { MuscleGroup(rawValue: $0) },
             isCustom: e.isCustom,
-            isFavorite: e.isFavorite
+            isFavorite: e.isFavorite,
+            isUnilateral: e.isUnilateral ?? false,
+            repRangeMin: e.repRangeMin ?? 8,
+            repRangeMax: e.repRangeMax ?? 12,
+            sortIndex: e.sortIndex ?? 0,
+            cautionNote: e.cautionNote ?? "",
+            isArchived: e.isArchived ?? false
         )
     }
 }
 
+// ==================================================================================
+// MARK: - ExerciseSet (Übungssätze)
+// ==================================================================================
 
+// MARK: Paket
+struct ExerciseSetExportPackage: Codable {
+    let version: Int
+    let exportedAt: String // ISO8601
+    let items: [ExerciseSetExportItem]
+}
 
+// MARK: Struktur
+struct ExerciseSetExportItem: Codable {
+    let exerciseName: String
+    let exerciseNameSnapshot: String?
+    let exerciseUUIDSnapshot: String?
+    let exerciseGifAssetName: String?
+    let setNumber: Int
+    let weight: Double?
+    let weightPerSide: Double?
+    let reps: Int?
+    let duration: Int?
+    let distance: Double?
+    let restSeconds: Int?
+    let setKind: String? // work/warmup/drop/amrap (optional für Rückwärtskompatibilität)
+    let isCompleted: Bool
+    let rpe: Int?
+    let notes: String?
+    // Zielwerte
+    let targetRepsMin: Int?
+    let targetRepsMax: Int?
+    let targetRIR: Int?
+    let groupId: String?
+    // Rückwärtskompatibilität für alte Exporte
+    let exerciseId: String? // Alt: wird zu exerciseUUIDSnapshot gemappt
+    let isWarmup: Bool? // Alt: wird zu setKind gemappt
+}
 
+// MARK: Mapper
+extension ExerciseSet {
+    // → DTO (Export)
+    var exportItem: ExerciseSetExportItem {
+        ExerciseSetExportItem(
+            exerciseName: exerciseName,
+            exerciseNameSnapshot: exerciseNameSnapshot.isEmpty ? nil : exerciseNameSnapshot,
+            exerciseUUIDSnapshot: exerciseUUIDSnapshot.isEmpty ? nil : exerciseUUIDSnapshot,
+            exerciseGifAssetName: exerciseGifAssetName.isEmpty ? nil : exerciseGifAssetName,
+            setNumber: setNumber,
+            weight: weight > 0 ? weight : nil,
+            weightPerSide: weightPerSide > 0 ? weightPerSide : nil,
+            reps: reps > 0 ? reps : nil,
+            duration: duration > 0 ? duration : nil,
+            distance: distance > 0 ? distance : nil,
+            restSeconds: restSeconds != 90 ? restSeconds : nil,
+            setKind: setKindRaw,
+            isCompleted: isCompleted,
+            rpe: rpe > 0 ? rpe : nil,
+            notes: notes.isEmpty ? nil : notes,
+            targetRepsMin: targetRepsMin > 0 ? targetRepsMin : nil,
+            targetRepsMax: targetRepsMax > 0 ? targetRepsMax : nil,
+            targetRIR: targetRIR != 2 ? targetRIR : nil,
+            groupId: groupId.isEmpty ? nil : groupId,
+            // Rückwärtskompatibilität: Nicht mehr verwendet beim Export
+            exerciseId: nil,
+            isWarmup: nil
+        )
+    }
 
+    // ← DTO (Import) - mit Rückwärtskompatibilität
+    static func fromExportItem(_ e: ExerciseSetExportItem) -> ExerciseSet {
+        // SetKind bestimmen: Neu oder aus altem isWarmup-Feld
+        let resolvedSetKind: SetKind
+        if let setKindStr = e.setKind, let kind = SetKind(rawValue: setKindStr) {
+            resolvedSetKind = kind
+        } else if e.isWarmup == true {
+            resolvedSetKind = .warmup
+        } else {
+            resolvedSetKind = .work
+        }
 
+        // UUID-Snapshot: Neu oder aus altem exerciseId-Feld
+        let resolvedUUID = e.exerciseUUIDSnapshot ?? e.exerciseId ?? ""
+
+        return ExerciseSet(
+            exerciseName: e.exerciseName,
+            exerciseNameSnapshot: e.exerciseNameSnapshot ?? e.exerciseName,
+            exerciseUUIDSnapshot: resolvedUUID,
+            exerciseGifAssetName: e.exerciseGifAssetName ?? "",
+            setNumber: e.setNumber,
+            weight: e.weight ?? 0.0,
+            weightPerSide: e.weightPerSide ?? 0.0,
+            reps: e.reps ?? 0,
+            duration: e.duration ?? 0,
+            distance: e.distance ?? 0.0,
+            restSeconds: e.restSeconds ?? 90,
+            setKind: resolvedSetKind,
+            isCompleted: e.isCompleted,
+            rpe: e.rpe ?? 0,
+            notes: e.notes ?? "",
+            targetRepsMin: e.targetRepsMin ?? 0,
+            targetRepsMax: e.targetRepsMax ?? 0,
+            targetRIR: e.targetRIR ?? 2,
+            groupId: e.groupId ?? ""
+        )
+    }
+}
+
+// ==================================================================================
+// MARK: - TrainingPlan (Trainingspläne)
+// ==================================================================================
+
+// MARK: Paket
+struct TrainingPlanExportPackage: Codable {
+    let version: Int
+    let exportedAt: String // ISO8601
+    let items: [TrainingPlanExportItem]
+}
+
+// MARK: Struktur
+struct TrainingPlanExportItem: Codable {
+    let title: String
+    let planDescription: String?
+    let startDate: String // ISO8601
+    let endDate: String? // ISO8601
+    let isActive: Bool
+    let createdAt: String // ISO8601
+    let planType: String // Enum rawValue
+    let templateSets: [ExerciseSetExportItem] // Eingebettete Sets
+}
+
+// MARK: Mapper
+extension TrainingPlan {
+    // → DTO (Export)
+    var exportItem: TrainingPlanExportItem {
+        let iso = ISO8601DateFormatter()
+
+        return TrainingPlanExportItem(
+            title: title,
+            planDescription: planDescription.isEmpty ? nil : planDescription,
+            startDate: iso.string(from: startDate),
+            endDate: endDate.map { iso.string(from: $0) },
+            isActive: isActive,
+            createdAt: iso.string(from: createdAt),
+            planType: planTypeRaw,
+            templateSets: templateSets.map { $0.exportItem }
+        )
+    }
+
+    // ← DTO (Import)
+    static func fromExportItem(_ e: TrainingPlanExportItem) -> TrainingPlan {
+        let iso = ISO8601DateFormatter()
+
+        let plan = TrainingPlan(
+            title: e.title,
+            planDescription: e.planDescription ?? "",
+            startDate: iso.date(from: e.startDate) ?? Date(),
+            endDate: e.endDate.flatMap { iso.date(from: $0) },
+            planType: PlanType(rawValue: e.planType) ?? .mixed,
+            isActive: e.isActive
+        )
+
+        // CreatedAt überschreiben (wird im Init auf Date() gesetzt)
+        if let created = iso.date(from: e.createdAt) {
+            plan.createdAt = created
+        }
+
+        // Template-Sets importieren und verknüpfen
+        for setItem in e.templateSets {
+            let exerciseSet = ExerciseSet.fromExportItem(setItem)
+            exerciseSet.trainingPlan = plan
+            plan.templateSets.append(exerciseSet)
+        }
+
+        return plan
+    }
+}
+
+// ==================================================================================
+// MARK: - StrengthSession (Krafttraining)
+// ==================================================================================
+
+// MARK: Paket
+struct StrengthSessionExportPackage: Codable {
+    let version: Int
+    let exportedAt: String // ISO8601
+    let items: [StrengthSessionExportItem]
+}
+
+// MARK: Struktur
+struct StrengthSessionExportItem: Codable {
+    let date: String // ISO8601
+    let duration: Int?
+    let calories: Int?
+    let notes: String?
+    let bodyWeight: Double?
+    let heartRate: Int?
+    let workoutType: String // Enum rawValue
+    let intensity: Int? // Enum rawValue
+    let isCompleted: Bool
+    let startedAt: String? // ISO8601
+    let completedAt: String? // ISO8601
+    let exerciseSets: [ExerciseSetExportItem] // Eingebettete Sets
+}
+
+// MARK: Mapper
+extension StrengthSession {
+    // → DTO (Export)
+    var exportItem: StrengthSessionExportItem {
+        let iso = ISO8601DateFormatter()
+
+        return StrengthSessionExportItem(
+            date: iso.string(from: date),
+            duration: duration > 0 ? duration : nil,
+            calories: calories > 0 ? calories : nil,
+            notes: notes.isEmpty ? nil : notes,
+            bodyWeight: bodyWeight > 0 ? bodyWeight : nil,
+            heartRate: heartRate > 0 ? heartRate : nil,
+            workoutType: workoutTypeRaw,
+            intensity: intensity != .none ? intensityRaw : nil,
+            isCompleted: isCompleted,
+            startedAt: startedAt.map { iso.string(from: $0) },
+            completedAt: completedAt.map { iso.string(from: $0) },
+            exerciseSets: exerciseSets.map { $0.exportItem }
+        )
+    }
+
+    // ← DTO (Import)
+    static func fromExportItem(_ e: StrengthSessionExportItem) -> StrengthSession {
+        let iso = ISO8601DateFormatter()
+
+        let session = StrengthSession(
+            date: iso.date(from: e.date) ?? Date(),
+            duration: e.duration ?? 0,
+            calories: e.calories ?? 0,
+            notes: e.notes ?? "",
+            bodyWeight: e.bodyWeight ?? 0.0,
+            heartRate: e.heartRate ?? 0,
+            workoutType: StrengthWorkoutType(rawValue: e.workoutType) ?? .fullBody,
+            intensity: e.intensity.flatMap { Intensity(rawValue: $0) } ?? .none
+        )
+
+        // Session-Status setzen
+        session.isCompleted = e.isCompleted
+        session.startedAt = e.startedAt.flatMap { iso.date(from: $0) }
+        session.completedAt = e.completedAt.flatMap { iso.date(from: $0) }
+
+        // ExerciseSets importieren und verknüpfen
+        for setItem in e.exerciseSets {
+            let exerciseSet = ExerciseSet.fromExportItem(setItem)
+            exerciseSet.session = session
+            session.exerciseSets.append(exerciseSet)
+        }
+
+        return session
+    }
+}

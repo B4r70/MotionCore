@@ -24,11 +24,23 @@ final class Exercise {
     var isFavorite: Bool = false            // Favorit markiert?
     var createdAt: Date = Date()            // Erstellungsdatum
 
+    // NEU: Zusätzliche Felder
+    var isUnilateral: Bool = false          // Unilateral (einseitig) oder bilateral?
+    var repRangeMin: Int = 8                // Minimale Wiederholungen (z.B. 1 für Maximalkraft)
+    var repRangeMax: Int = 12               // Maximale Wiederholungen (z.B. 12 für Hypertrophie)
+    var sortIndex: Int = 0                  // Sortierungsindex (für automatische Reihenfolge)
+    var cautionNote: String = ""            // Besondere Sicherheitshinweise
+    var isArchived: Bool = false            // Archiviert statt gelöscht
+
     // MARK: - Persistente ENUM-Rohwerte
 
     var categoryRaw: String = "compound"
     var equipmentRaw: String = "barbell"
     var difficultyRaw: String = "intermediate"
+
+    // NEU: Weitere Enum-Rohwerte
+    var movementPatternRaw: String = "push"
+    var bodyPositionRaw: String = "standing"
 
     // MARK: - Muskelgruppen (als String-Arrays)
 
@@ -52,6 +64,17 @@ final class Exercise {
         set { difficultyRaw = newValue.rawValue }
     }
 
+    // NEU: Typisierte Properties für neue Enums
+    var movementPattern: MovementPattern {
+        get { MovementPattern(rawValue: movementPatternRaw) ?? .push }
+        set { movementPatternRaw = newValue.rawValue }
+    }
+
+    var bodyPosition: BodyPosition {
+        get { BodyPosition(rawValue: bodyPositionRaw) ?? .standing }
+        set { bodyPositionRaw = newValue.rawValue }
+    }
+
     var primaryMuscles: [MuscleGroup] {
         get { primaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) } }
         set { primaryMusclesRaw = newValue.map { $0.rawValue } }
@@ -64,19 +87,36 @@ final class Exercise {
 
     // MARK: - Berechnete Werte
 
-    /// Alle trainierten Muskelgruppen (primär + sekundär)
+    // Alle trainierten Muskelgruppen (primär + sekundär)
     var allMuscles: [MuscleGroup] {
         Array(Set(primaryMuscles + secondaryMuscles))
     }
 
-    /// Ist eine Ganzkörperübung?
+    // Ist eine Ganzkörperübung?
     var isFullBody: Bool {
         allMuscles.contains(.fullBody)
     }
 
-    /// Hat ein GIF?
+    // Hat ein GIF?
     var hasGif: Bool {
         !gifAssetName.isEmpty
+    }
+
+    // NEU: Berechnete Werte für Rep-Range
+    // Rep-Range als formatierter String
+    var repRangeFormatted: String {
+        "\(repRangeMin)-\(repRangeMax) Wdh."
+    }
+
+    // Trainingstyp basierend auf Rep-Range
+    var trainingType: String {
+        switch repRangeMax {
+        case 1...3: return "Maximalkraft"
+        case 4...6: return "Kraft"
+        case 7...12: return "Hypertrophie"
+        case 13...20: return "Kraftausdauer"
+        default: return "Ausdauer"
+        }
     }
 
     // MARK: - Initialisierung
@@ -88,10 +128,18 @@ final class Exercise {
         category: ExerciseCategory = .compound,
         equipment: ExerciseEquipment = .barbell,
         difficulty: ExerciseDifficulty = .intermediate,
+        movementPattern: MovementPattern = .push,
+        bodyPosition: BodyPosition = .standing,
         primaryMuscles: [MuscleGroup] = [],
         secondaryMuscles: [MuscleGroup] = [],
         isCustom: Bool = false,
-        isFavorite: Bool = false
+        isFavorite: Bool = false,
+        isUnilateral: Bool = false,
+        repRangeMin: Int = 8,
+        repRangeMax: Int = 12,
+        sortIndex: Int = 0,
+        cautionNote: String = "",
+        isArchived: Bool = false
     ) {
         self.name = name
         self.exerciseDescription = exerciseDescription
@@ -99,11 +147,18 @@ final class Exercise {
         self.categoryRaw = category.rawValue
         self.equipmentRaw = equipment.rawValue
         self.difficultyRaw = difficulty.rawValue
+        self.movementPatternRaw = movementPattern.rawValue
+        self.bodyPositionRaw = bodyPosition.rawValue
         self.primaryMusclesRaw = primaryMuscles.map { $0.rawValue }
         self.secondaryMusclesRaw = secondaryMuscles.map { $0.rawValue }
         self.isCustom = isCustom
         self.isFavorite = isFavorite
+        self.isUnilateral = isUnilateral
+        self.repRangeMin = repRangeMin
+        self.repRangeMax = repRangeMax
+        self.sortIndex = sortIndex
+        self.cautionNote = cautionNote
+        self.isArchived = isArchived
         self.createdAt = Date()
     }
 }
-

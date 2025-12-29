@@ -16,29 +16,55 @@ import SwiftData
 
 @Model
 final class ExerciseSet {
-    // MARK: - Referenz zur Übung
-    
-    var exerciseName: String = ""       // Name der Übung
-    var exerciseId: String = ""         // Optional: UUID der Exercise
-    var exerciseGifAssetName: String = "" // Name des GIF-Assets um die Übung innerhalb der App darzustellen
+    // MARK: - Referenz zur Übung (Snapshots für stabile Statistiken)
+
+    var exerciseName: String = ""                // Name der Übung
+    var exerciseNameSnapshot: String = ""        // Snapshot des Namens bei Erstellung
+    var exerciseUUIDSnapshot: String = ""        // UUID-Snapshot für stabile Verknüpfung
+    var exerciseGifAssetName: String = ""        // Name des GIF-Assets
 
     // MARK: - Set-Daten
-    
-    var setNumber: Int = 1              // Satznummer (1, 2, 3...)
-    var weight: Double = 0.0            // Gewicht in kg
-    var reps: Int = 0                   // Wiederholungen
-    var duration: Int = 0               // Optional: Zeit in Sekunden (für Planks etc.)
-    var distance: Double = 0.0          // Optional: Strecke in m (für Farmers Walk)
-    
+
+    var setNumber: Int = 1                       // Satznummer (1, 2, 3...)
+    var weight: Double = 0.0                     // Gewicht in kg
+    var weightPerSide: Double = 0.0              // Gewicht pro Seite (für unilaterale Übungen)
+    var reps: Int = 0                            // Wiederholungen
+    var duration: Int = 0                        // Optional: Zeit in Sekunden (für Planks etc.)
+    var distance: Double = 0.0                   // Optional: Strecke in m (für Farmers Walk)
+    var restSeconds: Int = 90                    // Pause in Sekunden
+
+    // MARK: - Zielwerte für Progression
+
+    var targetRepsMin: Int = 0                   // Untere Zielgrenze (unter → Gewicht reduzieren)
+    var targetRepsMax: Int = 0                   // Obere Zielgrenze (über → Gewicht erhöhen)
+    var targetRIR: Int = 2                       // Ziel-RIR (Reps In Reserve)
+
+    // MARK: - Gruppierung
+
+    var groupId: String = ""                     // Gruppen-ID für Supersets etc.
+
     // MARK: - Set-Status
-    
-    var isWarmup: Bool = false          // Ist das ein Aufwärmsatz?
-    var isCompleted: Bool = true        // Satz abgeschlossen?
-    var rpe: Int = 0                    // Rate of Perceived Exertion (0-10)
-    var notes: String = ""              // Set-spezifische Notizen
-    
-    // MARK: - Beziehung
-    
+
+    var setKindRaw: String = "work"              // Satztyp (work/warmup/drop/amrap)
+    var isCompleted: Bool = true                 // Satz abgeschlossen?
+    var rpe: Int = 0                             // Rate of Perceived Exertion (0-10)
+    var notes: String = ""                       // Set-spezifische Notizen
+
+    // MARK: - Typisierte Set-Kind Property
+
+    var setKind: SetKind {
+        get { SetKind(rawValue: setKindRaw) ?? .work }
+        set { setKindRaw = newValue.rawValue }
+    }
+
+    // Deprecated: Wird durch setKind ersetzt, bleibt für Kompatibilität
+    var isWarmup: Bool {
+        get { setKind == .warmup }
+        set { if newValue { setKind = .warmup } else if setKind == .warmup { setKind = .work } }
+    }
+
+    // MARK: - Beziehungen
+
     var session: StrengthSession?
 
     // Beziehung zum TrainingPlan (wenn Template)
@@ -57,61 +83,112 @@ final class ExerciseSet {
     convenience init(from exercise: Exercise, setNumber: Int = 1, weight: Double = 0, reps: Int = 0) {
         self.init(
             exerciseName: exercise.name,
-            exerciseId: exercise.persistentModelID.hashValue.description,
+            exerciseNameSnapshot: exercise.name,
+            exerciseUUIDSnapshot: exercise.persistentModelID.hashValue.description,
             exerciseGifAssetName: exercise.gifAssetName,
             setNumber: setNumber,
             weight: weight,
-            reps: reps
+            reps: reps,
+            targetRepsMin: exercise.repRangeMin,
+            targetRepsMax: exercise.repRangeMax
         )
         self.exercise = exercise
     }
 
     // MARK: - Berechnete Werte
-    
-    /// Volumen dieses Sets (Gewicht × Reps)
+
+    // Volumen dieses Sets (Gewicht Ã— Reps)
     var volume: Double {
         weight * Double(reps)
     }
 
-    // Muskelgruppen-Info (wird später durch Exercise-Bibliothek ersetzt)
+    // Effektives Gewicht (berücksichtigt unilateral)
+    var effectiveWeight: Double {
+        weightPerSide > 0 ? weightPerSide * 2 : weight
+    }
+
+    // RIR berechnet aus RPE
+    var calculatedRIR: Int {
+        max(0, 10 - rpe)
+    }
+
+    // Ist im Zielbereich?
+    var isInTargetRange: Bool {
+        guard targetRepsMin > 0 && targetRepsMax > 0 else { return true }
+        return reps >= targetRepsMin && reps <= targetRepsMax
+    }
+
+    // Empfehlung für nächstes Workout
+    var progressionHint: String {
+        guard targetRepsMin > 0 && targetRepsMax > 0 else { return "" }
+        if reps < targetRepsMin {
+            return "Gewicht reduzieren"
+        } else if reps > targetRepsMax {
+            return "Gewicht erhöhen"
+        }
+        return "Im Zielbereich"
+    }
+
+    // Muskelgruppen-Info (wird spÃ¤ter durch Exercise-Bibliothek ersetzt)
     var primaryMuscleGroup: MuscleGroup? {
-            // TODO: Später aus Exercise-Bibliothek holen
-            // Für jetzt: Einfaches Mapping
-        MuscleGroupMapper.primaryMuscle(for: exerciseName)
+        // Zuerst aus verknüpfter Exercise holen
+        if let exercise = exercise, let primary = exercise.primaryMuscles.first {
+            return primary
+        }
+        // Fallback: Mapping über Namen
+        return MuscleGroupMapper.primaryMuscle(for: exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot)
     }
 
     var secondaryMuscleGroups: [MuscleGroup] {
-        // TODO: Später aus Exercise-Bibliothek holen
-        MuscleGroupMapper.secondaryMuscles(for: exerciseName)
+        // Zuerst aus verknüpfter Exercise holen
+        if let exercise = exercise {
+            return exercise.secondaryMuscles
+        }
+        // Fallback: Mapping über Namen
+        return MuscleGroupMapper.secondaryMuscles(for: exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot)
     }
 
     // MARK: - Initialisierung
-    
+
     init(
         exerciseName: String = "",
-        exerciseId: String = "",
+        exerciseNameSnapshot: String = "",
+        exerciseUUIDSnapshot: String = "",
         exerciseGifAssetName: String = "",
         setNumber: Int = 1,
         weight: Double = 0.0,
+        weightPerSide: Double = 0.0,
         reps: Int = 0,
         duration: Int = 0,
         distance: Double = 0.0,
-        isWarmup: Bool = false,
+        restSeconds: Int = 90,
+        setKind: SetKind = .work,
         isCompleted: Bool = true,
         rpe: Int = 0,
-        notes: String = ""
+        notes: String = "",
+        targetRepsMin: Int = 0,
+        targetRepsMax: Int = 0,
+        targetRIR: Int = 2,
+        groupId: String = ""
     ) {
         self.exerciseName = exerciseName
-        self.exerciseId = exerciseId
+        self.exerciseNameSnapshot = exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot
+        self.exerciseUUIDSnapshot = exerciseUUIDSnapshot
         self.exerciseGifAssetName = exerciseGifAssetName
         self.setNumber = setNumber
         self.weight = weight
+        self.weightPerSide = weightPerSide
         self.reps = reps
         self.duration = duration
         self.distance = distance
-        self.isWarmup = isWarmup
+        self.restSeconds = restSeconds
+        self.setKindRaw = setKind.rawValue
         self.isCompleted = isCompleted
         self.rpe = rpe
         self.notes = notes
+        self.targetRepsMin = targetRepsMin
+        self.targetRepsMax = targetRepsMax
+        self.targetRIR = targetRIR
+        self.groupId = groupId
     }
 }

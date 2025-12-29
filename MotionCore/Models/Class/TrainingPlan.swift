@@ -45,45 +45,45 @@ final class TrainingPlan {
 
     // MARK: - Berechnete Werte
 
-    /// Anzahl der geplanten Trainings
+    // Anzahl der geplanten Trainings
     var totalEntries: Int {
         entries.count
     }
 
-    /// Anzahl der abgeschlossenen Trainings
+    // Anzahl der abgeschlossenen Trainings
     var completedEntries: Int {
         entries.filter { $0.isCompleted }.count
     }
 
-    /// Fortschritt in Prozent (0.0 - 1.0)
+    // Fortschritt in Prozent (0.0 - 1.0)
     var progress: Double {
         guard totalEntries > 0 else { return 0 }
         return Double(completedEntries) / Double(totalEntries)
     }
 
-    /// Anzahl verpasster Trainings
+    // Anzahl verpasster Trainings
     var missedEntries: Int {
         entries.filter { $0.isMissed }.count
     }
 
-    /// Noch ausstehende Trainings
+    // Noch ausstehende Trainings
     var remainingEntries: Int {
         entries.filter { !$0.isCompleted && !$0.isMissed }.count
     }
 
-    /// Plan ist abgelaufen?
+    // Plan ist abgelaufen?
     var isExpired: Bool {
         guard let end = endDate else { return false }
         return end < Date()
     }
 
-    /// Anzahl Tage im Plan
+    // Anzahl Tage im Plan
     var durationInDays: Int? {
         guard let end = endDate else { return nil }
         return Calendar.current.dateComponents([.day], from: startDate, to: end).day
     }
 
-    /// Nächstes anstehendes Training
+    // Nächstes anstehendes Training
     var nextEntry: TrainingEntry? {
         entries
             .filter { !$0.isCompleted }
@@ -105,17 +105,24 @@ final class TrainingPlan {
         for templateSet in templateSets {
             let newSet = ExerciseSet(
                 exerciseName: templateSet.exerciseName,
-                exerciseId: templateSet.exerciseId,
+                exerciseNameSnapshot: templateSet.exerciseNameSnapshot,
+                exerciseUUIDSnapshot: templateSet.exerciseUUIDSnapshot,
                 exerciseGifAssetName: templateSet.exerciseGifAssetName,
                 setNumber: templateSet.setNumber,
                 weight: templateSet.weight,
+                weightPerSide: templateSet.weightPerSide,
                 reps: templateSet.reps,
                 duration: templateSet.duration,
                 distance: templateSet.distance,
-                isWarmup: templateSet.isWarmup,
+                restSeconds: templateSet.restSeconds,
+                setKind: templateSet.setKind,
                 isCompleted: false,
                 rpe: 0,
-                notes: ""
+                notes: "",
+                targetRepsMin: templateSet.targetRepsMin,
+                targetRepsMax: templateSet.targetRepsMax,
+                targetRIR: templateSet.targetRIR,
+                groupId: templateSet.groupId
             )
             newSet.exercise = templateSet.exercise
             session.exerciseSets.append(newSet)
@@ -124,12 +131,12 @@ final class TrainingPlan {
         return session
     }
 
-    // Gruppierte Template-Sets nach Übungsname
+    // Gruppierte Template-Sets nach Ãœbungsname
     var groupedTemplateSets: [[ExerciseSet]] {
         let grouped = Dictionary(grouping: templateSets) { $0.exerciseName }
         return grouped.values.sorted { ($0.first?.exerciseName ?? "") < ($1.first?.exerciseName ?? "") }
     }
-    
+
     // MARK: - Initialisierung
 
     init(
