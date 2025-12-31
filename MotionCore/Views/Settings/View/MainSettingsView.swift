@@ -89,7 +89,7 @@ struct MainSettingsView: View {
                     if !allExercises.isEmpty {
                         Button("Standard-Übungen aktualisieren (überschreibt Details)") {
                             let result = ExerciseSeeder.upsertAll(context: modelContext)
-                            seederResultMessage = "✅ Aktualisiert: \(result.updated) · Neu: \(result.inserted)"
+                            seederResultMessage = "✅ Aktualisiert: \(result.updated) · \(result.inserted)"
                             showingSeederResult = true
                         }
                     }
@@ -118,7 +118,7 @@ struct MainSettingsView: View {
                         
                         • Ergänzen: fügt nur fehlende Standard-Übungen hinzu (empfohlen)
                         • Aktualisieren: überschreibt bestehende Übungsdetails
-                        • Löschen & neu: setzt die Bibliothek komplett zurück
+                        • Löschen & setzt die Bibliothek komplett zurück
                         """)
                     }
                 }

@@ -43,12 +43,12 @@ final class TrainingEntry {
 
     // MARK: - Berechnete Werte
 
-    /// Datum liegt in der Vergangenheit?
+    // Datum liegt in der Vergangenheit?
     var isPastDue: Bool {
         scheduledDate < Date()
     }
 
-    /// Wurde verpasst (überfällig und nicht erledigt)?
+    // Wurde verpasst (überfällig und nicht erledigt)?
     var isMissed: Bool {
         isPastDue && !isCompleted
     }

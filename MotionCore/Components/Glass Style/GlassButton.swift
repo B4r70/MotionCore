@@ -80,10 +80,10 @@ private struct GlassButtonModifier: ViewModifier {
 // MARK: - Extension für einfache Verwendung
 
 extension View {
-    /// Wendet den Liquid-Glass-Effekt auf einen Button an
-    /// - Parameters:
-    ///   - size: Größe des Buttons (Standard: 60)
-    ///   - accentColor: Farbe für Glow und Icon (Standard: .blue)
+    // Wendet den Liquid-Glass-Effekt auf einen Button an
+    // - Parameters:
+    //   - size: Größe des Buttons (Standard: 60)
+    //   - accentColor: Farbe für Glow und Icon (Standard: .blue)
     func glassButton(
         size: CGFloat = 60,
         accentColor: Color = .blue

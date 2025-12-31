@@ -16,7 +16,7 @@ import SwiftUI
 struct GradientBackground: View {
     @Environment(\.colorScheme) private var colorScheme
 
-        /// Liefert je nach Light/Dark Mode die passenden Farben
+        // Liefert je nach Light/Dark Mode die passenden Farben
     private var backgroundColors: [Color] {
         if colorScheme == .light {
                 // Deine bisherigen hellen Farben

@@ -27,8 +27,8 @@ struct ExerciseSeeder {
         }
     }
 
-    /// Fügt nur Übungen hinzu, die anhand ihres Namens noch nicht existieren.
-    /// - Returns: Anzahl neu eingefügter Übungen
+    // Fügt nur Übungen hinzu, die anhand ihres Namens noch nicht existieren.
+    // - Returns: Anzahl neu eingefügter Übungen
     @discardableResult
     static func seedMissing(context: ModelContext) -> Int {
         let seeds = createAllExercises()
@@ -55,8 +55,8 @@ struct ExerciseSeeder {
         return inserted
     }
 
-    /// Optional: überschreibt bestehende Übungen (nach Name) mit den Seeder-Defaults.
-    /// - Returns: (inserted, updated)
+    // Optional: überschreibt bestehende Übungen (nach Name) mit den Seeder-Defaults.
+    // - Returns: (inserted, updated)
     @discardableResult
     static func upsertAll(context: ModelContext) -> (inserted: Int, updated: Int) {
         let seeds = createAllExercises()
@@ -118,8 +118,8 @@ struct ExerciseSeeder {
             .lowercased()
     }
 
-    /// Kopiert die Seeder-Werte in ein bestehendes Objekt.
-    /// Wichtig: wir ändern NICHT die Identität, nur die Felder.
+    // Kopiert die Seeder-Werte in ein bestehendes Objekt.
+    // Wichtig: wir ändern NICHT die Identität, nur die Felder.
     private static func apply(seed: Exercise, to existing: Exercise) {
         existing.name = seed.name
         existing.exerciseDescription = seed.exerciseDescription

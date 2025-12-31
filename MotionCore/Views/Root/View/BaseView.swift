@@ -24,6 +24,7 @@ struct BaseView: View {
     @State private var showingWorkoutPicker = false
     @State private var showingAddCardio = false
     @State private var showingTrainingPlanPicker = false
+    @State private var selectedPlanToStart: TrainingPlan?
 
     // State für aktive Session-Wiederherstellung
     @State private var showActiveWorkout = false
@@ -83,8 +84,6 @@ struct BaseView: View {
                 )
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    // MARK: Aufbau des App-Headers
-                    // Links oben - Filter-Button
                     ToolbarItem(placement: .topBarLeading) {
                         FilterSection(
                             selectedDeviceFilter: $selectedDeviceFilter,
@@ -92,7 +91,6 @@ struct BaseView: View {
                         )
                     }
 
-                    // Mitte: HeaderView
                     ToolbarItem(placement: .principal) {
                         HeaderView(
                             title: "MotionCore",
@@ -100,7 +98,6 @@ struct BaseView: View {
                         )
                     }
 
-                    // Rechts oben - Einstellungsbutton
                     ToolbarItem(placement: .topBarTrailing) {
                         NavigationLink {
                             MainSettingsView()
@@ -215,7 +212,6 @@ struct BaseView: View {
                     }
                 },
                 onOutdoorSelected: {
-                    // TODO: Outdoor-Session starten
                     showingWorkoutPicker = false
                 }
             )
@@ -247,12 +243,9 @@ struct BaseView: View {
 
         // Trainingsplan-Auswahl für Strength
         .sheet(isPresented: $showingTrainingPlanPicker) {
-            PlanPickerSheet { selectedPlan in
-                showingTrainingPlanPicker = false
-                startStrengthSession(from: selectedPlan)
-            }
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
+            PlanPickerSheet(selectedPlan: $selectedPlanToStart)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
 
         // Aktive StrengthSession (neu gestartet oder wiederhergestellt)
@@ -266,6 +259,19 @@ struct BaseView: View {
             }
         }
 
+        // MARK: - State Observers
+
+        // Wenn ein Plan ausgewählt wurde, Session starten
+        .onChange(of: selectedPlanToStart) { oldValue, newValue in
+            if let plan = newValue {
+                // Kurze Verzögerung damit Sheet-Animation fertig ist
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    startStrengthSession(from: plan)
+                    selectedPlanToStart = nil
+                }
+            }
+        }
+
         // Listener für Session-Wiederherstellung
         .onReceive(NotificationCenter.default.publisher(for: .restoreActiveSession)) { notification in
             handleSessionRestoration(notification)
@@ -274,7 +280,6 @@ struct BaseView: View {
 
     // MARK: - Session Wiederherstellung
 
-    // Behandelt die Wiederherstellung einer aktiven Session
     private func handleSessionRestoration(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let sessionID = userInfo["sessionID"] as? String,
@@ -292,14 +297,12 @@ struct BaseView: View {
         }
     }
 
-    // Stellt eine StrengthSession wieder her und öffnet die ActiveWorkoutView
     private func restoreStrengthSession(sessionID: String) {
         let descriptor = FetchDescriptor<StrengthSession>()
 
         do {
             let sessions = try context.fetch(descriptor)
 
-            // Session anhand der sessionUUID finden
             if let session = sessions.first(where: {
                 $0.sessionUUID.uuidString == sessionID
             }) {
@@ -307,7 +310,6 @@ struct BaseView: View {
                 newStrengthSession = nil
                 showActiveWorkout = true
             } else {
-                // Session nicht gefunden - State zurücksetzen
                 activeSessionManager.discardSession()
             }
         } catch {
@@ -315,41 +317,31 @@ struct BaseView: View {
         }
     }
 
-    // Stellt eine CardioSession wieder her (TODO: Implementierung)
     private func restoreCardioSession(sessionID: String) {
         // TODO: Implementieren wenn CardioSession Live-Tracking unterstützt
     }
 
-    // Stellt eine OutdoorSession wieder her (TODO: Implementierung)
     private func restoreOutdoorSession(sessionID: String) {
         // TODO: Implementieren wenn OutdoorSession Live-Tracking unterstützt
     }
 
     // MARK: - Neue Session starten
 
-    // Startet eine neue StrengthSession basierend auf einem Trainingsplan
     private func startStrengthSession(from plan: TrainingPlan) {
-        // TrainingPlan's createSession() nutzen
         let session = plan.createSession()
 
-        // In SwiftData speichern
         context.insert(session)
         try? context.save()
 
-        // Session öffnen
-        restoredStrengthSession = nil
         newStrengthSession = session
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            showActiveWorkout = true
-        }
+        restoredStrengthSession = nil
+        showActiveWorkout = true
     }
 }
 
 // MARK: - Notification Extension
 
 extension Notification.Name {
-    // Notification um eine aktive Session wiederherzustellen
     static let restoreActiveSession = Notification.Name("restoreActiveSession")
 }
 

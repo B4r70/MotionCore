@@ -130,7 +130,7 @@ final class ExerciseSet {
     }
 
     // Muskelgruppen-Info (wird später durch Exercise-Bibliothek ersetzt)
-    // NEU: Nutzt NUR Snapshots - Exercise-Relationship kann zu Crashes führen
+    // Nutzt NUR Snapshots - Exercise-Relationship kann zu Crashes führen
     // wenn die Exercise gelöscht wurde aber die Referenz noch existiert
     var primaryMuscleGroup: MuscleGroup? {
         // Immer über MuscleGroupMapper - sicher und konsistent

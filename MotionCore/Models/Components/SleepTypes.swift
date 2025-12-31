@@ -10,7 +10,7 @@
 import Foundation
 import SwiftUI
 
-/// Einzelne Schlafphase (z. B. REM, Tiefschlaf, Kernschlaf, Wach)
+// Einzelne Schlafphase (z. B. REM, Tiefschlaf, Kernschlaf, Wach)
 struct SleepStagesBreakdown: Identifiable {
     let id = UUID()
     let name: String              // z. B. "REM", "Tiefschlaf"
@@ -27,14 +27,14 @@ struct SleepStagesBreakdown: Identifiable {
         }
     }
     
-    /// Wird relativ zur Gesamtschlafzeit in der Card genutzt
+    // Wird relativ zur Gesamtschlafzeit in der Card genutzt
     func percentage(of totalMinutes: Int) -> Double {
         guard totalMinutes > 0 else { return 0 }
         return Double(minutes) / Double(totalMinutes)
     }
 }
 
-/// Gesamtübersicht einer Nacht
+// Gesamtübersicht einer Nacht
 struct SleepStagesSummary {
     let date: Date               // Nacht/Tag
     let totalMinutes: Int        // Gesamtschlafzeit (nur „schlafend“)

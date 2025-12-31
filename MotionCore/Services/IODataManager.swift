@@ -35,7 +35,7 @@ final class IODataManager {
 
         // 2. Export-Paket erstellen
         let pkg = WorkoutExportPackage(
-            version: 2, // NEU: Version erhöht wegen neuer Felder
+            version: 2, // Version erhöht wegen neuer Felder
             exportedAt: ISO8601DateFormatter().string(from: .now),
             items: allWorkouts.map { $0.exportItem }
         )
@@ -352,7 +352,7 @@ final class IODataManager {
 
         // 2. Export-Paket erstellen
         let pkg = StrengthSessionExportPackage(
-            version: 2, // NEU: Version erhöht wegen neuer Felder
+            version: 2, // Version erhöht wegen neuer Felder
             exportedAt: ISO8601DateFormatter().string(from: .now),
             items: allSessions.map { $0.exportItem }
         )

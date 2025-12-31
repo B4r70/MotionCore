@@ -14,7 +14,7 @@ import Foundation
 
 struct MuscleGroupMapper {
 
-        /// Primäre Muskelgruppe für eine Übung
+        // Primäre Muskelgruppe für eine Übung
     static func primaryMuscle(for exerciseName: String) -> MuscleGroup? {
         let name = exerciseName.lowercased()
 
@@ -62,7 +62,7 @@ struct MuscleGroupMapper {
         return nil
     }
 
-        /// Sekundäre Muskelgruppen für eine Übung
+        // Sekundäre Muskelgruppen für eine Übung
     static func secondaryMuscles(for exerciseName: String) -> [MuscleGroup] {
         let name = exerciseName.lowercased()
         var secondary: [MuscleGroup] = []

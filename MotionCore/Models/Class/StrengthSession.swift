@@ -35,7 +35,7 @@ final class StrengthSession {
 
     var bodyWeight: Double = 0.0 // Körpergewicht in kg
     var heartRate: Int = 0 // Durchschnittliche Herzfrequenz
-    var maxHeartRate: Int = 0 // NEU: Maximale Herzfrequenz
+    var maxHeartRate: Int = 0 // Maximale Herzfrequenz
 
     // MARK: - Beziehungen
 
@@ -49,7 +49,7 @@ final class StrengthSession {
     // MARK: - Session-Status
 
     var isCompleted: Bool = false // Training abgeschlossen?
-    var isLiveSession: Bool = false // NEU: Live getrackt vs. manuell eingetragen
+    var isLiveSession: Bool = false // Live getrackt vs. manuell eingetragen
     var startedAt: Date? // Wann gestartet?
     var completedAt: Date? // Wann beendet?
 
@@ -213,7 +213,7 @@ final class StrengthSession {
     func start() {
         startedAt = Date()
         isCompleted = false
-        isLiveSession = true // NEU: Markiert als Live-Session
+        isLiveSession = true // Markiert als Live-Session
     }
 
     // Training beenden

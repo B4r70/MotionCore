@@ -144,7 +144,7 @@ struct ActiveWorkoutView: View {
         VStack(spacing: 12) {
             // Timer und Fortschritt
             HStack {
-                // Timer - NEU: Verwendet SessionManager
+                // Timer - Verwendet SessionManager
                 HStack(spacing: 8) {
                     Image(systemName: sessionManager.isPaused ? "pause.circle.fill" : "clock.fill")
                         .foregroundStyle(sessionManager.isPaused ? .orange : .blue)
@@ -153,7 +153,7 @@ struct ActiveWorkoutView: View {
                         .font(.title2.bold().monospacedDigit())
                         .foregroundStyle(.primary)
 
-                    // NEU: Pausiert-Indikator
+                    // Pausiert-Indikator
                     if sessionManager.isPaused {
                         Text("(Pausiert)")
                             .font(.caption)
@@ -467,7 +467,7 @@ struct ActiveWorkoutView: View {
 
     private var bottomActionBar: some View {
         HStack(spacing: 16) {
-            // Pause/Play Button - NEU: Verwendet SessionManager
+            // Pause/Play Button - Verwendet SessionManager
             Button {
                 toggleTimer()
             } label: {
@@ -549,7 +549,7 @@ struct ActiveWorkoutView: View {
         localTimer = nil
     }
 
-    // MARK: - Timer Funktionen (NEU: Delegiert an SessionManager)
+    // MARK: - Timer Funktionen (Delegiert an SessionManager)
 
     private func toggleTimer() {
         if sessionManager.isPaused {
@@ -612,7 +612,7 @@ struct ActiveWorkoutView: View {
     }
 
     private func finishWorkout() {
-        // NEU: Session über Manager beenden und Dauer holen
+        // Session über Manager beenden und Dauer holen
         let finalSeconds = sessionManager.endSession()
 
         // Session-Daten aktualisieren
@@ -624,7 +624,7 @@ struct ActiveWorkoutView: View {
     }
 
     private func cancelWorkout() {
-        // NEU: Session im Manager verwerfen
+        // Session im Manager verwerfen
         sessionManager.discardSession()
 
         // Session aus SwiftData löschen

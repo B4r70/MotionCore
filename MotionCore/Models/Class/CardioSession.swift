@@ -32,9 +32,9 @@ final class CardioSession {
     var calories: Int = 0 // Kalorien
     var difficulty: Int = 1 // Schwierigkeitsgrad (1–25)
     var heartRate: Int = 0 // ∅ Herzfrequenz (Apple Watch)
-    var maxHeartRate: Int = 0 // NEU: Maximale Herzfrequenz
+    var maxHeartRate: Int = 0 // Maximale Herzfrequenz
     var bodyWeight: Double = 0.0 // Körpergewicht (am Gerät eingegeben)
-    var notes: String = "" // NEU: Session-Notizen
+    var notes: String = "" // Session-Notizen
 
     // MARK: - Session-Status (NEU)
 
@@ -78,19 +78,19 @@ final class CardioSession {
 
     // MARK: - Abgeleitete Trainingsergebnisse
 
-    /// METs (Metabolisches Äquivalent) ≈ kcal pro Stunde pro kg
+    // METs (Metabolisches Äquivalent) ≈ kcal pro Stunde pro kg
     var mets: Double {
         guard bodyWeight > 0.0, duration > 0 else { return 0 }
         return (Double(calories) / (Double(duration) / 60.0)) / bodyWeight
     }
 
-    /// Durchschnittliche Geschwindigkeit (m/min)
+    // Durchschnittliche Geschwindigkeit (m/min)
     var averageSpeed: Double {
         guard duration > 0 else { return 0 }
         return (distance * 1000.0) / Double(duration) // km → m, dann / Minuten
     }
 
-    /// Tatsächliche Trainingsdauer in Minuten (berechnet) (NEU)
+    // Tatsächliche Trainingsdauer in Minuten (berechnet) (NEU)
     var actualDuration: Int? {
         guard let start = startedAt, let end = completedAt else { return nil }
         return Calendar.current.dateComponents([.minute], from: start, to: end).minute
@@ -144,14 +144,14 @@ final class CardioSession {
 
     // MARK: - Session-Steuerung (NEU)
 
-    /// Training starten
+    // Training starten
     func start() {
         startedAt = Date()
         isCompleted = false
         isLiveSession = true
     }
 
-    /// Training beenden
+    // Training beenden
     func complete() {
         completedAt = Date()
         isCompleted = true
