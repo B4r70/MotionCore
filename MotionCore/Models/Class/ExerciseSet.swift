@@ -129,22 +129,16 @@ final class ExerciseSet {
         return "Im Zielbereich"
     }
 
-    // Muskelgruppen-Info (wird spÃ¤ter durch Exercise-Bibliothek ersetzt)
+    // Muskelgruppen-Info (wird später durch Exercise-Bibliothek ersetzt)
+    // NEU: Nutzt NUR Snapshots - Exercise-Relationship kann zu Crashes führen
+    // wenn die Exercise gelöscht wurde aber die Referenz noch existiert
     var primaryMuscleGroup: MuscleGroup? {
-        // Zuerst aus verknüpfter Exercise holen
-        if let exercise = exercise, let primary = exercise.primaryMuscles.first {
-            return primary
-        }
-        // Fallback: Mapping über Namen
+        // Immer über MuscleGroupMapper - sicher und konsistent
         return MuscleGroupMapper.primaryMuscle(for: exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot)
     }
 
     var secondaryMuscleGroups: [MuscleGroup] {
-        // Zuerst aus verknüpfter Exercise holen
-        if let exercise = exercise {
-            return exercise.secondaryMuscles
-        }
-        // Fallback: Mapping über Namen
+        // Immer über MuscleGroupMapper - sicher und konsistent
         return MuscleGroupMapper.secondaryMuscles(for: exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot)
     }
 

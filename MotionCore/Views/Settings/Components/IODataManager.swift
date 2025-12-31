@@ -17,7 +17,7 @@ import SwiftData
 /// (Der korrekte Klassenname lautet IODataManager)
 final class IODataManager {
 
-    // MARK: - Export
+    // MARK: - CardioSession Export/Import
 
     /// Führt den Export aller Workout-Daten durch, speichert sie temporär als JSON
     /// und gibt die URL zur Freigabe zurück.
@@ -35,7 +35,7 @@ final class IODataManager {
 
         // 2. Export-Paket erstellen
         let pkg = WorkoutExportPackage(
-            version: 1,
+            version: 2, // NEU: Version erhöht wegen neuer Felder
             exportedAt: ISO8601DateFormatter().string(from: .now),
             items: allWorkouts.map { $0.exportItem }
         )
@@ -53,40 +53,6 @@ final class IODataManager {
 
         return url
     }
-
-        /// Exportiert alle Übungen als JSON-Datei
-        /// - Parameter context: Der ModelContext, um alle Exercises abzurufen
-        /// - Returns: Die temporäre URL zur exportierten JSON-Datei
-    func exportExercises(context: ModelContext) throws -> URL {
-            // 1. Daten abrufen
-        let descriptor = FetchDescriptor<Exercise>(sortBy: [SortDescriptor(\.name, order: .forward)])
-        let allExercises = try context.fetch(descriptor)
-
-        guard !allExercises.isEmpty else {
-            throw DataIOError.noDataToExport
-        }
-
-            // 2. Export-Paket erstellen
-        let pkg = ExerciseExportPackage(
-            version: 1,
-            exportedAt: ISO8601DateFormatter().string(from: .now),
-            items: allExercises.map { $0.exportItem }
-        )
-
-            // 3. Kodierung
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        let data = try encoder.encode(pkg)
-
-            // 4. Temporäre Datei erstellen
-        let filename = "MotionCore-Exercises-\(Int(Date().timeIntervalSince1970)).json"
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-        try data.write(to: url, options: .atomic)
-
-        return url
-    }
-
-    // MARK: - Import
 
     /// Führt den Import von Workout-Daten aus einer gegebenen URL durch.
     /// - Parameter context: Der ModelContext, in dem die Daten gespeichert werden sollen.
@@ -106,7 +72,8 @@ final class IODataManager {
         let decoder = JSONDecoder()
         let pkg = try decoder.decode(WorkoutExportPackage.self, from: data)
 
-        guard pkg.version == 1 else {
+        // Version 1 und 2 sind kompatibel (neue Felder sind optional)
+        guard pkg.version >= 1 && pkg.version <= 2 else {
             throw DataIOError.unsupportedVersion
         }
 
@@ -125,22 +92,78 @@ final class IODataManager {
         return importedCount
     }
 
+    /// Löscht alle gespeicherten WorkoutSession-Objekte aus dem ModelContext.
+    /// - Parameter context: Der ModelContext, aus dem die Daten gelöscht werden sollen.
+    /// - Throws: Einen Fehler, falls die Operation fehlschlägt.
+    func deleteAllWorkouts(context: ModelContext) throws -> Int {
+
+        // 1. Alle Objekte vom Typ WorkoutSession abrufen
+        // Wir benötigen keine Sortierung, nur die Objekte selbst.
+        let workoutsToDelete = try context.fetch(FetchDescriptor<CardioSession>())
+
+        let deletedCount = workoutsToDelete.count
+
+        // 2. Alle Workouts löschen
+        for workout in workoutsToDelete {
+            context.delete(workout)
+        }
+
+        // 3. Änderungen speichern, um die Löschung zu persistieren
+        try context.save()
+
+        return deletedCount // Gibt die Anzahl der gelöschten Elemente zurück
+    }
+
+    // MARK: - Exercise Export/Import
+
+    /// Exportiert alle Übungen als JSON-Datei
+    /// - Parameter context: Der ModelContext, um alle Exercises abzurufen
+    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    func exportExercises(context: ModelContext) throws -> URL {
+        // 1. Daten abrufen
+        let descriptor = FetchDescriptor<Exercise>(sortBy: [SortDescriptor(\.name, order: .forward)])
+        let allExercises = try context.fetch(descriptor)
+
+        guard !allExercises.isEmpty else {
+            throw DataIOError.noDataToExport
+        }
+
+        // 2. Export-Paket erstellen
+        let pkg = ExerciseExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: allExercises.map { $0.exportItem }
+        )
+
+        // 3. Kodierung
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(pkg)
+
+        // 4. Temporäre Datei erstellen
+        let filename = "MotionCore-Exercises-\(Int(Date().timeIntervalSince1970)).json"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        try data.write(to: url, options: .atomic)
+
+        return url
+    }
+
     /// Importiert Übungen aus einer JSON-Datei
     /// - Parameters:
     ///   - context: Der ModelContext
     ///   - url: Die URL der JSON-Datei
     /// - Returns: Anzahl der importierten Übungen
     func importExercises(context: ModelContext, url: URL) throws -> Int {
-            // Sicherstellen, dass die Datei zugänglich ist
+        // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
             throw DataIOError.accessDenied
         }
         defer { url.stopAccessingSecurityScopedResource() }
 
-            // 1. Daten lesen
+        // 1. Daten lesen
         let data = try Data(contentsOf: url)
 
-            // 2. Dekodierung
+        // 2. Dekodierung
         let decoder = JSONDecoder()
         let pkg = try decoder.decode(ExerciseExportPackage.self, from: data)
 
@@ -150,39 +173,17 @@ final class IODataManager {
 
         var importedCount = 0
 
-            // 3. Speichern der Exercises im ModelContext
+        // 3. Speichern der Exercises im ModelContext
         for exportItem in pkg.items {
             let exercise = Exercise.fromExportItem(exportItem)
             context.insert(exercise)
             importedCount += 1
         }
 
-            // 4. Speichern
+        // 4. Speichern
         try context.save()
 
         return importedCount
-    }
-
-        /// Löscht alle gespeicherten WorkoutSession-Objekte aus dem ModelContext.
-        /// - Parameter context: Der ModelContext, aus dem die Daten gelöscht werden sollen.
-        /// - Throws: Einen Fehler, falls die Operation fehlschlägt.
-    func deleteAllWorkouts(context: ModelContext) throws -> Int {
-
-            // 1. Alle Objekte vom Typ WorkoutSession abrufen
-            // Wir benötigen keine Sortierung, nur die Objekte selbst.
-        let workoutsToDelete = try context.fetch(FetchDescriptor<CardioSession>())
-
-        let deletedCount = workoutsToDelete.count
-
-            // 2. Alle Workouts löschen
-        for workout in workoutsToDelete {
-            context.delete(workout)
-        }
-
-            // 3. Ã„nderungen speichern, um die Löschung zu persistieren
-        try context.save()
-
-        return deletedCount // Gibt die Anzahl der gelöschten Elemente zurück
     }
 
     // MARK: - TrainingPlan Export/Import
@@ -250,8 +251,8 @@ final class IODataManager {
             context.insert(plan)
 
             // Template-Sets sind bereits verknüpft, müssen aber auch eingefügt werden
-            for templateSet in plan.templateSets {
-                context.insert(templateSet)
+            for exerciseSet in plan.templateSets {
+                context.insert(exerciseSet)
             }
 
             importedCount += 1
@@ -263,14 +264,14 @@ final class IODataManager {
         return importedCount
     }
 
-    // MARK: - ExerciseSet Export/Import (standalone)
+    // MARK: - ExerciseSet Export/Import
 
     /// Exportiert alle ExerciseSets als JSON-Datei
-    /// - Parameter context: Der ModelContext, um alle ExerciseSets abzurufen
+    /// - Parameter context: Der ModelContext
     /// - Returns: Die temporäre URL zur exportierten JSON-Datei
     func exportExerciseSets(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
-        let descriptor = FetchDescriptor<ExerciseSet>(sortBy: [SortDescriptor(\.exerciseName, order: .forward)])
+        let descriptor = FetchDescriptor<ExerciseSet>(sortBy: [SortDescriptor(\.setNumber, order: .forward)])
         let allSets = try context.fetch(descriptor)
 
         guard !allSets.isEmpty else {
@@ -351,7 +352,7 @@ final class IODataManager {
 
         // 2. Export-Paket erstellen
         let pkg = StrengthSessionExportPackage(
-            version: 1,
+            version: 2, // NEU: Version erhöht wegen neuer Felder
             exportedAt: ISO8601DateFormatter().string(from: .now),
             items: allSessions.map { $0.exportItem }
         )
@@ -388,7 +389,8 @@ final class IODataManager {
         let decoder = JSONDecoder()
         let pkg = try decoder.decode(StrengthSessionExportPackage.self, from: data)
 
-        guard pkg.version == 1 else {
+        // Version 1 und 2 sind kompatibel (neue Felder sind optional)
+        guard pkg.version >= 1 && pkg.version <= 2 else {
             throw DataIOError.unsupportedVersion
         }
 
@@ -404,6 +406,78 @@ final class IODataManager {
                 context.insert(exerciseSet)
             }
 
+            importedCount += 1
+        }
+
+        // 4. Speichern
+        try context.save()
+
+        return importedCount
+    }
+
+    // MARK: - OutdoorSession Export/Import (NEU)
+
+    /// Exportiert alle Outdoor-Aktivitäten als JSON-Datei
+    /// - Parameter context: Der ModelContext, um alle OutdoorSessions abzurufen
+    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    func exportOutdoorSessions(context: ModelContext) throws -> URL {
+        // 1. Daten abrufen
+        let descriptor = FetchDescriptor<OutdoorSession>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+        let allSessions = try context.fetch(descriptor)
+
+        guard !allSessions.isEmpty else {
+            throw DataIOError.noDataToExport
+        }
+
+        // 2. Export-Paket erstellen
+        let pkg = OutdoorSessionExportPackage(
+            version: 1,
+            exportedAt: ISO8601DateFormatter().string(from: .now),
+            items: allSessions.map { $0.exportItem }
+        )
+
+        // 3. Kodierung
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(pkg)
+
+        // 4. Temporäre Datei erstellen
+        let filename = "MotionCore-OutdoorSessions-\(Int(Date().timeIntervalSince1970)).json"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        try data.write(to: url, options: .atomic)
+
+        return url
+    }
+
+    /// Importiert Outdoor-Aktivitäten aus einer JSON-Datei
+    /// - Parameters:
+    ///   - context: Der ModelContext
+    ///   - url: Die URL der JSON-Datei
+    /// - Returns: Anzahl der importierten OutdoorSessions
+    func importOutdoorSessions(context: ModelContext, url: URL) throws -> Int {
+        // Sicherstellen, dass die Datei zugänglich ist
+        guard url.startAccessingSecurityScopedResource() else {
+            throw DataIOError.accessDenied
+        }
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        // 1. Daten lesen
+        let data = try Data(contentsOf: url)
+
+        // 2. Dekodierung
+        let decoder = JSONDecoder()
+        let pkg = try decoder.decode(OutdoorSessionExportPackage.self, from: data)
+
+        guard pkg.version == 1 else {
+            throw DataIOError.unsupportedVersion
+        }
+
+        var importedCount = 0
+
+        // 3. Speichern der OutdoorSessions im ModelContext
+        for exportItem in pkg.items {
+            let session = OutdoorSession.fromExportItem(exportItem)
+            context.insert(session)
             importedCount += 1
         }
 
@@ -433,7 +507,7 @@ enum DataIOError: LocalizedError {
                 return "Der Importvorgang ist fehlgeschlagen."
             case .unsupportedVersion:
                 return "Das Format der Datei wird von dieser App-Version nicht unterstützt."
-            case .deleteError(let error): // <-- NEU
+            case .deleteError(let error):
                 return "Löschen fehlgeschlagen: \(error.localizedDescription)"
             case .generalError(let error):
                 return "Ein allgemeiner Fehler ist aufgetreten: \(error.localizedDescription)"
@@ -441,28 +515,7 @@ enum DataIOError: LocalizedError {
     }
 }
 
-func deleteAllWorkouts(context: ModelContext) throws -> Int {
-
-    // Wir nutzen einen do-catch-Block innerhalb der Funktion,
-    // um generische Fehler in unseren spezifischen Fehler zu verpacken.
-    do {
-        let workoutsToDelete = try context.fetch(FetchDescriptor<CardioSession>())
-        let deletedCount = workoutsToDelete.count
-
-        for workout in workoutsToDelete {
-            context.delete(workout)
-        }
-
-        try context.save()
-
-        return deletedCount
-    } catch {
-        // Jeden Fehler, der während des Fetches oder Speicherns auftritt,
-        // verpacken wir in den neuen DataIOError.deleteError.
-        throw DataIOError.deleteError(error)
-    }
-}
-
+// MARK: - Delete Extensions
 extension IODataManager {
 
     // Generic helper: delete all objects of a given SwiftData model type
@@ -501,6 +554,12 @@ extension IODataManager {
         try deleteAll(StrengthSession.self, context: context)
     }
 
+    // MARK: - Outdoor data deletes (NEU)
+
+    func deleteAllOutdoorSessions(context: ModelContext) throws -> Int {
+        try deleteAll(OutdoorSession.self, context: context)
+    }
+
     /// Convenience: delete all strength-related data in a safe-ish order.
     /// (Parents first if they cascade; otherwise this still usually works with optional relationships.)
     func deleteAllStrengthData(context: ModelContext) throws -> (sessions: Int, plans: Int, sets: Int, exercises: Int) {
@@ -509,5 +568,13 @@ extension IODataManager {
         let sets = try deleteAllExerciseSets(context: context)
         let exercises = try deleteAllExercises(context: context)
         return (sessions, plans, sets, exercises)
+    }
+
+    /// Convenience: delete all workout data (Cardio, Strength, Outdoor) (NEU)
+    func deleteAllWorkoutData(context: ModelContext) throws -> (cardio: Int, strength: Int, outdoor: Int) {
+        let cardio = try deleteAllWorkouts(context: context)
+        let strength = try deleteAllStrengthSessions(context: context)
+        let outdoor = try deleteAllOutdoorSessions(context: context)
+        return (cardio, strength, outdoor)
     }
 }

@@ -27,7 +27,26 @@ final class CardioSession {
     var calories: Int = 0 // Kalorien
     var difficulty: Int = 1 // Schwierigkeitsgrad (1–25)
     var heartRate: Int = 0 // ∅ Herzfrequenz (Apple Watch)
+    var maxHeartRate: Int = 0 // NEU: Maximale Herzfrequenz
     var bodyWeight: Double = 0.0 // Körpergewicht (am Gerät eingegeben)
+    var notes: String = "" // NEU: Session-Notizen
+
+    // MARK: - Session-Status (NEU)
+
+    var isCompleted: Bool = false // Training abgeschlossen?
+    var isLiveSession: Bool = false // Live getrackt vs. manuell eingetragen
+    var startedAt: Date? // Wann gestartet?
+    var completedAt: Date? // Wann beendet?
+
+    // MARK: - Subjektive Bewertung für ML (NEU)
+
+    var perceivedExertion: Int? // RPE 1-10 (Rate of Perceived Exertion)
+    var energyLevelBefore: Int? // Energielevel vor Training (1-5)
+
+    // MARK: - HealthKit-Integration (NEU)
+
+    var healthKitWorkoutUUID: UUID? // Verknüpfung zur HKWorkout
+    var deviceSource: String = "manual" // "iPhone", "AppleWatch", "manual"
 
     // MARK: - Persistente ENUM-Rohwerte
 
@@ -66,6 +85,12 @@ final class CardioSession {
         return (distance * 1000.0) / Double(duration) // km → m, dann / Minuten
     }
 
+    /// Tatsächliche Trainingsdauer in Minuten (berechnet) (NEU)
+    var actualDuration: Int? {
+        guard let start = startedAt, let end = completedAt else { return nil }
+        return Calendar.current.dateComponents([.minute], from: start, to: end).minute
+    }
+
     // MARK: - Initialisierung mit Default-Werten für CloudKit
 
     init(
@@ -75,20 +100,60 @@ final class CardioSession {
         calories: Int = 0,
         difficulty: Int = 1,
         heartRate: Int = 0,
+        maxHeartRate: Int = 0,
         bodyWeight: Double = 0.0,
+        notes: String = "",
+        isCompleted: Bool = false,
+        isLiveSession: Bool = false,
+        startedAt: Date? = nil,
+        completedAt: Date? = nil,
+        perceivedExertion: Int? = nil,
+        energyLevelBefore: Int? = nil,
+        healthKitWorkoutUUID: UUID? = nil,
+        deviceSource: String = "manual",
         intensity: Intensity = .none,
         trainingProgram: TrainingProgram = .random,
         cardioDevice: CardioDevice = .none
     ) {
         self.date = date
-        self.duration   = max(duration, 0)
-        self.distance   = max(distance, 0.0)
-        self.calories   = max(calories, 0)
+        self.duration = max(duration, 0)
+        self.distance = max(distance, 0.0)
+        self.calories = max(calories, 0)
         self.difficulty = difficulty.clamped(to: 1 ... 25)
-        self.heartRate  = heartRate
+        self.heartRate = heartRate
+        self.maxHeartRate = maxHeartRate
         self.bodyWeight = bodyWeight
-        intensityRaw    = intensity.rawValue
+        self.notes = notes
+        self.isCompleted = isCompleted
+        self.isLiveSession = isLiveSession
+        self.startedAt = startedAt
+        self.completedAt = completedAt
+        self.perceivedExertion = perceivedExertion
+        self.energyLevelBefore = energyLevelBefore
+        self.healthKitWorkoutUUID = healthKitWorkoutUUID
+        self.deviceSource = deviceSource
+        intensityRaw = intensity.rawValue
         trainingProgramRaw = trainingProgram.rawValue
         cardioDeviceRaw = cardioDevice.rawValue
+    }
+
+    // MARK: - Session-Steuerung (NEU)
+
+    /// Training starten
+    func start() {
+        startedAt = Date()
+        isCompleted = false
+        isLiveSession = true
+    }
+
+    /// Training beenden
+    func complete() {
+        completedAt = Date()
+        isCompleted = true
+
+        // Dauer berechnen und speichern
+        if let minutes = actualDuration {
+            duration = minutes
+        }
     }
 }

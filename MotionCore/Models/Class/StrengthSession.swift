@@ -20,19 +20,20 @@ import SwiftData
 @Model
 final class StrengthSession {
     // MARK: - Grunddaten
-    
+
     var date: Date = Date()
-    var duration: Int = 0               // Gesamtdauer in Minuten
-    var calories: Int = 0               // Geschätzte Kalorien
-    var notes: String = ""              // Session-Notizen
-    
+    var duration: Int = 0 // Gesamtdauer in Minuten
+    var calories: Int = 0 // Geschätzte Kalorien
+    var notes: String = "" // Session-Notizen
+
     // MARK: - Körperdaten
-    
-    var bodyWeight: Double = 0.0        // Körpergewicht in kg
-    var heartRate: Int = 0              // Durchschnittliche Herzfrequenz (optional)
-    
+
+    var bodyWeight: Double = 0.0 // Körpergewicht in kg
+    var heartRate: Int = 0 // Durchschnittliche Herzfrequenz
+    var maxHeartRate: Int = 0 // NEU: Maximale Herzfrequenz
+
     // MARK: - Beziehungen
-    
+
     @Relationship(deleteRule: .cascade)
     var exerciseSets: [ExerciseSet] = [] // Alle Sets dieser Session
 
@@ -40,40 +41,52 @@ final class StrengthSession {
     @Relationship(deleteRule: .nullify)
     var sourceTrainingPlan: TrainingPlan?
 
-    // Session-Status
-    var isCompleted: Bool = false        // Training abgeschlossen?
-    var startedAt: Date?                 // Wann gestartet?
-    var completedAt: Date?               // Wann beendet?
+    // MARK: - Session-Status
+
+    var isCompleted: Bool = false // Training abgeschlossen?
+    var isLiveSession: Bool = false // NEU: Live getrackt vs. manuell eingetragen
+    var startedAt: Date? // Wann gestartet?
+    var completedAt: Date? // Wann beendet?
+
+    // MARK: - Subjektive Bewertung für ML (NEU)
+
+    var perceivedExertion: Int? // RPE 1-10 (Rate of Perceived Exertion)
+    var energyLevelBefore: Int? // Energielevel vor Training (1-5)
+
+    // MARK: - HealthKit-Integration (NEU)
+
+    var healthKitWorkoutUUID: UUID? // Verknüpfung zur HKWorkout
+    var deviceSource: String = "manual" // "iPhone", "AppleWatch", "manual"
 
     // MARK: - Persistente ENUM-Rohwerte
-    
+
     var workoutTypeRaw: String = "fullBody"
     var intensityRaw: Int = 0
-    
+
     // MARK: - Typisierte ENUM-Properties
-    
+
     var workoutType: StrengthWorkoutType {
         get { StrengthWorkoutType(rawValue: workoutTypeRaw) ?? .fullBody }
         set { workoutTypeRaw = newValue.rawValue }
     }
-    
+
     var intensity: Intensity {
         get { Intensity(rawValue: intensityRaw) ?? .none }
         set { intensityRaw = newValue.rawValue }
     }
-    
+
     // MARK: - Berechnete Werte
-    
+
     // Anzahl der Sets in dieser Session
     var totalSets: Int {
         exerciseSets.count
     }
-    
+
     // Anzahl der verschiedenen Übungen
     var exercisesPerformed: Int {
         Set(exerciseSets.map { $0.exerciseName }).count
     }
-    
+
     // Gesamtes Trainingsvolumen (Summe: Gewicht × Reps)
     var totalVolume: Double {
         exerciseSets.reduce(0.0) { sum, set in
@@ -150,7 +163,7 @@ final class StrengthSession {
     }
 
     // MARK: - Initialisierung
-    
+
     init(
         date: Date = Date(),
         duration: Int = 0,
@@ -158,6 +171,15 @@ final class StrengthSession {
         notes: String = "",
         bodyWeight: Double = 0.0,
         heartRate: Int = 0,
+        maxHeartRate: Int = 0,
+        isCompleted: Bool = false,
+        isLiveSession: Bool = false,
+        startedAt: Date? = nil,
+        completedAt: Date? = nil,
+        perceivedExertion: Int? = nil,
+        energyLevelBefore: Int? = nil,
+        healthKitWorkoutUUID: UUID? = nil,
+        deviceSource: String = "manual",
         workoutType: StrengthWorkoutType = .fullBody,
         intensity: Intensity = .none
     ) {
@@ -167,14 +189,26 @@ final class StrengthSession {
         self.notes = notes
         self.bodyWeight = bodyWeight
         self.heartRate = heartRate
+        self.maxHeartRate = maxHeartRate
+        self.isCompleted = isCompleted
+        self.isLiveSession = isLiveSession
+        self.startedAt = startedAt
+        self.completedAt = completedAt
+        self.perceivedExertion = perceivedExertion
+        self.energyLevelBefore = energyLevelBefore
+        self.healthKitWorkoutUUID = healthKitWorkoutUUID
+        self.deviceSource = deviceSource
         self.workoutTypeRaw = workoutType.rawValue
         self.intensityRaw = intensity.rawValue
     }
+
+    // MARK: - Session-Steuerung
 
     // Training starten
     func start() {
         startedAt = Date()
         isCompleted = false
+        isLiveSession = true // NEU: Markiert als Live-Session
     }
 
     // Training beenden
@@ -182,7 +216,7 @@ final class StrengthSession {
         completedAt = Date()
         isCompleted = true
 
-            // Dauer berechnen und speichern
+        // Dauer berechnen und speichern
         if let minutes = actualDuration {
             duration = minutes
         }
@@ -195,3 +229,9 @@ final class StrengthSession {
             .first { !$0.isCompleted }
     }
 }
+
+
+
+
+
+

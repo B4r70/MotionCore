@@ -25,33 +25,62 @@ struct WorkoutExportPackage: Codable {
 
 // MARK: Struktur
 struct WorkoutExportItem: Codable {
+    // Grunddaten
     let date: String? // ISO8601
     let duration: Int?
     let distance: Double?
     let calories: Int?
     let difficulty: Int?
     let heartRate: Int?
+    let maxHeartRate: Int? // NEU
     let bodyWeight: Double?
+    let notes: String? // NEU
     let intensity: Int? // Enum als rawValue (0...5)
     let trainingProgram: String? // Enum als rawValue ("manual", ...)
     let cardioDevice: Int?
+
+    // Session-Status (NEU)
+    let isCompleted: Bool?
+    let isLiveSession: Bool?
+    let startedAt: String? // ISO8601
+    let completedAt: String? // ISO8601
+
+    // Subjektive Bewertung für ML (NEU)
+    let perceivedExertion: Int? // RPE 1-10
+    let energyLevelBefore: Int? // 1-5
+
+    // HealthKit-Integration (NEU)
+    let healthKitWorkoutUUID: String? // UUID als String
+    let deviceSource: String?
 }
 
 // MARK: Mapper
 extension CardioSession {
     // → DTO (Export)
     var exportItem: WorkoutExportItem {
-        WorkoutExportItem(
-            date: ISO8601DateFormatter().string(from: date),
+        let iso = ISO8601DateFormatter()
+
+        return WorkoutExportItem(
+            date: iso.string(from: date),
             duration: duration > 0 ? duration : nil,
             distance: distance > 0 ? distance : nil,
             calories: calories > 0 ? calories : nil,
             difficulty: difficulty > 1 ? difficulty : nil,
             heartRate: heartRate > 0 ? heartRate : nil,
+            maxHeartRate: maxHeartRate > 0 ? maxHeartRate : nil,
             bodyWeight: bodyWeight > 0.0 ? bodyWeight : nil,
+            notes: notes.isEmpty ? nil : notes,
             intensity: intensity != .none ? intensity.rawValue : nil,
             trainingProgram: trainingProgram != .manual ? trainingProgram.rawValue : nil,
-            cardioDevice: cardioDevice != .none ? cardioDevice.rawValue : nil
+            cardioDevice: cardioDevice != .none ? cardioDevice.rawValue : nil,
+            isCompleted: isCompleted ? true : nil,
+            isLiveSession: isLiveSession ? true : nil,
+            startedAt: startedAt.map { iso.string(from: $0) },
+            completedAt: completedAt.map { iso.string(from: $0) },
+            perceivedExertion: perceivedExertion,
+            energyLevelBefore: energyLevelBefore,
+            healthKitWorkoutUUID: healthKitWorkoutUUID?.uuidString,
+            deviceSource: deviceSource != "manual" ? deviceSource : nil
         )
     }
 
@@ -59,18 +88,30 @@ extension CardioSession {
     static func fromExportItem(_ e: WorkoutExportItem) -> CardioSession {
         let iso = ISO8601DateFormatter()
 
-        return CardioSession(
+        let session = CardioSession(
             date: e.date.flatMap { iso.date(from: $0) } ?? .now,
             duration: e.duration ?? 0,
             distance: e.distance ?? 0.0,
             calories: e.calories ?? 0,
             difficulty: e.difficulty ?? 1,
             heartRate: e.heartRate ?? 0,
+            maxHeartRate: e.maxHeartRate ?? 0,
             bodyWeight: e.bodyWeight ?? 0.0,
+            notes: e.notes ?? "",
+            isCompleted: e.isCompleted ?? false,
+            isLiveSession: e.isLiveSession ?? false,
+            startedAt: e.startedAt.flatMap { iso.date(from: $0) },
+            completedAt: e.completedAt.flatMap { iso.date(from: $0) },
+            perceivedExertion: e.perceivedExertion,
+            energyLevelBefore: e.energyLevelBefore,
+            healthKitWorkoutUUID: e.healthKitWorkoutUUID.flatMap { UUID(uuidString: $0) },
+            deviceSource: e.deviceSource ?? "manual",
             intensity: e.intensity.flatMap { Intensity(rawValue: $0) } ?? .none,
             trainingProgram: e.trainingProgram.flatMap { TrainingProgram(rawValue: $0) } ?? .manual,
             cardioDevice: e.cardioDevice.flatMap { CardioDevice(rawValue: $0) } ?? .none
         )
+
+        return session
     }
 }
 
@@ -349,18 +390,33 @@ struct StrengthSessionExportPackage: Codable {
 
 // MARK: Struktur
 struct StrengthSessionExportItem: Codable {
+    // Grunddaten
     let date: String // ISO8601
     let duration: Int?
     let calories: Int?
     let notes: String?
     let bodyWeight: Double?
     let heartRate: Int?
+    let maxHeartRate: Int? // NEU
     let workoutType: String // Enum rawValue
     let intensity: Int? // Enum rawValue
+
+    // Session-Status
     let isCompleted: Bool
+    let isLiveSession: Bool? // NEU
     let startedAt: String? // ISO8601
     let completedAt: String? // ISO8601
-    let exerciseSets: [ExerciseSetExportItem] // Eingebettete Sets
+
+    // Subjektive Bewertung für ML (NEU)
+    let perceivedExertion: Int? // RPE 1-10
+    let energyLevelBefore: Int? // 1-5
+
+    // HealthKit-Integration (NEU)
+    let healthKitWorkoutUUID: String? // UUID als String
+    let deviceSource: String?
+
+    // Eingebettete Sets
+    let exerciseSets: [ExerciseSetExportItem]
 }
 
 // MARK: Mapper
@@ -376,11 +432,17 @@ extension StrengthSession {
             notes: notes.isEmpty ? nil : notes,
             bodyWeight: bodyWeight > 0 ? bodyWeight : nil,
             heartRate: heartRate > 0 ? heartRate : nil,
+            maxHeartRate: maxHeartRate > 0 ? maxHeartRate : nil,
             workoutType: workoutTypeRaw,
             intensity: intensity != .none ? intensityRaw : nil,
             isCompleted: isCompleted,
+            isLiveSession: isLiveSession ? true : nil,
             startedAt: startedAt.map { iso.string(from: $0) },
             completedAt: completedAt.map { iso.string(from: $0) },
+            perceivedExertion: perceivedExertion,
+            energyLevelBefore: energyLevelBefore,
+            healthKitWorkoutUUID: healthKitWorkoutUUID?.uuidString,
+            deviceSource: deviceSource != "manual" ? deviceSource : nil,
             exerciseSets: exerciseSets.map { $0.exportItem }
         )
     }
@@ -396,14 +458,18 @@ extension StrengthSession {
             notes: e.notes ?? "",
             bodyWeight: e.bodyWeight ?? 0.0,
             heartRate: e.heartRate ?? 0,
+            maxHeartRate: e.maxHeartRate ?? 0,
+            isCompleted: e.isCompleted,
+            isLiveSession: e.isLiveSession ?? false,
+            startedAt: e.startedAt.flatMap { iso.date(from: $0) },
+            completedAt: e.completedAt.flatMap { iso.date(from: $0) },
+            perceivedExertion: e.perceivedExertion,
+            energyLevelBefore: e.energyLevelBefore,
+            healthKitWorkoutUUID: e.healthKitWorkoutUUID.flatMap { UUID(uuidString: $0) },
+            deviceSource: e.deviceSource ?? "manual",
             workoutType: StrengthWorkoutType(rawValue: e.workoutType) ?? .fullBody,
             intensity: e.intensity.flatMap { Intensity(rawValue: $0) } ?? .none
         )
-
-        // Session-Status setzen
-        session.isCompleted = e.isCompleted
-        session.startedAt = e.startedAt.flatMap { iso.date(from: $0) }
-        session.completedAt = e.completedAt.flatMap { iso.date(from: $0) }
 
         // ExerciseSets importieren und verknüpfen
         for setItem in e.exerciseSets {
@@ -413,5 +479,134 @@ extension StrengthSession {
         }
 
         return session
+    }
+}
+
+// ==================================================================================
+// MARK: - OutdoorSession (Outdoor-Aktivitäten) - NEU
+// ==================================================================================
+
+// MARK: Paket
+struct OutdoorSessionExportPackage: Codable {
+    let version: Int
+    let exportedAt: String // ISO8601
+    let items: [OutdoorSessionExportItem]
+}
+
+// MARK: Struktur
+struct OutdoorSessionExportItem: Codable {
+    // Grunddaten
+    let date: String // ISO8601
+    let duration: Int?
+    let distance: Double?
+    let calories: Int?
+
+    // Outdoor-spezifische Daten
+    let elevationGain: Double?
+    let averageSpeed: Double?
+    let maxSpeed: Double?
+
+    // Gesundheitsdaten
+    let heartRate: Int?
+    let maxHeartRate: Int?
+    let bodyWeight: Double?
+
+    // Route/Location
+    let routeName: String?
+    let startLocation: String?
+    let endLocation: String?
+    let notes: String?
+
+    // Wetter
+    let temperature: Double?
+    let weatherCondition: String? // Enum rawValue
+
+    // Aktivitätstyp und Intensität
+    let outdoorActivity: String // Enum rawValue
+    let intensity: Int? // Enum rawValue
+
+    // Session-Status
+    let isCompleted: Bool?
+    let isLiveSession: Bool?
+    let startedAt: String? // ISO8601
+    let completedAt: String? // ISO8601
+
+    // Subjektive Bewertung für ML
+    let perceivedExertion: Int? // RPE 1-10
+    let energyLevelBefore: Int? // 1-5
+
+    // HealthKit-Integration
+    let healthKitWorkoutUUID: String? // UUID als String
+    let deviceSource: String?
+}
+
+// MARK: Mapper
+extension OutdoorSession {
+    // → DTO (Export)
+    var exportItem: OutdoorSessionExportItem {
+        let iso = ISO8601DateFormatter()
+
+        return OutdoorSessionExportItem(
+            date: iso.string(from: date),
+            duration: duration > 0 ? duration : nil,
+            distance: distance > 0 ? distance : nil,
+            calories: calories > 0 ? calories : nil,
+            elevationGain: elevationGain > 0 ? elevationGain : nil,
+            averageSpeed: averageSpeed > 0 ? averageSpeed : nil,
+            maxSpeed: maxSpeed > 0 ? maxSpeed : nil,
+            heartRate: heartRate > 0 ? heartRate : nil,
+            maxHeartRate: maxHeartRate > 0 ? maxHeartRate : nil,
+            bodyWeight: bodyWeight > 0 ? bodyWeight : nil,
+            routeName: routeName.isEmpty ? nil : routeName,
+            startLocation: startLocation.isEmpty ? nil : startLocation,
+            endLocation: endLocation.isEmpty ? nil : endLocation,
+            notes: notes.isEmpty ? nil : notes,
+            temperature: temperature,
+            weatherCondition: weatherCondition != .unknown ? weatherConditionRaw : nil,
+            outdoorActivity: outdoorActivityRaw,
+            intensity: intensity != .none ? intensityRaw : nil,
+            isCompleted: isCompleted ? true : nil,
+            isLiveSession: isLiveSession ? true : nil,
+            startedAt: startedAt.map { iso.string(from: $0) },
+            completedAt: completedAt.map { iso.string(from: $0) },
+            perceivedExertion: perceivedExertion,
+            energyLevelBefore: energyLevelBefore,
+            healthKitWorkoutUUID: healthKitWorkoutUUID?.uuidString,
+            deviceSource: deviceSource != "manual" ? deviceSource : nil
+        )
+    }
+
+    // ← DTO (Import)
+    static func fromExportItem(_ e: OutdoorSessionExportItem) -> OutdoorSession {
+        let iso = ISO8601DateFormatter()
+
+        return OutdoorSession(
+            date: iso.date(from: e.date) ?? Date(),
+            duration: e.duration ?? 0,
+            distance: e.distance ?? 0.0,
+            calories: e.calories ?? 0,
+            elevationGain: e.elevationGain ?? 0.0,
+            averageSpeed: e.averageSpeed ?? 0.0,
+            maxSpeed: e.maxSpeed ?? 0.0,
+            heartRate: e.heartRate ?? 0,
+            maxHeartRate: e.maxHeartRate ?? 0,
+            bodyWeight: e.bodyWeight ?? 0.0,
+            routeName: e.routeName ?? "",
+            startLocation: e.startLocation ?? "",
+            endLocation: e.endLocation ?? "",
+            notes: e.notes ?? "",
+            temperature: e.temperature,
+            isCompleted: e.isCompleted ?? false,
+            isLiveSession: e.isLiveSession ?? false,
+            startedAt: e.startedAt.flatMap { iso.date(from: $0) },
+            completedAt: e.completedAt.flatMap { iso.date(from: $0) },
+            perceivedExertion: e.perceivedExertion,
+            energyLevelBefore: e.energyLevelBefore,
+            healthKitWorkoutUUID: e.healthKitWorkoutUUID.flatMap { UUID(uuidString: $0) },
+            deviceSource: e.deviceSource ?? "manual",
+            outdoorActivity: OutdoorActivity(rawValue: e.outdoorActivity) ?? .cycling,
+            intensity: e.intensity.flatMap { Intensity(rawValue: $0) } ?? .none,
+            weatherCondition: e.weatherCondition.flatMap { WeatherCondition(rawValue: $0) } ?? .unknown
+        )
     }
 }
