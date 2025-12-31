@@ -15,10 +15,7 @@ import SwiftUI
 
 @main
 struct MotionCoreApp: App {
-    // State für Userdefaults in den AppSettings
     @StateObject private var appSettings = AppSettings.shared
-
-    // State für den ActiveSessionManager für Wiederherstellung von abgebrochenen Sitzungen
     @StateObject private var activeSessionManager = ActiveSessionManager.shared
 
     // State für Session-Wiederherstellungs-Alert
@@ -51,23 +48,25 @@ struct MotionCoreApp: App {
     var body: some Scene {
         WindowGroup {
             BaseView()
-                .environmentObject(appSettings) // AppSettings sind Userdefaults und von überall zugreifbar
-                .environmentObject(activeSessionManager) // SessionManager als Environment
+                .environmentObject(appSettings)
+                .environmentObject(activeSessionManager)
                 .preferredColorScheme(appSettings.appTheme.colorScheme)
-                .handleSessionLifecycle() // Automatisches Background-/Foreground-Handling
+                .handleSessionLifecycle()
                 .onAppear {
                     checkForActiveSession()
                 }
                 .alert("Aktive Session gefunden", isPresented: $showSessionRestoreAlert) {
                     Button("Fortsetzen") {
-                            // Navigation zur aktiven Session wird in BaseView gehandelt
+                        restoreSession()
                     }
-                    Button("Verwerfen", role: .destructive) {
+                    Button("Verwerfen", role: .cancel) {
                         activeSessionManager.discardSession()
+                        pendingRestoreInfo = nil
                     }
                 } message: {
                     if let info = pendingRestoreInfo {
-                        Text("Du hast eine pausierte \(info.workoutType.description)-Session. Möchtest du fortfahren?")
+                        let formattedTime = activeSessionManager.formattedElapsedTime
+                        Text("Du hast eine pausierte \(info.workoutType.description)-Session (\(formattedTime)). Möchtest du fortfahren?")
                     }
                 }
         }
@@ -105,9 +104,3 @@ struct MotionCoreApp: App {
         pendingRestoreInfo = nil
     }
 }
-
-
-
-
-
-
