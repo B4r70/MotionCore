@@ -18,16 +18,20 @@ import Foundation
 struct DataSettingsView: View {
     @Environment(\.modelContext) private var modelContext
 
-        // Daten für Prüfung der Export-Aktivierung abrufen
+    // MARK: Queries für die Core Entities
     @Query(sort: \CardioSession.date, order: .reverse)
     private var allWorkouts: [CardioSession]
 
-    @Query(sort: \Exercise.name, order: .forward)
-    private var allExercises: [Exercise]
-
-        // Queries für weitere Datentypen
+    // Queries für weitere Datentypen
     @Query(sort: \StrengthSession.date, order: .reverse)
     private var allStrengthSessions: [StrengthSession]
+
+    @Query(sort: \OutdoorSession.date, order: .reverse)
+    private var allOutdoorSessions: [OutdoorSession]
+
+    // MARK: Queries für die Supporting Entities
+    @Query(sort: \Exercise.name, order: .forward)
+    private var allExercises: [Exercise]
 
     @Query(sort: \TrainingPlan.title, order: .forward)
     private var allTrainingPlans: [TrainingPlan]
@@ -59,6 +63,11 @@ struct DataSettingsView: View {
     @State private var showingSetImportPicker = false
     @State private var setExportURL: URL?
     @State private var showingSetShareSheet = false
+
+    // OutdoorSession Import/Export
+    @State private var showingOutdoorImportPicker = false
+    @State private var outdoorExportURL: URL?
+    @State private var showingOutdoorShareSheet = false
 
     // UI-Meldungen für Import/Export
     @State private var showingImportSuccess = false
@@ -107,7 +116,7 @@ struct DataSettingsView: View {
             showingImportError = true // Zeigt den Fehler-Alert an
         }
     }
-
+    // Exercise Export
     private func handleExerciseExport() {
         do {
             exerciseExportURL = try dataManager.exportExercises(context: modelContext)
@@ -121,7 +130,7 @@ struct DataSettingsView: View {
         }
     }
 
-        //  StrengthSession Export
+    //  StrengthSession Export
     private func handleStrengthExport() {
         do {
             strengthExportURL = try dataManager.exportStrengthSessions(context: modelContext)
@@ -131,6 +140,20 @@ struct DataSettingsView: View {
             showingImportError = true
         } catch {
             importErrorMessage = "Krafttraining-Export-Fehler: \(error.localizedDescription)"
+            showingImportError = true
+        }
+    }
+
+    //  OutdoorSession Export
+    private func handleOutdoorExport() {
+        do {
+            outdoorExportURL = try dataManager.exportOutdoorSessions(context: modelContext)
+            showingOutdoorShareSheet = true
+        } catch let error as DataIOError {
+            importErrorMessage = error.errorDescription ?? "Outdoor-Export fehlgeschlagen"
+            showingImportError = true
+        } catch {
+            importErrorMessage = "Outdoor-Export-Fehler: \(error.localizedDescription)"
             showingImportError = true
         }
     }
@@ -165,8 +188,7 @@ struct DataSettingsView: View {
 
     var body: some View {
         List {
-
-                // MARK: - Allgemeine Einstellungen
+            // MARK: - Allgemeine Einstellungen
             Section("Workouts") {
                 VStack(alignment: .leading, spacing: 8) {
                         // Export
@@ -188,7 +210,7 @@ struct DataSettingsView: View {
                     }
                 }
             }
-
+            // MARK: Übungsbibliothek Export/Import
             Section("Übungsbibliothek") {
                 VStack(alignment: .leading, spacing: 8) {
                         // Exercise Export
@@ -210,7 +232,7 @@ struct DataSettingsView: View {
                     }
                 }
             }
-
+            // MARK: Krafttraining Export/Import
             Section("Krafttrainings") {
                 VStack(alignment: .leading, spacing: 8) {
                         // StrengthSession Export
@@ -232,7 +254,7 @@ struct DataSettingsView: View {
                     }
                 }
             }
-
+            // MARK: Trainingspläne Export/Import
             Section("Trainingsplan") {
                 VStack(alignment: .leading, spacing: 8) {
                         // TrainingPlan Export
@@ -254,7 +276,7 @@ struct DataSettingsView: View {
                     }
                 }
             }
-
+            // MARK: Übungssätze Export/Import
             Section("Übungssätze") {
                 VStack(alignment: .leading, spacing: 8) {
                         // ExerciseSet Export
@@ -273,6 +295,28 @@ struct DataSettingsView: View {
                         showingSetImportPicker = true
                     } label: {
                         Label("Übungssätze importieren", systemImage: "square.and.arrow.down")
+                    }
+                }
+            }
+            // MARK: Outdoor-Trainings Export/Import
+            Section("Outdoor") {
+                VStack(alignment: .leading, spacing: 8) {
+                        // OutdoorSession Export
+                    Button {
+                        handleOutdoorExport()
+                    } label: {
+                        Label("Outdoor-Trainings exportieren", systemImage: "square.and.arrow.up")
+                    }
+                    .disabled(allOutdoorSessions.isEmpty)
+
+                    Divider()
+                        .padding(8)
+
+                        // OutdoorSession Import
+                    Button {
+                        showingOutdoorImportPicker = true
+                    } label: {
+                        Label("Outdorr-Trainings importieren", systemImage: "square.and.arrow.down")
                     }
                 }
             }
@@ -316,6 +360,12 @@ struct DataSettingsView: View {
         // Share Sheet für ExerciseSets
         .sheet(isPresented: $showingSetShareSheet) {
             if let url = setExportURL {
+                ShareSheet(items: [url])
+            }
+        }
+        // Share Sheet für OutdoorSession
+        .sheet(isPresented: $showingOutdoorShareSheet) {
+            if let url = outdoorExportURL {
                 ShareSheet(items: [url])
             }
         }
@@ -468,6 +518,36 @@ struct DataSettingsView: View {
             case .failure(let error):
                 importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
                 showingImportError = true
+            }
+        }
+            // File Importer für StrengthSessions
+        .fileImporter(
+            isPresented: $showingOutdoorImportPicker,
+            allowedContentTypes: [.json],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+                case .success(let urls):
+                    guard let url = urls.first else { return }
+                    do {
+                        let count = try dataManager.importOutdoorSessions(context: modelContext, url: url)
+                        if count > 0 {
+                            importErrorMessage = "Import erfolgreich! \(count) Outdoor-Trainings wurden hinzugefügt."
+                            showingImportSuccess = true
+                        } else {
+                            importErrorMessage = "Die Datei enthielt keine Outdoor-Trainings zum Importieren."
+                            showingImportError = true
+                        }
+                    } catch let error as DataIOError {
+                        importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
+                        showingImportError = true
+                    } catch {
+                        importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
+                        showingImportError = true
+                    }
+                case .failure(let error):
+                    importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
+                    showingImportError = true
             }
         }
         // UI-Meldungen für Import

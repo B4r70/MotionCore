@@ -19,6 +19,11 @@ import SwiftData
 
 @Model
 final class CardioSession {
+    // MARK: - Identifikation
+
+    // Stabile UUID für Session-Tracking (überlebt App-Neustarts)
+    var sessionUUID: UUID = UUID()
+
     // MARK: - Grunddaten
     // Trainingsblöcke innerhalb einer Session (z. B. Cardio + Kraft)
     var date: Date = Date() // Datum

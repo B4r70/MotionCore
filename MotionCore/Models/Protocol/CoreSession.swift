@@ -22,6 +22,11 @@ import Foundation
 // Definiert die Basis-Eigenschaften, die jede Session haben muss.
 protocol CoreSession: AnyObject {
 
+    // MARK: - Identifikation
+
+    // Stabile UUID für Session-Tracking (überlebt App-Neustarts)
+    var sessionUUID: UUID { get set }
+
     // MARK: - Zeitliche Daten
 
     // Datum der Session (für Anzeige/Sortierung)

@@ -17,13 +17,13 @@ struct ActiveWorkoutView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
+    @EnvironmentObject private var sessionManager: ActiveSessionManager // NEU
 
     @Bindable var session: StrengthSession
 
-    // Timer
-    @State private var elapsedSeconds: Int = 0
-    @State private var timer: Timer?
-    @State private var isTimerRunning = true
+    // Timer - Verwendet den SessionManager
+    // Lokaler State nur noch für UI-Updates
+    @State private var localTimer: Timer?
 
     // UI States
     @State private var showFinishAlert = false
@@ -110,10 +110,12 @@ struct ActiveWorkoutView: View {
             }
         }
         .onAppear {
-            startTimer()
+            setupSession()
             hapticGenerator.prepare()
         }
-        .onDisappear { stopTimer() }
+        .onDisappear {
+            cleanupTimer()
+        }
         .alert("Training abbrechen?", isPresented: $showCancelAlert) {
             Button("Weiter trainieren", role: .cancel) {}
             Button("Abbrechen", role: .destructive) {
@@ -142,14 +144,21 @@ struct ActiveWorkoutView: View {
         VStack(spacing: 12) {
             // Timer und Fortschritt
             HStack {
-                // Timer
+                // Timer - NEU: Verwendet SessionManager
                 HStack(spacing: 8) {
-                    Image(systemName: "clock.fill")
-                        .foregroundStyle(.blue)
+                    Image(systemName: sessionManager.isPaused ? "pause.circle.fill" : "clock.fill")
+                        .foregroundStyle(sessionManager.isPaused ? .orange : .blue)
 
-                    Text(formatTime(elapsedSeconds))
+                    Text(sessionManager.formattedElapsedTime)
                         .font(.title2.bold().monospacedDigit())
                         .foregroundStyle(.primary)
+
+                    // NEU: Pausiert-Indikator
+                    if sessionManager.isPaused {
+                        Text("(Pausiert)")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
                 }
 
                 Spacer()
@@ -458,15 +467,22 @@ struct ActiveWorkoutView: View {
 
     private var bottomActionBar: some View {
         HStack(spacing: 16) {
-            // Pause/Play Button
+            // Pause/Play Button - NEU: Verwendet SessionManager
             Button {
                 toggleTimer()
             } label: {
-                Image(systemName: isTimerRunning ? "pause.fill" : "play.fill")
+                Image(systemName: sessionManager.isPaused ? "play.fill" : "pause.fill")
                     .font(.title2)
                     .foregroundStyle(.primary)
                     .frame(width: 56, height: 56)
-                    .background(.ultraThinMaterial, in: Circle())
+                    .background(
+                        sessionManager.isPaused ? Color.green.opacity(0.2) : Color.primary.opacity(0.1),
+                        in: Circle()
+                    )
+                    .overlay(
+                        Circle()
+                            .stroke(sessionManager.isPaused ? Color.green : Color.clear, lineWidth: 2)
+                    )
             }
 
             Spacer()
@@ -497,35 +513,54 @@ struct ActiveWorkoutView: View {
         .background(.ultraThinMaterial)
     }
 
-    // MARK: - Timer Funktionen
+    // MARK: - Session Setup
 
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if isTimerRunning {
-                elapsedSeconds += 1
-            }
+    // Initialisiert die Session beim Erscheinen der View
+    private func setupSession() {
+        let sessionID = session.sessionUUID.uuidString
+        let activeID = sessionManager.getActiveSessionID()
+
+        // Prüfen ob diese Session bereits im Manager aktiv ist
+        if let activeID = activeID, activeID == sessionID {
+            // Diese Session ist bereits im Manager registriert (wiederhergestellt oder bereits laufend)
+            // Nichts zu tun - Timer-State kommt vom Manager
+        } else if sessionManager.hasActiveSession {
+            // Eine ANDERE Session ist aktiv - alte verwerfen und neue starten
+            sessionManager.discardSession()
+            startNewSession(sessionID: sessionID)
+        } else {
+            // Keine aktive Session - neue starten
+            startNewSession(sessionID: sessionID)
         }
     }
 
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
+    // Startet eine neue Session im Manager
+    private func startNewSession(sessionID: String) {
+        sessionManager.startSession(sessionID: sessionID, workoutType: .strength)
+
+        // Session in SwiftData als gestartet markieren
+        session.start()
+        try? context.save()
     }
+
+    // Räumt den lokalen Timer auf (falls vorhanden)
+    private func cleanupTimer() {
+        localTimer?.invalidate()
+        localTimer = nil
+    }
+
+    // MARK: - Timer Funktionen (NEU: Delegiert an SessionManager)
 
     private func toggleTimer() {
-        isTimerRunning.toggle()
-    }
-
-    private func formatTime(_ seconds: Int) -> String {
-        let hours = seconds / 3600
-        let minutes = (seconds % 3600) / 60
-        let secs = seconds % 60
-
-        if hours > 0 {
-            return String(format: "%d:%02d:%02d", hours, minutes, secs)
+        if sessionManager.isPaused {
+            sessionManager.resumeSession()
         } else {
-            return String(format: "%02d:%02d", minutes, secs)
+            sessionManager.pauseSession()
         }
+
+        // Haptic Feedback
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
 
     // MARK: - Aktionen
@@ -577,13 +612,22 @@ struct ActiveWorkoutView: View {
     }
 
     private func finishWorkout() {
+        // NEU: Session über Manager beenden und Dauer holen
+        let finalSeconds = sessionManager.endSession()
+
+        // Session-Daten aktualisieren
         session.complete()
-        session.duration = elapsedSeconds / 60
+        session.duration = finalSeconds / 60
+
         try? context.save()
         dismiss()
     }
 
     private func cancelWorkout() {
+        // NEU: Session im Manager verwerfen
+        sessionManager.discardSession()
+
+        // Session aus SwiftData löschen
         context.delete(session)
         try? context.save()
         dismiss()
@@ -732,4 +776,5 @@ struct SetEditSheet: View {
         }())
     }
     .environmentObject(AppSettings.shared)
+    .environmentObject(ActiveSessionManager.shared)
 }

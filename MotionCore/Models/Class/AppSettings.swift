@@ -71,7 +71,21 @@ class AppSettings: ObservableObject {
     }
 
     // MARK: Userdefaults in AppSettings
+/*
+    // Userdefault: Vorname des Benutzers
+    @Published var userSurname: String {
+        didSet {
+            UserDefaults.standard.set(userSurname, forKey: "user.userSurname")
+        }
+    }
 
+        // Userdefault: Nachname des Benutzers
+    @Published var userLastName: String {
+        didSet {
+            UserDefaults.standard.set(userLastName, forKey: "user.userLastName")
+        }
+    }
+*/
     // Userdefault: Körpergröße in cm
     @Published var userBodyHeight: Int {
         didSet {

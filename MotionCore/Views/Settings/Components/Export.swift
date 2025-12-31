@@ -32,9 +32,9 @@ struct WorkoutExportItem: Codable {
     let calories: Int?
     let difficulty: Int?
     let heartRate: Int?
-    let maxHeartRate: Int? // NEU
+    let maxHeartRate: Int? 
     let bodyWeight: Double?
-    let notes: String? // NEU
+    let notes: String? 
     let intensity: Int? // Enum als rawValue (0...5)
     let trainingProgram: String? // Enum als rawValue ("manual", ...)
     let cardioDevice: Int?
@@ -397,13 +397,13 @@ struct StrengthSessionExportItem: Codable {
     let notes: String?
     let bodyWeight: Double?
     let heartRate: Int?
-    let maxHeartRate: Int? // NEU
+    let maxHeartRate: Int? 
     let workoutType: String // Enum rawValue
     let intensity: Int? // Enum rawValue
 
     // Session-Status
     let isCompleted: Bool
-    let isLiveSession: Bool? // NEU
+    let isLiveSession: Bool? 
     let startedAt: String? // ISO8601
     let completedAt: String? // ISO8601
 
@@ -483,7 +483,7 @@ extension StrengthSession {
 }
 
 // ==================================================================================
-// MARK: - OutdoorSession (Outdoor-Aktivitäten) - NEU
+// MARK: - OutdoorSession (Outdoor-Aktivitäten)
 // ==================================================================================
 
 // MARK: Paket

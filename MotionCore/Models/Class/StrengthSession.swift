@@ -19,6 +19,11 @@ import SwiftData
 
 @Model
 final class StrengthSession {
+    // MARK: Identifikation
+
+    // Stabile UUID für Session-Tracking (überlebt App-Neustarts)
+    var sessionUUID: UUID = UUID()
+    
     // MARK: - Grunddaten
 
     var date: Date = Date()

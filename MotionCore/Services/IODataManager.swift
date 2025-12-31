@@ -13,16 +13,16 @@
 import Foundation
 import SwiftData
 
-/// Verwaltet die Import- und Exportfunktionen für Workout-Daten.
-/// (Der korrekte Klassenname lautet IODataManager)
+// Verwaltet die Import- und Exportfunktionen für Workout-Daten.
+// (Der korrekte Klassenname lautet IODataManager)
 final class IODataManager {
 
     // MARK: - CardioSession Export/Import
 
-    /// Führt den Export aller Workout-Daten durch, speichert sie temporär als JSON
-    /// und gibt die URL zur Freigabe zurück.
-    /// - Parameter context: Der ModelContext, um alle Workouts abzurufen.
-    /// - Returns: Die temporäre URL zur exportierten JSON-Datei.
+    // Führt den Export aller Workout-Daten durch, speichert sie temporär als JSON
+    // und gibt die URL zur Freigabe zurück.
+    // - Parameter context: Der ModelContext, um alle Workouts abzurufen.
+    // - Returns: Die temporäre URL zur exportierten JSON-Datei.
     func exportWorkouts(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
         let descriptor = FetchDescriptor<CardioSession>(sortBy: [SortDescriptor(\.date, order: .reverse)])
@@ -54,10 +54,10 @@ final class IODataManager {
         return url
     }
 
-    /// Führt den Import von Workout-Daten aus einer gegebenen URL durch.
-    /// - Parameter context: Der ModelContext, in dem die Daten gespeichert werden sollen.
-    /// - Parameter url: Die URL der zu importierenden JSON-Datei.
-    /// - Returns: Die Anzahl der erfolgreich importierten Workouts.
+    // Führt den Import von Workout-Daten aus einer gegebenen URL durch.
+    // - Parameter context: Der ModelContext, in dem die Daten gespeichert werden sollen.
+    // - Parameter url: Die URL der zu importierenden JSON-Datei.
+    // - Returns: Die Anzahl der erfolgreich importierten Workouts.
     func importWorkouts(context: ModelContext, url: URL) throws -> Int {
         // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
@@ -92,9 +92,9 @@ final class IODataManager {
         return importedCount
     }
 
-    /// Löscht alle gespeicherten WorkoutSession-Objekte aus dem ModelContext.
-    /// - Parameter context: Der ModelContext, aus dem die Daten gelöscht werden sollen.
-    /// - Throws: Einen Fehler, falls die Operation fehlschlägt.
+    // Löscht alle gespeicherten WorkoutSession-Objekte aus dem ModelContext.
+    // - Parameter context: Der ModelContext, aus dem die Daten gelöscht werden sollen.
+    // - Throws: Einen Fehler, falls die Operation fehlschlägt.
     func deleteAllWorkouts(context: ModelContext) throws -> Int {
 
         // 1. Alle Objekte vom Typ WorkoutSession abrufen
@@ -116,9 +116,9 @@ final class IODataManager {
 
     // MARK: - Exercise Export/Import
 
-    /// Exportiert alle Übungen als JSON-Datei
-    /// - Parameter context: Der ModelContext, um alle Exercises abzurufen
-    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    // Exportiert alle Übungen als JSON-Datei
+    // - Parameter context: Der ModelContext, um alle Exercises abzurufen
+    // - Returns: Die temporäre URL zur exportierten JSON-Datei
     func exportExercises(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
         let descriptor = FetchDescriptor<Exercise>(sortBy: [SortDescriptor(\.name, order: .forward)])
@@ -148,11 +148,11 @@ final class IODataManager {
         return url
     }
 
-    /// Importiert Übungen aus einer JSON-Datei
-    /// - Parameters:
-    ///   - context: Der ModelContext
-    ///   - url: Die URL der JSON-Datei
-    /// - Returns: Anzahl der importierten Übungen
+    // Importiert Übungen aus einer JSON-Datei
+    // - Parameters:
+    //   - context: Der ModelContext
+    //   - url: Die URL der JSON-Datei
+    // - Returns: Anzahl der importierten Übungen
     func importExercises(context: ModelContext, url: URL) throws -> Int {
         // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
@@ -188,9 +188,9 @@ final class IODataManager {
 
     // MARK: - TrainingPlan Export/Import
 
-    /// Exportiert alle Trainingspläne als JSON-Datei
-    /// - Parameter context: Der ModelContext, um alle TrainingPlans abzurufen
-    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    // Exportiert alle Trainingspläne als JSON-Datei
+    // - Parameter context: Der ModelContext, um alle TrainingPlans abzurufen
+    // - Returns: Die temporäre URL zur exportierten JSON-Datei
     func exportTrainingPlans(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
         let descriptor = FetchDescriptor<TrainingPlan>(sortBy: [SortDescriptor(\.title, order: .forward)])
@@ -220,11 +220,11 @@ final class IODataManager {
         return url
     }
 
-    /// Importiert Trainingspläne aus einer JSON-Datei
-    /// - Parameters:
-    ///   - context: Der ModelContext
-    ///   - url: Die URL der JSON-Datei
-    /// - Returns: Anzahl der importierten Trainingspläne
+    // Importiert Trainingspläne aus einer JSON-Datei
+    // - Parameters:
+    //   - context: Der ModelContext
+    //   - url: Die URL der JSON-Datei
+    // - Returns: Anzahl der importierten Trainingspläne
     func importTrainingPlans(context: ModelContext, url: URL) throws -> Int {
         // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
@@ -266,9 +266,9 @@ final class IODataManager {
 
     // MARK: - ExerciseSet Export/Import
 
-    /// Exportiert alle ExerciseSets als JSON-Datei
-    /// - Parameter context: Der ModelContext
-    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    // Exportiert alle ExerciseSets als JSON-Datei
+    // - Parameter context: Der ModelContext
+    // - Returns: Die temporäre URL zur exportierten JSON-Datei
     func exportExerciseSets(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
         let descriptor = FetchDescriptor<ExerciseSet>(sortBy: [SortDescriptor(\.setNumber, order: .forward)])
@@ -298,11 +298,11 @@ final class IODataManager {
         return url
     }
 
-    /// Importiert ExerciseSets aus einer JSON-Datei
-    /// - Parameters:
-    ///   - context: Der ModelContext
-    ///   - url: Die URL der JSON-Datei
-    /// - Returns: Anzahl der importierten ExerciseSets
+    // Importiert ExerciseSets aus einer JSON-Datei
+    // - Parameters:
+    //   - context: Der ModelContext
+    //   - url: Die URL der JSON-Datei
+    // - Returns: Anzahl der importierten ExerciseSets
     func importExerciseSets(context: ModelContext, url: URL) throws -> Int {
         // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
@@ -338,9 +338,9 @@ final class IODataManager {
 
     // MARK: - StrengthSession Export/Import
 
-    /// Exportiert alle Krafttrainings als JSON-Datei
-    /// - Parameter context: Der ModelContext, um alle StrengthSessions abzurufen
-    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    // Exportiert alle Krafttrainings als JSON-Datei
+    // - Parameter context: Der ModelContext, um alle StrengthSessions abzurufen
+    // - Returns: Die temporäre URL zur exportierten JSON-Datei
     func exportStrengthSessions(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
         let descriptor = FetchDescriptor<StrengthSession>(sortBy: [SortDescriptor(\.date, order: .reverse)])
@@ -370,11 +370,11 @@ final class IODataManager {
         return url
     }
 
-    /// Importiert Krafttrainings aus einer JSON-Datei
-    /// - Parameters:
-    ///   - context: Der ModelContext
-    ///   - url: Die URL der JSON-Datei
-    /// - Returns: Anzahl der importierten StrengthSessions
+    // Importiert Krafttrainings aus einer JSON-Datei
+    // - Parameters:
+    //   - context: Der ModelContext
+    //   - url: Die URL der JSON-Datei
+    // - Returns: Anzahl der importierten StrengthSessions
     func importStrengthSessions(context: ModelContext, url: URL) throws -> Int {
         // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
@@ -417,9 +417,9 @@ final class IODataManager {
 
     // MARK: - OutdoorSession Export/Import (NEU)
 
-    /// Exportiert alle Outdoor-Aktivitäten als JSON-Datei
-    /// - Parameter context: Der ModelContext, um alle OutdoorSessions abzurufen
-    /// - Returns: Die temporäre URL zur exportierten JSON-Datei
+    // Exportiert alle Outdoor-Aktivitäten als JSON-Datei
+    // - Parameter context: Der ModelContext, um alle OutdoorSessions abzurufen
+    // - Returns: Die temporäre URL zur exportierten JSON-Datei
     func exportOutdoorSessions(context: ModelContext) throws -> URL {
         // 1. Daten abrufen
         let descriptor = FetchDescriptor<OutdoorSession>(sortBy: [SortDescriptor(\.date, order: .reverse)])
@@ -449,11 +449,11 @@ final class IODataManager {
         return url
     }
 
-    /// Importiert Outdoor-Aktivitäten aus einer JSON-Datei
-    /// - Parameters:
-    ///   - context: Der ModelContext
-    ///   - url: Die URL der JSON-Datei
-    /// - Returns: Anzahl der importierten OutdoorSessions
+    // Importiert Outdoor-Aktivitäten aus einer JSON-Datei
+    // - Parameters:
+    //   - context: Der ModelContext
+    //   - url: Die URL der JSON-Datei
+    // - Returns: Anzahl der importierten OutdoorSessions
     func importOutdoorSessions(context: ModelContext, url: URL) throws -> Int {
         // Sicherstellen, dass die Datei zugänglich ist
         guard url.startAccessingSecurityScopedResource() else {
@@ -560,8 +560,8 @@ extension IODataManager {
         try deleteAll(OutdoorSession.self, context: context)
     }
 
-    /// Convenience: delete all strength-related data in a safe-ish order.
-    /// (Parents first if they cascade; otherwise this still usually works with optional relationships.)
+    // Convenience: delete all strength-related data in a safe-ish order.
+    // (Parents first if they cascade; otherwise this still usually works with optional relationships.)
     func deleteAllStrengthData(context: ModelContext) throws -> (sessions: Int, plans: Int, sets: Int, exercises: Int) {
         let sessions = try deleteAllStrengthSessions(context: context)
         let plans = try deleteAllTrainingPlans(context: context)
@@ -570,7 +570,7 @@ extension IODataManager {
         return (sessions, plans, sets, exercises)
     }
 
-    /// Convenience: delete all workout data (Cardio, Strength, Outdoor) (NEU)
+    // Convenience: delete all workout data (Cardio, Strength, Outdoor) (NEU)
     func deleteAllWorkoutData(context: ModelContext) throws -> (cardio: Int, strength: Int, outdoor: Int) {
         let cardio = try deleteAllWorkouts(context: context)
         let strength = try deleteAllStrengthSessions(context: context)
