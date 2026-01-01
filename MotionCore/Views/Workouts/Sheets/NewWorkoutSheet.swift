@@ -35,8 +35,8 @@ struct NewWorkoutSheet: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.top, 8)
-                
+                .padding(.top, 32)
+
                 // Workout-Typ Buttons
                 VStack(spacing: 12) {
                     WorkoutTypeButton(

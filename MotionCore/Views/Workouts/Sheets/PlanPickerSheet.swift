@@ -30,9 +30,7 @@ struct PlanPickerSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.clear
-                    .background(.ultraThinMaterial)
-                    .ignoresSafeArea()
+                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
                 VStack(spacing: 0) {
                     if strengthPlans.isEmpty {

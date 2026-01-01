@@ -35,6 +35,23 @@ struct TrainingPlanCard: View {
         }
     }
 
+    // Anzahl der einzigartigen Übungen im Plan
+    private var exerciseCount: Int {
+        return plan.groupedTemplateSets.count
+    }
+
+    // Gesamtanzahl der Sätze im Plan
+    private var totalSets: Int {
+        return plan.templateSets.count
+    }
+
+    // Gesamtvolumen des Plans (Gewicht × Wiederholungen)
+    private var totalVolume: Double {
+        return plan.templateSets.reduce(0) { total, set in
+            total + (set.weight * Double(set.reps))
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
 
@@ -76,6 +93,79 @@ struct TrainingPlanCard: View {
             }
 
             .glassDivider(paddingTop: 12, paddingBottom: 8)
+
+                // NEU: Statistiken (Übungen, Sätze & Volumen)
+            LazyVGrid(
+                columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ],
+                spacing: 12
+            ) {
+                    // Übungen
+                VStack(spacing: 4) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "dumbbell.fill")
+                            .font(.caption2)
+                            .foregroundStyle(planAccent)
+
+                        Text("\(exerciseCount)")
+                            .font(.title3.bold())
+                            .foregroundStyle(.primary)
+                    }
+
+                    Text("Übungen")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+
+                    // Sätze
+                VStack(spacing: 4) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "number.circle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(planAccent)
+
+                        Text("\(totalSets)")
+                            .font(.title3.bold())
+                            .foregroundStyle(.primary)
+                    }
+
+                    Text("Sätze")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+
+                    // Volumen
+                VStack(spacing: 4) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "scalemass.fill")
+                            .font(.caption2)
+                            .foregroundStyle(planAccent)
+
+                        Text(formatVolume(totalVolume))
+                            .font(.title3.bold())
+                            .foregroundStyle(.primary)
+                    }
+
+                    Text("Volumen")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+            }
+
+            .glassDivider(paddingTop: 12, paddingBottom: 8)
+
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
@@ -142,5 +232,15 @@ struct TrainingPlanCard: View {
             }
         }
         .glassCard()
+    }
+    // Formatiert das Volumen (kg)
+    private func formatVolume(_ volume: Double) -> String {
+        if volume <= 0 {
+            return "–"
+        } else if volume >= 1000 {
+            return String(format: "%.1fk", volume / 1000)
+        } else {
+            return String(format: "%.0f", volume)
+        }
     }
 }

@@ -13,7 +13,13 @@
 import SwiftUI
 
 struct StrengthSessionCard: View {
+    @EnvironmentObject private var sessionManager: ActiveSessionManager
+
     let session: StrengthSession
+
+    // Animation-States
+    @State private var pauseIconScale: CGFloat = 1.0
+    @State private var runningCircleScale: CGFloat = 1.0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -75,18 +81,52 @@ struct StrengthSessionCard: View {
         }
     }
 
+    // Status-Badge der Krafttraining Card
     private var statusBadge: some View {
         Group {
             if session.isCompleted {
+                // Abgeschlossen
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title2)
                     .foregroundStyle(.green)
             } else {
-                // Laufendes Training
+                // Prüfen ob pausiert
+                let isPaused = sessionManager.getActiveSessionID() == session.sessionUUID.uuidString
+                && sessionManager.isPaused
+
+                    // Laufendes Training
                 HStack(spacing: 4) {
-                    Circle()
-                        .fill(.orange)
-                        .frame(width: 8, height: 8)
+                    // Icon ändert sich je nach Status und pulsiert
+                    if isPaused {
+                        // Pausiert - pulsierendes Pause-Icon
+                        Image(systemName: "pause.circle.fill")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                            .scaleEffect(pauseIconScale)
+                            .animation(
+                                .easeInOut(duration: 1.0)
+                                .repeatForever(autoreverses: true),
+                                value: pauseIconScale
+                            )
+                            .onAppear {
+                                pauseIconScale = 1.2
+                            }
+                    } else {
+                        // Aktiv laufend - pulsierender Kreis
+                        Circle()
+                            .fill(.orange)
+                            .frame(width: 8, height: 8)
+                            .scaleEffect(runningCircleScale)
+                            .animation(
+                                .easeInOut(duration: 0.8)
+                                .repeatForever(autoreverses: true),
+                                value: runningCircleScale
+                            )
+                            .onAppear {
+                                runningCircleScale = 1.4
+                            }
+                    }
+
                     Text("\(Int(session.progress * 100))%")
                         .font(.caption.bold())
                         .foregroundStyle(.orange)

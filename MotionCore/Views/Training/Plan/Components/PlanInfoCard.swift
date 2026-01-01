@@ -95,7 +95,7 @@ struct PlanInfoCard: View {
                 Text("Startdatum")
                     .foregroundStyle(.secondary)
                 Spacer()
-                Text(plan.startDate, style: .date)
+                Text(plan.startDate.formatted(AppFormatters.dateGermanLong))
                     .foregroundStyle(.primary)
                     .fontWeight(.semibold)
             }
@@ -105,7 +105,7 @@ struct PlanInfoCard: View {
                     Text("Enddatum")
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Text(end, style: .date)
+                    Text(end.formatted(AppFormatters.dateGermanLong))
                         .foregroundStyle(.primary)
                         .fontWeight(.semibold)
                 }

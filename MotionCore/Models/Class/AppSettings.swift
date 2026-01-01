@@ -70,6 +70,20 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // Workoutdefaults: Haptic Feedback beim Rest-Timer
+    @Published var enableRestTimerHaptic: Bool {
+        didSet {
+            UserDefaults.standard.set(enableRestTimerHaptic, forKey: "workout.enableRestTimerHaptic")
+        }
+    }
+
+    // Workoutdefaults: Standard-Pausenzeit in Sekunden (falls nicht im Set definiert)
+    @Published var defaultRestTime: Int {
+        didSet {
+            UserDefaults.standard.set(defaultRestTime, forKey: "workout.defaultRestTime")
+        }
+    }
+
     // MARK: Userdefaults in AppSettings
 /*
     // Userdefault: Vorname des Benutzers
@@ -173,6 +187,12 @@ class AppSettings: ObservableObject {
 
         // Workout: Show Empty Fields
         showEmptyFields = defaults.bool(forKey: "workout.showEmptyFields")
+
+        // Rest-Timer: Haptic Feedback (Default: true)
+        enableRestTimerHaptic = defaults.object(forKey: "workout.enableRestTimerHaptic") as? Bool ?? true
+
+        // Rest-Timer: Standard-Pausenzeit (Default: 90 Sekunden)
+        defaultRestTime = defaults.object(forKey: "workout.defaultRestTime") as? Int ?? 90
 
         // Initialisiere die Körpergröße
         userBodyHeight = UserDefaults.standard.integer(forKey: "user.userBodyHeight")

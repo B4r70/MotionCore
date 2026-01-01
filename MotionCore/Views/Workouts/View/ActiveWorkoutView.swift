@@ -17,7 +17,7 @@ struct ActiveWorkoutView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
-    @EnvironmentObject private var sessionManager: ActiveSessionManager // NEU
+    @EnvironmentObject private var sessionManager: ActiveSessionManager // Session-Manager
 
     @Bindable var session: StrengthSession
 
@@ -30,6 +30,11 @@ struct ActiveWorkoutView: View {
     @State private var showCancelAlert = false
     @State private var selectedSetForEdit: ExerciseSet?
     @State private var selectedExerciseIndex: Int? = nil  // Manuell ausgewählte Übung
+
+    // Pause-Timer States
+    @State private var restTimerSeconds: Int = 0
+    @State private var restTimer: Timer?
+    @State private var isResting: Bool = false
 
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -58,6 +63,14 @@ struct ActiveWorkoutView: View {
         } ?? 0
     }
 
+    // Zuletzt abgeschlossener Satz (für Rest-Timer)
+    private var lastCompletedSet: ExerciseSet? {
+        // Finde den zuletzt abgeschlossenen Satz (für die Pausenzeit)
+        return session.exerciseSets
+            .filter { $0.isCompleted }
+            .last
+    }
+
     var body: some View {
         ZStack {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
@@ -69,8 +82,14 @@ struct ActiveWorkoutView: View {
                 // Hauptinhalt
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Unterscheide zwischen einzelner Übung komplett und Training komplett
-                        if let current = currentSet {
+                        // NEU: Unterscheide zwischen Pause, aktuellem Satz und Training komplett
+                        if isResting, let completedSet = lastCompletedSet {
+                            RestTimerCard(
+                                remainingSeconds: restTimerSeconds,
+                                targetSeconds: completedSet.restSeconds,
+                                onSkip: skipRest
+                            )
+                        } else if let current = currentSet {
                             currentSetCard(current)
                         } else if isSelectedExerciseComplete, !session.allSetsCompleted {
                             // Einzelne Übung ist komplett, aber Training noch nicht
@@ -102,7 +121,14 @@ struct ActiveWorkoutView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
-                    showCancelAlert = true
+                    // Prüfen ob Timer läuft
+                    if sessionManager.isPaused {
+                        // Timer pausiert → Direkt zurück ohne Alert
+                        handlePausedExit()
+                    } else {
+                        // Timer läuft → Alert zeigen
+                        showCancelAlert = true
+                    }
                 } label: {
                     Image(systemName: "xmark")
                         .foregroundStyle(.secondary)
@@ -116,13 +142,18 @@ struct ActiveWorkoutView: View {
         .onDisappear {
             cleanupTimer()
         }
-        .alert("Training abbrechen?", isPresented: $showCancelAlert) {
-            Button("Weiter trainieren", role: .cancel) {}
-            Button("Abbrechen", role: .destructive) {
+        .alert("Training läuft noch", isPresented: $showCancelAlert) {
+            Button("Pausieren") {
+                handlePauseAndExit()
+            }
+            Button("Verwerfen", role: .destructive) {
                 cancelWorkout()
             }
+            Button("Abbrechen", role: .cancel) {
+                    // Bleibt in ActiveWorkoutView - nichts tun
+            }
         } message: {
-            Text("Dein Fortschritt geht verloren.")
+            Text("Möchtest du das Training pausieren oder verwerfen?")
         }
         .alert("Training beenden?", isPresented: $showFinishAlert) {
             Button("Weiter trainieren", role: .cancel) {}
@@ -133,7 +164,7 @@ struct ActiveWorkoutView: View {
             Text("Du hast \(session.completedSets) von \(session.totalSets) Sätzen abgeschlossen.")
         }
         .sheet(item: $selectedSetForEdit) { set in
-            SetEditSheet(set: set)
+            SetEditSheet(set: set, session: session)
                 .environmentObject(appSettings)
         }
     }
@@ -609,6 +640,12 @@ struct ActiveWorkoutView: View {
         // Haptic Feedback
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
+
+        // Pause-Timer starten (außer es ist der letzte Satz)
+        // Verwende die restSeconds aus dem Set
+        if !session.allSetsCompleted {
+            startRestTimer(for: set)
+        }
     }
 
     private func finishWorkout() {
@@ -632,128 +669,76 @@ struct ActiveWorkoutView: View {
         try? context.save()
         dismiss()
     }
-}
 
-// MARK: - Set Edit Sheet
-
-struct SetEditSheet: View {
-    @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
-
-    @Bindable var set: ExerciseSet
-
-    @State private var weight: Double
-    @State private var reps: Int
-
-    init(set: ExerciseSet) {
-        self.set = set
-        _weight = State(initialValue: set.weight)
-        _reps = State(initialValue: set.reps)
+    // Wird aufgerufen wenn Timer bereits pausiert ist
+    private func handlePausedExit() {
+        // Training ist bereits pausiert → Einfach zurück zur ListView
+        // State bleibt im SessionManager erhalten für spätere Wiederaufnahme
+        dismiss()
     }
 
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+    // Pausiert das Training und kehrt zur ListView zurück
+    private func handlePauseAndExit() {
+        // Timer pausieren (speichert automatisch in UserDefaults)
+        sessionManager.pauseSession()
 
-                VStack(spacing: 24) {
-                    // Übungs-Info
-                    HStack {
-                        ExerciseGifView(assetName: set.exerciseGifAssetName, size: 60)
+        // Session in SwiftData bleibt erhalten (nicht löschen!)
+        // Benutzer kann später fortsetzen
 
-                        VStack(alignment: .leading) {
-                            Text(set.exerciseName)
-                                .font(.headline)
-                            Text("Satz \(set.setNumber)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
+        dismiss()
+    }
 
-                        Spacer()
-                    }
-                    .glassCard()
+    // MARK: - Rest Timer Functions
 
-                    // Gewicht
-                    VStack(spacing: 12) {
-                        Text("Gewicht (kg)")
-                            .font(.headline)
+    // Startet den Pause-Timer nach Satz-Abschluss
+    private func startRestTimer(for set: ExerciseSet) {
+            // NEU: Pausenzeit aus dem Set nehmen
+        let restTime = set.restSeconds
 
-                        HStack {
-                            Button {
-                                if weight >= 2.5 { weight -= 2.5 }
-                            } label: {
-                                Image(systemName: "minus.circle.fill")
-                                    .font(.title)
-                                    .foregroundStyle(.blue)
-                            }
+        // Falls restSeconds 0 ist, keinen Timer starten
+        guard restTime > 0 else { return }
 
-                            Text(String(format: "%.1f", weight))
-                                .font(.system(size: 48, weight: .bold, design: .rounded))
-                                .frame(width: 150)
+        restTimerSeconds = restTime
 
-                            Button {
-                                weight += 2.5
-                            } label: {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.title)
-                                    .foregroundStyle(.blue)
-                            }
-                        }
-                    }
-                    .glassCard()
+        withAnimation(.easeInOut) {
+            isResting = true
+        }
 
-                    // Wiederholungen
-                    VStack(spacing: 12) {
-                        Text("Wiederholungen")
-                            .font(.headline)
+        // Timer starten
+        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            if self.restTimerSeconds > 0 {
+                self.restTimerSeconds -= 1
+            } else {
+                // Pause vorbei
+                self.endRestTimer()
 
-                        HStack {
-                            Button {
-                                if reps > 1 { reps -= 1 }
-                            } label: {
-                                Image(systemName: "minus.circle.fill")
-                                    .font(.title)
-                                    .foregroundStyle(.blue)
-                            }
-
-                            Text("\(reps)")
-                                .font(.system(size: 48, weight: .bold, design: .rounded))
-                                .frame(width: 150)
-
-                            Button {
-                                reps += 1
-                            } label: {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.title)
-                                    .foregroundStyle(.blue)
-                            }
-                        }
-                    }
-                    .glassCard()
-
-                    Spacer()
-                }
-                .padding()
-            }
-            .navigationTitle("Satz anpassen")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") {
-                        dismiss()
-                    }
-                }
-
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Speichern") {
-                        set.weight = weight
-                        set.reps = reps
-                        dismiss()
-                    }
-                    .fontWeight(.semibold)
+                // NEU: Haptic Feedback wenn in Settings aktiviert
+                if self.appSettings.enableRestTimerHaptic {
+                    let generator = UINotificationFeedbackGenerator()
+                    generator.notificationOccurred(.success)
                 }
             }
         }
+    }
+
+    // Beendet den Pause-Timer
+    private func endRestTimer() {
+        restTimer?.invalidate()
+        restTimer = nil
+
+        withAnimation(.easeInOut) {
+            isResting = false
+        }
+
+        restTimerSeconds = 0
+    }
+
+    // Überspringt die Pause
+    private func skipRest() {
+        endRestTimer()
+
+        // Haptic Feedback
+        hapticGenerator.impactOccurred()
     }
 }
 

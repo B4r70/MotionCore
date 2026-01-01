@@ -96,6 +96,27 @@ struct WorkoutSettingsView: View {
                 // Show empty fields option – gehört inhaltlich auch zu den Defaults
                 Toggle("Leere Felder anzeigen", isOn: $appSettings.showEmptyFields)
             }
+            // Pause-Timer Einstellungen
+            Section("Pause-Timer") {
+                // Haptic Feedback Toggle
+                Toggle(isOn: $appSettings.enableRestTimerHaptic) {
+                    HStack {
+                        Image(systemName: "hand.tap.fill")
+                            .foregroundStyle(.orange)
+                        Text("Haptic Feedback")
+                    }
+                }
+
+                // Standard-Pausenzeit Picker
+                Picker("Standard-Pausenzeit", selection: $appSettings.defaultRestTime) {
+                    Text("30 Sekunden").tag(30)
+                    Text("60 Sekunden").tag(60)
+                    Text("90 Sekunden").tag(90)
+                    Text("120 Sekunden").tag(120)
+                }
+                .pickerStyle(.menu)
+                .tint(.secondary)
+            }
         }
         .navigationTitle("Defaultwerte für Workouts")
         .navigationBarTitleDisplayMode(.inline)
