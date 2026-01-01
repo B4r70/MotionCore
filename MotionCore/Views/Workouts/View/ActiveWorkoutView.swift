@@ -82,7 +82,7 @@ struct ActiveWorkoutView: View {
                 // Hauptinhalt
                 ScrollView {
                     VStack(spacing: 20) {
-                        // NEU: Unterscheide zwischen Pause, aktuellem Satz und Training komplett
+                        // Unterscheide zwischen Pause, aktuellem Satz und Training komplett
                         if isResting, let completedSet = lastCompletedSet {
                             RestTimerCard(
                                 remainingSeconds: restTimerSeconds,
@@ -692,7 +692,7 @@ struct ActiveWorkoutView: View {
 
     // Startet den Pause-Timer nach Satz-Abschluss
     private func startRestTimer(for set: ExerciseSet) {
-            // NEU: Pausenzeit aus dem Set nehmen
+            // Pausenzeit aus dem Set nehmen
         let restTime = set.restSeconds
 
         // Falls restSeconds 0 ist, keinen Timer starten
@@ -712,7 +712,7 @@ struct ActiveWorkoutView: View {
                 // Pause vorbei
                 self.endRestTimer()
 
-                // NEU: Haptic Feedback wenn in Settings aktiviert
+                // Haptic Feedback wenn in Settings aktiviert
                 if self.appSettings.enableRestTimerHaptic {
                     let generator = UINotificationFeedbackGenerator()
                     generator.notificationOccurred(.success)

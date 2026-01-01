@@ -94,7 +94,7 @@ struct TrainingPlanCard: View {
 
             .glassDivider(paddingTop: 12, paddingBottom: 8)
 
-                // NEU: Statistiken (Übungen, Sätze & Volumen)
+            // Statistiken (Übungen, Sätze & Volumen)
             LazyVGrid(
                 columns: [
                     GridItem(.flexible()),
@@ -103,7 +103,7 @@ struct TrainingPlanCard: View {
                 ],
                 spacing: 12
             ) {
-                    // Übungen
+                // Übungen
                 VStack(spacing: 4) {
                     HStack(spacing: 4) {
                         Image(systemName: "dumbbell.fill")
