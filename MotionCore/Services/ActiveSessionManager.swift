@@ -29,6 +29,7 @@ struct ActiveSessionState: Codable {
     let pausedAt: Date               // Zeitpunkt der Pausierung
     let accumulatedSeconds: Int      // Bereits angesammelte Zeit vor Pause
     let isPaused: Bool               // Ist die Session pausiert?
+    let selectedExerciseIndex: Int?  // Ausgewählte Übung innerhalb eines Trainings
 
     // Berechnet die Gesamtzeit inkl. der Zeit seit Pausierung (falls nicht pausiert)
     func totalElapsedSeconds(at date: Date = Date()) -> Int {
@@ -94,7 +95,8 @@ class ActiveSessionManager: ObservableObject {
             startedAt: now,
             pausedAt: now,
             accumulatedSeconds: 0,
-            isPaused: false
+            isPaused: false,
+            selectedExerciseIndex: nil
         )
 
         activeSessionState = state
@@ -122,7 +124,8 @@ class ActiveSessionManager: ObservableObject {
             startedAt: state.startedAt,
             pausedAt: Date(), // Neuer Referenzpunkt
             accumulatedSeconds: state.accumulatedSeconds,
-            isPaused: false
+            isPaused: false,
+            selectedExerciseIndex: state.selectedExerciseIndex
         )
 
         activeSessionState = state
@@ -146,7 +149,8 @@ class ActiveSessionManager: ObservableObject {
             startedAt: state.startedAt,
             pausedAt: now,
             accumulatedSeconds: state.accumulatedSeconds + additionalSeconds,
-            isPaused: true
+            isPaused: true,
+            selectedExerciseIndex: state.selectedExerciseIndex
         )
 
         activeSessionState = state
@@ -210,6 +214,29 @@ class ActiveSessionManager: ObservableObject {
         } else {
             return String(format: "%02d:%02d", minutes, seconds)
         }
+    }
+
+    // Setzt den ausgewählten Übungs-Index
+    func setSelectedExerciseIndex(_ index: Int?) {
+        guard var state = activeSessionState else { return }
+
+        state = ActiveSessionState(
+            sessionUUID: state.sessionUUID,
+            workoutType: state.workoutType,
+            startedAt: state.startedAt,
+            pausedAt: state.pausedAt,
+            accumulatedSeconds: state.accumulatedSeconds,
+            isPaused: state.isPaused,
+            selectedExerciseIndex: index
+        )
+
+        activeSessionState = state
+        saveState()
+    }
+
+    // Gibt den gespeicherten Übungs-Index zurück
+    func getSelectedExerciseIndex() -> Int? {
+        return activeSessionState?.selectedExerciseIndex
     }
 
     // Dauer in Minuten (für Session-Speicherung)

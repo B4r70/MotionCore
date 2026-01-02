@@ -19,15 +19,60 @@ struct SetConfigurationSheet: View {
     let exercise: Exercise
     let onSave: ([ExerciseSet]) -> Void
 
-    let initialWeight: Double?  // Optional: letztes Gewicht
+    // Nur noch initialSets (kein initialWeight mehr)
+    let initialSets: [ExerciseSet]?
 
-    init(exercise: Exercise, initialWeight: Double? = nil, onSave: @escaping ([ExerciseSet]) -> Void) {
+    init(
+        exercise: Exercise,
+        initialSets: [ExerciseSet]? = nil,
+        onSave: @escaping ([ExerciseSet]) -> Void
+    ) {
         self.exercise = exercise
-        self.initialWeight = initialWeight
+        self.initialSets = initialSets
         self.onSave = onSave
 
-        // Setze targetWeight auf initialWeight falls vorhanden
-        _targetWeight = State(initialValue: initialWeight ?? 0)
+        // Werte aus initialSets laden, falls vorhanden
+        if let sets = initialSets, !sets.isEmpty {
+            let workSets = sets.filter { $0.setKind == .work }
+            let warmupSetsCount = sets.filter { $0.setKind == .warmup }.count
+
+            // Anzahl Arbeitssätze
+            _numberOfSets = State(initialValue: workSets.count)
+
+            // Wiederholungen (aus erstem Arbeitssatz)
+            _targetReps = State(initialValue: workSets.first?.reps ?? 10)
+
+            // Gewicht (weightPerSide falls unilateral, sonst weight)
+            let firstWorkSet = workSets.first
+            if exercise.isUnilateral, let weightPerSide = firstWorkSet?.weightPerSide {
+                _targetWeight = State(initialValue: weightPerSide)
+            } else {
+                _targetWeight = State(initialValue: firstWorkSet?.weight ?? 0)
+            }
+
+            // Pausenzeit
+            _restSeconds = State(initialValue: firstWorkSet?.restSeconds ?? 90)
+
+            // RIR
+            _targetRIR = State(initialValue: firstWorkSet?.targetRIR ?? 2)
+
+            // Set-Art
+            _workSetKind = State(initialValue: firstWorkSet?.setKind ?? .work)
+
+            // Aufwärmsätze
+            _includeWarmup = State(initialValue: warmupSetsCount > 0)
+            _warmupSets = State(initialValue: max(warmupSetsCount, 1))
+        } else {
+            // Default-Werte wenn keine initialSets vorhanden
+            _targetWeight = State(initialValue: 0)
+            _numberOfSets = State(initialValue: 3)
+            _targetReps = State(initialValue: 10)
+            _restSeconds = State(initialValue: 90)
+            _targetRIR = State(initialValue: 2)
+            _workSetKind = State(initialValue: .work)
+            _includeWarmup = State(initialValue: false)
+            _warmupSets = State(initialValue: 1)
+        }
     }
 
     // Konfiguration
@@ -41,6 +86,14 @@ struct SetConfigurationSheet: View {
     @State private var restSeconds: Int = 90
     @State private var targetRIR: Int = 2
     @State private var workSetKind: SetKind = .work
+
+    // Für Long Press bei Sets, Reps und Weight
+    @State private var incrementTimer: Timer?
+
+    // Enumeration für fokussierte Felder
+    enum FocusedField {
+        case sets, reps, weight
+    }
 
     // MARK: - Body
 
@@ -84,6 +137,9 @@ struct SetConfigurationSheet: View {
                             .glassButton(size: 36, accentColor: .blue)
                     }
                 }
+            }
+            .onDisappear {
+                incrementTimer?.invalidate()
             }
         }
     }
@@ -137,57 +193,110 @@ struct SetConfigurationSheet: View {
                     .font(.headline)
                     .foregroundStyle(.primary)
 
-                HStack {
+                HStack(spacing: 12) {
+                    // Minus Button
                     Button {
-                        if numberOfSets > 1 { numberOfSets -= 1 }
+                        decreaseSets(by: 1)
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if incrementTimer == nil {
+                                    startContinuousAdjustment(field: .sets, increment: false)
+                                }
+                            }
+                            .onEnded { _ in
+                                stopContinuousAdjustment()
+                            }
+                    )
 
+                    // Große Zahl
                     Text("\(numberOfSets)")
-                        .font(.title.bold())
-                        .frame(width: 60)
+                        .font(.system(size: 48, weight: .bold, design: .rounded))
+                        .frame(width: 100)
+                        .contentTransition(.numericText())
 
+                    // Plus Button
                     Button {
-                        if numberOfSets < 10 { numberOfSets += 1 }
+                        increaseSets(by: 1)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if incrementTimer == nil {
+                                    startContinuousAdjustment(field: .sets, increment: true)
+                                }
+                            }
+                            .onEnded { _ in
+                                stopContinuousAdjustment()
+                            }
+                    )
                 }
                 .frame(maxWidth: .infinity)
             }
 
             GlassDivider.compact
+
             // Wiederholungen
             VStack(alignment: .leading, spacing: 8) {
                 Text("Wiederholungen pro Satz")
                     .font(.headline)
                     .foregroundStyle(.primary)
 
-                HStack {
+                HStack(spacing: 12) {
+                    // Minus Button
                     Button {
-                        if targetReps > 1 { targetReps -= 1 }
+                        decreaseReps(by: 1)
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if incrementTimer == nil {
+                                    startContinuousAdjustment(field: .reps, increment: false)
+                                }
+                            }
+                            .onEnded { _ in
+                                stopContinuousAdjustment()
+                            }
+                    )
 
+                    // Große Zahl
                     Text("\(targetReps)")
-                        .font(.title.bold())
-                        .frame(width: 60)
+                        .font(.system(size: 48, weight: .bold, design: .rounded))
+                        .frame(width: 100)
+                        .contentTransition(.numericText())
 
+                    // Plus Button
                     Button {
-                        if targetReps < 50 { targetReps += 1 }
+                        increaseReps(by: 1)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if incrementTimer == nil {
+                                    startContinuousAdjustment(field: .reps, increment: true)
+                                }
+                            }
+                            .onEnded { _ in
+                                stopContinuousAdjustment()
+                            }
+                    )
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -213,45 +322,71 @@ struct SetConfigurationSheet: View {
                     }
                 }
 
-                HStack {
+                HStack(spacing: 12) {
+                    // Minus Button
                     Button {
-                        if targetWeight >= 0.5 { targetWeight -= 0.5 }
+                        decreaseWeight(by: 0.25)
                     } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if incrementTimer == nil {
+                                    startContinuousAdjustment(field: .weight, increment: false)
+                                }
+                            }
+                            .onEnded { _ in
+                                stopContinuousAdjustment()
+                            }
+                    )
 
-                    // Anzeige mit "2 ×" bei unilateral
+                    // Große Zahl mit unilateral Anzeige
                     if exercise.isUnilateral && targetWeight > 0 {
-                        HStack(spacing: 4) {
+                        HStack(spacing: 6) {
                             Text("2 ×")
-                                .font(.title3)
+                                .font(.title2)
                                 .foregroundStyle(.orange)
-                            Text(String(format: "%.1f", targetWeight))
-                                .font(.title.bold())
+                            Text(String(format: "%.2f", targetWeight))
+                                .font(.system(size: 48, weight: .bold, design: .rounded))
                         }
-                        .frame(width: 100)
+                        .frame(width: 150)
+                        .contentTransition(.numericText())
                     } else {
-                        Text(targetWeight > 0 ? String(format: "%.1f", targetWeight) : "–")
-                            .font(.title.bold())
-                            .frame(width: 80)
+                        Text(targetWeight > 0 ? String(format: "%.2f", targetWeight) : "–")
+                            .font(.system(size: 48, weight: .bold, design: .rounded))
+                            .frame(width: 150)
+                            .contentTransition(.numericText())
                     }
 
+                    // Plus Button
                     Button {
-                        targetWeight += 0.5
+                        increaseWeight(by: 0.25)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if incrementTimer == nil {
+                                    startContinuousAdjustment(field: .weight, increment: true)
+                                }
+                            }
+                            .onEnded { _ in
+                                stopContinuousAdjustment()
+                            }
+                    )
                 }
                 .frame(maxWidth: .infinity)
 
                 // Hilfstext je nach Übungstyp
                 if exercise.isUnilateral {
                     if targetWeight > 0 {
-                        Text("Gesamt: \(String(format: "%.1f", targetWeight * 2)) kg (beide Seiten)")
+                        Text("Gesamt: \(String(format: "%.2f", targetWeight * 2)) kg (beide Seiten)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     } else {
@@ -300,7 +435,7 @@ struct SetConfigurationSheet: View {
             }
 
             GlassDivider.compact
-            
+
             // Pausenzeit
             SetRestTimeSection(restSeconds: $restSeconds)
 
@@ -329,7 +464,7 @@ struct SetConfigurationSheet: View {
                             setKind: .warmup,
                             restSeconds: 60,
                             targetRIR: 4,
-                            isUnilateral: exercise.isUnilateral  // NEU
+                            isUnilateral: exercise.isUnilateral
                         )
                     }
                 }
@@ -343,7 +478,7 @@ struct SetConfigurationSheet: View {
                         setKind: workSetKind,
                         restSeconds: restSeconds,
                         targetRIR: targetRIR,
-                        isUnilateral: exercise.isUnilateral  // NEU
+                        isUnilateral: exercise.isUnilateral
                     )
                 }
             }
@@ -456,6 +591,108 @@ struct SetConfigurationSheet: View {
         onSave(sets)
         dismiss()
     }
+
+    // MARK: - Adjustment Helpers
+
+    // Sets erhöhen
+    private func increaseSets(by amount: Int) {
+        if numberOfSets < 10 {
+            numberOfSets += amount
+            hapticFeedback()
+        }
+    }
+
+    // Sets vermindern
+    private func decreaseSets(by amount: Int) {
+        if numberOfSets > 1 {
+            numberOfSets -= amount
+            hapticFeedback()
+        }
+    }
+
+    // Reps erhöhen
+    private func increaseReps(by amount: Int) {
+        if targetReps < 50 {
+            targetReps += amount
+            hapticFeedback()
+        }
+    }
+
+    // Reps vermindern
+    private func decreaseReps(by amount: Int) {
+        if targetReps > 1 {
+            targetReps -= amount
+            hapticFeedback()
+        }
+    }
+
+    // Gewicht erhöhen (0,25 kg Schritte)
+    private func increaseWeight(by amount: Double) {
+        targetWeight += amount
+        targetWeight = (targetWeight * 4).rounded() / 4  // Auf 0,25 runden
+        hapticFeedback()
+    }
+
+    // Gewicht vermindern (0,25 kg Schritte)
+    private func decreaseWeight(by amount: Double) {
+        if targetWeight >= amount {
+            targetWeight -= amount
+            targetWeight = (targetWeight * 4).rounded() / 4  // Auf 0,25 runden
+            hapticFeedback()
+        }
+    }
+
+    // Continuous Adjustment (Long Press mit Delay)
+    private func startContinuousAdjustment(field: FocusedField, increment: Bool) {
+        // Warte kurz (0.8s) bevor kontinuierliches Anpassen startet
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            guard self.incrementTimer == nil else { return }
+
+            var counter = 0
+
+            self.incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { timer in
+                counter += 1
+
+                switch field {
+                case .sets:
+                    if increment {
+                        self.increaseSets(by: 1)
+                    } else {
+                        self.decreaseSets(by: 1)
+                    }
+
+                case .reps:
+                    if increment {
+                        self.increaseReps(by: 1)
+                    } else {
+                        self.decreaseReps(by: 1)
+                    }
+
+                case .weight:
+                    // Erste 20 Schritte: 0,25 kg
+                    // Danach: 0,5 kg (schneller)
+                    let step = counter > 20 ? 0.5 : 0.25
+                    if increment {
+                        self.increaseWeight(by: step)
+                    } else {
+                        self.decreaseWeight(by: step)
+                    }
+                }
+            }
+        }
+    }
+
+    // Timer stoppen
+    private func stopContinuousAdjustment() {
+        incrementTimer?.invalidate()
+        incrementTimer = nil
+    }
+
+    // Haptic Feedback
+    private func hapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+    }
 }
 
 // MARK: - Set Preview Row
@@ -467,7 +704,7 @@ private struct SetPreviewRow: View {
     let setKind: SetKind
     let restSeconds: Int
     let targetRIR: Int
-    let isUnilateral: Bool  // NEU
+    let isUnilateral: Bool
 
     var body: some View {
         HStack {

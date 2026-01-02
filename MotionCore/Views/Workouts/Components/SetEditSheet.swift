@@ -67,7 +67,7 @@ struct SetEditSheet: View {
 
                         HStack {
                             Button {
-                                if weight >= 2.5 { weight -= 2.5 }
+                                if weight >= 0.25 { weight -= 0.25 }
                             } label: {
                                 Image(systemName: "minus.circle.fill")
                                     .font(.title)
@@ -79,7 +79,7 @@ struct SetEditSheet: View {
                                 .frame(width: 250)
 
                             Button {
-                                weight += 2.5
+                                weight += 0.25
                             } label: {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.title)

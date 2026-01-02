@@ -26,7 +26,7 @@ struct RestTimerCard: View {
                 .font(.title2.bold())
                 .foregroundStyle(.secondary)
             
-            // Riesiger Timer (vom Boden lesbar!)
+            // Großer Pausen-Timer (damit die Zeit vom Boden lesbar ist!)
             Text(formatRestTime(remainingSeconds))
                 .font(.system(size: 96, weight: .bold, design: .rounded))
                 .foregroundStyle(remainingSeconds > 10 ? Color.primary : Color.orange)

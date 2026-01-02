@@ -5,7 +5,7 @@
 // Datei . . . . : TrainingFormView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.12.2025                                                       /
-// Beschreibung  : Formular zum Erstellen/Bearbeiten von TrainingsplÃ¤nen           /
+// Beschreibung  : Formular zum Erstellen/Bearbeiten von Trainingsplänen            /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -30,6 +30,8 @@ struct TrainingFormView: View {
     // Sheet States
     @State private var showExercisePicker = false
     @State private var selectedExerciseForConfig: Exercise? = nil
+    @State private var initialSetsForConfig: [ExerciseSet]? = nil  // NEU
+    @State private var sheetDidSave = false  // NEU: Track ob gespeichert wurde
 
     // Backup für Edit-Modus - falls Benutzer abbricht
     @State private var backupSetsForEdit: [ExerciseSet] = []
@@ -73,6 +75,7 @@ struct TrainingFormView: View {
         }
         .sheet(isPresented: $showExercisePicker) {
             ExercisePickerSheet { exercise in
+                initialSetsForConfig = nil  // NEU: Bei neuer Übung keine initialSets
                 selectedExerciseForConfig = exercise
             }
             .environmentObject(appSettings)
@@ -80,13 +83,15 @@ struct TrainingFormView: View {
         .sheet(item: $selectedExerciseForConfig) { exercise in
             SetConfigurationSheet(
                 exercise: exercise,
-                initialWeight: lastUsedWeight(for: exercise)  // Übergebe letztes Gewicht
+                initialSets: initialSetsForConfig  // NEU: Verwende gespeicherte State
             ) { sets in
                 addSets(sets)
             }
             .environmentObject(appSettings)
-            // Bei Abbruch (Sheet schließt ohne Speichern) Backup wiederherstellen
-            .onDisappear {
+        }
+        .onChange(of: selectedExerciseForConfig) { oldValue, newValue in
+            // Wenn das Sheet geschlossen wird (newValue == nil) und nicht gespeichert wurde
+            if oldValue != nil && newValue == nil {
                 restoreBackupIfCancelled()
             }
         }
@@ -121,6 +126,7 @@ struct TrainingFormView: View {
 
     // MARK: - Aktionen
 
+    // Trainingsplan sichern
     private func save() {
         dismissKeyboard()
         if mode == .add {
@@ -130,13 +136,17 @@ struct TrainingFormView: View {
         dismiss()
     }
 
+    // Trainingsplan löschen
     private func deletePlan() {
         context.delete(plan)
         try? context.save()
         dismiss()
     }
 
+    // Neues Set hinzufügen
     private func addSets(_ sets: [ExerciseSet]) {
+        sheetDidSave = true
+
         // Wenn wir im Edit-Modus sind, alte Sets endgültig löschen
         if isEditingExercise {
             for oldSet in backupSetsForEdit {
@@ -144,6 +154,7 @@ struct TrainingFormView: View {
             }
             backupSetsForEdit = []
             isEditingExercise = false
+            initialSetsForConfig = nil
         }
 
         // Neue Sets hinzufügen
@@ -153,23 +164,7 @@ struct TrainingFormView: View {
         }
     }
 
-    private func lastUsedWeight(for exercise: Exercise) -> Double? {
-        // Wenn wir im Edit-Modus sind, nutze das Backup
-        if isEditingExercise && !backupSetsForEdit.isEmpty {
-            let exerciseSets = backupSetsForEdit.filter {
-                $0.exerciseName == exercise.name && !$0.isWarmup
-            }
-            return exerciseSets.first?.weight  // ← Aus Backup! ✅
-        }
-
-        // Ansonsten: Normal aus dem Plan
-        let exerciseSets = plan.templateSets.filter {
-            $0.exerciseName == exercise.name && !$0.isWarmup
-        }
-
-        return exerciseSets.first?.weight
-    }
-
+    // Übung aus dem Trainingsplan löschen
     private func deleteExercise(_ exerciseName: String) {
         let setsToRemove = plan.templateSets.filter { $0.exerciseName == exerciseName }
         for set in setsToRemove {
@@ -178,26 +173,34 @@ struct TrainingFormView: View {
         }
     }
 
+    // Übung anpassen
     private func editExercise(_ exerciseName: String) {
+        // Reset sheetDidSave für neue Session
+        sheetDidSave = false
+
         if let existingSet = plan.templateSets.first(where: { $0.exerciseName == exerciseName }),
            let exercise = existingSet.exercise {
 
+            // Zuerst die Sets sammeln
+            let existingSets = plan.templateSets.filter { $0.exerciseName == exerciseName }
+
             // Backup der bestehenden Sets erstellen
-            backupSetsForEdit = plan.templateSets.filter { $0.exerciseName == exerciseName }
+            backupSetsForEdit = existingSets
+            initialSetsForConfig = existingSets
             isEditingExercise = true
 
             // Sets temporär entfernen (aber nicht aus SwiftData löschen!)
             plan.templateSets.removeAll { $0.exerciseName == exerciseName }
 
+            // Jetzt erst das Sheet öffnen
             selectedExerciseForConfig = exercise
         }
     }
 
     // Stellt das Backup wieder her, wenn der Benutzer abbricht
     private func restoreBackupIfCancelled() {
-        // Nur wiederherstellen wenn wir im Edit-Modus sind
-        // (isEditingExercise ist noch true = Benutzer hat nicht gespeichert)
-        if isEditingExercise {
+        // Nur wiederherstellen wenn wir im Edit-Modus sind UND NICHT gespeichert wurde
+        if isEditingExercise && !sheetDidSave {
             // Sets aus Backup wiederherstellen
             for set in backupSetsForEdit {
                 plan.templateSets.append(set)
@@ -206,6 +209,13 @@ struct TrainingFormView: View {
             // Cleanup
             backupSetsForEdit = []
             isEditingExercise = false
+            initialSetsForConfig = nil
+        } else {
+            // Cleanup trotzdem
+            backupSetsForEdit = []
+            isEditingExercise = false
+            initialSetsForConfig = nil
+            sheetDidSave = false  // Reset für nächstes Mal
         }
     }
 }

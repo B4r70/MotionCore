@@ -5,7 +5,7 @@
 // Datei . . . . : ActiveWorkoutView.swift                                          /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 27.12.2025                                                       /
-// Beschreibung  : Live-Tracking View während eines Krafttrainings                  /
+// Beschreibung  : Live-Tracking View während eines Krafttrainings                 /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -123,10 +123,10 @@ struct ActiveWorkoutView: View {
                 Button {
                     // Prüfen ob Timer läuft
                     if sessionManager.isPaused {
-                        // Timer pausiert → Direkt zurück ohne Alert
+                        // Timer pausiert â†’ Direkt zurück ohne Alert
                         handlePausedExit()
                     } else {
-                        // Timer läuft → Alert zeigen
+                        // Timer läuft â†’ Alert zeigen
                         showCancelAlert = true
                     }
                 } label: {
@@ -138,6 +138,10 @@ struct ActiveWorkoutView: View {
         .onAppear {
             setupSession()
             hapticGenerator.prepare()
+        }
+        .onChange(of: selectedExerciseIndex) { oldValue, newValue in
+            // Speichere den Index im SessionManager
+            sessionManager.setSelectedExerciseIndex(newValue)
         }
         .onDisappear {
             cleanupTimer()
@@ -553,15 +557,19 @@ struct ActiveWorkoutView: View {
 
         // Prüfen ob diese Session bereits im Manager aktiv ist
         if let activeID = activeID, activeID == sessionID {
-            // Diese Session ist bereits im Manager registriert (wiederhergestellt oder bereits laufend)
-            // Nichts zu tun - Timer-State kommt vom Manager
+          // Diese Session ist bereits im Manager registriert
         } else if sessionManager.hasActiveSession {
-            // Eine ANDERE Session ist aktiv - alte verwerfen und neue starten
+                // Eine ANDERE Session ist aktiv
             sessionManager.discardSession()
             startNewSession(sessionID: sessionID)
         } else {
             // Keine aktive Session - neue starten
             startNewSession(sessionID: sessionID)
+        }
+
+        // Stelle den gespeicherten Übungs-Index wieder her
+        if let savedIndex = sessionManager.getSelectedExerciseIndex() {
+            selectedExerciseIndex = savedIndex
         }
     }
 
@@ -641,11 +649,17 @@ struct ActiveWorkoutView: View {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
 
-        // Pause-Timer starten (außer es ist der letzte Satz)
-        // Verwende die restSeconds aus dem Set
-        if !session.allSetsCompleted {
+
+        // Pause-Timer nur starten wenn noch weitere Sätze der GLEICHEN Übung übrig sind
+        let remainingSetsForExercise = session.exerciseSets.filter {
+            $0.exerciseName == set.exerciseName && !$0.isCompleted
+        }
+
+        if !remainingSetsForExercise.isEmpty {
+            // Es gibt noch Sätze dieser Übung → Pause-Timer starten
             startRestTimer(for: set)
         }
+        // Ansonsten: Kein Pause-Timer, weil die Übung fertig ist
     }
 
     private func finishWorkout() {
@@ -672,7 +686,7 @@ struct ActiveWorkoutView: View {
 
     // Wird aufgerufen wenn Timer bereits pausiert ist
     private func handlePausedExit() {
-        // Training ist bereits pausiert → Einfach zurück zur ListView
+        // Training ist bereits pausiert - Einfach zurück zur ListView
         // State bleibt im SessionManager erhalten für spätere Wiederaufnahme
         dismiss()
     }
