@@ -6,8 +6,42 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4EF7B9B62F08133700C603DC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B52F08133600C603DC /* WidgetKit.framework */; };
+		4EF7B9B82F08133700C603DC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B72F08133700C603DC /* SwiftUI.framework */; };
+		4EF7B9C72F08133700C603DC /* MotionCoreWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4EF7B9C52F08133700C603DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EBA61652EA7C87D002426EE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4EF7B9B22F08133600C603DC;
+			remoteInfo = MotionCoreWidgetsExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4EF7B9C82F08133700C603DC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4EF7B9C72F08133700C603DC /* MotionCoreWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4EBA616D2EA7C87D002426EE /* MotionCore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionCore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MotionCoreWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EF7B9B52F08133600C603DC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		4EF7B9B72F08133700C603DC /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		4EF7B9CD2F08146300C603DC /* MotionCoreWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MotionCoreWidgetsExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -15,6 +49,20 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+			);
+			target = 4EBA616C2EA7C87D002426EE /* MotionCore */;
+		};
+		4EF7B9CB2F08133700C603DC /* Exceptions for "MotionCoreWidgets" folder in "MotionCoreWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4EF7B9B22F08133600C603DC /* MotionCoreWidgetsExtension */;
+		};
+		4EF7B9D12F0815DC00C603DC /* Exceptions for "MotionCoreWidgets" folder in "MotionCore" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				WorkoutActivityAttributes.swift,
 			);
 			target = 4EBA616C2EA7C87D002426EE /* MotionCore */;
 		};
@@ -29,6 +77,15 @@
 			path = MotionCore;
 			sourceTree = "<group>";
 		};
+		4EF7B9B92F08133700C603DC /* MotionCoreWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4EF7B9D12F0815DC00C603DC /* Exceptions for "MotionCoreWidgets" folder in "MotionCore" target */,
+				4EF7B9CB2F08133700C603DC /* Exceptions for "MotionCoreWidgets" folder in "MotionCoreWidgetsExtension" target */,
+			);
+			path = MotionCoreWidgets;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,12 +96,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4EF7B9B02F08133600C603DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EF7B9B82F08133700C603DC /* SwiftUI.framework in Frameworks */,
+				4EF7B9B62F08133700C603DC /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		4EBA61642EA7C87D002426EE = {
 			isa = PBXGroup;
 			children = (
+				4EF7B9CD2F08146300C603DC /* MotionCoreWidgetsExtension.entitlements */,
+				4EF7B9B92F08133700C603DC /* MotionCoreWidgets */,
+				4EF7B9B42F08133600C603DC /* Frameworks */,
 				4EBA616E2EA7C87D002426EE /* Products */,
 				4EBA616F2EA7C87D002426EE /* MotionCore */,
 			);
@@ -55,8 +124,18 @@
 			isa = PBXGroup;
 			children = (
 				4EBA616D2EA7C87D002426EE /* MotionCore.app */,
+				4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4EF7B9B42F08133600C603DC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4EF7B9B52F08133600C603DC /* WidgetKit.framework */,
+				4EF7B9B72F08133700C603DC /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -69,10 +148,12 @@
 				4EBA61692EA7C87D002426EE /* Sources */,
 				4EBA616A2EA7C87D002426EE /* Frameworks */,
 				4EBA616B2EA7C87D002426EE /* Resources */,
+				4EF7B9C82F08133700C603DC /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4EF7B9C62F08133700C603DC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				4EBA616F2EA7C87D002426EE /* MotionCore */,
@@ -83,6 +164,28 @@
 			productName = Crosstrainer;
 			productReference = 4EBA616D2EA7C87D002426EE /* MotionCore.app */;
 			productType = "com.apple.product-type.application";
+		};
+		4EF7B9B22F08133600C603DC /* MotionCoreWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EF7B9CC2F08133700C603DC /* Build configuration list for PBXNativeTarget "MotionCoreWidgetsExtension" */;
+			buildPhases = (
+				4EF7B9AF2F08133600C603DC /* Sources */,
+				4EF7B9B02F08133600C603DC /* Frameworks */,
+				4EF7B9B12F08133600C603DC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4EF7B9B92F08133700C603DC /* MotionCoreWidgets */,
+			);
+			name = MotionCoreWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = MotionCoreWidgetsExtension;
+			productReference = 4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -95,11 +198,14 @@
 					MockData,
 					Preview,
 				);
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					4EBA616C2EA7C87D002426EE = {
 						CreatedOnToolsVersion = 26.0.1;
+					};
+					4EF7B9B22F08133600C603DC = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -118,12 +224,20 @@
 			projectRoot = "";
 			targets = (
 				4EBA616C2EA7C87D002426EE /* MotionCore */,
+				4EF7B9B22F08133600C603DC /* MotionCoreWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4EBA616B2EA7C87D002426EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4EF7B9B12F08133600C603DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -140,7 +254,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4EF7B9AF2F08133600C603DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4EF7B9C62F08133700C603DC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4EF7B9B22F08133600C603DC /* MotionCoreWidgetsExtension */;
+			targetProxy = 4EF7B9C52F08133700C603DC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4EBA61782EA7C87E002426EE /* Debug */ = {
@@ -354,6 +483,71 @@
 			};
 			name = Release;
 		};
+		4EF7B9C92F08133700C603DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MotionCoreWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = 6XVYRUG73C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotionCoreWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionCoreWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.barto.motioncore.MotionCoreWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4EF7B9CA2F08133700C603DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MotionCoreWidgetsExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = 6XVYRUG73C;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MotionCoreWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MotionCoreWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.barto.motioncore.MotionCoreWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -371,6 +565,15 @@
 			buildConfigurations = (
 				4EBA617B2EA7C87E002426EE /* Debug */,
 				4EBA617C2EA7C87E002426EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4EF7B9CC2F08133700C603DC /* Build configuration list for PBXNativeTarget "MotionCoreWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EF7B9C92F08133700C603DC /* Debug */,
+				4EF7B9CA2F08133700C603DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

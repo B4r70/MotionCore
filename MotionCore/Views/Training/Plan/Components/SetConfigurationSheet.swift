@@ -140,6 +140,7 @@ struct SetConfigurationSheet: View {
             }
             .onDisappear {
                 incrementTimer?.invalidate()
+                incrementTimer = nil
             }
         }
     }
@@ -203,16 +204,12 @@ struct SetConfigurationSheet: View {
                             .foregroundStyle(.blue)
                     }
                     .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                if incrementTimer == nil {
-                                    startContinuousAdjustment(field: .sets, increment: false)
-                                }
-                            }
-                            .onEnded { _ in
-                                stopContinuousAdjustment()
-                            }
+                        LongPressGesture(minimumDuration: 0.35)
+                            .onEnded { _ in startContinuousAdjustment(field: .sets, increment: false) }
                     )
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if !pressing { stopContinuousAdjustment() }
+                    }, perform: {})
 
                     // Große Zahl
                     Text("\(numberOfSets)")
@@ -229,16 +226,12 @@ struct SetConfigurationSheet: View {
                             .foregroundStyle(.blue)
                     }
                     .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                if incrementTimer == nil {
-                                    startContinuousAdjustment(field: .sets, increment: true)
-                                }
-                            }
-                            .onEnded { _ in
-                                stopContinuousAdjustment()
-                            }
+                        LongPressGesture(minimumDuration: 0.35)
+                            .onEnded { _ in startContinuousAdjustment(field: .sets, increment: true) }
                     )
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if !pressing { stopContinuousAdjustment() }
+                    }, perform: {})
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -261,16 +254,12 @@ struct SetConfigurationSheet: View {
                             .foregroundStyle(.blue)
                     }
                     .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                if incrementTimer == nil {
-                                    startContinuousAdjustment(field: .reps, increment: false)
-                                }
-                            }
-                            .onEnded { _ in
-                                stopContinuousAdjustment()
-                            }
+                        LongPressGesture(minimumDuration: 0.35)
+                            .onEnded { _ in startContinuousAdjustment(field: .reps, increment: false) }
                     )
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if !pressing { stopContinuousAdjustment() }
+                    }, perform: {})
 
                     // Große Zahl
                     Text("\(targetReps)")
@@ -287,16 +276,12 @@ struct SetConfigurationSheet: View {
                             .foregroundStyle(.blue)
                     }
                     .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                if incrementTimer == nil {
-                                    startContinuousAdjustment(field: .reps, increment: true)
-                                }
-                            }
-                            .onEnded { _ in
-                                stopContinuousAdjustment()
-                            }
+                        LongPressGesture(minimumDuration: 0.35)
+                            .onEnded { _ in startContinuousAdjustment(field: .reps, increment: true) }
                     )
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if !pressing { stopContinuousAdjustment() }
+                    }, perform: {})
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -323,7 +308,7 @@ struct SetConfigurationSheet: View {
                 }
 
                 HStack(spacing: 12) {
-                    // Minus Button
+                    // Minus Button (Tap = 0.25, LongPress = Auto-Repeat)
                     Button {
                         decreaseWeight(by: 0.25)
                     } label: {
@@ -331,17 +316,13 @@ struct SetConfigurationSheet: View {
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                if incrementTimer == nil {
-                                    startContinuousAdjustment(field: .weight, increment: false)
-                                }
-                            }
-                            .onEnded { _ in
-                                stopContinuousAdjustment()
-                            }
-                    )
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing {
+                            startAutoRepeatWeight(increment: false)
+                        } else {
+                            stopContinuousAdjustment()
+                        }
+                    }, perform: {})
 
                     // Große Zahl mit unilateral Anzeige
                     if exercise.isUnilateral && targetWeight > 0 {
@@ -361,7 +342,7 @@ struct SetConfigurationSheet: View {
                             .contentTransition(.numericText())
                     }
 
-                    // Plus Button
+                    // Plus Button (Tap = 0.25, LongPress = Auto-Repeat)
                     Button {
                         increaseWeight(by: 0.25)
                     } label: {
@@ -369,17 +350,13 @@ struct SetConfigurationSheet: View {
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in
-                                if incrementTimer == nil {
-                                    startContinuousAdjustment(field: .weight, increment: true)
-                                }
-                            }
-                            .onEnded { _ in
-                                stopContinuousAdjustment()
-                            }
-                    )
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing {
+                            startAutoRepeatWeight(increment: true)
+                        } else {
+                            stopContinuousAdjustment()
+                        }
+                    }, perform: {})
                 }
                 .frame(maxWidth: .infinity)
 
@@ -642,7 +619,7 @@ struct SetConfigurationSheet: View {
         }
     }
 
-    // Continuous Adjustment (Long Press mit Delay)
+    // Continuous Adjustment (Long Press mit Delay) - Sets/Reps (dein bestehendes Verhalten)
     private func startContinuousAdjustment(field: FocusedField, increment: Bool) {
         // Warte kurz (0.8s) bevor kontinuierliches Anpassen startet
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
@@ -650,35 +627,42 @@ struct SetConfigurationSheet: View {
 
             var counter = 0
 
-            self.incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { timer in
+            self.incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { _ in
                 counter += 1
 
                 switch field {
                 case .sets:
-                    if increment {
-                        self.increaseSets(by: 1)
-                    } else {
-                        self.decreaseSets(by: 1)
-                    }
+                    if increment { self.increaseSets(by: 1) } else { self.decreaseSets(by: 1) }
 
                 case .reps:
-                    if increment {
-                        self.increaseReps(by: 1)
-                    } else {
-                        self.decreaseReps(by: 1)
-                    }
+                    if increment { self.increaseReps(by: 1) } else { self.decreaseReps(by: 1) }
 
                 case .weight:
-                    // Erste 20 Schritte: 0,25 kg
-                    // Danach: 0,5 kg (schneller)
+                    // wird hier nicht mehr genutzt (Weight hat eigenes Auto-Repeat)
                     let step = counter > 20 ? 0.5 : 0.25
-                    if increment {
-                        self.increaseWeight(by: step)
-                    } else {
-                        self.decreaseWeight(by: step)
-                    }
+                    if increment { self.increaseWeight(by: step) } else { self.decreaseWeight(by: step) }
                 }
             }
+
+            if let t = self.incrementTimer {
+                RunLoop.current.add(t, forMode: .common)
+            }
+        }
+    }
+
+    // ✅ Auto-Repeat für Weight (Tap bleibt Tap, LongPress startet direkt Repeat)
+    private func startAutoRepeatWeight(increment: Bool) {
+        stopContinuousAdjustment()
+
+        var counter = 0
+        incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.12, repeats: true) { _ in
+            counter += 1
+            let step: Double = counter > 20 ? 0.5 : 0.25
+            if increment { increaseWeight(by: step) } else { decreaseWeight(by: step) }
+        }
+
+        if let t = incrementTimer {
+            RunLoop.current.add(t, forMode: .common)
         }
     }
 

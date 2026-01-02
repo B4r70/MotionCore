@@ -12,35 +12,44 @@
 //
 import SwiftData
 import SwiftUI
+import ActivityKit
 
 struct ActiveWorkoutView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
-    @EnvironmentObject private var sessionManager: ActiveSessionManager // Session-Manager
+    @EnvironmentObject private var sessionManager: ActiveSessionManager
 
     @Bindable var session: StrengthSession
 
-    // Timer - Verwendet den SessionManager
-    // Lokaler State nur noch für UI-Updates
+        // MARK: - Local timers (UI only)
+
     @State private var localTimer: Timer?
 
-    // UI States
+        // Live Activities
+    @State private var currentActivity: Activity<WorkoutActivityAttributes>?
+
+        // NEW: Live Activity timer anchor
+    @State private var workoutStartDate: Date = Date()
+
+        // UI
     @State private var showFinishAlert = false
     @State private var showCancelAlert = false
     @State private var selectedSetForEdit: ExerciseSet?
-    @State private var selectedExerciseIndex: Int? = nil  // Manuell ausgewählte Übung
+    @State private var selectedExerciseIndex: Int? = nil
 
-    // Pause-Timer States
+        // Rest
     @State private var restTimerSeconds: Int = 0
     @State private var restTimer: Timer?
     @State private var isResting: Bool = false
 
+        // NEW: Rest end date anchor (system-side countdown)
+    @State private var restEndDate: Date?
+
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
 
-    // Aktueller Satz
-    // Falls eine Übung manuell ausgewählt wurde, verwende diese!
-    // Ansonsten automatisch den nächsten unerledigten Satz
+        // MARK: - Derived
+
     private var currentSet: ExerciseSet? {
         if let selectedIndex = selectedExerciseIndex {
             let grouped = session.groupedSets
@@ -50,12 +59,10 @@ struct ActiveWorkoutView: View {
         return session.nextUncompletedSet
     }
 
-    // Index der aktuellen Übung für Highlighting
     private var currentExerciseIndex: Int {
         if let selectedIndex = selectedExerciseIndex {
             return selectedIndex
         }
-
         guard let current = session.nextUncompletedSet else { return 0 }
         let grouped = session.groupedSets
         return grouped.firstIndex { group in
@@ -63,26 +70,23 @@ struct ActiveWorkoutView: View {
         } ?? 0
     }
 
-    // Zuletzt abgeschlossener Satz (für Rest-Timer)
     private var lastCompletedSet: ExerciseSet? {
-        // Finde den zuletzt abgeschlossenen Satz (für die Pausenzeit)
-        return session.exerciseSets
+        session.exerciseSets
             .filter { $0.isCompleted }
             .last
     }
+
+        // MARK: - Body
 
     var body: some View {
         ZStack {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             VStack(spacing: 0) {
-                // Header mit Timer und Fortschritt
                 headerSection
 
-                // Hauptinhalt
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Unterscheide zwischen Pause, aktuellem Satz und Training komplett
                         if isResting, let completedSet = lastCompletedSet {
                             RestTimerCard(
                                 remainingSeconds: restTimerSeconds,
@@ -92,14 +96,11 @@ struct ActiveWorkoutView: View {
                         } else if let current = currentSet {
                             currentSetCard(current)
                         } else if isSelectedExerciseComplete, !session.allSetsCompleted {
-                            // Einzelne Übung ist komplett, aber Training noch nicht
                             exerciseCompletedCard
                         } else {
-                            // Komplettes Training ist fertig
                             allCompletedCard
                         }
 
-                        // Übungen-Übersicht
                         exercisesOverview
                     }
                     .padding(.horizontal)
@@ -109,7 +110,6 @@ struct ActiveWorkoutView: View {
                 .scrollIndicators(.hidden)
             }
 
-            // Bottom Action Bar
             VStack {
                 Spacer()
                 bottomActionBar
@@ -121,12 +121,9 @@ struct ActiveWorkoutView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
-                    // Prüfen ob Timer läuft
                     if sessionManager.isPaused {
-                        // Timer pausiert â†’ Direkt zurück ohne Alert
                         handlePausedExit()
                     } else {
-                        // Timer läuft â†’ Alert zeigen
                         showCancelAlert = true
                     }
                 } label: {
@@ -139,13 +136,31 @@ struct ActiveWorkoutView: View {
             setupSession()
             hapticGenerator.prepare()
         }
-        .onChange(of: selectedExerciseIndex) { oldValue, newValue in
-            // Speichere den Index im SessionManager
-            sessionManager.setSelectedExerciseIndex(newValue)
+
+            // ✅ IMPORTANT: no second-by-second updates to Live Activity
+        .onChange(of: sessionManager.isPaused) { _, _ in
+            updateLiveActivity()
+            saveResumeState()
         }
+        .onChange(of: isResting) { _, _ in
+            updateLiveActivity()
+            saveResumeState()
+        }
+        .onChange(of: session.completedSets) { _, _ in
+            updateLiveActivity()
+            saveResumeState()
+        }
+        .onChange(of: selectedExerciseIndex) { _, newValue in
+            sessionManager.setSelectedExerciseIndex(newValue)
+            updateLiveActivity()
+            saveResumeState()
+        }
+
         .onDisappear {
             cleanupTimer()
+            saveResumeState()
         }
+
         .alert("Training läuft noch", isPresented: $showCancelAlert) {
             Button("Pausieren") {
                 handlePauseAndExit()
@@ -153,9 +168,7 @@ struct ActiveWorkoutView: View {
             Button("Verwerfen", role: .destructive) {
                 cancelWorkout()
             }
-            Button("Abbrechen", role: .cancel) {
-                    // Bleibt in ActiveWorkoutView - nichts tun
-            }
+            Button("Abbrechen", role: .cancel) {}
         } message: {
             Text("Möchtest du das Training pausieren oder verwerfen?")
         }
@@ -173,13 +186,11 @@ struct ActiveWorkoutView: View {
         }
     }
 
-    // MARK: - Header Section
+        // MARK: - Header
 
     private var headerSection: some View {
         VStack(spacing: 12) {
-            // Timer und Fortschritt
             HStack {
-                // Timer - Verwendet SessionManager
                 HStack(spacing: 8) {
                     Image(systemName: sessionManager.isPaused ? "pause.circle.fill" : "clock.fill")
                         .foregroundStyle(sessionManager.isPaused ? .orange : .blue)
@@ -188,7 +199,6 @@ struct ActiveWorkoutView: View {
                         .font(.title2.bold().monospacedDigit())
                         .foregroundStyle(.primary)
 
-                    // Pausiert-Indikator
                     if sessionManager.isPaused {
                         Text("(Pausiert)")
                             .font(.caption)
@@ -198,7 +208,6 @@ struct ActiveWorkoutView: View {
 
                 Spacer()
 
-                // Fortschritt
                 HStack(spacing: 8) {
                     Text("\(session.completedSets)/\(session.totalSets)")
                         .font(.title2.bold())
@@ -210,7 +219,6 @@ struct ActiveWorkoutView: View {
                 }
             }
 
-            // Fortschrittsbalken
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
@@ -235,16 +243,14 @@ struct ActiveWorkoutView: View {
         .background(.ultraThinMaterial)
     }
 
-    // MARK: - Aktueller Satz Card
+        // MARK: - Current Set Card
 
     private func currentSetCard(_ set: ExerciseSet) -> some View {
         VStack(spacing: 20) {
-            // Übungs-Info
             HStack(spacing: 16) {
                 ExerciseGifView(assetName: set.exerciseGifAssetName, size: 80)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    // SetKind Badge (falls nicht Arbeitssatz)
                     if set.setKind != .work {
                         Text(set.setKind.description.uppercased())
                             .font(.caption.bold())
@@ -265,9 +271,7 @@ struct ActiveWorkoutView: View {
 
             .glassDivider()
 
-            // Zielwerte
             HStack(spacing: 24) {
-                // Gewicht
                 VStack(spacing: 4) {
                     Text(set.weight > 0 ? String(format: "%.1f", set.weight) : "0.0")
                         .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -279,12 +283,10 @@ struct ActiveWorkoutView: View {
                 }
                 .frame(maxWidth: .infinity)
 
-                // Trennlinie
                 Rectangle()
                     .fill(Color.primary.opacity(0.2))
                     .frame(width: 1, height: 50)
 
-                // Wiederholungen
                 VStack(spacing: 4) {
                     Text("\(set.reps)")
                         .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -297,7 +299,6 @@ struct ActiveWorkoutView: View {
                 .frame(maxWidth: .infinity)
             }
 
-            // Bearbeiten Button
             Button {
                 selectedSetForEdit = set
             } label: {
@@ -308,7 +309,6 @@ struct ActiveWorkoutView: View {
 
             .glassDivider()
 
-            // Satz abschließen Button
             Button {
                 completeSet(set)
             } label: {
@@ -326,13 +326,11 @@ struct ActiveWorkoutView: View {
         .glassCard()
     }
 
-    // Anzahl der Sets für die jeweilige Übung
     private var setsForCurrentExercise: Int {
         guard let current = currentSet else { return 0 }
         return session.exerciseSets.filter { $0.exerciseName == current.exerciseName }.count
     }
 
-    // Prüft ob die aktuell ausgewählte Übung komplett ist
     private var isSelectedExerciseComplete: Bool {
         guard let selectedIndex = selectedExerciseIndex else { return false }
         let grouped = session.groupedSets
@@ -340,15 +338,12 @@ struct ActiveWorkoutView: View {
         return grouped[selectedIndex].allSatisfy { $0.isCompleted }
     }
 
-    // Name der aktuell ausgewählten Übung (falls komplett)
     private var selectedExerciseName: String? {
         guard let selectedIndex = selectedExerciseIndex else { return nil }
         let grouped = session.groupedSets
         guard selectedIndex < grouped.count else { return nil }
         return grouped[selectedIndex].first?.exerciseName
     }
-
-    // MARK: - Einzelne Übung abgeschlossen
 
     private var exerciseCompletedCard: some View {
         VStack(spacing: 20) {
@@ -369,7 +364,6 @@ struct ActiveWorkoutView: View {
                 .multilineTextAlignment(.center)
 
             Button {
-                // Zurück zum automatischen Modus
                 withAnimation(.easeInOut) {
                     selectedExerciseIndex = nil
                 }
@@ -387,8 +381,6 @@ struct ActiveWorkoutView: View {
         }
         .glassCard()
     }
-
-    // MARK: - Alle Sätze abgeschlossen
 
     private var allCompletedCard: some View {
         VStack(spacing: 20) {
@@ -422,7 +414,7 @@ struct ActiveWorkoutView: View {
         .glassCard()
     }
 
-    // MARK: - Übungen-Übersicht
+        // MARK: - Overview
 
     private var exercisesOverview: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -430,8 +422,6 @@ struct ActiveWorkoutView: View {
                 .font(.title3.bold())
                 .foregroundStyle(.primary)
 
-            // Verwende firstSet.id als stabile ID statt .offset
-            // Dies verhindert das Springen der Liste bei Timer-Updates
             ForEach(Array(session.groupedSets.enumerated()), id: \.element.first!.id) { index, sets in
                 if let firstSet = sets.first {
                     exerciseOverviewRow(
@@ -440,7 +430,6 @@ struct ActiveWorkoutView: View {
                         index: index + 1,
                         isCurrentExercise: index == currentExerciseIndex
                     )
-                    // Tap-Geste zur manuellen Übungsauswahl
                     .onTapGesture {
                         selectExercise(at: index)
                     }
@@ -450,10 +439,8 @@ struct ActiveWorkoutView: View {
         .glassCard()
     }
 
-    // Aufbau der Übungsübersicht
     private func exerciseOverviewRow(name: String, sets: [ExerciseSet], index: Int, isCurrentExercise: Bool) -> some View {
         VStack(spacing: 8) {
-            // Header
             HStack {
                 Text("\(index). \(name)")
                     .font(.subheadline.bold())
@@ -472,7 +459,6 @@ struct ActiveWorkoutView: View {
                 }
             }
 
-            // Sets als kleine Kreise
             HStack(spacing: 6) {
                 ForEach(sets, id: \.id) { set in
                     Circle()
@@ -485,7 +471,6 @@ struct ActiveWorkoutView: View {
                             }
                         }
                 }
-
                 Spacer()
             }
         }
@@ -494,15 +479,13 @@ struct ActiveWorkoutView: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(isCurrentExercise ? Color.blue.opacity(0.1) : Color.clear)
         )
-        // contentShape macht die gesamte Row tappbar, nicht nur den Text
         .contentShape(Rectangle())
     }
 
-    // MARK: - Bottom Action Bar
+        // MARK: - Bottom Action Bar
 
     private var bottomActionBar: some View {
         HStack(spacing: 16) {
-            // Pause/Play Button - Verwendet SessionManager
             Button {
                 toggleTimer()
             } label: {
@@ -522,7 +505,6 @@ struct ActiveWorkoutView: View {
 
             Spacer()
 
-            // Training beenden
             Button {
                 if session.allSetsCompleted {
                     finishWorkout()
@@ -548,47 +530,56 @@ struct ActiveWorkoutView: View {
         .background(.ultraThinMaterial)
     }
 
-    // MARK: - Session Setup
+        // MARK: - Session Setup
 
-    // Initialisiert die Session beim Erscheinen der View
     private func setupSession() {
         let sessionID = session.sessionUUID.uuidString
         let activeID = sessionManager.getActiveSessionID()
 
-        // Prüfen ob diese Session bereits im Manager aktiv ist
-        if let activeID = activeID, activeID == sessionID {
-          // Diese Session ist bereits im Manager registriert
+            // 1) Resume zuerst versuchen
+        if restoreResumeStateIfPossible() {
+            reattachLiveActivityIfNeeded()
+            return
+        }
+
+            // 2) sonst normales Verhalten
+        if let activeID, activeID == sessionID {
+                // already active
         } else if sessionManager.hasActiveSession {
-                // Eine ANDERE Session ist aktiv
             sessionManager.discardSession()
             startNewSession(sessionID: sessionID)
         } else {
-            // Keine aktive Session - neue starten
             startNewSession(sessionID: sessionID)
         }
 
-        // Stelle den gespeicherten Übungs-Index wieder her
+            // Index wiederherstellen
         if let savedIndex = sessionManager.getSelectedExerciseIndex() {
             selectedExerciseIndex = savedIndex
         }
+
+        reattachLiveActivityIfNeeded()
     }
 
-    // Startet eine neue Session im Manager
     private func startNewSession(sessionID: String) {
+        print("🎬 startNewSession() aufgerufen")
         sessionManager.startSession(sessionID: sessionID, workoutType: .strength)
 
-        // Session in SwiftData als gestartet markieren
         session.start()
         try? context.save()
+
+            // Live Activity starten
+        print("📱 Rufe startLiveActivity() auf")
+        startLiveActivity()
+
+        saveResumeState()
     }
 
-    // Räumt den lokalen Timer auf (falls vorhanden)
     private func cleanupTimer() {
         localTimer?.invalidate()
         localTimer = nil
     }
 
-    // MARK: - Timer Funktionen (Delegiert an SessionManager)
+        // MARK: - Actions
 
     private func toggleTimer() {
         if sessionManager.isPaused {
@@ -597,21 +588,21 @@ struct ActiveWorkoutView: View {
             sessionManager.pauseSession()
         }
 
-        // Haptic Feedback
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
+
+        updateLiveActivity()
+        saveResumeState()
     }
 
-    // MARK: - Aktionen
-
-    // Übung manuell auswählen
     private func selectExercise(at index: Int) {
         withAnimation(.easeInOut) {
             selectedExerciseIndex = index
         }
-
-        // Haptic Feedback
         hapticGenerator.impactOccurred()
+
+        updateLiveActivity()
+        saveResumeState()
     }
 
     private func completeSet(_ set: ExerciseSet) {
@@ -620,8 +611,6 @@ struct ActiveWorkoutView: View {
         }
         try? context.save()
 
-        // Wenn noch kein Index ausgewählt ist, wähle automatisch die aktuelle Übung
-        // damit wir bei dieser Übung bleiben (kein Zirkeltraining)
         if selectedExerciseIndex == nil {
             let grouped = session.groupedSets
             if let currentIndex = grouped.firstIndex(where: { group in
@@ -631,13 +620,11 @@ struct ActiveWorkoutView: View {
             }
         }
 
-        // Wenn alle Sätze der aktuellen Übung erledigt sind,
-        // setze selectedExerciseIndex zurück für automatische Fortsetzung zur nächsten Übung
         if let selectedIndex = selectedExerciseIndex {
             let grouped = session.groupedSets
             guard selectedIndex < grouped.count else { return }
-            let allSetsComplete = grouped[selectedIndex].allSatisfy { $0.isCompleted }
 
+            let allSetsComplete = grouped[selectedIndex].allSatisfy { $0.isCompleted }
             if allSetsComplete {
                 withAnimation(.easeInOut) {
                     selectedExerciseIndex = nil
@@ -645,88 +632,79 @@ struct ActiveWorkoutView: View {
             }
         }
 
-        // Haptic Feedback
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
 
-
-        // Pause-Timer nur starten wenn noch weitere Sätze der GLEICHEN Übung übrig sind
         let remainingSetsForExercise = session.exerciseSets.filter {
             $0.exerciseName == set.exerciseName && !$0.isCompleted
         }
 
         if !remainingSetsForExercise.isEmpty {
-            // Es gibt noch Sätze dieser Übung → Pause-Timer starten
             startRestTimer(for: set)
         }
-        // Ansonsten: Kein Pause-Timer, weil die Übung fertig ist
+
+        updateLiveActivity()
+        saveResumeState()
     }
 
     private func finishWorkout() {
-        // Session über Manager beenden und Dauer holen
         let finalSeconds = sessionManager.endSession()
 
-        // Session-Daten aktualisieren
         session.complete()
         session.duration = finalSeconds / 60
-
         try? context.save()
+
+        endLiveActivity()
+        ActiveWorkoutResumeStore.clear()
+
         dismiss()
     }
 
     private func cancelWorkout() {
-        // Session im Manager verwerfen
         sessionManager.discardSession()
 
-        // Session aus SwiftData löschen
         context.delete(session)
         try? context.save()
+
+        endLiveActivity()
+        ActiveWorkoutResumeStore.clear()
+
         dismiss()
     }
 
-    // Wird aufgerufen wenn Timer bereits pausiert ist
     private func handlePausedExit() {
-        // Training ist bereits pausiert - Einfach zurück zur ListView
-        // State bleibt im SessionManager erhalten für spätere Wiederaufnahme
         dismiss()
     }
 
-    // Pausiert das Training und kehrt zur ListView zurück
     private func handlePauseAndExit() {
-        // Timer pausieren (speichert automatisch in UserDefaults)
         sessionManager.pauseSession()
-
-        // Session in SwiftData bleibt erhalten (nicht löschen!)
-        // Benutzer kann später fortsetzen
-
+        saveResumeState()
         dismiss()
     }
 
-    // MARK: - Rest Timer Functions
+        // MARK: - Rest Timer
 
-    // Startet den Pause-Timer nach Satz-Abschluss
     private func startRestTimer(for set: ExerciseSet) {
-            // Pausenzeit aus dem Set nehmen
         let restTime = set.restSeconds
-
-        // Falls restSeconds 0 ist, keinen Timer starten
         guard restTime > 0 else { return }
 
         restTimerSeconds = restTime
+        restEndDate = Date().addingTimeInterval(Double(restTime))
 
         withAnimation(.easeInOut) {
             isResting = true
         }
 
-        // Timer starten
+        updateLiveActivity()
+        saveResumeState()
+
+        restTimer?.invalidate()
         restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             if self.restTimerSeconds > 0 {
                 self.restTimerSeconds -= 1
             } else {
-                // Pause vorbei
                 self.endRestTimer()
 
-                // Haptic Feedback wenn in Settings aktiviert
                 if self.appSettings.enableRestTimerHaptic {
                     let generator = UINotificationFeedbackGenerator()
                     generator.notificationOccurred(.success)
@@ -735,7 +713,6 @@ struct ActiveWorkoutView: View {
         }
     }
 
-    // Beendet den Pause-Timer
     private func endRestTimer() {
         restTimer?.invalidate()
         restTimer = nil
@@ -745,35 +722,262 @@ struct ActiveWorkoutView: View {
         }
 
         restTimerSeconds = 0
+        restEndDate = nil
+
+        updateLiveActivity()
+        saveResumeState()
     }
 
-    // Überspringt die Pause
     private func skipRest() {
         endRestTimer()
-
-        // Haptic Feedback
         hapticGenerator.impactOccurred()
     }
-}
 
-// MARK: - Preview
+        // MARK: - Live Activity
 
-#Preview("Active Workout View") {
-    NavigationStack {
-        ActiveWorkoutView(session: {
-            let session = StrengthSession(workoutType: .push)
-            session.start()
+    private func startLiveActivity() {
+        print("🚀 startLiveActivity() wurde aufgerufen")
 
-            let set1 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 1, weight: 60, reps: 10, setKind: .warmup)
-            let set2 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 2, weight: 80, reps: 8, setKind: .work)
-            let set3 = ExerciseSet(exerciseName: "Bankdrücken", setNumber: 3, weight: 80, reps: 8, setKind: .work)
-            let set4 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 4, weight: 60, reps: 10, setKind: .work)
-            let set5 = ExerciseSet(exerciseName: "Schrägbank", setNumber: 5, weight: 60, reps: 10, setKind: .work)
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else {
+            print("⚠️ Live Activities nicht aktiviert")
+            return
+        }
 
-            session.exerciseSets = [set1, set2, set3, set4, set5]
-            return session
-        }())
+            // ✅ 1) Vorher aufräumen / reattach
+        Task {
+            let attached = await ensureSingleLiveActivityForCurrentSession()
+
+                // Wenn wir bereits eine passende Activity haben -> fertig
+            if attached {
+                print("✅ Existing Live Activity found & attached")
+                return
+            }
+
+                // ✅ 2) Neu starten
+            await MainActor.run {
+                workoutStartDate = Date().addingTimeInterval(-Double(sessionManager.elapsedSeconds))
+
+                let attributes = WorkoutActivityAttributes(
+                    sessionID: session.sessionUUID.uuidString,
+                    workoutType: "Krafttraining",
+                    planName: session.planName
+                )
+
+                let contentState = makeLiveContentState()
+
+                do {
+                    currentActivity = try Activity.request(
+                        attributes: attributes,
+                        content: .init(state: contentState, staleDate: nil),
+                        pushType: nil
+                    )
+                    print("✅ Live Activity gestartet")
+                } catch {
+                    print("❌ Live Activity Fehler: \(error)")
+                }
+            }
+        }
     }
-    .environmentObject(AppSettings.shared)
-    .environmentObject(ActiveSessionManager.shared)
+
+    private func updateLiveActivity() {
+        guard let activity = currentActivity else { return }
+
+        let contentState = makeLiveContentState()
+        let content = ActivityContent(state: contentState, staleDate: nil)
+
+        Task {
+            await activity.update(content)
+        }
+    }
+
+    private func endLiveActivity() {
+        guard let activity = currentActivity else { return }
+
+        let finalState = WorkoutActivityAttributes.ContentState(
+            workoutStartDate: workoutStartDate,
+            isPaused: true,
+            elapsedAtPause: sessionManager.elapsedSeconds,
+            currentExercise: nil,
+            currentSet: nil,
+            isResting: false,
+            restEndDate: nil,
+            completedSets: session.completedSets,
+            totalSets: session.totalSets
+        )
+
+        let finalContent = ActivityContent(state: finalState, staleDate: nil)
+
+        Task {
+            await activity.end(finalContent, dismissalPolicy: .after(.now + 60))
+        }
+
+        currentActivity = nil
+    }
+
+    private func makeLiveContentState() -> WorkoutActivityAttributes.ContentState {
+        if !sessionManager.isPaused {
+            workoutStartDate = Date().addingTimeInterval(-Double(sessionManager.elapsedSeconds))
+        }
+
+        return WorkoutActivityAttributes.ContentState(
+            workoutStartDate: workoutStartDate,
+            isPaused: sessionManager.isPaused,
+            elapsedAtPause: sessionManager.isPaused ? sessionManager.elapsedSeconds : nil,
+            currentExercise: currentSet?.exerciseName,
+            currentSet: currentSet.map { "Satz \($0.setNumber)" },
+            isResting: isResting,
+            restEndDate: isResting ? restEndDate : nil,
+            completedSets: session.completedSets,
+            totalSets: session.totalSets
+        )
+    }
+
+    private func reattachLiveActivityIfNeeded() {
+        if currentActivity != nil { return }
+
+        let mySessionID = session.sessionUUID.uuidString
+
+        Task {
+            let activities = Activity<WorkoutActivityAttributes>.activities
+            if let existing = activities.first(where: { $0.attributes.sessionID == mySessionID }) {
+                await MainActor.run {
+                    self.currentActivity = existing
+                }
+                updateLiveActivity()
+                print("✅ Live Activity reattached (sessionID match)")
+            } else {
+                print("ℹ️ No existing Live Activity to reattach for this session")
+            }
+        }
+    }
+
+        // MARK: - Resume Store (Rest + LiveActivity Anchors)
+
+    @discardableResult
+    private func restoreResumeStateIfPossible() -> Bool {
+        guard let state = ActiveWorkoutResumeStore.load() else { return false }
+        guard state.sessionID == session.sessionUUID.uuidString else { return false }
+
+        workoutStartDate = state.workoutStartDate
+        selectedExerciseIndex = state.selectedExerciseIndex
+
+            // Pause-Status wiederherstellen
+        if state.isPaused && !sessionManager.isPaused {
+            sessionManager.pauseSession()
+        } else if !state.isPaused && sessionManager.isPaused {
+            sessionManager.resumeSession()
+        }
+
+            // Rest wiederherstellen
+        if state.isResting, let end = state.restEndDate, end > Date() {
+            restEndDate = end
+            isResting = true
+            restTimerSeconds = max(0, Int(end.timeIntervalSinceNow.rounded()))
+            restartLocalRestTimerFromResume()
+        } else {
+            restEndDate = nil
+            isResting = false
+            restTimerSeconds = 0
+        }
+
+        print("✅ Resume-State restored for session \(state.sessionID)")
+        return true
+    }
+
+    private func restartLocalRestTimerFromResume() {
+        restTimer?.invalidate()
+        guard let end = restEndDate else { return }
+
+        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            let remaining = Int(end.timeIntervalSinceNow.rounded())
+            if remaining > 0 {
+                self.restTimerSeconds = remaining
+            } else {
+                self.endRestTimer()
+                if self.appSettings.enableRestTimerHaptic {
+                    let gen = UINotificationFeedbackGenerator()
+                    gen.notificationOccurred(.success)
+                }
+            }
+        }
+    }
+
+    private func saveResumeState() {
+        let state = ActiveWorkoutResumeState(
+            sessionID: session.sessionUUID.uuidString,
+            workoutType: session.workoutType.rawValue,
+            isPaused: sessionManager.isPaused,
+            elapsedSeconds: sessionManager.elapsedSeconds,
+            workoutStartDate: workoutStartDate,
+            isResting: isResting,
+            restEndDate: isResting ? restEndDate : nil,
+            selectedExerciseIndex: selectedExerciseIndex,
+            updatedAt: Date()
+        )
+        ActiveWorkoutResumeStore.save(state)
+    }
+
+    private func ensureSingleLiveActivityForCurrentSession() async -> Bool {
+        let mySessionID = session.sessionUUID.uuidString
+
+            // Alle laufenden Activities dieses Typs
+        let activities = Activity<WorkoutActivityAttributes>.activities
+
+        var matching: Activity<WorkoutActivityAttributes>?
+        var others: [Activity<WorkoutActivityAttributes>] = []
+
+        for activity in activities {
+            if activity.attributes.sessionID == mySessionID {
+                    // Wenn mehrere matchen, nehmen wir "die erste" als canonical
+                if matching == nil {
+                    matching = activity
+                } else {
+                    others.append(activity) // Duplikat
+                }
+            } else {
+                    // Andere Sessions -> aufräumen
+                others.append(activity)
+            }
+        }
+
+            // 1) Duplikate/alte Activities beenden
+        if !others.isEmpty {
+            await endActivities(others)
+        }
+
+            // 2) Matching activity -> reattach
+        if let matching {
+            await MainActor.run {
+                self.currentActivity = matching
+            }
+
+                // Einmal synchronisieren (✅ neue API)
+            let content = ActivityContent(state: makeLiveContentState(), staleDate: nil)
+            await matching.update(content)
+
+            return true
+        }
+
+        return false
+    }
+
+    private func endActivities(_ activities: [Activity<WorkoutActivityAttributes>]) async {
+        for activity in activities {
+            let final = WorkoutActivityAttributes.ContentState(
+                workoutStartDate: workoutStartDate,
+                isPaused: true,
+                elapsedAtPause: sessionManager.elapsedSeconds,
+                currentExercise: nil,
+                currentSet: nil,
+                isResting: false,
+                restEndDate: nil,
+                completedSets: session.completedSets,
+                totalSets: session.totalSets
+            )
+
+                // ✅ neue API
+            let finalContent = ActivityContent(state: final, staleDate: nil)
+            await activity.end(finalContent, dismissalPolicy: .immediate)
+        }
+    }
 }

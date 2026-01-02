@@ -26,18 +26,18 @@ struct ActiveSessionState: Codable {
     let sessionUUID: String          // PersistentIdentifier als String
     let workoutType: String          // WorkoutType rawValue
     let startedAt: Date              // Original-Startzeit
-    let pausedAt: Date               // Zeitpunkt der Pausierung
-    let accumulatedSeconds: Int      // Bereits angesammelte Zeit vor Pause
+    let pausedAt: Date               // Referenzpunkt (historisch: "pausedAt", faktisch: "lastResumedAt")
+    let accumulatedSeconds: Int      // Bereits angesammelte Zeit vor dem aktuellen Lauf
     let isPaused: Bool               // Ist die Session pausiert?
     let selectedExerciseIndex: Int?  // Ausgewählte Übung innerhalb eines Trainings
 
-    // Berechnet die Gesamtzeit inkl. der Zeit seit Pausierung (falls nicht pausiert)
+    // Berechnet die Gesamtzeit inkl. der Zeit seit Referenzpunkt (falls nicht pausiert)
     func totalElapsedSeconds(at date: Date = Date()) -> Int {
         if isPaused {
             return accumulatedSeconds
         } else {
             let additionalSeconds = Int(date.timeIntervalSince(pausedAt))
-            return accumulatedSeconds + additionalSeconds
+            return accumulatedSeconds + max(0, additionalSeconds)
         }
     }
 }
@@ -82,10 +82,6 @@ class ActiveSessionManager: ObservableObject {
 
     // MARK: - Public Methods
 
-    // Startet eine neue Session
-    // - Parameters:
-    //   - sessionID: Die PersistentIdentifier der SwiftData-Session (als String)
-    //   - workoutType: Der Typ des Workouts
     func startSession(sessionID: String, workoutType: WorkoutType) {
         let now = Date()
 
@@ -93,7 +89,7 @@ class ActiveSessionManager: ObservableObject {
             sessionUUID: sessionID,
             workoutType: workoutType.rawValue,
             startedAt: now,
-            pausedAt: now,
+            pausedAt: now,              // Referenzpunkt ab Start
             accumulatedSeconds: 0,
             isPaused: false,
             selectedExerciseIndex: nil
@@ -109,20 +105,18 @@ class ActiveSessionManager: ObservableObject {
         elapsedSeconds = 0
         sessionStartedAt = now
 
-        // Timer starten
         startTimer()
     }
 
-    // Setzt eine pausierte Session fort
     func resumeSession() {
         guard var state = activeSessionState, state.isPaused else { return }
 
-        // Pausierung aufheben - pausedAt wird zum "Resume-Zeitpunkt"
+        // "Resume" -> neuer Referenzpunkt
         state = ActiveSessionState(
             sessionUUID: state.sessionUUID,
             workoutType: state.workoutType,
             startedAt: state.startedAt,
-            pausedAt: Date(), // Neuer Referenzpunkt
+            pausedAt: Date(),
             accumulatedSeconds: state.accumulatedSeconds,
             isPaused: false,
             selectedExerciseIndex: state.selectedExerciseIndex
@@ -135,11 +129,9 @@ class ActiveSessionManager: ObservableObject {
         startTimer()
     }
 
-    // Pausiert die aktive Session
     func pauseSession() {
         guard var state = activeSessionState, !state.isPaused else { return }
 
-        // Zeit bis jetzt akkumulieren
         let now = Date()
         let additionalSeconds = Int(now.timeIntervalSince(state.pausedAt))
 
@@ -148,7 +140,7 @@ class ActiveSessionManager: ObservableObject {
             workoutType: state.workoutType,
             startedAt: state.startedAt,
             pausedAt: now,
-            accumulatedSeconds: state.accumulatedSeconds + additionalSeconds,
+            accumulatedSeconds: state.accumulatedSeconds + max(0, additionalSeconds),
             isPaused: true,
             selectedExerciseIndex: state.selectedExerciseIndex
         )
@@ -161,17 +153,19 @@ class ActiveSessionManager: ObservableObject {
         stopTimer()
     }
 
-    // Beendet die aktive Session
-    // - Returns: Die finale Dauer in Sekunden
     @discardableResult
     func endSession() -> Int {
-        let finalSeconds = elapsedSeconds
+        // Falls nicht pausiert, finalen Stand sauber berechnen
+        let finalSeconds: Int
+        if let state = activeSessionState {
+            finalSeconds = state.totalElapsedSeconds()
+        } else {
+            finalSeconds = elapsedSeconds
+        }
 
-        // State zurücksetzen
         activeSessionState = nil
         clearState()
 
-        // UI zurücksetzen
         hasActiveSession = false
         activeWorkoutType = nil
         isPaused = true
@@ -179,22 +173,17 @@ class ActiveSessionManager: ObservableObject {
         sessionStartedAt = nil
 
         stopTimer()
-
         return finalSeconds
     }
 
-    // Verwirft die aktive Session ohne Speichern
     func discardSession() {
         _ = endSession()
     }
 
-    // Gibt die Session-ID zurück (für SwiftData-Query)
     func getActiveSessionID() -> String? {
-        return activeSessionState?.sessionUUID
+        activeSessionState?.sessionUUID
     }
 
-    // Versucht eine Session aus dem gespeicherten Zustand wiederherzustellen
-    // - Returns: Tuple mit (sessionID, workoutType) falls vorhanden
     func getRestorationInfo() -> (sessionID: String, workoutType: WorkoutType)? {
         guard let state = activeSessionState,
               let workoutType = WorkoutType(rawValue: state.workoutType) else {
@@ -203,7 +192,6 @@ class ActiveSessionManager: ObservableObject {
         return (state.sessionUUID, workoutType)
     }
 
-    // Formatierte Zeit als String (MM:SS oder HH:MM:SS)
     var formattedElapsedTime: String {
         let hours = elapsedSeconds / 3600
         let minutes = (elapsedSeconds % 3600) / 60
@@ -216,11 +204,10 @@ class ActiveSessionManager: ObservableObject {
         }
     }
 
-    // Setzt den ausgewählten Übungs-Index
     func setSelectedExerciseIndex(_ index: Int?) {
-        guard var state = activeSessionState else { return }
+        guard let state = activeSessionState else { return }
 
-        state = ActiveSessionState(
+        let updated = ActiveSessionState(
             sessionUUID: state.sessionUUID,
             workoutType: state.workoutType,
             startedAt: state.startedAt,
@@ -230,35 +217,30 @@ class ActiveSessionManager: ObservableObject {
             selectedExerciseIndex: index
         )
 
-        activeSessionState = state
+        activeSessionState = updated
         saveState()
     }
 
-    // Gibt den gespeicherten Übungs-Index zurück
     func getSelectedExerciseIndex() -> Int? {
-        return activeSessionState?.selectedExerciseIndex
+        activeSessionState?.selectedExerciseIndex
     }
 
-    // Dauer in Minuten (für Session-Speicherung)
     var elapsedMinutes: Int {
-        return elapsedSeconds / 60
+        elapsedSeconds / 60
     }
 
     // MARK: - App Lifecycle
 
-    // Aufrufen wenn die App in den Hintergrund geht
+    /// Variante B: Nicht automatisch pausieren.
+    /// Nur State sichern, damit nach Kill/Restart korrekt restored wird.
     func handleBackgroundTransition() {
-        if hasActiveSession && !isPaused {
-            pauseSession()
-        }
+        saveState()
     }
 
-    // Aufrufen wenn die App in den Vordergrund kommt
     func handleForegroundTransition() {
-        // State neu laden (für den Fall eines Neustarts)
         loadState()
-
-        // Timer nicht automatisch starten - Benutzer muss Play drücken
+        // UI sofort refreshen (falls state läuft)
+        updateElapsedTime()
     }
 
     // MARK: - Private Methods
@@ -270,8 +252,9 @@ class ActiveSessionManager: ObservableObject {
             self?.updateElapsedTime()
         }
 
-        // Timer auch im Hintergrund laufen lassen (für kurze Hintergrundzeiten)
-        RunLoop.current.add(timer!, forMode: .common)
+        if let timer {
+            RunLoop.current.add(timer, forMode: .common)
+        }
     }
 
     private func stopTimer() {
@@ -281,7 +264,6 @@ class ActiveSessionManager: ObservableObject {
 
     private func updateElapsedTime() {
         guard let state = activeSessionState, !state.isPaused else { return }
-
         elapsedSeconds = state.totalElapsedSeconds()
     }
 
@@ -299,18 +281,32 @@ class ActiveSessionManager: ObservableObject {
     private func loadState() {
         guard let data = UserDefaults.standard.data(forKey: userDefaultsKey),
               let state = try? JSONDecoder().decode(ActiveSessionState.self, from: data) else {
+
+            activeSessionState = nil
             hasActiveSession = false
+            activeWorkoutType = nil
+            isPaused = true
+            elapsedSeconds = 0
+            sessionStartedAt = nil
+            stopTimer()
             return
         }
 
         activeSessionState = state
 
-        // UI aktualisieren
         hasActiveSession = true
         activeWorkoutType = WorkoutType(rawValue: state.workoutType)
         isPaused = state.isPaused
-        elapsedSeconds = state.accumulatedSeconds
         sessionStartedAt = state.startedAt
+
+        // ✅ Bugfix: korrekt auch im "läuft"-Zustand
+        elapsedSeconds = state.totalElapsedSeconds()
+
+        if !state.isPaused {
+            startTimer()
+        } else {
+            stopTimer()
+        }
     }
 
     private func clearState() {
@@ -320,7 +316,6 @@ class ActiveSessionManager: ObservableObject {
 
 // MARK: - SwiftUI Environment Integration
 
-// Environment Key für den ActiveSessionManager
 private struct ActiveSessionManagerKey: EnvironmentKey {
     static let defaultValue = ActiveSessionManager.shared
 }
@@ -335,7 +330,6 @@ extension EnvironmentValues {
 // MARK: - View Extension für ScenePhase Handling
 
 extension View {
-    // Fügt automatisches Session-State-Handling für App-Lifecycle hinzu
     func handleSessionLifecycle() -> some View {
         self.modifier(SessionLifecycleModifier())
     }
@@ -347,14 +341,13 @@ private struct SessionLifecycleModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .onChange(of: scenePhase) { oldPhase, newPhase in
+            .onChange(of: scenePhase) { _, newPhase in
                 switch newPhase {
                 case .background:
                     sessionManager.handleBackgroundTransition()
                 case .active:
                     sessionManager.handleForegroundTransition()
                 case .inactive:
-                    // Optional: Auch bei inactive pausieren (z.B. Control Center)
                     break
                 @unknown default:
                     break
