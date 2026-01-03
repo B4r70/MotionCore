@@ -5,7 +5,7 @@
 // Datei . . . . : ActiveWorkoutView.swift                                          /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 27.12.2025                                                       /
-// Beschreibung  : Live-Tracking View während eines Krafttrainings                 /
+// Beschreibung  : Live-Tracking View während eines Krafttrainings                  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -137,7 +137,13 @@ struct ActiveWorkoutView: View {
             hapticGenerator.prepare()
         }
 
-            // ✅ IMPORTANT: no second-by-second updates to Live Activity
+        // =====================================================================
+        // MARK: - onChange Handler (einzige Quelle für Live Activity Updates)
+        // =====================================================================
+        // Diese Handler reagieren auf State-Änderungen und updaten die Live
+        // Activity EINMAL. Die Action-Funktionen ändern nur den State.
+        // =====================================================================
+
         .onChange(of: sessionManager.isPaused) { _, _ in
             updateLiveActivity()
             saveResumeState()
@@ -561,14 +567,12 @@ struct ActiveWorkoutView: View {
     }
 
     private func startNewSession(sessionID: String) {
-        print("🎬 startNewSession() aufgerufen")
         sessionManager.startSession(sessionID: sessionID, workoutType: .strength)
 
         session.start()
         try? context.save()
 
             // Live Activity starten
-        print("📱 Rufe startLiveActivity() auf")
         startLiveActivity()
 
         saveResumeState()
@@ -580,6 +584,10 @@ struct ActiveWorkoutView: View {
     }
 
         // MARK: - Actions
+        // =========================================================================
+        // WICHTIG: Diese Funktionen ändern nur den State.
+        // Die onChange-Handler oben reagieren darauf und updaten Live Activity.
+        // =========================================================================
 
     private func toggleTimer() {
         if sessionManager.isPaused {
@@ -590,9 +598,6 @@ struct ActiveWorkoutView: View {
 
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
-
-        updateLiveActivity()
-        saveResumeState()
     }
 
     private func selectExercise(at index: Int) {
@@ -600,9 +605,6 @@ struct ActiveWorkoutView: View {
             selectedExerciseIndex = index
         }
         hapticGenerator.impactOccurred()
-
-        updateLiveActivity()
-        saveResumeState()
     }
 
     private func completeSet(_ set: ExerciseSet) {
@@ -642,9 +644,6 @@ struct ActiveWorkoutView: View {
         if !remainingSetsForExercise.isEmpty {
             startRestTimer(for: set)
         }
-
-        updateLiveActivity()
-        saveResumeState()
     }
 
     private func finishWorkout() {
@@ -655,7 +654,7 @@ struct ActiveWorkoutView: View {
         try? context.save()
 
         endLiveActivity()
-        ActiveWorkoutResumeStore.clear()
+        SessionResumeStore.clear()
 
         dismiss()
     }
@@ -667,7 +666,7 @@ struct ActiveWorkoutView: View {
         try? context.save()
 
         endLiveActivity()
-        ActiveWorkoutResumeStore.clear()
+        SessionResumeStore.clear()
 
         dismiss()
     }
@@ -678,7 +677,6 @@ struct ActiveWorkoutView: View {
 
     private func handlePauseAndExit() {
         sessionManager.pauseSession()
-        saveResumeState()
         dismiss()
     }
 
@@ -694,10 +692,6 @@ struct ActiveWorkoutView: View {
         withAnimation(.easeInOut) {
             isResting = true
         }
-
-        updateLiveActivity()
-        saveResumeState()
-
         restTimer?.invalidate()
         restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             if self.restTimerSeconds > 0 {
@@ -723,9 +717,6 @@ struct ActiveWorkoutView: View {
 
         restTimerSeconds = 0
         restEndDate = nil
-
-        updateLiveActivity()
-        saveResumeState()
     }
 
     private func skipRest() {
@@ -736,10 +727,7 @@ struct ActiveWorkoutView: View {
         // MARK: - Live Activity
 
     private func startLiveActivity() {
-        print("🚀 startLiveActivity() wurde aufgerufen")
-
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
-            print("⚠️ Live Activities nicht aktiviert")
             return
         }
 
@@ -749,7 +737,6 @@ struct ActiveWorkoutView: View {
 
                 // Wenn wir bereits eine passende Activity haben -> fertig
             if attached {
-                print("✅ Existing Live Activity found & attached")
                 return
             }
 
@@ -771,9 +758,7 @@ struct ActiveWorkoutView: View {
                         content: .init(state: contentState, staleDate: nil),
                         pushType: nil
                     )
-                    print("✅ Live Activity gestartet")
                 } catch {
-                    print("❌ Live Activity Fehler: \(error)")
                 }
             }
         }
@@ -844,9 +829,7 @@ struct ActiveWorkoutView: View {
                     self.currentActivity = existing
                 }
                 updateLiveActivity()
-                print("✅ Live Activity reattached (sessionID match)")
             } else {
-                print("ℹ️ No existing Live Activity to reattach for this session")
             }
         }
     }
@@ -855,7 +838,7 @@ struct ActiveWorkoutView: View {
 
     @discardableResult
     private func restoreResumeStateIfPossible() -> Bool {
-        guard let state = ActiveWorkoutResumeStore.load() else { return false }
+        guard let state = SessionResumeStore.load() else { return false }
         guard state.sessionID == session.sessionUUID.uuidString else { return false }
 
         workoutStartDate = state.workoutStartDate
@@ -879,8 +862,6 @@ struct ActiveWorkoutView: View {
             isResting = false
             restTimerSeconds = 0
         }
-
-        print("✅ Resume-State restored for session \(state.sessionID)")
         return true
     }
 
@@ -903,7 +884,7 @@ struct ActiveWorkoutView: View {
     }
 
     private func saveResumeState() {
-        let state = ActiveWorkoutResumeState(
+        let state = SessionResumeState(
             sessionID: session.sessionUUID.uuidString,
             workoutType: session.workoutType.rawValue,
             isPaused: sessionManager.isPaused,
@@ -914,7 +895,7 @@ struct ActiveWorkoutView: View {
             selectedExerciseIndex: selectedExerciseIndex,
             updatedAt: Date()
         )
-        ActiveWorkoutResumeStore.save(state)
+        SessionResumeStore.save(state)
     }
 
     private func ensureSingleLiveActivityForCurrentSession() async -> Bool {

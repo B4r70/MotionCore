@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Extensions Daten-Modell                                          /
+// Abschnitt . . : Services                                                         /
 // Datei . . . . : AppSettingsUserDefaults.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 23.11.2025                                                       /

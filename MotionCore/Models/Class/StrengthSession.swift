@@ -148,24 +148,32 @@ final class StrengthSession {
     // 1. Primär: nach der kleinsten setNumber in jeder Gruppe
     // 2. Sekundär: nach Übungsname für absolute Stabilität
     var groupedSets: [[ExerciseSet]] {
-        let grouped = Dictionary(grouping: exerciseSets) { $0.exerciseName }
-        return grouped.values
-            .map { sets in sets.sorted { $0.setNumber < $1.setNumber } }
-            .sorted { group1, group2 in
-                let minSet1 = group1.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
-                let minSet2 = group2.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+            let grouped = Dictionary(grouping: exerciseSets) { $0.exerciseName }
+            return grouped.values
+                .map { sets in sets.sorted { $0.setNumber < $1.setNumber } }
+                .sorted { group1, group2 in
+                    // NEU: Primär nach sortOrder sortieren
+                    let sortOrder1 = group1.first?.sortOrder ?? Int.max
+                    let sortOrder2 = group2.first?.sortOrder ?? Int.max
 
-                // Primär nach setNumber sortieren
-                if minSet1 != minSet2 {
-                    return minSet1 < minSet2
+                    if sortOrder1 != sortOrder2 {
+                        return sortOrder1 < sortOrder2
+                    }
+
+                    // Fallback: nach setNumber für ältere Daten ohne sortOrder
+                    let minSet1 = group1.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+                    let minSet2 = group2.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+
+                    if minSet1 != minSet2 {
+                        return minSet1 < minSet2
+                    }
+
+                    // Sekundär nach Übungsname für Stabilität
+                    let name1 = group1.first?.exerciseName ?? ""
+                    let name2 = group2.first?.exerciseName ?? ""
+                    return name1 < name2
                 }
-
-                // Sekundär nach Übungsname für Stabilität
-                let name1 = group1.first?.exerciseName ?? ""
-                let name2 = group2.first?.exerciseName ?? ""
-                return name1 < name2
-            }
-    }
+        }
 
     // MARK: - Initialisierung
 
@@ -230,7 +238,14 @@ final class StrengthSession {
     // Nächster unerledigter Satz
     var nextUncompletedSet: ExerciseSet? {
         exerciseSets
-            .sorted { $0.setNumber < $1.setNumber }
+            .sorted {
+                // Primär nach sortOrder
+                if $0.sortOrder != $1.sortOrder {
+                    return $0.sortOrder < $1.sortOrder
+                }
+                // Sekundär nach setNumber
+                return $0.setNumber < $1.setNumber
+            }
             .first { !$0.isCompleted }
     }
 }

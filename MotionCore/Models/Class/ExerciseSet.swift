@@ -42,6 +42,7 @@ final class ExerciseSet {
     // MARK: - Gruppierung
 
     var groupId: String = ""                     // Gruppen-ID für Supersets etc.
+    var sortOrder: Int = 0                       // Sortierung innerhalb des Plans
 
     // MARK: - Set-Status
 
@@ -97,7 +98,7 @@ final class ExerciseSet {
 
     // MARK: - Berechnete Werte
 
-    // Volumen dieses Sets (Gewicht Ã— Reps)
+    // Volumen dieses Sets (Gewicht x Reps)
     var volume: Double {
         weight * Double(reps)
     }
@@ -163,7 +164,8 @@ final class ExerciseSet {
         targetRepsMin: Int = 0,
         targetRepsMax: Int = 0,
         targetRIR: Int = 2,
-        groupId: String = ""
+        groupId: String = "",
+        sortOrder: Int = 0
     ) {
         self.exerciseName = exerciseName
         self.exerciseNameSnapshot = exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot
@@ -184,5 +186,6 @@ final class ExerciseSet {
         self.targetRepsMax = targetRepsMax
         self.targetRIR = targetRIR
         self.groupId = groupId
+        self.sortOrder = sortOrder
     }
 }

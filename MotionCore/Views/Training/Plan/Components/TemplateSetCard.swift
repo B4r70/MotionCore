@@ -12,16 +12,34 @@
 //
 import SwiftUI
 
-struct TemplateSetCard: View {
+struct TemplateSetCard<Trailing: View>: View {
     let exerciseName: String
     let gifAssetName: String
     let sets: [ExerciseSet]
     let onDelete: () -> Void
     let onEdit: () -> Void
+    let trailing: () -> Trailing
 
     @State private var showDeleteConfirm = false
 
-    // Berechnete Werte
+    init(
+        exerciseName: String,
+        gifAssetName: String,
+        sets: [ExerciseSet],
+        onDelete: @escaping () -> Void,
+        onEdit: @escaping () -> Void,
+        @ViewBuilder trailing: @escaping () -> Trailing
+    ) {
+        self.exerciseName = exerciseName
+        self.gifAssetName = gifAssetName
+        self.sets = sets
+        self.onDelete = onDelete
+        self.onEdit = onEdit
+        self.trailing = trailing
+    }
+
+    // MARK: - Calculated Values
+
     private var workingSets: [ExerciseSet] {
         sets.filter { $0.setKind == .work }
     }
@@ -36,6 +54,7 @@ struct TemplateSetCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
+
             // Header mit Übungsinfo
             HStack(spacing: 12) {
                 ExerciseGifView(assetName: gifAssetName, size: 56)
@@ -58,28 +77,32 @@ struct TemplateSetCard: View {
 
                 Spacer()
 
-                // Aktionen
-                Menu {
-                    Button {
-                        onEdit()
-                    } label: {
-                        Label("Bearbeiten", systemImage: "pencil")
-                    }
+                // Menu nur im Normalmodus (wenn kein Trailing geliefert wird)
+                if Trailing.self == EmptyView.self {
+                    Menu {
+                        Button { onEdit() } label: {
+                            Label("Bearbeiten", systemImage: "pencil")
+                        }
 
-                    Button(role: .destructive) {
-                        showDeleteConfirm = true
+                        Button(role: .destructive) {
+                            showDeleteConfirm = true
+                        } label: {
+                            Label("Entfernen", systemImage: "trash")
+                        }
                     } label: {
-                        Label("Entfernen", systemImage: "trash")
+                        Image(systemName: "ellipsis.circle")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
                     }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
                 }
+
+                // Trailing Slot (z.B. Drag Handle im Edit-Mode)
+                trailing()
             }
 
             // Satz-Details
             VStack(spacing: 6) {
+
                 // Aufwärmsätze
                 if !warmupSets.isEmpty {
                     HStack {
@@ -114,17 +137,15 @@ struct TemplateSetCard: View {
                 .padding(.horizontal, 10)
                 .background(Color.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
 
-                // üPause und RIR Info
+                // Pause und RIR Info
                 if let firstWork = workingSets.first {
                     HStack(spacing: 16) {
-                        // Pausenzeit
                         Label(formatRestTime(firstWork.restSeconds), systemImage: "timer")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
                         Spacer()
 
-                        // RIR
                         HStack(spacing: 4) {
                             Text("RIR")
                                 .font(.caption)
@@ -154,13 +175,12 @@ struct TemplateSetCard: View {
         }
     }
 
-    // MARK: - Zusammenfassungen
+    // MARK: - Summaries
 
     private var warmupSummary: String {
         guard let first = warmupSets.first else { return "" }
         let reps = first.reps
 
-        // üPrüfen ob unilateral (weightPerSide > 0)
         if first.weightPerSide > 0 {
             let weightsPerSide = warmupSets.map { $0.weightPerSide }
             if Set(weightsPerSide).count == 1 {
@@ -182,7 +202,6 @@ struct TemplateSetCard: View {
         guard let first = workingSets.first else { return "" }
         let reps = first.reps
 
-        // üPrüfen ob unilateral (weightPerSide > 0)
         if first.weightPerSide > 0 {
             return "\(workingSets.count) × \(reps) @ 2×\(formatWeight(first.weightPerSide))"
         } else {
@@ -194,7 +213,6 @@ struct TemplateSetCard: View {
         weight > 0 ? String(format: "%.1f kg", weight) : "KG"
     }
 
-    // üHelper für Zeitformatierung
     private func formatRestTime(_ seconds: Int) -> String {
         let mins = seconds / 60
         let secs = seconds % 60
@@ -207,7 +225,6 @@ struct TemplateSetCard: View {
         }
     }
 
-    // üRIR Farbe
     private func rirColor(for rir: Int) -> Color {
         switch rir {
         case 0: return .red
@@ -215,6 +232,27 @@ struct TemplateSetCard: View {
         case 2: return .yellow
         case 3: return .green
         default: return .blue
+        }
+    }
+}
+
+// Convenience init für normalen Gebrauch ohne trailing
+extension TemplateSetCard where Trailing == EmptyView {
+    init(
+        exerciseName: String,
+        gifAssetName: String,
+        sets: [ExerciseSet],
+        onDelete: @escaping () -> Void,
+        onEdit: @escaping () -> Void
+    ) {
+        self.init(
+            exerciseName: exerciseName,
+            gifAssetName: gifAssetName,
+            sets: sets,
+            onDelete: onDelete,
+            onEdit: onEdit
+        ) {
+            EmptyView()
         }
     }
 }
@@ -256,9 +294,3 @@ struct TemplateSetCard: View {
     }
     .environmentObject(AppSettings.shared)
 }
-
-
-
-
-
-
