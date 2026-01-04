@@ -74,7 +74,7 @@ struct SetEditSheet: View {
                                     .foregroundStyle(.blue)
                             }
 
-                            Text(String(format: "%.1f", weight))
+                            Text(String(format: "%.2f", weight))
                                 .font(.system(size: 48, weight: .bold, design: .rounded))
                                 .frame(width: 250)
 
@@ -171,14 +171,41 @@ struct SetEditSheet: View {
 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Speichern") {
-                        set.weight = weight
-                        set.reps = reps
+                        saveChanges()
                         dismiss()
                     }
                     .fontWeight(.semibold)
                 }
             }
         }
+    }
+
+    // MARK: - Speichern mit Übernahme für nachfolgende Sets
+
+    private func saveChanges() {
+        // Aktuelles Set aktualisieren
+        set.weight = weight
+        set.reps = reps
+
+        // Alle Sets der gleichen Übung finden
+        let sameSets = session.exerciseSets.filter { $0.exerciseName == set.exerciseName }
+
+        // Nachfolgende NICHT abgeschlossene Sets aktualisieren
+        for otherSet in sameSets {
+            // Nur Sets mit höherer Satznummer UND nicht abgeschlossen
+            if otherSet.setNumber > set.setNumber && !otherSet.isCompleted {
+                otherSet.weight = weight
+                otherSet.reps = reps
+
+                // Bei unilateralen Übungen auch weightPerSide anpassen
+                if set.isUnilateralSnapshot && set.weightPerSide > 0 {
+                    // Neues weightPerSide berechnen (weight / 2)
+                    otherSet.weightPerSide = weight / 2
+                }
+            }
+        }
+
+        try? context.save()
     }
 
     // MARK: - Set Management

@@ -38,6 +38,12 @@ struct ActiveWorkoutView: View {
     @State private var selectedSetForEdit: ExerciseSet?
     @State private var selectedExerciseIndex: Int? = nil
 
+    // NEU: Sheet zum Hinzufügen einer Übung während des Trainings
+    @State private var showAddExerciseSheet = false
+
+    // NEU: Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
+    @State private var exerciseListRefreshID = UUID()
+
         // Rest
     @State private var restTimerSeconds: Int = 0
     @State private var restTimer: Timer?
@@ -190,6 +196,16 @@ struct ActiveWorkoutView: View {
             SetEditSheet(set: set, session: session)
                 .environmentObject(appSettings)
         }
+        // NEU: Sheet zum Hinzufügen einer Übung während des Trainings
+        .sheet(isPresented: $showAddExerciseSheet) {
+            AddExerciseDuringWorkoutSheet(session: session) {
+                // Nach dem Hinzufügen: UI refreshen und Live Activity updaten
+                exerciseListRefreshID = UUID() // Erzwingt Neuaufbau der Liste
+                updateLiveActivity()
+                saveResumeState()
+            }
+            .environmentObject(appSettings)
+        }
     }
 
         // MARK: - Header
@@ -279,7 +295,7 @@ struct ActiveWorkoutView: View {
 
             HStack(spacing: 24) {
                 VStack(spacing: 4) {
-                    Text(set.weight > 0 ? String(format: "%.1f", set.weight) : "0.0")
+                    Text(set.weight > 0 ? String(format: "%.2f", set.weight) : "0.00")
                         .font(.system(size: 36, weight: .bold, design: .rounded))
                         .foregroundStyle(set.weight > 0 ? .primary : .secondary)
 
@@ -424,9 +440,22 @@ struct ActiveWorkoutView: View {
 
     private var exercisesOverview: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Übersicht")
-                .font(.title3.bold())
-                .foregroundStyle(.primary)
+            HStack {
+                Text("Übersicht")
+                    .font(.title3.bold())
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                // NEU: Button zum Hinzufügen einer Übung
+                Button {
+                    showAddExerciseSheet = true
+                } label: {
+                    Label("Übung", systemImage: "plus.circle.fill")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.blue)
+                }
+            }
 
             ForEach(Array(session.groupedSets.enumerated()), id: \.element.first!.id) { index, sets in
                 if let firstSet = sets.first {
@@ -443,6 +472,7 @@ struct ActiveWorkoutView: View {
             }
         }
         .glassCard()
+        .id(exerciseListRefreshID) // NEU: Erzwingt Neuaufbau bei Änderung
     }
 
     private func exerciseOverviewRow(name: String, sets: [ExerciseSet], index: Int, isCurrentExercise: Bool) -> some View {
@@ -731,7 +761,7 @@ struct ActiveWorkoutView: View {
             return
         }
 
-            // ✅ 1) Vorher aufräumen / reattach
+            //  1) Vorher aufräumen / reattach
         Task {
             let attached = await ensureSingleLiveActivityForCurrentSession()
 
@@ -740,7 +770,7 @@ struct ActiveWorkoutView: View {
                 return
             }
 
-                // ✅ 2) Neu starten
+                //  2) Neu starten
             await MainActor.run {
                 workoutStartDate = Date().addingTimeInterval(-Double(sessionManager.elapsedSeconds))
 
@@ -932,7 +962,7 @@ struct ActiveWorkoutView: View {
                 self.currentActivity = matching
             }
 
-                // Einmal synchronisieren (✅ neue API)
+                // Einmal synchronisieren ( neue API)
             let content = ActivityContent(state: makeLiveContentState(), staleDate: nil)
             await matching.update(content)
 
@@ -956,9 +986,680 @@ struct ActiveWorkoutView: View {
                 totalSets: session.totalSets
             )
 
-                // ✅ neue API
+                //  neue API
             let finalContent = ActivityContent(state: final, staleDate: nil)
             await activity.end(finalContent, dismissalPolicy: .immediate)
         }
+    }
+}
+
+// MARK: - Sheet zum Hinzufügen einer Übung während des Trainings
+
+struct AddExerciseDuringWorkoutSheet: View {
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var appSettings: AppSettings
+
+    @Bindable var session: StrengthSession
+    let onComplete: () -> Void
+
+    // Schritt 1: Übung wählen, Schritt 2: Sets konfigurieren
+    @State private var selectedExercise: Exercise?
+    @State private var numberOfSets: Int = 3
+    @State private var defaultWeight: Double = 0.0
+    @State private var defaultReps: Int = 10
+    @State private var restSeconds: Int = 90
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+
+                if let exercise = selectedExercise {
+                    // Schritt 2: Sets konfigurieren
+                    configureExerciseView(exercise)
+                } else {
+                    // Schritt 1: Übung wählen
+                    exerciseSelectionView
+                }
+            }
+            .navigationTitle(selectedExercise == nil ? "Übung hinzufügen" : "Konfigurieren")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        if selectedExercise != nil {
+                            // Zurück zur Auswahl
+                            withAnimation {
+                                selectedExercise = nil
+                            }
+                        } else {
+                            dismiss()
+                        }
+                    } label: {
+                        if selectedExercise != nil {
+                            Label("Zurück", systemImage: "chevron.left")
+                        } else {
+                            Text("Abbrechen")
+                        }
+                    }
+                }
+            }
+            .onDisappear {
+                // Timer aufräumen beim Schließen
+                stopContinuousAdjustment()
+            }
+        }
+    }
+
+    // MARK: - Schritt 1: Übung wählen (eigene Implementierung statt ExercisePickerSheet)
+
+    @Query(sort: \Exercise.name, order: .forward)
+    private var allExercises: [Exercise]
+
+    @State private var selectedMuscleGroup: MuscleGroup? = nil
+    @State private var selectedEquipment: ExerciseEquipment? = nil
+    @State private var searchText: String = ""
+
+    private var filteredExercises: [Exercise] {
+        var exercises = allExercises
+
+        if let muscle = selectedMuscleGroup {
+            exercises = exercises.filter { exercise in
+                exercise.primaryMuscles.contains(muscle) ||
+                exercise.secondaryMuscles.contains(muscle)
+            }
+        }
+
+        if let equipment = selectedEquipment {
+            exercises = exercises.filter { $0.equipment == equipment }
+        }
+
+        if !searchText.isEmpty {
+            exercises = exercises.filter {
+                $0.name.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+
+        return exercises
+    }
+
+    private var exerciseSelectionView: some View {
+        VStack(spacing: 0) {
+            // Suchleiste
+            searchBar
+                .padding(.horizontal)
+                .padding(.top, 16)
+
+            // Filter-Chips
+            filterChipsView
+                .padding(.horizontal)
+                .padding(.top, 12)
+
+            // Übungsliste
+            ScrollView {
+                LazyVStack(spacing: 12) {
+                    ForEach(filteredExercises) { exercise in
+                        Button {
+                            withAnimation {
+                                selectedExercise = exercise
+                                defaultReps = exercise.repRangeMax > 0 ? exercise.repRangeMax : 10
+                            }
+                        } label: {
+                            exercisePickerRow(exercise)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 16)
+                .padding(.bottom, 32)
+            }
+            .scrollIndicators(.hidden)
+
+            // Empty State
+            if filteredExercises.isEmpty {
+                emptyStateOverlay
+            }
+        }
+    }
+
+    private var searchBar: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(.secondary)
+
+            TextField("Übung suchen...", text: $searchText)
+                .textFieldStyle(.plain)
+
+            if !searchText.isEmpty {
+                Button {
+                    searchText = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+        )
+    }
+
+    private var filterChipsView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                // Muskelgruppen
+                Menu {
+                    Button("Alle Muskelgruppen") {
+                        selectedMuscleGroup = nil
+                    }
+
+                    ForEach(MuscleGroup.allCases) { muscle in
+                        Button {
+                            selectedMuscleGroup = muscle
+                        } label: {
+                            HStack {
+                                Text(muscle.description)
+                                Spacer()
+                                if selectedMuscleGroup == muscle {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    FilterChip(
+                        title: selectedMuscleGroup?.description ?? "Muskel",
+                        icon: .system("figure.strengthtraining.traditional"),
+                        count: selectedMuscleGroup != nil ? 1 : 0,
+                        isSelected: selectedMuscleGroup != nil
+                    ) {}
+                }
+
+                // Equipment
+                Menu {
+                    Button("Alle Geräte") {
+                        selectedEquipment = nil
+                    }
+
+                    ForEach(ExerciseEquipment.allCases) { equipment in
+                        Button {
+                            selectedEquipment = equipment
+                        } label: {
+                            HStack {
+                                Text(equipment.description)
+                                Spacer()
+                                if selectedEquipment == equipment {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    FilterChip(
+                        title: selectedEquipment?.description ?? "Gerät",
+                        icon: .system("dumbbell.fill"),
+                        count: selectedEquipment != nil ? 1 : 0,
+                        isSelected: selectedEquipment != nil
+                    ) {}
+                }
+            }
+            .padding(.horizontal, 4)
+        }
+    }
+
+    private func exercisePickerRow(_ exercise: Exercise) -> some View {
+        HStack(spacing: 12) {
+            ExerciseGifView(assetName: exercise.gifAssetName, size: 56)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(exercise.name)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+
+                HStack(spacing: 8) {
+                    Label(exercise.equipment.description, systemImage: exercise.equipment.icon)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    if let primaryMuscle = exercise.primaryMuscles.first {
+                        Text(primaryMuscle.description)
+                            .font(.caption)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(.blue.opacity(0.2))
+                            .foregroundStyle(.blue)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+        .padding(12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+        )
+    }
+
+    private var emptyStateOverlay: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 40))
+                .foregroundStyle(.secondary)
+
+            Text("Keine Übungen gefunden")
+                .font(.headline)
+
+            Text("Versuche es mit anderen Filtern")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .padding(32)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+    }
+
+    // MARK: - Schritt 2: Sets konfigurieren
+
+    private func configureExerciseView(_ exercise: Exercise) -> some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                // Übungsinfo
+                exerciseInfoCard(exercise)
+
+                // Set-Konfiguration
+                setConfigurationCard
+
+                // Hinzufügen-Button
+                addButton(exercise)
+            }
+            .padding()
+            .padding(.bottom, 32)
+        }
+        .scrollIndicators(.hidden)
+    }
+
+    private func exerciseInfoCard(_ exercise: Exercise) -> some View {
+        HStack(spacing: 16) {
+            ExerciseGifView(assetName: exercise.gifAssetName, size: 80)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(exercise.name)
+                    .font(.title3.bold())
+                    .foregroundStyle(.primary)
+
+                HStack(spacing: 8) {
+                    Label(exercise.equipment.description, systemImage: exercise.equipment.icon)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    if let primaryMuscle = exercise.primaryMuscles.first {
+                        Text(primaryMuscle.description)
+                            .font(.caption)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(.blue.opacity(0.2))
+                            .foregroundStyle(.blue)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+
+            Spacer()
+        }
+        .glassCard()
+    }
+
+    private var setConfigurationCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Set-Konfiguration")
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            .glassDivider()
+
+            // Anzahl Sets
+            HStack {
+                Text("Anzahl Sets")
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                HStack(spacing: 12) {
+                    Button { decreaseSets() } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(numberOfSets > 1 ? .blue : .gray)
+                    }
+                    .disabled(numberOfSets <= 1)
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing { startContinuousAdjustment(field: .sets, increment: false) }
+                        else { stopContinuousAdjustment() }
+                    }, perform: {})
+
+                    Text("\(numberOfSets)")
+                        .font(.title2.bold().monospacedDigit())
+                        .frame(minWidth: 40)
+                        .contentTransition(.numericText())
+
+                    Button { increaseSets() } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(numberOfSets < 10 ? .blue : .gray)
+                    }
+                    .disabled(numberOfSets >= 10)
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing { startContinuousAdjustment(field: .sets, increment: true) }
+                        else { stopContinuousAdjustment() }
+                    }, perform: {})
+                }
+            }
+
+            .glassDivider()
+
+            // Gewicht mit +/- Buttons und LongPress
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text(isSelectedExerciseUnilateral ? "Gewicht pro Seite (kg)" : "Gewicht (kg)")
+                        .foregroundStyle(.primary)
+
+                    if isSelectedExerciseUnilateral {
+                        Text("2×")
+                            .font(.caption.bold())
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.orange.opacity(0.2))
+                            .foregroundStyle(.orange)
+                            .clipShape(Capsule())
+                    }
+                }
+
+                HStack(spacing: 12) {
+                    Button { decreaseWeight() } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(defaultWeight > 0 ? .blue : .gray)
+                    }
+                    .disabled(defaultWeight <= 0)
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing { startContinuousAdjustment(field: .weight, increment: false) }
+                        else { stopContinuousAdjustment() }
+                    }, perform: {})
+
+                    Spacer()
+
+                    if isSelectedExerciseUnilateral && defaultWeight > 0 {
+                        HStack(spacing: 4) {
+                            Text("2×")
+                                .font(.title3)
+                                .foregroundStyle(.orange)
+                            Text(String(format: "%.2f", defaultWeight))
+                                .font(.system(size: 32, weight: .bold, design: .rounded))
+                        }
+                        .contentTransition(.numericText())
+                    } else {
+                        Text(defaultWeight > 0 ? String(format: "%.2f", defaultWeight) : "–")
+                            .font(.system(size: 32, weight: .bold, design: .rounded))
+                            .contentTransition(.numericText())
+                    }
+
+                    Spacer()
+
+                    Button { increaseWeight() } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(.blue)
+                    }
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing { startContinuousAdjustment(field: .weight, increment: true) }
+                        else { stopContinuousAdjustment() }
+                    }, perform: {})
+                }
+
+                if isSelectedExerciseUnilateral {
+                    if defaultWeight > 0 {
+                        Text("Gesamt: \(String(format: "%.2f", defaultWeight * 2)) kg")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("Gewicht einer Seite eingeben")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    Text("0 = Körpergewicht")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            .glassDivider()
+
+            // Wiederholungen
+            HStack {
+                Text("Wiederholungen")
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                HStack(spacing: 12) {
+                    Button { decreaseReps() } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(defaultReps > 1 ? .blue : .gray)
+                    }
+                    .disabled(defaultReps <= 1)
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing { startContinuousAdjustment(field: .reps, increment: false) }
+                        else { stopContinuousAdjustment() }
+                    }, perform: {})
+
+                    Text("\(defaultReps)")
+                        .font(.title2.bold().monospacedDigit())
+                        .frame(minWidth: 40)
+                        .contentTransition(.numericText())
+
+                    Button { increaseReps() } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(defaultReps < 50 ? .blue : .gray)
+                    }
+                    .disabled(defaultReps >= 50)
+                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                        if pressing { startContinuousAdjustment(field: .reps, increment: true) }
+                        else { stopContinuousAdjustment() }
+                    }, perform: {})
+                }
+            }
+
+            .glassDivider()
+
+            // Pausenzeit
+            HStack {
+                Text("Pause (Sek.)")
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                Picker("", selection: $restSeconds) {
+                    ForEach([30, 45, 60, 90, 120, 150, 180], id: \.self) { seconds in
+                        Text("\(seconds)s").tag(seconds)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+        }
+        .glassCard()
+    }
+
+    // MARK: - Hilfsvariable für unilateral
+
+    private var isSelectedExerciseUnilateral: Bool {
+        selectedExercise?.isUnilateral ?? false
+    }
+
+    // MARK: - Adjustment Timer für LongPress
+
+    @State private var incrementTimer: Timer?
+
+    private enum AdjustmentField { case sets, reps, weight }
+
+    private func increaseSets() {
+        guard numberOfSets < 10 else { return }
+        withAnimation { numberOfSets += 1 }
+        hapticFeedback()
+    }
+
+    private func decreaseSets() {
+        guard numberOfSets > 1 else { return }
+        withAnimation { numberOfSets -= 1 }
+        hapticFeedback()
+    }
+
+    private func increaseReps() {
+        guard defaultReps < 50 else { return }
+        withAnimation { defaultReps += 1 }
+        hapticFeedback()
+    }
+
+    private func decreaseReps() {
+        guard defaultReps > 1 else { return }
+        withAnimation { defaultReps -= 1 }
+        hapticFeedback()
+    }
+
+    private func increaseWeight() {
+        withAnimation {
+            defaultWeight += 0.25
+            defaultWeight = (defaultWeight * 4).rounded() / 4
+        }
+        hapticFeedback()
+    }
+
+    private func decreaseWeight() {
+        guard defaultWeight >= 0.25 else { return }
+        withAnimation {
+            defaultWeight -= 0.25
+            defaultWeight = (defaultWeight * 4).rounded() / 4
+        }
+        hapticFeedback()
+    }
+
+    private func startContinuousAdjustment(field: AdjustmentField, increment: Bool) {
+        stopContinuousAdjustment()
+
+        var counter = 0
+        incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.12, repeats: true) { _ in
+            counter += 1
+            switch field {
+            case .sets:
+                if increment { increaseSets() } else { decreaseSets() }
+            case .reps:
+                if increment { increaseReps() } else { decreaseReps() }
+            case .weight:
+                // Nach 20 Iterationen schneller (0.5 statt 0.25)
+                let step: Double = counter > 20 ? 0.5 : 0.25
+                if increment {
+                    withAnimation {
+                        defaultWeight += step
+                        defaultWeight = (defaultWeight * 4).rounded() / 4
+                    }
+                } else if defaultWeight >= step {
+                    withAnimation {
+                        defaultWeight -= step
+                        defaultWeight = (defaultWeight * 4).rounded() / 4
+                    }
+                }
+                hapticFeedback()
+            }
+        }
+
+        if let t = incrementTimer {
+            RunLoop.current.add(t, forMode: .common)
+        }
+    }
+
+    private func stopContinuousAdjustment() {
+        incrementTimer?.invalidate()
+        incrementTimer = nil
+    }
+
+    private func hapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+    }
+
+    private func addButton(_ exercise: Exercise) -> some View {
+        Button {
+            addExerciseToSession(exercise)
+            dismiss()
+        } label: {
+            HStack {
+                Image(systemName: "plus.circle.fill")
+                Text("\(numberOfSets) \(numberOfSets == 1 ? "Set" : "Sets") hinzufügen")
+                    .font(.headline)
+            }
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(.blue, in: RoundedRectangle(cornerRadius: 16))
+        }
+    }
+
+    // MARK: - Logik zum Hinzufügen
+
+    private func addExerciseToSession(_ exercise: Exercise) {
+        // Höchsten sortOrder in der Session finden
+        let maxSortOrder = session.exerciseSets.map { $0.sortOrder }.max() ?? -1
+        let newSortOrder = maxSortOrder + 1
+
+        // Gewicht berechnen (bei unilateral: Gesamtgewicht = 2 × Eingabe)
+        let isUnilateral = exercise.isUnilateral
+        let finalWeight = isUnilateral ? defaultWeight * 2 : defaultWeight
+
+        // Sets erstellen
+        for setNumber in 1...numberOfSets {
+            let newSet = ExerciseSet(
+                exerciseName: exercise.name,
+                exerciseNameSnapshot: exercise.name,
+                exerciseUUIDSnapshot: exercise.persistentModelID.hashValue.description,
+                exerciseGifAssetName: exercise.gifAssetName,
+                isUnilateralSnapshot: exercise.isUnilateral,
+                setNumber: setNumber,
+                weight: finalWeight,
+                weightPerSide: isUnilateral ? defaultWeight : 0,
+                reps: defaultReps,
+                restSeconds: restSeconds,
+                setKind: .work,
+                isCompleted: false, // NEU: Nicht abgeschlossen, da während des Trainings
+                targetRepsMin: exercise.repRangeMin,
+                targetRepsMax: exercise.repRangeMax,
+                sortOrder: newSortOrder
+            )
+
+            newSet.exercise = exercise
+            newSet.session = session
+            session.exerciseSets.append(newSet)
+            context.insert(newSet)
+        }
+
+        try? context.save()
+
+        // Haptic Feedback
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+
+        // Callback ausführen (Live Activity updaten etc.)
+        onComplete()
     }
 }
