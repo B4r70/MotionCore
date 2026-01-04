@@ -24,18 +24,23 @@ struct TrainingFormView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
 
-    // Alerts
     @State private var showDeleteAlert = false
 
     // Sheet States
     @State private var showExercisePicker = false
-    @State private var selectedExerciseForConfig: Exercise? = nil
+    @State private var editExerciseContext: EditExerciseContext? = nil
 
-    // Backup für Edit-Modus - falls Benutzer abbricht
-    @State private var backupSetsForEdit: [ExerciseSet] = []
-    @State private var isEditingExercise = false
+    @State private var pendingReplacement: (sortOrder: Int, newSets: [ExerciseSet])? = nil
 
-    // MARK: - Body
+    struct EditExerciseContext: Identifiable {
+        let id = UUID()
+        let exercise: Exercise?              // optional: Library-Exercise
+        let exerciseName: String             // Snapshot-Fallback
+        let gifAssetName: String             // Snapshot-Fallback
+        let isUnilateral: Bool               // Snapshot-Fallback
+        let sets: [ExerciseSet]              // ORIGINALE Sets (nur zum Vorbefüllen)
+        let sortOrder: Int                   // Gruppen-Key im Plan
+    }
 
     var body: some View {
         ZStack {
@@ -44,19 +49,23 @@ struct TrainingFormView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    // Grunddaten
                     PlanBasicDataCard(plan: plan)
                         .padding(.horizontal)
                         .padding(.top, 16)
 
-                    // Uebungen
                     PlanExercisesSection(
                         plan: plan,
                         mode: .form,
                         onAddExercise: { showExercisePicker = true },
-                        onEditExercise: { exerciseName in editExercise(exerciseName) },
-                        onDeleteExercise: { exerciseName in deleteExercise(exerciseName) },
-                        onMoveExercise: { source, destination in moveExercise(from: source, to: destination) }  // Drag & Drop
+                        onEditExercise: { firstSet in
+                            editExercise(firstSet)
+                        },
+                        onDeleteExercise: { set in
+                            deleteExercise(set)
+                        },
+                        onMoveExercise: { source, destination in
+                            moveExercise(from: source, to: destination)
+                        }
                     )
                 }
                 .padding(.bottom, 80)
@@ -72,24 +81,44 @@ struct TrainingFormView: View {
         } message: {
             Text("Dieser Trainingsplan wird unwiderruflich gelöscht.")
         }
+        // Picker (Add)
         .sheet(isPresented: $showExercisePicker) {
             ExercisePickerSheet { exercise in
-                selectedExerciseForConfig = exercise
+                // Für "Add" öffnen wir direkt über denselben Context-Mechanismus
+                editExerciseContext = EditExerciseContext(
+                    exercise: exercise,
+                    exerciseName: exercise.name,
+                    gifAssetName: exercise.gifAssetName,
+                    isUnilateral: exercise.isUnilateral,
+                    sets: [],
+                    sortOrder: plan.nextSortOrder
+                )
             }
             .environmentObject(appSettings)
         }
-        .sheet(item: $selectedExerciseForConfig) { exercise in
-            SetConfigurationSheet(
-                exercise: exercise,
-                initialSets: backupSetsForEdit.isEmpty ? nil : backupSetsForEdit  // Bestehende Sets übergeben
-            ) { sets in
-                addSets(sets)
+        // Konfiguration (Add + Edit über EIN Sheet)
+        .sheet(item: $editExerciseContext, onDismiss: {
+            commitPendingReplacementIfNeeded()
+        }) { ctx in
+            Group {
+                if let ex = ctx.exercise {
+                    SetConfigurationSheet(exercise: ex, initialSets: ctx.sets.isEmpty ? nil : ctx.sets) { newSets in
+                        pendingReplacement = (ctx.sortOrder, newSets)
+                        editExerciseContext = nil   // erst schließen
+                    }
+                } else {
+                    SetConfigurationSheet(
+                        exerciseName: ctx.exerciseName,
+                        gifAssetName: ctx.gifAssetName,
+                        isUnilateral: ctx.isUnilateral,
+                        initialSets: ctx.sets.isEmpty ? nil : ctx.sets
+                    ) { newSets in
+                        pendingReplacement = (ctx.sortOrder, newSets)
+                        editExerciseContext = nil   // erst schließen
+                    }
+                }
             }
             .environmentObject(appSettings)
-            // Bei Abbruch (Sheet schliesst ohne Speichern) Backup wiederherstellen
-            .onDisappear {
-                restoreBackupIfCancelled()
-            }
         }
     }
 
@@ -98,9 +127,7 @@ struct TrainingFormView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .confirmationAction) {
-            Button {
-                save()
-            } label: {
+            Button { save() } label: {
                 IconType(icon: .system("checkmark"), color: .blue, size: 16)
                     .glassButton(size: 36, accentColor: .blue)
             }
@@ -124,9 +151,7 @@ struct TrainingFormView: View {
 
     private func save() {
         dismissKeyboard()
-        if mode == .add {
-            context.insert(plan)
-        }
+        if mode == .add { context.insert(plan) }
         try? context.save()
         dismiss()
     }
@@ -137,85 +162,79 @@ struct TrainingFormView: View {
         dismiss()
     }
 
-    // addSets mit sortOrder-Logik
-    private func addSets(_ sets: [ExerciseSet]) {
-        // Wenn wir im Edit-Modus sind, alte Sets endgueltig loeschen
-        if isEditingExercise {
-            // sortOrder vom ersten Backup-Set uebernehmen
-            let existingSortOrder = backupSetsForEdit.first?.sortOrder ?? plan.nextSortOrder
+    private func commitPendingReplacementIfNeeded() {
+        guard let pending = pendingReplacement else { return }
+        pendingReplacement = nil
 
-            for oldSet in backupSetsForEdit {
-                context.delete(oldSet)
-            }
-            backupSetsForEdit = []
-            isEditingExercise = false
-
-            // Neue Sets mit bestehender sortOrder hinzufuegen
-            for set in sets {
-                set.sortOrder = existingSortOrder
-                set.trainingPlan = plan
-                plan.templateSets.append(set)
-            }
-        } else {
-            // Neue Uebung: nächste verfuegbare sortOrder verwenden
-            let nextOrder = plan.nextSortOrder
-
-            for set in sets {
-                set.sortOrder = nextOrder
-                set.trainingPlan = plan
-                plan.templateSets.append(set)
-            }
-        }
+        addSets(pending.newSets, keepingSortOrder: pending.sortOrder)
     }
 
-    // MARK: - Uebungs-Sortierung (Drag & Drop)
+    // MARK: - Sortierung
 
-    // Drag & Drop Callback
     private func moveExercise(from source: IndexSet, to destination: Int) {
         plan.reorderExercises(fromOffsets: source, toOffset: destination)
     }
 
-    private func deleteExercise(_ exerciseName: String) {
-        let setsToRemove = plan.templateSets.filter { $0.exerciseName == exerciseName }
-        for set in setsToRemove {
-            plan.templateSets.removeAll { $0.id == set.id }
-            context.delete(set)
+    // MARK: - Delete
+
+    private func deleteExercise(_ set: ExerciseSet) {
+        // Gruppe über sortOrder löschen (stabiler als Name)
+        let targetOrder = set.sortOrder
+        let toRemove = plan.templateSets.filter { $0.sortOrder == targetOrder }
+
+        for s in toRemove {
+            plan.templateSets.removeAll { $0.persistentModelID == s.persistentModelID }
+            context.delete(s)
         }
     }
 
-    private func editExercise(_ exerciseName: String) {
-        if let existingSet = plan.templateSets.first(where: { $0.exerciseName == exerciseName }),
-           let exercise = existingSet.exercise {
+    // MARK: - Edit
 
-            // Backup der bestehenden Sets erstellen
-            backupSetsForEdit = plan.templateSets.filter { $0.exerciseName == exerciseName }
-            isEditingExercise = true
+    private func editExercise(_ firstSet: ExerciseSet) {
+        let targetOrder = firstSet.sortOrder
+        let originalSets = plan.templateSets.filter { $0.sortOrder == targetOrder }
 
-            // Sets temporär entfernen (aber nicht aus SwiftData löschen!)
-            plan.templateSets.removeAll { $0.exerciseName == exerciseName }
+        // unilateral sauber bestimmen:
+        // 1) wenn Relationship existiert -> von Exercise
+        // 2) sonst -> aus Snapshot-Flag (neu) oder weightPerSide fallback
+        let resolvedIsUnilateral: Bool =
+            firstSet.exercise?.isUnilateral
+            ?? originalSets.first?.isUnilateralSnapshot
+            ?? originalSets.contains(where: { $0.weightPerSide > 0 })
 
-            selectedExerciseForConfig = exercise
-        }
+        editExerciseContext = EditExerciseContext(
+            exercise: firstSet.exercise,
+            exerciseName: (firstSet.exerciseNameSnapshot.isEmpty ? firstSet.exerciseName : firstSet.exerciseNameSnapshot),
+            gifAssetName: firstSet.exerciseGifAssetName,
+            isUnilateral: resolvedIsUnilateral,
+            sets: originalSets, // ORIGINALE Sets nur zum Vorbefüllen
+            sortOrder: targetOrder
+        )
     }
 
-    // Stellt das Backup wieder her, wenn der Benutzer abbricht
-    private func restoreBackupIfCancelled() {
-        // Nur wiederherstellen wenn wir im Edit-Modus sind
-        // (isEditingExercise ist noch true = Benutzer hat nicht gespeichert)
-        if isEditingExercise {
-            // Sets aus Backup wiederherstellen
-            for set in backupSetsForEdit {
-                plan.templateSets.append(set)
-            }
+    // MARK: - Save Sets into Plan
 
-            // Cleanup
-            backupSetsForEdit = []
-            isEditingExercise = false
+    private func addSets(_ sets: [ExerciseSet], keepingSortOrder sortOrder: Int? = nil) {
+        let targetOrder = sortOrder ?? plan.nextSortOrder
+
+        // Alte Sets derselben Übung (über sortOrder) löschen
+        let old = plan.templateSets.filter { $0.sortOrder == targetOrder }
+        for s in old {
+            plan.templateSets.removeAll { $0.persistentModelID == s.persistentModelID }
+            context.delete(s)
         }
+
+        // Neue Sets anhängen
+        for set in sets {
+            set.sortOrder = targetOrder
+            set.trainingPlan = plan
+            plan.templateSets.append(set)
+        }
+
+        // Optional: gleich persistieren (kannst du auch nur beim "Save" machen)
+        try? context.save()
     }
 }
-
-// MARK: - Preview
 
 #Preview("Training Form - Add") {
     NavigationStack {

@@ -9,7 +9,6 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-//
 import SwiftUI
 
 // MARK: - Modus fuer die Uebungsanzeige
@@ -27,18 +26,16 @@ struct PlanExercisesSection: View {
 
     // Callbacks fuer Form-Modus
     var onAddExercise: (() -> Void)? = nil
-    var onEditExercise: ((String) -> Void)? = nil
-    var onDeleteExercise: ((String) -> Void)? = nil
-    var onMoveExercise: ((IndexSet, Int) -> Void)? = nil  // NEU: Drag & Drop Callback
+    var onEditExercise: ((ExerciseSet) -> Void)? = nil
+    var onDeleteExercise: ((ExerciseSet) -> Void)? = nil
+    var onMoveExercise: ((IndexSet, Int) -> Void)? = nil
 
     @State private var isEditing = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Header
             exerciseHeaderView
 
-            // Inhalt
             if plan.templateSets.isEmpty {
                 emptyStateView
             } else {
@@ -58,31 +55,31 @@ struct PlanExercisesSection: View {
             Spacer()
 
             switch mode {
-                case .form:
-                    HStack(spacing: 12) {
-                        // Hinzufügen Button (nur wenn nicht im Sortier-Modus)
-                        if let onAdd = onAddExercise {
-                            Button { onAdd() } label: {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.title2)
-                                    .foregroundStyle(.blue)
-                            }
-                            .opacity(isEditing ? 0 : 1)
-                            .scaleEffect(isEditing ? 0.5 : 1)
-                        }
-
-                        // Sortieren/Fertig Button
-                        Button {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                isEditing.toggle()
-                            }
-                        } label: {
-                            Image(systemName: isEditing ? "checkmark.circle.fill" : "arrow.up.arrow.down.circle.fill")
+            case .form:
+                HStack(spacing: 12) {
+                    // Hinzufügen Button (nur wenn nicht im Sortier-Modus)
+                    if let onAdd = onAddExercise {
+                        Button { onAdd() } label: {
+                            Image(systemName: "plus.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(isEditing ? .green : .blue)
-                                .contentTransition(.symbolEffect(.replace))
+                                .foregroundStyle(.blue)
                         }
+                        .opacity(isEditing ? 0 : 1)
+                        .scaleEffect(isEditing ? 0.5 : 1)
                     }
+
+                    // Sortieren/Fertig Button
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            isEditing.toggle()
+                        }
+                    } label: {
+                        Image(systemName: isEditing ? "checkmark.circle.fill" : "arrow.up.arrow.down.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(isEditing ? .green : .blue)
+                            .contentTransition(.symbolEffect(.replace))
+                    }
+                }
 
             case .detail:
                 if !plan.templateSets.isEmpty {
@@ -117,9 +114,7 @@ struct PlanExercisesSection: View {
                 .multilineTextAlignment(.center)
 
             if mode == .form, let onAdd = onAddExercise {
-                Button {
-                    onAdd()
-                } label: {
+                Button { onAdd() } label: {
                     Label("Übung hinzufügen", systemImage: "plus")
                         .font(.headline)
                         .foregroundStyle(.white)
@@ -149,67 +144,62 @@ struct PlanExercisesSection: View {
     private var exercisesList: some View {
         switch mode {
         case .form:
-            // NEU: Reorderable Liste mit Custom Drag & Drop
             ReorderableExerciseList(
                 isEditing: $isEditing,
                 plan: plan,
-                onEdit: { exerciseName in onEditExercise?(exerciseName) },
-                onDelete: { exerciseName in onDeleteExercise?(exerciseName) },
+                onEdit: { set in onEditExercise?(set) },
+                onDelete: { set in onDeleteExercise?(set) },
                 onReorder: { from, to in
-                    // Direkte Methode nutzen fuer praezises Reordering
+                    // Optionaler Callback falls du im Parent mitziehen willst
+                    onMoveExercise?(IndexSet(integer: from), to)
+
+                    // Deine Plan-Methode (präzise)
                     plan.reorderExercise(from: from, to: to)
                 }
             )
             .padding(.horizontal)
 
-            case .detail:
-                VStack(spacing: 12) {
-                    ForEach(
-                        Array(plan.groupedTemplateSets.enumerated()),
-                        id: \.element.first?.persistentModelID
-                    ) { index, setsGroup in
-                        if let firstSet = setsGroup.first {
-                            ExerciseDetailRow(
-                                exerciseName: firstSet.exerciseName,
-                                gifAssetName: firstSet.exerciseGifAssetName,
-                                sets: setsGroup,
-                                index: index + 1
-                            )
-                        }
+        case .detail:
+            VStack(spacing: 12) {
+                ForEach(
+                    Array(plan.groupedTemplateSets.enumerated()),
+                    id: \.element.first?.persistentModelID
+                ) { index, setsGroup in
+                    if let firstSet = setsGroup.first {
+                        ExerciseDetailRow(
+                            exerciseName: firstSet.exerciseName,
+                            gifAssetName: firstSet.exerciseGifAssetName,
+                            sets: setsGroup,
+                            index: index + 1
+                        )
                     }
                 }
-                .padding(.horizontal)
+            }
+            .padding(.horizontal)
         }
     }
 }
 
-// MARK: - NEU: Reorderable Exercise List mit Custom Drag & Drop
+// MARK: - Reorderable Exercise List mit Custom Drag & Drop
 
 struct ReorderableExerciseList: View {
     @Binding var isEditing: Bool
     let plan: TrainingPlan
-    let onEdit: (String) -> Void
-    let onDelete: (String) -> Void
+    let onEdit: (ExerciseSet) -> Void
+    let onDelete: (ExerciseSet) -> Void
     let onReorder: (Int, Int) -> Void
 
     // Drag State
     @State private var draggingIndex: Int? = nil
     @State private var dragOffset: CGSize = .zero
-    @State private var cardHeights: [Int: CGFloat] = [:]  // Hoehe pro Card speichern
-    @GestureState private var isDragging = false
-
-    // Fuer Haptic Feedback
+    @State private var cardHeights: [Int: CGFloat] = [:]
     @State private var lastTargetIndex: Int? = nil
 
-
-
-    // Durchschnittliche Card-Hoehe fuer Berechnungen
     private var averageCardHeight: CGFloat {
         guard !cardHeights.isEmpty else { return 120 }
         return cardHeights.values.reduce(0, +) / CGFloat(cardHeights.count)
     }
 
-    // Spacing zwischen Cards
     private let cardSpacing: CGFloat = 12
 
     var body: some View {
@@ -226,8 +216,8 @@ struct ReorderableExerciseList: View {
                             isDragging: draggingIndex == index,
                             isEditing: isEditing,
                             offset: offsetForIndex(index),
-                            onEdit: { onEdit(firstSet.exerciseName) },
-                            onDelete: { onDelete(firstSet.exerciseName) },
+                            onEdit: { onEdit(firstSet) },
+                            onDelete: { onDelete(firstSet) }, // ✅ richtig: ExerciseSet
                             onDragStarted: { startDragging(index: index) },
                             onDragChanged: { translation in updateDrag(translation: translation, fromIndex: index) },
                             onDragEnded: { endDragging(fromIndex: index) },
@@ -242,7 +232,6 @@ struct ReorderableExerciseList: View {
                let setsGroup = plan.groupedTemplateSets[safe: dragIndex],
                let firstSet = setsGroup.first {
 
-                // Berechne Y-Position der schwebenden Card
                 let yPosition = calculateFloatingCardPosition(for: dragIndex)
 
                 FloatingDragCard(
@@ -276,7 +265,6 @@ struct ReorderableExerciseList: View {
     private func updateDrag(translation: CGSize, fromIndex: Int) {
         dragOffset = translation
 
-        // Haptic bei Positionswechsel
         let targetIndex = calculateTargetIndex(from: fromIndex)
         if targetIndex != lastTargetIndex && targetIndex != fromIndex {
             hapticFeedback(.light)
@@ -301,7 +289,6 @@ struct ReorderableExerciseList: View {
 
     // MARK: - Position Calculations
 
-    // Berechnet die Y-Position der schwebenden Card
     private func calculateFloatingCardPosition(for index: Int) -> CGFloat {
         var position: CGFloat = 0
         for i in 0..<index {
@@ -310,7 +297,6 @@ struct ReorderableExerciseList: View {
         return position
     }
 
-    // Berechnet den Offset fuer Cards die Platz machen muessen
     private func offsetForIndex(_ index: Int) -> CGFloat {
         guard let dragIndex = draggingIndex else { return 0 }
         if index == dragIndex { return 0 }
@@ -320,17 +306,14 @@ struct ReorderableExerciseList: View {
         let shift = draggedHeight + cardSpacing
 
         if dragIndex < target {
-            // dragged nach unten: alle dazwischen rutschen nach oben
             if (dragIndex + 1)...target ~= index { return -shift }
         } else if target < dragIndex {
-            // dragged nach oben: alle dazwischen rutschen nach unten
             if target..<(dragIndex) ~= index { return shift }
         }
 
         return 0
     }
 
-    // Berechnet den Ziel-Index basierend auf der Drag-Position
     private func yStart(for index: Int) -> CGFloat {
         var y: CGFloat = 0
         for i in 0..<index {
@@ -362,7 +345,6 @@ struct ReorderableExerciseList: View {
         return bestIndex
     }
 
-    // Haptic Feedback
     private func hapticFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
         let generator = UIImpactFeedbackGenerator(style: style)
         generator.impactOccurred()
@@ -386,9 +368,7 @@ private struct ReorderableCard: View {
     let onDragEnded: () -> Void
     let onHeightMeasured: (CGFloat) -> Void
 
-    @GestureState private var isDetectingLongPress = false
     @State private var hasStartedDrag = false
-
 
     var body: some View {
         TemplateSetCard(
@@ -396,10 +376,13 @@ private struct ReorderableCard: View {
             gifAssetName: gifAssetName,
             sets: sets,
             onDelete: onDelete,
-            onEdit: onEdit
+            onEdit: onEdit,
+            showsEditMenu: !isEditing
         ) {
             if isEditing {
                 dragHandle
+            } else {
+                EmptyView()
             }
         }
         .opacity(isDragging ? 0 : 1)
@@ -417,7 +400,6 @@ private struct ReorderableCard: View {
         )
     }
 
-    // Nur der Handle reagiert auf LongPress+Drag (Scroll bleibt frei)
     private var dragHandle: some View {
         Image(systemName: "line.3.horizontal")
             .font(.title3)
@@ -427,9 +409,6 @@ private struct ReorderableCard: View {
             .gesture(
                 LongPressGesture(minimumDuration: 0.2)
                     .sequenced(before: DragGesture())
-                    .updating($isDetectingLongPress) { value, state, _ in
-                        if case .second(true, _) = value { state = true }
-                    }
                     .onChanged { value in
                         if case .second(true, let drag) = value {
                             if !hasStartedDrag {
@@ -449,7 +428,7 @@ private struct ReorderableCard: View {
     }
 }
 
-// MARK: - Floating Drag Card (die schwebende Kopie)
+// MARK: - Floating Drag Card
 
 private struct FloatingDragCard: View {
     let exerciseName: String
@@ -474,7 +453,7 @@ private struct FloatingDragCard: View {
     }
 }
 
-// MARK: - Safe Array Access Extension
+// MARK: - Safe Array Access
 
 private extension Array {
     subscript(safe index: Int) -> Element? {
@@ -500,24 +479,20 @@ struct ExerciseDetailRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // Index-Nummer
             Text("\(index)")
                 .font(.caption.bold())
                 .foregroundStyle(.white)
                 .frame(width: 24, height: 24)
                 .background(Circle().fill(.blue))
 
-            // GIF Thumbnail
             ExerciseGifView(assetName: gifAssetName, size: 50)
 
-            // Info
             VStack(alignment: .leading, spacing: 4) {
                 Text(exerciseName)
                     .font(.subheadline.bold())
                     .foregroundStyle(.primary)
 
                 HStack(spacing: 12) {
-                    // Arbeitssätze
                     if let firstWorkingSet = workingSets.first {
                         Text("\(workingSets.count) x \(firstWorkingSet.reps)")
                             .font(.caption)
@@ -530,7 +505,6 @@ struct ExerciseDetailRow: View {
                         }
                     }
 
-                    // Aufwärmsätze Indikator
                     if !warmupSets.isEmpty {
                         Text("+\(warmupSets.count) Aufwärm.")
                             .font(.caption2)
@@ -565,8 +539,8 @@ struct ExerciseDetailRow: View {
                 plan: TrainingPlan(title: "Push Day"),
                 mode: .form,
                 onAddExercise: { print("Add") },
-                onEditExercise: { name in print("Edit: \(name)") },
-                onDeleteExercise: { name in print("Delete: \(name)") }
+                onEditExercise: { set in print("Edit: \(set.exerciseName)") },
+                onDeleteExercise: { set in print("Delete: \(set.exerciseName)") }
             )
         }
     }

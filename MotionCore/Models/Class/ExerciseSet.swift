@@ -23,6 +23,9 @@ final class ExerciseSet {
     var exerciseUUIDSnapshot: String = ""        // UUID-Snapshot für stabile Verknüpfung
     var exerciseGifAssetName: String = ""        // Name des GIF-Assets
 
+    // Snapshot für unilateral (damit Edit ohne Relationship korrekt ist)
+    var isUnilateralSnapshot: Bool = false
+
     // MARK: - Set-Daten
 
     var setNumber: Int = 1                       // Satznummer (1, 2, 3...)
@@ -87,6 +90,7 @@ final class ExerciseSet {
             exerciseNameSnapshot: exercise.name,
             exerciseUUIDSnapshot: exercise.persistentModelID.hashValue.description,
             exerciseGifAssetName: exercise.gifAssetName,
+            isUnilateralSnapshot: exercise.isUnilateral, // NEU
             setNumber: setNumber,
             weight: weight,
             reps: reps,
@@ -150,6 +154,7 @@ final class ExerciseSet {
         exerciseNameSnapshot: String = "",
         exerciseUUIDSnapshot: String = "",
         exerciseGifAssetName: String = "",
+        isUnilateralSnapshot: Bool = false,
         setNumber: Int = 1,
         weight: Double = 0.0,
         weightPerSide: Double = 0.0,
@@ -171,6 +176,7 @@ final class ExerciseSet {
         self.exerciseNameSnapshot = exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot
         self.exerciseUUIDSnapshot = exerciseUUIDSnapshot
         self.exerciseGifAssetName = exerciseGifAssetName
+        self.isUnilateralSnapshot = isUnilateralSnapshot
         self.setNumber = setNumber
         self.weight = weight
         self.weightPerSide = weightPerSide
@@ -187,5 +193,44 @@ final class ExerciseSet {
         self.targetRIR = targetRIR
         self.groupId = groupId
         self.sortOrder = sortOrder
+    }
+}
+
+extension ExerciseSet {
+    /// Creates a detached copy for editing in the plan sheet.
+    /// No relationships are copied (exercise/trainingPlan/session).
+    func cloneForPlanEditing() -> ExerciseSet {
+        let copy = ExerciseSet(
+            exerciseName: exerciseName,
+            exerciseNameSnapshot: exerciseNameSnapshot,
+            exerciseUUIDSnapshot: exerciseUUIDSnapshot,
+            exerciseGifAssetName: exerciseGifAssetName,
+            setNumber: setNumber,
+            weight: weight,
+            weightPerSide: weightPerSide,
+            reps: reps,
+            duration: duration,
+            distance: distance,
+            restSeconds: restSeconds,
+            setKind: setKind,
+            isCompleted: isCompleted,
+            rpe: rpe,
+            notes: notes,
+            targetRepsMin: targetRepsMin,
+            targetRepsMax: targetRepsMax,
+            targetRIR: targetRIR,
+            groupId: groupId,
+            sortOrder: sortOrder
+        )
+
+        // NEW: your snapshot flag
+        copy.isUnilateralSnapshot = isUnilateralSnapshot
+
+        // Important: detach relations
+        copy.exercise = nil
+        copy.trainingPlan = nil
+        copy.session = nil
+
+        return copy
     }
 }

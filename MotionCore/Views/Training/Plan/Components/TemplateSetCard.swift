@@ -18,6 +18,7 @@ struct TemplateSetCard<Trailing: View>: View {
     let sets: [ExerciseSet]
     let onDelete: () -> Void
     let onEdit: () -> Void
+    let showsEditMenu: Bool
     let trailing: () -> Trailing
 
     @State private var showDeleteConfirm = false
@@ -28,6 +29,7 @@ struct TemplateSetCard<Trailing: View>: View {
         sets: [ExerciseSet],
         onDelete: @escaping () -> Void,
         onEdit: @escaping () -> Void,
+        showsEditMenu: Bool = true,
         @ViewBuilder trailing: @escaping () -> Trailing
     ) {
         self.exerciseName = exerciseName
@@ -35,6 +37,7 @@ struct TemplateSetCard<Trailing: View>: View {
         self.sets = sets
         self.onDelete = onDelete
         self.onEdit = onEdit
+        self.showsEditMenu = showsEditMenu
         self.trailing = trailing
     }
 
@@ -78,7 +81,7 @@ struct TemplateSetCard<Trailing: View>: View {
                 Spacer()
 
                 // Menu nur im Normalmodus (wenn kein Trailing geliefert wird)
-                if Trailing.self == EmptyView.self {
+                if showsEditMenu {
                     Menu {
                         Button { onEdit() } label: {
                             Label("Bearbeiten", systemImage: "pencil")
@@ -243,14 +246,16 @@ extension TemplateSetCard where Trailing == EmptyView {
         gifAssetName: String,
         sets: [ExerciseSet],
         onDelete: @escaping () -> Void,
-        onEdit: @escaping () -> Void
+        onEdit: @escaping () -> Void,
+        showsEditMenu: Bool = true
     ) {
         self.init(
             exerciseName: exerciseName,
             gifAssetName: gifAssetName,
             sets: sets,
             onDelete: onDelete,
-            onEdit: onEdit
+            onEdit: onEdit,
+            showsEditMenu: showsEditMenu
         ) {
             EmptyView()
         }

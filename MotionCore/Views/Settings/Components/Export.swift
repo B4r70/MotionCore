@@ -217,6 +217,7 @@ struct ExerciseSetExportItem: Codable {
     let exerciseNameSnapshot: String?
     let exerciseUUIDSnapshot: String?
     let exerciseGifAssetName: String?
+    let isUnilateralSnapshot: Bool?
     let setNumber: Int
     let weight: Double?
     let weightPerSide: Double?
@@ -247,6 +248,7 @@ extension ExerciseSet {
             exerciseNameSnapshot: exerciseNameSnapshot.isEmpty ? nil : exerciseNameSnapshot,
             exerciseUUIDSnapshot: exerciseUUIDSnapshot.isEmpty ? nil : exerciseUUIDSnapshot,
             exerciseGifAssetName: exerciseGifAssetName.isEmpty ? nil : exerciseGifAssetName,
+            isUnilateralSnapshot: isUnilateralSnapshot ? true : nil,
             setNumber: setNumber,
             weight: weight > 0 ? weight : nil,
             weightPerSide: weightPerSide > 0 ? weightPerSide : nil,
@@ -288,6 +290,7 @@ extension ExerciseSet {
             exerciseNameSnapshot: e.exerciseNameSnapshot ?? e.exerciseName,
             exerciseUUIDSnapshot: resolvedUUID,
             exerciseGifAssetName: e.exerciseGifAssetName ?? "",
+            isUnilateralSnapshot: e.isUnilateralSnapshot ?? false,
             setNumber: e.setNumber,
             weight: e.weight ?? 0.0,
             weightPerSide: e.weightPerSide ?? 0.0,

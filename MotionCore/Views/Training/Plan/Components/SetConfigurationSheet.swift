@@ -9,109 +9,163 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-//
 import SwiftUI
 
 struct SetConfigurationSheet: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
 
-    let exercise: Exercise
-    let onSave: ([ExerciseSet]) -> Void
+    // Quelle 1: aus Library
+    private let exercise: Exercise?
 
-    // Nur noch initialSets (kein initialWeight mehr)
+    // Quelle 2: Snapshot (Edit ohne Exercise-Relationship)
+    private let snapshotName: String
+    private let snapshotGifAssetName: String
+    private let snapshotIsUnilateral: Bool
+
+    let onSave: ([ExerciseSet]) -> Void
     let initialSets: [ExerciseSet]?
 
+    // Display (computed)
+    private var displayName: String { exercise?.name ?? snapshotName }
+    private var displayGif: String { exercise?.gifAssetName ?? snapshotGifAssetName }
+    private var displayIsUnilateral: Bool { exercise?.isUnilateral ?? snapshotIsUnilateral }
+
+    // MARK: - Init A: Normal mit Exercise
     init(
         exercise: Exercise,
         initialSets: [ExerciseSet]? = nil,
         onSave: @escaping ([ExerciseSet]) -> Void
     ) {
         self.exercise = exercise
+
+        // NEU: Snapshot-Fallbacks IMMER initialisieren (stored props müssen gesetzt sein)
+        self.snapshotName = exercise.name
+        self.snapshotGifAssetName = exercise.gifAssetName
+        self.snapshotIsUnilateral = exercise.isUnilateral
+
         self.initialSets = initialSets
         self.onSave = onSave
 
-        // Werte aus initialSets laden, falls vorhanden
-        if let sets = initialSets, !sets.isEmpty {
-            let workSets = sets.filter { $0.setKind == .work }
-            let warmupSetsCount = sets.filter { $0.setKind == .warmup }.count
-
-            // Anzahl Arbeitssätze
-            _numberOfSets = State(initialValue: workSets.count)
-
-            // Wiederholungen (aus erstem Arbeitssatz)
-            _targetReps = State(initialValue: workSets.first?.reps ?? 10)
-
-            // Gewicht (weightPerSide falls unilateral, sonst weight)
-            let firstWorkSet = workSets.first
-            if exercise.isUnilateral, let weightPerSide = firstWorkSet?.weightPerSide {
-                _targetWeight = State(initialValue: weightPerSide)
-            } else {
-                _targetWeight = State(initialValue: firstWorkSet?.weight ?? 0)
-            }
-
-            // Pausenzeit
-            _restSeconds = State(initialValue: firstWorkSet?.restSeconds ?? 90)
-
-            // RIR
-            _targetRIR = State(initialValue: firstWorkSet?.targetRIR ?? 2)
-
-            // Set-Art
-            _workSetKind = State(initialValue: firstWorkSet?.setKind ?? .work)
-
-            // Aufwärmsätze
-            _includeWarmup = State(initialValue: warmupSetsCount > 0)
-            _warmupSets = State(initialValue: max(warmupSetsCount, 1))
-        } else {
-            // Default-Werte wenn keine initialSets vorhanden
-            _targetWeight = State(initialValue: 0)
-            _numberOfSets = State(initialValue: 3)
-            _targetReps = State(initialValue: 10)
-            _restSeconds = State(initialValue: 90)
-            _targetRIR = State(initialValue: 2)
-            _workSetKind = State(initialValue: .work)
-            _includeWarmup = State(initialValue: false)
-            _warmupSets = State(initialValue: 1)
-        }
+        // NEU: gemeinsame Initialisierung der @State Werte
+        Self.bootstrapState(
+            initialSets: initialSets,
+            isUnilateral: exercise.isUnilateral,
+            numberOfSets: &_numberOfSets,
+            targetReps: &_targetReps,
+            targetWeight: &_targetWeight,
+            restSeconds: &_restSeconds,
+            targetRIR: &_targetRIR,
+            workSetKind: &_workSetKind,
+            includeWarmup: &_includeWarmup,
+            warmupSets: &_warmupSets
+        )
     }
 
-    // Konfiguration
+    // MARK: - Init B: Snapshot (ohne Exercise)
+    init(
+        exerciseName: String,
+        gifAssetName: String,
+        isUnilateral: Bool = false,
+        initialSets: [ExerciseSet]? = nil,
+        onSave: @escaping ([ExerciseSet]) -> Void
+    ) {
+        self.exercise = nil
+
+        self.snapshotName = exerciseName
+        self.snapshotGifAssetName = gifAssetName
+        self.snapshotIsUnilateral = isUnilateral
+
+        self.initialSets = initialSets
+        self.onSave = onSave
+
+        // NEU: gemeinsame Initialisierung der @State Werte
+        Self.bootstrapState(
+            initialSets: initialSets,
+            isUnilateral: isUnilateral,
+            numberOfSets: &_numberOfSets,
+            targetReps: &_targetReps,
+            targetWeight: &_targetWeight,
+            restSeconds: &_restSeconds,
+            targetRIR: &_targetRIR,
+            workSetKind: &_workSetKind,
+            includeWarmup: &_includeWarmup,
+            warmupSets: &_warmupSets
+        )
+    }
+
+    // MARK: - State
     @State private var numberOfSets: Int = 3
     @State private var targetReps: Int = 10
     @State private var targetWeight: Double = 0
     @State private var includeWarmup: Bool = false
     @State private var warmupSets: Int = 1
 
-    // Erweiterte Konfiguration
     @State private var restSeconds: Int = 90
     @State private var targetRIR: Int = 2
     @State private var workSetKind: SetKind = .work
 
-    // Für Long Press bei Sets, Reps und Weight
     @State private var incrementTimer: Timer?
 
-    // Enumeration für fokussierte Felder
-    enum FocusedField {
-        case sets, reps, weight
+    enum FocusedField { case sets, reps, weight }
+
+    // MARK: - NEU: Bootstrap Helper (initialSets -> @State)
+    private static func bootstrapState(
+        initialSets: [ExerciseSet]?,
+        isUnilateral: Bool,
+        numberOfSets: inout State<Int>,
+        targetReps: inout State<Int>,
+        targetWeight: inout State<Double>,
+        restSeconds: inout State<Int>,
+        targetRIR: inout State<Int>,
+        workSetKind: inout State<SetKind>,
+        includeWarmup: inout State<Bool>,
+        warmupSets: inout State<Int>
+    ) {
+        guard let sets = initialSets, !sets.isEmpty else {
+            targetWeight = State(initialValue: 0)
+            numberOfSets = State(initialValue: 3)
+            targetReps = State(initialValue: 10)
+            restSeconds = State(initialValue: 90)
+            targetRIR = State(initialValue: 2)
+            workSetKind = State(initialValue: .work)
+            includeWarmup = State(initialValue: false)
+            warmupSets = State(initialValue: 1)
+            return
+        }
+
+        let workSets = sets.filter { $0.setKind == .work }
+        let warmupCount = sets.filter { $0.setKind == .warmup }.count
+
+        numberOfSets = State(initialValue: max(workSets.count, 1))
+        targetReps = State(initialValue: workSets.first?.reps ?? 10)
+
+        let firstWork = workSets.first
+        // Hinweis: weightPerSide ist bei dir Double (nicht optional)
+        if isUnilateral, (firstWork?.weightPerSide ?? 0) > 0 {
+            targetWeight = State(initialValue: firstWork?.weightPerSide ?? 0)
+        } else {
+            targetWeight = State(initialValue: firstWork?.weight ?? 0)
+        }
+
+        restSeconds = State(initialValue: firstWork?.restSeconds ?? 90)
+        targetRIR = State(initialValue: firstWork?.targetRIR ?? 2)
+        workSetKind = State(initialValue: firstWork?.setKind ?? .work)
+
+        includeWarmup = State(initialValue: warmupCount > 0)
+        warmupSets = State(initialValue: max(warmupCount, 1))
     }
 
     // MARK: - Body
-
     var body: some View {
         NavigationStack {
             ZStack {
-                // Hintergrund
                 AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Übungs-Info Card
                         exerciseInfoCard
-
-                        // Satz-Konfiguration
                         setsConfigurationCard
-
-                        // Vorschau
                         previewCard
                     }
                     .padding(.horizontal)
@@ -124,15 +178,11 @@ struct SetConfigurationSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") {
-                        dismiss()
-                    }
+                    Button("Abbrechen") { dismiss() }
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        saveSets()
-                    } label: {
+                    Button { saveSets() } label: {
                         IconType(icon: .system("checkmark"), color: .blue, size: 16)
                             .glassButton(size: 36, accentColor: .blue)
                     }
@@ -146,32 +196,31 @@ struct SetConfigurationSheet: View {
     }
 
     // MARK: - Subviews
-
     private var exerciseInfoCard: some View {
         HStack(spacing: 16) {
-            ExerciseGifView(assetName: exercise.gifAssetName, size: 80)
+            ExerciseGifView(assetName: displayGif, size: 80)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(exercise.name)
+                Text(displayName)
                     .font(.title3.bold())
                     .foregroundStyle(.primary)
 
-                HStack(spacing: 8) {
-                    Label(exercise.equipment.description, systemImage: exercise.equipment.icon)
+                if let ex = exercise {
+                    Label(ex.equipment.description, systemImage: ex.equipment.icon)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                }
 
-                if !exercise.primaryMuscles.isEmpty {
-                    HStack(spacing: 6) {
-                        ForEach(exercise.primaryMuscles.prefix(2), id: \.self) { muscle in
-                            Text(muscle.description)
-                                .font(.caption2)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(.blue.opacity(0.2))
-                                .foregroundStyle(.blue)
-                                .clipShape(Capsule())
+                    if !ex.primaryMuscles.isEmpty {
+                        HStack(spacing: 6) {
+                            ForEach(ex.primaryMuscles.prefix(2), id: \.self) { muscle in
+                                Text(muscle.description)
+                                    .font(.caption2)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(.blue.opacity(0.2))
+                                    .foregroundStyle(.blue)
+                                    .clipShape(Capsule())
+                            }
                         }
                     }
                 }
@@ -188,17 +237,14 @@ struct SetConfigurationSheet: View {
                 .font(.title3.bold())
                 .foregroundStyle(.primary)
 
-            // Anzahl Arbeitssätze
+            // Arbeitssätze
             VStack(alignment: .leading, spacing: 8) {
                 Text("Arbeitssätze")
                     .font(.headline)
                     .foregroundStyle(.primary)
 
                 HStack(spacing: 12) {
-                    // Minus Button
-                    Button {
-                        decreaseSets(by: 1)
-                    } label: {
+                    Button { decreaseSets(by: 1) } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
@@ -211,16 +257,12 @@ struct SetConfigurationSheet: View {
                         if !pressing { stopContinuousAdjustment() }
                     }, perform: {})
 
-                    // Große Zahl
                     Text("\(numberOfSets)")
                         .font(.system(size: 48, weight: .bold, design: .rounded))
                         .frame(width: 100)
                         .contentTransition(.numericText())
 
-                    // Plus Button
-                    Button {
-                        increaseSets(by: 1)
-                    } label: {
+                    Button { increaseSets(by: 1) } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
@@ -238,17 +280,14 @@ struct SetConfigurationSheet: View {
 
             GlassDivider.compact
 
-            // Wiederholungen
+            // Reps
             VStack(alignment: .leading, spacing: 8) {
                 Text("Wiederholungen pro Satz")
                     .font(.headline)
                     .foregroundStyle(.primary)
 
                 HStack(spacing: 12) {
-                    // Minus Button
-                    Button {
-                        decreaseReps(by: 1)
-                    } label: {
+                    Button { decreaseReps(by: 1) } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
@@ -261,16 +300,12 @@ struct SetConfigurationSheet: View {
                         if !pressing { stopContinuousAdjustment() }
                     }, perform: {})
 
-                    // Große Zahl
                     Text("\(targetReps)")
                         .font(.system(size: 48, weight: .bold, design: .rounded))
                         .frame(width: 100)
                         .contentTransition(.numericText())
 
-                    // Plus Button
-                    Button {
-                        increaseReps(by: 1)
-                    } label: {
+                    Button { increaseReps(by: 1) } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
@@ -288,15 +323,14 @@ struct SetConfigurationSheet: View {
 
             GlassDivider.compact
 
-            // Gewicht - Unterscheidung unilateral/bilateral
+            // Gewicht
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(exercise.isUnilateral ? "Gewicht pro Seite (kg)" : "Zielgewicht (kg)")
+                    Text(displayIsUnilateral ? "Gewicht pro Seite (kg)" : "Zielgewicht (kg)")
                         .font(.headline)
                         .foregroundStyle(.primary)
 
-                    // Unilateral-Badge
-                    if exercise.isUnilateral {
+                    if displayIsUnilateral {
                         Text("2×")
                             .font(.caption.bold())
                             .padding(.horizontal, 6)
@@ -308,24 +342,17 @@ struct SetConfigurationSheet: View {
                 }
 
                 HStack(spacing: 12) {
-                    // Minus Button (Tap = 0.25, LongPress = Auto-Repeat)
-                    Button {
-                        decreaseWeight(by: 0.25)
-                    } label: {
+                    Button { decreaseWeight(by: 0.25) } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
-                        if pressing {
-                            startAutoRepeatWeight(increment: false)
-                        } else {
-                            stopContinuousAdjustment()
-                        }
+                        if pressing { startAutoRepeatWeight(increment: false) }
+                        else { stopContinuousAdjustment() }
                     }, perform: {})
 
-                    // Große Zahl mit unilateral Anzeige
-                    if exercise.isUnilateral && targetWeight > 0 {
+                    if displayIsUnilateral && targetWeight > 0 {
                         HStack(spacing: 6) {
                             Text("2 ×")
                                 .font(.title2)
@@ -342,26 +369,19 @@ struct SetConfigurationSheet: View {
                             .contentTransition(.numericText())
                     }
 
-                    // Plus Button (Tap = 0.25, LongPress = Auto-Repeat)
-                    Button {
-                        increaseWeight(by: 0.25)
-                    } label: {
+                    Button { increaseWeight(by: 0.25) } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.blue)
                     }
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
-                        if pressing {
-                            startAutoRepeatWeight(increment: true)
-                        } else {
-                            stopContinuousAdjustment()
-                        }
+                        if pressing { startAutoRepeatWeight(increment: true) }
+                        else { stopContinuousAdjustment() }
                     }, perform: {})
                 }
                 .frame(maxWidth: .infinity)
 
-                // Hilfstext je nach Übungstyp
-                if exercise.isUnilateral {
+                if displayIsUnilateral {
                     if targetWeight > 0 {
                         Text("Gesamt: \(String(format: "%.2f", targetWeight * 2)) kg (beide Seiten)")
                             .font(.caption)
@@ -380,13 +400,11 @@ struct SetConfigurationSheet: View {
 
             GlassDivider.compact
 
-            // Aufwärmsätze
             Toggle(isOn: $includeWarmup) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Aufwärmsätze hinzufügen")
                         .font(.headline)
                         .foregroundStyle(.primary)
-
                     Text("Leichtere Sätze vor den Arbeitssätzen")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -398,9 +416,7 @@ struct SetConfigurationSheet: View {
                 HStack {
                     Text("Anzahl Aufwärmsätze")
                         .foregroundStyle(.secondary)
-
                     Spacer()
-
                     Picker("", selection: $warmupSets) {
                         ForEach(1...3, id: \.self) { num in
                             Text("\(num)").tag(num)
@@ -413,12 +429,10 @@ struct SetConfigurationSheet: View {
 
             GlassDivider.compact
 
-            // Pausenzeit
             SetRestTimeSection(restSeconds: $restSeconds)
 
             GlassDivider.compact
 
-            // Ziel-RIR
             SetTargetRIRSection(targetRIR: $targetRIR)
         }
         .glassCard()
@@ -431,7 +445,6 @@ struct SetConfigurationSheet: View {
                 .foregroundStyle(.primary)
 
             VStack(spacing: 8) {
-                // Aufwärmsätze
                 if includeWarmup {
                     ForEach(1...warmupSets, id: \.self) { setNum in
                         SetPreviewRow(
@@ -441,12 +454,11 @@ struct SetConfigurationSheet: View {
                             setKind: .warmup,
                             restSeconds: 60,
                             targetRIR: 4,
-                            isUnilateral: exercise.isUnilateral
+                            isUnilateral: displayIsUnilateral
                         )
                     }
                 }
 
-                // Arbeitssätze
                 ForEach(1...numberOfSets, id: \.self) { setNum in
                     SetPreviewRow(
                         setNumber: (includeWarmup ? warmupSets : 0) + setNum,
@@ -455,12 +467,11 @@ struct SetConfigurationSheet: View {
                         setKind: workSetKind,
                         restSeconds: restSeconds,
                         targetRIR: targetRIR,
-                        isUnilateral: exercise.isUnilateral
+                        isUnilateral: displayIsUnilateral
                     )
                 }
             }
 
-            // Zusammenfassung
             VStack(spacing: 8) {
                 HStack {
                     Label("\(totalSetsCount) Sätze", systemImage: "number.circle.fill")
@@ -468,15 +479,13 @@ struct SetConfigurationSheet: View {
                     Label("\(totalSetsCount * targetReps) Wdh. gesamt", systemImage: "repeat.circle.fill")
                 }
 
-                // Pause und RIR Info
                 HStack {
                     Label(formatRestTime(restSeconds), systemImage: "timer")
                     Spacer()
                     Label("RIR \(targetRIR)", systemImage: "flame.fill")
                 }
 
-                // Gesamtvolumen bei unilateral
-                if exercise.isUnilateral && targetWeight > 0 {
+                if displayIsUnilateral && targetWeight > 0 {
                     HStack {
                         Label("Gesamtgewicht: \(String(format: "%.1f", targetWeight * 2)) kg", systemImage: "scalemass.fill")
                             .foregroundStyle(.orange)
@@ -490,7 +499,6 @@ struct SetConfigurationSheet: View {
         .glassCard()
     }
 
-    // Helper für Zeitformatierung
     private func formatRestTime(_ seconds: Int) -> String {
         let mins = seconds / 60
         let secs = seconds % 60
@@ -503,64 +511,82 @@ struct SetConfigurationSheet: View {
         }
     }
 
-    // MARK: - Berechnungen
-
     private var totalSetsCount: Int {
         numberOfSets + (includeWarmup ? warmupSets : 0)
     }
 
     private func calculateWarmupWeight(_ setNum: Int) -> Double {
         guard targetWeight > 0 else { return 0 }
-        // Aufwärmsätze: 50%, 70%, 85% des Zielgewichts
         let percentages = [0.5, 0.7, 0.85]
         let index = min(setNum - 1, percentages.count - 1)
         return (targetWeight * percentages[index]).rounded(toNearest: 2.5)
     }
 
     // MARK: - Speichern
+    private func makeSet(setNumber: Int, weight: Double, reps: Int) -> ExerciseSet {
+        if let ex = exercise {
+            let set = ExerciseSet(from: ex, setNumber: setNumber, weight: weight, reps: reps)
+
+            // NEU: Unilateral-Snapshot setzen (auch wenn Relationship da ist)
+            set.isUnilateralSnapshot = ex.isUnilateral
+
+            return set
+        } else {
+            let set = ExerciseSet(
+                exerciseName: snapshotName,
+                exerciseNameSnapshot: snapshotName,
+                exerciseUUIDSnapshot: "",
+                exerciseGifAssetName: snapshotGifAssetName,
+                setNumber: setNumber,
+                weight: weight,
+                reps: reps
+            )
+
+            // NEU: Snapshot-Fall
+            set.isUnilateralSnapshot = snapshotIsUnilateral
+
+            return set
+        }
+    }
 
     private func saveSets() {
         var sets: [ExerciseSet] = []
         var setNumber = 1
 
-        // Aufwärmsätze
         if includeWarmup {
             for i in 1...warmupSets {
                 let warmupWeight = calculateWarmupWeight(i)
-                let set = ExerciseSet(
-                    from: exercise,
+
+                let set = makeSet(
                     setNumber: setNumber,
-                    weight: exercise.isUnilateral ? warmupWeight * 2 : warmupWeight,
+                    weight: displayIsUnilateral ? warmupWeight * 2 : warmupWeight,
                     reps: targetReps
                 )
-                // Bei unilateral das Gewicht pro Seite speichern
-                if exercise.isUnilateral {
-                    set.weightPerSide = warmupWeight
-                }
+
+                if displayIsUnilateral { set.weightPerSide = warmupWeight }
+
                 set.setKind = .warmup
-                set.restSeconds = 60  // Kürzere Pause beim Aufwärmen
-                set.targetRIR = 4     // Aufwärmen sollte leichter sein
+                set.restSeconds = 60
+                set.targetRIR = 4
+
                 sets.append(set)
                 setNumber += 1
             }
         }
 
-        // Arbeitssätze
         for _ in 1...numberOfSets {
-            let set = ExerciseSet(
-                from: exercise,
+            let set = makeSet(
                 setNumber: setNumber,
-                weight: exercise.isUnilateral ? targetWeight * 2 : targetWeight,
+                weight: displayIsUnilateral ? targetWeight * 2 : targetWeight,
                 reps: targetReps
             )
-            // Bei unilateral das Gewicht pro Seite speichern
-            if exercise.isUnilateral {
-                set.weightPerSide = targetWeight
-            }
-            // Erweiterte Werte setzen
+
+            if displayIsUnilateral { set.weightPerSide = targetWeight }
+
             set.setKind = workSetKind
             set.restSeconds = restSeconds
             set.targetRIR = targetRIR
+
             sets.append(set)
             setNumber += 1
         }
@@ -570,87 +596,58 @@ struct SetConfigurationSheet: View {
     }
 
     // MARK: - Adjustment Helpers
-
-    // Sets erhöhen
     private func increaseSets(by amount: Int) {
-        if numberOfSets < 10 {
-            numberOfSets += amount
-            hapticFeedback()
-        }
+        if numberOfSets < 10 { numberOfSets += amount; hapticFeedback() }
     }
 
-    // Sets vermindern
     private func decreaseSets(by amount: Int) {
-        if numberOfSets > 1 {
-            numberOfSets -= amount
-            hapticFeedback()
-        }
+        if numberOfSets > 1 { numberOfSets -= amount; hapticFeedback() }
     }
 
-    // Reps erhöhen
     private func increaseReps(by amount: Int) {
-        if targetReps < 50 {
-            targetReps += amount
-            hapticFeedback()
-        }
+        if targetReps < 50 { targetReps += amount; hapticFeedback() }
     }
 
-    // Reps vermindern
     private func decreaseReps(by amount: Int) {
-        if targetReps > 1 {
-            targetReps -= amount
-            hapticFeedback()
-        }
+        if targetReps > 1 { targetReps -= amount; hapticFeedback() }
     }
 
-    // Gewicht erhöhen (0,25 kg Schritte)
     private func increaseWeight(by amount: Double) {
         targetWeight += amount
-        targetWeight = (targetWeight * 4).rounded() / 4  // Auf 0,25 runden
+        targetWeight = (targetWeight * 4).rounded() / 4
         hapticFeedback()
     }
 
-    // Gewicht vermindern (0,25 kg Schritte)
     private func decreaseWeight(by amount: Double) {
         if targetWeight >= amount {
             targetWeight -= amount
-            targetWeight = (targetWeight * 4).rounded() / 4  // Auf 0,25 runden
+            targetWeight = (targetWeight * 4).rounded() / 4
             hapticFeedback()
         }
     }
 
-    // Continuous Adjustment (Long Press mit Delay) - Sets/Reps (dein bestehendes Verhalten)
     private func startContinuousAdjustment(field: FocusedField, increment: Bool) {
-        // Warte kurz (0.8s) bevor kontinuierliches Anpassen startet
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             guard self.incrementTimer == nil else { return }
 
             var counter = 0
-
             self.incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { _ in
                 counter += 1
-
                 switch field {
                 case .sets:
                     if increment { self.increaseSets(by: 1) } else { self.decreaseSets(by: 1) }
-
                 case .reps:
                     if increment { self.increaseReps(by: 1) } else { self.decreaseReps(by: 1) }
-
                 case .weight:
-                    // wird hier nicht mehr genutzt (Weight hat eigenes Auto-Repeat)
                     let step = counter > 20 ? 0.5 : 0.25
                     if increment { self.increaseWeight(by: step) } else { self.decreaseWeight(by: step) }
                 }
             }
 
-            if let t = self.incrementTimer {
-                RunLoop.current.add(t, forMode: .common)
-            }
+            if let t = self.incrementTimer { RunLoop.current.add(t, forMode: .common) }
         }
     }
 
-    // ✅ Auto-Repeat für Weight (Tap bleibt Tap, LongPress startet direkt Repeat)
     private func startAutoRepeatWeight(increment: Bool) {
         stopContinuousAdjustment()
 
@@ -661,26 +658,21 @@ struct SetConfigurationSheet: View {
             if increment { increaseWeight(by: step) } else { decreaseWeight(by: step) }
         }
 
-        if let t = incrementTimer {
-            RunLoop.current.add(t, forMode: .common)
-        }
+        if let t = incrementTimer { RunLoop.current.add(t, forMode: .common) }
     }
 
-    // Timer stoppen
     private func stopContinuousAdjustment() {
         incrementTimer?.invalidate()
         incrementTimer = nil
     }
 
-    // Haptic Feedback
     private func hapticFeedback() {
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
     }
 }
 
-// MARK: - Set Preview Row
-
+// MARK: - Set Preview Row (unverändert)
 private struct SetPreviewRow: View {
     let setNumber: Int
     let reps: Int
@@ -692,7 +684,6 @@ private struct SetPreviewRow: View {
 
     var body: some View {
         HStack {
-            // Satz-Nummer mit Typ-Badge
             HStack(spacing: 6) {
                 Text(setKind.shortName)
                     .font(.caption.bold())
@@ -708,7 +699,6 @@ private struct SetPreviewRow: View {
 
             Spacer()
 
-            // Reps × Gewicht - "2 × X kg" bei unilateral
             HStack(spacing: 4) {
                 Text("\(reps)")
                     .font(.subheadline.bold())
@@ -730,7 +720,6 @@ private struct SetPreviewRow: View {
                 }
             }
 
-            // RIR Badge
             Text("RIR \(targetRIR)")
                 .font(.caption2)
                 .padding(.horizontal, 6)
@@ -758,15 +747,11 @@ private struct SetPreviewRow: View {
     }
 }
 
-// MARK: - Double Extension
-
 private extension Double {
     func rounded(toNearest value: Double) -> Double {
         (self / value).rounded() * value
     }
 }
-
-// MARK: - Preview
 
 #Preview("Set Configuration Sheet") {
     SetConfigurationSheet(
