@@ -21,7 +21,7 @@ struct TrainingListView: View {
     @Query(sort: \TrainingPlan.startDate, order: .reverse)
     private var plans: [TrainingPlan]
 
-    @State private var showingAddPlanSheet = false
+    @State private var draftPlan: TrainingPlan? = nil
 
     var body: some View {
         ZStack {
@@ -59,11 +59,13 @@ struct TrainingListView: View {
             icon: .system("plus.circle.fill"),
             color: .primary
         ) {
-            showingAddPlanSheet = true
+            // Draft erzeugen
+            draftPlan = TrainingPlan()
         }
-        .sheet(isPresented: $showingAddPlanSheet) {
+        // sheet(item:) statt sheet(isPresented:)
+        .sheet(item: $draftPlan) { plan in
             NavigationStack {
-                TrainingFormView(mode: .add, plan: TrainingPlan())
+                TrainingFormView(mode: .add, plan: plan)
             }
         }
     }
