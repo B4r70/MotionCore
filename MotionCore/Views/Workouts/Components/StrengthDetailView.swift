@@ -316,7 +316,7 @@ struct StrengthDetailView: View {
 
             // Satz-Details
             VStack(spacing: 6) {
-                ForEach(sets, id: \.id) { set in
+                ForEach(sets, id: \.persistentModelID) { set in
                     HStack {
                         // Satz-Nummer
                         Text("Satz \(set.setNumber)")

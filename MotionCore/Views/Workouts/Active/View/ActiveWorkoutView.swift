@@ -36,7 +36,7 @@ struct ActiveWorkoutView: View {
     @State private var showFinishAlert = false
     @State private var showCancelAlert = false
     @State private var selectedSetForEdit: ExerciseSet?
-    @State private var selectedExerciseIndex: Int? = nil
+    @State private var selectedExerciseKey: String? = nil
 
     // NEU: Sheet zum Hinzufügen einer Übung während des Trainings
     @State private var showAddExerciseSheet = false
@@ -56,24 +56,33 @@ struct ActiveWorkoutView: View {
 
         // MARK: - Derived
 
+    private var selectedExerciseSets: [ExerciseSet] {
+        guard let key = selectedExerciseKey else { return [] }
+
+        return session.exerciseSets
+            .filter { $0.groupKey == key }
+            .sorted { $0.setNumber < $1.setNumber }
+    }
+
     private var currentSet: ExerciseSet? {
-        if let selectedIndex = selectedExerciseIndex {
-            let grouped = session.groupedSets
-            guard selectedIndex < grouped.count else { return nil }
-            return grouped[selectedIndex].first { !$0.isCompleted }
+        if selectedExerciseKey != nil {
+            return selectedExerciseSets.first { !$0.isCompleted }
         }
         return session.nextUncompletedSet
     }
 
     private var currentExerciseIndex: Int {
-        if let selectedIndex = selectedExerciseIndex {
-            return selectedIndex
-        }
-        guard let current = session.nextUncompletedSet else { return 0 }
         let grouped = session.groupedSets
-        return grouped.firstIndex { group in
+
+        if let key = selectedExerciseKey,
+           let idx = grouped.firstIndex(where: { $0.first?.groupKey == key }) {
+            return idx
+        }
+
+        guard let current = session.nextUncompletedSet else { return 0 }
+        return grouped.firstIndex(where: { group in
             group.contains { $0.id == current.id }
-        } ?? 0
+        }) ?? 0
     }
 
     private var lastCompletedSet: ExerciseSet? {
@@ -89,29 +98,16 @@ struct ActiveWorkoutView: View {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             VStack(spacing: 0) {
-                headerSection
-
+                // Workout-Status als Header der View
+                ActiveWorkoutStatus(
+                    isPaused: sessionManager.isPaused,
+                    formattedElapsedTime: sessionManager.formattedElapsedTime,
+                    completedSets: session.completedSets,
+                    totalSets: session.totalSets,
+                    progress: session.progress
+                )
                 ScrollView {
-                    VStack(spacing: 20) {
-                        if isResting, let completedSet = lastCompletedSet {
-                            RestTimerCard(
-                                remainingSeconds: restTimerSeconds,
-                                targetSeconds: completedSet.restSeconds,
-                                onSkip: skipRest
-                            )
-                        } else if let current = currentSet {
-                            currentSetCard(current)
-                        } else if isSelectedExerciseComplete, !session.allSetsCompleted {
-                            exerciseCompletedCard
-                        } else {
-                            allCompletedCard
-                        }
-
-                        exercisesOverview
-                    }
-                    .padding(.horizontal)
-                    .padding(.top, 16)
-                    .padding(.bottom, 100)
+                    scrollContent
                 }
                 .scrollIndicators(.hidden)
             }
@@ -162,8 +158,8 @@ struct ActiveWorkoutView: View {
             updateLiveActivity()
             saveResumeState()
         }
-        .onChange(of: selectedExerciseIndex) { _, newValue in
-            sessionManager.setSelectedExerciseIndex(newValue)
+        .onChange(of: selectedExerciseKey) { _, newValue in
+            sessionManager.setSelectedExerciseKey(newValue)
             updateLiveActivity()
             saveResumeState()
         }
@@ -208,314 +204,20 @@ struct ActiveWorkoutView: View {
         }
     }
 
-        // MARK: - Header
-
-    private var headerSection: some View {
-        VStack(spacing: 12) {
-            HStack {
-                HStack(spacing: 8) {
-                    Image(systemName: sessionManager.isPaused ? "pause.circle.fill" : "clock.fill")
-                        .foregroundStyle(sessionManager.isPaused ? .orange : .blue)
-
-                    Text(sessionManager.formattedElapsedTime)
-                        .font(.title2.bold().monospacedDigit())
-                        .foregroundStyle(.primary)
-
-                    if sessionManager.isPaused {
-                        Text("(Pausiert)")
-                            .font(.caption)
-                            .foregroundStyle(.orange)
-                    }
-                }
-
-                Spacer()
-
-                HStack(spacing: 8) {
-                    Text("\(session.completedSets)/\(session.totalSets)")
-                        .font(.title2.bold())
-                        .foregroundStyle(.primary)
-
-                    Text("Sätze")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.primary.opacity(0.1))
-                        .frame(height: 8)
-
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(
-                            LinearGradient(
-                                colors: [.blue, .green],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .frame(width: geo.size.width * session.progress, height: 8)
-                        .animation(.easeInOut, value: session.progress)
-                }
-            }
-            .frame(height: 8)
-        }
-        .padding()
-        .background(.ultraThinMaterial)
-    }
-
-        // MARK: - Current Set Card
-
-    private func currentSetCard(_ set: ExerciseSet) -> some View {
-        VStack(spacing: 20) {
-            HStack(spacing: 16) {
-                ExerciseGifView(assetName: set.exerciseGifAssetName, size: 80)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    if set.setKind != .work {
-                        Text(set.setKind.description.uppercased())
-                            .font(.caption.bold())
-                            .foregroundStyle(set.setKind.color)
-                    }
-
-                    Text(set.exerciseName)
-                        .font(.title2.bold())
-                        .foregroundStyle(.primary)
-
-                    Text("Satz \(set.setNumber) von \(setsForCurrentExercise)")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-            }
-
-            .glassDivider()
-
-            HStack(spacing: 24) {
-                VStack(spacing: 4) {
-                    Text(set.weight > 0 ? String(format: "%.2f", set.weight) : "0.00")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
-                        .foregroundStyle(set.weight > 0 ? .primary : .secondary)
-
-                    Text(set.weight > 0 ? "kg" : "Körpergewicht")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-
-                Rectangle()
-                    .fill(Color.primary.opacity(0.2))
-                    .frame(width: 1, height: 50)
-
-                VStack(spacing: 4) {
-                    Text("\(set.reps)")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
-                        .foregroundStyle(.primary)
-
-                    Text("Wdh.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-            }
-
-            Button {
-                selectedSetForEdit = set
-            } label: {
-                Label("Anpassen", systemImage: "pencil")
-                    .font(.subheadline)
-                    .foregroundStyle(.blue)
-            }
-
-            .glassDivider()
-
-            Button {
-                completeSet(set)
-            } label: {
-                HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                    Text("Satz abschließen")
-                        .font(.headline)
-                }
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(.green, in: RoundedRectangle(cornerRadius: 16))
-            }
-        }
-        .glassCard()
-    }
-
     private var setsForCurrentExercise: Int {
         guard let current = currentSet else { return 0 }
-        return session.exerciseSets.filter { $0.exerciseName == current.exerciseName }.count
+        return session.groupedSets.first(where: { $0.first?.groupKey == current.groupKey })?.count ?? 0
     }
 
     private var isSelectedExerciseComplete: Bool {
-        guard let selectedIndex = selectedExerciseIndex else { return false }
-        let grouped = session.groupedSets
-        guard selectedIndex < grouped.count else { return false }
-        return grouped[selectedIndex].allSatisfy { $0.isCompleted }
+        guard selectedExerciseKey != nil else { return false }
+        return !selectedExerciseSets.isEmpty && selectedExerciseSets.allSatisfy { $0.isCompleted }
     }
 
     private var selectedExerciseName: String? {
-        guard let selectedIndex = selectedExerciseIndex else { return nil }
-        let grouped = session.groupedSets
-        guard selectedIndex < grouped.count else { return nil }
-        return grouped[selectedIndex].first?.exerciseName
-    }
-
-    private var exerciseCompletedCard: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.green)
-
-            if let exerciseName = selectedExerciseName {
-                Text("Übung \"\(exerciseName)\" abgeschlossen!")
-                    .font(.title2.bold())
-                    .foregroundStyle(.primary)
-                    .multilineTextAlignment(.center)
-            }
-
-            Text("Wähle die nächste Übung aus der Liste unten.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-
-            Button {
-                withAnimation(.easeInOut) {
-                    selectedExerciseIndex = nil
-                }
-            } label: {
-                HStack {
-                    Image(systemName: "arrow.right.circle.fill")
-                    Text("Nächste Übung")
-                        .font(.headline)
-                }
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(.blue, in: RoundedRectangle(cornerRadius: 16))
-            }
+        selectedExerciseSets.first.map {
+            $0.exerciseNameSnapshot.isEmpty ? $0.exerciseName : $0.exerciseNameSnapshot
         }
-        .glassCard()
-    }
-
-    private var allCompletedCard: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "trophy.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.yellow)
-
-            Text("Alle Sätze abgeschlossen!")
-                .font(.title2.bold())
-                .foregroundStyle(.primary)
-
-            Text("Großartige Arbeit! Du kannst das Training jetzt beenden.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-
-            Button {
-                finishWorkout()
-            } label: {
-                HStack {
-                    Image(systemName: "flag.checkered")
-                    Text("Training beenden")
-                        .font(.headline)
-                }
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(.green, in: RoundedRectangle(cornerRadius: 16))
-            }
-        }
-        .glassCard()
-    }
-
-        // MARK: - Overview
-
-    private var exercisesOverview: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Übersicht")
-                    .font(.title3.bold())
-                    .foregroundStyle(.primary)
-
-                Spacer()
-
-                // NEU: Button zum Hinzufügen einer Übung
-                Button {
-                    showAddExerciseSheet = true
-                } label: {
-                    Label("Übung", systemImage: "plus.circle.fill")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.blue)
-                }
-            }
-
-            ForEach(Array(session.groupedSets.enumerated()), id: \.element.first!.id) { index, sets in
-                if let firstSet = sets.first {
-                    exerciseOverviewRow(
-                        name: firstSet.exerciseName,
-                        sets: sets,
-                        index: index + 1,
-                        isCurrentExercise: index == currentExerciseIndex
-                    )
-                    .onTapGesture {
-                        selectExercise(at: index)
-                    }
-                }
-            }
-        }
-        .glassCard()
-        .id(exerciseListRefreshID) // NEU: Erzwingt Neuaufbau bei Änderung
-    }
-
-    private func exerciseOverviewRow(name: String, sets: [ExerciseSet], index: Int, isCurrentExercise: Bool) -> some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text("\(index). \(name)")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(isCurrentExercise ? .blue : .primary)
-
-                Spacer()
-
-                let completed = sets.filter { $0.isCompleted }.count
-                if completed == sets.count {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                } else {
-                    Text("\(completed)/\(sets.count)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            HStack(spacing: 6) {
-                ForEach(sets, id: \.id) { set in
-                    Circle()
-                        .fill(set.isCompleted ? Color.green : Color.primary.opacity(0.2))
-                        .frame(width: 12, height: 12)
-                        .overlay {
-                            if set.setKind == .warmup {
-                                Circle()
-                                    .stroke(Color.orange, lineWidth: 2)
-                            }
-                        }
-                }
-                Spacer()
-            }
-        }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(isCurrentExercise ? Color.blue.opacity(0.1) : Color.clear)
-        )
-        .contentShape(Rectangle())
     }
 
         // MARK: - Bottom Action Bar
@@ -572,28 +274,39 @@ struct ActiveWorkoutView: View {
         let sessionID = session.sessionUUID.uuidString
         let activeID = sessionManager.getActiveSessionID()
 
-            // 1) Resume zuerst versuchen
-        if restoreResumeStateIfPossible() {
-            reattachLiveActivityIfNeeded()
-            return
-        }
+        let didRestore = restoreResumeStateIfPossible()
 
-            // 2) sonst normales Verhalten
-        if let activeID, activeID == sessionID {
+        if !didRestore {
+            if let activeID, activeID == sessionID {
                 // already active
-        } else if sessionManager.hasActiveSession {
-            sessionManager.discardSession()
-            startNewSession(sessionID: sessionID)
-        } else {
-            startNewSession(sessionID: sessionID)
+            } else if sessionManager.hasActiveSession {
+                sessionManager.discardSession()
+                startNewSession(sessionID: sessionID)
+            } else {
+                startNewSession(sessionID: sessionID)
+            }
         }
 
-            // Index wiederherstellen
-        if let savedIndex = sessionManager.getSelectedExerciseIndex() {
-            selectedExerciseIndex = savedIndex
+        // Fallback: falls ResumeStore nix gesetzt hat
+        if selectedExerciseKey == nil {
+            selectedExerciseKey = sessionManager.getSelectedExerciseKey()
         }
+
+        // ✅ Schritt 2: Guard gegen ungültigen Key (nach dem Setzen!)
+        validateSelectedExerciseKey()
 
         reattachLiveActivityIfNeeded()
+
+        // ✅ Schritt 3: einmaliger Initial-Sync
+        updateLiveActivity()
+        saveResumeState()
+    }
+
+    private func validateSelectedExerciseKey() {
+        if let key = selectedExerciseKey,
+           !session.groupedSets.contains(where: { $0.first?.groupKey == key }) {
+            selectedExerciseKey = nil
+        }
     }
 
     private func startNewSession(sessionID: String) {
@@ -613,11 +326,12 @@ struct ActiveWorkoutView: View {
         localTimer = nil
     }
 
-        // MARK: - Actions
-        // =========================================================================
-        // WICHTIG: Diese Funktionen ändern nur den State.
-        // Die onChange-Handler oben reagieren darauf und updaten Live Activity.
-        // =========================================================================
+    // =========================================================================
+    // MARK: - Actions
+    // =========================================================================
+    // WICHTIG: Diese Funktionen ändern nur den State.
+    // Die onChange-Handler oben reagieren darauf und updaten Live Activity.
+    // =========================================================================
 
     private func toggleTimer() {
         if sessionManager.isPaused {
@@ -630,9 +344,9 @@ struct ActiveWorkoutView: View {
         generator.impactOccurred()
     }
 
-    private func selectExercise(at index: Int) {
+    private func selectExercise(key: String) {
         withAnimation(.easeInOut) {
-            selectedExerciseIndex = index
+            selectedExerciseKey = key
         }
         hapticGenerator.impactOccurred()
     }
@@ -643,32 +357,23 @@ struct ActiveWorkoutView: View {
         }
         try? context.save()
 
-        if selectedExerciseIndex == nil {
-            let grouped = session.groupedSets
-            if let currentIndex = grouped.firstIndex(where: { group in
-                group.contains { $0.id == set.id }
-            }) {
-                selectedExerciseIndex = currentIndex
+        if selectedExerciseKey == nil {
+            if let key = session.groupedSets
+                .first(where: { group in group.contains(where: { $0.id == set.id }) })?
+                .first?.groupKey {
+                selectedExerciseKey = key
             }
         }
 
-        if let selectedIndex = selectedExerciseIndex {
-            let grouped = session.groupedSets
-            guard selectedIndex < grouped.count else { return }
-
-            let allSetsComplete = grouped[selectedIndex].allSatisfy { $0.isCompleted }
-            if allSetsComplete {
-                withAnimation(.easeInOut) {
-                    selectedExerciseIndex = nil
-                }
-            }
+        if selectedExerciseKey == nil {
+            selectedExerciseKey = set.groupKey
         }
 
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
 
         let remainingSetsForExercise = session.exerciseSets.filter {
-            $0.exerciseName == set.exerciseName && !$0.isCompleted
+            $0.groupKey == set.groupKey && !$0.isCompleted
         }
 
         if !remainingSetsForExercise.isEmpty {
@@ -710,7 +415,9 @@ struct ActiveWorkoutView: View {
         dismiss()
     }
 
-        // MARK: - Rest Timer
+    // =========================================================================
+    // MARK: - Rest Timer
+    // =========================================================================
 
     private func startRestTimer(for set: ExerciseSet) {
         let restTime = set.restSeconds
@@ -754,7 +461,9 @@ struct ActiveWorkoutView: View {
         hapticGenerator.impactOccurred()
     }
 
-        // MARK: - Live Activity
+    // =========================================================================
+    // MARK: - Live Activity
+    // =========================================================================
 
     private func startLiveActivity() {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
@@ -859,12 +568,13 @@ struct ActiveWorkoutView: View {
                     self.currentActivity = existing
                 }
                 updateLiveActivity()
-            } else {
             }
         }
     }
 
-        // MARK: - Resume Store (Rest + LiveActivity Anchors)
+    // =========================================================================
+    // MARK: - Resume Store (Rest + LiveActivity Anchors)
+    // =========================================================================
 
     @discardableResult
     private func restoreResumeStateIfPossible() -> Bool {
@@ -872,7 +582,7 @@ struct ActiveWorkoutView: View {
         guard state.sessionID == session.sessionUUID.uuidString else { return false }
 
         workoutStartDate = state.workoutStartDate
-        selectedExerciseIndex = state.selectedExerciseIndex
+        selectedExerciseKey = state.selectedExerciseKey
 
             // Pause-Status wiederherstellen
         if state.isPaused && !sessionManager.isPaused {
@@ -922,7 +632,7 @@ struct ActiveWorkoutView: View {
             workoutStartDate: workoutStartDate,
             isResting: isResting,
             restEndDate: isResting ? restEndDate : nil,
-            selectedExerciseIndex: selectedExerciseIndex,
+            selectedExerciseKey: selectedExerciseKey,
             updatedAt: Date()
         )
         SessionResumeStore.save(state)
@@ -990,6 +700,65 @@ struct ActiveWorkoutView: View {
             let finalContent = ActivityContent(state: final, staleDate: nil)
             await activity.end(finalContent, dismissalPolicy: .immediate)
         }
+    }
+    private var exercisesOverview: some View {
+        ExercisesOverviewCard(
+            groupedSets: session.groupedSets,
+            currentExerciseIndex: currentExerciseIndex,
+            refreshID: exerciseListRefreshID,
+            onAddExercise: { showAddExerciseSheet = true },
+            onSelectExercise: { key in
+                selectExercise(key: key)
+            }
+        )
+    }
+
+    private var scrollContent: some View {
+        VStack(spacing: 20) {
+            heroCard
+            exercisesOverview
+        }
+        .padding(.horizontal)
+        .padding(.top, 16)
+        .padding(.bottom, 100)
+    }
+
+    private var heroCard: AnyView {
+        if isResting, let completedSet = lastCompletedSet {
+            return AnyView(
+                RestTimerCard(
+                    remainingSeconds: restTimerSeconds,
+                    targetSeconds: completedSet.restSeconds,
+                    onSkip: skipRest
+                )
+            )
+        }
+
+        if let activeSet = currentSet {
+            return AnyView(
+                ActiveSetCard(
+                    set: activeSet,
+                    setsForCurrentExercise: setsForCurrentExercise,
+                    selectedSetForEdit: $selectedSetForEdit,
+                    onComplete: completeSet
+                )
+            )
+        }
+
+        if isSelectedExerciseComplete, !session.allSetsCompleted {
+            return AnyView(
+                ExerciseCompletedCard(
+                    exerciseName: selectedExerciseName,
+                    onNextExercise: { selectedExerciseKey = nil }
+                )
+            )
+        }
+
+        return AnyView(
+            WorkoutCompletedCard(
+                onFinishWorkout: finishWorkout
+            )
+        )
     }
 }
 
@@ -1099,7 +868,7 @@ struct AddExerciseDuringWorkoutSheet: View {
             // Übungsliste
             ScrollView {
                 LazyVStack(spacing: 12) {
-                    ForEach(filteredExercises) { exercise in
+                    ForEach(filteredExercises, id: \.persistentModelID) { exercise in
                         Button {
                             withAnimation {
                                 selectedExercise = exercise

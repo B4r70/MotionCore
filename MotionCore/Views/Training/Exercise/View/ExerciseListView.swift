@@ -90,7 +90,7 @@ struct ExerciseListView: View {
                 // MARK: Übungsliste
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(filteredExercises) { exercise in
+                        ForEach(filteredExercises, id: \.persistentModelID) { exercise in
                             NavigationLink {
                                 ExerciseFormView(mode: .edit, exercise: exercise)
                             } label: {

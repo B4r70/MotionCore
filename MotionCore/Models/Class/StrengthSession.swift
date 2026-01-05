@@ -89,7 +89,7 @@ final class StrengthSession {
 
     // Anzahl der verschiedenen Übungen
     var exercisesPerformed: Int {
-        Set(exerciseSets.map { $0.exerciseName }).count
+        Set(exerciseSets.map { $0.groupKey }).count
     }
 
     // Gesamtes Trainingsvolumen (Summe: Gewicht × Reps)
@@ -148,32 +148,31 @@ final class StrengthSession {
     // 1. Primär: nach der kleinsten setNumber in jeder Gruppe
     // 2. Sekundär: nach Übungsname für absolute Stabilität
     var groupedSets: [[ExerciseSet]] {
-            let grouped = Dictionary(grouping: exerciseSets) { $0.exerciseName }
-            return grouped.values
-                .map { sets in sets.sorted { $0.setNumber < $1.setNumber } }
-                .sorted { group1, group2 in
-                    // NEU: Primär nach sortOrder sortieren
-                    let sortOrder1 = group1.first?.sortOrder ?? Int.max
-                    let sortOrder2 = group2.first?.sortOrder ?? Int.max
+        let grouped = Dictionary(grouping: exerciseSets) { $0.groupKey }
 
-                    if sortOrder1 != sortOrder2 {
-                        return sortOrder1 < sortOrder2
-                    }
+        return grouped.values
+            .map { sets in sets.sorted { $0.setNumber < $1.setNumber } }
+            .sorted { group1, group2 in
+                let sortOrder1 = group1.first?.sortOrder ?? Int.max
+                let sortOrder2 = group2.first?.sortOrder ?? Int.max
 
-                    // Fallback: nach setNumber für ältere Daten ohne sortOrder
-                    let minSet1 = group1.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
-                    let minSet2 = group2.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+                if sortOrder1 != sortOrder2 { return sortOrder1 < sortOrder2 }
 
-                    if minSet1 != minSet2 {
-                        return minSet1 < minSet2
-                    }
+                let minSet1 = group1.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+                let minSet2 = group2.min(by: { $0.setNumber < $1.setNumber })?.setNumber ?? Int.max
+                if minSet1 != minSet2 { return minSet1 < minSet2 }
 
-                    // Sekundär nach Übungsname für Stabilität
-                    let name1 = group1.first?.exerciseName ?? ""
-                    let name2 = group2.first?.exerciseName ?? ""
-                    return name1 < name2
-                }
-        }
+                let name1 = group1.first?.exerciseNameSnapshot.isEmpty == false
+                    ? group1.first!.exerciseNameSnapshot
+                    : (group1.first?.exerciseName ?? "")
+
+                let name2 = group2.first?.exerciseNameSnapshot.isEmpty == false
+                    ? group2.first!.exerciseNameSnapshot
+                    : (group2.first?.exerciseName ?? "")
+
+                return name1 < name2
+            }
+    }
 
     // MARK: - Initialisierung
 

@@ -19,29 +19,6 @@ import SwiftUI
 import SwiftData
 import Combine
 
-// MARK: - Active Session State
-
-// Zustand einer pausierten Session (für UserDefaults-Persistenz)
-struct ActiveSessionState: Codable {
-    let sessionUUID: String          // PersistentIdentifier als String
-    let workoutType: String          // WorkoutType rawValue
-    let startedAt: Date              // Original-Startzeit
-    let pausedAt: Date               // Referenzpunkt (historisch: "pausedAt", faktisch: "lastResumedAt")
-    let accumulatedSeconds: Int      // Bereits angesammelte Zeit vor dem aktuellen Lauf
-    let isPaused: Bool               // Ist die Session pausiert?
-    let selectedExerciseIndex: Int?  // Ausgewählte Übung innerhalb eines Trainings
-
-    // Berechnet die Gesamtzeit inkl. der Zeit seit Referenzpunkt (falls nicht pausiert)
-    func totalElapsedSeconds(at date: Date = Date()) -> Int {
-        if isPaused {
-            return accumulatedSeconds
-        } else {
-            let additionalSeconds = Int(date.timeIntervalSince(pausedAt))
-            return accumulatedSeconds + max(0, additionalSeconds)
-        }
-    }
-}
-
 // MARK: - Active Session Manager
 
 // Verwaltet den Zustand der aktuell aktiven Workout-Session
@@ -89,10 +66,10 @@ class ActiveSessionManager: ObservableObject {
             sessionUUID: sessionID,
             workoutType: workoutType.rawValue,
             startedAt: now,
-            pausedAt: now,              // Referenzpunkt ab Start
+            pausedAt: now,
             accumulatedSeconds: 0,
             isPaused: false,
-            selectedExerciseIndex: nil
+            selectedExerciseKey: nil
         )
 
         activeSessionState = state
@@ -119,7 +96,7 @@ class ActiveSessionManager: ObservableObject {
             pausedAt: Date(),
             accumulatedSeconds: state.accumulatedSeconds,
             isPaused: false,
-            selectedExerciseIndex: state.selectedExerciseIndex
+            selectedExerciseKey: state.selectedExerciseKey
         )
 
         activeSessionState = state
@@ -142,7 +119,7 @@ class ActiveSessionManager: ObservableObject {
             pausedAt: now,
             accumulatedSeconds: state.accumulatedSeconds + max(0, additionalSeconds),
             isPaused: true,
-            selectedExerciseIndex: state.selectedExerciseIndex
+            selectedExerciseKey: state.selectedExerciseKey
         )
 
         activeSessionState = state
@@ -204,7 +181,7 @@ class ActiveSessionManager: ObservableObject {
         }
     }
 
-    func setSelectedExerciseIndex(_ index: Int?) {
+    func setSelectedExerciseKey(_ key: String?) {
         guard let state = activeSessionState else { return }
 
         let updated = ActiveSessionState(
@@ -214,15 +191,15 @@ class ActiveSessionManager: ObservableObject {
             pausedAt: state.pausedAt,
             accumulatedSeconds: state.accumulatedSeconds,
             isPaused: state.isPaused,
-            selectedExerciseIndex: index
+            selectedExerciseKey: key
         )
 
         activeSessionState = updated
         saveState()
     }
 
-    func getSelectedExerciseIndex() -> Int? {
-        activeSessionState?.selectedExerciseIndex
+    func getSelectedExerciseKey() -> String? {
+        activeSessionState?.selectedExerciseKey
     }
 
     var elapsedMinutes: Int {

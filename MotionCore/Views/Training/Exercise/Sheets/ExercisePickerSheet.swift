@@ -78,7 +78,7 @@ struct ExercisePickerSheet: View {
                     // Übungsliste
                     ScrollView {
                         LazyVStack(spacing: 12) {
-                            ForEach(filteredExercises) { exercise in
+                            ForEach(filteredExercises, id: \.persistentModelID) { exercise in
                                 Button {
                                     onSelect(exercise)
                                     dismiss()

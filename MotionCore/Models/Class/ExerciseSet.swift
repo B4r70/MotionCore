@@ -234,3 +234,12 @@ extension ExerciseSet {
         return copy
     }
 }
+
+extension ExerciseSet {
+    // Stable grouping key for UI grouping & counting.
+    var groupKey: String {
+        if !exerciseUUIDSnapshot.isEmpty { return exerciseUUIDSnapshot }
+        if !exerciseNameSnapshot.isEmpty { return exerciseNameSnapshot }
+        return exerciseName
+    }
+}
