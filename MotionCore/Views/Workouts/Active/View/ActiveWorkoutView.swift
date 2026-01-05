@@ -38,10 +38,10 @@ struct ActiveWorkoutView: View {
     @State private var selectedSetForEdit: ExerciseSet?
     @State private var selectedExerciseKey: String? = nil
 
-    // NEU: Sheet zum Hinzufügen einer Übung während des Trainings
+    // Sheet zum Hinzufügen einer Übung während des Trainings
     @State private var showAddExerciseSheet = false
 
-    // NEU: Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
+    // Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
     @State private var exerciseListRefreshID = UUID()
 
         // Rest
@@ -147,28 +147,23 @@ struct ActiveWorkoutView: View {
         // =====================================================================
 
         .onChange(of: sessionManager.isPaused) { _, _ in
-            updateLiveActivity()
-            saveResumeState()
+            syncLiveActivityStates()
         }
         .onChange(of: isResting) { _, _ in
-            updateLiveActivity()
-            saveResumeState()
+            syncLiveActivityStates()
         }
         .onChange(of: session.completedSets) { _, _ in
-            updateLiveActivity()
-            saveResumeState()
+            syncLiveActivityStates()
         }
         .onChange(of: selectedExerciseKey) { _, newValue in
             sessionManager.setSelectedExerciseKey(newValue)
-            updateLiveActivity()
-            saveResumeState()
+            syncLiveActivityStates()
         }
-
         .onDisappear {
-            cleanupTimer()
+            cleanupLocalTimer()
+            cleanupRestTimer()
             saveResumeState()
         }
-
         .alert("Training läuft noch", isPresented: $showCancelAlert) {
             Button("Pausieren") {
                 handlePauseAndExit()
@@ -192,13 +187,12 @@ struct ActiveWorkoutView: View {
             SetEditSheet(set: set, session: session)
                 .environmentObject(appSettings)
         }
-        // NEU: Sheet zum Hinzufügen einer Übung während des Trainings
+        // Sheet zum Hinzufügen einer Übung während des Trainings
         .sheet(isPresented: $showAddExerciseSheet) {
             AddExerciseDuringWorkoutSheet(session: session) {
                 // Nach dem Hinzufügen: UI refreshen und Live Activity updaten
                 exerciseListRefreshID = UUID() // Erzwingt Neuaufbau der Liste
-                updateLiveActivity()
-                saveResumeState()
+                syncLiveActivityStates()
             }
             .environmentObject(appSettings)
         }
@@ -298,32 +292,46 @@ struct ActiveWorkoutView: View {
         reattachLiveActivityIfNeeded()
 
         // ✅ Schritt 3: einmaliger Initial-Sync
-        updateLiveActivity()
-        saveResumeState()
+        syncLiveActivityStates()
     }
 
+    // Zugriff Exercise-Key prüfen
     private func validateSelectedExerciseKey() {
+        guard !session.groupedSets.isEmpty else { return }
+
         if let key = selectedExerciseKey,
            !session.groupedSets.contains(where: { $0.first?.groupKey == key }) {
             selectedExerciseKey = nil
         }
     }
 
+    // Synchronisierung Live Activity States
+    private func syncLiveActivityStates() {
+           updateLiveActivity()
+           saveResumeState()
+    }
+
+
     private func startNewSession(sessionID: String) {
         sessionManager.startSession(sessionID: sessionID, workoutType: .strength)
-
         session.start()
         try? context.save()
 
-            // Live Activity starten
+        // Live Activity starten
         startLiveActivity()
 
         saveResumeState()
     }
 
-    private func cleanupTimer() {
+    // Bereinigung des Local Timers
+    private func cleanupLocalTimer() {
         localTimer?.invalidate()
         localTimer = nil
+    }
+    // Bereinigung des RestTimers
+    private func cleanupRestTimer() {
+        restTimer?.invalidate()
+        restTimer = nil
     }
 
     // =========================================================================
@@ -1410,7 +1418,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                 reps: defaultReps,
                 restSeconds: restSeconds,
                 setKind: .work,
-                isCompleted: false, // NEU: Nicht abgeschlossen, da während des Trainings
+                isCompleted: false, // Nicht abgeschlossen, da während des Trainings
                 targetRepsMin: exercise.repRangeMin,
                 targetRepsMax: exercise.repRangeMax,
                 sortOrder: newSortOrder

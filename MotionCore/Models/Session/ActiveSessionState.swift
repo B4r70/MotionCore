@@ -16,38 +16,34 @@
 import Foundation
 
 struct ActiveSessionState: Codable {
-    let sessionUUID: String
+    let sessionID: String
     let workoutType: String
     let startedAt: Date
     let pausedAt: Date
     let accumulatedSeconds: Int
     let isPaused: Bool
-
-    // NEU
     let selectedExerciseKey: String?
 
     func totalElapsedSeconds(at date: Date = Date()) -> Int {
-        if isPaused {
-            return accumulatedSeconds
-        } else {
-            let additionalSeconds = Int(date.timeIntervalSince(pausedAt))
-            return accumulatedSeconds + max(0, additionalSeconds)
-        }
+        if isPaused { return accumulatedSeconds }
+        let additionalSeconds = Int(date.timeIntervalSince(pausedAt))
+        return accumulatedSeconds + max(0, additionalSeconds)
     }
 
     enum CodingKeys: String, CodingKey {
-        case sessionUUID
+        case sessionID
+        case sessionUUID // legacy
         case workoutType
         case startedAt
         case pausedAt
         case accumulatedSeconds
         case isPaused
         case selectedExerciseKey
-        case selectedExerciseIndex // legacy (nur beim Decoding)
+        case selectedExerciseIndex // legacy
     }
 
     init(
-        sessionUUID: String,
+        sessionID: String,
         workoutType: String,
         startedAt: Date,
         pausedAt: Date,
@@ -55,7 +51,7 @@ struct ActiveSessionState: Codable {
         isPaused: Bool,
         selectedExerciseKey: String?
     ) {
-        self.sessionUUID = sessionUUID
+        self.sessionID = sessionID
         self.workoutType = workoutType
         self.startedAt = startedAt
         self.pausedAt = pausedAt
@@ -67,7 +63,19 @@ struct ActiveSessionState: Codable {
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
 
-        sessionUUID = try c.decode(String.self, forKey: .sessionUUID)
+        // ✅ new key first, fallback to legacy key
+        if let id = try c.decodeIfPresent(String.self, forKey: .sessionID) {
+            sessionID = id
+        } else if let legacy = try c.decodeIfPresent(String.self, forKey: .sessionUUID) {
+            sessionID = legacy
+        } else {
+            throw DecodingError.keyNotFound(
+                CodingKeys.sessionID,
+                .init(codingPath: decoder.codingPath,
+                      debugDescription: "Neither sessionID nor sessionUUID found.")
+            )
+        }
+
         workoutType = try c.decode(String.self, forKey: .workoutType)
         startedAt = try c.decode(Date.self, forKey: .startedAt)
         pausedAt = try c.decode(Date.self, forKey: .pausedAt)
@@ -77,23 +85,28 @@ struct ActiveSessionState: Codable {
         if let key = try c.decodeIfPresent(String.self, forKey: .selectedExerciseKey) {
             selectedExerciseKey = key
         } else {
-            // legacy Feld nur "schlucken"
-            _ = try c.decodeIfPresent(Int.self, forKey: .selectedExerciseIndex)
+            _ = try c.decodeIfPresent(Int.self, forKey: .selectedExerciseIndex) // legacy swallow
             selectedExerciseKey = nil
+        }
+        // Session ID darf nicht leer sein
+        if sessionID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            throw DecodingError.dataCorrupted(.init(
+                codingPath: decoder.codingPath,
+                debugDescription: "sessionID is empty."
+            ))
         }
     }
 
     func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
 
-        try c.encode(sessionUUID, forKey: .sessionUUID)
+        // ✅ Nur noch der neue Key wird geschrieben
+        try c.encode(sessionID, forKey: .sessionID)
         try c.encode(workoutType, forKey: .workoutType)
         try c.encode(startedAt, forKey: .startedAt)
         try c.encode(pausedAt, forKey: .pausedAt)
         try c.encode(accumulatedSeconds, forKey: .accumulatedSeconds)
         try c.encode(isPaused, forKey: .isPaused)
-
         try c.encodeIfPresent(selectedExerciseKey, forKey: .selectedExerciseKey)
-        // selectedExerciseIndex wird absichtlich NICHT mehr encoded
     }
 }

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E9F81ED2F0C32C300BF3618 /* Benchpress_Incline Dumbbell.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4E9F81E72F0C32C300BF3618 /* Benchpress_Incline Dumbbell.gif */; };
+		4E9F81EE2F0C32C300BF3618 /* CurlsBizeps_Cable.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4E9F81E92F0C32C300BF3618 /* CurlsBizeps_Cable.gif */; };
+		4E9F81EF2F0C32C300BF3618 /* ShoulderPress_SeatedDumbbell.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4E9F81EC2F0C32C300BF3618 /* ShoulderPress_SeatedDumbbell.gif */; };
+		4E9F81F02F0C32C300BF3618 /* PushdownTriceps_Cable.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4E9F81EB2F0C32C300BF3618 /* PushdownTriceps_Cable.gif */; };
+		4E9F81F12F0C32C300BF3618 /* Benchpress_Machine.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4E9F81E82F0C32C300BF3618 /* Benchpress_Machine.gif */; };
+		4E9F81F22F0C32C300BF3618 /* HammerCurls_Dumbbell.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4E9F81EA2F0C32C300BF3618 /* HammerCurls_Dumbbell.gif */; };
 		4EF7B9B62F08133700C603DC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B52F08133600C603DC /* WidgetKit.framework */; };
 		4EF7B9B82F08133700C603DC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B72F08133700C603DC /* SwiftUI.framework */; };
 		4EF7B9C72F08133700C603DC /* MotionCoreWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -37,6 +43,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4E9F81E72F0C32C300BF3618 /* Benchpress_Incline Dumbbell.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Benchpress_Incline Dumbbell.gif"; sourceTree = "<group>"; };
+		4E9F81E82F0C32C300BF3618 /* Benchpress_Machine.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Benchpress_Machine.gif; sourceTree = "<group>"; };
+		4E9F81E92F0C32C300BF3618 /* CurlsBizeps_Cable.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = CurlsBizeps_Cable.gif; sourceTree = "<group>"; };
+		4E9F81EA2F0C32C300BF3618 /* HammerCurls_Dumbbell.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = HammerCurls_Dumbbell.gif; sourceTree = "<group>"; };
+		4E9F81EB2F0C32C300BF3618 /* PushdownTriceps_Cable.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = PushdownTriceps_Cable.gif; sourceTree = "<group>"; };
+		4E9F81EC2F0C32C300BF3618 /* ShoulderPress_SeatedDumbbell.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ShoulderPress_SeatedDumbbell.gif; sourceTree = "<group>"; };
 		4EBA616D2EA7C87D002426EE /* MotionCore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionCore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MotionCoreWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF7B9B52F08133600C603DC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -108,9 +120,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E9F81F32F0C32D500BF3618 /* ExerciseGIF */ = {
+			isa = PBXGroup;
+			children = (
+				4E9F81E72F0C32C300BF3618 /* Benchpress_Incline Dumbbell.gif */,
+				4E9F81E82F0C32C300BF3618 /* Benchpress_Machine.gif */,
+				4E9F81E92F0C32C300BF3618 /* CurlsBizeps_Cable.gif */,
+				4E9F81EA2F0C32C300BF3618 /* HammerCurls_Dumbbell.gif */,
+				4E9F81EB2F0C32C300BF3618 /* PushdownTriceps_Cable.gif */,
+				4E9F81EC2F0C32C300BF3618 /* ShoulderPress_SeatedDumbbell.gif */,
+			);
+			path = ExerciseGIF;
+			sourceTree = "<group>";
+		};
 		4EBA61642EA7C87D002426EE = {
 			isa = PBXGroup;
 			children = (
+				4E9F81F32F0C32D500BF3618 /* ExerciseGIF */,
 				4EF7B9CD2F08146300C603DC /* MotionCoreWidgetsExtension.entitlements */,
 				4EF7B9B92F08133700C603DC /* MotionCoreWidgets */,
 				4EF7B9B42F08133600C603DC /* Frameworks */,
@@ -234,6 +260,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E9F81ED2F0C32C300BF3618 /* Benchpress_Incline Dumbbell.gif in Resources */,
+				4E9F81EE2F0C32C300BF3618 /* CurlsBizeps_Cable.gif in Resources */,
+				4E9F81EF2F0C32C300BF3618 /* ShoulderPress_SeatedDumbbell.gif in Resources */,
+				4E9F81F02F0C32C300BF3618 /* PushdownTriceps_Cable.gif in Resources */,
+				4E9F81F12F0C32C300BF3618 /* Benchpress_Machine.gif in Resources */,
+				4E9F81F22F0C32C300BF3618 /* HammerCurls_Dumbbell.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -63,7 +63,7 @@ class ActiveSessionManager: ObservableObject {
         let now = Date()
 
         let state = ActiveSessionState(
-            sessionUUID: sessionID,
+            sessionID: sessionID,
             workoutType: workoutType.rawValue,
             startedAt: now,
             pausedAt: now,
@@ -90,7 +90,7 @@ class ActiveSessionManager: ObservableObject {
 
         // "Resume" -> neuer Referenzpunkt
         state = ActiveSessionState(
-            sessionUUID: state.sessionUUID,
+            sessionID: state.sessionID,
             workoutType: state.workoutType,
             startedAt: state.startedAt,
             pausedAt: Date(),
@@ -113,7 +113,7 @@ class ActiveSessionManager: ObservableObject {
         let additionalSeconds = Int(now.timeIntervalSince(state.pausedAt))
 
         state = ActiveSessionState(
-            sessionUUID: state.sessionUUID,
+            sessionID: state.sessionID,
             workoutType: state.workoutType,
             startedAt: state.startedAt,
             pausedAt: now,
@@ -158,7 +158,7 @@ class ActiveSessionManager: ObservableObject {
     }
 
     func getActiveSessionID() -> String? {
-        activeSessionState?.sessionUUID
+        activeSessionState?.sessionID
     }
 
     func getRestorationInfo() -> (sessionID: String, workoutType: WorkoutType)? {
@@ -166,7 +166,7 @@ class ActiveSessionManager: ObservableObject {
               let workoutType = WorkoutType(rawValue: state.workoutType) else {
             return nil
         }
-        return (state.sessionUUID, workoutType)
+        return (state.sessionID, workoutType)
     }
 
     var formattedElapsedTime: String {
@@ -185,7 +185,7 @@ class ActiveSessionManager: ObservableObject {
         guard let state = activeSessionState else { return }
 
         let updated = ActiveSessionState(
-            sessionUUID: state.sessionUUID,
+            sessionID: state.sessionID,
             workoutType: state.workoutType,
             startedAt: state.startedAt,
             pausedAt: state.pausedAt,
