@@ -991,7 +991,10 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private func exercisePickerRow(_ exercise: Exercise) -> some View {
         HStack(spacing: 12) {
-            ExerciseGifView(assetName: exercise.gifAssetName, size: 56)
+            ExerciseVideoView(
+                assetName: exercise.mediaAssetName,
+                size: 56
+            )
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name)
@@ -1068,7 +1071,10 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private func exerciseInfoCard(_ exercise: Exercise) -> some View {
         HStack(spacing: 16) {
-            ExerciseGifView(assetName: exercise.gifAssetName, size: 80)
+            ExerciseVideoView(
+                assetName: exercise.mediaAssetName,
+                size: 80
+            )
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name)
@@ -1410,7 +1416,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                 exerciseName: exercise.name,
                 exerciseNameSnapshot: exercise.name,
                 exerciseUUIDSnapshot: exercise.persistentModelID.hashValue.description,
-                exerciseGifAssetName: exercise.gifAssetName,
+                exerciseMediaAssetName: exercise.mediaAssetName,
                 isUnilateralSnapshot: exercise.isUnilateral,
                 setNumber: setNumber,
                 weight: finalWeight,

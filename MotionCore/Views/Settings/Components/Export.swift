@@ -130,7 +130,7 @@ struct ExerciseExportPackage: Codable {
 struct ExerciseExportItem: Codable {
     let name: String
     let exerciseDescription: String?
-    let gifAssetName: String?
+    let mediaAssetName: String?
     let category: String // Enum rawValue
     let equipment: String // Enum rawValue
     let difficulty: String // Enum rawValue
@@ -156,7 +156,7 @@ extension Exercise {
         ExerciseExportItem(
             name: name,
             exerciseDescription: exerciseDescription.isEmpty ? nil : exerciseDescription,
-            gifAssetName: gifAssetName.isEmpty ? nil : gifAssetName,
+            mediaAssetName: mediaAssetName.isEmpty ? nil : mediaAssetName,
             category: category.rawValue,
             equipment: equipment.rawValue,
             difficulty: difficulty.rawValue,
@@ -180,7 +180,7 @@ extension Exercise {
         Exercise(
             name: e.name,
             exerciseDescription: e.exerciseDescription ?? "",
-            gifAssetName: e.gifAssetName ?? "",
+            mediaAssetName: e.mediaAssetName ?? "",
             category: ExerciseCategory(rawValue: e.category) ?? .compound,
             equipment: ExerciseEquipment(rawValue: e.equipment) ?? .barbell,
             difficulty: ExerciseDifficulty(rawValue: e.difficulty) ?? .intermediate,
@@ -216,7 +216,7 @@ struct ExerciseSetExportItem: Codable {
     let exerciseName: String
     let exerciseNameSnapshot: String?
     let exerciseUUIDSnapshot: String?
-    let exerciseGifAssetName: String?
+    let exerciseMediaAssetName: String?
     let isUnilateralSnapshot: Bool?
     let setNumber: Int
     let weight: Double?
@@ -247,7 +247,7 @@ extension ExerciseSet {
             exerciseName: exerciseName,
             exerciseNameSnapshot: exerciseNameSnapshot.isEmpty ? nil : exerciseNameSnapshot,
             exerciseUUIDSnapshot: exerciseUUIDSnapshot.isEmpty ? nil : exerciseUUIDSnapshot,
-            exerciseGifAssetName: exerciseGifAssetName.isEmpty ? nil : exerciseGifAssetName,
+            exerciseMediaAssetName: exerciseMediaAssetName.isEmpty ? nil : exerciseMediaAssetName,
             isUnilateralSnapshot: isUnilateralSnapshot ? true : nil,
             setNumber: setNumber,
             weight: weight > 0 ? weight : nil,
@@ -289,7 +289,7 @@ extension ExerciseSet {
             exerciseName: e.exerciseName,
             exerciseNameSnapshot: e.exerciseNameSnapshot ?? e.exerciseName,
             exerciseUUIDSnapshot: resolvedUUID,
-            exerciseGifAssetName: e.exerciseGifAssetName ?? "",
+            exerciseMediaAssetName: e.exerciseMediaAssetName ?? "",
             isUnilateralSnapshot: e.isUnilateralSnapshot ?? false,
             setNumber: e.setNumber,
             weight: e.weight ?? 0.0,

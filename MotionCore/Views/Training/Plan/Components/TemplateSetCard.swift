@@ -14,7 +14,7 @@ import SwiftUI
 
 struct TemplateSetCard<Trailing: View>: View {
     let exerciseName: String
-    let gifAssetName: String
+    let mediaAssetName: String
     let sets: [ExerciseSet]
     let onDelete: () -> Void
     let onEdit: () -> Void
@@ -25,7 +25,7 @@ struct TemplateSetCard<Trailing: View>: View {
 
     init(
         exerciseName: String,
-        gifAssetName: String,
+        mediaAssetName: String,
         sets: [ExerciseSet],
         onDelete: @escaping () -> Void,
         onEdit: @escaping () -> Void,
@@ -33,7 +33,7 @@ struct TemplateSetCard<Trailing: View>: View {
         @ViewBuilder trailing: @escaping () -> Trailing
     ) {
         self.exerciseName = exerciseName
-        self.gifAssetName = gifAssetName
+        self.mediaAssetName = mediaAssetName
         self.sets = sets
         self.onDelete = onDelete
         self.onEdit = onEdit
@@ -60,7 +60,10 @@ struct TemplateSetCard<Trailing: View>: View {
 
             // Header mit Übungsinfo
             HStack(spacing: 12) {
-                ExerciseGifView(assetName: gifAssetName, size: 56)
+                ExerciseVideoView(
+                    assetName: mediaAssetName,
+                    size: 56
+                )
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(exerciseName)
@@ -243,7 +246,7 @@ struct TemplateSetCard<Trailing: View>: View {
 extension TemplateSetCard where Trailing == EmptyView {
     init(
         exerciseName: String,
-        gifAssetName: String,
+        mediaAssetName: String,
         sets: [ExerciseSet],
         onDelete: @escaping () -> Void,
         onEdit: @escaping () -> Void,
@@ -251,7 +254,7 @@ extension TemplateSetCard where Trailing == EmptyView {
     ) {
         self.init(
             exerciseName: exerciseName,
-            gifAssetName: gifAssetName,
+            mediaAssetName: mediaAssetName,
             sets: sets,
             onDelete: onDelete,
             onEdit: onEdit,
@@ -271,7 +274,7 @@ extension TemplateSetCard where Trailing == EmptyView {
         VStack(spacing: 16) {
             TemplateSetCard(
                 exerciseName: "Bankdrücken",
-                gifAssetName: "",
+                mediaAssetName: "",
                 sets: [
                     ExerciseSet(exerciseName: "Bankdrücken", setNumber: 1, weight: 40, reps: 10, setKind: .warmup),
                     ExerciseSet(exerciseName: "Bankdrücken", setNumber: 2, weight: 60, reps: 10, setKind: .warmup),
@@ -285,7 +288,7 @@ extension TemplateSetCard where Trailing == EmptyView {
 
             TemplateSetCard(
                 exerciseName: "Kniebeugen",
-                gifAssetName: "",
+                mediaAssetName: "",
                 sets: [
                     ExerciseSet(exerciseName: "Kniebeugen", setNumber: 1, weight: 100, reps: 8, setKind: .work),
                     ExerciseSet(exerciseName: "Kniebeugen", setNumber: 2, weight: 100, reps: 8, setKind: .work),

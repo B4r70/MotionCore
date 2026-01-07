@@ -18,11 +18,7 @@ struct AboutView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
-                Image(.appIcon)
-                    .font(.system(size: 10))
-                    .scaleEffect(0.5)
-                    .foregroundStyle(.orange)
-                    .padding(.top, 5)
+                AppIconView(size: 120)
 
                 Text("MotionCore")
                     .font(.largeTitle.bold())

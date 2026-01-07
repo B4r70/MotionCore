@@ -21,8 +21,11 @@ struct ExerciseCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 16) {
-                // GIF Thumbnail oder Placeholder
-                ExerciseGifView(assetName: exercise.gifAssetName, size: 80)
+                // MP4 Thumbnail oder Placeholder
+                ExerciseVideoView(
+                    assetName: exercise.mediaAssetName,
+                    size: 80
+                )
 
                 // Info
                 VStack(alignment: .leading, spacing: 8) {

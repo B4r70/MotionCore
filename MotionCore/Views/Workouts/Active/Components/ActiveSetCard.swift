@@ -22,7 +22,15 @@ struct ActiveSetCard: View {
     var body: some View {
         VStack(spacing: 20) {
             HStack(spacing: 16) {
-                ExerciseGifView(assetName: set.exerciseGifAssetName, size: 80)
+                // Anzeige des Übungs-Darstellung sofern vorhanden
+                ExerciseVideoView(
+                    assetName: set.exerciseMediaAssetName,
+                    size: 80
+                )
+                .fixedSize(
+                    horizontal: true,
+                    vertical: true
+                )
 
                 VStack(alignment: .leading, spacing: 4) {
                     if set.setKind != .work {

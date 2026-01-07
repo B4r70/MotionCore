@@ -540,17 +540,17 @@ struct ExerciseSecondaryMuscleGroupsSection: View {
     }
 }
 
-// MARK: Exercise GIF Asset Section
-struct ExerciseGifAssetSection: View {
-    @Binding var gifAssetName: String
+// MARK: Exercise Media Asset Section
+struct ExerciseMediaAssetSection: View {
+    @Binding var mediaAssetName: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("GIF-Name (optional)")
+            Text("Media-Name (optional)")
                 .font(.headline)
                 .foregroundStyle(.primary)
 
-            TextField("z.B. bench_press", text: $gifAssetName)
+            TextField("z.B. bench_press", text: $mediaAssetName)
                 .textFieldStyle(.plain)
                 .padding(12)
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))

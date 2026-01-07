@@ -19,7 +19,7 @@ final class Exercise {
 
     var name: String = ""                   // Name der Übung (z.B. "Bankdrücken")
     var exerciseDescription: String = ""    // Beschreibung/Ausführung
-    var gifAssetName: String = ""           // Name des GIF-Assets
+    var mediaAssetName: String = ""         // Name des Media-Assets
     var isCustom: Bool = false              // Vom Benutzer erstellt?
     var isFavorite: Bool = false            // Favorit markiert?
     var createdAt: Date = Date()            // Erstellungsdatum
@@ -97,9 +97,9 @@ final class Exercise {
         allMuscles.contains(.fullBody)
     }
 
-    // Hat ein GIF?
-    var hasGif: Bool {
-        !gifAssetName.isEmpty
+    // Hat eine Darstellung?
+    var hasMedia: Bool {
+        !mediaAssetName.isEmpty
     }
 
     // Berechnete Werte für Rep-Range
@@ -124,7 +124,7 @@ final class Exercise {
     init(
         name: String = "",
         exerciseDescription: String = "",
-        gifAssetName: String = "",
+        mediaAssetName: String = "",
         category: ExerciseCategory = .compound,
         equipment: ExerciseEquipment = .barbell,
         difficulty: ExerciseDifficulty = .intermediate,
@@ -143,7 +143,7 @@ final class Exercise {
     ) {
         self.name = name
         self.exerciseDescription = exerciseDescription
-        self.gifAssetName = gifAssetName
+        self.mediaAssetName = mediaAssetName
         self.categoryRaw = category.rawValue
         self.equipmentRaw = equipment.rawValue
         self.difficultyRaw = difficulty.rawValue

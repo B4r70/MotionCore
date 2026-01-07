@@ -46,7 +46,10 @@ struct SetEditSheet: View {
                 VStack(spacing: 24) {
                     // Übungs-Info
                     HStack {
-                        ExerciseGifView(assetName: set.exerciseGifAssetName, size: 60)
+                        ExerciseVideoView(
+                            assetName: set.exerciseMediaAssetName,
+                            size: 60
+                        )
 
                         VStack(alignment: .leading) {
                             Text(set.exerciseName)
@@ -245,7 +248,7 @@ struct SetEditSheet: View {
             exerciseName: set.exerciseName,
             exerciseNameSnapshot: set.exerciseNameSnapshot,
             exerciseUUIDSnapshot: set.exerciseUUIDSnapshot,
-            exerciseGifAssetName: set.exerciseGifAssetName,
+            exerciseMediaAssetName: set.exerciseMediaAssetName,
             setNumber: nextSetNumber,
             weight: set.weight,
             weightPerSide: set.weightPerSide,

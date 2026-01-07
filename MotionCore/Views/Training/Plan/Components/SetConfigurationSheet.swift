@@ -20,7 +20,7 @@ struct SetConfigurationSheet: View {
 
     // Quelle 2: Snapshot (Edit ohne Exercise-Relationship)
     private let snapshotName: String
-    private let snapshotGifAssetName: String
+    private let snapshotMediaAssetName: String
     private let snapshotIsUnilateral: Bool
 
     let onSave: ([ExerciseSet]) -> Void
@@ -28,7 +28,7 @@ struct SetConfigurationSheet: View {
 
     // Display (computed)
     private var displayName: String { exercise?.name ?? snapshotName }
-    private var displayGif: String { exercise?.gifAssetName ?? snapshotGifAssetName }
+    private var displayMedia: String { exercise?.mediaAssetName ?? snapshotMediaAssetName }
     private var displayIsUnilateral: Bool { exercise?.isUnilateral ?? snapshotIsUnilateral }
 
     // MARK: - Init A: Normal mit Exercise
@@ -41,7 +41,7 @@ struct SetConfigurationSheet: View {
 
         // NEU: Snapshot-Fallbacks IMMER initialisieren (stored props müssen gesetzt sein)
         self.snapshotName = exercise.name
-        self.snapshotGifAssetName = exercise.gifAssetName
+        self.snapshotMediaAssetName = exercise.mediaAssetName
         self.snapshotIsUnilateral = exercise.isUnilateral
 
         self.initialSets = initialSets
@@ -65,7 +65,7 @@ struct SetConfigurationSheet: View {
     // MARK: - Init B: Snapshot (ohne Exercise)
     init(
         exerciseName: String,
-        gifAssetName: String,
+        mediaAssetName: String,
         isUnilateral: Bool = false,
         initialSets: [ExerciseSet]? = nil,
         onSave: @escaping ([ExerciseSet]) -> Void
@@ -73,7 +73,7 @@ struct SetConfigurationSheet: View {
         self.exercise = nil
 
         self.snapshotName = exerciseName
-        self.snapshotGifAssetName = gifAssetName
+        self.snapshotMediaAssetName = mediaAssetName
         self.snapshotIsUnilateral = isUnilateral
 
         self.initialSets = initialSets
@@ -198,7 +198,10 @@ struct SetConfigurationSheet: View {
     // MARK: - Subviews
     private var exerciseInfoCard: some View {
         HStack(spacing: 16) {
-            ExerciseGifView(assetName: displayGif, size: 80)
+            ExerciseVideoView(
+                assetName: displayMedia,
+                size: 80
+            )
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(displayName)
@@ -536,7 +539,7 @@ struct SetConfigurationSheet: View {
                 exerciseName: snapshotName,
                 exerciseNameSnapshot: snapshotName,
                 exerciseUUIDSnapshot: "",
-                exerciseGifAssetName: snapshotGifAssetName,
+                exerciseMediaAssetName: snapshotMediaAssetName,
                 setNumber: setNumber,
                 weight: weight,
                 reps: reps

@@ -274,7 +274,7 @@ struct StrengthDetailView: View {
                 if let firstSet = sets.first {
                     exerciseDetailCard(
                         name: firstSet.exerciseName,
-                        gifAssetName: firstSet.exerciseGifAssetName,
+                        mediaAssetName: firstSet.exerciseMediaAssetName,
                         sets: sets,
                         index: index + 1
                     )
@@ -284,7 +284,7 @@ struct StrengthDetailView: View {
         .glassCard()
     }
 
-    private func exerciseDetailCard(name: String, gifAssetName: String, sets: [ExerciseSet], index: Int) -> some View {
+    private func exerciseDetailCard(name: String, mediaAssetName: String, sets: [ExerciseSet], index: Int) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack(spacing: 12) {
@@ -294,7 +294,10 @@ struct StrengthDetailView: View {
                     .frame(width: 24, height: 24)
                     .background(Circle().fill(.blue))
 
-                ExerciseGifView(assetName: gifAssetName, size: 44)
+                ExerciseVideoView(
+                    assetName: mediaAssetName,
+                    size: 44
+                )
 
                 Text(name)
                     .font(.headline)

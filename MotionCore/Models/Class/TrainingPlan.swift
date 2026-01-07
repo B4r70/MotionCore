@@ -108,7 +108,7 @@ final class TrainingPlan {
                 exerciseName: templateSet.exerciseName,
                 exerciseNameSnapshot: templateSet.exerciseNameSnapshot,
                 exerciseUUIDSnapshot: templateSet.exerciseUUIDSnapshot,
-                exerciseGifAssetName: templateSet.exerciseGifAssetName,
+                exerciseMediaAssetName: templateSet.exerciseMediaAssetName,
                 setNumber: templateSet.setNumber,
                 weight: templateSet.weight,
                 weightPerSide: templateSet.weightPerSide,

@@ -67,8 +67,8 @@ struct ExerciseFormView: View {
                         // MARK: Sekundäre Muskelgruppen
                         ExerciseSecondaryMuscleGroupsSection(selectedMuscles: $exercise.secondaryMuscles)
 
-                        // MARK: GIF Asset Name
-                        ExerciseGifAssetSection(gifAssetName: $exercise.gifAssetName)
+                        // MARK: Media Asset Name
+                        ExerciseMediaAssetSection(mediaAssetName: $exercise.mediaAssetName)
 
                         // MARK: Unilateral Toggle
                         ExerciseUnilateralToggle(isUnilateral: $exercise.isUnilateral)

@@ -227,9 +227,12 @@ private struct ExercisePickerRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            // GIF Thumbnail
-            ExerciseGifView(assetName: exercise.gifAssetName, size: 56)
-            
+            // Media Thumbnail
+            ExerciseVideoView(
+                assetName: exercise.mediaAssetName,
+                size: 56
+            )
+
             // Info
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name)

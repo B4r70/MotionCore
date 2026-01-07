@@ -168,7 +168,7 @@ struct PlanExercisesSection: View {
                     if let firstSet = setsGroup.first {
                         ExerciseDetailRow(
                             exerciseName: firstSet.exerciseName,
-                            gifAssetName: firstSet.exerciseGifAssetName,
+                            mediaAssetName: firstSet.exerciseMediaAssetName,
                             sets: setsGroup,
                             index: index + 1
                         )
@@ -210,7 +210,7 @@ struct ReorderableExerciseList: View {
                     if let firstSet = setsGroup.first {
                         ReorderableCard(
                             exerciseName: firstSet.exerciseName,
-                            gifAssetName: firstSet.exerciseGifAssetName,
+                            mediaAssetName: firstSet.exerciseMediaAssetName,
                             sets: setsGroup,
                             index: index,
                             isDragging: draggingIndex == index,
@@ -236,7 +236,7 @@ struct ReorderableExerciseList: View {
 
                 FloatingDragCard(
                     exerciseName: firstSet.exerciseName,
-                    gifAssetName: firstSet.exerciseGifAssetName,
+                    mediaAssetName: firstSet.exerciseMediaAssetName,
                     sets: setsGroup
                 )
                 .offset(y: yPosition + dragOffset.height)
@@ -355,7 +355,7 @@ struct ReorderableExerciseList: View {
 
 private struct ReorderableCard: View {
     let exerciseName: String
-    let gifAssetName: String
+    let mediaAssetName: String
     let sets: [ExerciseSet]
     let index: Int
     let isDragging: Bool
@@ -373,7 +373,7 @@ private struct ReorderableCard: View {
     var body: some View {
         TemplateSetCard(
             exerciseName: exerciseName,
-            gifAssetName: gifAssetName,
+            mediaAssetName: mediaAssetName,
             sets: sets,
             onDelete: onDelete,
             onEdit: onEdit,
@@ -432,13 +432,13 @@ private struct ReorderableCard: View {
 
 private struct FloatingDragCard: View {
     let exerciseName: String
-    let gifAssetName: String
+    let mediaAssetName: String
     let sets: [ExerciseSet]
 
     var body: some View {
         TemplateSetCard(
             exerciseName: exerciseName,
-            gifAssetName: gifAssetName,
+            mediaAssetName: mediaAssetName,
             sets: sets,
             onDelete: {},
             onEdit: {}
@@ -465,7 +465,7 @@ private extension Array {
 
 struct ExerciseDetailRow: View {
     let exerciseName: String
-    let gifAssetName: String
+    let mediaAssetName: String
     let sets: [ExerciseSet]
     let index: Int
 
@@ -484,8 +484,11 @@ struct ExerciseDetailRow: View {
                 .foregroundStyle(.white)
                 .frame(width: 24, height: 24)
                 .background(Circle().fill(.blue))
-
-            ExerciseGifView(assetName: gifAssetName, size: 50)
+            // Anzeige MP4 Übungsdurchführung
+            ExerciseVideoView(
+                assetName: mediaAssetName,
+                size: 50
+            )
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(exerciseName)

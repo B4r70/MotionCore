@@ -36,7 +36,7 @@ struct TrainingFormView: View {
         let id = UUID()
         let exercise: Exercise?              // optional: Library-Exercise
         let exerciseName: String             // Snapshot-Fallback
-        let gifAssetName: String             // Snapshot-Fallback
+        let mediaAssetName: String             // Snapshot-Fallback
         let isUnilateral: Bool               // Snapshot-Fallback
         let sets: [ExerciseSet]              // ORIGINALE Sets (nur zum Vorbefüllen)
         let sortOrder: Int                   // Gruppen-Key im Plan
@@ -88,7 +88,7 @@ struct TrainingFormView: View {
                 editExerciseContext = EditExerciseContext(
                     exercise: exercise,
                     exerciseName: exercise.name,
-                    gifAssetName: exercise.gifAssetName,
+                    mediaAssetName: exercise.mediaAssetName,
                     isUnilateral: exercise.isUnilateral,
                     sets: [],
                     sortOrder: plan.nextSortOrder
@@ -109,7 +109,7 @@ struct TrainingFormView: View {
                 } else {
                     SetConfigurationSheet(
                         exerciseName: ctx.exerciseName,
-                        gifAssetName: ctx.gifAssetName,
+                        mediaAssetName: ctx.mediaAssetName,
                         isUnilateral: ctx.isUnilateral,
                         initialSets: ctx.sets.isEmpty ? nil : ctx.sets
                     ) { newSets in
@@ -205,7 +205,7 @@ struct TrainingFormView: View {
         editExerciseContext = EditExerciseContext(
             exercise: firstSet.exercise,
             exerciseName: (firstSet.exerciseNameSnapshot.isEmpty ? firstSet.exerciseName : firstSet.exerciseNameSnapshot),
-            gifAssetName: firstSet.exerciseGifAssetName,
+            mediaAssetName: firstSet.exerciseMediaAssetName,
             isUnilateral: resolvedIsUnilateral,
             sets: originalSets, // ORIGINALE Sets nur zum Vorbefüllen
             sortOrder: targetOrder

@@ -21,7 +21,7 @@ final class ExerciseSet {
     var exerciseName: String = ""                // Name der Übung
     var exerciseNameSnapshot: String = ""        // Snapshot des Namens bei Erstellung
     var exerciseUUIDSnapshot: String = ""        // UUID-Snapshot für stabile Verknüpfung
-    var exerciseGifAssetName: String = ""        // Name des GIF-Assets
+    var exerciseMediaAssetName: String = ""      // Name des Media-Assets
 
     // Snapshot für unilateral (damit Edit ohne Relationship korrekt ist)
     var isUnilateralSnapshot: Bool = false
@@ -89,7 +89,7 @@ final class ExerciseSet {
             exerciseName: exercise.name,
             exerciseNameSnapshot: exercise.name,
             exerciseUUIDSnapshot: exercise.persistentModelID.hashValue.description,
-            exerciseGifAssetName: exercise.gifAssetName,
+            exerciseMediaAssetName: exercise.mediaAssetName,
             isUnilateralSnapshot: exercise.isUnilateral, // NEU
             setNumber: setNumber,
             weight: weight,
@@ -153,7 +153,7 @@ final class ExerciseSet {
         exerciseName: String = "",
         exerciseNameSnapshot: String = "",
         exerciseUUIDSnapshot: String = "",
-        exerciseGifAssetName: String = "",
+        exerciseMediaAssetName: String = "",
         isUnilateralSnapshot: Bool = false,
         setNumber: Int = 1,
         weight: Double = 0.0,
@@ -175,7 +175,7 @@ final class ExerciseSet {
         self.exerciseName = exerciseName
         self.exerciseNameSnapshot = exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot
         self.exerciseUUIDSnapshot = exerciseUUIDSnapshot
-        self.exerciseGifAssetName = exerciseGifAssetName
+        self.exerciseMediaAssetName = exerciseMediaAssetName
         self.isUnilateralSnapshot = isUnilateralSnapshot
         self.setNumber = setNumber
         self.weight = weight
@@ -204,7 +204,7 @@ extension ExerciseSet {
             exerciseName: exerciseName,
             exerciseNameSnapshot: exerciseNameSnapshot,
             exerciseUUIDSnapshot: exerciseUUIDSnapshot,
-            exerciseGifAssetName: exerciseGifAssetName,
+            exerciseMediaAssetName: exerciseMediaAssetName,
             setNumber: setNumber,
             weight: weight,
             weightPerSide: weightPerSide,
