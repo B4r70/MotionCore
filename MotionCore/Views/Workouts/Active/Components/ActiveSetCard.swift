@@ -16,6 +16,7 @@ struct ActiveSetCard: View {
     let set: ExerciseSet
     let setsForCurrentExercise: Int
 
+
     @Binding var selectedSetForEdit: ExerciseSet?
     let onComplete: (ExerciseSet) -> Void
 
