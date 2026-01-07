@@ -9,6 +9,9 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
+// Hinweis  . . :  SummaryView als erster Tab hinzugefügt.                      /
+//                 Statistik und Rekorde in einem Tab kombiniert.               /
+// ---------------------------------------------------------------------------------/
 //
 import SwiftData
 import SwiftUI
@@ -18,7 +21,8 @@ struct BaseView: View {
     @EnvironmentObject private var activeSessionManager: ActiveSessionManager
     @Environment(\.modelContext) private var context
 
-    @State private var selectedTab: Tab = .workouts
+    //  Default-Tab auf .summary geändert
+    @State private var selectedTab: Tab = .summary
 
     // Workout-Erstellung
     @State private var showingWorkoutPicker = false
@@ -69,14 +73,41 @@ struct BaseView: View {
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 
+    //  Tab-Enum angepasst (5 Tabs: summary, workouts, stats, health, training)
     enum Tab: Hashable {
-        case workouts, statistics, health, records, training
+        case summary, workouts, stats, health, training
     }
 
     var body: some View {
         TabView(selection: $selectedTab) {
 
-            // MARK: Tab 1 - Workouts
+            // MARK: Tab 1 - Summary (NEU)
+            NavigationStack {
+                SummaryView()
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Übersicht"
+                            )
+                        }
+
+                        ToolbarItem(placement: .topBarTrailing) {
+                            NavigationLink {
+                                MainSettingsView()
+                            } label: {
+                                ToolbarButton(icon: .system("gearshape"))
+                            }
+                        }
+                    }
+            }
+            .tabItem {
+                Label("Übersicht", systemImage: "square.grid.2x2")
+            }
+            .tag(Tab.summary)
+
+            // MARK: Tab 2 - Workouts
             NavigationStack {
                 ListViewWrapper(
                     selectedDeviceFilter: $selectedDeviceFilter,
@@ -118,10 +149,9 @@ struct BaseView: View {
             }
             .tag(Tab.workouts)
 
-            // MARK: Tab 2 - Statistiken
-
+            // MARK: Tab 3 - Statistiken & Rekorde ( Kombiniert)
             NavigationStack {
-                StatisticView()
+                StatsAndRecordsView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
@@ -133,12 +163,11 @@ struct BaseView: View {
                     }
             }
             .tabItem {
-                Label("Statistiken", systemImage: "chart.bar.fill")
+                Label("Statistik", systemImage: "chart.bar.fill")
             }
-            .tag(Tab.statistics)
+            .tag(Tab.stats)
 
-            // MARK: Tab 3 - Gesundheitsdaten
-
+            // MARK: Tab 4 - Gesundheitsdaten
             NavigationStack {
                 HealthMetricView()
                     .navigationBarTitleDisplayMode(.inline)
@@ -156,27 +185,7 @@ struct BaseView: View {
             }
             .tag(Tab.health)
 
-            // MARK: Tab 4 - Rekorde
-
-            NavigationStack {
-                RecordView()
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            HeaderView(
-                                title: "MotionCore",
-                                subtitle: "Rekorde"
-                            )
-                        }
-                    }
-            }
-            .tabItem {
-                Label("Rekorde", systemImage: "trophy.fill")
-            }
-            .tag(Tab.records)
-
             // MARK: Tab 5 - Trainingsplan
-
             NavigationStack {
                 TrainingListView()
                     .navigationBarTitleDisplayMode(.inline)

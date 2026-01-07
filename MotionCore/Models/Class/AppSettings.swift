@@ -34,6 +34,13 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // Anzeigedefaults: Anzeige Exercise Display
+    @Published var showExerciseVideos: Bool {
+        didSet {
+            UserDefaults.standard.set(showExerciseVideos, forKey: "display.showExerciseVideos")
+        }
+    }
+
     // MARK: Workoutdefaults in AppSettings
     // Workoutdefaults: Trainingsgerät aus Enumeration
     @Published var defaultDevice: CardioDevice {
@@ -163,13 +170,16 @@ class AppSettings: ObservableObject {
         // Display: Animierter Hintergrund
         showAnimatedBlob = defaults.bool(forKey: "display.showAnimatedBlob")
 
-        // Theme aus UserDefaults laden (oder .system, wenn nichts gesetzt)
-        if let raw = UserDefaults.standard.string(forKey: "display.appTheme"),
+        // Display: Theme aus UserDefaults laden (oder .system, wenn nichts gesetzt)
+        if let raw = defaults.string(forKey: "display.appTheme"),
            let loaded = AppTheme(rawValue: raw) {
-            self.appTheme = loaded
+            appTheme = loaded
         } else {
-            self.appTheme = .system
+            appTheme = .system
         }
+
+        // Display: Übungsvideos anzeigen (Default: true)
+        showExerciseVideos = defaults.object(forKey: "display.showExerciseVideos") as? Bool ?? true
 
         // Workout: Device
         let deviceRaw = defaults.integer(forKey: "workout.defaultDevice")

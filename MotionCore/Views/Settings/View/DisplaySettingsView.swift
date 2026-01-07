@@ -32,8 +32,7 @@ struct DisplaySettingsView: View {
                 }
                 .pickerStyle(.segmented)
                 .tint(.primary)
-            }
-            header: {
+            } header: {
                 Text("Erscheinungsbild")
             }
 
@@ -51,6 +50,21 @@ struct DisplaySettingsView: View {
             } header: {
                 Text("Specials")
             }
+
+            // MARK: Übungsvideos
+            Section {
+                Toggle(isOn: $appSettings.showExerciseVideos) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Übungsvideos anzeigen")
+                            .font(.body)
+                        Text("Blendet Videos zu Übungen ein (z. B. in der Satz-Ansicht).")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("Übungen")
+            }
         }
         .navigationTitle("Anzeigeeinstellungen")
         .navigationBarTitleDisplayMode(.inline)
@@ -62,5 +76,6 @@ struct DisplaySettingsView: View {
 #Preview {
     NavigationStack {
         DisplaySettingsView()
+            .environmentObject(AppSettings.shared)
     }
 }

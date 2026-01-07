@@ -15,6 +15,7 @@ import AVKit
 import UIKit
 
 struct ExerciseVideoView: View {
+    @EnvironmentObject private var appSettings: AppSettings
     let assetName: String
     var size: CGFloat = 120
 
@@ -27,6 +28,27 @@ struct ExerciseVideoView: View {
     @State private var previewPlayer: AVQueuePlayer?
     @State private var previewLooper: AVPlayerLooper?
 
+    private enum DisplayState: Equatable {
+        case disabled
+        case placeholder
+        case playing
+        case previewing
+    }
+
+    private var hasAsset: Bool { !assetName.isEmpty }
+
+    private var canPreview: Bool {
+        appSettings.showExerciseVideos && hasAsset
+    }
+
+    private var displayState: DisplayState {
+        if !appSettings.showExerciseVideos { return .disabled }
+        if !hasAsset { return .placeholder }
+        if isPreviewing { return .previewing }
+        if player != nil { return .playing }
+        return .placeholder
+    }
+
     var body: some View {
         ZStack {
             mainContent
@@ -34,6 +56,13 @@ struct ExerciseVideoView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .contentShape(RoundedRectangle(cornerRadius: 12))
                 .onAppear { setupMainIfNeeded() }
+                .onChange(of: appSettings.showExerciseVideos) { _, newValue in
+                    if !newValue {
+                        teardownAll()
+                    } else {
+                        setupMainIfNeeded()
+                    }
+                }
                 .onDisappear {
                     player?.pause()
                     previewPlayer?.pause()
@@ -43,47 +72,54 @@ struct ExerciseVideoView: View {
                 .highPriorityGesture(
                     LongPressGesture(minimumDuration: 0.15, maximumDistance: 40)
                         .onChanged { _ in
-                            // Fire once when entering preview
-                            if !isPreviewing {
-                                withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                                    isPreviewing = true
-                                }
-                                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-                                startPreview()
+                            guard canPreview else { return }
+                            guard !isPreviewing else { return }
+
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                isPreviewing = true
                             }
+                            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                            startPreview()
                         }
                         .onEnded { _ in
-                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                                isPreviewing = false
-                            }
-                            previewPlayer?.pause()
-
-                            // Optional cleanup (uncomment if you want to fully release resources after each press)
-                            // previewPlayer = nil
-                            // previewLooper = nil
+                            guard canPreview else { return }
+                            stopPreview()
                         }
                 )
 
-            if isPreviewing {
-                previewOverlay
-                    .transition(.opacity)
+            if displayState == .previewing && canPreview {
+                previewOverlay.transition(.opacity)
             }
         }
+    }
+
+    private func teardownAll() {
+        player?.pause()
+        previewPlayer?.pause()
+
+        player = nil
+        looper = nil
+        previewPlayer = nil
+        previewLooper = nil
+        isPreviewing = false
     }
 
     // MARK: - Main Content
 
     @ViewBuilder
     private var mainContent: some View {
-        if assetName.isEmpty {
+        switch displayState {
+        case .disabled, .placeholder:
             placeholder
-        } else if let player {
-            VideoPlayer(player: player)
-                .disabled(true)
-                // Critical: AVKit can swallow touches; ensure SwiftUI wrapper receives gestures.
-                .allowsHitTesting(false)
-        } else {
-            placeholder
+
+        case .playing, .previewing:
+            if let player {
+                VideoPlayer(player: player)
+                    .disabled(true)
+                    .allowsHitTesting(false)
+            } else {
+                placeholder
+            }
         }
     }
 
@@ -96,6 +132,7 @@ struct ExerciseVideoView: View {
     }
 
     private func setupMainIfNeeded() {
+        guard appSettings.showExerciseVideos else { return }
         guard player == nil, !assetName.isEmpty else { return }
         guard let url = mediaURL(for: assetName) else { return }
 
@@ -103,9 +140,7 @@ struct ExerciseVideoView: View {
         let q = AVQueuePlayer()
         q.isMuted = true
 
-        // Hold looper strongly (State) – otherwise it stops looping
         looper = AVPlayerLooper(player: q, templateItem: item)
-
         player = q
         q.play()
     }
@@ -119,10 +154,9 @@ struct ExerciseVideoView: View {
                 .onTapGesture { stopPreview() }
 
             Group {
-                if let previewPlayer {
+                if appSettings.showExerciseVideos, let previewPlayer {
                     VideoPlayer(player: previewPlayer)
                         .disabled(true)
-                        // NOTE: Do NOT set allowsHitTesting(false) here, otherwise taps may "pass through".
                 } else {
                     placeholder
                 }
@@ -136,9 +170,11 @@ struct ExerciseVideoView: View {
     }
 
     private func startPreview() {
+        guard canPreview else { return }
+            player?.pause()
+        guard appSettings.showExerciseVideos else { return }
         guard !assetName.isEmpty else { return }
 
-        // If already created, just resume playback
         if let previewPlayer {
             previewPlayer.play()
             return
@@ -156,6 +192,7 @@ struct ExerciseVideoView: View {
     }
 
     private func stopPreview() {
+        player?.play()
         withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
             isPreviewing = false
         }
