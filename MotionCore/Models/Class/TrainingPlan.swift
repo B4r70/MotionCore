@@ -135,18 +135,17 @@ final class TrainingPlan {
 
     // Gruppierte Template-Sets, sortiert nach sortOrder
     var groupedTemplateSets: [[ExerciseSet]] {
-        let grouped = Dictionary(grouping: templateSets) { $0.exerciseName }
-        return grouped.values.sorted { group1, group2 in
-            let order1 = group1.first?.sortOrder ?? Int.max
-            let order2 = group2.first?.sortOrder ?? Int.max
-            return order1 < order2
-        }
+        let grouped = Dictionary(grouping: templateSets) { $0.sortOrder }
+        return grouped
+            .keys.sorted()
+            .compactMap { grouped[$0] }
+            .map { $0.sorted(by: { $0.setNumber < $1.setNumber }) }
     }
 
     // Naechste verfuegbare sortOrder fuer neue Uebungen
     var nextSortOrder: Int {
-        let maxOrder = templateSets.map { $0.sortOrder }.max() ?? -1
-        return maxOrder + 1
+        let maxOrder = templateSets.map(\.sortOrder).max() ?? 0
+        return max(maxOrder + 1, 1)
     }
 
     // MARK: Uebungs-Sortierung

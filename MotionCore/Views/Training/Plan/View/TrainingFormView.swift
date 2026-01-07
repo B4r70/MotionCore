@@ -178,14 +178,19 @@ struct TrainingFormView: View {
     // MARK: - Delete
 
     private func deleteExercise(_ set: ExerciseSet) {
-        // Gruppe über sortOrder löschen (stabiler als Name)
         let targetOrder = set.sortOrder
+
+        // 1) Alte Sets dieser Gruppe einsammeln
         let toRemove = plan.templateSets.filter { $0.sortOrder == targetOrder }
 
-        for s in toRemove {
-            plan.templateSets.removeAll { $0.persistentModelID == s.persistentModelID }
-            context.delete(s)
-        }
+        // 2) Aus der Relationship entfernen (einmal!)
+        plan.templateSets.removeAll { $0.sortOrder == targetOrder }
+
+        // 3) Aus dem Context löschen (einmal pro Objekt)
+        toRemove.forEach { context.delete($0) }
+
+        // 4) Persistieren
+        try? context.save()
     }
 
     // MARK: - Edit
@@ -215,23 +220,20 @@ struct TrainingFormView: View {
     // MARK: - Save Sets into Plan
 
     private func addSets(_ sets: [ExerciseSet], keepingSortOrder sortOrder: Int? = nil) {
-        let targetOrder = sortOrder ?? plan.nextSortOrder
-
-        // Alte Sets derselben Übung (über sortOrder) löschen
-        let old = plan.templateSets.filter { $0.sortOrder == targetOrder }
-        for s in old {
-            plan.templateSets.removeAll { $0.persistentModelID == s.persistentModelID }
-            context.delete(s)
+        var targetOrder = sortOrder ?? plan.nextSortOrder
+        if targetOrder <= 0 {
+            let maxOrder = plan.templateSets.map(\.sortOrder).max() ?? 0
+            targetOrder = max(maxOrder + 1, 1)
         }
 
-        // Neue Sets anhängen
+        plan.templateSets.removeAll { $0.sortOrder == targetOrder }
+        // old löschen im context optional wie vorher
+
         for set in sets {
             set.sortOrder = targetOrder
             set.trainingPlan = plan
             plan.templateSets.append(set)
         }
-
-        // Optional: gleich persistieren (kannst du auch nur beim "Save" machen)
         try? context.save()
     }
 }
