@@ -121,7 +121,7 @@ struct SummaryView: View {
                     }
 
                     if summaryCalc.totalWorkouts > 0 {
-                        RecordsCard(
+                        SummaryRecordsCard(
                             highestCaloriesBurn: summaryCalc.highestCaloriesBurn,
                             longestWorkout: summaryCalc.longestWorkout,
                             longestStreak: summaryCalc.longestStreak

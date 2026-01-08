@@ -15,7 +15,7 @@ import SwiftUI
 // MARK: - Records Card
 
 // Sektion mit den wichtigsten Rekorden
-struct RecordsCard: View {
+struct SummaryRecordsCard: View {
     let highestCaloriesBurn: (session: any CoreSession, type: WorkoutType)?
     let longestWorkout: (session: any CoreSession, type: WorkoutType)?
     let longestStreak: Int
