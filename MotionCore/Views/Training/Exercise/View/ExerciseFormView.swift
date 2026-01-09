@@ -26,6 +26,9 @@ struct ExerciseFormView: View {
     // Lösch-Bestätigung
     @State private var showDeleteAlert = false
 
+    // Instruktionen zur Übung
+    @State private var isEditingInstructions = false
+
     var body: some View {
         ZStack {
             // Hintergrund
@@ -45,6 +48,14 @@ struct ExerciseFormView: View {
 
                         // MARK: Beschreibung
                         ExerciseDescriptionSection(description: $exercise.exerciseDescription)
+
+                        // MARK: Übungsanleitung Inline
+                        // 2 verschiedene Modi: presentation: .inline / .sheet
+                        ExerciseInstructionSection(
+                            exercise: exercise,
+                            isEditingInstructions: $isEditingInstructions,
+                            presentation: .inline
+                        )
 
                         // MARK: Kategorie
                         ExerciseCategorySection(category: $exercise.category)
@@ -84,6 +95,11 @@ struct ExerciseFormView: View {
 
                         // MARK: Favorit
                         ExerciseFavoriteToggle(isFavorite: $exercise.isFavorite)
+
+                            // MARK: API-Informationen (nur bei importierten Übungen)
+                        if exercise.isSystemExercise {
+                            ExerciseAPIView(exercise: exercise)
+                        }
                     }
                     .glassCard()
                     .padding(.horizontal)

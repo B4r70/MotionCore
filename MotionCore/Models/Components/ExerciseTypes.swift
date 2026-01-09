@@ -257,3 +257,9 @@ enum SetKind: String, Codable, CaseIterable, Identifiable {
         }
     }
 }
+
+// MARK: - Instructions Presentation Mode
+enum ExerciseInstructionsPresentation {
+    case inline
+    case sheet
+}

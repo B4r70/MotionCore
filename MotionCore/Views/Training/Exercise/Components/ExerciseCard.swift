@@ -46,6 +46,12 @@ struct ExerciseCard: View {
                                 .font(.caption)
                                 .foregroundStyle(.orange)
                         }
+                            // Video verfügbar Badge
+                        if exercise.videoURL != nil {
+                            Image(systemName: "play.circle.fill")
+                                .font(.caption)
+                                .foregroundStyle(.purple)
+                        }
                     }
 
                     // Kategorie & Equipment

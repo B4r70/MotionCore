@@ -1,0 +1,152 @@
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "Indicates whether the request was successful",
+      "example": true
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total number of exercises matching the filters",
+          "example": 12778
+        },
+        "hasNextPage": {
+          "type": "boolean",
+          "description": "Whether there are more results after the current page",
+          "example": true
+        },
+        "hasPreviousPage": {
+          "type": "boolean",
+          "description": "Whether there are results before the current page",
+          "example": false
+        },
+        "nextCursor": {
+          "type": "string",
+          "description": "Cursor for the next page (exercise ID)"
+        },
+        "previousCursor": {
+          "type": "string",
+          "description": "Cursor for the previous page (exercise ID)"
+        }
+      },
+      "required": [
+        "total",
+        "hasNextPage",
+        "hasPreviousPage"
+      ],
+      "description": "Metadata about cursor-based pagination",
+      "title": "Cursor Pagination Metadata"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "exerciseId": {
+            "type": "string",
+            "description": "The id of the exercise",
+            "example": "exr_41n2hxnFMotsXTj3"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the exercise.",
+            "example": "Bench Press"
+          },
+          "equipments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of equipment required for the exercise.",
+            "example": [
+              "Barbell"
+            ]
+          },
+          "bodyParts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Primary body parts targeted by the exercise.",
+            "example": [
+              "Chest"
+            ]
+          },
+          "exerciseType": {
+            "type": "string",
+            "description": "Type of exercise (e.g., cardio,strength).",
+            "example": "strength"
+          },
+          "targetMuscles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Primary muscles targeted by the exercise.",
+            "example": [
+              "Pectoralis Major Clavicular Head"
+            ]
+          },
+          "secondaryMuscles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Secondary muscles engaged during the exercise.",
+            "example": [
+              "Deltoid Anterior",
+              "Pectoralis Major Clavicular Head",
+              "Triceps Brachii"
+            ]
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "URL of the exercise image",
+            "title": "imageUrl of exercises",
+            "example": ""
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Keywords associated with the exercise for searchability.",
+            "example": [
+              "Chest workout with barbell",
+              "Barbell bench press exercise",
+              "Strength training for chest",
+              "Upper body workout with barbell",
+              "Barbell chest exercises",
+              "Bench press for chest muscles",
+              "Building chest muscles with bench press",
+              "Chest strengthening with barbell",
+              "Bench press workout routine",
+              "Barbell exercises for chest muscle growth"
+            ]
+          }
+        },
+        "required": [
+          "exerciseId",
+          "name",
+          "equipments",
+          "bodyParts",
+          "exerciseType",
+          "targetMuscles",
+          "secondaryMuscles",
+          "keywords"
+        ]
+      },
+      "description": "Array of exercises matching the filter criteria",
+      "title": "Filtered Exercise Results"
+    }
+  },
+  "required": [
+    "success",
+    "meta",
+    "data"
+  ]
+}

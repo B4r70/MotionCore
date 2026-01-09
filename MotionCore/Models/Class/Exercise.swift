@@ -15,40 +15,104 @@ import SwiftData
 
 @Model
 final class Exercise {
-    // MARK: - Grunddaten
+    var name: String
+    var exerciseDescription: String
+    var mediaAssetName: String
+    var isCustom: Bool
+    var isFavorite: Bool
+    var createdAt: Date
+    var isUnilateral: Bool
+    var repRangeMin: Int
+    var repRangeMax: Int
+    var sortIndex: Int
+    var cautionNote: String
+    var isArchived: Bool
+    var apiID: String?
+    var isSystemExercise: Bool
+    var videoURL: String?
+    var instructions: String?
+    var localVideoFileName: String?
+    var apiBodyPart: String?
+    var apiTarget: String?
+    var apiEquipment: String?
+    var apiSecondaryMuscles: [String]?
+    var apiOverview: String?          // Ausführliche Beschreibung (v2)
+    var apiExerciseTips: [String]?    // Trainingstipps (v2)
+    var apiVariations: [String]?      // Übungsvariationen (v2)
+    var apiImageURL: String?          // Bild-URL (v2)
+    var apiProvider: String?          // "rapidapi" oder "exercisedb_v2"
+    var categoryRaw: String
+    var equipmentRaw: String
+    var difficultyRaw: String
+    var movementPatternRaw: String
+    var bodyPositionRaw: String
+    var primaryMusclesRaw: [String]
+    var secondaryMusclesRaw: [String]
 
-    var name: String = ""                   // Name der Übung (z.B. "Bankdrücken")
-    var exerciseDescription: String = ""    // Beschreibung/Ausführung
-    var mediaAssetName: String = ""         // Name des Media-Assets
-    var isCustom: Bool = false              // Vom Benutzer erstellt?
-    var isFavorite: Bool = false            // Favorit markiert?
-    var createdAt: Date = Date()            // Erstellungsdatum
+    init(
+        name: String = "",
+        exerciseDescription: String = "",
+        mediaAssetName: String = "",
+        isCustom: Bool = false,
+        isFavorite: Bool = false,
+        createdAt: Date = Date(),
+        isUnilateral: Bool = false,
+        repRangeMin: Int = 8,
+        repRangeMax: Int = 12,
+        sortIndex: Int = 0,
+        cautionNote: String = "",
+        isArchived: Bool = false,
+        apiID: String? = nil,
+        isSystemExercise: Bool = false,
+        videoURL: String? = nil,
+        instructions: String? = nil,
+        localVideoFileName: String? = nil,
+        apiBodyPart: String? = nil,
+        apiTarget: String? = nil,
+        apiEquipment: String? = nil,
+        apiSecondaryMuscles: [String]? = nil,
+        categoryRaw: String = "compound",
+        equipmentRaw: String = "barbell",
+        difficultyRaw: String = "intermediate",
+        movementPatternRaw: String = "push",
+        bodyPositionRaw: String = "standing",
+        primaryMusclesRaw: [String] = [],
+        secondaryMusclesRaw: [String] = []
+    ) {
+        self.name = name
+        self.exerciseDescription = exerciseDescription
+        self.mediaAssetName = mediaAssetName
+        self.isCustom = isCustom
+        self.isFavorite = isFavorite
+        self.createdAt = createdAt
+        self.isUnilateral = isUnilateral
+        self.repRangeMin = repRangeMin
+        self.repRangeMax = repRangeMax
+        self.sortIndex = sortIndex
+        self.cautionNote = cautionNote
+        self.isArchived = isArchived
+        self.apiID = apiID
+        self.isSystemExercise = isSystemExercise
+        self.videoURL = videoURL
+        self.instructions = instructions
+        self.localVideoFileName = localVideoFileName
+        self.apiBodyPart = apiBodyPart
+        self.apiTarget = apiTarget
+        self.apiEquipment = apiEquipment
+        self.apiSecondaryMuscles = apiSecondaryMuscles
+        self.categoryRaw = categoryRaw
+        self.equipmentRaw = equipmentRaw
+        self.difficultyRaw = difficultyRaw
+        self.movementPatternRaw = movementPatternRaw
+        self.bodyPositionRaw = bodyPositionRaw
+        self.primaryMusclesRaw = primaryMusclesRaw
+        self.secondaryMusclesRaw = secondaryMusclesRaw
+    }
+}
 
-    // Zusätzliche Felder
-    var isUnilateral: Bool = false          // Unilateral (einseitig) oder bilateral?
-    var repRangeMin: Int = 8                // Minimale Wiederholungen (z.B. 1 für Maximalkraft)
-    var repRangeMax: Int = 12               // Maximale Wiederholungen (z.B. 12 für Hypertrophie)
-    var sortIndex: Int = 0                  // Sortierungsindex (für automatische Reihenfolge)
-    var cautionNote: String = ""            // Besondere Sicherheitshinweise
-    var isArchived: Bool = false            // Archiviert statt gelöscht
+// MARK: - Computed Properties
 
-    // MARK: - Persistente ENUM-Rohwerte
-
-    var categoryRaw: String = "compound"
-    var equipmentRaw: String = "barbell"
-    var difficultyRaw: String = "intermediate"
-
-    // Weitere Enum-Rohwerte
-    var movementPatternRaw: String = "push"
-    var bodyPositionRaw: String = "standing"
-
-    // MARK: - Muskelgruppen (als String-Arrays)
-
-    var primaryMusclesRaw: [String] = []    // z.B. ["chest"]
-    var secondaryMusclesRaw: [String] = []  // z.B. ["shoulders", "triceps"]
-
-    // MARK: - Typisierte ENUM-Properties
-
+extension Exercise {
     var category: ExerciseCategory {
         get { ExerciseCategory(rawValue: categoryRaw) ?? .compound }
         set { categoryRaw = newValue.rawValue }
@@ -64,7 +128,6 @@ final class Exercise {
         set { difficultyRaw = newValue.rawValue }
     }
 
-    // Typisierte Properties für neue Enums
     var movementPattern: MovementPattern {
         get { MovementPattern(rawValue: movementPatternRaw) ?? .push }
         set { movementPatternRaw = newValue.rawValue }
@@ -85,30 +148,37 @@ final class Exercise {
         set { secondaryMusclesRaw = newValue.map { $0.rawValue } }
     }
 
-    // MARK: - Berechnete Werte
-
-    // Alle trainierten Muskelgruppen (primär + sekundär)
     var allMuscles: [MuscleGroup] {
         Array(Set(primaryMuscles + secondaryMuscles))
     }
 
-    // Ist eine Ganzkörperübung?
     var isFullBody: Bool {
         allMuscles.contains(.fullBody)
     }
 
-    // Hat eine Darstellung?
     var hasMedia: Bool {
-        !mediaAssetName.isEmpty
+        !mediaAssetName.isEmpty || videoURL != nil
     }
 
-    // Berechnete Werte für Rep-Range
-    // Rep-Range als formatierter String
+    var hasLocalVideo: Bool {
+        localVideoFileName != nil
+    }
+
+    var hasRemoteVideo: Bool {
+        videoURL != nil
+    }
+
+    var bestVideoSource: String? {
+        if let localFile = localVideoFileName {
+            return localFile
+        }
+        return videoURL
+    }
+
     var repRangeFormatted: String {
         "\(repRangeMin)-\(repRangeMax) Wdh."
     }
 
-    // Trainingstyp basierend auf Rep-Range
     var trainingType: String {
         switch repRangeMax {
         case 1...3: return "Maximalkraft"
@@ -119,9 +189,35 @@ final class Exercise {
         }
     }
 
-    // MARK: - Initialisierung
+    var sourceLabel: String {
+        if isSystemExercise {
+            return "ExerciseDB"
+        } else if isCustom {
+            return "Eigene Übung"
+        } else {
+            return "Standard"
+        }
+    }
 
-    init(
+    var fullDescription: String {
+        var parts: [String] = []
+
+        if !exerciseDescription.isEmpty {
+            parts.append(exerciseDescription)
+        }
+
+        if let apiInstructions = instructions, !apiInstructions.isEmpty {
+            parts.append(apiInstructions)
+        }
+
+        return parts.joined(separator: "\n\n")
+    }
+}
+
+// MARK: - Convenience Initializer (Enum-basiert)
+
+extension Exercise {
+    convenience init(
         name: String = "",
         exerciseDescription: String = "",
         mediaAssetName: String = "",
@@ -139,26 +235,109 @@ final class Exercise {
         repRangeMax: Int = 12,
         sortIndex: Int = 0,
         cautionNote: String = "",
-        isArchived: Bool = false
+        isArchived: Bool = false,
+        apiID: String? = nil,
+        isSystemExercise: Bool = false,
+        videoURL: String? = nil,
+        instructions: String? = nil,
+        localVideoFileName: String? = nil,
+        apiBodyPart: String? = nil,
+        apiTarget: String? = nil,
+        apiEquipment: String? = nil,
+        apiSecondaryMuscles: [String]? = nil
     ) {
-        self.name = name
-        self.exerciseDescription = exerciseDescription
-        self.mediaAssetName = mediaAssetName
-        self.categoryRaw = category.rawValue
-        self.equipmentRaw = equipment.rawValue
-        self.difficultyRaw = difficulty.rawValue
-        self.movementPatternRaw = movementPattern.rawValue
-        self.bodyPositionRaw = bodyPosition.rawValue
-        self.primaryMusclesRaw = primaryMuscles.map { $0.rawValue }
-        self.secondaryMusclesRaw = secondaryMuscles.map { $0.rawValue }
-        self.isCustom = isCustom
-        self.isFavorite = isFavorite
-        self.isUnilateral = isUnilateral
-        self.repRangeMin = repRangeMin
-        self.repRangeMax = repRangeMax
-        self.sortIndex = sortIndex
-        self.cautionNote = cautionNote
-        self.isArchived = isArchived
-        self.createdAt = Date()
+        self.init(
+            name: name,
+            exerciseDescription: exerciseDescription,
+            mediaAssetName: mediaAssetName,
+            isCustom: isCustom,
+            isFavorite: isFavorite,
+            createdAt: Date(),
+            isUnilateral: isUnilateral,
+            repRangeMin: repRangeMin,
+            repRangeMax: repRangeMax,
+            sortIndex: sortIndex,
+            cautionNote: cautionNote,
+            isArchived: isArchived,
+            apiID: apiID,
+            isSystemExercise: isSystemExercise,
+            videoURL: videoURL,
+            instructions: instructions,
+            localVideoFileName: localVideoFileName,
+            apiBodyPart: apiBodyPart,
+            apiTarget: apiTarget,
+            apiEquipment: apiEquipment,
+            apiSecondaryMuscles: apiSecondaryMuscles,
+            categoryRaw: category.rawValue,
+            equipmentRaw: equipment.rawValue,
+            difficultyRaw: difficulty.rawValue,
+            movementPatternRaw: movementPattern.rawValue,
+            bodyPositionRaw: bodyPosition.rawValue,
+            primaryMusclesRaw: primaryMuscles.map { $0.rawValue },
+            secondaryMusclesRaw: secondaryMuscles.map { $0.rawValue }
+        )
+    }
+}
+
+// MARK: - Methods
+
+extension Exercise {
+    func markVideoAsCached(fileName: String) {
+        self.localVideoFileName = fileName
+    }
+
+    func clearLocalVideo() {
+        self.localVideoFileName = nil
+    }
+
+    func enrichWithAPIData(
+        apiID: String,
+        videoURL: String,
+        instructions: String,
+        apiBodyPart: String,
+        apiTarget: String,
+        apiEquipment: String,
+        apiSecondaryMuscles: [String]
+    ) {
+        self.apiID = apiID
+        self.videoURL = videoURL
+        self.instructions = instructions
+        self.apiBodyPart = apiBodyPart
+        self.apiTarget = apiTarget
+        self.apiEquipment = apiEquipment
+        self.apiSecondaryMuscles = apiSecondaryMuscles
+        self.isSystemExercise = true
+    }
+
+    func matchesSearch(_ searchText: String) -> Bool {
+        guard !searchText.isEmpty else { return true }
+
+        let lowercasedSearch = searchText.lowercased()
+
+        if name.lowercased().contains(lowercasedSearch) {
+            return true
+        }
+
+        if exerciseDescription.lowercased().contains(lowercasedSearch) {
+            return true
+        }
+
+        if primaryMusclesRaw.contains(where: { $0.lowercased().contains(lowercasedSearch) }) {
+            return true
+        }
+
+        if secondaryMusclesRaw.contains(where: { $0.lowercased().contains(lowercasedSearch) }) {
+            return true
+        }
+
+        return false
+    }
+
+    func trainsMuscle(_ muscle: MuscleGroup) -> Bool {
+        return primaryMuscles.contains(muscle) || secondaryMuscles.contains(muscle)
+    }
+
+    func usesEquipment(_ eq: ExerciseEquipment) -> Bool {
+        return equipment == eq
     }
 }

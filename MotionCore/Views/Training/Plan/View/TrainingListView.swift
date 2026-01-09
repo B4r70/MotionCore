@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Trainingsplan                                                    /
-// Datei . . . . : WorkoutPlanView.swift                                            /
+// Datei . . . . : TrainingListView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 19.12.2025                                                       /
 // Beschreibung  : Hauptdisplay für den Bereich Trainingspläne                      /

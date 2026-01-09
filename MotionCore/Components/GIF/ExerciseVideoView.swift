@@ -5,7 +5,7 @@
 // Datei . . . . : ExerciseVideoView.swift                                          /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 06.01.2026                                                       /
-// Beschreibung  : Darstellung der Krafttrainingübung als MP4                       /
+// Beschreibung  : Darstellung der Krafttrainingübung als MP4 (lokal + remote)      /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -16,7 +16,10 @@ import UIKit
 
 struct ExerciseVideoView: View {
     @EnvironmentObject private var appSettings: AppSettings
+
+    // Unterstützt sowohl assetName als auch Exercise-Objekt
     let assetName: String
+    let remoteVideoURL: String?
     var size: CGFloat = 120
 
     // Main player (small thumbnail)
@@ -28,25 +31,55 @@ struct ExerciseVideoView: View {
     @State private var previewPlayer: AVQueuePlayer?
     @State private var previewLooper: AVPlayerLooper?
 
+        // Loading State für Remote Videos
+    @State private var isLoadingRemote = false
+
     private enum DisplayState: Equatable {
         case disabled
         case placeholder
+        case loading
         case playing
         case previewing
     }
 
-    private var hasAsset: Bool { !assetName.isEmpty }
+    private var hasLocalAsset: Bool { !assetName.isEmpty }
+    private var hasRemoteVideo: Bool { remoteVideoURL != nil && !(remoteVideoURL?.isEmpty ?? true) }
+    private var hasAnyVideo: Bool { hasLocalAsset || hasRemoteVideo }
 
     private var canPreview: Bool {
-        appSettings.showExerciseVideos && hasAsset
+        appSettings.showExerciseVideos && hasAnyVideo
     }
 
     private var displayState: DisplayState {
         if !appSettings.showExerciseVideos { return .disabled }
-        if !hasAsset { return .placeholder }
+        if !hasAnyVideo { return .placeholder }
         if isPreviewing { return .previewing }
+        if isLoadingRemote { return .loading }
         if player != nil { return .playing }
         return .placeholder
+    }
+
+    // MARK: - Initializers
+
+    // Bestehender Init (kompatibel mit bestehendem Code)
+    init(assetName: String, size: CGFloat = 120) {
+        self.assetName = assetName
+        self.remoteVideoURL = nil
+        self.size = size
+    }
+
+    // Init mit Exercise-Objekt
+    init(exercise: Exercise, size: CGFloat = 120) {
+        self.assetName = exercise.mediaAssetName
+        self.remoteVideoURL = exercise.videoURL
+        self.size = size
+    }
+
+    // Direkter Init mit Remote-URL
+    init(assetName: String = "", remoteVideoURL: String?, size: CGFloat = 120) {
+        self.assetName = assetName
+        self.remoteVideoURL = remoteVideoURL
+        self.size = size
     }
 
     var body: some View {
@@ -102,6 +135,7 @@ struct ExerciseVideoView: View {
         previewPlayer = nil
         previewLooper = nil
         isPreviewing = false
+        isLoadingRemote = false
     }
 
     // MARK: - Main Content
@@ -109,17 +143,20 @@ struct ExerciseVideoView: View {
     @ViewBuilder
     private var mainContent: some View {
         switch displayState {
-        case .disabled, .placeholder:
-            placeholder
-
-        case .playing, .previewing:
-            if let player {
-                VideoPlayer(player: player)
-                    .disabled(true)
-                    .allowsHitTesting(false)
-            } else {
+            case .disabled, .placeholder:
                 placeholder
-            }
+
+            case .loading:
+                loadingView
+
+            case .playing, .previewing:
+                if let player {
+                    VideoPlayer(player: player)
+                        .disabled(true)
+                        .allowsHitTesting(false)
+                } else {
+                    placeholder
+                }
         }
     }
 
@@ -131,11 +168,31 @@ struct ExerciseVideoView: View {
             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
     }
 
+    // Loading Indicator
+    private var loadingView: some View {
+        ZStack {
+            placeholder
+
+            ProgressView()
+                .tint(.white)
+                .scaleEffect(0.8)
+        }
+    }
+
     private func setupMainIfNeeded() {
         guard appSettings.showExerciseVideos else { return }
-        guard player == nil, !assetName.isEmpty else { return }
-        guard let url = mediaURL(for: assetName) else { return }
+        guard player == nil else { return }
 
+            // Priorität: Erst lokales Asset, dann Remote
+        if hasLocalAsset, let localURL = mediaURL(for: assetName) {
+            setupLocalPlayer(with: localURL)
+        } else if hasRemoteVideo, let remoteURLString = remoteVideoURL, let remoteURL = URL(string: remoteURLString) {
+            setupRemotePlayer(with: remoteURL)
+        }
+    }
+
+    // Setup für lokale Videos
+    private func setupLocalPlayer(with url: URL) {
         let item = AVPlayerItem(url: url)
         let q = AVQueuePlayer()
         q.isMuted = true
@@ -145,7 +202,43 @@ struct ExerciseVideoView: View {
         q.play()
     }
 
-    // MARK: - Preview Overlay
+    // Setup für Remote-Videos
+    private func setupRemotePlayer(with url: URL) {
+        isLoadingRemote = true
+
+        let item = AVPlayerItem(url: url)
+        let q = AVQueuePlayer()
+        q.isMuted = true
+
+            // Warte bis Video bereit ist
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: item,
+            queue: .main
+        ) { _ in
+                // Video hat Ende erreicht, wird durch Looper neu gestartet
+        }
+
+            // Observer für Status
+        let observation = item.observe(\.status, options: [.new]) { item, _ in
+            DispatchQueue.main.async {
+                if item.status == .readyToPlay {
+                    isLoadingRemote = false
+                } else if item.status == .failed {
+                    isLoadingRemote = false
+                    print("⚠️ Remote Video konnte nicht geladen werden: \(url)")
+                }
+            }
+        }
+
+            // Speichere Observer (würde normalerweise in @State, aber hier reicht temporär)
+
+        looper = AVPlayerLooper(player: q, templateItem: item)
+        player = q
+        q.play()
+    }
+
+        // MARK: - Preview Overlay
 
     private var previewOverlay: some View {
         ZStack {
@@ -157,6 +250,8 @@ struct ExerciseVideoView: View {
                 if appSettings.showExerciseVideos, let previewPlayer {
                     VideoPlayer(player: previewPlayer)
                         .disabled(true)
+                } else if isLoadingRemote {
+                    loadingView
                 } else {
                     placeholder
                 }
@@ -171,16 +266,24 @@ struct ExerciseVideoView: View {
 
     private func startPreview() {
         guard canPreview else { return }
-            player?.pause()
+        player?.pause()
         guard appSettings.showExerciseVideos else { return }
-        guard !assetName.isEmpty else { return }
 
         if let previewPlayer {
             previewPlayer.play()
             return
         }
 
-        guard let url = mediaURL(for: assetName) else { return }
+            // Priorität: Lokales Asset, dann Remote
+        var videoURL: URL?
+
+        if hasLocalAsset {
+            videoURL = mediaURL(for: assetName)
+        } else if hasRemoteVideo, let remoteURLString = remoteVideoURL {
+            videoURL = URL(string: remoteURLString)
+        }
+
+        guard let url = videoURL else { return }
 
         let item = AVPlayerItem(url: url)
         let q = AVQueuePlayer()
@@ -199,10 +302,19 @@ struct ExerciseVideoView: View {
         previewPlayer?.pause()
     }
 
-    // MARK: - Helpers
+        // MARK: - Helpers
 
     private func mediaURL(for name: String) -> URL? {
         Bundle.main.url(forResource: name, withExtension: "mp4")
         ?? Bundle.main.url(forResource: name, withExtension: "mov")
+    }
+}
+
+    // MARK: - Convenience Extensions
+
+extension ExerciseVideoView {
+        // Helper für ExerciseCard
+    static func from(_ exercise: Exercise, size: CGFloat = 80) -> ExerciseVideoView {
+        ExerciseVideoView(exercise: exercise, size: size)
     }
 }

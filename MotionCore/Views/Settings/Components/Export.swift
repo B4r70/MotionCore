@@ -147,9 +147,20 @@ struct ExerciseExportItem: Codable {
     let sortIndex: Int?
     let cautionNote: String?
     let isArchived: Bool?
+
+    // ExerciseDB API Felder
+    let apiID: String?
+    let isSystemExercise: Bool?
+    let videoURL: String?
+    let instructions: String?
+    let apiBodyPart: String?
+    let apiTarget: String?
+    let apiEquipment: String?
+    let apiSecondaryMuscles: [String]?
 }
 
 // MARK: Mapper
+
 extension Exercise {
     // → DTO (Export)
     var exportItem: ExerciseExportItem {
@@ -171,7 +182,17 @@ extension Exercise {
             repRangeMax: repRangeMax != 12 ? repRangeMax : nil,
             sortIndex: sortIndex != 0 ? sortIndex : nil,
             cautionNote: cautionNote.isEmpty ? nil : cautionNote,
-            isArchived: isArchived ? true : nil
+            isArchived: isArchived ? true : nil,
+
+            // NEU: API-Felder
+            apiID: apiID,
+            isSystemExercise: isSystemExercise ? true : nil,
+            videoURL: videoURL,
+            instructions: instructions,
+            apiBodyPart: apiBodyPart,
+            apiTarget: apiTarget,
+            apiEquipment: apiEquipment,
+            apiSecondaryMuscles: apiSecondaryMuscles
         )
     }
 
@@ -195,7 +216,18 @@ extension Exercise {
             repRangeMax: e.repRangeMax ?? 12,
             sortIndex: e.sortIndex ?? 0,
             cautionNote: e.cautionNote ?? "",
-            isArchived: e.isArchived ?? false
+            isArchived: e.isArchived ?? false,
+
+            // NEU: API-Felder
+            apiID: e.apiID,
+            isSystemExercise: e.isSystemExercise ?? false,
+            videoURL: e.videoURL,
+            instructions: e.instructions,
+            localVideoFileName: nil, // Wird nicht exportiert (nur temporär gecacht)
+            apiBodyPart: e.apiBodyPart,
+            apiTarget: e.apiTarget,
+            apiEquipment: e.apiEquipment,
+            apiSecondaryMuscles: e.apiSecondaryMuscles
         )
     }
 }

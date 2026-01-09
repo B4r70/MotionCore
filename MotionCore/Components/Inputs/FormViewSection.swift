@@ -434,6 +434,127 @@ struct ExerciseDifficultySection: View {
     }
 }
 
+// MARK: Exercise Instructions
+struct ExerciseInstructionSection: View {
+    @Bindable var exercise: Exercise
+    @Binding var isEditingInstructions: Bool
+
+    let presentation: ExerciseInstructionsPresentation
+
+    @State private var isInlineExpanded = false
+    @State private var showSheet = false
+
+    init(
+        exercise: Exercise,
+        isEditingInstructions: Binding<Bool>,
+        presentation: ExerciseInstructionsPresentation = .sheet
+    ) {
+        self.exercise = exercise
+        self._isEditingInstructions = isEditingInstructions
+        self.presentation = presentation
+    }
+
+    var body: some View {
+        switch presentation {
+        case .inline:
+            inlineCard
+        case .sheet:
+            sheetCard
+        }
+    }
+
+    // MARK: - Inline Variant (in Form integriert)
+
+    private var inlineCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Button {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                    isInlineExpanded.toggle()
+                }
+            } label: {
+                instructionRow(chevron: isInlineExpanded ? "chevron.up" : "chevron.down")
+            }
+            .buttonStyle(.plain)
+
+            if isInlineExpanded {
+                GlassDivider()
+
+                // Embedded: no extra header + no extra glassCard wrapper (du bist ja schon in einer Card)
+                ExerciseInstructionsCard(
+                    exercise: exercise,
+                    isEditing: $isEditingInstructions,
+                    showsHeader: false,
+                    wrapContentInGlassCard: false
+                )
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .padding(12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+        )
+    }
+
+    // MARK: - Sheet Variant (modern + konsistent)
+
+    private var sheetCard: some View {
+        Button {
+            showSheet = true
+        } label: {
+            instructionRow(chevron: "chevron.right")
+        }
+        .buttonStyle(.plain)
+        .padding(12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+        )
+        .sheet(isPresented: $showSheet) {
+            ScrollView {
+                ExerciseInstructionsCard(
+                    exercise: exercise,
+                    isEditing: $isEditingInstructions,
+                    showsHeader: true,
+                    wrapContentInGlassCard: true,
+                    initiallyExpanded: true
+                )
+                .padding()
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+    }
+
+    // MARK: - Shared Row UI
+
+    private func instructionRow(chevron: String) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Übungsanleitung")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                if exercise.isSystemExercise {
+                    Image(systemName: "lock.fill")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+
+                Image(systemName: chevron)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            ExerciseInstructionsPreview(exercise: exercise)
+        }
+    }
+}
+
 // MARK: Exercise Primary Muscle Groups Section
 struct ExercisePrimaryMuscleGroupsSection: View {
     @Binding var selectedMuscles: [MuscleGroup]

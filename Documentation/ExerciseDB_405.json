@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "METHOD_NOT_ALLOWED"
+          ],
+          "description": "A machine readable error code.",
+          "example": "METHOD_NOT_ALLOWED"
+        },
+        "docs": {
+          "type": "string",
+          "description": "A link to our documentation with more details about this error code",
+          "example": "https://docs.exercisedb.dev/errors/code/METHOD_NOT_ALLOWED"
+        },
+        "message": {
+          "type": "string",
+          "description": "A human readable explanation of what went wrong"
+        },
+        "requestId": {
+          "type": "string",
+          "description": "Please always include the requestId in your error report",
+          "example": "req_12345"
+        }
+      },
+      "required": [
+        "code",
+        "docs",
+        "message",
+        "requestId"
+      ]
+    }
+  },
+  "required": [
+    "error"
+  ]
+}

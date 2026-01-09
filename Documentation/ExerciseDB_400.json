@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "BAD_REQUEST"
+          ],
+          "description": "A machine readable error code.",
+          "example": "BAD_REQUEST"
+        },
+        "docs": {
+          "type": "string",
+          "description": "A link to our documentation with more details about this error code",
+          "example": "https://docs.exercisedb.dev/errors/code/BAD_REQUEST"
+        },
+        "message": {
+          "type": "string",
+          "description": "A human readable explanation of what went wrong"
+        },
+        "requestId": {
+          "type": "string",
+          "description": "Please always include the requestId in your error report",
+          "example": "req_12345"
+        }
+      },
+      "required": [
+        "code",
+        "docs",
+        "message",
+        "requestId"
+      ]
+    }
+  },
+  "required": [
+    "error"
+  ]
+}
