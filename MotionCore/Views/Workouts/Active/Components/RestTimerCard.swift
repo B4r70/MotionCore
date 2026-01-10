@@ -58,7 +58,7 @@ struct RestTimerCard: View {
             }
         }
         .glassCard()
-        .padding(.horizontal)
+        .scrollViewContentPadding()
     }
     
     // MARK: - Fortschrittsbalken

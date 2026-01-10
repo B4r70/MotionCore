@@ -180,11 +180,68 @@ class ExerciseImportManager {
         )
     }
 
+    // MARK: - Import Single Exercise *NEU*
+    /// Importiert eine einzelne Übung aus der API in die Datenbank
+    static func importSingleExercise(
+        _ apiExercise: UnifiedExercise,
+        context: ModelContext
+    ) throws -> Bool {
+        // Prüfen ob bereits vorhanden
+        let apiID = apiExercise.id  // *NEU* - Lokale Konstante für Capture
+        let existingDescriptor = FetchDescriptor<Exercise>(
+            predicate: #Predicate { $0.apiID == apiID }  // *NEU* - Capture der lokalen Variable
+        )
+        let existing = try context.fetch(existingDescriptor)
+
+        if !existing.isEmpty {
+            print("⭐️ Übung bereits vorhanden: \(apiExercise.name)")
+            return false
+        }
+
+        let exercise = createExercise(from: apiExercise)
+        context.insert(exercise)
+        try context.save()
+
+        print("✅ Importiert: \(apiExercise.name)")
+        return true
+    }
+
+    // MARK: - Delete Imported Exercise *NEU*
+    /// Löscht eine aus der API importierte Übung
+    static func deleteExercise(
+        _ exercise: Exercise,
+        context: ModelContext
+    ) throws {
+        // Nur API-Übungen können gelöscht werden
+        guard exercise.isSystemExercise else {
+            print("⚠️ Nur API-importierte Übungen können gelöscht werden")
+            return
+        }
+
+        let name = exercise.name
+        context.delete(exercise)
+        try context.save()
+        print("🗑️ Gelöscht: \(name)")
+    }
+
+    // MARK: - Check if Exercise Exists *NEU*
+    /// Prüft ob eine Übung bereits in der Datenbank existiert
+    static func exerciseExists(
+        apiID: String,
+        context: ModelContext
+    ) -> Bool {
+        let descriptor = FetchDescriptor<Exercise>(
+            predicate: #Predicate { $0.apiID == apiID }
+        )
+        let count = (try? context.fetchCount(descriptor)) ?? 0
+        return count > 0
+    }
+
     // MARK: - Create Exercise from Unified API Data
     private static func createExercise(from api: UnifiedExercise) -> Exercise {
         let exercise = Exercise(
             name: translateToGerman(api.name),
-            exerciseDescription: api.description ?? "",  // *NEU* - Description aus API
+            exerciseDescription: api.description ?? "",
             mediaAssetName: "",
             category: mapCategory(api.category),
             equipment: mapEquipment(api.equipment.first),

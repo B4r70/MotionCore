@@ -90,8 +90,8 @@ class ExerciseDBService {
     }
 
         // MARK: - Search by Name
-    func searchExercise(name: String) async throws -> [UnifiedExercise] {
-        let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? name
+    func searchByName(_ name: String) async throws -> [UnifiedExercise] {
+        let encodedName = encodeForURL(name)
         let url = URL(string: "\(baseURL)/exercises/name/\(encodedName)")!
 
         var request = URLRequest(url: url)
@@ -103,6 +103,7 @@ class ExerciseDBService {
         let (data, response) = try await URLSession.shared.data(for: request)
 
         guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+            debugDump(data, response)
             throw ExerciseDBError.invalidResponse
         }
 
@@ -110,9 +111,67 @@ class ExerciseDBService {
         return exercises.map { $0.toUnified() }
     }
 
+        // MARK: - Get by Target Muscle  *NEU*
+    func getByTarget(_ target: String) async throws -> [UnifiedExercise] {  
+        let encodedTarget = encodeForURL(target)  // *NEU*
+        let url = URL(string: "\(baseURL)/exercises/target/\(encodedTarget)")!
+
+        var request = URLRequest(url: url)  
+        request.httpMethod = "GET"  
+        request.setValue(apiKey, forHTTPHeaderField: "x-rapidapi-key")  
+        request.setValue(apiHost, forHTTPHeaderField: "x-rapidapi-host")  
+        request.timeoutInterval = 30  
+        
+        let (data, response) = try await URLSession.shared.data(for: request)  
+        
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {  
+            debugDump(data, response)  
+            throw ExerciseDBError.invalidResponse  
+        }  
+        
+        let exercises = try JSONDecoder().decode([RapidAPIExercise].self, from: data)  
+        return exercises.map { $0.toUnified() }  
+    }  
+    
+        // MARK: - Get by Equipment  *NEU*
+    func getByEquipment(_ equipment: String) async throws -> [UnifiedExercise] {  
+        let encodedEquipment = encodeForURL(equipment)  // *NEU*
+        let url = URL(string: "\(baseURL)/exercises/equipment/\(encodedEquipment)")!
+
+        var request = URLRequest(url: url)  
+        request.httpMethod = "GET"  
+        request.setValue(apiKey, forHTTPHeaderField: "x-rapidapi-key")  
+        request.setValue(apiHost, forHTTPHeaderField: "x-rapidapi-host")  
+        request.timeoutInterval = 30  
+        
+        let (data, response) = try await URLSession.shared.data(for: request)  
+        
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {  
+            debugDump(data, response)  
+            throw ExerciseDBError.invalidResponse  
+        }  
+        
+        let exercises = try JSONDecoder().decode([RapidAPIExercise].self, from: data)  
+        return exercises.map { $0.toUnified() }  
+    }  
+    
+        // MARK: - Get Target List  *NEU*
+    func getTargetList() async throws -> [String] {  
+        let url = URL(string: "\(baseURL)/exercises/targetList")!  
+        var request = URLRequest(url: url)  
+        request.httpMethod = "GET"  
+        request.setValue(apiKey, forHTTPHeaderField: "x-rapidapi-key")  
+        request.setValue(apiHost, forHTTPHeaderField: "x-rapidapi-host")  
+        request.timeoutInterval = 30  
+        
+        let (data, _) = try await URLSession.shared.data(for: request)  
+        return try JSONDecoder().decode([String].self, from: data)  
+    }  
+
         // MARK: - Get by Body Part
     func getByBodyPart(_ bodyPart: String) async throws -> [UnifiedExercise] {
-        let url = URL(string: "\(baseURL)/exercises/bodyPart/\(bodyPart)")!
+        let encodedBodyPart = encodeForURL(bodyPart)
+        let url = URL(string: "\(baseURL)/exercises/bodyPart/\(encodedBodyPart)")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -168,5 +227,13 @@ class ExerciseDBService {
                 print("   ... (\(data.count - previewBytes) weitere bytes)")
             }
         }
+    }
+
+        // MARK: - URL Encoding Helper *NEU*
+    private func encodeForURL(_ string: String) -> String {
+        string
+            .trimmingCharacters(in: .whitespaces)
+            .lowercased()  // API erwartet lowercase
+            .replacingOccurrences(of: " ", with: "%20")
     }
 }

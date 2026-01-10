@@ -53,6 +53,10 @@
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		4E0C700B2EBB7C81007CE982 /* Exceptions for "MotionCore" folder in "MotionCore" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			assetTagsByRelativePath = {
+				Documentation/ExerciseDB/bodyParts.json = (API, bodyParts, communication, ExerciseDB, exercises, );
+				Documentation/ExerciseDB/equipments.json = (API, communication, equipments, ExerciseDB, exercises, );
+			};
 			membershipExceptions = (
 				Info.plist,
 			);
@@ -81,6 +85,10 @@
 			exceptions = (
 				4E0C700B2EBB7C81007CE982 /* Exceptions for "MotionCore" folder in "MotionCore" target */,
 			);
+			explicitFileTypes = {
+				Documentation/ExerciseDB/bodyParts.json = text.json;
+				Documentation/ExerciseDB/equipments.json = text.json;
+			};
 			path = MotionCore;
 			sourceTree = "<group>";
 		};
@@ -221,8 +229,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				KnownAssetTags = (
+					API,
+					ExerciseDB,
 					MockData,
 					Preview,
+					bodyParts,
+					communication,
+					equipments,
+					exercises,
 				);
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2610;

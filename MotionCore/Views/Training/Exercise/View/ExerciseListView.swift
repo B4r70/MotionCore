@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Übungsbibliothek                                                 /
-// Datei . . . . : ExerciseLibraryView.swift                                        /
+// Datei . . . . : ExerciseListView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 24.12.2025                                                       /
 // Beschreibung  : Hauptdisplay für die Krafttraining-Übungsbibliothek              /
@@ -27,13 +27,14 @@ struct ExerciseListView: View {
     @State private var showFavoritesOnly: Bool = false
     @State private var searchText: String = ""
 
-    // NEU: Quellen-Filter
+    // Quellen-Filter
     @State private var showSystemExercises: Bool = true
     @State private var showUserExercises: Bool = true
 
     // Sheet State
     @State private var showingAddExercise = false
     @State private var draft = Exercise()
+    @State private var showingAPISearch = false  // *NEU*
 
     // MARK: - Computed Properties
 
@@ -50,7 +51,7 @@ struct ExerciseListView: View {
     var filteredExercises: [Exercise] {
         var exercises = allExercises
 
-        // NEU: Quellen-Filter
+        // Quellen-Filter
         exercises = exercises.filter { exercise in
             if exercise.isSystemExercise && !showSystemExercises {
                 return false
@@ -102,7 +103,7 @@ struct ExerciseListView: View {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             VStack(spacing: 0) {
-                // MARK: Statistik-Badge (NEU)
+                // MARK: Statistik-Badge
                 statisticBadge
                     .padding(.horizontal)
                     .padding(.top, 12)
@@ -127,6 +128,40 @@ struct ExerciseListView: View {
                                 ExerciseCard(exercise: exercise)
                             }
                             .buttonStyle(.plain)
+                            // *NEU* - Swipe Actions
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                // Löschen-Button (nur für API-Übungen)
+                                if exercise.isSystemExercise {
+                                    Button(role: .destructive) {
+                                        deleteExercise(exercise)
+                                    } label: {
+                                        Label("Löschen", systemImage: "trash")
+                                    }
+                                }
+
+                                // Archivieren-Button (für alle Übungen)
+                                Button {
+                                    toggleArchive(exercise)
+                                } label: {
+                                    Label(
+                                        exercise.isArchived ? "Aktivieren" : "Archivieren",
+                                        systemImage: exercise.isArchived ? "tray.and.arrow.up" : "archivebox"
+                                    )
+                                }
+                                .tint(.orange)
+                            }
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                // Favorit-Toggle
+                                Button {
+                                    toggleFavorite(exercise)
+                                } label: {
+                                    Label(
+                                        exercise.isFavorite ? "Entfernen" : "Favorit",
+                                        systemImage: exercise.isFavorite ? "star.slash" : "star.fill"
+                                    )
+                                }
+                                .tint(.yellow)
+                            }
                         }
                     }
                     .scrollViewContentPadding()
@@ -145,6 +180,20 @@ struct ExerciseListView: View {
         ) {
             showingAddExercise = true
         }
+        // *NEU* - Zweiter FAB für API-Suche
+        .overlay(alignment: .bottomLeading) {
+            Button {
+                showingAPISearch = true
+            } label: {
+                Image(systemName: "magnifyingglass.circle.fill")
+                    .font(.system(size: 50))
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.white, .blue)
+                    .shadow(color: .blue.opacity(0.4), radius: 8, x: 0, y: 4)
+            }
+            .padding(.leading, 24)
+            .padding(.bottom, 24)
+        }
         .sheet(isPresented: $showingAddExercise) {
             NavigationStack {
                 ExerciseFormView(mode: .add, exercise: draft)
@@ -154,11 +203,16 @@ struct ExerciseListView: View {
                 draft = Exercise()
             }
         }
+        // *NEU* - Sheet für API-Suche
+        .sheet(isPresented: $showingAPISearch) {
+            ExerciseSearchView()
+                .environmentObject(appSettings)
+        }
     }
 
     // MARK: - Subviews
 
-    // NEU: Statistik-Badge
+    // Statistik-Badge
     private var statisticBadge: some View {
         HStack(spacing: 16) {
             // Gesamt
@@ -249,7 +303,7 @@ struct ExerciseListView: View {
     private var filterChips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                // NEU: Eigene Übungen
+                // Eigene Übungen
                 FilterChip(
                     title: "Eigene",
                     icon: .system("person.fill"),
@@ -259,7 +313,7 @@ struct ExerciseListView: View {
                     showUserExercises.toggle()
                 }
 
-                // NEU: Importierte Übungen
+                // Importierte Übungen
                 FilterChip(
                     title: "Aus ExerciseDB",
                     icon: .system("cloud.fill"),
@@ -422,6 +476,26 @@ struct ExerciseListView: View {
         }
 
         return "Füge deine erste Übung hinzu"
+    }
+
+    // MARK: - Actions *NEU*
+
+    private func deleteExercise(_ exercise: Exercise) {
+        do {
+            try ExerciseImportManager.deleteExercise(exercise, context: modelContext)
+        } catch {
+            print("❌ Fehler beim Löschen: \(error.localizedDescription)")
+        }
+    }
+
+    private func toggleFavorite(_ exercise: Exercise) {
+        exercise.isFavorite.toggle()
+        try? modelContext.save()
+    }
+
+    private func toggleArchive(_ exercise: Exercise) {
+        exercise.isArchived.toggle()
+        try? modelContext.save()
     }
 }
 
