@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4EB8313C2F0E918300BE7D77 /* CurlsBizeps_Cable.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4EB8313A2F0E918300BE7D77 /* CurlsBizeps_Cable.mp4 */; };
-		4EB8313D2F0E918300BE7D77 /* Benchpress_Machine.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4EB831392F0E918300BE7D77 /* Benchpress_Machine.mp4 */; };
-		4EB8313E2F0E918300BE7D77 /* PushdownTriceps_Cable.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4EB8313B2F0E918300BE7D77 /* PushdownTriceps_Cable.mp4 */; };
 		4EF7B9B62F08133700C603DC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B52F08133600C603DC /* WidgetKit.framework */; };
 		4EF7B9B82F08133700C603DC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B72F08133700C603DC /* SwiftUI.framework */; };
 		4EF7B9C72F08133700C603DC /* MotionCoreWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -40,9 +37,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4EB831392F0E918300BE7D77 /* Benchpress_Machine.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Benchpress_Machine.mp4; sourceTree = "<group>"; };
-		4EB8313A2F0E918300BE7D77 /* CurlsBizeps_Cable.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = CurlsBizeps_Cable.mp4; sourceTree = "<group>"; };
-		4EB8313B2F0E918300BE7D77 /* PushdownTriceps_Cable.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = PushdownTriceps_Cable.mp4; sourceTree = "<group>"; };
 		4EBA616D2EA7C87D002426EE /* MotionCore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionCore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF7B9B32F08133600C603DC /* MotionCoreWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MotionCoreWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF7B9B52F08133600C603DC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -53,10 +47,6 @@
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		4E0C700B2EBB7C81007CE982 /* Exceptions for "MotionCore" folder in "MotionCore" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			assetTagsByRelativePath = {
-				Documentation/ExerciseDB/bodyParts.json = (API, bodyParts, communication, ExerciseDB, exercises, );
-				Documentation/ExerciseDB/equipments.json = (API, communication, equipments, ExerciseDB, exercises, );
-			};
 			membershipExceptions = (
 				Info.plist,
 			);
@@ -85,10 +75,6 @@
 			exceptions = (
 				4E0C700B2EBB7C81007CE982 /* Exceptions for "MotionCore" folder in "MotionCore" target */,
 			);
-			explicitFileTypes = {
-				Documentation/ExerciseDB/bodyParts.json = text.json;
-				Documentation/ExerciseDB/equipments.json = text.json;
-			};
 			path = MotionCore;
 			sourceTree = "<group>";
 		};
@@ -123,28 +109,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4EB8313F2F0E918C00BE7D77 /* Media */ = {
-			isa = PBXGroup;
-			children = (
-				4EB831402F0E919200BE7D77 /* Videos */,
-			);
-			path = Media;
-			sourceTree = "<group>";
-		};
-		4EB831402F0E919200BE7D77 /* Videos */ = {
-			isa = PBXGroup;
-			children = (
-				4EB831392F0E918300BE7D77 /* Benchpress_Machine.mp4 */,
-				4EB8313A2F0E918300BE7D77 /* CurlsBizeps_Cable.mp4 */,
-				4EB8313B2F0E918300BE7D77 /* PushdownTriceps_Cable.mp4 */,
-			);
-			path = Videos;
-			sourceTree = "<group>";
-		};
 		4EBA61642EA7C87D002426EE = {
 			isa = PBXGroup;
 			children = (
-				4EB8313F2F0E918C00BE7D77 /* Media */,
 				4EF7B9CD2F08146300C603DC /* MotionCoreWidgetsExtension.entitlements */,
 				4EF7B9B92F08133700C603DC /* MotionCoreWidgets */,
 				4EF7B9B42F08133600C603DC /* Frameworks */,
@@ -274,9 +241,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EB8313C2F0E918300BE7D77 /* CurlsBizeps_Cable.mp4 in Resources */,
-				4EB8313D2F0E918300BE7D77 /* Benchpress_Machine.mp4 in Resources */,
-				4EB8313E2F0E918300BE7D77 /* PushdownTriceps_Cable.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -737,7 +737,10 @@ struct ActiveWorkoutView: View {
                 RestTimerCard(
                     remainingSeconds: restTimerSeconds,
                     targetSeconds: completedSet.restSeconds,
-                    onSkip: skipRest
+                    onSkip: skipRest,
+                    nextExerciseName: currentSet?.exerciseName,  // *NEU*
+                    nextSetNumber: currentSet?.setNumber,  // *NEU*
+                    totalSetsForExercise: setsForCurrentExercise  // *NEU*
                 )
             )
         }

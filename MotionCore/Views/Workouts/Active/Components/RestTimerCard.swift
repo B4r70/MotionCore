@@ -14,34 +14,57 @@ import SwiftUI
 
 struct RestTimerCard: View {
     @EnvironmentObject private var appSettings: AppSettings
-    
+
     let remainingSeconds: Int
     let targetSeconds: Int
     let onSkip: () -> Void
-    
+
+    // *NEU* - Zusätzliche Infos für Kontext
+    let nextExerciseName: String?  // *NEU*
+    let nextSetNumber: Int?  // *NEU*
+    let totalSetsForExercise: Int?  // *NEU*
+
     var body: some View {
         VStack(spacing: 32) {
             // "Pause" Label
             Text("Pause")
                 .font(.title2.bold())
                 .foregroundStyle(.secondary)
-            
-            // Großer Pausen-Timer (damit die Zeit vom Boden lesbar ist!)
+
+            // Großer Pausen-Timer
             Text(formatRestTime(remainingSeconds))
                 .font(.system(size: 96, weight: .bold, design: .rounded))
                 .foregroundStyle(remainingSeconds > 10 ? Color.primary : Color.orange)
                 .monospacedDigit()
                 .contentTransition(.numericText())
-            
+
             // Fortschrittsbalken
             progressBar
-            
-            // Info-Text
-            Text("Nächster Satz bereit in \(remainingSeconds) Sekunden")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            
+
+            // *NEU* - Nächster Satz Info
+            if let exerciseName = nextExerciseName,
+               let setNumber = nextSetNumber,
+               let totalSets = totalSetsForExercise {
+                VStack(spacing: 4) {
+                    Text(exerciseName)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.primary)
+
+                    Text("Nächster: Satz \(setNumber) von \(totalSets)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.top, 8)
+            }
+
+            // Info-Text (falls keine Set-Info vorhanden)
+            if nextExerciseName == nil {
+                Text("Nächster Satz bereit in \(remainingSeconds) Sekunden")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
             // Skip Button
             Button {
                 onSkip()
@@ -58,9 +81,8 @@ struct RestTimerCard: View {
             }
         }
         .glassCard()
-        .scrollViewContentPadding()
     }
-    
+
     // MARK: - Fortschrittsbalken
     
     private var progressBar: some View {
@@ -118,31 +140,29 @@ struct RestTimerCard: View {
 }
 
 // MARK: - Preview
-
 #Preview("Rest Timer Card") {
     ZStack {
         AnimatedBackground(showAnimatedBlob: true)
-        
+
         VStack(spacing: 20) {
-            // 90 Sekunden
+            // Mit Context
             RestTimerCard(
                 remainingSeconds: 90,
                 targetSeconds: 90,
-                onSkip: {}
+                onSkip: {},
+                nextExerciseName: "Bankdrücken",  // *NEU*
+                nextSetNumber: 3,  // *NEU*
+                totalSetsForExercise: 4  // *NEU*
             )
-            
-            // 30 Sekunden
-            RestTimerCard(
-                remainingSeconds: 30,
-                targetSeconds: 90,
-                onSkip: {}
-            )
-            
-            // 5 Sekunden (kritisch)
+
+            // Ohne Context (Fallback)
             RestTimerCard(
                 remainingSeconds: 5,
                 targetSeconds: 90,
-                onSkip: {}
+                onSkip: {},
+                nextExerciseName: nil,  // *NEU*
+                nextSetNumber: nil,  // *NEU*
+                totalSetsForExercise: nil  // *NEU*
             )
         }
         .padding()
