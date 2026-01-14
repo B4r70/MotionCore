@@ -95,3 +95,91 @@ struct MuscleGroupMapper {
         return secondary
     }
 }
+
+extension MuscleGroupMapper {
+    /// Konvertiert Supabase Muskelgruppen-Strings zu MotionCore MuscleGroup-Enum
+    /// - Parameter supabaseValue: Der Muskelgruppen-String aus Supabase (z.B. "chest", "biceps")
+    /// - Returns: MuscleGroup Enum oder nil wenn nicht gemappt werden kann
+    static func map(supabaseValue: String) -> MuscleGroup? {
+        let lowercased = supabaseValue.lowercased()
+
+        // Spezielle Mappings für Untergruppen (detailliert)
+        switch lowercased {
+        // Bauch/Core Untergruppen
+        case "abs_lower", "abs_upper", "abs_obliques":
+            return .core
+
+        // Brust Untergruppen
+        case "chest_upper", "chest_lower", "chest_middle":
+            return .chest
+
+        // Rücken Untergruppen
+        case "back_lats", "back_lower", "back_upper", "back_middle":
+            return .back
+
+        // Schultern Untergruppen
+        case "shoulders_front", "shoulders_side", "shoulders_rear":
+            return .shoulders
+
+        // Beine Untergruppen
+        case "legs_quads", "legs_hamstrings", "legs_calves":
+            return .legs
+
+        // Arme Untergruppen
+        case "arms_biceps", "arms_triceps", "arms_forearms":
+            return .arms
+
+        // Standard-Mappings (Hauptgruppen)
+        // Brust
+        case "chest", "pectorals", "pectoralis major", "pectoralis minor":
+            return .chest
+
+        // Rücken
+        case "back", "lats", "latissimus dorsi", "upper back", "middle back",
+             "lower back", "traps", "trapezius", "rhomboids", "erector spinae":
+            return .back
+
+        // Schultern
+        case "shoulders", "delts", "deltoids", "deltoid",
+             "deltoid anterior", "deltoid posterior", "deltoid lateral":
+            return .shoulders
+
+        // Arme
+        case "biceps", "biceps brachii", "triceps", "triceps brachii",
+             "forearms", "brachialis", "brachioradialis":
+            return .arms
+
+        // Beine
+        case "legs", "quadriceps", "quads", "hamstrings", "calves",
+             "tibialis anterior", "gastrocnemius", "soleus",
+             "adductors", "abductors":
+            return .legs
+
+        // Gesäß
+        case "glutes", "gluteus maximus", "gluteus medius", "gluteus minimus":
+            return .glutes
+
+        // Core/Bauch
+        case "core", "abs", "abdominals", "rectus abdominis", "obliques",
+             "transverse abdominis", "serratus anterior":
+            return .core
+
+        // Ganzkörper
+        case "full body", "total body", "whole body":
+            return .fullBody
+
+        // Nacken
+        case "neck", "levator scapulae", "sternocleidomastoid":
+            return .other
+
+        // Hüfte
+        case "hip flexors", "hip", "iliopsoas":
+            return .legs
+
+        // Nicht zuordenbar
+        default:
+            print("⚠️ Unbekannte Muskelgruppe aus Supabase: '\(supabaseValue)' → Fallback: nil")
+            return nil
+        }
+    }
+}

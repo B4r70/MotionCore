@@ -263,3 +263,72 @@ enum ExerciseInstructionsPresentation {
     case inline
     case sheet
 }
+
+// MARK: - Supabase Mapping
+
+extension ExerciseEquipment {
+    // Konvertiert Supabase Equipment-Werte zu MotionCore Equipment-Enum
+    static func fromSupabase(_ value: String?) -> ExerciseEquipment {
+        guard let value = value?.lowercased() else { return .none }
+
+        switch value {
+        case "barbell": return .barbell
+        case "dumbbell": return .dumbbell
+        case "kettlebell": return .kettlebell
+        case "cable": return .cable
+        case "machine": return .machine
+        case "bodyweight", "body weight", "body_only": return .bodyweight
+        case "resistance band", "bands": return .band
+        case "none", "other": return .other
+        default:
+            print("⚠️ Unbekanntes Equipment aus Supabase: '\(value)' → Fallback: .other")
+            return .other
+        }
+    }
+
+    // Zusätzliche Cases für Supabase
+    static let none: ExerciseEquipment = .other
+    static let resistanceBand: ExerciseEquipment = .band
+    static let medicineBall: ExerciseEquipment = .other
+    static let suspension: ExerciseEquipment = .other
+}
+
+extension ExerciseDifficulty {
+    // Konvertiert Supabase Level-Werte zu MotionCore Difficulty-Enum
+    static func fromSupabase(_ level: String) -> ExerciseDifficulty {
+        switch level.lowercased() {
+        case "beginner": return .beginner
+        case "intermediate": return .intermediate
+        case "expert", "advanced": return .advanced
+        default:
+            print("⚠️ Unbekannter Level aus Supabase: '\(level)' → Fallback: .intermediate")
+            return .intermediate
+        }
+    }
+}
+
+extension ExerciseCategory {
+    // Konvertiert Supabase Mechanic/Force-Werte zu MotionCore Category-Enum
+    static func fromSupabase(mechanic: String?, force: String?) -> ExerciseCategory {
+        // Wenn compound mechanic → compound
+        if mechanic?.lowercased() == "compound" {
+            return .compound
+        }
+
+        // Wenn isolation mechanic → isolation
+        if mechanic?.lowercased() == "isolation" {
+            return .isolation
+        }
+
+        // Fallback basierend auf force
+        if force?.lowercased() == "static" {
+            return .core
+        }
+
+        // Default
+        return .compound
+    }
+
+    // Zusätzliche Cases für Supabase
+    static let stability: ExerciseCategory = .core
+}

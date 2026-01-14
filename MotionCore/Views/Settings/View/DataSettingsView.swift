@@ -2,10 +2,10 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Einstellungen                                                    /
-// Datei . . . . : MainSettingsView.swift                                           /
+// Datei . . . . : DataSettingsView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 02.11.2025                                                       /
-// Beschreibung  : Konfigurationshauptdisplay                                       /
+// Beschreibung  : Konfigurationshauptdisplay für Datenimport/-export              /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -68,12 +68,7 @@ struct DataSettingsView: View {
     @State private var outdoorExportURL: URL?
     @State private var showingOutdoorShareSheet = false
 
-    // ExerciseDB API Import
-    @State private var isImportingFromAPI = false
-    @State private var showingAPIImportConfirmation = false
-    @State private var apiImportResult: ExerciseImportResult?
-    @State private var showingAPIImportResult = false
-    @State private var currentBatchIndex = 0
+    /* *DEL* Alle RapidAPI/ExerciseDB Import States entfernt */
 
     // UI-Meldungen für Import/Export
     @State private var showingImportSuccess = false
@@ -90,6 +85,10 @@ struct DataSettingsView: View {
 
     var userExercises: [Exercise] {
         allExercises.filter { !$0.isSystemExercise }
+    }
+
+    var supabaseExercises: [Exercise] {
+        allExercises.filter { $0.apiProvider == "supabase" }
     }
 
     // MARK: - Helper Functions
@@ -190,34 +189,7 @@ struct DataSettingsView: View {
         }
     }
 
-    // MARK: - ExerciseDB API Import
-    private func startAPIImport() {
-        isImportingFromAPI = true
-
-        Task {
-            do {
-                let result = try await ExerciseImportManager.importBatch(
-                    context: modelContext,
-                    startIndex: currentBatchIndex,
-                    batchSize: 10
-                )
-
-                await MainActor.run {
-                    isImportingFromAPI = false
-                    apiImportResult = result
-                    showingAPIImportResult = true
-                    currentBatchIndex += 10
-                }
-
-            } catch {
-                await MainActor.run {
-                    isImportingFromAPI = false
-                    importErrorMessage = "API-Import Fehler: \(error.localizedDescription)"
-                    showingImportError = true
-                }
-            }
-        }
-    }
+    /* *DEL* Alle RapidAPI/ExerciseDB Import Funktionen entfernt */
 
     // MARK: - Body
     var body: some View {
@@ -232,9 +204,9 @@ struct DataSettingsView: View {
                 }
 
                 HStack {
-                    Text("Importierte Übungen (API)")
+                    Text("Supabase Übungen")
                     Spacer()
-                    Text("\(systemExercises.count)")
+                    Text("\(supabaseExercises.count)")
                         .foregroundStyle(.secondary)
                 }
 
@@ -247,65 +219,12 @@ struct DataSettingsView: View {
                 }
             } header: {
                 Text("Übungsbibliothek")
-            }
-
-            // MARK: - ExerciseDB API Import
-            Section {
-                Button {
-                    showingAPIImportConfirmation = true
-                } label: {
-                    HStack {
-                        Image(systemName: "cloud.fill")
-                            .foregroundStyle(.blue)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Übungen importieren")
-                                .foregroundStyle(.primary)
-                            Text("exercisedb.p.rapidapi.com")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        Spacer()
-
-                        if isImportingFromAPI {
-                            ProgressView()
-                                .scaleEffect(0.8)
-                        }
-                    }
-                }
-                .disabled(isImportingFromAPI)
-
-                if isImportingFromAPI {
-                    HStack(spacing: 12) {
-                        ProgressView()
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Import läuft...")
-                                .font(.subheadline)
-                            Text("Lade Übungen \(currentBatchIndex) bis \(currentBatchIndex + 10)...")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .padding(.vertical, 4)
-                }
-
-                if currentBatchIndex > 0 && !isImportingFromAPI {
-                    Button(role: .destructive) {
-                        currentBatchIndex = 0
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.counterclockwise")
-                            Text("Batch-Index zurücksetzen")
-                        }
-                    }
-                }
-
-            } header: {
-                Text("ExerciseDB API")
             } footer: {
-                Text("Importiert 10 Übungen pro Durchgang. Aktueller Index: \(currentBatchIndex). Bereits vorhandene Übungen werden übersprungen.")
+                Text("Übungen aus Supabase können über die Übungsbibliothek importiert werden (Lupen-Symbol).")
                     .font(.caption)
             }
+
+            /* *DEL* ExerciseDB API Import Section komplett entfernt */
 
             // MARK: - Workouts
             Section("Workouts") {
@@ -670,40 +589,7 @@ struct DataSettingsView: View {
             Text(importErrorMessage)
         }
 
-        // ExerciseDB API Import Result
-        .alert("ExerciseDB Import abgeschlossen", isPresented: $showingAPIImportResult) {
-            Button("OK") {
-                apiImportResult = nil
-            }
-        } message: {
-            if let result = apiImportResult {
-                Text("""
-                Von API geladen: \(result.totalFetched) Übungen
-                Neu importiert: \(result.imported)
-                Übersprungen (bereits vorhanden): \(result.skipped)
-                \(result.errors.isEmpty ? "" : "\nFehler: \(result.errors.count)")
-                
-                Deine Bibliothek enthält jetzt:
-                • \(userExercises.count) eigene Übungen
-                • \(systemExercises.count) importierte Übungen
-                • \(allExercises.count) Übungen gesamt
-                """)
-            }
-        }
-
-        // ExerciseDB API Import Confirmation
-        .confirmationDialog(
-            "ExerciseDB Import",
-            isPresented: $showingAPIImportConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button("10 Übungen importieren") {
-                startAPIImport()
-            }
-            Button("Abbrechen", role: .cancel) {}
-        } message: {
-            Text("Importiert 10 Übungen von ExerciseDB (Index \(currentBatchIndex) bis \(currentBatchIndex + 10)).\n\nBereits vorhandene Übungen werden automatisch übersprungen.")
-        }
+        /* *DEL* Alle RapidAPI/ExerciseDB Alerts entfernt */
 
         // Delete Confirmation
         .confirmationDialog("Workouts löschen", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {

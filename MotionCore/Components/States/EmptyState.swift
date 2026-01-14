@@ -12,8 +12,24 @@
 //
 import SwiftUI
 
-// Glassmorphic Empty State
+    // Glassmorphic Empty State
 struct EmptyState: View {
+    /* *EDIT* Parameter hinzugefügt für Flexibilität */
+    let icon: String
+    let title: String
+    let message: String
+
+    /* *NEW* Default-Initializer für Abwärtskompatibilität */
+    init(
+        icon: String = "figure.run",
+        title: String = "Keine Einträge",
+        message: String = "Füge dein erstes Training hinzu"
+    ) {
+        self.icon = icon
+        self.title = title
+        self.message = message
+    }
+
     var body: some View {
         VStack(spacing: 20) {
             ZStack {
@@ -21,19 +37,20 @@ struct EmptyState: View {
                     .fill(.ultraThinMaterial)
                     .frame(width: 120, height: 120)
 
-                Image(systemName: "figure.run")
+                Image(systemName: icon) /* *EDIT* Variable statt hardcoded */
                     .font(.system(size: 50))
                     .foregroundStyle(.blue)
             }
             .shadow(color: .black.opacity(0.1), radius: 20)
 
             VStack(spacing: 8) {
-                Text("Keine Einträge")
+                Text(title) /* *EDIT* Variable statt hardcoded */
                     .font(.title2.bold())
 
-                Text("Füge dein erstes Training hinzu")
+                Text(message) /* *EDIT* Variable statt hardcoded */
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center) /* *NEW* Für mehrzeilige Texte */
             }
         }
         .padding(40)

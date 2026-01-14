@@ -8,5 +8,9 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+    <key>MOTIONCORE_SUPABASE_URL</key>
+    <string>$(MOTIONCORE_SUPABASE_URL)</string>
+    <key>MOTIONCORE_SUPABASE_ANON_KEY</key>
+    <string>$(MOTIONCORE_SUPABASE_ANON_KEY)</string>
 </dict>
 </plist>
