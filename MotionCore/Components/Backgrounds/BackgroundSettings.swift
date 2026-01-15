@@ -58,6 +58,7 @@ struct AnimatedBackground: View {
                     .transition(.opacity)
             }
         }
+        .allowsHitTesting(false)
     }
 }
 

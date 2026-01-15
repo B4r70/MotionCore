@@ -34,7 +34,8 @@ final class TrainingEntry {
 
     // MARK: - Beziehungen
 
-    var plan: TrainingPlan?                 // Gehört zu welchem Plan?
+    @Relationship(inverse: \TrainingPlan.entries)
+    var plan: TrainingPlan?                // Gehört zu welchem Plan?
 
     // Optional: Referenzen zu durchgeführten Sessions (als IDs)
     var completedCardioSessionID: String?

@@ -185,7 +185,7 @@ extension Exercise {
             isArchived: isArchived ? true : nil,
 
             // NEU: API-Felder
-            apiID: apiID,
+            apiID: apiID?.uuidString,
             isSystemExercise: isSystemExercise ? true : nil,
             videoURL: videoURL,
             instructions: instructions,
@@ -219,7 +219,7 @@ extension Exercise {
             isArchived: e.isArchived ?? false,
 
             // NEU: API-Felder
-            apiID: e.apiID,
+            apiID: e.apiID.flatMap { UUID(uuidString: $0) },
             isSystemExercise: e.isSystemExercise ?? false,
             videoURL: e.videoURL,
             instructions: e.instructions,

@@ -156,9 +156,10 @@ class ExerciseImportManager {
     ///   - context: SwiftData ModelContext
     /// - Returns: true wenn Exercise existiert, sonst false
     static func exerciseExists(
-        apiID: String,
+        apiID: UUID?,
         context: ModelContext
     ) -> Bool {
+        guard let apiID else { return false }
         let descriptor = FetchDescriptor<Exercise>(
             predicate: #Predicate { $0.apiID == apiID }
         )

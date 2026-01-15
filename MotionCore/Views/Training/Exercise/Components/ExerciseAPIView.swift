@@ -16,34 +16,30 @@ import AVKit
 struct ExerciseAPIView: View {
     let exercise: Exercise
     @State private var showVideoPlayer = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Header
             HStack {
                 Image(systemName: "cloud.fill")
                     .foregroundStyle(.blue)
+
                 Text("API-Informationen")
                     .font(.headline)
-                
+
                 Spacer()
-                
+
                 // Provider Badge
                 if let provider = exercise.apiProvider {
-                    Text(provider == "exercisedb_v2" ? "v2" : "RapidAPI")
-                        .font(.caption2)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(provider == "exercisedb_v2" ? Color.purple.opacity(0.2) : Color.blue.opacity(0.2))
-                        .foregroundStyle(provider == "exercisedb_v2" ? .purple : .blue)
-                        .clipShape(Capsule())
+                    ProviderBadge(provider: provider)
                 }
             }
-            
+
             Divider()
-            
+
             // Video Player Button
-            if let videoURL = exercise.videoURL, let url = URL(string: videoURL) {
+            if let videoURL = exercise.videoURL,
+               let url = URL(string: videoURL) {
                 Button {
                     showVideoPlayer = true
                 } label: {
@@ -51,18 +47,18 @@ struct ExerciseAPIView: View {
                         Image(systemName: "play.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.purple)
-                        
+
                         VStack(alignment: .leading) {
                             Text("Video abspielen")
                                 .font(.subheadline)
                                 .foregroundStyle(.primary)
-                            Text("MP4 von ExerciseDB")
+                            Text("MP4")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        
+
                         Spacer()
-                        
+
                         Image(systemName: "chevron.right")
                             .foregroundStyle(.secondary)
                     }
@@ -74,27 +70,27 @@ struct ExerciseAPIView: View {
                     VideoPlayerSheet(url: url, title: exercise.name)
                 }
             }
-            
+
             // Overview (ausführliche Beschreibung)
             if let overview = exercise.apiOverview, !overview.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Beschreibung", systemImage: "text.alignleft")
                         .font(.subheadline.bold())
                         .foregroundStyle(.secondary)
-                    
+
                     Text(overview)
                         .font(.subheadline)
                         .foregroundStyle(.primary)
                 }
             }
-            
+
             // Exercise Tips
             if let tips = exercise.apiExerciseTips, !tips.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Trainingstipps", systemImage: "lightbulb.fill")
                         .font(.subheadline.bold())
                         .foregroundStyle(.orange)
-                    
+
                     ForEach(tips, id: \.self) { tip in
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "checkmark.circle.fill")
@@ -106,14 +102,14 @@ struct ExerciseAPIView: View {
                     }
                 }
             }
-            
+
             // Variations
             if let variations = exercise.apiVariations, !variations.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Variationen", systemImage: "arrow.triangle.branch")
                         .font(.subheadline.bold())
                         .foregroundStyle(.blue)
-                    
+
                     ForEach(variations, id: \.self) { variation in
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "circle.fill")
@@ -126,15 +122,15 @@ struct ExerciseAPIView: View {
                     }
                 }
             }
-            
+
             // API Details
             VStack(alignment: .leading, spacing: 4) {
                 Label("API Details", systemImage: "info.circle")
                     .font(.subheadline.bold())
                     .foregroundStyle(.secondary)
-                
+
                 if let apiID = exercise.apiID {
-                    DetailRow(label: "ID", value: apiID)
+                    DetailRow(label: "ID", value: apiID.uuidString)
                 }
                 if let bodyPart = exercise.apiBodyPart {
                     DetailRow(label: "Körperteil", value: bodyPart)
@@ -150,11 +146,49 @@ struct ExerciseAPIView: View {
     }
 }
 
+// MARK: - Provider Badge
+private struct ProviderBadge: View {
+    let provider: String
+
+    var body: some View {
+        let label: String
+        let bg: Color
+        let fg: Color
+
+        switch provider {
+        case "exercisedb_v2":
+            label = "ExerciseDB v2"
+            bg = Color.purple.opacity(0.2)
+            fg = .purple
+        case "rapidapi":
+            label = "RapidAPI"
+            bg = Color.blue.opacity(0.2)
+            fg = .blue
+        case "supabase":
+            label = "Supabase"
+            bg = Color.green.opacity(0.2)
+            fg = .green
+        default:
+            label = provider
+            bg = Color.gray.opacity(0.2)
+            fg = .secondary
+        }
+
+        return Text(label)
+            .font(.caption2)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(bg)
+            .foregroundStyle(fg)
+            .clipShape(Capsule())
+    }
+}
+
 // MARK: - Detail Row
 private struct DetailRow: View {
     let label: String
     let value: String
-    
+
     var body: some View {
         HStack {
             Text(label)
@@ -164,6 +198,8 @@ private struct DetailRow: View {
             Text(value)
                 .font(.caption)
                 .foregroundStyle(.primary)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(2)
         }
     }
 }
@@ -173,7 +209,7 @@ struct VideoPlayerSheet: View {
     let url: URL
     let title: String
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationStack {
             VideoPlayer(player: AVPlayer(url: url))

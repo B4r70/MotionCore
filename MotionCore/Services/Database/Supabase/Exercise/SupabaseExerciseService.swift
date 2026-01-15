@@ -45,10 +45,13 @@ final class SupabaseExerciseService {
     }
 
     func searchExercises(byName searchText: String) async throws -> [SupabaseExercise] {
+        let term = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard term.count >= 2 else { return [] }
+        
         let body: [String: Any] = [
-            "search_term": searchText  // *EDIT* - Parameter-Name korrigiert
+            "p_search_term": term
         ]
-
+        
         return try await client.post(
             endpoint: "rpc/search_exercises_by_name",
             body: body

@@ -1,14 +1,14 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
-// ---------------------------------------------------------------------------------/
+//----------------------------------------------------------------------------------/
 // Abschnitt . . : Einstellungen                                                    /
 // Datei . . . . : DataSettingsView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 02.11.2025                                                       /
 // Beschreibung  : Konfigurationshauptdisplay für Datenimport/-export              /
-// ---------------------------------------------------------------------------------/
+//----------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
-// ---------------------------------------------------------------------------------/
+//----------------------------------------------------------------------------------/
 //
 import SwiftUI
 import SwiftData
@@ -38,185 +38,102 @@ struct DataSettingsView: View {
     @Query(sort: \ExerciseSet.exerciseName, order: .forward)
     private var allExerciseSets: [ExerciseSet]
 
-    // Import/Export Funktionen
-    @State private var showingImportPicker = false
-    @State private var exportURL: URL?
-    @State private var showingShareSheet = false
-
-    // Exercise Import/Export
-    @State private var showingExerciseImportPicker = false
-    @State private var exerciseExportURL: URL?
-    @State private var showingExerciseShareSheet = false
-
-    // StrengthSession Import/Export
-    @State private var showingStrengthImportPicker = false
-    @State private var strengthExportURL: URL?
-    @State private var showingStrengthShareSheet = false
-
-    // TrainingPlan Import/Export
-    @State private var showingPlanImportPicker = false
-    @State private var planExportURL: URL?
-    @State private var showingPlanShareSheet = false
-
-    // ExerciseSet Import/Export
-    @State private var showingSetImportPicker = false
-    @State private var setExportURL: URL?
-    @State private var showingSetShareSheet = false
-
-    // OutdoorSession Import/Export
-    @State private var showingOutdoorImportPicker = false
-    @State private var outdoorExportURL: URL?
-    @State private var showingOutdoorShareSheet = false
-
-    /* *DEL* Alle RapidAPI/ExerciseDB Import States entfernt */
-
     // UI-Meldungen für Import/Export
     @State private var showingImportSuccess = false
     @State private var showingImportError = false
-    @State private var importErrorMessage = ""
+    @State private var importMessage = ""
     @State private var showingDeleteConfirmation = false
+
+    // Single Share Sheet
+    @State private var activeShareURL: URL?
+    @State private var showingShareSheet = false
+
+    // Single File Importer
+    @State private var showingImporter = false
+    @State private var activeImport: ImportKind?
 
     private let dataManager = IODataManager()
 
+    enum ImportKind: String {
+        case workouts
+        case exercises
+        case strength
+        case plans
+        case sets
+        case outdoor
+    }
+
     // MARK: - Computed Properties
-    var systemExercises: [Exercise] {
-        allExercises.filter { $0.isSystemExercise }
+    var systemExercises: [Exercise] { allExercises.filter { $0.isSystemExercise } }
+    var userExercises: [Exercise] { allExercises.filter { !$0.isSystemExercise } }
+    var supabaseExercises: [Exercise] { allExercises.filter { $0.apiProvider == "supabase" } }
+
+    // MARK: - Security Scoped Access Helper (Sandbox fix)
+    private func withSecurityScopedAccess<T>(to url: URL, _ work: () throws -> T) rethrows -> T {
+        let didStart = url.startAccessingSecurityScopedResource()
+        defer { if didStart { url.stopAccessingSecurityScopedResource() } }
+        return try work()
     }
 
-    var userExercises: [Exercise] {
-        allExercises.filter { !$0.isSystemExercise }
-    }
-
-    var supabaseExercises: [Exercise] {
-        allExercises.filter { $0.apiProvider == "supabase" }
-    }
-
-    // MARK: - Helper Functions
-    private func handleExport() {
+    // MARK: - Export Helpers
+    private func export(_ kind: ImportKind) {
         do {
-            exportURL = try dataManager.exportWorkouts(context: modelContext)
+            let url: URL
+            switch kind {
+            case .workouts:
+                url = try dataManager.exportWorkouts(context: modelContext)
+            case .exercises:
+                url = try dataManager.exportExercises(context: modelContext)
+            case .strength:
+                url = try dataManager.exportStrengthSessions(context: modelContext)
+            case .plans:
+                url = try dataManager.exportTrainingPlans(context: modelContext)
+            case .sets:
+                url = try dataManager.exportExerciseSets(context: modelContext)
+            case .outdoor:
+                url = try dataManager.exportOutdoorSessions(context: modelContext)
+            }
+
+            activeShareURL = url
             showingShareSheet = true
         } catch let error as DataIOError {
-            importErrorMessage = error.errorDescription ?? "Export fehlgeschlagen"
+            importMessage = error.errorDescription ?? "Export fehlgeschlagen"
             showingImportError = true
         } catch {
-            importErrorMessage = "Export-Fehler: \(error.localizedDescription)"
+            importMessage = "Export-Fehler: \(error.localizedDescription)"
             showingImportError = true
         }
     }
 
+    // MARK: - Import Trigger
+    private func startImport(_ kind: ImportKind) {
+        activeImport = kind
+        showingImporter = true
+    }
+
+    // MARK: - Delete
     private func handleDeleteAllData() {
         do {
             let count = try dataManager.deleteAllWorkouts(context: modelContext)
-
-            if count > 0 {
-                importErrorMessage = "Alle \(count) Workouts wurden erfolgreich gelöscht."
-            } else {
-                importErrorMessage = "Es waren keine Workouts vorhanden. Nichts gelöscht."
-            }
-
+            importMessage = count > 0
+                ? "Alle \(count) Workouts wurden erfolgreich gelöscht."
+                : "Es waren keine Workouts vorhanden. Nichts gelöscht."
             showingImportSuccess = true
-
         } catch {
             let deleteError = error as? DataIOError
-            importErrorMessage = deleteError?.errorDescription ?? "Unbekannter Fehler beim Löschen."
+            importMessage = deleteError?.errorDescription ?? "Unbekannter Fehler beim Löschen."
             showingImportError = true
         }
     }
-
-    private func handleExerciseExport() {
-        do {
-            exerciseExportURL = try dataManager.exportExercises(context: modelContext)
-            showingExerciseShareSheet = true
-        } catch let error as DataIOError {
-            importErrorMessage = error.errorDescription ?? "Exercise-Export fehlgeschlagen"
-            showingImportError = true
-        } catch {
-            importErrorMessage = "Exercise-Export-Fehler: \(error.localizedDescription)"
-            showingImportError = true
-        }
-    }
-
-    private func handleStrengthExport() {
-        do {
-            strengthExportURL = try dataManager.exportStrengthSessions(context: modelContext)
-            showingStrengthShareSheet = true
-        } catch let error as DataIOError {
-            importErrorMessage = error.errorDescription ?? "Krafttraining-Export fehlgeschlagen"
-            showingImportError = true
-        } catch {
-            importErrorMessage = "Krafttraining-Export-Fehler: \(error.localizedDescription)"
-            showingImportError = true
-        }
-    }
-
-    private func handleOutdoorExport() {
-        do {
-            outdoorExportURL = try dataManager.exportOutdoorSessions(context: modelContext)
-            showingOutdoorShareSheet = true
-        } catch let error as DataIOError {
-            importErrorMessage = error.errorDescription ?? "Outdoor-Export fehlgeschlagen"
-            showingImportError = true
-        } catch {
-            importErrorMessage = "Outdoor-Export-Fehler: \(error.localizedDescription)"
-            showingImportError = true
-        }
-    }
-
-    private func handlePlanExport() {
-        do {
-            planExportURL = try dataManager.exportTrainingPlans(context: modelContext)
-            showingPlanShareSheet = true
-        } catch let error as DataIOError {
-            importErrorMessage = error.errorDescription ?? "Trainingsplan-Export fehlgeschlagen"
-            showingImportError = true
-        } catch {
-            importErrorMessage = "Trainingsplan-Export-Fehler: \(error.localizedDescription)"
-            showingImportError = true
-        }
-    }
-
-    private func handleSetExport() {
-        do {
-            setExportURL = try dataManager.exportExerciseSets(context: modelContext)
-            showingSetShareSheet = true
-        } catch let error as DataIOError {
-            importErrorMessage = error.errorDescription ?? "ExerciseSet-Export fehlgeschlagen"
-            showingImportError = true
-        } catch {
-            importErrorMessage = "ExerciseSet-Export-Fehler: \(error.localizedDescription)"
-            showingImportError = true
-        }
-    }
-
-    /* *DEL* Alle RapidAPI/ExerciseDB Import Funktionen entfernt */
 
     // MARK: - Body
     var body: some View {
         List {
-            // MARK: - Übungsbibliothek Statistik
+            // Übungsbibliothek Statistik
             Section {
-                HStack {
-                    Text("Eigene Übungen")
-                    Spacer()
-                    Text("\(userExercises.count)")
-                        .foregroundStyle(.secondary)
-                }
-
-                HStack {
-                    Text("Supabase Übungen")
-                    Spacer()
-                    Text("\(supabaseExercises.count)")
-                        .foregroundStyle(.secondary)
-                }
-
-                HStack {
-                    Text("Gesamt")
-                    Spacer()
-                    Text("\(allExercises.count)")
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.secondary)
-                }
+                statRow("Eigene Übungen", userExercises.count)
+                statRow("Supabase Übungen", supabaseExercises.count)
+                statRow("Gesamt", allExercises.count, emphasize: true)
             } header: {
                 Text("Übungsbibliothek")
             } footer: {
@@ -224,135 +141,115 @@ struct DataSettingsView: View {
                     .font(.caption)
             }
 
-            /* *DEL* ExerciseDB API Import Section komplett entfernt */
-
-            // MARK: - Workouts
+            // Workouts
             Section("Workouts") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Button {
-                        handleExport()
-                    } label: {
-                        Label("Workouts exportieren", systemImage: "square.and.arrow.up")
-                    }
-                    .disabled(allWorkouts.isEmpty)
+                Button {
+                    export(.workouts)
+                } label: {
+                    Label("Workouts exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allWorkouts.isEmpty)
 
-                    Divider()
-                        .padding(8)
+                Divider().padding(.vertical, 6)
 
-                    Button {
-                        showingImportPicker = true
-                    } label: {
-                        Label("Workouts importieren", systemImage: "square.and.arrow.down")
-                    }
+                Button {
+                    startImport(.workouts)
+                } label: {
+                    Label("Workouts importieren", systemImage: "square.and.arrow.down")
                 }
             }
 
-            // MARK: Übungsbibliothek Export/Import (JSON)
+            // Übungsbibliothek (JSON)
             Section("Übungsbibliothek (JSON)") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Button {
-                        handleExerciseExport()
-                    } label: {
-                        Label("Übungsbibliothek exportieren", systemImage: "square.and.arrow.up")
-                    }
-                    .disabled(allExercises.isEmpty)
+                Button {
+                    export(.exercises)
+                } label: {
+                    Label("Übungsbibliothek exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allExercises.isEmpty)
 
-                    Divider()
-                        .padding(8)
+                Divider().padding(.vertical, 6)
 
-                    Button {
-                        showingExerciseImportPicker = true
-                    } label: {
-                        Label("Übungsbibliothek importieren", systemImage: "square.and.arrow.down")
-                    }
+                Button {
+                    startImport(.exercises)
+                } label: {
+                    Label("Übungsbibliothek importieren", systemImage: "square.and.arrow.down")
                 }
             }
 
-            // MARK: Krafttraining Export/Import
+            // Krafttrainings
             Section("Krafttrainings") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Button {
-                        handleStrengthExport()
-                    } label: {
-                        Label("Krafttrainings exportieren", systemImage: "square.and.arrow.up")
-                    }
-                    .disabled(allStrengthSessions.isEmpty)
+                Button {
+                    export(.strength)
+                } label: {
+                    Label("Krafttrainings exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allStrengthSessions.isEmpty)
 
-                    Divider()
-                        .padding(8)
+                Divider().padding(.vertical, 6)
 
-                    Button {
-                        showingStrengthImportPicker = true
-                    } label: {
-                        Label("Krafttrainings importieren", systemImage: "square.and.arrow.down")
-                    }
+                Button {
+                    startImport(.strength)
+                } label: {
+                    Label("Krafttrainings importieren", systemImage: "square.and.arrow.down")
                 }
             }
 
-            // MARK: Trainingspläne Export/Import
+            // Trainingspläne
             Section("Trainingsplan") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Button {
-                        handlePlanExport()
-                    } label: {
-                        Label("Trainingspläne exportieren", systemImage: "square.and.arrow.up")
-                    }
-                    .disabled(allTrainingPlans.isEmpty)
+                Button {
+                    export(.plans)
+                } label: {
+                    Label("Trainingspläne exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allTrainingPlans.isEmpty)
 
-                    Divider()
-                        .padding(8)
+                Divider().padding(.vertical, 6)
 
-                    Button {
-                        showingPlanImportPicker = true
-                    } label: {
-                        Label("Trainingspläne importieren", systemImage: "square.and.arrow.down")
-                    }
+                Button {
+                    startImport(.plans)
+                } label: {
+                    Label("Trainingspläne importieren", systemImage: "square.and.arrow.down")
                 }
             }
 
-            // MARK: Übungssätze Export/Import
+            // Übungssätze
             Section("Übungssätze") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Button {
-                        handleSetExport()
-                    } label: {
-                        Label("Übungssätze exportieren", systemImage: "square.and.arrow.up")
-                    }
-                    .disabled(allExerciseSets.isEmpty)
+                Button {
+                    export(.sets)
+                } label: {
+                    Label("Übungssätze exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allExerciseSets.isEmpty)
 
-                    Divider()
-                        .padding(8)
+                Divider().padding(.vertical, 6)
 
-                    Button {
-                        showingSetImportPicker = true
-                    } label: {
-                        Label("Übungssätze importieren", systemImage: "square.and.arrow.down")
-                    }
+                Button {
+                    startImport(.sets)
+                } label: {
+                    Label("Übungssätze importieren", systemImage: "square.and.arrow.down")
                 }
             }
 
-            // MARK: Outdoor Export/Import
+            // Outdoor
             Section("Outdoor-Trainings") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Button {
-                        handleOutdoorExport()
-                    } label: {
-                        Label("Outdoor-Trainings exportieren", systemImage: "square.and.arrow.up")
-                    }
-                    .disabled(allOutdoorSessions.isEmpty)
+                Button {
+                    export(.outdoor)
+                } label: {
+                    Label("Outdoor-Trainings exportieren", systemImage: "square.and.arrow.up")
+                }
+                .disabled(allOutdoorSessions.isEmpty)
 
-                    Divider()
-                        .padding(8)
+                Divider().padding(.vertical, 6)
 
-                    Button {
-                        showingOutdoorImportPicker = true
-                    } label: {
-                        Label("Outdoor-Trainings importieren", systemImage: "square.and.arrow.down")
-                    }
+                Button {
+                    startImport(.outdoor)
+                } label: {
+                    Label("Outdoor-Trainings importieren", systemImage: "square.and.arrow.down")
                 }
             }
 
-            // MARK: - Gefahrenzone
+            // Gefahrenzone
             Section {
                 Button(role: .destructive) {
                     showingDeleteConfirmation = true
@@ -369,227 +266,76 @@ struct DataSettingsView: View {
         .navigationTitle("Daten")
         .navigationBarTitleDisplayMode(.inline)
 
-        // MARK: - Share Sheets
+        // ✅ Single Share Sheet
         .sheet(isPresented: $showingShareSheet) {
-            if let url = exportURL {
-                ShareSheet(items: [url])
-            }
-        }
-        .sheet(isPresented: $showingExerciseShareSheet) {
-            if let url = exerciseExportURL {
-                ShareSheet(items: [url])
-            }
-        }
-        .sheet(isPresented: $showingStrengthShareSheet) {
-            if let url = strengthExportURL {
-                ShareSheet(items: [url])
-            }
-        }
-        .sheet(isPresented: $showingPlanShareSheet) {
-            if let url = planExportURL {
-                ShareSheet(items: [url])
-            }
-        }
-        .sheet(isPresented: $showingSetShareSheet) {
-            if let url = setExportURL {
-                ShareSheet(items: [url])
-            }
-        }
-        .sheet(isPresented: $showingOutdoorShareSheet) {
-            if let url = outdoorExportURL {
+            if let url = activeShareURL {
                 ShareSheet(items: [url])
             }
         }
 
-        // MARK: - File Importers
+        // ✅ Single File Importer (robust!)
         .fileImporter(
-            isPresented: $showingImportPicker,
+            isPresented: $showingImporter,
             allowedContentTypes: [.json],
             allowsMultipleSelection: false
         ) { result in
+            guard let kind = activeImport else { return }
+
             switch result {
             case .success(let urls):
                 guard let url = urls.first else { return }
+
                 do {
-                    let count = try dataManager.importWorkouts(context: modelContext, url: url)
+                    let count: Int = try withSecurityScopedAccess(to: url) {
+                        switch kind {
+                        case .workouts:
+                            return try dataManager.importWorkouts(context: modelContext, url: url)
+                        case .exercises:
+                            return try dataManager.importExercises(context: modelContext, url: url)
+                        case .strength:
+                            return try dataManager.importStrengthSessions(context: modelContext, url: url)
+                        case .plans:
+                            return try dataManager.importTrainingPlans(context: modelContext, url: url)
+                        case .sets:
+                            return try dataManager.importExerciseSets(context: modelContext, url: url)
+                        case .outdoor:
+                            return try dataManager.importOutdoorSessions(context: modelContext, url: url)
+                        }
+                    }
+
                     if count > 0 {
-                        importErrorMessage = "Import erfolgreich! \(count) Workouts wurden hinzugefügt."
+                        importMessage = "Import erfolgreich! \(count) Einträge wurden hinzugefügt."
                         showingImportSuccess = true
                     } else {
-                        importErrorMessage = "Die Datei enthielt keine Workouts zum Importieren."
+                        importMessage = "Die Datei enthielt keine Einträge zum Importieren."
                         showingImportError = true
                     }
+
                 } catch let error as DataIOError {
-                    importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
+                    importMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
                     showingImportError = true
                 } catch {
-                    importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
+                    importMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
                     showingImportError = true
                 }
+
             case .failure(let error):
-                importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
-                showingImportError = true
-            }
-        }
-        .fileImporter(
-            isPresented: $showingExerciseImportPicker,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                guard let url = urls.first else { return }
-                do {
-                    let count = try dataManager.importExercises(context: modelContext, url: url)
-                    if count > 0 {
-                        importErrorMessage = "Import erfolgreich! \(count) Übungen wurden hinzugefügt."
-                        showingImportSuccess = true
-                    } else {
-                        importErrorMessage = "Die Datei enthielt keine Übungen zum Importieren."
-                        showingImportError = true
-                    }
-                } catch let error as DataIOError {
-                    importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
-                    showingImportError = true
-                } catch {
-                    importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
-                    showingImportError = true
-                }
-            case .failure(let error):
-                importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
-                showingImportError = true
-            }
-        }
-        .fileImporter(
-            isPresented: $showingStrengthImportPicker,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                guard let url = urls.first else { return }
-                do {
-                    let count = try dataManager.importStrengthSessions(context: modelContext, url: url)
-                    if count > 0 {
-                        importErrorMessage = "Import erfolgreich! \(count) Krafttrainings wurden hinzugefügt."
-                        showingImportSuccess = true
-                    } else {
-                        importErrorMessage = "Die Datei enthielt keine Krafttrainings zum Importieren."
-                        showingImportError = true
-                    }
-                } catch let error as DataIOError {
-                    importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
-                    showingImportError = true
-                } catch {
-                    importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
-                    showingImportError = true
-                }
-            case .failure(let error):
-                importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
-                showingImportError = true
-            }
-        }
-        .fileImporter(
-            isPresented: $showingPlanImportPicker,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                guard let url = urls.first else { return }
-                do {
-                    let count = try dataManager.importTrainingPlans(context: modelContext, url: url)
-                    if count > 0 {
-                        importErrorMessage = "Import erfolgreich! \(count) Trainingspläne wurden hinzugefügt."
-                        showingImportSuccess = true
-                    } else {
-                        importErrorMessage = "Die Datei enthielt keine Trainingspläne zum Importieren."
-                        showingImportError = true
-                    }
-                } catch let error as DataIOError {
-                    importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
-                    showingImportError = true
-                } catch {
-                    importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
-                    showingImportError = true
-                }
-            case .failure(let error):
-                importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
-                showingImportError = true
-            }
-        }
-        .fileImporter(
-            isPresented: $showingSetImportPicker,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                guard let url = urls.first else { return }
-                do {
-                    let count = try dataManager.importExerciseSets(context: modelContext, url: url)
-                    if count > 0 {
-                        importErrorMessage = "Import erfolgreich! \(count) Übungssätze wurden hinzugefügt."
-                        showingImportSuccess = true
-                    } else {
-                        importErrorMessage = "Die Datei enthielt keine Übungssätze zum Importieren."
-                        showingImportError = true
-                    }
-                } catch let error as DataIOError {
-                    importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
-                    showingImportError = true
-                } catch {
-                    importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
-                    showingImportError = true
-                }
-            case .failure(let error):
-                importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
-                showingImportError = true
-            }
-        }
-        .fileImporter(
-            isPresented: $showingOutdoorImportPicker,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                guard let url = urls.first else { return }
-                do {
-                    let count = try dataManager.importOutdoorSessions(context: modelContext, url: url)
-                    if count > 0 {
-                        importErrorMessage = "Import erfolgreich! \(count) Outdoor-Trainings wurden hinzugefügt."
-                        showingImportSuccess = true
-                    } else {
-                        importErrorMessage = "Die Datei enthielt keine Outdoor-Trainings zum Importieren."
-                        showingImportError = true
-                    }
-                } catch let error as DataIOError {
-                    importErrorMessage = error.errorDescription ?? "Unbekannter Fehler beim Import."
-                    showingImportError = true
-                } catch {
-                    importErrorMessage = "Allgemeiner Import-Fehler: \(error.localizedDescription)"
-                    showingImportError = true
-                }
-            case .failure(let error):
-                importErrorMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
+                importMessage = "Fehler beim Auswählen der Datei: \(error.localizedDescription)"
                 showingImportError = true
             }
         }
 
-        // MARK: - Alerts
+        // Alerts
         .alert("Import erfolgreich", isPresented: $showingImportSuccess) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text(importErrorMessage)
+            Text(importMessage)
         }
         .alert("Fehler", isPresented: $showingImportError) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text(importErrorMessage)
+            Text(importMessage)
         }
-
-        /* *DEL* Alle RapidAPI/ExerciseDB Alerts entfernt */
 
         // Delete Confirmation
         .confirmationDialog("Workouts löschen", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
@@ -601,6 +347,16 @@ struct DataSettingsView: View {
             Text("Diese Aktion kann nicht rückgängig gemacht werden. Sind Sie sicher, dass Sie alle gespeicherten Trainingsdaten unwiderruflich löschen möchten?")
         }
     }
+
+    private func statRow(_ title: String, _ value: Int, emphasize: Bool = false) -> some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text("\(value)")
+                .fontWeight(emphasize ? .semibold : .regular)
+                .foregroundStyle(.secondary)
+        }
+    }
 }
 
 // MARK: - ShareSheet UIKit Wrapper
@@ -608,16 +364,8 @@ struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        return controller
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
-
-#Preview {
-    NavigationStack {
-        DataSettingsView()
-            .modelContainer(for: [Exercise.self, CardioSession.self])
-    }
 }

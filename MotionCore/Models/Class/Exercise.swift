@@ -27,20 +27,26 @@ final class Exercise {
     var sortIndex: Int
     var cautionNote: String
     var isArchived: Bool
-    var apiID: String?
+
+    // ✅ UUID statt String
+    var apiID: UUID?
     var isSystemExercise: Bool
+
     var videoURL: String?
     var instructions: String?
     var localVideoFileName: String?
+
     var apiBodyPart: String?
     var apiTarget: String?
     var apiEquipment: String?
     var apiSecondaryMuscles: [String]?
+
     var apiOverview: String?          // Ausführliche Beschreibung (v2)
     var apiExerciseTips: [String]?    // Trainingstipps (v2)
     var apiVariations: [String]?      // Übungsvariationen (v2)
     var apiImageURL: String?          // Bild-URL (v2)
     var apiProvider: String?          // "rapidapi", "exercisedb_v2" oder "supabase"
+
     var categoryRaw: String
     var equipmentRaw: String
     var difficultyRaw: String
@@ -62,7 +68,7 @@ final class Exercise {
         sortIndex: Int = 0,
         cautionNote: String = "",
         isArchived: Bool = false,
-        apiID: String? = nil,
+        apiID: UUID? = nil,
         isSystemExercise: Bool = false,
         videoURL: String? = nil,
         instructions: String? = nil,
@@ -73,6 +79,9 @@ final class Exercise {
         apiSecondaryMuscles: [String]? = nil,
         apiProvider: String? = nil,
         apiOverview: String? = nil,
+        apiExerciseTips: [String]? = nil,
+        apiVariations: [String]? = nil,
+        apiImageURL: String? = nil,
         categoryRaw: String = "compound",
         equipmentRaw: String = "barbell",
         difficultyRaw: String = "intermediate",
@@ -93,17 +102,25 @@ final class Exercise {
         self.sortIndex = sortIndex
         self.cautionNote = cautionNote
         self.isArchived = isArchived
+
         self.apiID = apiID
         self.isSystemExercise = isSystemExercise
+
         self.videoURL = videoURL
         self.instructions = instructions
         self.localVideoFileName = localVideoFileName
+
         self.apiBodyPart = apiBodyPart
         self.apiTarget = apiTarget
         self.apiEquipment = apiEquipment
         self.apiSecondaryMuscles = apiSecondaryMuscles
+
         self.apiProvider = apiProvider
         self.apiOverview = apiOverview
+        self.apiExerciseTips = apiExerciseTips
+        self.apiVariations = apiVariations
+        self.apiImageURL = apiImageURL
+
         self.categoryRaw = categoryRaw
         self.equipmentRaw = equipmentRaw
         self.difficultyRaw = difficultyRaw
@@ -246,7 +263,7 @@ extension Exercise {
         sortIndex: Int = 0,
         cautionNote: String = "",
         isArchived: Bool = false,
-        apiID: String? = nil,
+        apiID: UUID? = nil,
         isSystemExercise: Bool = false,
         videoURL: String? = nil,
         instructions: String? = nil,
@@ -256,7 +273,10 @@ extension Exercise {
         apiEquipment: String? = nil,
         apiSecondaryMuscles: [String]? = nil,
         apiProvider: String? = nil,
-        apiOverview: String? = nil
+        apiOverview: String? = nil,
+        apiExerciseTips: [String]? = nil,
+        apiVariations: [String]? = nil,
+        apiImageURL: String? = nil
     ) {
         self.init(
             name: name,
@@ -282,6 +302,9 @@ extension Exercise {
             apiSecondaryMuscles: apiSecondaryMuscles,
             apiProvider: apiProvider,
             apiOverview: apiOverview,
+            apiExerciseTips: apiExerciseTips,
+            apiVariations: apiVariations,
+            apiImageURL: apiImageURL,
             categoryRaw: category.rawValue,
             equipmentRaw: equipment.rawValue,
             difficultyRaw: difficulty.rawValue,
@@ -295,8 +318,6 @@ extension Exercise {
 
 // MARK: - Supabase Import
 
-    // MARK: - Supabase Import
-
 extension Exercise {
     /// Erstellt ein Exercise-Objekt aus Supabase-Daten (neue Struktur mit JOINs)
     convenience init(from supabase: SupabaseExercise) {
@@ -306,10 +327,10 @@ extension Exercise {
         let tipsText = supabase.tips ?? ""
 
         // Muskelgruppen mappen (können nil sein)
-        let primaryMusclesList = (supabase.primaryMuscles ?? []).compactMap {
+        let primaryMusclesList = supabase.primaryMuscles.compactMap {
             MuscleGroupMapper.map(supabaseValue: $0)
         }
-        let secondaryMusclesList = (supabase.secondaryMuscles ?? []).compactMap {
+        let secondaryMusclesList = supabase.secondaryMuscles.compactMap {
             MuscleGroupMapper.map(supabaseValue: $0)
         }
 
@@ -318,11 +339,11 @@ extension Exercise {
         let secondaryMusclesRaw = secondaryMusclesList.map { $0.rawValue }
 
         // Equipment mappen (nimm das erste wenn mehrere vorhanden)
-        let equipmentEnum = ExerciseEquipment.fromSupabase(supabase.equipment?.first)
+        let equipmentEnum = ExerciseEquipment.fromSupabase(supabase.equipment.first)
         let equipmentRaw = equipmentEnum.rawValue
 
         // Difficulty mappen
-        let difficultyEnum = ExerciseDifficulty.fromSupabase(supabase.difficulty)
+        let difficultyEnum = ExerciseDifficulty.fromSupabase(supabase.difficulty ?? "intermediate")
         let difficultyRaw = difficultyEnum.rawValue
 
         // Category mappen (aus mechanic/force ableiten)
@@ -334,15 +355,14 @@ extension Exercise {
 
         // Video-URL konstruieren (aus gif_filename oder direkt aus video_url)
         var videoURL: String? = supabase.videoUrl
+        
         if videoURL == nil, let gifFilename = supabase.gifFilename {
-            // Konstruiere URL für Supabase Storage
             do {
                 let baseUrl = try SupabaseConfig.url.absoluteString
-                    .replacingOccurrences(of: "/rest/v1", with: "")
                 let mp4Filename = gifFilename.replacingOccurrences(of: ".gif", with: ".mp4")
                 videoURL = "\(baseUrl)/storage/v1/object/public/exercises/\(mp4Filename)"
             } catch {
-                print("⚠️ Konnte Video-URL nicht konstruieren: \(error)")
+                print("⚠️ SupabaseConfig.url konnte nicht geladen werden: \(error)")
             }
         }
 
@@ -360,7 +380,7 @@ extension Exercise {
             sortIndex: 0,
             cautionNote: "",
             isArchived: false,
-            apiID: supabase.id,
+            apiID: supabase.id,               // ✅ UUID passt jetzt
             isSystemExercise: true,
             videoURL: videoURL,
             instructions: instructionsText,
@@ -371,6 +391,9 @@ extension Exercise {
             apiSecondaryMuscles: nil,
             apiProvider: "supabase",
             apiOverview: tipsText,
+            apiExerciseTips: nil,
+            apiVariations: nil,
+            apiImageURL: nil,
             categoryRaw: categoryRaw,
             equipmentRaw: equipmentRaw,
             difficultyRaw: difficultyRaw,
@@ -381,6 +404,7 @@ extension Exercise {
         )
     }
 }
+
 // MARK: - Methods
 
 extension Exercise {

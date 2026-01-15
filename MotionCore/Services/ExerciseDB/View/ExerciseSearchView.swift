@@ -22,7 +22,7 @@ struct ExerciseSearchView: View {
     @State private var searchResults: [SupabaseExercise] = []
     @State private var isSearching = false
     @State private var errorMessage: String?
-    @State private var importedIDs: Set<String> = []
+    @State private var importedIDs: Set<UUID> = []
 
         // Filter-Optionen
     @State private var selectedFilter: SearchFilter = .name
@@ -269,10 +269,11 @@ struct ExerciseSearchView: View {
 
         do {
             searchResults = try await SupabaseExerciseService.shared.searchExercises(byName: searchText)
+        } catch let err as SupabaseError {
+            errorMessage = "Suche fehlgeschlagen: \(err.errorDescription ?? "Unbekannt")"
         } catch {
             errorMessage = "Suche fehlgeschlagen: \(error.localizedDescription)"
         }
-
         isSearching = false
     }
 
@@ -326,15 +327,22 @@ struct ExerciseSearchView: View {
     // MARK: - Import
 
     private func importExercise(_ exercise: SupabaseExercise) {
-        do {
-            try ExerciseImportManager.importFromSupabase(
-                exercise,
-                context: modelContext
-            )
-            importedIDs.insert(exercise.id)
-
-        } catch {
-            errorMessage = "Import fehlgeschlagen: \(error.localizedDescription)"
+        errorMessage = nil
+        
+        Task {
+            do {
+                    // Import + Save (läuft nicht im UI-Flow)
+                try ExerciseImportManager.importFromSupabase(exercise, context: modelContext)
+                
+                    // UI State sicher auf dem MainActor updaten
+                await MainActor.run {
+                    importedIDs.insert(exercise.id)
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Import fehlgeschlagen: \(error.localizedDescription)"
+                }
+            }
         }
     }
 
@@ -362,9 +370,8 @@ struct ExerciseSearchRow: View {
                     .font(.headline)
 
                 HStack(spacing: 8) {
-                    // Primäre Muskelgruppe
-                    if let primaryMuscles = exercise.primaryMuscles,
-                       let primaryMuscle = primaryMuscles.first {
+                    // NEU: Primäre Muskelgruppe (nicht mehr optional)
+                    if let primaryMuscle = exercise.primaryMuscles.first {
                         HStack(spacing: 4) {
                             Image(systemName: "figure.strengthtraining.traditional")
                                 .font(.caption2)
@@ -374,9 +381,8 @@ struct ExerciseSearchRow: View {
                         .foregroundStyle(.secondary)
                     }
 
-                    // Equipment
-                    if let equipmentArray = exercise.equipment,
-                       let equipment = equipmentArray.first {
+                    // NEU: Equipment (nicht mehr optional)
+                    if let equipment = exercise.equipment.first {
                         HStack(spacing: 4) {
                             Image(systemName: "dumbbell")
                                 .font(.caption2)
@@ -386,11 +392,11 @@ struct ExerciseSearchRow: View {
                         .foregroundStyle(.secondary)
                     }
 
-                    // Difficulty
+                    // NEU: Difficulty (optional mit Fallback)
                     HStack(spacing: 4) {
                         Image(systemName: "chart.bar.fill")
                             .font(.caption2)
-                        Text(exercise.difficulty.capitalized)
+                        Text((exercise.difficulty ?? "intermediate").capitalized)
                             .font(.caption)
                     }
                     .foregroundStyle(.secondary)
