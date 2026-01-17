@@ -85,6 +85,11 @@ struct ExerciseVideoView: View {
         self.size = size
     }
 
+    private var sourceKey: String {
+        // eindeutig: wenn sich Übung ändert → Key ändert sich
+        "\(assetName)|\(remoteVideoPath ?? "")"
+    }
+
     var body: some View {
         ZStack {
             mainContent
@@ -98,6 +103,12 @@ struct ExerciseVideoView: View {
                     } else {
                         setupMainIfNeeded()
                     }
+                }
+                .onChange(of: assetName) { _, _ in
+                    reloadForNewSource()
+                }
+                .onChange(of: remoteVideoPath) { _, _ in
+                    reloadForNewSource()
                 }
                 .onDisappear {
                     player?.pause()
@@ -157,9 +168,8 @@ struct ExerciseVideoView: View {
 
             case .playing, .previewing:
                 if let player {
-                    LoopingPlayerLayerView(player: player)
+                    LoopingPlayerView(player: player, cornerRadius: 12)
                         .frame(width: size, height: size)
-                        .clipped()
                         .allowsHitTesting(false)
                 } else {
                     placeholder
@@ -196,10 +206,9 @@ struct ExerciseVideoView: View {
         } else if hasRemoteVideo,
                   let path = remoteVideoPath,
                   let remoteURL = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path) {
-
-              print("🎬 Remote video path:", path)
-              print("🎬 Remote video url :", remoteURL.absoluteString)
-              setupRemotePlayer(with: remoteURL)
+            
+            print("🎬 remoteVideoPath RAW:", remoteVideoPath ?? "nil")
+            setupRemotePlayer(with: remoteURL)
           }
     }
 
@@ -225,13 +234,18 @@ struct ExerciseVideoView: View {
         statusObservation = item.observe(\.status, options: [.new]) { item, _ in
             DispatchQueue.main.async {
                 switch item.status {
-                case .readyToPlay:
-                    isLoadingRemote = false
-                case .failed:
-                    isLoadingRemote = false
-                    print("⚠️ Remote Video konnte nicht geladen werden: \(url)")
-                default:
-                    break
+                    case .readyToPlay:
+                        isLoadingRemote = false
+                    case .failed:
+                        isLoadingRemote = false
+                        print("⚠️ Remote Video konnte nicht geladen werden: \(url)")
+
+                            // ✅ WICHTIG: Player zurücksetzen, damit UI wieder placeholder zeigt
+                        self.player?.pause()
+                        self.player = nil
+                        self.looper = nil
+                    default:
+                        break
                 }
             }
         }
@@ -251,7 +265,8 @@ struct ExerciseVideoView: View {
 
             Group {
                 if appSettings.showExerciseVideos, let previewPlayer {
-                    LoopingPlayerLayerView(player: previewPlayer)
+                    LoopingPlayerView(player: previewPlayer, cornerRadius: 12)
+                        .frame(width: size, height: size)
                         .allowsHitTesting(false)
                 } else if isLoadingRemote {
                     loadingView
@@ -311,6 +326,25 @@ struct ExerciseVideoView: View {
         Bundle.main.url(forResource: name, withExtension: "mp4")
         ?? Bundle.main.url(forResource: name, withExtension: "mov")
     }
+
+    private func reloadForNewSource() {
+        // Preview sauber schließen
+        isPreviewing = false
+        previewPlayer?.pause()
+        previewPlayer = nil
+        previewLooper = nil
+
+        // Main sauber resetten
+        player?.pause()
+        player = nil
+        looper = nil
+        statusObservation?.invalidate()
+        statusObservation = nil
+        isLoadingRemote = false
+
+        // Neu aufbauen
+        setupMainIfNeeded()
+    }
 }
 
     // MARK: - Convenience Extensions
@@ -332,15 +366,14 @@ extension ExerciseVideoView {
         let asset = set.exerciseMediaAssetName
         let uuid = set.exerciseUUIDSnapshot
 
-        // Wir bauen remotePath aus Snapshot, ohne set.exercise zu anfassen
         let remotePath: String? = {
-            guard let _ = UUID(uuidString: uuid) else { return nil }
-            return "\(uuid).mp4"
+            guard UUID(uuidString: uuid) != nil else { return nil }
+            return "\(uuid.lowercased()).mp4"   // ✅ WICHTIG
         }()
 
         return ExerciseVideoView(assetName: asset, remoteVideoPath: remotePath, size: size)
     }
-    
+
         // ✅ Legacy/local-only usage
     static func forAsset(_ assetName: String, size: CGFloat = 80) -> ExerciseVideoView {
         ExerciseVideoView(assetName: assetName, size: size)

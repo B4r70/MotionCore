@@ -71,10 +71,7 @@ struct ActiveSetCard: View {
                         .foregroundStyle(.blue)
                         .padding(10)
                         .background(.ultraThinMaterial, in: Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white.opacity(0.25), lineWidth: 0.8)
-                        )
+                        .overlay(Circle().fill(Color.white.opacity(0.06)))
                 }
                 .opacity(hasInstructions ? 1.0 : 0.35)
                 .disabled(!hasInstructions)
