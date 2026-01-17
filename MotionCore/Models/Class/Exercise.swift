@@ -32,7 +32,8 @@ final class Exercise {
     var apiID: UUID?
     var isSystemExercise: Bool
 
-    var videoURL: String?
+    var videoPath: String?
+    var posterPath: String?
     var instructions: String?
     var localVideoFileName: String?
 
@@ -70,7 +71,8 @@ final class Exercise {
         isArchived: Bool = false,
         apiID: UUID? = nil,
         isSystemExercise: Bool = false,
-        videoURL: String? = nil,
+        videoPath: String? = nil,
+        posterPath: String? = nil,
         instructions: String? = nil,
         localVideoFileName: String? = nil,
         apiBodyPart: String? = nil,
@@ -106,7 +108,8 @@ final class Exercise {
         self.apiID = apiID
         self.isSystemExercise = isSystemExercise
 
-        self.videoURL = videoURL
+        self.videoPath = videoPath
+        self.posterPath = posterPath
         self.instructions = instructions
         self.localVideoFileName = localVideoFileName
 
@@ -178,22 +181,23 @@ extension Exercise {
     }
 
     var hasMedia: Bool {
-        !mediaAssetName.isEmpty || videoURL != nil
+        !mediaAssetName.isEmpty || videoPath != nil
+    }
+
+    var hasRemoteVideo: Bool {
+        guard let p = videoPath else { return false }
+        return !p.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var hasLocalVideo: Bool {
         localVideoFileName != nil
     }
 
-    var hasRemoteVideo: Bool {
-        videoURL != nil
-    }
-
     var bestVideoSource: String? {
         if let localFile = localVideoFileName {
             return localFile
         }
-        return videoURL
+        return videoPath
     }
 
     var repRangeFormatted: String {
@@ -265,7 +269,8 @@ extension Exercise {
         isArchived: Bool = false,
         apiID: UUID? = nil,
         isSystemExercise: Bool = false,
-        videoURL: String? = nil,
+        videoPath: String? = nil,
+        posterPath: String? = nil,
         instructions: String? = nil,
         localVideoFileName: String? = nil,
         apiBodyPart: String? = nil,
@@ -293,7 +298,8 @@ extension Exercise {
             isArchived: isArchived,
             apiID: apiID,
             isSystemExercise: isSystemExercise,
-            videoURL: videoURL,
+            videoPath: videoPath,
+            posterPath: posterPath,
             instructions: instructions,
             localVideoFileName: localVideoFileName,
             apiBodyPart: apiBodyPart,
@@ -353,18 +359,9 @@ extension Exercise {
         )
         let categoryRaw = categoryEnum.rawValue
 
-        // Video-URL konstruieren (aus gif_filename oder direkt aus video_url)
-        var videoURL: String? = supabase.videoUrl
-        
-        if videoURL == nil, let gifFilename = supabase.gifFilename {
-            do {
-                let baseUrl = try SupabaseConfig.url.absoluteString
-                let mp4Filename = gifFilename.replacingOccurrences(of: ".gif", with: ".mp4")
-                videoURL = "\(baseUrl)/storage/v1/object/public/exercises/\(mp4Filename)"
-            } catch {
-                print("⚠️ SupabaseConfig.url konnte nicht geladen werden: \(error)")
-            }
-        }
+        // ✅ Neu: Wir speichern nur PATHS aus der DB (nicht die volle URL)
+        let videoPath: String? = supabase.videoPath
+        let posterPath: String? = supabase.posterPath
 
         // HAUPT-Initializer aufrufen (ALLE Parameter!)
         self.init(
@@ -382,7 +379,8 @@ extension Exercise {
             isArchived: false,
             apiID: supabase.id,               // ✅ UUID passt jetzt
             isSystemExercise: true,
-            videoURL: videoURL,
+            videoPath: videoPath,
+            posterPath: posterPath,
             instructions: instructionsText,
             localVideoFileName: nil,
             apiBodyPart: nil,
@@ -446,5 +444,17 @@ extension Exercise {
 
     func usesEquipment(_ eq: ExerciseEquipment) -> Bool {
         return equipment == eq
+    }
+}
+
+extension Exercise {
+    var remoteVideoPublicURL: URL? {
+        guard let path = videoPath, !path.isEmpty else { return nil }
+        return SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path)
+    }
+
+    var posterPublicURL: URL? {
+        guard let path = posterPath, !path.isEmpty else { return nil }
+        return SupabaseStorageURLBuilder.publicURL(bucket: .exercisePosters, path: path)
     }
 }

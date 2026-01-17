@@ -38,8 +38,8 @@ struct ExerciseAPIView: View {
             Divider()
 
             // Video Player Button
-            if let videoURL = exercise.videoURL,
-               let url = URL(string: videoURL) {
+            if let path = exercise.videoPath,
+               let url = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path) {
                 Button {
                     showVideoPlayer = true
                 } label: {

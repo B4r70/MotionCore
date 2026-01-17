@@ -9,7 +9,7 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-
+//
 import SwiftData
 import SwiftUI
 
@@ -53,6 +53,7 @@ struct MotionCoreApp: App {
                 .preferredColorScheme(appSettings.appTheme.colorScheme)
                 .handleSessionLifecycle()
                 .onAppear {
+                    repairSnapshotsOnLaunch()
                     checkForActiveSession()
                 }
                 .alert("Aktive Session gefunden", isPresented: $showSessionRestoreAlert) {
@@ -102,5 +103,31 @@ struct MotionCoreApp: App {
         )
 
         pendingRestoreInfo = nil
+    }
+
+    private func repairSnapshotsOnLaunch() {
+        let context = ModelContext(sharedModelContainer)
+
+        do {
+            let descriptor = FetchDescriptor<ExerciseSet>()
+            let sets = try context.fetch(descriptor)
+
+            var changed = 0
+            for s in sets {
+                let uuid = s.exerciseUUIDSnapshot
+                if !uuid.isEmpty && UUID(uuidString: uuid) == nil {
+                    // kaputter Snapshot -> leeren, damit UI nicht falsche URLs baut
+                    s.exerciseUUIDSnapshot = ""
+                    changed += 1
+                }
+            }
+
+            if changed > 0 {
+                try context.save()
+                print("🧹 Repair: cleaned \(changed) invalid exerciseUUIDSnapshot values")
+            }
+        } catch {
+            print("⚠️ Repair failed:", error)
+        }
     }
 }

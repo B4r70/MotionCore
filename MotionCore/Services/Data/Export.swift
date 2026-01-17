@@ -151,7 +151,8 @@ struct ExerciseExportItem: Codable {
     // ExerciseDB API Felder
     let apiID: String?
     let isSystemExercise: Bool?
-    let videoURL: String?
+    let videoPath: String?
+    let posterPath: String?
     let instructions: String?
     let apiBodyPart: String?
     let apiTarget: String?
@@ -187,7 +188,8 @@ extension Exercise {
             // NEU: API-Felder
             apiID: apiID?.uuidString,
             isSystemExercise: isSystemExercise ? true : nil,
-            videoURL: videoURL,
+            videoPath: videoPath,
+            posterPath: posterPath,
             instructions: instructions,
             apiBodyPart: apiBodyPart,
             apiTarget: apiTarget,
@@ -221,7 +223,8 @@ extension Exercise {
             // NEU: API-Felder
             apiID: e.apiID.flatMap { UUID(uuidString: $0) },
             isSystemExercise: e.isSystemExercise ?? false,
-            videoURL: e.videoURL,
+            videoPath: e.videoPath,
+            posterPath: e.posterPath,
             instructions: e.instructions,
             localVideoFileName: nil, // Wird nicht exportiert (nur temporär gecacht)
             apiBodyPart: e.apiBodyPart,

@@ -23,8 +23,8 @@ struct SupabaseExercise: Decodable, Identifiable {
     let mechanicType: String?
     let difficulty: String?
 
-    let gifFilename: String?
-    let videoUrl: String?
+    let videoPath: String?
+    let posterPath: String?
     let thumbnailUrl: String?
     let source: String?
 

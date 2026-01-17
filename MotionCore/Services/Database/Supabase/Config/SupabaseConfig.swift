@@ -13,73 +13,68 @@
 
 import Foundation
 
+private func debugLog(_ message: @autoclosure () -> String) {
+#if DEBUG
+    print(message())
+#endif
+}
+
 enum SupabaseConfig {
+
     enum Error: Swift.Error {
         case missingKey(String)
         case invalidURL
     }
 
-    /// Supabase Base URL (OHNE /rest/v1 - wird vom Client hinzugefügt)
+    // MARK: - Supabase Base URL
+
+    // Supabase Base URL (OHNE /rest/v1)
     static var url: URL {
         get throws {
-            // Debug: Alle Info.plist Keys ausgeben
-            print("📋 Alle Info.plist Keys:")
-            if let dict = Bundle.main.infoDictionary {
-                for (key, value) in dict {
-                    if key.contains("SUPABASE") {
-                        print("   \(key) = \(value)")
-                    }
-                }
-            }
-
-            // Versuche URL zu laden
-            guard let urlString = Bundle.main.object(forInfoDictionaryKey: "MOTIONCORE_SUPABASE_URL") as? String else {
-                print("❌ MOTIONCORE_SUPABASE_URL nicht gefunden in Info.plist")
+            guard let urlString = Bundle.main
+                .object(forInfoDictionaryKey: "MOTIONCORE_SUPABASE_URL") as? String else {
                 throw Error.missingKey("MOTIONCORE_SUPABASE_URL")
             }
 
-            print("🔍 URL String aus Info.plist: '\(urlString)'")
-            print("🔍 URL String Länge: \(urlString.count) Zeichen")
-            print("🔍 URL String isEmpty: \(urlString.isEmpty)")
-            print("🔍 URL String enthält $(: \(urlString.contains("$("))")
+            let trimmed = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
 
-            guard !urlString.isEmpty,
-                  !urlString.contains("$("),
-                  !urlString.contains("your-project") else {
-                print("❌ URL String ist leer oder nicht ersetzt")
-                throw Error.missingKey("MOTIONCORE_SUPABASE_URL nicht konfiguriert")
+            guard !trimmed.isEmpty,
+                  !trimmed.contains("$("),
+                  !trimmed.contains("your-project") else {
+                throw Error.missingKey("MOTIONCORE_SUPABASE_URL not configured")
             }
 
-            guard let url = URL(string: urlString) else {
-                print("❌ Kann keine URL erstellen aus: '\(urlString)'")
+            guard let url = URL(string: trimmed) else {
                 throw Error.invalidURL
             }
 
-            print("✅ URL erfolgreich geladen: \(url)")
+            debugLog("✅ Supabase URL loaded: \(url.host ?? url.absoluteString)")
             return url
         }
     }
 
-    /// Supabase Anon/Public API Key
+    // MARK: - Supabase Anon Key
+
+    // Supabase public anon key
     static var anonKey: String {
         get throws {
-            guard let key = Bundle.main.object(forInfoDictionaryKey: "MOTIONCORE_SUPABASE_ANON_KEY") as? String else {
-                print("❌ MOTIONCORE_SUPABASE_ANON_KEY nicht gefunden in Info.plist")
+            guard let key = Bundle.main
+                .object(forInfoDictionaryKey: "MOTIONCORE_SUPABASE_ANON_KEY") as? String else {
                 throw Error.missingKey("MOTIONCORE_SUPABASE_ANON_KEY")
             }
 
-            print("🔍 API Key Länge: \(key.count) Zeichen")
-            print("🔍 API Key Prefix: \(key.prefix(20))...")
+            let trimmed = key.trimmingCharacters(in: .whitespacesAndNewlines)
 
-            guard !key.isEmpty,
-                  !key.contains("$("),
-                  !key.contains("your_anon_key") else {
-                print("❌ API Key ist leer oder nicht ersetzt")
-                throw Error.missingKey("MOTIONCORE_SUPABASE_ANON_KEY nicht konfiguriert")
+            guard !trimmed.isEmpty,
+                  !trimmed.contains("$("),
+                  !trimmed.contains("your_anon_key") else {
+                throw Error.missingKey("MOTIONCORE_SUPABASE_ANON_KEY not configured")
             }
 
-            print("✅ API Key erfolgreich geladen")
-            return key
+                // 🔒 NIEMALS den Key selbst loggen
+            debugLog("🔐 Supabase anon key loaded (length: \(trimmed.count))")
+
+            return trimmed
         }
     }
 }

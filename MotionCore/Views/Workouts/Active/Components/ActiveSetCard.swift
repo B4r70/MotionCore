@@ -36,8 +36,8 @@ struct ActiveSetCard: View {
         VStack(spacing: 20) {
             HStack(spacing: 16) {
                 // Anzeige des Übungs-Darstellung sofern vorhanden
-                ExerciseVideoView(
-                    assetName: set.exerciseMediaAssetName,
+                ExerciseVideoView.forSet(
+                    set,
                     size: 80
                 )
                 .fixedSize(

@@ -46,8 +46,10 @@ struct UnifiedExercise {
     let description: String?
     let difficulty: String?
     let category: String?
-    let videoURL: String?
-    let imageURL: String?
+
+    // Externe Medien (URLs!)
+    let externalVideoURL: String?
+    let externalImageURL: String?
 }
 
     // MARK: - Conversion Extension
@@ -64,8 +66,8 @@ extension RapidAPIExercise {
             description: description,
             difficulty: difficulty,
             category: category,
-            videoURL: nil,
-            imageURL: nil
+            externalVideoURL: nil,
+            externalImageURL: nil
         )
     }
 }
@@ -73,5 +75,5 @@ extension RapidAPIExercise {
     // MARK: - Legacy Support
     /// Response-Modell für die Exercise-IDs-Liste (falls noch benötigt)
 struct ExerciseIdListResponse: Decodable {
-    let excercises_ids: [String]
+    let excercise_ids: [String]
 }

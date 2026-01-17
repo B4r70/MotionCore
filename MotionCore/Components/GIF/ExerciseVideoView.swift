@@ -19,7 +19,7 @@ struct ExerciseVideoView: View {
 
     // Unterstützt sowohl assetName als auch Exercise-Objekt
     let assetName: String
-    let remoteVideoURL: String?
+    let remoteVideoPath: String?
     var size: CGFloat = 120
 
     // Main player (small thumbnail)
@@ -30,6 +30,7 @@ struct ExerciseVideoView: View {
     @State private var isPreviewing = false
     @State private var previewPlayer: AVQueuePlayer?
     @State private var previewLooper: AVPlayerLooper?
+    @State private var statusObservation: NSKeyValueObservation?
 
         // Loading State für Remote Videos
     @State private var isLoadingRemote = false
@@ -43,7 +44,7 @@ struct ExerciseVideoView: View {
     }
 
     private var hasLocalAsset: Bool { !assetName.isEmpty }
-    private var hasRemoteVideo: Bool { remoteVideoURL != nil && !(remoteVideoURL?.isEmpty ?? true) }
+    private var hasRemoteVideo: Bool { remoteVideoPath != nil && !(remoteVideoPath?.isEmpty ?? true) }
     private var hasAnyVideo: Bool { hasLocalAsset || hasRemoteVideo }
 
     private var canPreview: Bool {
@@ -62,23 +63,25 @@ struct ExerciseVideoView: View {
     // MARK: - Initializers
 
     // Bestehender Init (kompatibel mit bestehendem Code)
+    // → nur lokal (Asset), kein Remote
     init(assetName: String, size: CGFloat = 120) {
         self.assetName = assetName
-        self.remoteVideoURL = nil
+        self.remoteVideoPath = nil
         self.size = size
     }
 
     // Init mit Exercise-Objekt
     init(exercise: Exercise, size: CGFloat = 120) {
         self.assetName = exercise.mediaAssetName
-        self.remoteVideoURL = exercise.videoURL
+        self.remoteVideoPath = exercise.videoPath
         self.size = size
     }
 
-    // Direkter Init mit Remote-URL
-    init(assetName: String = "", remoteVideoURL: String?, size: CGFloat = 120) {
+    // Direkter Init mit Remote-PATH (vormals Remote-URL)
+    // (Ich nenne den Parameter bewusst "remoteVideoPath", damit du nicht wieder URL/Path verwechselst.)
+    init(assetName: String = "", remoteVideoPath: String?, size: CGFloat = 120) {
         self.assetName = assetName
-        self.remoteVideoURL = remoteVideoURL
+        self.remoteVideoPath = remoteVideoPath
         self.size = size
     }
 
@@ -130,6 +133,9 @@ struct ExerciseVideoView: View {
         player?.pause()
         previewPlayer?.pause()
 
+        statusObservation?.invalidate()
+        statusObservation = nil
+
         player = nil
         looper = nil
         previewPlayer = nil
@@ -151,8 +157,9 @@ struct ExerciseVideoView: View {
 
             case .playing, .previewing:
                 if let player {
-                    VideoPlayer(player: player)
-                        .disabled(true)
+                    LoopingPlayerLayerView(player: player)
+                        .frame(width: size, height: size)
+                        .clipped()
                         .allowsHitTesting(false)
                 } else {
                     placeholder
@@ -186,9 +193,14 @@ struct ExerciseVideoView: View {
             // Priorität: Erst lokales Asset, dann Remote
         if hasLocalAsset, let localURL = mediaURL(for: assetName) {
             setupLocalPlayer(with: localURL)
-        } else if hasRemoteVideo, let remoteURLString = remoteVideoURL, let remoteURL = URL(string: remoteURLString) {
-            setupRemotePlayer(with: remoteURL)
-        }
+        } else if hasRemoteVideo,
+                  let path = remoteVideoPath,
+                  let remoteURL = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path) {
+
+              print("🎬 Remote video path:", path)
+              print("🎬 Remote video url :", remoteURL.absoluteString)
+              setupRemotePlayer(with: remoteURL)
+          }
     }
 
     // Setup für lokale Videos
@@ -210,28 +222,19 @@ struct ExerciseVideoView: View {
         let q = AVQueuePlayer()
         q.isMuted = true
 
-            // Warte bis Video bereit ist
-        NotificationCenter.default.addObserver(
-            forName: .AVPlayerItemDidPlayToEndTime,
-            object: item,
-            queue: .main
-        ) { _ in
-                // Video hat Ende erreicht, wird durch Looper neu gestartet
-        }
-
-            // Observer für Status
-        let observation = item.observe(\.status, options: [.new]) { item, _ in
+        statusObservation = item.observe(\.status, options: [.new]) { item, _ in
             DispatchQueue.main.async {
-                if item.status == .readyToPlay {
+                switch item.status {
+                case .readyToPlay:
                     isLoadingRemote = false
-                } else if item.status == .failed {
+                case .failed:
                     isLoadingRemote = false
                     print("⚠️ Remote Video konnte nicht geladen werden: \(url)")
+                default:
+                    break
                 }
             }
         }
-
-            // Speichere Observer (würde normalerweise in @State, aber hier reicht temporär)
 
         looper = AVPlayerLooper(player: q, templateItem: item)
         player = q
@@ -248,8 +251,8 @@ struct ExerciseVideoView: View {
 
             Group {
                 if appSettings.showExerciseVideos, let previewPlayer {
-                    VideoPlayer(player: previewPlayer)
-                        .disabled(true)
+                    LoopingPlayerLayerView(player: previewPlayer)
+                        .allowsHitTesting(false)
                 } else if isLoadingRemote {
                     loadingView
                 } else {
@@ -275,15 +278,15 @@ struct ExerciseVideoView: View {
         }
 
             // Priorität: Lokales Asset, dann Remote
-        var videoURL: URL?
+        var resolvedURL: URL?
 
         if hasLocalAsset {
-            videoURL = mediaURL(for: assetName)
-        } else if hasRemoteVideo, let remoteURLString = remoteVideoURL {
-            videoURL = URL(string: remoteURLString)
+            resolvedURL = mediaURL(for: assetName)
+        } else if hasRemoteVideo, let path = remoteVideoPath {
+            resolvedURL = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path)
         }
 
-        guard let url = videoURL else { return }
+        guard let url = resolvedURL else { return }
 
         let item = AVPlayerItem(url: url)
         let q = AVQueuePlayer()
@@ -312,9 +315,34 @@ struct ExerciseVideoView: View {
 
     // MARK: - Convenience Extensions
 
+    // ✅ Best effort for an ExerciseSet snapshot (Active Workout, Templates, etc.)
 extension ExerciseVideoView {
-        // Helper für ExerciseCard
-    static func from(_ exercise: Exercise, size: CGFloat = 80) -> ExerciseVideoView {
-        ExerciseVideoView(exercise: exercise, size: size)
+
+    /// ✅ Für Screens, die ein Exercise haben (Library, Picker, Cards)
+    static func forExercise(_ exercise: Exercise, size: CGFloat = 80) -> ExerciseVideoView {
+        ExerciseVideoView(
+            assetName: exercise.mediaAssetName,
+            remoteVideoPath: exercise.videoPath,
+            size: size
+        )
+    }
+
+    /// ✅ Für Screens, die nur Snapshots aus einem Set haben (Active Workout)
+    static func forSet(_ set: ExerciseSet, size: CGFloat = 80) -> ExerciseVideoView {
+        let asset = set.exerciseMediaAssetName
+        let uuid = set.exerciseUUIDSnapshot
+
+        // Wir bauen remotePath aus Snapshot, ohne set.exercise zu anfassen
+        let remotePath: String? = {
+            guard let _ = UUID(uuidString: uuid) else { return nil }
+            return "\(uuid).mp4"
+        }()
+
+        return ExerciseVideoView(assetName: asset, remoteVideoPath: remotePath, size: size)
+    }
+    
+        // ✅ Legacy/local-only usage
+    static func forAsset(_ assetName: String, size: CGFloat = 80) -> ExerciseVideoView {
+        ExerciseVideoView(assetName: assetName, size: size)
     }
 }

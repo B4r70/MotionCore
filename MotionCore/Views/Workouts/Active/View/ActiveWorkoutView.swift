@@ -91,6 +91,20 @@ struct ActiveWorkoutView: View {
             .last
     }
 
+    private var currentVideoThumb: ExerciseVideoView {
+        guard let set = currentSet else {
+            return ExerciseVideoView(assetName: "", size: 80)
+        }
+        return .forSet(set, size: 80)
+    }
+
+    private var lastCompletedVideoThumb: ExerciseVideoView {
+        guard let set = lastCompletedSet else {
+            return ExerciseVideoView(assetName: "", size: 56)
+        }
+        return .forSet(set, size: 56)
+    }
+
         // MARK: - Body
 
     var body: some View {
@@ -280,6 +294,8 @@ struct ActiveWorkoutView: View {
                 startNewSession(sessionID: sessionID)
             }
         }
+        // UUID in Exercise bereinigen
+        repairExerciseUUIDSnapshotsIfNeeded()
 
         // Fallback: falls ResumeStore nix gesetzt hat
         if selectedExerciseKey == nil {
@@ -332,6 +348,25 @@ struct ActiveWorkoutView: View {
     private func cleanupRestTimer() {
         restTimer?.invalidate()
         restTimer = nil
+    }
+
+    // ExerciseUUID in der Datei bereinigen.
+    private func repairExerciseUUIDSnapshotsIfNeeded() {
+        var didChange = false
+
+        for s in session.exerciseSets {
+            guard let api = s.exercise?.apiID?.uuidString, !api.isEmpty else { continue }
+
+            if s.exerciseUUIDSnapshot != api {
+                s.exerciseUUIDSnapshot = api
+                didChange = true
+            }
+        }
+
+        if didChange {
+            try? context.save()
+            print("🛠️ Repaired exerciseUUIDSnapshot for existing sets.")
+        }
     }
 
     // =========================================================================
@@ -994,11 +1029,11 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private func exercisePickerRow(_ exercise: Exercise) -> some View {
         HStack(spacing: 12) {
-            ExerciseVideoView(
-                assetName: exercise.mediaAssetName,
+            // Anzeige Exercise Video View
+            ExerciseVideoView.forExercise(
+                exercise,
                 size: 56
             )
-
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name)
                     .font(.headline)
@@ -1074,8 +1109,9 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private func exerciseInfoCard(_ exercise: Exercise) -> some View {
         HStack(spacing: 16) {
-            ExerciseVideoView(
-                assetName: exercise.mediaAssetName,
+            //Anzeige Exercise Video View
+            ExerciseVideoView.forExercise(
+                exercise,
                 size: 80
             )
 
@@ -1418,7 +1454,7 @@ struct AddExerciseDuringWorkoutSheet: View {
             let newSet = ExerciseSet(
                 exerciseName: exercise.name,
                 exerciseNameSnapshot: exercise.name,
-                exerciseUUIDSnapshot: exercise.persistentModelID.hashValue.description,
+                exerciseUUIDSnapshot: exercise.apiID?.uuidString.lowercased() ?? "", 
                 exerciseMediaAssetName: exercise.mediaAssetName,
                 isUnilateralSnapshot: exercise.isUnilateral,
                 setNumber: setNumber,

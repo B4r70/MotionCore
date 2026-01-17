@@ -22,10 +22,7 @@ struct ExerciseCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 16) {
                 // MP4 Thumbnail oder Placeholder
-                ExerciseVideoView(
-                    assetName: exercise.mediaAssetName,
-                    size: 80
-                )
+                ExerciseVideoView.forExercise(exercise, size: 80)
 
                 // Info
                 VStack(alignment: .leading, spacing: 8) {
@@ -47,7 +44,7 @@ struct ExerciseCard: View {
                                 .foregroundStyle(.orange)
                         }
                             // Video verfügbar Badge
-                        if exercise.videoURL != nil {
+                        if exercise.videoPath != nil {
                             Image(systemName: "play.circle.fill")
                                 .font(.caption)
                                 .foregroundStyle(.purple)

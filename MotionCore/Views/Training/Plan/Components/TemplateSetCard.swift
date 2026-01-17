@@ -60,10 +60,11 @@ struct TemplateSetCard<Trailing: View>: View {
 
             // Header mit Übungsinfo
             HStack(spacing: 12) {
-                ExerciseVideoView(
-                    assetName: mediaAssetName,
-                    size: 56
-                )
+                if let firstSet = sets.first {
+                    ExerciseVideoView.forSet(firstSet, size: 56)
+                } else {
+                    ExerciseVideoView.forAsset(mediaAssetName, size: 56)
+                }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(exerciseName)
