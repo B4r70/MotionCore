@@ -24,7 +24,8 @@ final class SupabaseExerciseService {
 
     func fetchExercises(byMuscleGroup muscleGroup: String) async throws -> [SupabaseExercise] {
         let body: [String: Any] = [
-            "p_muscle_identifier": muscleGroup  // *EDIT* - war falsch geschrieben
+            "p_muscle_identifier": muscleGroup,
+            "p_language_code": "de"
         ]
 
         return try await client.post(
@@ -35,7 +36,8 @@ final class SupabaseExerciseService {
 
     func fetchExercises(byEquipment equipment: String) async throws -> [SupabaseExercise] {
         let body: [String: Any] = [
-            "p_equipment_identifier": equipment  // *EDIT* - war falsch geschrieben
+            "p_equipment_identifier": equipment,
+            "p_language_code": "de"
         ]
 
         return try await client.post(

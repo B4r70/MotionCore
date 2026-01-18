@@ -37,10 +37,37 @@ struct ExerciseSearchView: View {
 
         // Verfügbare Muskelgruppen (aus Supabase)
     let muscleGroups = [
-        "abdominals", "abductors", "adductors", "biceps", "calves",
-        "chest", "forearms", "glutes", "hamstrings", "lats",
-        "lower back", "middle back", "neck", "quadriceps", "shoulders",
-        "traps", "triceps"
+        "abs_lower",
+        "abs_upper",
+        "abductors",
+        "adductors",
+        "back_erector_spinae",
+        "back_lats",
+        "back_rhomboids",
+        "back_traps_middle",
+        "back_traps_upper",
+        "biceps_long",        // ← statt "biceps"
+        "biceps_short",       // ← statt "biceps"
+        "calves_gastrocnemius",
+        "calves_soleus",
+        "chest_middle",
+        "chest_outer",
+        "core",
+        "forearms_extensors",
+        "forearms_flexors",
+        "glutes_maximus",
+        "glutes_medius",
+        "hamstrings_biceps_femoris",
+        "hamstrings_semitendinosus",
+        "quads_rectus_femoris",
+        "quads_vastus_lateralis",
+        "quads_vastus_medialis",
+        "shoulders_front",
+        "shoulders_rear",
+        "shoulders_side",
+        "triceps_lateral",
+        "triceps_long",
+        "triceps_medial"
     ]
 
         // Verfügbares Equipment (aus Supabase)
