@@ -7,11 +7,12 @@
 // Erstellt am . : 01.01.2026                                                       /
 // Beschreibung  : Edit-Sheet für die Anpassung des Trainings innerhalb der View    /
 // ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                              /
+// (C) Copyright by Bartosz Stryjewski                                               /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 import SwiftData
+import UIKit
 
 // MARK: - Set Edit Sheet
 
@@ -34,7 +35,7 @@ struct SetEditSheet: View {
         _reps = State(initialValue: set.reps)
 
         // Satz-Anzahl für diese Übung berechnen
-        let sameSets = session.exerciseSets.filter { $0.exerciseName == set.exerciseName }
+        let sameSets = session.safeExerciseSets.filter { $0.exerciseName == set.exerciseName }
         _setCount = State(initialValue: sameSets.count)
     }
 
@@ -191,18 +192,16 @@ struct SetEditSheet: View {
         set.reps = reps
 
         // Alle Sets der gleichen Übung finden
-        let sameSets = session.exerciseSets.filter { $0.exerciseName == set.exerciseName }
+        let sameSets = session.safeExerciseSets.filter { $0.exerciseName == set.exerciseName }
 
         // Nachfolgende NICHT abgeschlossene Sets aktualisieren
         for otherSet in sameSets {
-            // Nur Sets mit höherer Satznummer UND nicht abgeschlossen
             if otherSet.setNumber > set.setNumber && !otherSet.isCompleted {
                 otherSet.weight = weight
                 otherSet.reps = reps
 
                 // Bei unilateralen Übungen auch weightPerSide anpassen
                 if set.isUnilateralSnapshot && set.weightPerSide > 0 {
-                    // Neues weightPerSide berechnen (weight / 2)
                     otherSet.weightPerSide = weight / 2
                 }
             }
@@ -213,42 +212,34 @@ struct SetEditSheet: View {
 
     // MARK: - Set Management
 
-    // Reagiert auf Änderung der Satz-Anzahl
     private func handleSetCountChange() {
-        let currentCount = session.exerciseSets.filter { $0.exerciseName == set.exerciseName }.count
+        let currentCount = session.safeExerciseSets.filter { $0.exerciseName == set.exerciseName }.count
         let difference = setCount - currentCount
 
         if difference > 0 {
-            // Sätze hinzufügen
-            for _ in 0..<difference {
-                addSet()
-            }
+            for _ in 0..<difference { addSet() }
         } else if difference < 0 {
-            // Sätze entfernen
-            for _ in 0..<abs(difference) {
-                removeLastSet()
-            }
+            for _ in 0..<abs(difference) { removeLastSet() }
         }
 
-        // Haptic Feedback
+        // Nach jeder Änderung sauber durchnummerieren (sonst entstehen Lücken)
+        renumberSetsForExercise()
+        try? context.save()
+
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
     }
 
-    // Fügt einen zusätzlichen Satz hinzu
     private func addSet() {
-        // Finde alle Sätze der gleichen Übung
-        let sameSets = session.exerciseSets.filter { $0.exerciseName == set.exerciseName }
-
-        // Nächste Satznummer berechnen
+        let sameSets = session.safeExerciseSets.filter { $0.exerciseName == set.exerciseName }
         let nextSetNumber = (sameSets.map { $0.setNumber }.max() ?? 0) + 1
 
-        // Neuen Satz erstellen mit gleichen Werten wie das Original
         let newSet = ExerciseSet(
             exerciseName: set.exerciseName,
             exerciseNameSnapshot: set.exerciseNameSnapshot,
             exerciseUUIDSnapshot: set.exerciseUUIDSnapshot,
             exerciseMediaAssetName: set.exerciseMediaAssetName,
+            isUnilateralSnapshot: set.isUnilateralSnapshot,
             setNumber: nextSetNumber,
             weight: set.weight,
             weightPerSide: set.weightPerSide,
@@ -256,46 +247,46 @@ struct SetEditSheet: View {
             duration: set.duration,
             distance: set.distance,
             restSeconds: set.restSeconds,
-            setKind: .work,  // Zusatzsätze sind immer Arbeitssätze
+            setKind: .work,
             isCompleted: false,
             rpe: 0,
             notes: "",
             targetRepsMin: set.targetRepsMin,
             targetRepsMax: set.targetRepsMax,
             targetRIR: set.targetRIR,
-            groupId: set.groupId
+            groupId: set.groupId,
+            sortOrder: set.sortOrder
         )
 
-        // Exercise-Referenz übernehmen
         newSet.exercise = set.exercise
 
-        // Zur Session hinzufügen
-        session.exerciseSets.append(newSet)
-
-        // Speichern
-        try? context.save()
+        session.addSet(newSet)
+        context.insert(newSet) // deterministisch
     }
 
-    // Entfernt den letzten Satz einer Übung
     private func removeLastSet() {
-        // Finde alle Sätze dieser Übung
-        let sameSets = session.exerciseSets.filter { $0.exerciseName == set.exerciseName }
-
-        // Mindestens 1 Satz muss bleiben
+        let sameSets = session.safeExerciseSets.filter { $0.exerciseName == set.exerciseName }
         guard sameSets.count > 1 else { return }
 
-        // Finde den letzten nicht-abgeschlossenen Satz
-        if let lastIncompleteSet = sameSets.filter({ !$0.isCompleted }).last {
-            session.exerciseSets.removeAll { $0.id == lastIncompleteSet.id }
-            context.delete(lastIncompleteSet)
-        }
-        // Falls alle abgeschlossen, entferne einfach den letzten
-        else if let lastSet = sameSets.last {
-            session.exerciseSets.removeAll { $0.id == lastSet.id }
-            context.delete(lastSet)
-        }
+        let candidate = sameSets
+            .filter { !$0.isCompleted }
+            .sorted { $0.setNumber < $1.setNumber }
+            .last
+            ?? sameSets.sorted { $0.setNumber < $1.setNumber }.last
 
-        // Speichern
-        try? context.save()
+        guard let toDelete = candidate else { return }
+
+        session.removeSet(toDelete)
+        context.delete(toDelete)
+    }
+
+    private func renumberSetsForExercise() {
+        let sets = session.safeExerciseSets
+            .filter { $0.exerciseName == set.exerciseName }
+            .sorted { $0.setNumber < $1.setNumber }
+
+        for (idx, s) in sets.enumerated() {
+            s.setNumber = idx + 1
+        }
     }
 }

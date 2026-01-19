@@ -20,6 +20,7 @@ struct BaseView: View {
     @EnvironmentObject private var appSettings: AppSettings
     @EnvironmentObject private var activeSessionManager: ActiveSessionManager
     @Environment(\.modelContext) private var context
+    @State private var didRepair = false
 
     //  Default-Tab auf .summary geändert
     @State private var selectedTab: Tab = .summary
@@ -285,6 +286,15 @@ struct BaseView: View {
         .onReceive(NotificationCenter.default.publisher(for: .restoreActiveSession)) { notification in
             handleSessionRestoration(notification)
         }
+        .onAppear {
+            guard !didRepair else { return }
+            didRepair = true
+
+                // Wichtig: leicht verzögert starten, damit SwiftData/CloudKit beim Booten fertig wird
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                repairSnapshotsOnLaunch(context: context)
+            }
+        }
     }
 
     // MARK: - Session Wiederherstellung
@@ -345,6 +355,33 @@ struct BaseView: View {
         newStrengthSession = session
         restoredStrengthSession = nil
         showActiveWorkout = true
+    }
+
+    private func repairSnapshotsOnLaunch(context: ModelContext) {
+        do {
+            // Nur auf cleanem Context arbeiten
+            if context.hasChanges {
+                try context.save()
+            }
+
+            let sets = try context.fetch(FetchDescriptor<ExerciseSet>())
+
+            var changed = 0
+            for s in sets {
+                let uuid = s.exerciseUUIDSnapshot.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !uuid.isEmpty && UUID(uuidString: uuid) == nil {
+                    s.exerciseUUIDSnapshot = ""
+                    changed += 1
+                }
+            }
+
+            if changed > 0 {
+                try context.save()
+                print("🧹 Repair: cleaned \(changed) invalid exerciseUUIDSnapshot values")
+            }
+        } catch {
+            print("⚠️ Repair failed:", error)
+        }
     }
 }
 

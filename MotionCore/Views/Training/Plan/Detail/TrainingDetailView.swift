@@ -36,7 +36,7 @@ struct TrainingDetailView: View {
                         .padding(.top, 16)
 
                     // Statistik (nur wenn Übungen vorhanden)
-                    if !plan.templateSets.isEmpty {
+                    if !plan.safeTemplateSets.isEmpty {
                         PlanStatisticsCard(plan: plan)
                             .padding(.horizontal)
                     }

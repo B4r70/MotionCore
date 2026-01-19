@@ -21,23 +21,23 @@ struct PlanStatisticsCard: View {
     }
     
     private var totalSets: Int {
-        plan.templateSets.count
+        plan.safeTemplateSets.count
     }
     
     private var workingSets: Int {
-        plan.templateSets.filter { !$0.isWarmup }.count
+        plan.safeTemplateSets.filter { !$0.isWarmup }.count
     }
     
     private var warmupSets: Int {
-        plan.templateSets.filter { $0.isWarmup }.count
+        plan.safeTemplateSets.filter { $0.isWarmup }.count
     }
     
     private var totalVolume: Double {
-        plan.templateSets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
+        plan.safeTemplateSets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
     }
     
     private var totalReps: Int {
-        plan.templateSets.reduce(0) { $0 + $1.reps }
+        plan.safeTemplateSets.reduce(0) { $0 + $1.reps }
     }
     
     var body: some View {
@@ -117,23 +117,23 @@ struct PlanStatisticsDetailCard: View {
     }
     
     private var totalSets: Int {
-        plan.templateSets.count
+        plan.safeTemplateSets.count
     }
     
     private var workingSets: Int {
-        plan.templateSets.filter { !$0.isWarmup }.count
+        plan.safeTemplateSets.filter { !$0.isWarmup }.count
     }
     
     private var warmupSets: Int {
-        plan.templateSets.filter { $0.isWarmup }.count
+        plan.safeTemplateSets.filter { $0.isWarmup }.count
     }
     
     private var totalVolume: Double {
-        plan.templateSets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
+        plan.safeTemplateSets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
     }
     
     private var totalReps: Int {
-        plan.templateSets.reduce(0) { $0 + $1.reps }
+        plan.safeTemplateSets.reduce(0) { $0 + $1.reps }
     }
     
     var body: some View {

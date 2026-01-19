@@ -23,7 +23,7 @@ final class StrengthSession {
 
     // Stabile UUID für Session-Tracking (überlebt App-Neustarts)
     var sessionUUID: UUID = UUID()
-    
+
     // MARK: - Grunddaten
 
     var date: Date = Date()
@@ -39,8 +39,8 @@ final class StrengthSession {
 
     // MARK: - Beziehungen
 
-    @Relationship(deleteRule: .cascade)
-    var exerciseSets: [ExerciseSet] = [] // Alle Sets dieser Session
+    @Relationship(deleteRule: .cascade, inverse: \ExerciseSet.session)
+    var exerciseSets: [ExerciseSet]? = []
 
     // Referenz zum Trainingsplan (Template)
     @Relationship(deleteRule: .nullify)
@@ -84,17 +84,15 @@ final class StrengthSession {
 
     // Anzahl der Sets in dieser Session
     var totalSets: Int {
-        exerciseSets.count
+        safeExerciseSets.count
     }
 
-    // Anzahl der verschiedenen Übungen
     var exercisesPerformed: Int {
-        Set(exerciseSets.map { $0.groupKey }).count
+        Set(safeExerciseSets.map { $0.groupKey }).count
     }
 
-    // Gesamtes Trainingsvolumen (Summe: Gewicht × Reps)
     var totalVolume: Double {
-        exerciseSets.reduce(0.0) { sum, set in
+        safeExerciseSets.reduce(0.0) { sum, set in
             sum + (set.weight * Double(set.reps))
         }
     }
@@ -103,7 +101,7 @@ final class StrengthSession {
     var trainedMuscleGroups: [MuscleGroup] {
         var groups = Set<MuscleGroup>()
 
-        for set in exerciseSets {
+        for set in safeExerciseSets {
             // Später: Aus Exercise-Bibliothek holen
             // Jetzt: Mapping über exerciseName
             if let primary = set.primaryMuscleGroup {
@@ -118,7 +116,7 @@ final class StrengthSession {
 
     // Anzahl abgeschlossener Sätze
     var completedSets: Int {
-        exerciseSets.filter { $0.isCompleted }.count
+        safeExerciseSets.filter { $0.isCompleted }.count
     }
 
     // Fortschritt in Prozent (0.0 - 1.0)
@@ -129,7 +127,7 @@ final class StrengthSession {
 
     // Alle Sätze erledigt?
     var allSetsCompleted: Bool {
-        !exerciseSets.isEmpty && exerciseSets.allSatisfy { $0.isCompleted }
+        !safeExerciseSets.isEmpty && safeExerciseSets.allSatisfy { $0.isCompleted }
     }
 
     // Tatsächliche Trainingsdauer in Minuten (berechnet)
@@ -148,7 +146,7 @@ final class StrengthSession {
     // 1. Primär: nach der kleinsten setNumber in jeder Gruppe
     // 2. Sekundär: nach Übungsname für absolute Stabilität
     var groupedSets: [[ExerciseSet]] {
-        let grouped = Dictionary(grouping: exerciseSets) { $0.groupKey }
+        let grouped = Dictionary(grouping: safeExerciseSets) { $0.groupKey }
 
         return grouped.values
             .map { sets in sets.sorted { $0.setNumber < $1.setNumber } }
@@ -236,7 +234,7 @@ final class StrengthSession {
 
     // Nächster unerledigter Satz
     var nextUncompletedSet: ExerciseSet? {
-        exerciseSets
+        safeExerciseSets
             .sorted {
                 // Primär nach sortOrder
                 if $0.sortOrder != $1.sortOrder {
@@ -248,9 +246,28 @@ final class StrengthSession {
             .first { !$0.isCompleted }
     }
 }
+extension StrengthSession {
+    var safeExerciseSets: [ExerciseSet] { exerciseSets ?? [] }
 
+    func ensureExerciseSets() {
+        if exerciseSets == nil { exerciseSets = [] }
+    }
 
+    func addSet(_ set: ExerciseSet) {
+        ensureExerciseSets()
+        set.session = self
+        set.trainingPlan = nil
+        exerciseSets?.append(set)
+    }
 
+    func removeSet(_ set: ExerciseSet) {
+        ensureExerciseSets()
+        exerciseSets?.removeAll { $0.persistentModelID == set.persistentModelID }
+        set.session = nil
+    }
 
-
-
+    func removeSets(where predicate: (ExerciseSet) -> Bool) {
+        ensureExerciseSets()
+        exerciseSets?.removeAll(where: predicate)
+    }
+}

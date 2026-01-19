@@ -251,8 +251,8 @@ final class IODataManager {
             let plan = TrainingPlan.fromExportItem(exportItem)
             context.insert(plan)
 
-            // Template-Sets sind bereits verknüpft, müssen aber auch eingefügt werden
-            for exerciseSet in plan.templateSets {
+                // Template-Sets sind bereits verknüpft, müssen aber auch eingefügt werden
+            for exerciseSet in plan.safeTemplateSets {
                 context.insert(exerciseSet)
             }
 
@@ -401,12 +401,12 @@ final class IODataManager {
         for exportItem in pkg.items {
             let session = StrengthSession.fromExportItem(exportItem)
             context.insert(session)
-
-            // ExerciseSets sind bereits verknüpft, müssen aber auch eingefügt werden
-            for exerciseSet in session.exerciseSets {
+            
+                // ExerciseSets sind bereits verknüpft, müssen aber auch eingefügt werden
+            for exerciseSet in session.safeExerciseSets {
                 context.insert(exerciseSet)
             }
-
+            
             importedCount += 1
         }
 

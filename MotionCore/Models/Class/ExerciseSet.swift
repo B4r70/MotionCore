@@ -68,13 +68,12 @@ final class ExerciseSet {
     }
 
     // MARK: - Beziehungen
-
+    @Relationship(deleteRule: .nullify)
     var session: StrengthSession?
 
-    // Beziehung zum TrainingPlan (wenn Template)
+    @Relationship(deleteRule: .nullify)
     var trainingPlan: TrainingPlan?
 
-    // Direkte Referenz zur Übung aus der Bibliothek
     @Relationship(deleteRule: .nullify)
     var exercise: Exercise?
 
@@ -163,7 +162,7 @@ final class ExerciseSet {
         distance: Double = 0.0,
         restSeconds: Int = 90,
         setKind: SetKind = .work,
-        isCompleted: Bool = true,
+        isCompleted: Bool = false,
         rpe: Int = 0,
         notes: String = "",
         targetRepsMin: Int = 0,
@@ -241,5 +240,46 @@ extension ExerciseSet {
         if !exerciseUUIDSnapshot.isEmpty { return exerciseUUIDSnapshot }
         if !exerciseNameSnapshot.isEmpty { return exerciseNameSnapshot }
         return exerciseName
+    }
+}
+// Clone for Session um Datenkorruption zu vermeiden
+// MARK: - Clone for Session (verhindert Datenkorruption zwischen Plan & Session)
+extension ExerciseSet {
+    /// Creates a fresh set instance for a StrengthSession, based on a template.
+    /// Copies all relevant fields + snapshots.
+    /// Does NOT keep `trainingPlan` relationship.
+    func cloneForSession() -> ExerciseSet {
+        let copy = ExerciseSet(
+            exerciseName: exerciseName,
+            exerciseNameSnapshot: exerciseNameSnapshot,
+            exerciseUUIDSnapshot: exerciseUUIDSnapshot,
+            exerciseMediaAssetName: exerciseMediaAssetName,
+            isUnilateralSnapshot: isUnilateralSnapshot,
+            setNumber: setNumber,
+            weight: weight,
+            weightPerSide: weightPerSide,
+            reps: reps,
+            duration: duration,
+            distance: distance,
+            restSeconds: restSeconds,
+            setKind: setKind,
+            isCompleted: false,          // sinnvoll: neue Sets sind erstmal nicht abgeschlossen
+            rpe: 0,                      // neutral starten
+            notes: notes,                // optional: kannst du auch "" setzen
+            targetRepsMin: targetRepsMin,
+            targetRepsMax: targetRepsMax,
+            targetRIR: targetRIR,
+            groupId: groupId,
+            sortOrder: sortOrder
+        )
+
+        // Relationship: Exercise darf mit rüber (optional, aber praktisch)
+        copy.exercise = self.exercise
+
+        // Ownership: Session kommt später via session.addSet(...)
+        copy.session = nil
+        copy.trainingPlan = nil
+
+        return copy
     }
 }

@@ -38,22 +38,25 @@ final class TrainingPlan {
 
     // MARK: - Beziehungen
 
-    @Relationship(deleteRule: .cascade)
-    var entries: [TrainingEntry] = []       // Alle Einträge in diesem Plan
+    @Relationship(deleteRule: .cascade, inverse: \TrainingEntry.plan)
+    var entries: [TrainingEntry]? = []
 
     @Relationship(deleteRule: .cascade, inverse: \ExerciseSet.trainingPlan)
-    var templateSets: [ExerciseSet] = []
+    var templateSets: [ExerciseSet]? = []
+
+    @Relationship(deleteRule: .nullify, inverse: \StrengthSession.sourceTrainingPlan)
+    var derivedSessions: [StrengthSession]? = []
 
     // MARK: - Berechnete Werte
 
     // Anzahl der geplanten Trainings
     var totalEntries: Int {
-        entries.count
+        safeEntries.count
     }
 
     // Anzahl der abgeschlossenen Trainings
     var completedEntries: Int {
-        entries.filter { $0.isCompleted }.count
+        safeEntries.filter { $0.isCompleted }.count
     }
 
     // Fortschritt in Prozent (0.0 - 1.0)
@@ -64,12 +67,12 @@ final class TrainingPlan {
 
     // Anzahl verpasster Trainings
     var missedEntries: Int {
-        entries.filter { $0.isMissed }.count
+        safeEntries.filter { $0.isMissed }.count
     }
 
     // Noch ausstehende Trainings
     var remainingEntries: Int {
-        entries.filter { !$0.isCompleted && !$0.isMissed }.count
+        safeEntries.filter { !$0.isCompleted && !$0.isMissed }.count
     }
 
     // Plan ist abgelaufen?
@@ -86,7 +89,7 @@ final class TrainingPlan {
 
     // Nächstes anstehendes Training
     var nextEntry: TrainingEntry? {
-        entries
+        safeEntries
             .filter { !$0.isCompleted }
             .sorted { $0.scheduledDate < $1.scheduledDate }
             .first
@@ -103,7 +106,7 @@ final class TrainingPlan {
         session.start()  // Direkt starten
 
         // Template-Sets kopieren (sortiert nach sortOrder)
-        for templateSet in templateSets.sorted(by: { $0.sortOrder < $1.sortOrder }) {
+        for templateSet in safeTemplateSets.sorted(by: { $0.sortOrder < $1.sortOrder }) {
             let newSet = ExerciseSet(
                 exerciseName: templateSet.exerciseName,
                 exerciseNameSnapshot: templateSet.exerciseNameSnapshot,
@@ -127,24 +130,30 @@ final class TrainingPlan {
                 sortOrder: templateSet.sortOrder  // NEU: Sortierung uebernehmen
             )
             newSet.exercise = templateSet.exercise
-            session.exerciseSets.append(newSet)
+            session.addSet(newSet)
         }
-
         return session
     }
 
     // Gruppierte Template-Sets, sortiert nach sortOrder
     var groupedTemplateSets: [[ExerciseSet]] {
-        let grouped = Dictionary(grouping: templateSets) { $0.sortOrder }
-        return grouped
-            .keys.sorted()
-            .compactMap { grouped[$0] }
-            .map { $0.sorted(by: { $0.setNumber < $1.setNumber }) }
+        let sets = safeTemplateSets
+
+        // Gruppieren nach sortOrder (Gruppen-ID)
+        let grouped = Dictionary(grouping: sets, by: { $0.sortOrder })
+
+        // Gruppen nach sortOrder sortieren (wichtig!)
+        let orderedKeys = grouped.keys.sorted()
+
+        // Optional: Sets innerhalb der Gruppe nach setNumber
+        return orderedKeys.map { key in
+            (grouped[key] ?? []).sorted { $0.setNumber < $1.setNumber }
+        }
     }
 
     // Naechste verfuegbare sortOrder fuer neue Uebungen
     var nextSortOrder: Int {
-        let maxOrder = templateSets.map(\.sortOrder).max() ?? 0
+        let maxOrder = safeTemplateSets.map(\.sortOrder).max() ?? 0
         return max(maxOrder + 1, 1)
     }
 
@@ -155,16 +164,13 @@ final class TrainingPlan {
     //   - source: IndexSet mit dem Quell-Index
     //   - destination: Ziel-Index (Position nach dem Move)
     func reorderExercises(fromOffsets source: IndexSet, toOffset destination: Int) {
-        // Aktuelle Gruppen holen
         var groups = groupedTemplateSets
-
-        // Move durchfuehren
         groups.move(fromOffsets: source, toOffset: destination)
 
-        // Neue sortOrder fuer alle Sets setzen
         for (index, group) in groups.enumerated() {
+            let newOrder = index + 1          // ✅ 1-basiert
             for set in group {
-                set.sortOrder = index
+                set.sortOrder = newOrder
             }
         }
     }
@@ -176,14 +182,13 @@ final class TrainingPlan {
               sourceIndex >= 0, sourceIndex < groups.count,
               destinationIndex >= 0, destinationIndex < groups.count else { return }
 
-        // Element entfernen und an neuer Position einfuegen
         let movedGroup = groups.remove(at: sourceIndex)
         groups.insert(movedGroup, at: destinationIndex)
 
-        // Neue sortOrder fuer alle Sets setzen
         for (index, group) in groups.enumerated() {
+            let newOrder = index + 1          // ✅ 1-basiert
             for set in group {
-                set.sortOrder = index
+                set.sortOrder = newOrder
             }
         }
     }
@@ -264,5 +269,30 @@ final class TrainingPlan {
         self.planTypeRaw = planType.rawValue
         self.isActive = isActive
         self.createdAt = Date()
+    }
+}
+extension TrainingPlan {
+    var safeEntries: [TrainingEntry] {
+        entries ?? []
+    }
+}
+
+extension TrainingPlan {
+    var safeTemplateSets: [ExerciseSet] { templateSets ?? [] }
+
+    func ensureTemplateSets() {
+        if templateSets == nil { templateSets = [] }
+    }
+
+    func addTemplateSet(_ set: ExerciseSet) {
+        ensureTemplateSets()
+        set.trainingPlan = self
+        set.session = nil
+        templateSets?.append(set)
+    }
+
+    func removeTemplateSets(where predicate: (ExerciseSet) -> Bool) {
+        ensureTemplateSets()
+        templateSets?.removeAll(where: predicate)
     }
 }

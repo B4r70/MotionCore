@@ -121,9 +121,11 @@ private struct PlanRow: View {
                         .lineLimit(1)
 
                     HStack(spacing: 12) {
-                        let exerciseCount = Set(plan.templateSets.map { $0.exerciseName }).count
+                        let sets = plan.safeTemplateSets
+                        let exerciseCount = Set(sets.map { $0.exerciseName }).count
+
                         Label("\(exerciseCount) Übungen", systemImage: "dumbbell")
-                        Label("\(plan.templateSets.count) Sets", systemImage: "list.number")
+                        Label("\(sets.count) Sets", systemImage: "list.number")
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)

@@ -15,22 +15,21 @@ import SwiftData
 
 @Model
 final class Exercise {
-    var name: String
-    var exerciseDescription: String
-    var mediaAssetName: String
-    var isCustom: Bool
-    var isFavorite: Bool
-    var createdAt: Date
-    var isUnilateral: Bool
-    var repRangeMin: Int
-    var repRangeMax: Int
-    var sortIndex: Int
-    var cautionNote: String
-    var isArchived: Bool
+    var name: String = ""
+    var exerciseDescription: String = ""
+    var mediaAssetName: String = ""
+    var isCustom: Bool = false
+    var isFavorite: Bool = false
+    var createdAt: Date = Date()
+    var isUnilateral: Bool = false
+    var repRangeMin: Int = 0
+    var repRangeMax: Int = 0
+    var sortIndex: Int = 0
+    var cautionNote: String = ""
+    var isArchived: Bool = false
 
-    // ✅ UUID statt String
     var apiID: UUID?
-    var isSystemExercise: Bool
+    var isSystemExercise: Bool = false
 
     var videoPath: String?
     var posterPath: String?
@@ -42,19 +41,22 @@ final class Exercise {
     var apiEquipment: String?
     var apiSecondaryMuscles: [String]?
 
-    var apiOverview: String?          // Ausführliche Beschreibung (v2)
-    var apiExerciseTips: [String]?    // Trainingstipps (v2)
-    var apiVariations: [String]?      // Übungsvariationen (v2)
-    var apiImageURL: String?          // Bild-URL (v2)
-    var apiProvider: String?          // "rapidapi", "exercisedb_v2" oder "supabase"
+    var apiOverview: String?
+    var apiExerciseTips: [String]?
+    var apiVariations: [String]?
+    var apiImageURL: String?
+    var apiProvider: String?
 
-    var categoryRaw: String
-    var equipmentRaw: String
-    var difficultyRaw: String
-    var movementPatternRaw: String
-    var bodyPositionRaw: String
-    var primaryMusclesRaw: [String]
-    var secondaryMusclesRaw: [String]
+    var categoryRaw: String = ""
+    var equipmentRaw: String = ""
+    var difficultyRaw: String = ""
+    var movementPatternRaw: String = ""
+    var bodyPositionRaw: String = ""
+    var primaryMusclesRaw: [String] = []
+    var secondaryMusclesRaw: [String] = []
+
+    @Relationship(deleteRule: .nullify, inverse: \ExerciseSet.exercise)
+    var sets: [ExerciseSet]? = []
 
     init(
         name: String = "",
@@ -84,11 +86,11 @@ final class Exercise {
         apiExerciseTips: [String]? = nil,
         apiVariations: [String]? = nil,
         apiImageURL: String? = nil,
-        categoryRaw: String = "compound",
-        equipmentRaw: String = "barbell",
-        difficultyRaw: String = "intermediate",
-        movementPatternRaw: String = "push",
-        bodyPositionRaw: String = "standing",
+        categoryRaw: String = "",
+        equipmentRaw: String = "",
+        difficultyRaw: String = "",
+        movementPatternRaw: String = "",
+        bodyPositionRaw: String = "",
         primaryMusclesRaw: [String] = [],
         secondaryMusclesRaw: [String] = []
     ) {
@@ -325,14 +327,11 @@ extension Exercise {
 // MARK: - Supabase Import
 
 extension Exercise {
-    /// Erstellt ein Exercise-Objekt aus Supabase-Daten (neue Struktur mit JOINs)
     convenience init(from supabase: SupabaseExercise) {
-        // Name und Instructions sind bereits deutsch aus der DB
         let displayName = supabase.name
         let instructionsText = supabase.instructions ?? ""
         let tipsText = supabase.tips ?? ""
 
-        // Muskelgruppen mappen (können nil sein)
         let primaryMusclesList = supabase.primaryMuscles.compactMap {
             MuscleGroupMapper.map(supabaseValue: $0)
         }
@@ -340,30 +339,24 @@ extension Exercise {
             MuscleGroupMapper.map(supabaseValue: $0)
         }
 
-        // In rawValue Strings konvertieren
         let primaryMusclesRaw = primaryMusclesList.map { $0.rawValue }
         let secondaryMusclesRaw = secondaryMusclesList.map { $0.rawValue }
 
-        // Equipment mappen (nimm das erste wenn mehrere vorhanden)
         let equipmentEnum = ExerciseEquipment.fromSupabase(supabase.equipment.first)
         let equipmentRaw = equipmentEnum.rawValue
 
-        // Difficulty mappen
         let difficultyEnum = ExerciseDifficulty.fromSupabase(supabase.difficulty ?? "intermediate")
         let difficultyRaw = difficultyEnum.rawValue
 
-        // Category mappen (aus mechanic/force ableiten)
         let categoryEnum = ExerciseCategory.fromSupabase(
             mechanic: supabase.mechanicType,
             force: supabase.forceType
         )
         let categoryRaw = categoryEnum.rawValue
 
-        // ✅ Neu: Wir speichern nur PATHS aus der DB (nicht die volle URL)
         let videoPath: String? = supabase.videoPath
         let posterPath: String? = supabase.posterPath
 
-        // HAUPT-Initializer aufrufen (ALLE Parameter!)
         self.init(
             name: displayName,
             exerciseDescription: tipsText,
@@ -377,7 +370,7 @@ extension Exercise {
             sortIndex: 0,
             cautionNote: "",
             isArchived: false,
-            apiID: supabase.id,               // ✅ UUID passt jetzt
+            apiID: supabase.id,
             isSystemExercise: true,
             videoPath: videoPath,
             posterPath: posterPath,
@@ -456,5 +449,10 @@ extension Exercise {
     var posterPublicURL: URL? {
         guard let path = posterPath, !path.isEmpty else { return nil }
         return SupabaseStorageURLBuilder.publicURL(bucket: .exercisePosters, path: path)
+    }
+}
+extension Exercise {
+    var safeSets: [ExerciseSet] {
+        sets ?? []
     }
 }

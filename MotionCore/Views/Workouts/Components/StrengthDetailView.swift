@@ -259,7 +259,7 @@ struct StrengthDetailView: View {
     }
 
     private var totalReps: Int {
-        session.exerciseSets.reduce(0) { $0 + $1.reps }
+        session.safeExerciseSets.reduce(0) { $0 + $1.reps }
     }
 
     // MARK: - Übungen Details Section
@@ -533,6 +533,7 @@ struct StrengthDetailView: View {
             let set5 = ExerciseSet(exerciseName: "Schrägbank KH", setNumber: 5, weight: 26, reps: 10, setKind: .work)
             set5.isCompleted = true
 
+            // CloudKit-ready: relationship is optional
             session.exerciseSets = [set1, set2, set3, set4, set5]
             return session
         }())

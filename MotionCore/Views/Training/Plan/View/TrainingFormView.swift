@@ -180,16 +180,12 @@ struct TrainingFormView: View {
     private func deleteExercise(_ set: ExerciseSet) {
         let targetOrder = set.sortOrder
 
-        // 1) Alte Sets dieser Gruppe einsammeln
-        let toRemove = plan.templateSets.filter { $0.sortOrder == targetOrder }
+        let toRemove = plan.safeTemplateSets.filter { $0.sortOrder == targetOrder }
 
-        // 2) Aus der Relationship entfernen (einmal!)
-        plan.templateSets.removeAll { $0.sortOrder == targetOrder }
+        plan.removeTemplateSets { $0.sortOrder == targetOrder }
 
-        // 3) Aus dem Context löschen (einmal pro Objekt)
         toRemove.forEach { context.delete($0) }
 
-        // 4) Persistieren
         try? context.save()
     }
 
@@ -197,7 +193,7 @@ struct TrainingFormView: View {
 
     private func editExercise(_ firstSet: ExerciseSet) {
         let targetOrder = firstSet.sortOrder
-        let originalSets = plan.templateSets.filter { $0.sortOrder == targetOrder }
+        let originalSets = plan.safeTemplateSets.filter { $0.sortOrder == targetOrder }
 
         // unilateral sauber bestimmen:
         // 1) wenn Relationship existiert -> von Exercise
@@ -222,18 +218,26 @@ struct TrainingFormView: View {
     private func addSets(_ sets: [ExerciseSet], keepingSortOrder sortOrder: Int? = nil) {
         var targetOrder = sortOrder ?? plan.nextSortOrder
         if targetOrder <= 0 {
-            let maxOrder = plan.templateSets.map(\.sortOrder).max() ?? 0
+            let maxOrder = plan.safeTemplateSets.map(\.sortOrder).max() ?? 0
             targetOrder = max(maxOrder + 1, 1)
         }
 
-        plan.templateSets.removeAll { $0.sortOrder == targetOrder }
-        // old löschen im context optional wie vorher
+        // 1) Alte Sets dieser Gruppe zuerst einsammeln
+        let old = plan.safeTemplateSets.filter { $0.sortOrder == targetOrder }
 
+        // 2) Relationship entfernen (einmal)
+        plan.removeTemplateSets { $0.sortOrder == targetOrder }
+
+        // 3) Alte Objekte aus dem Context löschen
+        old.forEach { context.delete($0) }
+
+        // 4) Neue Sets hinzufügen
         for set in sets {
             set.sortOrder = targetOrder
-            set.trainingPlan = plan
-            plan.templateSets.append(set)
+            plan.addTemplateSet(set)
+            context.insert(set)          // optional, aber ich empfehle es hier explizit
         }
+
         try? context.save()
     }
 }

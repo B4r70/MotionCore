@@ -42,12 +42,12 @@ struct TrainingPlanCard: View {
 
     // Gesamtanzahl der Sätze im Plan
     private var totalSets: Int {
-        return plan.templateSets.count
+        return plan.safeTemplateSets.count
     }
 
     // Gesamtvolumen des Plans (Gewicht × Wiederholungen)
     private var totalVolume: Double {
-        return plan.templateSets.reduce(0) { total, set in
+        return plan.safeTemplateSets.reduce(0) { total, set in
             total + (set.weight * Double(set.reps))
         }
     }

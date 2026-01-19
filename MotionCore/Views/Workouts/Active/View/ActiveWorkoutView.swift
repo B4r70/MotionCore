@@ -59,7 +59,7 @@ struct ActiveWorkoutView: View {
     private var selectedExerciseSets: [ExerciseSet] {
         guard let key = selectedExerciseKey else { return [] }
 
-        return session.exerciseSets
+        return session.safeExerciseSets
             .filter { $0.groupKey == key }
             .sorted { $0.setNumber < $1.setNumber }
     }
@@ -86,7 +86,7 @@ struct ActiveWorkoutView: View {
     }
 
     private var lastCompletedSet: ExerciseSet? {
-        session.exerciseSets
+        session.safeExerciseSets
             .filter { $0.isCompleted }
             .last
     }
@@ -354,7 +354,7 @@ struct ActiveWorkoutView: View {
     private func repairExerciseUUIDSnapshotsIfNeeded() {
         var didChange = false
 
-        for s in session.exerciseSets {
+        for s in session.safeExerciseSets {
             guard let api = s.exercise?.apiID?.uuidString, !api.isEmpty else { continue }
 
             if s.exerciseUUIDSnapshot != api {
@@ -415,7 +415,7 @@ struct ActiveWorkoutView: View {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
 
-        let remainingSetsForExercise = session.exerciseSets.filter {
+        let remainingSetsForExercise = session.safeExerciseSets.filter {
             $0.groupKey == set.groupKey && !$0.isCompleted
         }
 
@@ -1442,7 +1442,7 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private func addExerciseToSession(_ exercise: Exercise) {
         // Höchsten sortOrder in der Session finden
-        let maxSortOrder = session.exerciseSets.map { $0.sortOrder }.max() ?? -1
+        let maxSortOrder = session.safeExerciseSets.map { $0.sortOrder }.max() ?? -1
         let newSortOrder = maxSortOrder + 1
 
         // Gewicht berechnen (bei unilateral: Gesamtgewicht = 2 × Eingabe)
@@ -1470,9 +1470,8 @@ struct AddExerciseDuringWorkoutSheet: View {
             )
 
             newSet.exercise = exercise
-            newSet.session = session
-            session.exerciseSets.append(newSet)
-            context.insert(newSet)
+            session.addSet(newSet)      // ✅ setzt session + hängt an optional array korrekt an
+            context.insert(newSet)      // kann bleiben (ist ok)
         }
 
         try? context.save()

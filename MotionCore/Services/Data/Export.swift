@@ -382,7 +382,7 @@ extension TrainingPlan {
             isActive: isActive,
             createdAt: iso.string(from: createdAt),
             planType: planTypeRaw,
-            templateSets: templateSets.map { $0.exportItem }
+            templateSets: safeTemplateSets.map { $0.exportItem }
         )
     }
 
@@ -407,8 +407,7 @@ extension TrainingPlan {
         // Template-Sets importieren und verknüpfen
         for setItem in e.templateSets {
             let exerciseSet = ExerciseSet.fromExportItem(setItem)
-            exerciseSet.trainingPlan = plan
-            plan.templateSets.append(exerciseSet)
+            plan.addTemplateSet(exerciseSet)
         }
 
         return plan
@@ -481,7 +480,7 @@ extension StrengthSession {
             energyLevelBefore: energyLevelBefore,
             healthKitWorkoutUUID: healthKitWorkoutUUID?.uuidString,
             deviceSource: deviceSource != "manual" ? deviceSource : nil,
-            exerciseSets: exerciseSets.map { $0.exportItem }
+            exerciseSets: safeExerciseSets.map { $0.exportItem }
         )
     }
 
@@ -512,8 +511,7 @@ extension StrengthSession {
         // ExerciseSets importieren und verknüpfen
         for setItem in e.exerciseSets {
             let exerciseSet = ExerciseSet.fromExportItem(setItem)
-            exerciseSet.session = session
-            session.exerciseSets.append(exerciseSet)
+            session.addSet(exerciseSet)
         }
 
         return session

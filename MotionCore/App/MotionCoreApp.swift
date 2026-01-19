@@ -9,39 +9,92 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-//
 import SwiftData
 import SwiftUI
+import os.log
 
 @main
 struct MotionCoreApp: App {
     @StateObject private var appSettings = AppSettings.shared
     @StateObject private var activeSessionManager = ActiveSessionManager.shared
 
-    // State für Session-Wiederherstellungs-Alert
     @State private var showSessionRestoreAlert = false
     @State private var pendingRestoreInfo: (sessionID: String, workoutType: WorkoutType)?
 
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            CardioSession.self,
-            StrengthSession.self,
-            OutdoorSession.self,
-            ExerciseSet.self,
-            Exercise.self,
-            TrainingPlan.self,
-            TrainingEntry.self
-        ])
-        let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: false,
-            cloudKitDatabase: .none
-        )
+    // ✅ Wenn true: KEIN Fallback, Crash wenn CloudKit nicht geht
+    private static let requireCloudKit: Bool = false
+
+    // ✅ DEINE AppGroup-ID eintragen (Xcode → App Groups)
+    private static let appGroupID: String = "group.com.barto.motioncore"
+
+    private static let log = Logger(subsystem: "MotionCore", category: "SwiftData")
+
+    private static let appSchema = Schema([
+        CardioSession.self,
+        StrengthSession.self,
+        OutdoorSession.self,
+        ExerciseSet.self,
+        Exercise.self,
+        TrainingPlan.self,
+        TrainingEntry.self
+    ])
+
+    // ✅ CloudKit im Simulator standardmäßig AUS (Widget/LiveActivity kann trotzdem via AppGroup lokal lesen)
+    private static var useCloudKit: Bool {
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        return true
+        #endif
+    }
+
+    // ✅ Bau den Store-URL im AppGroup-Container + stelle sicher, dass der Ordner existiert
+    private static func appGroupStoreURL() -> URL {
+        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
+            fatalError("❌ AppGroup container not found. Check App Groups entitlement: \(appGroupID)")
+        }
+
+        let appSupport = container.appendingPathComponent("Library/Application Support", isDirectory: true)
+        let storeURL = appSupport.appendingPathComponent("default.store")
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            try FileManager.default.createDirectory(at: appSupport, withIntermediateDirectories: true)
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("❌ Could not create AppGroup Application Support directory: \(error)")
+        }
+
+        return storeURL
+    }
+
+    // ✅ Container wird einmal gebaut
+    let sharedModelContainer: ModelContainer = {
+        let storeURL = MotionCoreApp.appGroupStoreURL()
+
+        do {
+            let config = ModelConfiguration(
+                schema: MotionCoreApp.appSchema,
+                url: storeURL,
+                cloudKitDatabase: MotionCoreApp.useCloudKit ? .automatic : .none
+            )
+
+            MotionCoreApp.log.info("✅ Creating ModelContainer (CloudKit=\(MotionCoreApp.useCloudKit ? "ON" : "OFF")) store=\(storeURL.path)")
+            return try ModelContainer(for: MotionCoreApp.appSchema, configurations: [config])
+
+        } catch {
+            MotionCoreApp.log.error("❌ ModelContainer init failed: \(String(describing: error))")
+
+            if MotionCoreApp.requireCloudKit {
+                fatalError("💥 CloudKit required but failed: \(error)")
+            }
+
+            // Fallback: lokal (aber weiterhin AppGroup-Store, damit Widget/LiveActivity mitliest)
+            let localConfig = ModelConfiguration(
+                schema: MotionCoreApp.appSchema,
+                url: storeURL,
+                cloudKitDatabase: .none
+            )
+            MotionCoreApp.log.warning("⚠️ Falling back to LOCAL (CloudKit OFF) store=\(storeURL.path)")
+            return try! ModelContainer(for: MotionCoreApp.appSchema, configurations: [localConfig])
         }
     }()
 
@@ -52,14 +105,9 @@ struct MotionCoreApp: App {
                 .environmentObject(activeSessionManager)
                 .preferredColorScheme(appSettings.appTheme.colorScheme)
                 .handleSessionLifecycle()
-                .onAppear {
-                    repairSnapshotsOnLaunch()
-                    checkForActiveSession()
-                }
+                .onAppear { checkForActiveSession() }
                 .alert("Aktive Session gefunden", isPresented: $showSessionRestoreAlert) {
-                    Button("Fortsetzen") {
-                        restoreSession()
-                    }
+                    Button("Fortsetzen") { restoreSession() }
                     Button("Verwerfen", role: .cancel) {
                         activeSessionManager.discardSession()
                         pendingRestoreInfo = nil
@@ -74,60 +122,22 @@ struct MotionCoreApp: App {
         .modelContainer(sharedModelContainer)
     }
 
-    // MARK: - Session Wiederherstellung
-
-    // Prüft beim App-Start ob eine aktive Session wiederhergestellt werden muss
     private func checkForActiveSession() {
         if let restoreInfo = activeSessionManager.getRestorationInfo() {
             pendingRestoreInfo = restoreInfo
-
-            // Kurze Verzögerung damit die UI vollständig geladen ist
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 showSessionRestoreAlert = true
             }
         }
     }
 
-    // Stellt die Session wieder her und navigiert zur entsprechenden View
     private func restoreSession() {
         guard let info = pendingRestoreInfo else { return }
-
-        // Notification an BaseView senden
         NotificationCenter.default.post(
             name: .restoreActiveSession,
             object: nil,
-            userInfo: [
-                "sessionID": info.sessionID,
-                "workoutType": info.workoutType
-            ]
+            userInfo: ["sessionID": info.sessionID, "workoutType": info.workoutType]
         )
-
         pendingRestoreInfo = nil
-    }
-
-    private func repairSnapshotsOnLaunch() {
-        let context = ModelContext(sharedModelContainer)
-
-        do {
-            let descriptor = FetchDescriptor<ExerciseSet>()
-            let sets = try context.fetch(descriptor)
-
-            var changed = 0
-            for s in sets {
-                let uuid = s.exerciseUUIDSnapshot
-                if !uuid.isEmpty && UUID(uuidString: uuid) == nil {
-                    // kaputter Snapshot -> leeren, damit UI nicht falsche URLs baut
-                    s.exerciseUUIDSnapshot = ""
-                    changed += 1
-                }
-            }
-
-            if changed > 0 {
-                try context.save()
-                print("🧹 Repair: cleaned \(changed) invalid exerciseUUIDSnapshot values")
-            }
-        } catch {
-            print("⚠️ Repair failed:", error)
-        }
     }
 }

@@ -36,7 +36,7 @@ struct PlanExercisesSection: View {
         VStack(alignment: .leading, spacing: 12) {
             exerciseHeaderView
 
-            if plan.templateSets.isEmpty {
+            if plan.safeTemplateSets.isEmpty {
                 emptyStateView
             } else {
                 exercisesList
@@ -80,17 +80,16 @@ struct PlanExercisesSection: View {
                             .contentTransition(.symbolEffect(.replace))
                     }
                 }
-
-            case .detail:
-                if !plan.templateSets.isEmpty {
-                    NavigationLink {
-                        TrainingFormView(mode: .edit, plan: plan)
-                    } label: {
-                        Text("Bearbeiten")
-                            .font(.subheadline)
-                            .foregroundStyle(.blue)
+                case .detail:
+                    if !plan.safeTemplateSets.isEmpty {
+                        NavigationLink {
+                            TrainingFormView(mode: .edit, plan: plan)
+                        } label: {
+                            Text("Bearbeiten")
+                                .font(.subheadline)
+                                .foregroundStyle(.blue)
+                        }
                     }
-                }
             }
         }
         .padding(.horizontal)

@@ -27,9 +27,9 @@ struct PlanActionsSection: View {
     }
     
     private var canStartWorkout: Bool {
-        !plan.templateSets.isEmpty
+        !plan.safeTemplateSets.isEmpty
     }
-    
+
     var body: some View {
         VStack(spacing: 12) {
             // Training starten (nur wenn Übungen vorhanden)
