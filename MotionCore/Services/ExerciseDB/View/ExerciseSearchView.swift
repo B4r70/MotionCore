@@ -5,7 +5,7 @@
 // Datei . . . . : ExerciseSearchView.swift                                         /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 10.01.2026                                                       /
-// Beschreibung  : Suche und Import von Übungen aus Supabase                        /
+// Beschreibung  : Suche und Import von Übungen aus Supabase mit erweiterten Filtern/
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -17,89 +17,41 @@ struct ExerciseSearchView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
+    @EnvironmentObject private var filterService: SupabaseFilterService
 
+    // Search & Results
     @State private var searchText = ""
-    @State private var searchResults: [SupabaseExercise] = []
+    @State private var searchResults: [SupabaseExerciseSearchResult] = []
     @State private var isSearching = false
     @State private var errorMessage: String?
     @State private var importedIDs: Set<UUID> = []
 
-        // Filter-Optionen
-    @State private var selectedFilter: SearchFilter = .name
-    @State private var selectedMuscleGroup: String?
-    @State private var selectedEquipment: String?
-
-    enum SearchFilter: String, CaseIterable {
-        case name = "Name"
-        case muscleGroup = "Muskelgruppe"
-        case equipment = "Equipment"
-    }
-
-        // Verfügbare Muskelgruppen (aus Supabase)
-    let muscleGroups = [
-        "abs_lower",
-        "abs_upper",
-        "abductors",
-        "adductors",
-        "back_erector_spinae",
-        "back_lats",
-        "back_rhomboids",
-        "back_traps_middle",
-        "back_traps_upper",
-        "biceps_long",        // ← statt "biceps"
-        "biceps_short",       // ← statt "biceps"
-        "calves_gastrocnemius",
-        "calves_soleus",
-        "chest_middle",
-        "chest_outer",
-        "core",
-        "forearms_extensors",
-        "forearms_flexors",
-        "glutes_maximus",
-        "glutes_medius",
-        "hamstrings_biceps_femoris",
-        "hamstrings_semitendinosus",
-        "quads_rectus_femoris",
-        "quads_vastus_lateralis",
-        "quads_vastus_medialis",
-        "shoulders_front",
-        "shoulders_rear",
-        "shoulders_side",
-        "triceps_lateral",
-        "triceps_long",
-        "triceps_medial"
-    ]
-
-        // Verfügbares Equipment (aus Supabase)
-    let equipment = [
-        "barbell", "dumbbell", "kettlebell", "cable", "machine",
-        "bodyweight", "bands", "medicine ball", "other"
-    ]
+    // Advanced Filters
+    @State private var showAdvancedFilter = false
+    @State private var selectedEquipment: SupabaseEquipment?
+    @State private var selectedPrimaryMuscle: SupabaseMuscleGroup?
+    @State private var selectedSubMuscle: SupabaseMuscleGroup?
 
     var body: some View {
         ZStack {
-                // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             VStack(spacing: 0) {
-                    // *NEW* Reduced top padding
-                Spacer()
-                    .frame(height: 8)
+                Spacer().frame(height: 8)
 
-                    // Filter-Auswahl
-                filterPicker
+                // Search Bar mit Filter Button
+                searchBar
                     .padding(.horizontal)
 
-                    // Suchfeld oder Dropdown je nach Filter
-                searchInputSection
-                    .padding(.horizontal)
-                    .padding(.top, 12)
+                // Active Filters Display
+                if hasActiveFilters {
+                    activeFiltersRow
+                        .padding(.top, 12)
+                }
 
-                    // *NEW* Better spacing before results
-                Spacer()
-                    .frame(height: 20)
+                Spacer().frame(height: 20)
 
-                    // Ergebnisliste
+                // Results List
                 resultsList
             }
         }
@@ -112,258 +64,261 @@ struct ExerciseSearchView: View {
         }
         .onAppear {
             loadExistingImports()
-        }
-    }
-
-        // MARK: - Filter Picker
-    private var filterPicker: some View {
-        Picker("Filter", selection: $selectedFilter) {
-            ForEach(SearchFilter.allCases, id: \.self) { filter in
-                Text(filter.rawValue).tag(filter)
+            // Filter laden
+            Task {
+                await filterService.loadAllFilters(languageCode: "de")
             }
         }
-        .pickerStyle(.segmented)
-        .onChange(of: selectedFilter) {
-            searchResults = []
-            searchText = ""
+        .sheet(isPresented: $showAdvancedFilter) {
+            ExerciseFilterSheet(
+                selectedEquipment: $selectedEquipment,
+                selectedPrimaryMuscle: $selectedPrimaryMuscle,
+                selectedSubMuscle: $selectedSubMuscle
+            )
+            .environmentObject(filterService)
         }
+        .onChange(of: selectedEquipment) { _, _ in performSearch() }
+        .onChange(of: selectedPrimaryMuscle) { _, _ in performSearch() }
+        .onChange(of: selectedSubMuscle) { _, _ in performSearch() }
     }
 
-        // MARK: - Search Input
-    @ViewBuilder
-    private var searchInputSection: some View {
-        switch selectedFilter {
-            case .name:
-                HStack(spacing: 12) {
-                    TextField("Übungsname eingeben...", text: $searchText)
-                        .textFieldStyle(.plain)
-                        .padding(12)
-                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-                        )
+    // MARK: - Search Bar
 
+    private var searchBar: some View {
+        HStack(spacing: 12) {
+            // Search Field
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.secondary)
+
+                TextField("Übungsname eingeben...", text: $searchText)
+                    .textFieldStyle(.plain)
+                    .submitLabel(.search)
+                    .onSubmit {
+                        performSearch()
+                    }
+
+                if !searchText.isEmpty {
                     Button {
-                        Task { await searchByName() }
+                        searchText = ""
+                        searchResults = []
                     } label: {
-                        Image(systemName: "magnifyingglass")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .padding(12)
-                            .background(
-                                LinearGradient(
-                                    colors: [.blue, .blue.opacity(0.8)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                in: RoundedRectangle(cornerRadius: 12)
-                            )
-                    }
-                    .disabled(searchText.isEmpty || isSearching)
-                }
-
-            case .muscleGroup:
-                Menu {
-                    Button("Auswählen...") {
-                        selectedMuscleGroup = nil
-                        searchResults = []
-                    }
-
-                    ForEach(muscleGroups, id: \.self) { muscle in
-                        Button(muscle.capitalized) {
-                            selectedMuscleGroup = muscle
-                            Task { await searchByMuscleGroup(muscle) }
-                        }
-                    }
-                } label: {
-                    HStack {
-                        Text(selectedMuscleGroup?.capitalized ?? "Muskelgruppe wählen")
-                            .foregroundStyle(selectedMuscleGroup == nil ? .secondary : .primary)
-
-                        Spacer()
-
-                        Image(systemName: "chevron.down")
+                        Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.secondary)
                     }
+                }
+            }
+            .padding(12)
+            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+            )
+
+            // Filter Button
+            Button {
+                showAdvancedFilter = true
+            } label: {
+                Image(systemName: hasActiveFilters ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                    .font(.title2)
+                    .foregroundStyle(hasActiveFilters ? .blue : .secondary)
                     .padding(12)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                    .background(.ultraThinMaterial, in: Circle())
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        Circle()
                             .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
                     )
-                }
-
-            case .equipment:
-                Menu {
-                    Button("Auswählen...") {
-                        selectedEquipment = nil
-                        searchResults = []
-                    }
-
-                    ForEach(equipment, id: \.self) { eq in
-                        Button(eq.capitalized) {
-                            selectedEquipment = eq
-                            Task { await searchByEquipment(eq) }
-                        }
-                    }
-                } label: {
-                    HStack {
-                        Text(selectedEquipment?.capitalized ?? "Equipment wählen")
-                            .foregroundStyle(selectedEquipment == nil ? .secondary : .primary)
-
-                        Spacer()
-
-                        Image(systemName: "chevron.down")
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(12)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-                    )
-                }
-        }
-    }
-
-        // MARK: - Results List
-    private var resultsList: some View {
-        Group {
-            if isSearching {
-                VStack(spacing: 20) {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                    Text("Suche läuft...")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            } else if let error = errorMessage {
-                    // *NEW* Better positioned error state
-                VStack(spacing: 0) {
-                    Spacer()
-                    EmptyState(
-                        icon: "exclamationmark.triangle",
-                        title: "Fehler",
-                        message: error
-                    )
-                    Spacer()
-                    Spacer() // Extra spacer to push up slightly
-                }
-
-            } else if searchResults.isEmpty {
-                    // *NEW* Better positioned empty state
-                VStack(spacing: 0) {
-                    Spacer()
-                    EmptyState(
-                        icon: "magnifyingglass",
-                        title: "Keine Ergebnisse",
-                        message: "Starte eine Suche um Übungen zu finden"
-                    )
-                    Spacer()
-                    Spacer() // Extra spacer to push up slightly
-                }
-
-            } else {
-                ScrollView {
-                    LazyVStack(spacing: 12) {
-                        ForEach(searchResults, id: \.id) { exercise in
-                            ExerciseSearchRow(
-                                exercise: exercise,
-                                isImported: importedIDs.contains(exercise.id),
-                                onImport: { importExercise(exercise) }
-                            )
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.top, 8)
-                    .padding(.bottom, 24)
-                }
-                .scrollIndicators(.hidden)
             }
         }
     }
 
-        // MARK: - Search Methods
+    // MARK: - Active Filters Row
 
-    private func searchByName() async {
-        guard !searchText.isEmpty else { return }
+    private var activeFiltersRow: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                if let equipment = selectedEquipment {
+                    HStack(spacing: 6) {
+                        Image(systemName: "dumbbell.fill")
+                            .font(.caption2)
+                        Text(equipment.name)
+                            .font(.caption)
+                        Button {
+                            selectedEquipment = nil
+                            performSearch()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.caption)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .overlay(Capsule().stroke(Color.blue, lineWidth: 1))
+                }
 
+                if let primary = selectedPrimaryMuscle {
+                    HStack(spacing: 6) {
+                        Image(systemName: "figure.arms.open")
+                            .font(.caption2)
+                        Text(primary.name)
+                            .font(.caption)
+                        Button {
+                            selectedPrimaryMuscle = nil
+                            selectedSubMuscle = nil
+                            performSearch()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.caption)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .overlay(Capsule().stroke(Color.green, lineWidth: 1))
+                }
+
+                if let sub = selectedSubMuscle {
+                    HStack(spacing: 6) {
+                        Image(systemName: "scope")
+                            .font(.caption2)
+                        Text(sub.name)
+                            .font(.caption)
+                        Button {
+                            selectedSubMuscle = nil
+                            performSearch()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.caption)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .overlay(Capsule().stroke(Color.green.opacity(0.6), lineWidth: 1))
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+
+    // MARK: - Results List
+
+    @ViewBuilder
+    private var resultsList: some View {
+        if isSearching {
+            VStack(spacing: 12) {
+                ProgressView()
+                    .scaleEffect(1.5)
+                Text("Suche läuft...")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+        } else if let error = errorMessage {
+            VStack(spacing: 0) {
+                Spacer()
+                EmptyState(
+                    icon: "exclamationmark.triangle",
+                    title: "Fehler",
+                    message: error
+                )
+                Spacer()
+                Spacer()
+            }
+
+        } else if searchResults.isEmpty {
+            VStack(spacing: 0) {
+                Spacer()
+                EmptyState(
+                    icon: "magnifyingglass",
+                    title: "Keine Ergebnisse",
+                    message: hasActiveFilters || !searchText.isEmpty
+                        ? "Keine Übungen gefunden. Versuche andere Filter."
+                        : "Starte eine Suche oder wähle Filter"
+                )
+                Spacer()
+                Spacer()
+            }
+
+        } else {
+            ScrollView {
+                LazyVStack(spacing: 12) {
+                    ForEach(searchResults, id: \.id) { exercise in
+                        ExerciseSearchRow(
+                            exercise: exercise,
+                            isImported: importedIDs.contains(exercise.id),
+                            onImport: { importExercise(exercise) }
+                        )
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 24)
+            }
+            .scrollIndicators(.hidden)
+        }
+    }
+
+    // MARK: - Search
+
+    private func performSearch() {
+        Task {
+            await executeSearch()
+        }
+    }
+
+    private func executeSearch() async {
         isSearching = true
         errorMessage = nil
+        defer { isSearching = false }
+
+        let languageCode = "de"
+
+        // Search term normalisieren
+        let trimmedTerm = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let usableTerm: String? = (trimmedTerm.count >= 2) ? trimmedTerm : nil
+
+        // Filter-IDs bestimmen (Subgroup hat Priorität)
+        let selectedEquipmentId: UUID? = selectedEquipment?.id
+        let selectedMuscleGroupId: UUID? = selectedSubMuscle?.id ?? selectedPrimaryMuscle?.id
+
+        // Wenn gar kein Kriterium gesetzt ist -> keine Suche
+        let hasAnyCriteria = (usableTerm != nil) || (selectedEquipmentId != nil) || (selectedMuscleGroupId != nil)
+        guard hasAnyCriteria else {
+            searchResults = []
+            return
+        }
 
         do {
-            searchResults = try await SupabaseExerciseService.shared.searchExercises(byName: searchText)
+            searchResults = try await SupabaseExerciseService.shared.searchExercises(
+                byName: usableTerm,
+                equipmentId: selectedEquipmentId,
+                muscleGroupId: selectedMuscleGroupId,
+                languageCode: languageCode,
+                limit: 50,
+                offset: 0
+            )
         } catch let err as SupabaseError {
             errorMessage = "Suche fehlgeschlagen: \(err.errorDescription ?? "Unbekannt")"
         } catch {
             errorMessage = "Suche fehlgeschlagen: \(error.localizedDescription)"
         }
-        isSearching = false
-    }
-
-    private func searchByMuscleGroup(_ muscleGroup: String) async {
-        isSearching = true
-        errorMessage = nil
-            // *TMP* Debug-Output
-        do {
-            let url = try SupabaseConfig.url
-            let key = try SupabaseConfig.anonKey
-            print("🔍 Supabase Config:")
-            print("   URL: \(url)")
-            print("   Key: \(key.prefix(20))...") // Nur erste 20 Zeichen
-        } catch {
-            print("❌ Config Error: \(error)")
-        }
-
-        do {
-            searchResults = try await SupabaseExerciseService.shared.fetchExercises(byMuscleGroup: muscleGroup)
-        } catch {
-            errorMessage = "Suche fehlgeschlagen: \(error.localizedDescription)"
-        }
-
-        isSearching = false
-    }
-
-    private func searchByEquipment(_ equipment: String) async {
-        isSearching = true
-        errorMessage = nil
-
-        // *TMP* Debug-Output
-        do {
-            let url = try SupabaseConfig.url
-            let key = try SupabaseConfig.anonKey
-            print("🔍 Supabase Config:")
-            print("   URL: \(url)")
-            print("   Key: \(key.prefix(20))...") // Nur erste 20 Zeichen
-        } catch {
-            print("❌ Config Error: \(error)")
-        }
-
-        do {
-            searchResults = try await SupabaseExerciseService.shared.fetchExercises(byEquipment: equipment)
-        } catch {
-            errorMessage = "Suche fehlgeschlagen: \(error.localizedDescription)"
-        }
-
-        isSearching = false
     }
 
     // MARK: - Import
 
-    private func importExercise(_ exercise: SupabaseExercise) {
+    private func importExercise(_ searchResult: SupabaseExerciseSearchResult) {
         errorMessage = nil
-        
+
         Task {
             do {
-                    // Import + Save (läuft nicht im UI-Flow)
-                try ExerciseImportManager.importFromSupabase(exercise, context: modelContext)
-                
-                    // UI State sicher auf dem MainActor updaten
+                // Konvertiere SearchResult zu Exercise-Import Format
+                try await importFromSearchResult(searchResult)
+
                 await MainActor.run {
-                    importedIDs.insert(exercise.id)
+                    importedIDs.insert(searchResult.id)
                 }
             } catch {
                 await MainActor.run {
@@ -371,6 +326,94 @@ struct ExerciseSearchView: View {
                 }
             }
         }
+    }
+
+    // Helper: Import von SearchResult
+    private func importFromSearchResult(_ result: SupabaseExerciseSearchResult) async throws {
+        // ✅ ID VORHER extrahieren (außerhalb des Predicates)
+        let searchId = result.id
+
+        // Prüfe ob bereits importiert
+        let descriptor = FetchDescriptor<Exercise>(
+            predicate: #Predicate<Exercise> { exercise in
+                exercise.apiID == searchId
+            }
+        )
+
+        if let existing = try? modelContext.fetch(descriptor).first {
+            print("⚠️ Exercise bereits importiert: \(existing.name)")
+            return
+        }
+
+        // Konvertiere String-Arrays zu MuscleGroup Enums
+        let primaryMuscles: [MuscleGroup] = result.muscles.compactMap { muscleName in
+            MuscleGroup.allCases.first { $0.rawValue.lowercased().contains(muscleName.lowercased()) }
+        }
+
+        // Equipment Mapping (nimm erstes aus Array)
+        let equipmentEnum: ExerciseEquipment = {
+            guard let firstEquipment = result.equipment.first else { return .bodyweight }
+            return ExerciseEquipment.fromSupabase(firstEquipment)  // ✅ String, nicht [String]
+        }()
+
+        // Difficulty Mapping
+        let difficultyEnum: ExerciseDifficulty = {
+            guard let diff = result.difficulty else { return .intermediate }
+            return ExerciseDifficulty.fromSupabase(diff)
+        }()
+
+        // Category Mapping (aus result)
+        let categoryEnum: ExerciseCategory = {
+            guard let cat = result.category else { return .compound }
+            return ExerciseCategory.fromSupabase(
+                mechanic: result.mechanicType,
+                force: result.forceType
+            )
+        }()
+
+        // Erstelle neue Exercise mit ALLEN Feldern
+        let newExercise = Exercise(
+            name: result.name,
+            exerciseDescription: result.description ?? "",
+            mediaAssetName: "",
+            isCustom: false,
+            isFavorite: false,
+            createdAt: Date(),
+            isUnilateral: false,
+            repRangeMin: 8,
+            repRangeMax: 12,
+            sortIndex: 0,
+            cautionNote: "",
+            isArchived: false,
+            apiID: result.id,
+            isSystemExercise: true,
+            videoPath: result.videoPath,     // ✅ Aus SQL Result
+            posterPath: result.posterPath,   // ✅ Aus SQL Result
+            instructions: result.description,
+            localVideoFileName: nil,
+            apiBodyPart: nil,
+            apiTarget: nil,
+            apiEquipment: result.equipment.first,
+            apiSecondaryMuscles: Array(result.muscles.dropFirst()),
+            apiProvider: "supabase",
+            apiOverview: nil,
+            apiExerciseTips: nil,
+            apiVariations: nil,
+            apiImageURL: nil,
+            categoryRaw: categoryEnum.rawValue,
+            equipmentRaw: equipmentEnum.rawValue,
+            difficultyRaw: difficultyEnum.rawValue,
+            movementPatternRaw: "push",
+            bodyPositionRaw: "standing",
+            primaryMusclesRaw: primaryMuscles.map { $0.rawValue },
+            secondaryMusclesRaw: []
+        )
+
+        // Speichern
+        modelContext.insert(newExercise)
+        try modelContext.save()
+
+        print("✅ Exercise importiert: \(newExercise.name) (Video: \(result.videoPath ?? "N/A"), Poster: \(result.posterPath ?? "N/A"))")
     }
 
     private func loadExistingImports() {
@@ -381,12 +424,20 @@ struct ExerciseSearchView: View {
             importedIDs = Set(existing.compactMap { $0.apiID })
         }
     }
+
+    // MARK: - Helpers
+
+    private var hasActiveFilters: Bool {
+        selectedEquipment != nil ||
+        selectedPrimaryMuscle != nil ||
+        selectedSubMuscle != nil
+    }
 }
 
 // MARK: - Search Row
 
 struct ExerciseSearchRow: View {
-    let exercise: SupabaseExercise
+    let exercise: SupabaseExerciseSearchResult
     let isImported: Bool
     let onImport: () -> Void
 
@@ -397,36 +448,37 @@ struct ExerciseSearchRow: View {
                     .font(.headline)
 
                 HStack(spacing: 8) {
-                    // NEU: Primäre Muskelgruppe (nicht mehr optional)
-                    if let primaryMuscle = exercise.primaryMuscles.first {
+                    if let firstMuscle = exercise.muscles.first {
                         HStack(spacing: 4) {
                             Image(systemName: "figure.strengthtraining.traditional")
                                 .font(.caption2)
-                            Text(primaryMuscle.capitalized)
+                            Text(firstMuscle)
                                 .font(.caption)
+                                .lineLimit(1)
                         }
                         .foregroundStyle(.secondary)
                     }
 
-                    // NEU: Equipment (nicht mehr optional)
-                    if let equipment = exercise.equipment.first {
+                    if let firstEquipment = exercise.equipment.first {
                         HStack(spacing: 4) {
                             Image(systemName: "dumbbell")
                                 .font(.caption2)
-                            Text(equipment.capitalized)
+                            Text(firstEquipment)
                                 .font(.caption)
+                                .lineLimit(1)
                         }
                         .foregroundStyle(.secondary)
                     }
 
-                    // NEU: Difficulty (optional mit Fallback)
-                    HStack(spacing: 4) {
-                        Image(systemName: "chart.bar.fill")
-                            .font(.caption2)
-                        Text((exercise.difficulty ?? "intermediate").capitalized)
-                            .font(.caption)
+                    if let difficulty = exercise.difficulty {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chart.bar.fill")
+                                .font(.caption2)
+                            Text(difficulty.capitalized)
+                                .font(.caption)
+                        }
+                        .foregroundStyle(.secondary)
                     }
-                    .foregroundStyle(.secondary)
                 }
             }
 
@@ -435,11 +487,9 @@ struct ExerciseSearchRow: View {
             if isImported {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title3)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
             } else {
-                Button {
-                    onImport()
-                } label: {
+                Button(action: onImport) {
                     Image(systemName: "plus.circle.fill")
                         .font(.title3)
                         .foregroundStyle(.blue)

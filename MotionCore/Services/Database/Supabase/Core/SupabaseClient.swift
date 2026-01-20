@@ -193,6 +193,52 @@ final class SupabaseClient {
             throw SupabaseError.decodingError(error)
         }
     }
+
+    // MARK: - RPC (Remote Procedure Call)
+
+    /// Ruft eine Supabase PostgreSQL Function auf
+    /// - Parameters:
+    ///   - function: Name der Function (z.B. "search_exercises")
+    ///   - params: Dictionary mit Parametern (z.B. ["p_language_code": "de"])
+    /// - Returns: Decoded result vom Typ T
+    func rpc<T: Decodable>(
+        function: String,
+        params: [String: Any] = [:]
+    ) async throws -> T {
+
+        let url = baseURL
+            .appendingPathComponent("rest")
+            .appendingPathComponent("v1")
+            .appendingPathComponent("rpc")
+            .appendingPathComponent(function)
+
+        print("🔧 RPC \(function)")
+        print("📤 Params: \(params)")
+
+        var request = makeRequest(url: url, method: "POST")
+        request.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validate(response, data: data)
+
+        do {
+            let decoder = Self.makeDecoder()
+            let result = try decoder.decode(T.self, from: data)
+
+            // Logging für Arrays
+            if let array = result as? [Any] {
+                print("✅ RPC returned \(array.count) items")
+            } else {
+                print("✅ RPC returned result")
+            }
+
+            return result
+        } catch {
+            print("❌ RPC Decode error: \(error)")
+            print("   Data: \(String(data: data, encoding: .utf8) ?? "N/A")")
+            throw SupabaseError.decodingError(error)
+        }
+    }
 }
 
 // MARK: - Errors

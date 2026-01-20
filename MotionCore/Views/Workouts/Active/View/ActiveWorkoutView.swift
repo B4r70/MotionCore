@@ -802,7 +802,8 @@ struct ActiveWorkoutView: View {
 
         return AnyView(
             WorkoutCompletedCard(
-                onFinishWorkout: finishWorkout
+                onFinishWorkout: finishWorkout,
+                onAddExercise: { showAddExerciseSheet = true }  // ✅ NEU!
             )
         )
     }

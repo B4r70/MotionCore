@@ -5,7 +5,7 @@
 // Datei . . . . : TrainingPlan.swift                                               /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 23.12.2025                                                       /
-// Beschreibung  : Trainingsplan mit mehreren TrainingEntries                       /
+// Beschreibung  : Trainingsplan als Template für Workouts                          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -38,9 +38,6 @@ final class TrainingPlan {
 
     // MARK: - Beziehungen
 
-    @Relationship(deleteRule: .cascade, inverse: \TrainingEntry.plan)
-    var entries: [TrainingEntry]? = []
-
     @Relationship(deleteRule: .cascade, inverse: \ExerciseSet.trainingPlan)
     var templateSets: [ExerciseSet]? = []
 
@@ -48,32 +45,6 @@ final class TrainingPlan {
     var derivedSessions: [StrengthSession]? = []
 
     // MARK: - Berechnete Werte
-
-    // Anzahl der geplanten Trainings
-    var totalEntries: Int {
-        safeEntries.count
-    }
-
-    // Anzahl der abgeschlossenen Trainings
-    var completedEntries: Int {
-        safeEntries.filter { $0.isCompleted }.count
-    }
-
-    // Fortschritt in Prozent (0.0 - 1.0)
-    var progress: Double {
-        guard totalEntries > 0 else { return 0 }
-        return Double(completedEntries) / Double(totalEntries)
-    }
-
-    // Anzahl verpasster Trainings
-    var missedEntries: Int {
-        safeEntries.filter { $0.isMissed }.count
-    }
-
-    // Noch ausstehende Trainings
-    var remainingEntries: Int {
-        safeEntries.filter { !$0.isCompleted && !$0.isMissed }.count
-    }
 
     // Plan ist abgelaufen?
     var isExpired: Bool {
@@ -87,13 +58,6 @@ final class TrainingPlan {
         return Calendar.current.dateComponents([.day], from: startDate, to: end).day
     }
 
-    // Nächstes anstehendes Training
-    var nextEntry: TrainingEntry? {
-        safeEntries
-            .filter { !$0.isCompleted }
-            .sorted { $0.scheduledDate < $1.scheduledDate }
-            .first
-    }
     // Erstellt eine neue StrengthSession basierend auf diesem Template
     func createSession() -> StrengthSession {
         let session = StrengthSession(
@@ -269,11 +233,6 @@ final class TrainingPlan {
         self.planTypeRaw = planType.rawValue
         self.isActive = isActive
         self.createdAt = Date()
-    }
-}
-extension TrainingPlan {
-    var safeEntries: [TrainingEntry] {
-        entries ?? []
     }
 }
 

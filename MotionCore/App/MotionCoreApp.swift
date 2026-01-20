@@ -11,12 +11,14 @@
 // ---------------------------------------------------------------------------------/
 import SwiftData
 import SwiftUI
+import Combine
 import os.log
 
 @main
 struct MotionCoreApp: App {
     @StateObject private var appSettings = AppSettings.shared
     @StateObject private var activeSessionManager = ActiveSessionManager.shared
+    @StateObject private var filterService = SupabaseFilterService.shared
 
     @State private var showSessionRestoreAlert = false
     @State private var pendingRestoreInfo: (sessionID: String, workoutType: WorkoutType)?
@@ -35,8 +37,7 @@ struct MotionCoreApp: App {
         OutdoorSession.self,
         ExerciseSet.self,
         Exercise.self,
-        TrainingPlan.self,
-        TrainingEntry.self
+        TrainingPlan.self
     ])
 
     // ✅ CloudKit im Simulator standardmäßig AUS (Widget/LiveActivity kann trotzdem via AppGroup lokal lesen)
@@ -103,6 +104,7 @@ struct MotionCoreApp: App {
             BaseView()
                 .environmentObject(appSettings)
                 .environmentObject(activeSessionManager)
+                .environmentObject(filterService)
                 .preferredColorScheme(appSettings.appTheme.colorScheme)
                 .handleSessionLifecycle()
                 .onAppear { checkForActiveSession() }

@@ -58,11 +58,11 @@ struct HealthMetricHeroCard: View {
                         HStack(spacing: 8) {
                             Image(systemName: calorieBalance.isDeficit ? "arrow.down.circle.fill" : "arrow.up.circle.fill")
                                 .font(.caption)
-                                .foregroundStyle(calorieBalance.isDeficit ? .green : .red)
+                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
 
                             Text(calorieBalance.isDeficit ? "Kaloriendefizit" : "Kalorienüberschuss")
                                 .font(.subheadline.weight(.medium))
-                                .foregroundStyle(calorieBalance.isDeficit ? .green : .red)
+                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
                         }
                     }
                 }
@@ -82,7 +82,7 @@ struct HealthMetricHeroCard: View {
                         HStack {
                             HStack(spacing: 8) {
                                 Image(systemName: "fork.knife.circle.fill")
-                                    .foregroundStyle(.green)
+                                    .foregroundStyle(Color.green)
 
                                 Text("Aufnahme")
                                     .font(.subheadline)
