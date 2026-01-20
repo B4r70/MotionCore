@@ -32,34 +32,62 @@ struct ExerciseSearchView: View {
     @State private var selectedPrimaryMuscle: SupabaseMuscleGroup?
     @State private var selectedSubMuscle: SupabaseMuscleGroup?
 
+    // State für Success Toast
+    @State private var showSuccessToast = false
+    @State private var lastImportedName = ""
+
     var body: some View {
-        ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+        NavigationStack {
+            ZStack {
+                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
-            VStack(spacing: 0) {
-                Spacer().frame(height: 8)
+                VStack(spacing: 0) {
+                    Spacer().frame(height: 8)
 
-                // Search Bar mit Filter Button
-                searchBar
-                    .padding(.horizontal)
+                    // Search Bar mit Filter Button
+                    searchBar
+                        .padding(.horizontal)
 
-                // Active Filters Display
-                if hasActiveFilters {
-                    activeFiltersRow
-                        .padding(.top, 12)
+                    // Active Filters Display
+                    if hasActiveFilters {
+                        activeFiltersRow
+                            .padding(.top, 12)
+                    }
+
+                    Spacer().frame(height: 20)
+
+                    // Results List
+                    resultsList
                 }
 
-                Spacer().frame(height: 20)
+                // Success Toast
+                if showSuccessToast {
+                    VStack {
+                        Spacer()
+                        HStack(spacing: 12) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(.green)
 
-                // Results List
-                resultsList
+                            Text("\(lastImportedName) importiert!")
+                                .font(.subheadline.bold())
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .background(.ultraThinMaterial, in: Capsule())
+                        .overlay(Capsule().stroke(Color.green, lineWidth: 2))
+                        .shadow(color: .green.opacity(0.3), radius: 8)
+                        .padding(.bottom, 100)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+                }
             }
-        }
-        .navigationTitle("Übung suchen")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Schließen") { dismiss() }
+            .navigationTitle("Übung suchen")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Schließen") { dismiss() }
+                }
             }
         }
         .onAppear {
@@ -246,11 +274,23 @@ struct ExerciseSearchView: View {
             ScrollView {
                 LazyVStack(spacing: 12) {
                     ForEach(searchResults, id: \.id) { exercise in
-                        ExerciseSearchRow(
-                            exercise: exercise,
-                            isImported: importedIDs.contains(exercise.id),
-                            onImport: { importExercise(exercise) }
-                        )
+                        NavigationLink {
+                            ExerciseSearchDetailView(
+                                searchResult: exercise,
+                                isImported: importedIDs.contains(exercise.id),
+                                onImport: {
+                                    importExercise(exercise)
+                                }
+                            )
+                            .environmentObject(appSettings)
+                        } label: {
+                            ExerciseSearchRow(
+                                exercise: exercise,
+                                isImported: importedIDs.contains(exercise.id),
+                                onImport: { importExercise(exercise) }
+                            )
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal)
@@ -319,6 +359,22 @@ struct ExerciseSearchView: View {
 
                 await MainActor.run {
                     importedIDs.insert(searchResult.id)
+
+                    // Success Toast anzeigen
+                    lastImportedName = searchResult.name
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                        showSuccessToast = true
+                    }
+
+                    // Toast nach 2 Sekunden ausblenden
+                    Task {
+                        try? await Task.sleep(for: .seconds(2))
+                        await MainActor.run {
+                            withAnimation {
+                                showSuccessToast = false
+                            }
+                        }
+                    }
                 }
             } catch {
                 await MainActor.run {
@@ -487,7 +543,7 @@ struct ExerciseSearchRow: View {
             if isImported {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title3)
-                    .foregroundStyle(Color.green)
+                    .foregroundStyle(.green)
             } else {
                 Button(action: onImport) {
                     Image(systemName: "plus.circle.fill")
