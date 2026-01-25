@@ -18,8 +18,8 @@ struct ExerciseFilterSheet: View {
     
     // Filter States
     @Binding var selectedEquipment: SupabaseEquipment?
-    @Binding var selectedPrimaryMuscle: SupabaseMuscleGroup?
-    @Binding var selectedSubMuscle: SupabaseMuscleGroup?
+    @Binding var selectedPrimaryMuscle: SupabaseMuscles?
+    @Binding var selectedSubMuscle: SupabaseMuscles?
     
     // Local State
     @State private var expandedMuscleGroup: UUID? = nil
@@ -260,9 +260,9 @@ private struct EquipmentButton: View {
 // MARK: - Muscle Group Row (Hierarchisch)
 
 private struct MuscleGroupRow: View {
-    let hierarchy: MuscleGroupHierarchy
-    @Binding var selectedPrimary: SupabaseMuscleGroup?
-    @Binding var selectedSub: SupabaseMuscleGroup?
+    let hierarchy: SupabaseMusclesHierarchy
+    @Binding var selectedPrimary: SupabaseMuscles?
+    @Binding var selectedSub: SupabaseMuscles?
     let isExpanded: Bool
     let onToggleExpand: () -> Void
     
@@ -344,7 +344,7 @@ private struct MuscleGroupRow: View {
 // MARK: - Subgroup Button
 
 private struct SubgroupButton: View {
-    let subgroup: SupabaseMuscleGroup
+    let subgroup: SupabaseMuscles
     let isSelected: Bool
     let onTap: () -> Void
     

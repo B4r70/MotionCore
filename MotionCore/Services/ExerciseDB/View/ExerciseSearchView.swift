@@ -29,8 +29,8 @@ struct ExerciseSearchView: View {
     // Advanced Filters
     @State private var showAdvancedFilter = false
     @State private var selectedEquipment: SupabaseEquipment?
-    @State private var selectedPrimaryMuscle: SupabaseMuscleGroup?
-    @State private var selectedSubMuscle: SupabaseMuscleGroup?
+    @State private var selectedPrimaryMuscle: SupabaseMuscles?
+    @State private var selectedSubMuscle: SupabaseMuscles?
 
     // State für Success Toast
     @State private var showSuccessToast = false
@@ -420,7 +420,7 @@ struct ExerciseSearchView: View {
 
         // Category Mapping (aus result)
         let categoryEnum: ExerciseCategory = {
-            guard let cat = result.category else { return .compound }
+            guard result.category != nil else { return .compound }
             return ExerciseCategory.fromSupabase(
                 mechanic: result.mechanicType,
                 force: result.forceType

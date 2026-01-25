@@ -69,7 +69,7 @@ class ExerciseDBService {
         offset: Int = 0,
         limit: Int = 10
     ) async throws -> [UnifiedExercise] {
-        var urlString = "\(baseURL)/exercises?offset=\(offset)&limit=\(limit)"
+        let urlString = "\(baseURL)/exercises?offset=\(offset)&limit=\(limit)"
 
         let url = URL(string: urlString)!
         var request = URLRequest(url: url)

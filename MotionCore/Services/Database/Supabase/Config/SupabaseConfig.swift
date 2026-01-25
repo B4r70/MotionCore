@@ -10,7 +10,6 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
-
 import Foundation
 
 private func debugLog(_ message: @autoclosure () -> String) {

@@ -13,7 +13,7 @@
 
 import Foundation
 
-/// Service für die Verwaltung von Exercises aus der Supabase-Datenbank
+// Service für die Verwaltung von Exercises aus der Supabase-Datenbank
 final class SupabaseExerciseService {
     static let shared = SupabaseExerciseService()
     private let client = SupabaseClient.shared
@@ -63,15 +63,15 @@ final class SupabaseExerciseService {
 
     // MARK: - Advanced Search (NEW)
 
-    /// Generische Suche mit optionalen Filtern
-    /// - Parameters:
-    ///   - searchTerm: Optional - Suchtext für Namen (>= 2 Zeichen)
-    ///   - equipmentId: Optional - Equipment UUID Filter
-    ///   - muscleGroupId: Optional - MuscleGroup UUID Filter (Level 1 oder Level 2)
-    ///   - languageCode: Sprache für Übersetzungen (default: "de")
-    ///   - limit: Max. Anzahl Ergebnisse (default: 20)
-    ///   - offset: Offset für Paging (default: 0)
-    /// - Returns: Array von SupabaseExerciseSearchResult
+    // Generische Suche mit optionalen Filtern
+    // - Parameters:
+    //   - searchTerm: Optional - Suchtext für Namen (>= 2 Zeichen)
+    //   - equipmentId: Optional - Equipment UUID Filter
+    //   - muscleGroupId: Optional - MuscleGroup UUID Filter (Level 1 oder Level 2)
+    //   - languageCode: Sprache für Übersetzungen (default: "de")
+    //   - limit: Max. Anzahl Ergebnisse (default: 20)
+    //   - offset: Offset für Paging (default: 0)
+    // - Returns: Array von SupabaseExerciseSearchResult
     func searchExercises(
         byName searchTerm: String? = nil,
         equipmentId: UUID? = nil,

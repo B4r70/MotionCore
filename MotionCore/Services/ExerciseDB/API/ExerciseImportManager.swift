@@ -32,7 +32,7 @@ class ExerciseImportManager {
             predicate: #Predicate { $0.apiID == exerciseID }
         )
 
-        if let existingExercise = try context.fetch(fetchDescriptor).first {
+        if try context.fetch(fetchDescriptor).first != nil {
             print("⭐️ Exercise '\(supabaseExercise.name)' bereits vorhanden (ID: \(supabaseExercise.id))")
             return
         }

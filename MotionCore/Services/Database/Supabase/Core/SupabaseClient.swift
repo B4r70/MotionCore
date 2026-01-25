@@ -119,7 +119,7 @@ final class SupabaseClient {
         }
 
         print("🌐 GET \(url.absoluteString)")
-        var request = makeRequest(url: url, method: "GET")
+        let request = makeRequest(url: url, method: "GET")
 
         let (data, response) = try await URLSession.shared.data(for: request)
         try validate(response, data: data)

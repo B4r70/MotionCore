@@ -20,17 +20,17 @@ final class SupabaseFilterService: ObservableObject {
 
     // Cache für geladene Daten
     @Published private(set) var equipments: [SupabaseEquipment] = []
-    @Published private(set) var muscleGroups: [SupabaseMuscleGroup] = []
+    @Published private(set) var muscleGroups: [SupabaseMuscles] = []
     @Published private(set) var isLoading = false
     @Published private(set) var error: String?
 
     // Computed: Hierarchisch gruppierte MuscleGroups
-    var muscleGroupHierarchy: [MuscleGroupHierarchy] {
+    var muscleGroupHierarchy: [SupabaseMusclesHierarchy] {
         muscleGroups.grouped()
     }
 
     // Computed: Nur Level 1 (Hauptgruppen)
-    var primaryMuscleGroups: [SupabaseMuscleGroup] {
+    var primaryMuscleGroups: [SupabaseMuscles] {
         muscleGroups.filter { $0.isPrimaryGroup }
             .sorted { ($0.displayOrder ?? 999) < ($1.displayOrder ?? 999) }
     }
@@ -64,7 +64,7 @@ final class SupabaseFilterService: ObservableObject {
 
     // MARK: - Load Muscle Groups
 
-    /// Lädt ALLE Muscle Groups (Level 1 + Level 2)
+    // Lädt ALLE Muscle Groups (Level 1 + Level 2)
     @MainActor
     func loadMuscleGroups(languageCode: String = "de") async throws {
         isLoading = true
@@ -74,13 +74,13 @@ final class SupabaseFilterService: ObservableObject {
 
         do {
             // Level 1 laden
-            let level1: [SupabaseMuscleGroup] = try await client.rpc(
+            let level1: [SupabaseMuscles] = try await client.rpc(
                 function: "list_muscle_groups",
                 params: ["p_language_code": languageCode]
             )
 
             // Level 2 laden (alle Subgroups)
-            let level2: [SupabaseMuscleGroup] = try await client.rpc(
+            let level2: [SupabaseMuscles] = try await client.rpc(
                 function: "list_muscle_subgroups_all",
                 params: ["p_language_code": languageCode]
             )
@@ -98,19 +98,19 @@ final class SupabaseFilterService: ObservableObject {
 
     // MARK: - Load All Filters
 
-    /// Lädt Equipment UND MuscleGroups gleichzeitig
+    // Lädt Equipment UND MuscleGroups gleichzeitig
     @MainActor
     func loadAllFilters(languageCode: String = "de") async {
         isLoading = true
         error = nil
-
+        
         defer { isLoading = false }
-
-        async let equipmentTask = loadEquipment(languageCode: languageCode)
-        async let muscleGroupTask = loadMuscleGroups(languageCode: languageCode)
-
+        
+        async let equipmentTask: () = loadEquipment(languageCode: languageCode)
+        async let muscleGroupTask: () = loadMuscleGroups(languageCode: languageCode)
+        
         do {
-            try await (equipmentTask, muscleGroupTask)
+            _ = try await (equipmentTask, muscleGroupTask)  // ✅ FIX
             print("✅ All filters loaded successfully")
         } catch {
             self.error = "Filter konnten nicht geladen werden"
@@ -120,8 +120,8 @@ final class SupabaseFilterService: ObservableObject {
 
     // MARK: - Subgroups für Primary Group
 
-    /// Gibt alle Subgroups für eine Primary Group zurück
-    func subgroups(for primaryGroup: SupabaseMuscleGroup) -> [SupabaseMuscleGroup] {
+    // Gibt alle Subgroups für eine Primary Group zurück
+    func subgroups(for primaryGroup: SupabaseMuscles) -> [SupabaseMuscles] {
         guard primaryGroup.isPrimaryGroup else { return [] }
 
         return muscleGroups
@@ -129,8 +129,8 @@ final class SupabaseFilterService: ObservableObject {
             .sorted { ($0.displayOrder ?? 999) < ($1.displayOrder ?? 999) }
     }
 
-    /// Gibt alle Subgroups für einen Primary Group Identifier zurück
-    func subgroups(forIdentifier identifier: String) -> [SupabaseMuscleGroup] {
+    // Gibt alle Subgroups für einen Primary Group Identifier zurück
+    func subgroups(forIdentifier identifier: String) -> [SupabaseMuscles] {
         guard let primary = primaryMuscleGroups.first(where: { $0.identifier == identifier }) else {
             return []
         }
