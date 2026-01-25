@@ -50,6 +50,7 @@ enum DataRepairService {
         var skippedNoExercise = 0
         var skippedNoApiID = 0
 
+        
         for s in sets {
             guard let ex = s.exercise else {
                 skippedNoExercise += 1
