@@ -10,7 +10,6 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
-
 import Foundation
 
 // Service für die Verwaltung von Exercises aus der Supabase-Datenbank

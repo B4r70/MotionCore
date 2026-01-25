@@ -10,8 +10,6 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
-
-/* *NEW* Gesamte Datei */
 import Foundation
 
 struct SupabaseExercise: Decodable, Identifiable {

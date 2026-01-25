@@ -96,7 +96,7 @@ struct ExerciseFormView: View {
                         // MARK: Favorit
                         ExerciseFavoriteToggle(isFavorite: $exercise.isFavorite)
 
-                            // MARK: API-Informationen (nur bei importierten Übungen)
+                        // MARK: API-Informationen (nur bei importierten Übungen)
                         if exercise.isSystemExercise {
                             ExerciseAPIView(exercise: exercise)
                         }

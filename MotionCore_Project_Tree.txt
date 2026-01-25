@@ -1,0 +1,355 @@
+.
+├── .github
+│   ├── ISSUE_TEMPLATE
+│   │   ├── config.yml
+│   │   └── issue.yml
+│   └── workflows
+│       └── issue-auto-label.yml
+├── Documentation
+│   ├── ExerciseDB_200.json
+│   ├── ExerciseDB_400.json
+│   ├── ExerciseDB_401.json
+│   ├── ExerciseDB_403.json
+│   ├── ExerciseDB_404.json
+│   ├── ExerciseDB_405.json
+│   ├── ExerciseDB_409.json
+│   ├── ExerciseDB_412.json
+│   ├── ExerciseDB_429.json
+│   └── ExerciseDB_500.json
+├── MotionCore
+│   ├── App
+│   │   └── MotionCoreApp.swift
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
+│   │   ├── AppIcon.appiconset
+│   │   │   ├── MotionCore
+│   │   │   │   ├── MotionCoreAppIcon Exports
+│   │   │   │   │   ├── MotionCoreAppIcon-iOS-ClearDark-1024x1024@1x.png
+│   │   │   │   │   ├── MotionCoreAppIcon-iOS-ClearLight-1024x1024@1x.png
+│   │   │   │   │   ├── MotionCoreAppIcon-iOS-Dark-1024x1024@1x.png
+│   │   │   │   │   ├── MotionCoreAppIcon-iOS-Default-1024x1024@1x.png
+│   │   │   │   │   ├── MotionCoreAppIcon-iOS-TintedDark-1024x1024@1x.png
+│   │   │   │   │   └── MotionCoreAppIcon-iOS-TintedLight-1024x1024@1x.png
+│   │   │   │   └── MotionCoreAppIcon.icon
+│   │   │   │       ├── Assets
+│   │   │   │       │   └── MotionCoreIcon.png
+│   │   │   │       └── icon.json
+│   │   │   ├── MotionCore_Light.icon
+│   │   │   │   ├── Assets
+│   │   │   │   │   └── MotionCore.jpg
+│   │   │   │   └── icon.json
+│   │   │   ├── Contents.json
+│   │   │   ├── MotionCore_ClearLight.icon
+│   │   │   ├── MotionCore_Dark.icon
+│   │   │   ├── MotionCore_TintedLight.icon
+│   │   │   ├── MotionCoreAppIcon-iOS-Dark-1024x1024@1x.png
+│   │   │   ├── MotionCoreAppIcon-iOS-Default-1024x1024@1x.png
+│   │   │   ├── MotionCoreAppIcon-iOS-TintedLight-1024x1024@1x.png
+│   │   │   └── MotionCoreIcon.svg
+│   │   ├── AppIconImage.imageset
+│   │   │   ├── Contents.json
+│   │   │   ├── MotionCoreAppIcon-iOS-Dark-1024x1024@1x 1.png
+│   │   │   ├── MotionCoreAppIcon-iOS-Dark-1024x1024@1x 2.png
+│   │   │   └── MotionCoreAppIcon-iOS-Dark-1024x1024@1x.png
+│   │   ├── AppIconPreview.imageset
+│   │   │   ├── Contents.json
+│   │   │   └── MotionCoreAppIcon-iOS-Default-1024x1024@1x.png
+│   │   ├── Exercise
+│   │   │   └── Contents.json
+│   │   ├── GenderMetrics
+│   │   │   ├── divers.imageset
+│   │   │   │   ├── Contents.json
+│   │   │   │   └── divers.svg
+│   │   │   ├── female.imageset
+│   │   │   │   ├── Contents.json
+│   │   │   │   └── female.svg
+│   │   │   ├── male.imageset
+│   │   │   │   ├── Contents.json
+│   │   │   │   └── male.svg
+│   │   │   └── Contents.json
+│   │   ├── Contents.json
+│   │   └── CrosstrainerWorkoutIcon.png
+│   ├── Components
+│   │   ├── Backgrounds
+│   │   │   ├── AnimatedBlob.swift
+│   │   │   └── BackgroundSettings.swift
+│   │   ├── Badges
+│   │   │   └── DeviceBadge.swift
+│   │   ├── Buttons
+│   │   │   ├── DeviceButton.swift
+│   │   │   ├── FilterChip.swift
+│   │   │   ├── FloatingButton.swift
+│   │   │   └── ToolbarButton.swift
+│   │   ├── Color
+│   │   │   └── ColorHexExtension.swift
+│   │   ├── Elements
+│   │   │   ├── AppIconView.swift
+│   │   │   ├── ShowStarRating.swift
+│   │   │   └── StatBubble.swift
+│   │   ├── GIF
+│   │   │   ├── ExerciseVideoView.swift
+│   │   │   └── LoopingPlayerView.swift
+│   │   ├── Glass Style
+│   │   │   ├── GlassButton.swift
+│   │   │   ├── GlassCard.swift
+│   │   │   └── GlassDivider.swift
+│   │   ├── Inputs
+│   │   │   ├── DisclosureRow.swift
+│   │   │   ├── FormViewSection.swift
+│   │   │   ├── GenderIconView.swift
+│   │   │   ├── IconTypes.swift
+│   │   │   ├── InputStarRating.swift
+│   │   │   └── KeyboardToolbar.swift
+│   │   ├── Sections
+│   │   │   ├── FilterSection.swift
+│   │   │   ├── HeaderView.swift
+│   │   │   └── ScrollViewContentPadding.swift
+│   │   └── States
+│   │       └── EmptyState.swift
+│   ├── Config
+│   │   ├── MotionCoreSecrets.xcconfig
+│   │   └── MotionCoreSecrets.xcconfig.templates
+│   ├── Documentation
+│   │   ├── Crosstrainer.docc
+│   │   │   ├── Resources
+│   │   │   └── Crosstrainer.md
+│   │   └── ExerciseDB
+│   ├── Examples
+│   │   ├── MockData
+│   │   │   ├── PreviewModelContainer.swift
+│   │   │   └── WorkoutSessionPreview.swift
+│   │   └── GlassButtonExamples.swift
+│   ├── Models
+│   │   ├── Class
+│   │   │   ├── AppSettings.swift
+│   │   │   ├── CardioSession.swift
+│   │   │   ├── Exercise.swift
+│   │   │   ├── ExerciseSet.swift
+│   │   │   ├── OutdoorSession.swift
+│   │   │   ├── StrengthSession.swift
+│   │   │   └── TrainingPlan.swift
+│   │   ├── Components
+│   │   │   ├── CardioTypes.swift
+│   │   │   ├── ExerciseTypes.swift
+│   │   │   ├── FilterTypes.swift
+│   │   │   ├── OutdoorTypes.swift
+│   │   │   ├── SleepTypes.swift
+│   │   │   ├── StrengthTypes.swift
+│   │   │   ├── TrainingTypes.swift
+│   │   │   └── UserTypes.swift
+│   │   ├── Extensions
+│   │   │   └── CompareableRange.swift
+│   │   ├── Helper
+│   │   ├── Protocol
+│   │   │   └── CoreSession.swift
+│   │   ├── Seeder
+│   │   │   └── ExerciseSeeder.swift
+│   │   └── Session
+│   │       ├── ActiveSessionState.swift
+│   │       └── SessionResumeState.swift
+│   ├── Services
+│   │   ├── Data
+│   │   │   ├── DataRepairService.swift
+│   │   │   ├── Export.swift
+│   │   │   ├── IODataManager.swift
+│   │   │   └── SwiftDataFactory.swift
+│   │   ├── Database
+│   │   │   └── Supabase
+│   │   │       ├── Config
+│   │   │       │   ├── SupabaseConfig.swift
+│   │   │       │   ├── SupabaseFilterService.swift
+│   │   │       │   └── SupabaseStorageBucket.swift
+│   │   │       ├── Core
+│   │   │       │   └── SupabaseClient.swift
+│   │   │       └── Exercise
+│   │   │           ├── SupabaseEquipment.swift
+│   │   │           ├── SupabaseExerciseModels.swift
+│   │   │           ├── SupabaseExerciseSearchResult.swift
+│   │   │           ├── SupabaseExerciseService.swift
+│   │   │           ├── SupabaseMuscles.swift
+│   │   │           └── SupabaseMusclesHierarchy.swift
+│   │   ├── Engine
+│   │   │   ├── CoreSessionCalcEngine.swift
+│   │   │   ├── HealthMetricCalcEngine.swift
+│   │   │   ├── RecordCalcEngine.swift
+│   │   │   ├── StatisticCalcEngine.swift
+│   │   │   └── SummaryCalcEngine.swift
+│   │   ├── ExerciseDB
+│   │   │   ├── API
+│   │   │   │   └── ExerciseImportManager.swift
+│   │   │   ├── Models
+│   │   │   │   └── ExerciseImportResult.swift
+│   │   │   └── View
+│   │   │       ├── ExerciseFilterSheet.swift
+│   │   │       ├── ExerciseSearchDetailView.swift
+│   │   │       └── ExerciseSearchView.swift
+│   │   ├── Health
+│   │   │   └── HealthKitManager.swift
+│   │   ├── Session
+│   │   │   ├── ActiveSessionManager.swift
+│   │   │   └── SessionResumeStore.swift
+│   │   ├── Store
+│   │   │   └── AppSettingsUserDefaults.swift
+│   │   └── Utility
+│   │       ├── AppFormatter.swift
+│   │       └── MuscleGroupMapper.swift
+│   ├── Utils
+│   │   └── Extensions
+│   │       ├── AppTheme.swift
+│   │       ├── NumberFormatting.swift
+│   │       ├── SessionUI.swift
+│   │       ├── TypesUI.swift
+│   │       └── ViewVisibility.swift
+│   ├── Views
+│   │   ├── Root
+│   │   │   ├── Components
+│   │   │   └── View
+│   │   │       └── BaseView.swift
+│   │   ├── Settings
+│   │   │   ├── Components
+│   │   │   │   └── VersionBundle.swift
+│   │   │   └── View
+│   │   │       ├── AboutView.swift
+│   │   │       ├── DataSettingsView.swift
+│   │   │       ├── DisplaySettingsView.swift
+│   │   │       ├── InfoRow.swift
+│   │   │       ├── MainSettingsView.swift
+│   │   │       ├── UserSettingsView.swift
+│   │   │       └── WorkoutSettingsView.swift
+│   │   ├── Statistics
+│   │   │   ├── Record Statistic
+│   │   │   │   ├── Components
+│   │   │   │   │   ├── RecordCard.swift
+│   │   │   │   │   └── RecordDetailRow.swift
+│   │   │   │   ├── Detail View
+│   │   │   │   └── View
+│   │   │   │       └── RecordView.swift
+│   │   │   ├── User Statistic
+│   │   │   │   ├── Components
+│   │   │   │   │   ├── HealthMetricCalorieHeroCard.swift
+│   │   │   │   │   ├── HealthMetricCard.swift
+│   │   │   │   │   ├── HealthMetricProgressCard.swift
+│   │   │   │   │   ├── HealthMetricSleepHeroCard.swift
+│   │   │   │   │   └── HealthMetricTrendChart.swift
+│   │   │   │   └── View
+│   │   │   │       └── HealthMetricView.swift
+│   │   │   ├── Workout Statistic
+│   │   │   │   ├── Components
+│   │   │   │   │   ├── StatisticCard.swift
+│   │   │   │   │   ├── StatisticDeviceCard.swift
+│   │   │   │   │   ├── StatisticDeviceRow.swift
+│   │   │   │   │   ├── StatisticDonutChart.swift
+│   │   │   │   │   ├── StatisticIntensityCard.swift
+│   │   │   │   │   ├── StatisticIntensityRow.swift
+│   │   │   │   │   └── StatisticTrendChart.swift
+│   │   │   │   └── View
+│   │   │   │       └── StatisticView.swift
+│   │   │   └── StatsAndRecordsView.swift
+│   │   ├── Summary
+│   │   │   ├── Components
+│   │   │   │   ├── StreakCard.swift
+│   │   │   │   ├── SummaryRecordRow.swift
+│   │   │   │   ├── SummaryRecordsCard.swift
+│   │   │   │   ├── TimeframePicker.swift
+│   │   │   │   ├── TypeBreakdownCard.swift
+│   │   │   │   └── WorkoutTypeRow.swift
+│   │   │   ├── Types
+│   │   │   │   └── SummaryTimeframe.swift
+│   │   │   └── View
+│   │   │       └── SummaryView.swift
+│   │   ├── Training
+│   │   │   ├── Exercise
+│   │   │   │   ├── Components
+│   │   │   │   │   ├── ExerciseAPIView.swift
+│   │   │   │   │   ├── ExerciseCard.swift
+│   │   │   │   │   ├── ExerciseInstructionsCard.swift
+│   │   │   │   │   └── MuscleGroupPicker.swift
+│   │   │   │   ├── Sheets
+│   │   │   │   │   └── ExercisePickerSheet.swift
+│   │   │   │   └── View
+│   │   │   │       ├── ExerciseFormView.swift
+│   │   │   │       └── ExerciseListView.swift
+│   │   │   └── Plan
+│   │   │       ├── Components
+│   │   │       │   ├── PlanActionsSection.swift
+│   │   │       │   ├── PlanBasicDataCard.swift
+│   │   │       │   ├── PlanExercisesSection.swift
+│   │   │       │   ├── PlanInfoCard.swift
+│   │   │       │   ├── PlanStatisticsCard.swift
+│   │   │       │   ├── SetConfigurationSheet.swift
+│   │   │       │   ├── TemplateSetCard.swift
+│   │   │       │   └── TrainingPlanCard.swift
+│   │   │       ├── Detail
+│   │   │       │   └── TrainingDetailView.swift
+│   │   │       └── View
+│   │   │           ├── TrainingFormView.swift
+│   │   │           └── TrainingListView.swift
+│   │   └── Workouts
+│   │       ├── Active
+│   │       │   ├── Components
+│   │       │   │   ├── ActiveSetCard.swift
+│   │       │   │   ├── ActiveWorkoutStatus.swift
+│   │       │   │   ├── ExerciseCompletedCard.swift
+│   │       │   │   ├── ExercisesOverviewCard.swift
+│   │       │   │   ├── RestTimerCard.swift
+│   │       │   │   └── WorkoutCompletedCard.swift
+│   │       │   └── View
+│   │       │       └── ActiveWorkoutView.swift
+│   │       ├── Components
+│   │       │   ├── ListViewWrapper.swift
+│   │       │   ├── SetEditSheet.swift
+│   │       │   ├── StrengthDetailView.swift
+│   │       │   ├── StrengthEditView.swift
+│   │       │   ├── StrengthSessionCard.swift
+│   │       │   └── WorkoutCard.swift
+│   │       ├── Sheets
+│   │       │   ├── NewWorkoutSheet.swift
+│   │       │   └── PlanPickerSheet.swift
+│   │       └── View
+│   │           ├── FormView.swift
+│   │           └── ListView.swift
+│   ├── Info.plist
+│   └── MotionCore.entitlements
+├── MotionCore.xcodeproj
+│   ├── project.xcworkspace
+│   │   ├── xcshareddata
+│   │   │   └── swiftpm
+│   │   │       └── configuration
+│   │   ├── xcuserdata
+│   │   │   └── bartosz.xcuserdatad
+│   │   │       ├── IDEFindNavigatorScopes.plist
+│   │   │       └── UserInterfaceState.xcuserstate
+│   │   └── contents.xcworkspacedata
+│   ├── xcshareddata
+│   │   └── xcschemes
+│   │       ├── CrossStats.xcscheme
+│   │       └── MotionCoreWidgetsExtension.xcscheme
+│   ├── xcuserdata
+│   │   └── bartosz.xcuserdatad
+│   │       ├── xcdebugger
+│   │       │   └── Breakpoints_v2.xcbkptlist
+│   │       └── xcschemes
+│   │           └── xcschememanagement.plist
+│   └── project.pbxproj
+├── MotionCoreWidgets
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
+│   │   ├── AppIcon.appiconset
+│   │   │   └── Contents.json
+│   │   ├── WidgetBackground.colorset
+│   │   │   └── Contents.json
+│   │   └── Contents.json
+│   ├── Info.plist
+│   ├── MotionCoreWidgets.swift
+│   ├── MotionCoreWidgetsBundle.swift
+│   ├── MotionCoreWidgetsControl.swift
+│   ├── MotionCoreWidgetsLiveActivity.swift
+│   └── WorkoutActivityAttributes.swift
+├── .gitignore
+├── .gitmessage
+├── MotionCore_Project_Tree.txt
+└── MotionCoreWidgetsExtension.entitlements
+
+123 directories, 230 files

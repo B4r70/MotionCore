@@ -12,8 +12,8 @@
 //
 import Foundation
 
-    /// Lightweight DTO returned by `public.search_exercises` RPC.
-    /// EXTENDED Version mit videoPath, posterPath, category, forceType, mechanicType
+// Lightweight DTO returned by `public.search_exercises` RPC.
+// EXTENDED Version mit videoPath, posterPath, category, forceType, mechanicType
 struct SupabaseExerciseSearchResult: Codable, Identifiable, Hashable {
     let id: UUID
     let name: String
