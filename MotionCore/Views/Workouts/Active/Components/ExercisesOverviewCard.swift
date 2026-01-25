@@ -19,6 +19,9 @@ struct ExercisesOverviewCard: View {
 
     let onAddExercise: () -> Void
     let onSelectExercise: (String) -> Void
+    let onDeleteExercise: (String) -> Void
+
+    @State private var pressedGroupKey: String? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -30,11 +33,28 @@ struct ExercisesOverviewCard: View {
                         index: index + 1,
                         name: firstSet.exerciseName,
                         sets: sets,
-                        isCurrentExercise: index == currentExerciseIndex
+                        isCurrentExercise: index == currentExerciseIndex,
+                        isPressed: pressedGroupKey == firstSet.groupKey  // ← NEU
                     )
                     .onTapGesture {
                         onSelectExercise(firstSet.groupKey)
                     }
+                    .onLongPressGesture(
+                        minimumDuration: 0.5,
+                        perform: {
+                            onDeleteExercise(firstSet.groupKey)
+                            pressedGroupKey = nil
+                        },
+                        onPressingChanged: { isPressing in
+                            if isPressing {
+                                pressedGroupKey = firstSet.groupKey
+                            } else {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    pressedGroupKey = nil
+                                }
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -66,6 +86,7 @@ private struct ExerciseOverviewRow: View {
     let name: String
     let sets: [ExerciseSet]
     let isCurrentExercise: Bool
+    let isPressed: Bool  // ← NEU
 
     private var completedCount: Int { sets.filter { $0.isCompleted }.count }
     private var isAllCompleted: Bool { completedCount == sets.count }
@@ -78,9 +99,10 @@ private struct ExerciseOverviewRow: View {
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(isCurrentExercise ? Color.blue.opacity(0.1) : Color.clear)
+                .fill(backgroundColor)
         )
         .contentShape(Rectangle())
+        .animation(.easeInOut(duration: 0.15), value: isPressed) 
     }
 
     private var topLine: some View {
@@ -116,6 +138,16 @@ private struct ExerciseOverviewRow: View {
                     }
             }
             Spacer()
+        }
+    }
+
+    private var backgroundColor: Color {
+        if isPressed {
+            return Color.red.opacity(0.15)
+        } else if isCurrentExercise {
+            return Color.blue.opacity(0.1)
+        } else {
+            return Color.clear
         }
     }
 }

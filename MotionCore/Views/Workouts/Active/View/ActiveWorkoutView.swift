@@ -37,6 +37,8 @@ struct ActiveWorkoutView: View {
     @State private var showCancelAlert = false
     @State private var selectedSetForEdit: ExerciseSet?
     @State private var selectedExerciseKey: String? = nil
+    @State private var exerciseToDelete: String?
+    @State private var showDeleteAlert = false
 
     // Sheet zum Hinzufügen einer Übung während des Trainings
     @State private var showAddExerciseSheet = false
@@ -196,6 +198,20 @@ struct ActiveWorkoutView: View {
             }
         } message: {
             Text("Du hast \(session.completedSets) von \(session.totalSets) Sätzen abgeschlossen.")
+        }
+        .alert("Übung löschen?", isPresented: $showDeleteAlert) {
+            Button("Löschen", role: .destructive) {
+                confirmDelete()
+            }
+            Button("Abbrechen", role: .cancel) {
+                exerciseToDelete = nil
+            }
+        } message: {
+            if let key = exerciseToDelete {
+                let sets = session.safeExerciseSets.filter { $0.groupKey == key }
+                let name = sets.first?.exerciseName ?? "Übung"
+                Text("Möchtest du '\(name)' mit \(sets.count) Sätzen aus diesem Training entfernen?")
+            }
         }
         .sheet(item: $selectedSetForEdit) { set in
             SetEditSheet(set: set, session: session)
@@ -387,6 +403,7 @@ struct ActiveWorkoutView: View {
         generator.impactOccurred()
     }
 
+    // Exercise auswählen
     private func selectExercise(key: String) {
         withAnimation(.easeInOut) {
             selectedExerciseKey = key
@@ -394,6 +411,41 @@ struct ActiveWorkoutView: View {
         hapticGenerator.impactOccurred()
     }
 
+    // Delete Exercise
+    private func deleteExercise(groupKey: String) {
+        hapticGenerator.impactOccurred()
+        exerciseToDelete = groupKey
+        showDeleteAlert = true
+    }
+
+    // Löschen bestätigen
+    private func confirmDelete() {
+        guard let groupKey = exerciseToDelete else { return }
+
+        // Finde alle Sets dieser Übung
+        let setsToDelete = session.safeExerciseSets.filter { $0.groupKey == groupKey }
+
+        // Lösche alle Sets
+        for set in setsToDelete {
+            context.delete(set)
+        }
+
+        // Refresh UI
+        exerciseListRefreshID = UUID()
+
+        // Falls die gelöschte Übung aktuell ausgewählt war
+        if selectedExerciseKey == groupKey {
+            selectedExerciseKey = nil
+        }
+
+        // Reset Alert State
+        exerciseToDelete = nil
+        showDeleteAlert = false
+
+        print("🗑️ Übung gelöscht: \(groupKey)")
+    }
+
+    // Set komplett abschließen
     private func completeSet(_ set: ExerciseSet) {
         withAnimation(.easeInOut) {
             set.isCompleted = true
@@ -752,7 +804,10 @@ struct ActiveWorkoutView: View {
             onAddExercise: { showAddExerciseSheet = true },
             onSelectExercise: { key in
                 selectExercise(key: key)
-            }
+            },
+            onDeleteExercise: { key in           // ← NEU!
+                deleteExercise(groupKey: key)    // ← NEU!
+            }                                     // ← NEU!
         )
     }
 

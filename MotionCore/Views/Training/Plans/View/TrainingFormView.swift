@@ -13,13 +13,11 @@
 import SwiftData
 import SwiftUI
 
-enum TrainingPlanFormMode { case add, edit }
-
 struct TrainingFormView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
-    let mode: TrainingPlanFormMode
+    let mode: FormMode
     @Bindable var plan: TrainingPlan
 
     @EnvironmentObject private var appSettings: AppSettings

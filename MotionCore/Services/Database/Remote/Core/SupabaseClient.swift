@@ -241,25 +241,3 @@ final class SupabaseClient {
     }
 }
 
-// MARK: - Errors
-
-enum SupabaseError: LocalizedError {
-    case invalidURL
-    case invalidResponse
-    case httpError(statusCode: Int, data: Data)
-    case decodingError(Error)
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:
-            return "Ungültige URL"
-        case .invalidResponse:
-            return "Ungültige Server-Antwort"
-        case .httpError(let statusCode, let data):
-            let msg = String(data: data, encoding: .utf8) ?? "Keine Details"
-            return "HTTP Fehler \(statusCode): \(msg)"
-        case .decodingError(let error):
-            return "Fehler beim Dekodieren: \(error.localizedDescription)"
-        }
-    }
-}

@@ -488,33 +488,9 @@ final class IODataManager {
         return importedCount
     }
 }
+/*
 
-// MARK: - Fehlerbehandlung
-enum DataIOError: LocalizedError {
-    case noDataToExport
-    case accessDenied
-    case importFailed
-    case unsupportedVersion
-    case deleteError(Error)
-    case generalError(Error)
-
-    var errorDescription: String? {
-        switch self {
-            case .noDataToExport:
-                return "Es sind keine Workouts zum Exportieren vorhanden."
-            case .accessDenied:
-                return "Zugriff auf die ausgewählte Datei verweigert."
-            case .importFailed:
-                return "Der Importvorgang ist fehlgeschlagen."
-            case .unsupportedVersion:
-                return "Das Format der Datei wird von dieser App-Version nicht unterstützt."
-            case .deleteError(let error):
-                return "Löschen fehlgeschlagen: \(error.localizedDescription)"
-            case .generalError(let error):
-                return "Ein allgemeiner Fehler ist aufgetreten: \(error.localizedDescription)"
-        }
-    }
-}
+ */
 
 // MARK: - Delete Extensions
 extension IODataManager {

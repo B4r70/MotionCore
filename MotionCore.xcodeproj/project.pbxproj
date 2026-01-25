@@ -414,7 +414,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.0;
 				MOTIONCORE_SUPABASE_URL = "https://jeebptrnhjekwtviecvz.supabase.co";
 				PRODUCT_BUNDLE_IDENTIFIER = com.barto.motioncore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -461,7 +461,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.0;
 				MOTIONCORE_SUPABASE_URL = "https://jeebptrnhjekwtviecvz.supabase.co";
 				PRODUCT_BUNDLE_IDENTIFIER = com.barto.motioncore;
 				PRODUCT_NAME = "$(TARGET_NAME)";

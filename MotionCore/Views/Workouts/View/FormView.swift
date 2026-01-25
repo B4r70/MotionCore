@@ -13,12 +13,10 @@
 import SwiftData
 import SwiftUI
 
-enum WorkoutFormMode { case add, edit }
-
 struct FormView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    let mode: WorkoutFormMode
+    let mode: FormMode
 
     @Bindable var workout: CardioSession
     @EnvironmentObject private var appSettings: AppSettings
