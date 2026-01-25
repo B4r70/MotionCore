@@ -52,6 +52,9 @@ struct LoopingPlayerView: UIViewRepresentable {
 
 final class PlayerContainerView: UIView {
     override static var layerClass: AnyClass { AVPlayerLayer.self }
+    
+    // Safe force cast: layerClass is overridden to return AVPlayerLayer.self,
+    // so the layer is guaranteed to be an AVPlayerLayer instance
     var playerLayer: AVPlayerLayer { layer as! AVPlayerLayer }
 
     override func layoutSubviews() {

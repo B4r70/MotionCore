@@ -525,7 +525,8 @@ struct ActiveWorkoutView: View {
             isResting = true
         }
         restTimer?.invalidate()
-        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
             if self.restTimerSeconds > 0 {
                 self.restTimerSeconds -= 1
             } else {
@@ -704,7 +705,8 @@ struct ActiveWorkoutView: View {
         restTimer?.invalidate()
         guard let end = restEndDate else { return }
 
-        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
             let remaining = Int(end.timeIntervalSinceNow.rounded())
             if remaining > 0 {
                 self.restTimerSeconds = remaining
@@ -1437,28 +1439,29 @@ struct AddExerciseDuringWorkoutSheet: View {
         stopContinuousAdjustment()
 
         var counter = 0
-        incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.12, repeats: true) { _ in
+        incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.12, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
             counter += 1
             switch field {
             case .sets:
-                if increment { increaseSets() } else { decreaseSets() }
+                if increment { self.increaseSets() } else { self.decreaseSets() }
             case .reps:
-                if increment { increaseReps() } else { decreaseReps() }
+                if increment { self.increaseReps() } else { self.decreaseReps() }
             case .weight:
                 // Nach 20 Iterationen schneller (0.5 statt 0.25)
                 let step: Double = counter > 20 ? 0.5 : 0.25
                 if increment {
                     withAnimation {
-                        defaultWeight += step
-                        defaultWeight = (defaultWeight * 4).rounded() / 4
+                        self.defaultWeight += step
+                        self.defaultWeight = (self.defaultWeight * 4).rounded() / 4
                     }
-                } else if defaultWeight >= step {
+                } else if self.defaultWeight >= step {
                     withAnimation {
-                        defaultWeight -= step
-                        defaultWeight = (defaultWeight * 4).rounded() / 4
+                        self.defaultWeight -= step
+                        self.defaultWeight = (self.defaultWeight * 4).rounded() / 4
                     }
                 }
-                hapticFeedback()
+                self.hapticFeedback()
             }
         }
 

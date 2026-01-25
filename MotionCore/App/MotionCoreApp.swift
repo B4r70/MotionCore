@@ -95,7 +95,11 @@ struct MotionCoreApp: App {
                 cloudKitDatabase: .none
             )
             MotionCoreApp.log.warning("⚠️ Falling back to LOCAL (CloudKit OFF) store=\(storeURL.path)")
-            return try! ModelContainer(for: MotionCoreApp.appSchema, configurations: [localConfig])
+            do {
+                return try ModelContainer(for: MotionCoreApp.appSchema, configurations: [localConfig])
+            } catch {
+                fatalError("💥 Failed to create local ModelContainer as fallback. This is unrecoverable: \(error)")
+            }
         }
     }()
 

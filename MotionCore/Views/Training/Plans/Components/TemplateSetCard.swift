@@ -190,15 +190,15 @@ struct TemplateSetCard<Trailing: View>: View {
 
         if first.weightPerSide > 0 {
             let weightsPerSide = warmupSets.map { $0.weightPerSide }
-            if Set(weightsPerSide).count == 1 {
-                return "\(warmupSets.count) × \(reps) @ 2×\(formatWeight(weightsPerSide[0]))"
+            if Set(weightsPerSide).count == 1, let weight = weightsPerSide.first {
+                return "\(warmupSets.count) × \(reps) @ 2×\(formatWeight(weight))"
             } else {
                 return "\(warmupSets.count) × \(reps) (variabel)"
             }
         } else {
             let weights = warmupSets.map { $0.weight }
-            if Set(weights).count == 1 {
-                return "\(warmupSets.count) × \(reps) @ \(formatWeight(weights[0]))"
+            if Set(weights).count == 1, let weight = weights.first {
+                return "\(warmupSets.count) × \(reps) @ \(formatWeight(weight))"
             } else {
                 return "\(warmupSets.count) × \(reps) (variabel)"
             }

@@ -33,6 +33,8 @@ struct ExerciseVideoView: View {
     @State private var isLoadingVideo = false
     @State private var posterImage: UIImage?
     @State private var isLoadingPoster = false
+    @State private var previewStatusObservation: NSKeyValueObservation?
+    @State private var videoStatusObservation: NSKeyValueObservation?
 
     // Display Logic
     private var hasLocalAsset: Bool { !assetName.isEmpty }
@@ -263,6 +265,8 @@ struct ExerciseVideoView: View {
         previewPlayer?.pause()
         previewPlayer = nil
         previewLooper = nil
+        previewStatusObservation?.invalidate()
+        previewStatusObservation = nil
         isLoadingVideo = false
     }
 
@@ -291,15 +295,16 @@ struct ExerciseVideoView: View {
 
         // Observe loading status für remote videos
         if hasRemoteVideo {
-            _ = item.observe(\.status, options: [.new]) { item, _ in
+            previewStatusObservation = item.observe(\.status, options: [.new]) { [weak self] item, _ in
                 DispatchQueue.main.async {
+                    guard let self = self else { return }
                     switch item.status {
                     case .readyToPlay:
-                        isLoadingVideo = false
+                        self.isLoadingVideo = false
                     case .failed:
-                        isLoadingVideo = false
+                        self.isLoadingVideo = false
                         print("⚠️ Remote Video failed to load: \(url)")
-                        stopPreview()
+                        self.stopPreview()
                     default:
                         break
                     }
@@ -353,15 +358,16 @@ struct ExerciseVideoView: View {
 
         // Observe loading status für remote videos
         if hasRemoteVideo {
-            _ = item.observe(\.status, options: [.new]) { item, _ in
+            videoStatusObservation = item.observe(\.status, options: [.new]) { [weak self] item, _ in
                 DispatchQueue.main.async {
+                    guard let self = self else { return }
                     switch item.status {
                     case .readyToPlay:
-                        isLoadingVideo = false
+                        self.isLoadingVideo = false
                     case .failed:
-                        isLoadingVideo = false
+                        self.isLoadingVideo = false
                         print("⚠️ Remote Video failed to load: \(url)")
-                        stopVideo()
+                        self.stopVideo()
                     default:
                         break
                     }
@@ -387,6 +393,8 @@ struct ExerciseVideoView: View {
         player?.pause()
         player = nil
         looper = nil
+        videoStatusObservation?.invalidate()
+        videoStatusObservation = nil
         isLoadingVideo = false
     }
 
