@@ -23,6 +23,7 @@ enum PlanExercisesMode {
 struct PlanExercisesSection: View {
     let plan: TrainingPlan
     let mode: PlanExercisesMode
+    @Environment(\.modelContext) private var modelContext
 
     // Callbacks fuer Form-Modus
     var onAddExercise: (() -> Void)? = nil
@@ -154,6 +155,10 @@ struct PlanExercisesSection: View {
 
                     // Deine Plan-Methode (präzise)
                     plan.reorderExercise(from: from, to: to)
+                },
+                onSupersetToggle: { index in
+                    plan.toggleSuperset(forGroupAt: index)
+                    try? modelContext.save()
                 }
             )
             .padding(.horizontal)
@@ -169,7 +174,8 @@ struct PlanExercisesSection: View {
                             exerciseName: firstSet.exerciseName,
                             mediaAssetName: firstSet.exerciseMediaAssetName,
                             sets: setsGroup,
-                            index: index + 1
+                            index: index + 1,
+                            isInSuperset: (setsGroup.first?.supersetGroupId != nil)
                         )
                     }
                 }
@@ -187,6 +193,7 @@ struct ReorderableExerciseList: View {
     let onEdit: (ExerciseSet) -> Void
     let onDelete: (ExerciseSet) -> Void
     let onReorder: (Int, Int) -> Void
+    let onSupersetToggle: (Int) -> Void
 
     // Drag State
     @State private var draggingIndex: Int? = nil
@@ -220,7 +227,10 @@ struct ReorderableExerciseList: View {
                             onDragStarted: { startDragging(index: index) },
                             onDragChanged: { translation in updateDrag(translation: translation, fromIndex: index) },
                             onDragEnded: { endDragging(fromIndex: index) },
-                            onHeightMeasured: { height in cardHeights[index] = height }
+                            onHeightMeasured: { height in cardHeights[index] = height },
+                            onSupersetToggle: index < plan.groupedTemplateSets.count - 1
+                                ? { onSupersetToggle(index) }
+                                : nil
                         )
                     }
                 }
@@ -366,6 +376,7 @@ private struct ReorderableCard: View {
     let onDragChanged: (CGSize) -> Void
     let onDragEnded: () -> Void
     let onHeightMeasured: (CGFloat) -> Void
+    let onSupersetToggle: (() -> Void)?
 
     @State private var hasStartedDrag = false
 
@@ -376,7 +387,8 @@ private struct ReorderableCard: View {
             sets: sets,
             onDelete: onDelete,
             onEdit: onEdit,
-            showsEditMenu: !isEditing
+            showsEditMenu: !isEditing,
+            onSupersetToggle: onSupersetToggle
         ) {
             if isEditing {
                 dragHandle
@@ -467,6 +479,7 @@ struct ExerciseDetailRow: View {
     let mediaAssetName: String
     let sets: [ExerciseSet]
     let index: Int
+    var isInSuperset: Bool = false
 
     private var workingSets: [ExerciseSet] {
         sets.filter { !$0.isWarmup }
@@ -483,6 +496,11 @@ struct ExerciseDetailRow: View {
                 .foregroundStyle(.white)
                 .frame(width: 24, height: 24)
                 .background(Circle().fill(.blue))
+            if isInSuperset {
+                Image(systemName: "link")
+                    .font(.caption2)
+                    .foregroundStyle(.blue)
+            }
             // Anzeige MP4 Übungsdurchführung
             ExerciseVideoView(
                 assetName: mediaAssetName,
