@@ -22,6 +22,9 @@ struct ActiveWorkoutView: View {
 
     @Bindable var session: StrengthSession
 
+    @Query(sort: \StrengthSession.date, order: .reverse)
+    private var allSessions: [StrengthSession]
+
         // MARK: - Local timers (UI only)
 
     @State private var localTimer: Timer?
@@ -48,6 +51,8 @@ struct ActiveWorkoutView: View {
 
     // PR-Set IDs (wird in Task 8 befüllt)
     @State private var prSetIDs: Set<PersistentModelID> = []
+    @State private var prBannerExercise: String? = nil
+    @State private var prBannerOneRM: Double = 0
 
         // Rest
     @State private var restTimerSeconds: Int = 0
@@ -74,6 +79,12 @@ struct ActiveWorkoutView: View {
         session.safeExerciseSets
             .filter { $0.isCompleted }
             .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
+    }
+
+    private var historicalSessions: [StrengthSession] {
+        allSessions.filter {
+            $0.isCompleted && $0.persistentModelID != session.persistentModelID
+        }
     }
 
     private var currentSet: ExerciseSet? {
@@ -151,6 +162,19 @@ struct ActiveWorkoutView: View {
                     scrollContent
                 }
                 .scrollIndicators(.hidden)
+            }
+
+            // PR-Banner Overlay
+            if prBannerExercise != nil {
+                VStack {
+                    if let exercise = prBannerExercise {
+                        PRBannerView(exerciseName: exercise, oneRM: prBannerOneRM)
+                    }
+                    Spacer()
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: prBannerExercise)
+                .zIndex(100)
             }
 
             VStack {
@@ -476,6 +500,19 @@ struct ActiveWorkoutView: View {
             set.isCompleted = true
         }
         try? context.save()
+
+        // PR-Prüfung
+        let prService = PRDetectionService(historicalSessions: historicalSessions)
+        if prService.isNewPR(set: set) {
+            prSetIDs.insert(set.persistentModelID)
+            prBannerExercise = set.exerciseName
+            prBannerOneRM = set.weight * (1.0 + Double(set.reps) / 30.0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation(.easeOut) {
+                    self.prBannerExercise = nil
+                }
+            }
+        }
 
         if selectedExerciseKey == nil {
             if let key = session.groupedSets
