@@ -46,6 +46,9 @@ struct ActiveWorkoutView: View {
     // Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
     @State private var exerciseListRefreshID = UUID()
 
+    // PR-Set IDs (wird in Task 8 befüllt)
+    @State private var prSetIDs: Set<PersistentModelID> = []
+
         // Rest
     @State private var restTimerSeconds: Int = 0
     @State private var restTimer: Timer?
@@ -814,13 +817,14 @@ struct ActiveWorkoutView: View {
             groupedSets: session.groupedSets,
             currentExerciseIndex: currentExerciseIndex,
             refreshID: exerciseListRefreshID,
+            prSetIDs: prSetIDs,
             onAddExercise: { showAddExerciseSheet = true },
             onSelectExercise: { key in
                 selectExercise(key: key)
             },
-            onDeleteExercise: { key in           // ← NEU!
-                deleteExercise(groupKey: key)    // ← NEU!
-            }                                     // ← NEU!
+            onDeleteExercise: { key in
+                deleteExercise(groupKey: key)
+            }
         )
     }
 

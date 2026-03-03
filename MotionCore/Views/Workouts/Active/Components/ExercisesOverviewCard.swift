@@ -10,18 +10,40 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
+import SwiftData
 import SwiftUI
 
 struct ExercisesOverviewCard: View {
     let groupedSets: [[ExerciseSet]]
     let currentExerciseIndex: Int
     let refreshID: UUID
+    let prSetIDs: Set<PersistentModelID>
 
     let onAddExercise: () -> Void
     let onSelectExercise: (String) -> Void
     let onDeleteExercise: (String) -> Void
 
     @State private var pressedGroupKey: String? = nil
+
+    private func isSupersetConnectedBelow(at index: Int) -> Bool {
+        guard index + 1 < groupedSets.count else { return false }
+        guard let thisID = groupedSets[index].first?.supersetGroupId,
+              !thisID.isEmpty,
+              let nextID = groupedSets[index + 1].first?.supersetGroupId else { return false }
+        return thisID == nextID
+    }
+
+    private func isSupersetConnectedAbove(at index: Int) -> Bool {
+        guard index > 0 else { return false }
+        guard let thisID = groupedSets[index].first?.supersetGroupId,
+              !thisID.isEmpty,
+              let prevID = groupedSets[index - 1].first?.supersetGroupId else { return false }
+        return thisID == prevID
+    }
+
+    private func hasPR(in sets: [ExerciseSet]) -> Bool {
+        sets.contains { prSetIDs.contains($0.persistentModelID) }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -34,7 +56,10 @@ struct ExercisesOverviewCard: View {
                         name: firstSet.exerciseName,
                         sets: sets,
                         isCurrentExercise: index == currentExerciseIndex,
-                        isPressed: pressedGroupKey == firstSet.groupKey  // ← NEU
+                        isPressed: pressedGroupKey == firstSet.groupKey,
+                        hasSupersetAbove: isSupersetConnectedAbove(at: index),
+                        hasSupersetBelow: isSupersetConnectedBelow(at: index),
+                        hasPR: hasPR(in: sets)
                     )
                     .onTapGesture {
                         onSelectExercise(firstSet.groupKey)
@@ -86,23 +111,53 @@ private struct ExerciseOverviewRow: View {
     let name: String
     let sets: [ExerciseSet]
     let isCurrentExercise: Bool
-    let isPressed: Bool  // ← NEU
+    let isPressed: Bool
+    let hasSupersetAbove: Bool
+    let hasSupersetBelow: Bool
+    let hasPR: Bool
 
     private var completedCount: Int { sets.filter { $0.isCompleted }.count }
     private var isAllCompleted: Bool { completedCount == sets.count }
 
     var body: some View {
-        VStack(spacing: 8) {
-            topLine
-            dotsLine
+        HStack(spacing: 0) {
+            // Vertikale Superset-Linie links
+            VStack(spacing: 0) {
+                Rectangle()
+                    .fill(Color.blue.opacity(0.6))
+                    .frame(width: 2)
+                    .frame(maxHeight: .infinity)
+                    .opacity(hasSupersetAbove ? 1 : 0)
+
+                if hasSupersetAbove || hasSupersetBelow {
+                    Image(systemName: "link")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(.blue)
+                        .padding(.vertical, 2)
+                }
+
+                Rectangle()
+                    .fill(Color.blue.opacity(0.6))
+                    .frame(width: 2)
+                    .frame(maxHeight: .infinity)
+                    .opacity(hasSupersetBelow ? 1 : 0)
+            }
+            .frame(width: 12)
+
+            // Inhalt
+            VStack(spacing: 8) {
+                topLine
+                dotsLine
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity)
         }
-        .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(backgroundColor)
         )
         .contentShape(Rectangle())
-        .animation(.easeInOut(duration: 0.15), value: isPressed) 
+        .animation(.easeInOut(duration: 0.15), value: isPressed)
     }
 
     private var topLine: some View {
@@ -113,13 +168,20 @@ private struct ExerciseOverviewRow: View {
 
             Spacer()
 
-            if isAllCompleted {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.green)
-            } else {
-                Text("\(completedCount)/\(sets.count)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            HStack(spacing: 4) {
+                if hasPR {
+                    Image(systemName: "crown.fill")
+                        .font(.caption)
+                        .foregroundStyle(.yellow)
+                }
+                if isAllCompleted {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                } else {
+                    Text("\(completedCount)/\(sets.count)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
     }
