@@ -18,44 +18,61 @@ struct ActiveWorkoutStatus: View {
     let completedSets: Int
     let totalSets: Int
     let progress: Double
+    let sessionVolume: Double
 
     var body: some View {
         VStack(spacing: 12) {
-            HStack {
-                HStack(spacing: 8) {
-                    Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
-                        .foregroundStyle(isPaused ? .orange : .blue)
-
-                    Text(formattedElapsedTime)
-                        .font(.title2.bold().monospacedDigit())
-                        .foregroundStyle(.primary)
-
+            HStack(alignment: .top) {
+                // Timer (links)
+                VStack(spacing: 2) {
+                    HStack(spacing: 6) {
+                        Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
+                            .foregroundStyle(isPaused ? .orange : .blue)
+                        Text(formattedElapsedTime)
+                            .font(.title3.bold().monospacedDigit())
+                            .foregroundStyle(.primary)
+                    }
                     if isPaused {
-                        Text("(Pausiert)")
-                            .font(.caption)
+                        Text("Pausiert")
+                            .font(.caption2)
                             .foregroundStyle(.orange)
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
+                // Volumen (Mitte) — nur anzeigen wenn > 0
+                if sessionVolume > 0 {
+                    VStack(spacing: 2) {
+                        Text(formattedVolume)
+                            .font(.title3.bold())
+                            .foregroundStyle(.primary)
+                        Text("Volumen")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .transition(.scale.combined(with: .opacity))
+                }
 
-                HStack(spacing: 8) {
+                // Sätze (rechts)
+                VStack(spacing: 2) {
                     Text("\(completedSets)/\(totalSets)")
-                        .font(.title2.bold())
+                        .font(.title3.bold())
                         .foregroundStyle(.primary)
-
                     Text("Sätze")
-                        .font(.subheadline)
+                        .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
+            .animation(.easeInOut(duration: 0.3), value: sessionVolume > 0)
 
+            // Fortschrittsbalken
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Color.primary.opacity(0.1))
                         .frame(height: 8)
-
                     RoundedRectangle(cornerRadius: 4)
                         .fill(
                             LinearGradient(
@@ -72,5 +89,15 @@ struct ActiveWorkoutStatus: View {
         }
         .padding()
         .background(.ultraThinMaterial)
+    }
+
+    // MARK: - Formatierung
+
+    private var formattedVolume: String {
+        if sessionVolume >= 1000 {
+            return String(format: "%.1f t", sessionVolume / 1000)
+        } else {
+            return String(format: "%.0f kg", sessionVolume)
+        }
     }
 }

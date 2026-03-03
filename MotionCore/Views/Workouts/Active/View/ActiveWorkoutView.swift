@@ -67,6 +67,12 @@ struct ActiveWorkoutView: View {
             .sorted { $0.setNumber < $1.setNumber }
     }
 
+    private var sessionVolume: Double {
+        session.safeExerciseSets
+            .filter { $0.isCompleted }
+            .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
+    }
+
     private var currentSet: ExerciseSet? {
         if selectedExerciseKey != nil {
             return selectedExerciseSets.first { !$0.isCompleted }
@@ -121,7 +127,8 @@ struct ActiveWorkoutView: View {
                     formattedElapsedTime: sessionManager.formattedElapsedTime,
                     completedSets: session.completedSets,
                     totalSets: session.totalSets,
-                    progress: session.progress
+                    progress: session.progress,
+                    sessionVolume: sessionVolume   // NEU
                 )
                 ScrollView {
                     scrollContent
