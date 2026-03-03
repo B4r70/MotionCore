@@ -183,11 +183,6 @@ struct ActiveWorkoutView: View {
             sessionManager.setSelectedExerciseKey(newValue)
             syncLiveActivityStates()
         }
-        .onChange(of: restTimerSeconds) { _, newValue in
-            if newValue == 0 && isResting {
-                completionHaptic.notificationOccurred(.success)
-            }
-        }
         .onDisappear {
             cleanupLocalTimer()
             cleanupRestTimer()

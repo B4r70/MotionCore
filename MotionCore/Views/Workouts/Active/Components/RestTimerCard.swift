@@ -137,7 +137,7 @@ struct RestTimerCard: View {
 
     private var progress: Double {
         guard targetSeconds > 0 else { return 0 }
-        return Double(remainingSeconds) / Double(targetSeconds)
+        return min(1.0, Double(remainingSeconds) / Double(targetSeconds))
     }
 
     private var progressGradientColors: [Color] {

@@ -54,7 +54,6 @@ struct StrengthOneRMChart: View {
                     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
                     .padding(.horizontal)
                 }
-                }
             }
 
             let oneRMData = selectedExercise.isEmpty ? [] : calcEngine.estimatedOneRM(for: selectedExercise)
