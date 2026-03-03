@@ -19,6 +19,7 @@ struct TemplateSetCard<Trailing: View>: View {
     let onDelete: () -> Void
     let onEdit: () -> Void
     let showsEditMenu: Bool
+    let onSupersetToggle: (() -> Void)?
     let trailing: () -> Trailing
 
     @State private var showDeleteConfirm = false
@@ -30,6 +31,7 @@ struct TemplateSetCard<Trailing: View>: View {
         onDelete: @escaping () -> Void,
         onEdit: @escaping () -> Void,
         showsEditMenu: Bool = true,
+        onSupersetToggle: (() -> Void)? = nil,
         @ViewBuilder trailing: @escaping () -> Trailing
     ) {
         self.exerciseName = exerciseName
@@ -38,6 +40,7 @@ struct TemplateSetCard<Trailing: View>: View {
         self.onDelete = onDelete
         self.onEdit = onEdit
         self.showsEditMenu = showsEditMenu
+        self.onSupersetToggle = onSupersetToggle
         self.trailing = trailing
     }
 
@@ -53,6 +56,10 @@ struct TemplateSetCard<Trailing: View>: View {
 
     private var totalVolume: Double {
         sets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
+    }
+
+    private var isInSuperset: Bool {
+        sets.first?.supersetGroupId != nil
     }
 
     var body: some View {
@@ -82,6 +89,15 @@ struct TemplateSetCard<Trailing: View>: View {
                     .foregroundStyle(.secondary)
                 }
 
+                if isInSuperset {
+                    Image(systemName: "link")
+                        .font(.caption.bold())
+                        .foregroundStyle(.blue)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(Color.blue.opacity(0.15), in: Capsule())
+                }
+
                 Spacer()
 
                 // Menu nur im Normalmodus (wenn kein Trailing geliefert wird)
@@ -89,6 +105,20 @@ struct TemplateSetCard<Trailing: View>: View {
                     Menu {
                         Button { onEdit() } label: {
                             Label("Bearbeiten", systemImage: "pencil")
+                        }
+
+                        if let toggle = onSupersetToggle {
+                            Button {
+                                toggle()
+                            } label: {
+                                if isInSuperset {
+                                    Label("Superset auflösen", systemImage: "link.badge.minus")
+                                } else {
+                                    Label("Superset mit nächster", systemImage: "link.badge.plus")
+                                }
+                            }
+
+                            Divider()
                         }
 
                         Button(role: .destructive) {
