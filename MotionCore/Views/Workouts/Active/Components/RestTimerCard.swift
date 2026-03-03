@@ -13,8 +13,6 @@
 import SwiftUI
 
 struct RestTimerCard: View {
-    @EnvironmentObject private var appSettings: AppSettings
-
     let remainingSeconds: Int
     let targetSeconds: Int
     let onSkip: () -> Void
@@ -49,9 +47,7 @@ struct RestTimerCard: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-            }
-
-            if nextExerciseName == nil {
+            } else {
                 Text("Nächster Satz bereit in \(remainingSeconds) Sekunden")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -59,9 +55,7 @@ struct RestTimerCard: View {
             }
 
             // Skip Button
-            Button {
-                onSkip()
-            } label: {
+            Button(action: onSkip) {
                 HStack {
                     Image(systemName: "forward.fill")
                     Text("Pause überspringen")
@@ -96,7 +90,7 @@ struct RestTimerCard: View {
                     style: StrokeStyle(lineWidth: 14, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
-                .animation(.linear(duration: 1.0), value: remainingSeconds)
+                .animation(.easeInOut(duration: 1.0), value: remainingSeconds)
 
             // Zahl in der Mitte
             Text(formatRestTime(remainingSeconds))
@@ -159,9 +153,12 @@ struct RestTimerCard: View {
     // MARK: - Hilfsfunktionen
 
     private func formatRestTime(_ seconds: Int) -> String {
+        if seconds < 60 {
+            return "\(seconds)s"
+        }
         let mins = seconds / 60
         let secs = seconds % 60
-        return String(format: "%02d:%02d", mins, secs)
+        return String(format: "%d:%02d", mins, secs)
     }
 }
 
