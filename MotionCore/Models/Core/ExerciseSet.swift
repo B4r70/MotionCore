@@ -45,6 +45,7 @@ final class ExerciseSet {
     // MARK: - Gruppierung
 
     var groupId: String = ""                     // Gruppen-ID für Supersets etc.
+    var supersetGroupId: String? = nil           // nil = normaler Satz, gleicher Wert = Superset-Gruppe
     var sortOrder: Int = 0                       // Sortierung innerhalb des Plans
 
     // MARK: - Set-Status
@@ -80,6 +81,10 @@ final class ExerciseSet {
     // Hilfsfunktion - Ist dies ein Template oder durchgeführt?
     var isTemplate: Bool {
         trainingPlan != nil && session == nil
+    }
+
+    var isInSuperset: Bool {
+        supersetGroupId != nil
     }
 
     // Convenience-Initializer mit Exercise
@@ -169,7 +174,8 @@ final class ExerciseSet {
         targetRepsMax: Int = 0,
         targetRIR: Int = 2,
         groupId: String = "",
-        sortOrder: Int = 0
+        sortOrder: Int = 0,
+        supersetGroupId: String? = nil
     ) {
         self.exerciseName = exerciseName
         self.exerciseNameSnapshot = exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot
@@ -192,6 +198,7 @@ final class ExerciseSet {
         self.targetRIR = targetRIR
         self.groupId = groupId
         self.sortOrder = sortOrder
+        self.supersetGroupId = supersetGroupId
     }
 }
 
@@ -224,6 +231,7 @@ extension ExerciseSet {
 
         // NEW: your snapshot flag
         copy.isUnilateralSnapshot = isUnilateralSnapshot
+        copy.supersetGroupId = supersetGroupId
 
         // Important: detach relations
         copy.exercise = nil
@@ -275,6 +283,7 @@ extension ExerciseSet {
 
         // Relationship: Exercise darf mit rüber (optional, aber praktisch)
         copy.exercise = self.exercise
+        copy.supersetGroupId = supersetGroupId
 
         // Ownership: Session kommt später via session.addSet(...)
         copy.session = nil

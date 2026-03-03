@@ -91,7 +91,8 @@ final class TrainingPlan {
                 targetRepsMax: templateSet.targetRepsMax,
                 targetRIR: templateSet.targetRIR,
                 groupId: templateSet.groupId,
-                sortOrder: templateSet.sortOrder  // NEU: Sortierung uebernehmen
+                sortOrder: templateSet.sortOrder,  // NEU: Sortierung uebernehmen
+                supersetGroupId: templateSet.supersetGroupId
             )
             newSet.exercise = templateSet.exercise
             session.addSet(newSet)
@@ -214,6 +215,28 @@ final class TrainingPlan {
 
         let totalVolume = workingSets.reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
         return totalVolume / Double(workingSets.count)
+    }
+
+    /// Verbindet Übung an `index` mit der nächsten Übung als Superset.
+    /// Falls die Übung bereits in einem Superset ist, wird das gesamte Superset aufgelöst.
+    func toggleSuperset(forGroupAt index: Int) {
+        let groups = groupedTemplateSets
+        guard index < groups.count else { return }
+        let currentGroup = groups[index]
+
+        if let existingGroupId = currentGroup.first?.supersetGroupId {
+            // Superset auflösen: alle Sets dieser Gruppe
+            safeTemplateSets
+                .filter { $0.supersetGroupId == existingGroupId }
+                .forEach { $0.supersetGroupId = nil }
+        } else {
+            // Mit nächster Übung verbinden
+            guard index + 1 < groups.count else { return }
+            let nextGroup = groups[index + 1]
+            let newGroupId = UUID().uuidString
+            currentGroup.forEach { $0.supersetGroupId = newGroupId }
+            nextGroup.forEach { $0.supersetGroupId = newGroupId }
+        }
     }
 
     // MARK: - Initialisierung
