@@ -55,6 +55,7 @@ struct ActiveWorkoutView: View {
     @State private var restEndDate: Date?
 
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let completionHaptic = UINotificationFeedbackGenerator()
 
         // MARK: - Derived
 
@@ -174,6 +175,11 @@ struct ActiveWorkoutView: View {
         .onChange(of: selectedExerciseKey) { _, newValue in
             sessionManager.setSelectedExerciseKey(newValue)
             syncLiveActivityStates()
+        }
+        .onChange(of: restTimerSeconds) { _, newValue in
+            if newValue == 0 && isResting {
+                completionHaptic.notificationOccurred(.success)
+            }
         }
         .onDisappear {
             cleanupLocalTimer()
@@ -556,6 +562,11 @@ struct ActiveWorkoutView: View {
         hapticGenerator.impactOccurred()
     }
 
+    private func adjustRestTimer(delta: Int) {
+        let newValue = restTimerSeconds + delta
+        restTimerSeconds = max(5, min(300, newValue))  // 5s bis 5min
+    }
+
     // =========================================================================
     // MARK: - Live Activity
     // =========================================================================
@@ -828,6 +839,7 @@ struct ActiveWorkoutView: View {
                     remainingSeconds: restTimerSeconds,
                     targetSeconds: completedSet.restSeconds,
                     onSkip: skipRest,
+                    onAdjust: { delta in adjustRestTimer(delta: delta) },
                     nextExerciseName: currentSet?.exerciseName,  // *NEU*
                     nextSetNumber: currentSet?.setNumber,  // *NEU*
                     totalSetsForExercise: setsForCurrentExercise  // *NEU*
