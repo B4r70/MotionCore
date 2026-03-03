@@ -229,7 +229,6 @@ extension ExerciseSet {
             sortOrder: sortOrder
         )
 
-        // NEW: your snapshot flag
         copy.isUnilateralSnapshot = isUnilateralSnapshot
         copy.supersetGroupId = supersetGroupId
 
