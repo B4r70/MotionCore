@@ -908,8 +908,8 @@ struct ActiveWorkoutView: View {
                 ActiveSetCard(
                     set: activeSet,
                     setsForCurrentExercise: setsForCurrentExercise,
-                    selectedSetForEdit: $selectedSetForEdit,
                     supersetNextExercise: supersetNextExercise(for: activeSet),
+                    selectedSetForEdit: $selectedSetForEdit,
                     onComplete: completeSet
                 )
             )
