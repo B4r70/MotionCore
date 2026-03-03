@@ -200,10 +200,10 @@ final class TrainingPlan {
                 }
         }
 
-            // Neue sortOrder zuweisen
+            // Neue sortOrder zuweisen (1-basiert, konsistent mit reorderExercises)
         for (index, group) in groups.enumerated() {
             for set in group {
-                set.sortOrder = index
+                set.sortOrder = index + 1
             }
         }
     }
@@ -233,9 +233,10 @@ final class TrainingPlan {
             // Mit nächster Übung verbinden
             guard index + 1 < groups.count else { return }
             let nextGroup = groups[index + 1]
-            let newGroupId = UUID().uuidString
-            currentGroup.forEach { $0.supersetGroupId = newGroupId }
-            nextGroup.forEach { $0.supersetGroupId = newGroupId }
+            // Falls die nächste Gruppe bereits ein Superset hat, in diese Gruppe eingliedern
+            let groupId = nextGroup.first?.supersetGroupId ?? UUID().uuidString
+            currentGroup.forEach { $0.supersetGroupId = groupId }
+            nextGroup.forEach { $0.supersetGroupId = groupId }
         }
     }
 

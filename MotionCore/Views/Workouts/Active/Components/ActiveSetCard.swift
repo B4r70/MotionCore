@@ -92,7 +92,7 @@ struct ActiveSetCard: View {
                 .background(Color.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
             }
 
-            .glassDivider()
+            GlassDivider()
 
             HStack(spacing: 24) {
                 VStack(spacing: 4) {

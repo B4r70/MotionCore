@@ -482,11 +482,11 @@ struct ExerciseDetailRow: View {
     var isInSuperset: Bool = false
 
     private var workingSets: [ExerciseSet] {
-        sets.filter { !$0.isWarmup }
+        sets.filter { $0.setKind == .work }
     }
 
     private var warmupSets: [ExerciseSet] {
-        sets.filter { $0.isWarmup }
+        sets.filter { $0.setKind == .warmup }
     }
 
     var body: some View {

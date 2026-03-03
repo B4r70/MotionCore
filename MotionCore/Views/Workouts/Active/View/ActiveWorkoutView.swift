@@ -49,7 +49,6 @@ struct ActiveWorkoutView: View {
     // Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
     @State private var exerciseListRefreshID = UUID()
 
-    // PR-Set IDs (wird in Task 8 befüllt)
     @State private var prSetIDs: Set<PersistentModelID> = []
     @State private var prBannerExercise: String? = nil
     @State private var prBannerOneRM: Double = 0
@@ -506,7 +505,7 @@ struct ActiveWorkoutView: View {
         if prService.isNewPR(set: set) {
             prSetIDs.insert(set.persistentModelID)
             prBannerExercise = set.exerciseName
-            prBannerOneRM = set.weight * (1.0 + Double(set.reps) / 30.0)
+            prBannerOneRM = prService.calculatedOneRM(for: set)
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 withAnimation(.easeOut) {
                     self.prBannerExercise = nil

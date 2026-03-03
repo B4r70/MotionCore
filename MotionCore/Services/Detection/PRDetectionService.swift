@@ -28,6 +28,11 @@ struct PRDetectionService {
         return current > bestOneRM(for: set.exerciseName)
     }
 
+    /// Berechnet den 1RM-Wert für einen gegebenen Satz via Epley-Formel.
+    func calculatedOneRM(for set: ExerciseSet) -> Double {
+        epley(weight: set.weight, reps: set.reps)
+    }
+
     /// Bisheriger Bestwert (1RM) für eine Übung aus historischen Sessions.
     func bestOneRM(for exerciseName: String) -> Double {
         historicalSessions
