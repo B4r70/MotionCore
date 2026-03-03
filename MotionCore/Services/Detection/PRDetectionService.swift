@@ -35,17 +35,15 @@ struct PRDetectionService {
 
     /// Bisheriger Bestwert (1RM) für eine Übung aus historischen Sessions.
     func bestOneRM(for exerciseName: String) -> Double {
-        historicalSessions
-            .flatMap { $0.safeExerciseSets }
-            .filter {
-                $0.exerciseName == exerciseName
-                    && $0.setKind == .work
-                    && $0.weight > 0
-                    && $0.reps > 0
-                    && $0.isCompleted
-            }
-            .map { epley(weight: $0.weight, reps: $0.reps) }
-            .max() ?? 0
+        let allSets = historicalSessions.flatMap { $0.safeExerciseSets }
+        let relevantSets = allSets.filter { set in
+            set.exerciseName == exerciseName
+                && set.setKind == .work
+                && set.weight > 0
+                && set.reps > 0
+                && set.isCompleted
+        }
+        return relevantSets.map { epley(weight: $0.weight, reps: $0.reps) }.max() ?? 0
     }
 
     // MARK: - Privat

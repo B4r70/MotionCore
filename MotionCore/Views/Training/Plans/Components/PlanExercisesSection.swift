@@ -9,6 +9,7 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
+import SwiftData
 import SwiftUI
 
 // MARK: - Modus fuer die Uebungsanzeige

@@ -49,7 +49,7 @@ struct ActiveWorkoutView: View {
     // Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
     @State private var exerciseListRefreshID = UUID()
 
-    @State private var prSetIDs: Set<PersistentModelID> = []
+    @State private var prSetIDs: Set<PersistentIdentifier> = []
     @State private var prBannerExercise: String? = nil
     @State private var prBannerOneRM: Double = 0
 

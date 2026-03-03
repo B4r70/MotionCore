@@ -17,7 +17,7 @@ struct ExercisesOverviewCard: View {
     let groupedSets: [[ExerciseSet]]
     let currentExerciseIndex: Int
     let refreshID: UUID
-    let prSetIDs: Set<PersistentModelID>
+    let prSetIDs: Set<PersistentIdentifier>
 
     let onAddExercise: () -> Void
     let onSelectExercise: (String) -> Void
