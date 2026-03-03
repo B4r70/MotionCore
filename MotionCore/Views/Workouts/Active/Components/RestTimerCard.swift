@@ -18,30 +18,26 @@ struct RestTimerCard: View {
     let remainingSeconds: Int
     let targetSeconds: Int
     let onSkip: () -> Void
+    let onAdjust: (Int) -> Void
 
-    // *NEU* - Zusätzliche Infos für Kontext
-    let nextExerciseName: String?  // *NEU*
-    let nextSetNumber: Int?  // *NEU*
-    let totalSetsForExercise: Int?  // *NEU*
+    let nextExerciseName: String?
+    let nextSetNumber: Int?
+    let totalSetsForExercise: Int?
 
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: 24) {
             // "Pause" Label
             Text("Pause")
                 .font(.title2.bold())
                 .foregroundStyle(.secondary)
 
-            // Großer Pausen-Timer
-            Text(formatRestTime(remainingSeconds))
-                .font(.system(size: 96, weight: .bold, design: .rounded))
-                .foregroundStyle(remainingSeconds > 10 ? Color.primary : Color.orange)
-                .monospacedDigit()
-                .contentTransition(.numericText())
+            // Kreisförmiger Ring-Timer
+            ringTimer
 
-            // Fortschrittsbalken
-            progressBar
+            // Zeitanpassung
+            adjustButtons
 
-            // *NEU* - Nächster Satz Info
+            // Nächster Satz Info
             if let exerciseName = nextExerciseName,
                let setNumber = nextSetNumber,
                let totalSets = totalSetsForExercise {
@@ -49,15 +45,12 @@ struct RestTimerCard: View {
                     Text(exerciseName)
                         .font(.subheadline.bold())
                         .foregroundStyle(.primary)
-
                     Text("Nächster: Satz \(setNumber) von \(totalSets)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.top, 8)
             }
 
-            // Info-Text (falls keine Set-Info vorhanden)
             if nextExerciseName == nil {
                 Text("Nächster Satz bereit in \(remainingSeconds) Sekunden")
                     .font(.subheadline)
@@ -83,43 +76,76 @@ struct RestTimerCard: View {
         .glassCard()
     }
 
-    // MARK: - Fortschrittsbalken
-    
-    private var progressBar: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .leading) {
-                // Hintergrund
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.primary.opacity(0.1))
-                    .frame(height: 12)
-                
-                // Fortschritt (läuft von voll nach leer)
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(
-                        LinearGradient(
-                            colors: progressGradientColors,
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .frame(
-                        width: geo.size.width * progress,
-                        height: 12
-                    )
-                    .animation(.linear(duration: 1.0), value: remainingSeconds)
+    // MARK: - Ring-Timer
+
+    private var ringTimer: some View {
+        ZStack {
+            // Hintergrund-Ring
+            Circle()
+                .stroke(Color.primary.opacity(0.1), lineWidth: 14)
+
+            // Fortschritts-Ring
+            Circle()
+                .trim(from: 0, to: progress)
+                .stroke(
+                    LinearGradient(
+                        colors: progressGradientColors,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    style: StrokeStyle(lineWidth: 14, lineCap: .round)
+                )
+                .rotationEffect(.degrees(-90))
+                .animation(.linear(duration: 1.0), value: remainingSeconds)
+
+            // Zahl in der Mitte
+            Text(formatRestTime(remainingSeconds))
+                .font(.system(size: 72, weight: .bold, design: .rounded))
+                .foregroundStyle(remainingSeconds > 10 ? Color.primary : Color.orange)
+                .monospacedDigit()
+                .contentTransition(.numericText())
+        }
+        .frame(width: 210, height: 210)
+    }
+
+    // MARK: - Zeitanpassung
+
+    private var adjustButtons: some View {
+        HStack {
+            Button {
+                onAdjust(-15)
+            } label: {
+                Label("−15s", systemImage: "minus.circle.fill")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.ultraThinMaterial, in: Capsule())
+            }
+
+            Spacer()
+
+            Button {
+                onAdjust(15)
+            } label: {
+                Label("+15s", systemImage: "plus.circle.fill")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.ultraThinMaterial, in: Capsule())
             }
         }
-        .frame(height: 12)
+        .padding(.horizontal, 8)
     }
-    
+
     // MARK: - Berechnete Properties
-    
+
     private var progress: Double {
         guard targetSeconds > 0 else { return 0 }
         return Double(remainingSeconds) / Double(targetSeconds)
     }
-    
-    // Farbverlauf ändert sich je nach verbleibender Zeit
+
     private var progressGradientColors: [Color] {
         if remainingSeconds > 30 {
             return [.blue, .green]
@@ -129,9 +155,9 @@ struct RestTimerCard: View {
             return [.orange, .red]
         }
     }
-    
+
     // MARK: - Hilfsfunktionen
-    
+
     private func formatRestTime(_ seconds: Int) -> String {
         let mins = seconds / 60
         let secs = seconds % 60
@@ -145,24 +171,24 @@ struct RestTimerCard: View {
         AnimatedBackground(showAnimatedBlob: true)
 
         VStack(spacing: 20) {
-            // Mit Context
             RestTimerCard(
                 remainingSeconds: 90,
                 targetSeconds: 90,
                 onSkip: {},
-                nextExerciseName: "Bankdrücken",  // *NEU*
-                nextSetNumber: 3,  // *NEU*
-                totalSetsForExercise: 4  // *NEU*
+                onAdjust: { _ in },
+                nextExerciseName: "Bankdrücken",
+                nextSetNumber: 3,
+                totalSetsForExercise: 4
             )
 
-            // Ohne Context (Fallback)
             RestTimerCard(
                 remainingSeconds: 5,
                 targetSeconds: 90,
                 onSkip: {},
-                nextExerciseName: nil,  // *NEU*
-                nextSetNumber: nil,  // *NEU*
-                totalSetsForExercise: nil  // *NEU*
+                onAdjust: { _ in },
+                nextExerciseName: nil,
+                nextSetNumber: nil,
+                totalSetsForExercise: nil
             )
         }
         .padding()
