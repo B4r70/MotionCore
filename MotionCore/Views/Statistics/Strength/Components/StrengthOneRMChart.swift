@@ -54,10 +54,6 @@ struct StrengthOneRMChart: View {
                     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
                     .padding(.horizontal)
                 }
-                .onAppear {
-                    if selectedExercise.isEmpty, let first = exerciseNames.first {
-                        selectedExercise = first
-                    }
                 }
             }
 
@@ -102,6 +98,16 @@ struct StrengthOneRMChart: View {
                 }
                 .frame(minHeight: 220)
                 .padding()
+            }
+        }
+        .onAppear {
+            if selectedExercise.isEmpty, let first = exerciseNames.first {
+                selectedExercise = first
+            }
+        }
+        .onChange(of: exerciseNames) { _, newNames in
+            if selectedExercise.isEmpty, let first = newNames.first {
+                selectedExercise = first
             }
         }
         .glassCard()
