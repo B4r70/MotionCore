@@ -43,6 +43,8 @@ struct StatsAndRecordsView: View {
                 StatisticView()
             case .records:
                 RecordView()
+            case .strength:
+                StrengthStatisticView()
             }
         }
     }
@@ -53,6 +55,7 @@ struct StatsAndRecordsView: View {
 enum StatsSegment: String, CaseIterable, Identifiable {
     case statistics = "statistics"
     case records = "records"
+    case strength = "strength"
 
     var id: String { rawValue }
 
@@ -60,6 +63,7 @@ enum StatsSegment: String, CaseIterable, Identifiable {
         switch self {
         case .statistics: return "Statistiken"
         case .records: return "Rekorde"
+        case .strength: return "Kraft"
         }
     }
 }
