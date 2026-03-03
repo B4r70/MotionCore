@@ -103,6 +103,20 @@ struct ActiveWorkoutView: View {
             .last
     }
 
+    private func supersetNextExercise(for set: ExerciseSet) -> String? {
+        guard let groupId = set.supersetGroupId else { return nil }
+        let groups = session.groupedSets
+        guard let currentGroupIndex = groups.firstIndex(where: { group in
+            group.contains { $0.groupKey == set.groupKey }
+        }) else { return nil }
+
+        let nextIndex = currentGroupIndex + 1
+        guard nextIndex < groups.count,
+              let nextSet = groups[nextIndex].first,
+              nextSet.supersetGroupId == groupId else { return nil }
+        return nextSet.exerciseName
+    }
+
     private var currentVideoThumb: ExerciseVideoView {
         guard let set = currentSet else {
             return ExerciseVideoView(assetName: "", size: 80)
@@ -859,6 +873,7 @@ struct ActiveWorkoutView: View {
                     set: activeSet,
                     setsForCurrentExercise: setsForCurrentExercise,
                     selectedSetForEdit: $selectedSetForEdit,
+                    supersetNextExercise: supersetNextExercise(for: activeSet),
                     onComplete: completeSet
                 )
             )

@@ -18,6 +18,7 @@ struct ActiveSetCard: View {
         // 2. Input
     let set: ExerciseSet
     let setsForCurrentExercise: Int
+    let supersetNextExercise: String?
         // 3. Bindings
     @Binding var selectedSetForEdit: ExerciseSet?
         // 4. Actions
@@ -77,6 +78,20 @@ struct ActiveSetCard: View {
                 .disabled(!hasInstructions)
                 .accessibilityLabel("Übungsanleitung anzeigen")
             }
+
+            if let nextExercise = supersetNextExercise {
+                HStack(spacing: 6) {
+                    Image(systemName: "link")
+                        .font(.caption.bold())
+                    Text("Superset — weiter mit: \(nextExercise)")
+                        .font(.caption)
+                }
+                .foregroundStyle(.blue)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+            }
+
             .glassDivider()
 
             HStack(spacing: 24) {
