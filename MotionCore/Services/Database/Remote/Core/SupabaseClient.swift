@@ -239,5 +239,81 @@ final class SupabaseClient {
             throw SupabaseError.decodingError(error)
         }
     }
+
+    // MARK: - Upsert (INSERT OR UPDATE)
+
+    /// Fügt einen einzelnen Datensatz ein oder aktualisiert ihn bei id-Konflikt.
+    func upsert<Body: Encodable>(
+        endpoint: String,
+        body: Body
+    ) async throws {
+        let url = baseURL
+            .appendingPathComponent("rest")
+            .appendingPathComponent("v1")
+            .appendingPathComponent(endpoint)
+
+        print("🔄 UPSERT \(url.absoluteString)")
+        var request = makeRequest(url: url, method: "POST")
+        request.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+
+        let encoder = Self.makeEncoder()
+        request.httpBody = try encoder.encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validate(response, data: data)
+    }
+
+    /// Batch-Upsert für ein Array von Datensätzen.
+    func upsert<Body: Encodable>(
+        endpoint: String,
+        body: [Body]
+    ) async throws {
+        guard !body.isEmpty else { return }
+
+        let url = baseURL
+            .appendingPathComponent("rest")
+            .appendingPathComponent("v1")
+            .appendingPathComponent(endpoint)
+
+        print("🔄 BATCH UPSERT \(url.absoluteString) (\(body.count) Einträge)")
+        var request = makeRequest(url: url, method: "POST")
+        request.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+
+        let encoder = Self.makeEncoder()
+        request.httpBody = try encoder.encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validate(response, data: data)
+    }
+
+    // MARK: - DELETE
+
+    /// Löscht Datensätze anhand eines Supabase-Filterstrings.
+    /// Beispiel: deleteWhere(endpoint: "exercise_sets", filter: "session_id=eq.UUID-STRING")
+    func deleteWhere(
+        endpoint: String,
+        filter: String
+    ) async throws {
+        guard !filter.isEmpty else {
+            print("⚠️ DELETE ohne Filter abgelehnt (endpoint: \(endpoint))")
+            return
+        }
+
+        var components = URLComponents()
+        components.scheme = baseURL.scheme
+        components.host = baseURL.host
+        components.path = "/rest/v1/\(endpoint)"
+        components.query = filter
+
+        guard let url = components.url else {
+            throw SupabaseError.invalidURL
+        }
+
+        print("🗑️ DELETE \(url.absoluteString)")
+        let request = makeRequest(url: url, method: "DELETE")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validate(response, data: data)
+    }
 }
 
