@@ -151,6 +151,14 @@ struct TrainingFormView: View {
         dismissKeyboard()
         if mode == .add { context.insert(plan) }
         try? context.save()
+
+        // Supabase-Upload nur bei neuen Plänen (non-blocking, CloudKit bleibt primär)
+        if mode == .add {
+            Task {
+                await SupabaseSessionService.shared.upload(plan)
+            }
+        }
+
         dismiss()
     }
 
