@@ -295,8 +295,7 @@ final class SupabaseClient {
         filter: String
     ) async throws {
         guard !filter.isEmpty else {
-            print("⚠️ DELETE ohne Filter abgelehnt (endpoint: \(endpoint))")
-            return
+            throw SupabaseError.invalidFilter
         }
 
         var components = URLComponents()

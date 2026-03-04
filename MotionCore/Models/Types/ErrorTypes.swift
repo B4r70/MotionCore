@@ -18,6 +18,7 @@ enum SupabaseError: LocalizedError {
     case invalidResponse
     case httpError(statusCode: Int, data: Data)
     case decodingError(Error)
+    case invalidFilter
 
     var errorDescription: String? {
         switch self {
@@ -30,6 +31,8 @@ enum SupabaseError: LocalizedError {
                 return "HTTP Fehler \(statusCode): \(msg)"
             case .decodingError(let error):
                 return "Fehler beim Dekodieren: \(error.localizedDescription)"
+            case .invalidFilter:
+                return "DELETE ohne Filter ist nicht erlaubt"
         }
     }
 }
