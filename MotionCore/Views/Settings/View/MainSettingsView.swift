@@ -144,39 +144,7 @@ struct MainSettingsView: View {
             }
         }
         .padding(.top, 20)
-        .navigationTitle("Einstellungen")
-
-        // MARK: - Sicherheitsabfrage
-        .confirmationDialog(
-            "Übungsbibliothek befüllen",
-            isPresented: $showingSeederDialog,
-            titleVisibility: .visible
-        ) {
-            Button("Fehlende Standard-Übungen ergänzen") {
-                let inserted = ExerciseSeeder.seedMissing(context: modelContext)
-                seederResultMessage = inserted > 0
-                ? "✅ \(inserted) neue Übungen hinzugefügt."
-                : "ℹ️ Keine neuen Übungen – alles bereits vorhanden."
-                showingSeederResult = true
-            }
-
-            // Diese Option macht nur Sinn, wenn bereits Einträge existieren
-            if !allExercises.isEmpty {
-                Button("Übungsbibliothek löschen & neu seeden", role: .destructive) {
-                    ExerciseSeeder.reseed(context: modelContext)
-                    seederResultMessage = "Übungsbibliothek wurde gelöscht und neu aufgebaut."
-                    showingSeederResult = true
-                }
-            }
-
-            Button("Abbrechen", role: .cancel) {}
-        } message: {
-            if allExercises.isEmpty {
-                Text("Es sind aktuell keine Übungen vorhanden. Soll die Standard-Übungsbibliothek angelegt werden?")
-            } else {
-                Text("Es sind bereits \(allExercises.count) Übungen vorhanden.\n\n„Hinzufügen“ kann Duplikate erzeugen.\n„Löschen & neu seeden“ setzt die Bibliothek komplett zurück.")
-            }
-        }
+        .navigationTitle(“Einstellungen”)
 
         // MARK: - Ergebnis
         .alert("Übungsbibliothek", isPresented: $showingSeederResult) {
