@@ -15,6 +15,7 @@
 //
 
 import Foundation
+import Combine
 import SwiftData
 
 /// Migriert alle lokalen Sessions, die noch nicht in Supabase hochgeladen wurden.
