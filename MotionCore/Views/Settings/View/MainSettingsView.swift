@@ -144,7 +144,7 @@ struct MainSettingsView: View {
             }
         }
         .padding(.top, 20)
-        .navigationTitle(“Einstellungen”)
+        .navigationTitle("Einstellungen")
 
         // MARK: - Ergebnis
         .alert("Übungsbibliothek", isPresented: $showingSeederResult) {
