@@ -27,7 +27,8 @@ final class SupabaseSessionService {
     // MARK: - StrengthSession
 
     /// Lädt eine StrengthSession inkl. aller ExerciseSets nach Supabase hoch.
-    func upload(_ session: StrengthSession) async {
+    @discardableResult
+    func upload(_ session: StrengthSession) async -> Bool {
         do {
             let dto = SupabaseStrengthSessionDTO(
                 id: session.sessionUUID,
@@ -96,15 +97,18 @@ final class SupabaseSessionService {
             }
 
             print("✅ StrengthSession \(session.sessionUUID) hochgeladen (\(setDTOs.count) Sets)")
+            return true
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (StrengthSession): \(error.localizedDescription)")
+            return false
         }
     }
 
     // MARK: - CardioSession
 
     /// Lädt eine CardioSession nach Supabase hoch.
-    func upload(_ session: CardioSession) async {
+    @discardableResult
+    func upload(_ session: CardioSession) async -> Bool {
         do {
             let dto = SupabaseCardioSessionDTO(
                 id: session.sessionUUID,
@@ -132,15 +136,18 @@ final class SupabaseSessionService {
 
             try await client.upsert(endpoint: "cardio_sessions", body: dto)
             print("✅ CardioSession \(session.sessionUUID) hochgeladen")
+            return true
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (CardioSession): \(error.localizedDescription)")
+            return false
         }
     }
 
     // MARK: - OutdoorSession
 
     /// Lädt eine OutdoorSession nach Supabase hoch.
-    func upload(_ session: OutdoorSession) async {
+    @discardableResult
+    func upload(_ session: OutdoorSession) async -> Bool {
         do {
             let dto = SupabaseOutdoorSessionDTO(
                 id: session.sessionUUID,
@@ -171,15 +178,18 @@ final class SupabaseSessionService {
 
             try await client.upsert(endpoint: "outdoor_sessions", body: dto)
             print("✅ OutdoorSession \(session.sessionUUID) hochgeladen")
+            return true
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (OutdoorSession): \(error.localizedDescription)")
+            return false
         }
     }
 
     // MARK: - TrainingPlan
 
     /// Lädt einen TrainingPlan nach Supabase hoch.
-    func upload(_ plan: TrainingPlan) async {
+    @discardableResult
+    func upload(_ plan: TrainingPlan) async -> Bool {
         do {
             let dto = SupabaseTrainingPlanDTO(
                 id: plan.planUUID,
@@ -193,8 +203,10 @@ final class SupabaseSessionService {
 
             try await client.upsert(endpoint: "training_plans", body: dto)
             print("✅ TrainingPlan \(plan.planUUID) hochgeladen")
+            return true
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (TrainingPlan): \(error.localizedDescription)")
+            return false
         }
     }
 }
