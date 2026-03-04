@@ -155,7 +155,13 @@ struct TrainingFormView: View {
         // Supabase-Upload nur bei neuen Plänen (non-blocking, CloudKit bleibt primär)
         if mode == .add {
             Task {
-                await SupabaseSessionService.shared.upload(plan)
+                let success = await SupabaseSessionService.shared.upload(plan)
+                if success {
+                    await MainActor.run {
+                        plan.syncedToSupabase = true
+                        try? context.save()
+                    }
+                }
             }
         }
 

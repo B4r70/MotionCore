@@ -546,7 +546,13 @@ struct ActiveWorkoutView: View {
 
         // Supabase-Upload (non-blocking, CloudKit bleibt primär)
         Task {
-            await SupabaseSessionService.shared.upload(session)
+            let success = await SupabaseSessionService.shared.upload(session)
+            if success {
+                await MainActor.run {
+                    session.syncedToSupabase = true
+                    try? context.save()
+                }
+            }
         }
 
         endLiveActivity()

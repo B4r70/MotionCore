@@ -137,7 +137,13 @@ struct FormView: View {
                     // Supabase-Upload nur bei neuen Sessions (non-blocking, CloudKit bleibt primär)
                     if mode == .add {
                         Task {
-                            await SupabaseSessionService.shared.upload(workout)
+                            let success = await SupabaseSessionService.shared.upload(workout)
+                            if success {
+                                await MainActor.run {
+                                    workout.syncedToSupabase = true
+                                    try? context.save()
+                                }
+                            }
                         }
                     }
 
