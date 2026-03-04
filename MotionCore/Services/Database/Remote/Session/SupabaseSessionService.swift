@@ -17,6 +17,9 @@ import Foundation
 
 /// Lädt abgeschlossene Sessions additiv nach Supabase hoch.
 /// CloudKit bleibt primäre Persistenz – Supabase ist sekundär.
+///
+/// Thread-Safety: `upload()` ist sicher aus `@MainActor`-Kontexten aufrufbar.
+/// SwiftData-Properties werden synchron vor dem ersten `await` in ein DTO kopiert.
 final class SupabaseSessionService {
 
     static let shared = SupabaseSessionService()

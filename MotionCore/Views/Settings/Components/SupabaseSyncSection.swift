@@ -18,7 +18,7 @@ import SwiftData
 struct SupabaseSyncSection: View {
 
     @Environment(\.modelContext) private var context
-    @StateObject private var service = SupabaseMigrationService.shared
+    @ObservedObject private var service = SupabaseMigrationService.shared
 
     var body: some View {
         Section("Supabase Sync") {
