@@ -16,6 +16,11 @@ import SwiftUI
 
 @Model
 final class TrainingPlan {
+    // MARK: - Identifikation
+
+    // Stabile UUID für Supabase-Sync (überlebt App-Neustarts)
+    var planUUID: UUID = UUID()
+
     // MARK: - Grunddaten
 
     var title: String = ""                  // Name des Plans

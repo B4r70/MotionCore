@@ -16,6 +16,11 @@ import SwiftData
 
 @Model
 final class ExerciseSet {
+    // MARK: - Identifikation
+
+    // Stabile UUID für Supabase-Sync (überlebt App-Neustarts)
+    var setUUID: UUID = UUID()
+
     // MARK: - Referenz zur Übung (Snapshots für stabile Statistiken)
 
     var exerciseName: String = ""                // Name der Übung
