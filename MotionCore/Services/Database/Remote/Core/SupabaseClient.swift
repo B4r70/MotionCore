@@ -29,6 +29,19 @@ final class SupabaseClient {
 
     // MARK: - Decoder/Encoder
 
+    // Gecachte Formatter – ISO8601DateFormatter ist thread-safe ab iOS 10+
+    private static let isoFormatterFractional: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return f
+    }()
+
+    private static let isoFormatter: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime]
+        return f
+    }()
+
     private static func makeDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -39,19 +52,10 @@ final class SupabaseClient {
             let raw = try container.decode(String.self)
 
             // 1) ISO8601 mit fractional seconds
-            let isoFrac = ISO8601DateFormatter()
-            isoFrac.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-            if let date = isoFrac.date(from: raw) {
-                return date
-            }
+            if let date = isoFormatterFractional.date(from: raw) { return date }
 
             // 2) ISO8601 ohne fractional seconds
-            let iso = ISO8601DateFormatter()
-            iso.formatOptions = [.withInternetDateTime]
-            if let date = iso.date(from: raw) {
-                return date
-            }
+            if let date = isoFormatter.date(from: raw) { return date }
 
             throw DecodingError.dataCorruptedError(
                 in: container,
@@ -66,12 +70,9 @@ final class SupabaseClient {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
 
-        let isoFrac = ISO8601DateFormatter()
-        isoFrac.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
         encoder.dateEncodingStrategy = .custom { date, encoder in
             var container = encoder.singleValueContainer()
-            try container.encode(isoFrac.string(from: date))
+            try container.encode(isoFormatterFractional.string(from: date))
         }
 
         return encoder
@@ -298,13 +299,15 @@ final class SupabaseClient {
             throw SupabaseError.invalidFilter
         }
 
-        var components = URLComponents()
-        components.scheme = baseURL.scheme
-        components.host = baseURL.host
-        components.path = "/rest/v1/\(endpoint)"
-        components.query = filter
+        let fullURL = baseURL
+            .appendingPathComponent("rest")
+            .appendingPathComponent("v1")
+            .appendingPathComponent(endpoint)
 
-        guard let url = components.url else {
+        var components = URLComponents(url: fullURL, resolvingAgainstBaseURL: false)
+        components?.query = filter
+
+        guard let url = components?.url else {
             throw SupabaseError.invalidURL
         }
 
