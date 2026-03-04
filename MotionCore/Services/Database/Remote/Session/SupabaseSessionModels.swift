@@ -51,6 +51,16 @@ struct SupabaseStrengthSessionDTO: Encodable {
     let deviceSource: String
     let healthKitWorkoutUUID: UUID?
     let sourceTrainingPlanId: UUID?     // UUID des verknüpften TrainingPlans
+
+    // Manuelle CodingKeys: verhindert fehlerhafte Konvertierung durch .convertToSnakeCase
+    // z.B. healthKitWorkoutUUID → health_kit_workout_u_u_i_d (falsch) statt healthkit_workout_uuid
+    enum CodingKeys: String, CodingKey {
+        case id, date, duration, calories, bodyWeight, heartRate, maxHeartRate
+        case notes, workoutTypeRaw, intensityRaw, perceivedExertion, energyLevelBefore
+        case isCompleted, isLiveSession, startedAt, completedAt, deviceSource
+        case healthKitWorkoutUUID = "healthkit_workout_uuid"
+        case sourceTrainingPlanId
+    }
 }
 
 // MARK: - ExerciseSet DTO
@@ -81,6 +91,17 @@ struct SupabaseExerciseSetDTO: Encodable {
     let isCompleted: Bool
     let rpe: Int
     let notes: String
+
+    // Manuelle CodingKeys: verhindert fehlerhafte Konvertierung durch .convertToSnakeCase
+    // z.B. targetRIR → target_r_i_r (falsch) statt target_rir
+    enum CodingKeys: String, CodingKey {
+        case id, sessionId, trainingPlanId, exerciseName, exerciseNameSnapshot
+        case exerciseUUIDSnapshot, exerciseMediaAssetName, isUnilateralSnapshot
+        case setNumber, weight, weightPerSide, reps, duration, distance
+        case restSeconds, targetRepsMin, targetRepsMax
+        case targetRIR = "target_rir"
+        case groupId, supersetGroupId, sortOrder, setKindRaw, isCompleted, rpe, notes
+    }
 }
 
 // MARK: - CardioSession DTO
@@ -107,6 +128,16 @@ struct SupabaseCardioSessionDTO: Encodable {
     let completedAt: Date?
     let deviceSource: String
     let healthKitWorkoutUUID: UUID?
+
+    // Manuelle CodingKeys: verhindert fehlerhafte Konvertierung durch .convertToSnakeCase
+    // z.B. healthKitWorkoutUUID → health_kit_workout_u_u_i_d (falsch) statt healthkit_workout_uuid
+    enum CodingKeys: String, CodingKey {
+        case id, date, duration, distance, calories, difficulty
+        case heartRate, maxHeartRate, bodyWeight, notes, cardioDeviceRaw, intensityRaw
+        case trainingProgramRaw, perceivedExertion, energyLevelBefore
+        case isCompleted, isLiveSession, startedAt, completedAt, deviceSource
+        case healthKitWorkoutUUID = "healthkit_workout_uuid"
+    }
 }
 
 // MARK: - OutdoorSession DTO
@@ -139,4 +170,15 @@ struct SupabaseOutdoorSessionDTO: Encodable {
     let completedAt: Date?
     let deviceSource: String
     let healthKitWorkoutUUID: UUID?
+
+    // Manuelle CodingKeys: verhindert fehlerhafte Konvertierung durch .convertToSnakeCase
+    // z.B. healthKitWorkoutUUID → health_kit_workout_u_u_i_d (falsch) statt healthkit_workout_uuid
+    enum CodingKeys: String, CodingKey {
+        case id, date, duration, distance, calories, elevationGain, averageSpeed, maxSpeed
+        case heartRate, maxHeartRate, bodyWeight, routeName, startLocation, endLocation
+        case notes, temperature, weatherConditionRaw, outdoorActivityRaw, intensityRaw
+        case perceivedExertion, energyLevelBefore
+        case isCompleted, isLiveSession, startedAt, completedAt, deviceSource
+        case healthKitWorkoutUUID = "healthkit_workout_uuid"
+    }
 }
