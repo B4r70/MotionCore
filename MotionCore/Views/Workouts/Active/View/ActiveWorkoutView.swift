@@ -544,6 +544,11 @@ struct ActiveWorkoutView: View {
         session.duration = finalSeconds / 60
         try? context.save()
 
+        // Supabase-Upload (non-blocking, CloudKit bleibt primär)
+        Task {
+            await SupabaseSessionService.shared.upload(session)
+        }
+
         endLiveActivity()
         SessionResumeStore.clear()
 
