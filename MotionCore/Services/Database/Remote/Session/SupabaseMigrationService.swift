@@ -51,6 +51,7 @@ final class SupabaseMigrationService: ObservableObject {
         isRunning = true
         uploadedCount = 0
         failedCount = 0
+        totalCount = 0
 
         // Alle ungemigrierten Sessions laden
         let strengthSessions = (try? context.fetch(
