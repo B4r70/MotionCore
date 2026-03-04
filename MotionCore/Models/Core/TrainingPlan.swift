@@ -28,6 +28,8 @@ final class TrainingPlan {
     var startDate: Date = Date()            // Startdatum
     var endDate: Date?                      // Optional: Enddatum
     var isActive: Bool = true               // Aktiver Plan?
+    /// Wurde dieser Plan bereits zu Supabase hochgeladen?
+    var syncedToSupabase: Bool = false
     var createdAt: Date = Date()            // Erstellungsdatum
 
     // MARK: - Persistente ENUM-Rohwerte

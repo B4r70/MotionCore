@@ -49,6 +49,8 @@ final class OutdoorSession {
     // MARK: - Session-Status (NEU)
     var isCompleted: Bool = false // Training abgeschlossen?
     var isLiveSession: Bool = false // Live getrackt vs. manuell eingetragen
+    /// Wurde diese Session bereits zu Supabase hochgeladen?
+    var syncedToSupabase: Bool = false
     var startedAt: Date? // Wann gestartet?
     var completedAt: Date? // Wann beendet?
 
