@@ -124,6 +124,9 @@ struct MainSettingsView: View {
                 }
             }
 
+            // MARK: - Supabase Sync
+            SupabaseSyncSection()
+
             // MARK: - App Information
             Section("App") {
                 HStack {
