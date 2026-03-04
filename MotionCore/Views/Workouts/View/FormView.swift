@@ -133,6 +133,14 @@ struct FormView: View {
                     dismissKeyboard()
                     if mode == .add { context.insert(workout) }
                     try? context.save()
+
+                    // Supabase-Upload nur bei neuen Sessions (non-blocking, CloudKit bleibt primär)
+                    if mode == .add {
+                        Task {
+                            await SupabaseSessionService.shared.upload(workout)
+                        }
+                    }
+
                     dismiss()
                 } label: {
                     IconType(icon: .system("checkmark"), color: .blue, size: 16)
