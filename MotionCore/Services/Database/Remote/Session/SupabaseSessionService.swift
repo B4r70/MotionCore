@@ -53,7 +53,10 @@ final class SupabaseSessionService {
 
             try await client.upsert(endpoint: "strength_sessions", body: dto)
 
-            // Alte Sets löschen, neue einfügen (idempotenter Sync)
+            // Alte Sets löschen, dann neue einfügen.
+            // Bewusst: Zwischen DELETE und INSERT existiert ein kurzes Inkonsistenzfenster.
+            // Da Supabase sekundäre Persistenz ist (CloudKit ist primär), ist das akzeptabel –
+            // ein erneuter Upload beim nächsten Session-Abschluss würde es korrigieren.
             try await client.deleteWhere(
                 endpoint: "exercise_sets",
                 filter: "session_id=eq.\(session.sessionUUID.uuidString)"
