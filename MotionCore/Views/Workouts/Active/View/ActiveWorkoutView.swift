@@ -556,6 +556,9 @@ struct ActiveWorkoutView: View {
         session.duration = finalSeconds / 60
         try? context.save()
 
+        // Complications nach Workout-Abschluss aktualisieren
+        WatchComplicationService.updateComplications(allSessions: allSessions)
+
         // Supabase-Upload (non-blocking, CloudKit bleibt primär)
         Task {
             let success = await SupabaseSessionService.shared.upload(session)
