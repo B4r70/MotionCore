@@ -203,8 +203,8 @@ struct ActiveWorkoutView: View {
             setupSession()
             hapticGenerator.prepare()
             // Watch-Action-Handler registrieren
-            PhoneSessionManager.shared.onAction = { [weak self] action in
-                self?.handleWatchAction(action)
+            PhoneSessionManager.shared.onAction = { action in
+                handleWatchAction(action)
             }
         }
 
