@@ -21,6 +21,7 @@ struct TrainingDetailView: View {
     @Bindable var plan: TrainingPlan
 
     @State private var showDeleteAlert = false
+    @State private var startedSession: StrengthSession?
 
     // MARK: - Body
 
@@ -64,6 +65,11 @@ struct TrainingDetailView: View {
         } message: {
             Text("Dieser Trainingsplan wird unwiderruflich gelöscht.")
         }
+        .fullScreenCover(item: $startedSession) { session in
+            NavigationStack {
+                ActiveWorkoutView(session: session)
+            }
+        }
     }
 
     // MARK: - Aktionen
@@ -78,9 +84,7 @@ struct TrainingDetailView: View {
         let session = plan.createSession()
         context.insert(session)
         try? context.save()
-
-        // TODO: Navigation zur aktiven Workout-Ansicht
-        // Hier später NavigationPath oder Sheet für Live-Tracking
+        startedSession = session
     }
 }
 
