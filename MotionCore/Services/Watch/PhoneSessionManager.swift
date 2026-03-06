@@ -17,7 +17,7 @@ import WatchConnectivity
 
 /// Verwaltet die WCSession auf dem iPhone
 /// Sendet Workout-State-Updates an die Watch und empfängt Actions
-final class PhoneSessionManager: NSObject, ObservableObject {
+final class PhoneSessionManager: NSObject {
 
     // MARK: - Singleton
 
@@ -25,7 +25,8 @@ final class PhoneSessionManager: NSObject, ObservableObject {
 
     // MARK: - Callback für eingehende Actions
 
-    /// Wird aufgerufen wenn die Watch eine Action sendet
+    /// Wird aufgerufen wenn die Watch eine Action sendet.
+    /// Muss vom Main Thread aus gesetzt werden.
     var onAction: ((WatchAction) -> Void)?
 
     // MARK: - Init
@@ -50,7 +51,10 @@ final class PhoneSessionManager: NSObject, ObservableObject {
         elapsedTime: TimeInterval
     ) {
         guard WCSession.default.activationState == .activated,
-              WCSession.default.isReachable else { return }
+              WCSession.default.isReachable else {
+            print("PhoneSessionManager: Watch nicht erreichbar, State-Update verworfen.")
+            return
+        }
 
         let message: [String: Any] = [
             WatchStateKey.workoutState:   state.rawValue,
@@ -70,7 +74,10 @@ final class PhoneSessionManager: NSObject, ObservableObject {
     /// Sendet den Idle-State wenn kein Workout aktiv ist
     func sendIdleState() {
         guard WCSession.default.activationState == .activated,
-              WCSession.default.isReachable else { return }
+              WCSession.default.isReachable else {
+            print("PhoneSessionManager: Watch nicht erreichbar, Idle-State verworfen.")
+            return
+        }
 
         let message: [String: Any] = [
             WatchStateKey.workoutState: WatchWorkoutState.idle.rawValue
