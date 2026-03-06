@@ -32,9 +32,21 @@ struct PlanActionsSection: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            // Training starten (nur wenn Übungen vorhanden)
+            // Training starten oder Hinweis bei leerem Plan
             if canStartWorkout {
                 startWorkoutButton
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "info.circle")
+                    Text("Füge zuerst Übungen zum Plan hinzu.")
+                        .font(.subheadline)
+                }
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 14)
+                .padding(.horizontal, 14)
+                .background(Color.secondary.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
             }
             
             // Plan bearbeiten
