@@ -203,11 +203,9 @@ struct ActiveWorkoutView: View {
             setupSession()
             hapticGenerator.prepare()
             // Watch-Action-Handler registrieren
-            PhoneSessionManager.shared.onAction = { action in
-                handleWatchAction(action)
+            PhoneSessionManager.shared.onAction = { [weak self] action in
+                self?.handleWatchAction(action)
             }
-            // Initialen Watch-State senden
-            sendWatchState()
         }
 
         // =====================================================================
@@ -693,6 +691,7 @@ struct ActiveWorkoutView: View {
         case .nextExercise:
             let grouped = session.groupedSets
             let currentKey = selectedExerciseKey ?? ""
+            // Fallback -1 → nextIdx wird 0 → navigiert zur ersten Übung wenn keine Auswahl
             let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? -1
             let nextIdx = currentIdx + 1
             guard nextIdx < grouped.count else { return }
@@ -703,6 +702,7 @@ struct ActiveWorkoutView: View {
         case .previousExercise:
             let grouped = session.groupedSets
             let currentKey = selectedExerciseKey ?? ""
+            // Fallback 0 → prevIdx wird -1 → guard greift → kein Wechsel bei unbekanntem Key
             let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
             let prevIdx = currentIdx - 1
             guard prevIdx >= 0 else { return }
