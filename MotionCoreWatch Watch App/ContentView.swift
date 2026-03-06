@@ -1,24 +1,28 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Watch App                                                        /
+// Datei . . . . : ContentView.swift                                                /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 06.03.2026                                                       /
+// Beschreibung  : Watch App Root View — routet zwischen Idle und Active Workout    /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
-//  ContentView.swift
-//  MotionCoreWatch Watch App
-//
-//  Created by Barto on 06.03.26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @EnvironmentObject private var watchSession: WatchSessionManager
 
-#Preview {
-    ContentView()
+    var body: some View {
+        Group {
+            if watchSession.workoutState == .idle {
+                IdleView()
+            } else {
+                WatchActiveWorkoutView()
+            }
+        }
+        .animation(.easeInOut, value: watchSession.workoutState)
+    }
 }

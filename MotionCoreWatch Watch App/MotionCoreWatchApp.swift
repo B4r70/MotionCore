@@ -1,17 +1,27 @@
+//----------------------------------------------------------------------------------/
+// # MotionCore                                                                     /
+// ---------------------------------------------------------------------------------/
+// Abschnitt . . : Watch App                                                        /
+// Datei . . . . : MotionCoreWatchApp.swift                                         /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 06.03.2026                                                       /
+// Beschreibung  : Watch App Entry Point                                            /
+// ---------------------------------------------------------------------------------/
+// (C) Copyright by Bartosz Stryjewski                                              /
+// ---------------------------------------------------------------------------------/
 //
-//  MotionCoreWatchApp.swift
-//  MotionCoreWatch Watch App
-//
-//  Created by Barto on 06.03.26.
-//
-
 import SwiftUI
 
 @main
-struct MotionCoreWatch_Watch_AppApp: App {
+struct MotionCoreWatchApp: App {
+
+    // WatchSessionManager beim App-Start initialisieren
+    @StateObject private var watchSession = WatchSessionManager.shared
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(watchSession)
         }
     }
 }
