@@ -19,6 +19,7 @@ struct ActiveWorkoutStatus: View {
     let totalSets: Int
     let progress: Double
     let sessionVolume: Double
+    let planTitle: String?          // Optional: Plan-Name als Badge
 
     var body: some View {
         VStack(spacing: 12) {
@@ -36,6 +37,13 @@ struct ActiveWorkoutStatus: View {
                         Text("Pausiert")
                             .font(.caption2)
                             .foregroundStyle(.orange)
+                    }
+                    // Plan-Badge: nur anzeigen wenn Workout aus einem Plan stammt
+                    if let title = planTitle {
+                        Text(title)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

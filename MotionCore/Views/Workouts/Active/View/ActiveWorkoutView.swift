@@ -155,7 +155,8 @@ struct ActiveWorkoutView: View {
                     completedSets: session.completedSets,
                     totalSets: session.totalSets,
                     progress: session.progress,
-                    sessionVolume: sessionVolume   // NEU
+                    sessionVolume: sessionVolume,
+                    planTitle: session.sourceTrainingPlan?.title
                 )
                 ScrollView {
                     scrollContent
