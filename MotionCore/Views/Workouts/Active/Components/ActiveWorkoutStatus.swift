@@ -109,3 +109,29 @@ struct ActiveWorkoutStatus: View {
         }
     }
 }
+
+// MARK: - Preview
+
+#Preview("Mit Plan") {
+    ActiveWorkoutStatus(
+        isPaused: false,
+        formattedElapsedTime: "12:34",
+        completedSets: 3,
+        totalSets: 8,
+        progress: 0.375,
+        sessionVolume: 1450,
+        planTitle: "Push Day A"
+    )
+}
+
+#Preview("Ohne Plan / Pausiert") {
+    ActiveWorkoutStatus(
+        isPaused: true,
+        formattedElapsedTime: "05:00",
+        completedSets: 1,
+        totalSets: 4,
+        progress: 0.25,
+        sessionVolume: 0,
+        planTitle: nil
+    )
+}
