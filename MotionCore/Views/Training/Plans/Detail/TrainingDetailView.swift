@@ -69,6 +69,8 @@ struct TrainingDetailView: View {
             NavigationStack {
                 ActiveWorkoutView(session: session)
             }
+            .environmentObject(appSettings)
+            .environmentObject(ActiveSessionManager.shared)
         }
     }
 
