@@ -202,6 +202,12 @@ struct ActiveWorkoutView: View {
         .onAppear {
             setupSession()
             hapticGenerator.prepare()
+            // Watch-Action-Handler registrieren
+            PhoneSessionManager.shared.onAction = { action in
+                handleWatchAction(action)
+            }
+            // Initialen Watch-State senden
+            sendWatchState()
         }
 
         // =====================================================================
@@ -213,21 +219,27 @@ struct ActiveWorkoutView: View {
 
         .onChange(of: sessionManager.isPaused) { _, _ in
             syncLiveActivityStates()
+            sendWatchState()
         }
         .onChange(of: isResting) { _, _ in
             syncLiveActivityStates()
         }
         .onChange(of: session.completedSets) { _, _ in
             syncLiveActivityStates()
+            sendWatchState()
         }
         .onChange(of: selectedExerciseKey) { _, newValue in
             sessionManager.setSelectedExerciseKey(newValue)
             syncLiveActivityStates()
+            sendWatchState()
         }
         .onDisappear {
             cleanupLocalTimer()
             cleanupRestTimer()
             saveResumeState()
+            // Watch-Action-Handler aufräumen
+            PhoneSessionManager.shared.onAction = nil
+            PhoneSessionManager.shared.sendIdleState()
         }
         .alert("Training läuft noch", isPresented: $showCancelAlert) {
             Button("Pausieren") {
@@ -374,6 +386,7 @@ struct ActiveWorkoutView: View {
 
         // ✅ Schritt 3: einmaliger Initial-Sync
         syncLiveActivityStates()
+        sendWatchState()
     }
 
     // Zugriff Exercise-Key prüfen
@@ -559,6 +572,7 @@ struct ActiveWorkoutView: View {
         endLiveActivity()
         SessionResumeStore.clear()
 
+        PhoneSessionManager.shared.sendIdleState()
         dismiss()
     }
 
@@ -571,6 +585,7 @@ struct ActiveWorkoutView: View {
         endLiveActivity()
         SessionResumeStore.clear()
 
+        PhoneSessionManager.shared.sendIdleState()
         dismiss()
     }
 
@@ -632,6 +647,69 @@ struct ActiveWorkoutView: View {
     private func adjustRestTimer(delta: Int) {
         let newValue = restTimerSeconds + delta
         restTimerSeconds = max(5, min(300, newValue))  // 5s bis 5min
+    }
+
+    // =========================================================================
+    // MARK: - Watch Integration
+    // =========================================================================
+
+    /// Sendet den aktuellen Workout-State an die Apple Watch
+    private func sendWatchState() {
+        let state: WatchWorkoutState = sessionManager.isPaused ? .paused : .active
+        let grouped = session.groupedSets
+        let currentKey = selectedExerciseKey ?? session.nextUncompletedSet?.groupKey ?? ""
+        let exIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
+        let currentExName = grouped[safe: exIdx]?.first?.exerciseName ?? ""
+        let completedInGroup = grouped[safe: exIdx]?.filter { $0.isCompleted }.count ?? 0
+        let totalInGroup = grouped[safe: exIdx]?.count ?? 0
+
+        PhoneSessionManager.shared.sendWorkoutState(
+            state: state,
+            exerciseName: currentExName,
+            setIndex: completedInGroup,
+            totalSets: totalInGroup,
+            exerciseIndex: exIdx,
+            totalExercises: grouped.count,
+            elapsedTime: TimeInterval(sessionManager.elapsedSeconds)
+        )
+    }
+
+    /// Verarbeitet eingehende Actions von der Apple Watch
+    private func handleWatchAction(_ action: WatchAction) {
+        switch action {
+        case .pauseResume:
+            if sessionManager.isPaused {
+                sessionManager.resumeSession()
+            } else {
+                sessionManager.pauseSession()
+            }
+
+        case .completeSet:
+            // Ersten nicht abgeschlossenen Satz der aktuellen Übung abschließen
+            if let set = selectedExerciseSets.first(where: { !$0.isCompleted }) {
+                completeSet(set)
+            }
+
+        case .nextExercise:
+            let grouped = session.groupedSets
+            let currentKey = selectedExerciseKey ?? ""
+            let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? -1
+            let nextIdx = currentIdx + 1
+            guard nextIdx < grouped.count else { return }
+            if let nextKey = grouped[safe: nextIdx]?.first?.groupKey {
+                selectExercise(key: nextKey)
+            }
+
+        case .previousExercise:
+            let grouped = session.groupedSets
+            let currentKey = selectedExerciseKey ?? ""
+            let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
+            let prevIdx = currentIdx - 1
+            guard prevIdx >= 0 else { return }
+            if let prevKey = grouped[safe: prevIdx]?.first?.groupKey {
+                selectExercise(key: prevKey)
+            }
+        }
     }
 
     // =========================================================================
@@ -1619,5 +1697,14 @@ struct AddExerciseDuringWorkoutSheet: View {
 
         // Callback ausführen (Live Activity updaten etc.)
         onComplete()
+    }
+}
+
+// MARK: - Array Helper
+
+private extension Array {
+    /// Gibt das Element am Index zurück, oder nil wenn der Index außerhalb liegt
+    subscript(safe index: Int) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }
