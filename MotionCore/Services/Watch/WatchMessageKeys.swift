@@ -10,7 +10,8 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
-import Foundation
+// Hinweis: Diese Datei ist in beiden Targets identisch (MotionCore + MotionCoreWatch).
+// Änderungen müssen in beiden Dateien synchron gepflegt werden.
 
 // MARK: - State Keys (iPhone → Watch)
 
@@ -27,9 +28,9 @@ enum WatchStateKey {
 
 /// Mögliche Werte für workoutState
 enum WatchWorkoutState: String {
-    case idle   = "idle"
-    case active = "active"
-    case paused = "paused"
+    case idle
+    case active
+    case paused
 }
 
 // MARK: - Action Keys (Watch → iPhone)
@@ -41,10 +42,10 @@ enum WatchActionKey {
 
 /// Mögliche Actions von der Watch
 enum WatchAction: String {
-    case pauseResume      = "pauseResume"
-    case completeSet      = "completeSet"
-    case nextExercise     = "nextExercise"
-    case previousExercise = "previousExercise"
+    case pauseResume
+    case completeSet
+    case nextExercise
+    case previousExercise
 }
 
 // MARK: - App Group UserDefaults Keys (für Complications)
