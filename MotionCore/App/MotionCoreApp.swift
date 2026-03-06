@@ -23,6 +23,11 @@ struct MotionCoreApp: App {
     @State private var showSessionRestoreAlert = false
     @State private var pendingRestoreInfo: (sessionID: String, workoutType: WorkoutType)?
 
+    init() {
+        // PhoneSessionManager früh initialisieren damit WCSession sofort aktiviert wird
+        _ = PhoneSessionManager.shared
+    }
+
     // ✅ Wenn true: KEIN Fallback, Crash wenn CloudKit nicht geht
     private static let requireCloudKit: Bool = false
 
