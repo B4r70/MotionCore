@@ -101,6 +101,9 @@ struct StrengthEditView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Fertig") {
+                        if session.syncedToSupabase {
+                            session.needsSupabaseResync = true
+                        }
                         dismiss()
                     }
                     .fontWeight(.semibold)
