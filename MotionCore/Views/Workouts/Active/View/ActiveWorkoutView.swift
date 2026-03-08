@@ -54,6 +54,9 @@ struct ActiveWorkoutView: View {
     @State private var prBannerExercise: String? = nil
     @State private var prBannerOneRM: Double = 0
 
+    // Progression
+    @State private var dismissedProgressionExercises: Set<String> = []
+
         // Rest
     @State private var restTimerSeconds: Int = 0
     @State private var restTimer: Timer?
@@ -112,6 +115,26 @@ struct ActiveWorkoutView: View {
         session.safeExerciseSets
             .filter { $0.isCompleted }
             .last
+    }
+
+    private var progressionRecommendations: [ProgressionRecommendation] {
+        let engine = ProgressionCalcEngine()
+        let exerciseNames = Set(session.safeExerciseSets.map { $0.exerciseName })
+
+        return exerciseNames.compactMap { name in
+            guard !dismissedProgressionExercises.contains(name) else { return nil }
+
+            let firstSet = session.safeExerciseSets.first { $0.exerciseName == name }
+            let targetRIR = firstSet?.targetRIR ?? 2
+            let step = firstSet?.exercise?.progressionStep ?? 2.5
+
+            return engine.recommendation(
+                for: name,
+                targetRIR: targetRIR,
+                progressionStep: step,
+                sessions: historicalSessions
+            )
+        }
     }
 
     private func supersetNextExercise(for set: ExerciseSet) -> String? {
@@ -980,9 +1003,27 @@ struct ActiveWorkoutView: View {
         )
     }
 
+    @ViewBuilder
+    private var progressionBanners: some View {
+        if !progressionRecommendations.isEmpty {
+            VStack(spacing: 8) {
+                ForEach(progressionRecommendations, id: \.exerciseName) { rec in
+                    ProgressionBannerView(recommendation: rec) {
+                        withAnimation(.easeOut) {
+                            dismissedProgressionExercises.insert(rec.exerciseName)
+                        }
+                    }
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+            }
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: progressionRecommendations.count)
+        }
+    }
+
     private var scrollContent: some View {
         VStack(spacing: 20) {
             heroCard
+            progressionBanners
             exercisesOverview
         }
         .padding(.horizontal)
