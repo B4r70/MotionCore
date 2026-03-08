@@ -20,6 +20,7 @@ struct BaseView: View {
     @EnvironmentObject private var appSettings: AppSettings
     @EnvironmentObject private var activeSessionManager: ActiveSessionManager
     @Environment(\.modelContext) private var context
+    @Environment(\.scenePhase) private var scenePhase
     @State private var didRepair = false
 
     //  Default-Tab auf .summary geändert
@@ -293,6 +294,17 @@ struct BaseView: View {
                 // Wichtig: leicht verzögert starten, damit SwiftData/CloudKit beim Booten fertig wird
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 repairSnapshotsOnLaunch(context: context)
+                // Ausstehende Supabase-Updates nach App-Start syncen
+                Task {
+                    await SupabaseResyncService.shared.syncPendingChanges(in: context)
+                }
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                Task {
+                    await SupabaseResyncService.shared.syncPendingChanges(in: context)
+                }
             }
         }
     }
