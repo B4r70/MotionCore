@@ -181,116 +181,126 @@ struct MotionCoreWidgetsLiveActivity: Widget {
     // MARK: - Lock Screen View
 
     private func lockScreenView(context: ActivityViewContext<WorkoutActivityAttributes>) -> some View {
-        VStack(spacing: 12) {
-            HStack {
-                // Links: Übungs-Info
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(context.attributes.planName ?? "Training")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
+        ZStack {
+            // Glassmorphism-Hintergrund
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.blue.opacity(0.4), Color.cyan.opacity(0.2)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1
+                        )
+                )
 
-                    if let exercise = context.state.currentExercise {
-                        Text(exercise)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+            VStack(spacing: 16) {
+                // Header: Plan- / Übungsname
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(context.attributes.planName ?? "Training")
+                            .font(.headline.bold())
+                            .foregroundStyle(blueRestGradient)
+
+                        if let exercise = context.state.currentExercise {
+                            Text(exercise)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        if let set = context.state.currentSet {
+                            Text(set)
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
+                        }
                     }
 
-                    if let set = context.state.currentSet {
-                        Text(set)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                    Spacer()
 
-                Spacer()
-
-                // Rechts: Timer mit angepassten Farben
-                if context.state.isResting, let end = context.state.restEndDate {
-                    // PAUSEN-MODUS
-                    VStack(spacing: 4) {
-                        Text("Pause")
-                            .font(.caption)
-                            .foregroundStyle(restTimerColor(for: context))
-
-                        Text(end, style: .timer)
-                            .font(.title.bold().monospacedDigit())
-                            .foregroundStyle(restTimerColor(for: context))
-                    }
-                } else {
-                    // AKTIV-MODUS
-                    VStack(spacing: 4) {
-                        Text(context.state.isPaused ? "Pausiert" : "Training")
-                            .font(.caption)
-                            .foregroundStyle(context.state.isPaused ? .orange : .green)
-
-                        if context.state.isPaused {
-                            Text(formatTime(context.state.elapsedAtPause ?? 0))
+                    // Timer-Block
+                    if context.state.isResting, let end = context.state.restEndDate {
+                        VStack(spacing: 3) {
+                            Text("Pause")
+                                .font(.caption.bold())
+                                .foregroundStyle(blueRestGradient)
+                            Text(end, style: .timer)
                                 .font(.title.bold().monospacedDigit())
-                                .foregroundStyle(.orange)
-                        } else {
-                            Text(context.state.workoutStartDate, style: .timer)
-                                .font(.title.bold().monospacedDigit())
-                                .foregroundStyle(.green)
+                                .foregroundStyle(blueRestGradient)
+                        }
+                    } else {
+                        VStack(spacing: 3) {
+                            Text(context.state.isPaused ? "Pausiert" : "Training")
+                                .font(.caption.bold())
+                                .foregroundStyle(context.state.isPaused ? .orange : .green)
+                            if context.state.isPaused {
+                                Text(formatTime(context.state.elapsedAtPause ?? 0))
+                                    .font(.title.bold().monospacedDigit())
+                                    .foregroundStyle(.orange)
+                            } else {
+                                Text(context.state.workoutStartDate, style: .timer)
+                                    .font(.title.bold().monospacedDigit())
+                                    .foregroundStyle(.green)
+                            }
                         }
                     }
                 }
-            }
 
-            // Fortschrittsbalken mit angepassten Farben
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    // Hintergrund
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.secondary.opacity(0.2))
+                // Fortschrittsbalken
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.secondary.opacity(0.15))
 
-                    // Fortschritt - Farbe je nach Modus
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(
-                            context.state.isResting
-                                ? LinearGradient(
-                                    colors: [restTimerColor(for: context), restTimerColor(for: context).opacity(0.7)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                                : LinearGradient(
-                                    colors: [.green, .green.opacity(0.7)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                        )
-                        .frame(width: geometry.size.width * progress(context))
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(
+                                context.state.isResting
+                                    ? LinearGradient(
+                                        colors: [.blue, .cyan],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                    : LinearGradient(
+                                        colors: [.green, .teal],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                            )
+                            .frame(width: geometry.size.width * progress(context))
+                    }
                 }
-            }
-            .frame(height: 8)
+                .frame(height: 6)
+                .clipShape(Capsule())
 
-            // Untere Info-Zeile
-            HStack {
-                HStack(spacing: 4) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                    Text("\(context.state.completedSets)/\(context.state.totalSets) Sätze")
-                        .font(.caption)
-                }
+                // Satz-Fortschritt
+                HStack {
+                    Label(
+                        "\(context.state.completedSets)/\(context.state.totalSets) Sätze",
+                        systemImage: "checkmark.circle.fill"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
 
-                Spacer()
+                    Spacer()
 
-                HStack(spacing: 4) {
                     if context.state.isResting {
-                        Image(systemName: "pause.circle.fill")
-                            .foregroundStyle(restTimerColor(for: context))
-                        Text("Satzpause")
+                        Label("Satzpause", systemImage: "pause.circle.fill")
                             .font(.caption)
+                            .foregroundStyle(blueRestGradient)
                     } else {
-                        Image(systemName: context.state.isPaused ? "pause.circle.fill" : "play.circle.fill")
-                            .foregroundStyle(context.state.isPaused ? .orange : .green)
-                        Text(context.state.isPaused ? "Pausiert" : "Aktiv")
-                            .font(.caption)
+                        Label(
+                            context.state.isPaused ? "Pausiert" : "Aktiv",
+                            systemImage: context.state.isPaused ? "pause.circle.fill" : "play.circle.fill"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(context.state.isPaused ? .orange : .green)
                     }
                 }
             }
-            .foregroundStyle(.secondary)
+            .padding(18)
         }
-        .padding(16)
     }
 
     // MARK: - Helper Functions
