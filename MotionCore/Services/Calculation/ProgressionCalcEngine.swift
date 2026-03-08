@@ -39,8 +39,11 @@ struct ProgressionCalcEngine {
         sessionCount: Int = 3
     ) -> ProgressionRecommendation? {
 
-        // 1) Letzte N Sessions filtern, die diese Übung enthalten
+        guard sessionCount > 0 else { return nil }
+
+        // 1) Letzte N Sessions filtern und nach Datum sortieren (neueste zuerst)
         let relevantSessions = sessions
+            .sorted { $0.date > $1.date }
             .filter { session in
                 session.safeExerciseSets.contains {
                     matchesExercise($0, name: exerciseName)
