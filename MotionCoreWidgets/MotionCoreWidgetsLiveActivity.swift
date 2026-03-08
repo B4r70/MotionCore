@@ -55,11 +55,11 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         VStack(spacing: 2) {
                             Text("Pause")
                                 .font(.caption2)
-                                .foregroundStyle(restTimerColor(for: context))
+                                .foregroundStyle(blueRestGradient)
 
                             Text(end, style: .timer)
                                 .font(.title2.bold().monospacedDigit())
-                                .foregroundStyle(restTimerColor(for: context))
+                                .foregroundStyle(blueRestGradient)
                         }
                     } else {
                         // AKTIV-MODUS (erweitert)
@@ -143,10 +143,10 @@ struct MotionCoreWidgetsLiveActivity: Widget {
             } compactTrailing: {
                 // Kompakt Rechts - Timer rechtsbündig
                 if context.state.isResting, let end = context.state.restEndDate {
-                    // PAUSEN-MODUS: Countdown mit Farbverlauf
+                    // PAUSEN-MODUS: Countdown mit blauem Gradient
                     Text(end, style: .timer)
                         .font(.caption.bold().monospacedDigit())
-                        .foregroundStyle(restTimerColor(for: context))
+                        .foregroundStyle(blueRestGradient)
                         .contentTransition(.numericText())
                 } else if context.state.isPaused {
                     // WORKOUT PAUSIERT
@@ -355,6 +355,15 @@ struct MotionCoreWidgetsLiveActivity: Widget {
         }
 
         return endDate.timeIntervalSinceNow <= 10 && endDate.timeIntervalSinceNow > 0
+    }
+
+    /// Blauer Gradient für den Rest-Timer (Satzpause)
+    private var blueRestGradient: LinearGradient {
+        LinearGradient(
+            colors: [Color.blue, Color.cyan],
+            startPoint: .leading,
+            endPoint: .trailing
+        )
     }
 }
 
