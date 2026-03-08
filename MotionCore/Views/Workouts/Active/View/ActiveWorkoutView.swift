@@ -17,6 +17,7 @@ import ActivityKit
 struct ActiveWorkoutView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var appSettings: AppSettings
     @EnvironmentObject private var sessionManager: ActiveSessionManager
 
@@ -230,6 +231,14 @@ struct ActiveWorkoutView: View {
             sessionManager.setSelectedExerciseKey(newValue)
             syncLiveActivityStates()
             sendWatchState()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active,
+                  isResting,
+                  let end = restEndDate,
+                  end > Date() else { return }
+            restTimerSeconds = max(0, Int(end.timeIntervalSinceNow.rounded()))
+            restartLocalRestTimerFromResume()
         }
         .onDisappear {
             cleanupLocalTimer()
