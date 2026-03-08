@@ -24,6 +24,7 @@ final class Exercise {
     var isUnilateral: Bool = false
     var repRangeMin: Int = 0
     var repRangeMax: Int = 0
+    var progressionStep: Double = 2.5    // Progressionsschritt in kg (z.B. 2.5 oder 5.0)
     var sortIndex: Int = 0
     var cautionNote: String = ""
     var isArchived: Bool = false
@@ -68,6 +69,7 @@ final class Exercise {
         isUnilateral: Bool = false,
         repRangeMin: Int = 8,
         repRangeMax: Int = 12,
+        progressionStep: Double = 2.5,
         sortIndex: Int = 0,
         cautionNote: String = "",
         isArchived: Bool = false,
@@ -103,6 +105,7 @@ final class Exercise {
         self.isUnilateral = isUnilateral
         self.repRangeMin = repRangeMin
         self.repRangeMax = repRangeMax
+        self.progressionStep = progressionStep
         self.sortIndex = sortIndex
         self.cautionNote = cautionNote
         self.isArchived = isArchived
