@@ -12,10 +12,10 @@
 // ---------------------------------------------------------------------------------/
 // Änderungen:                                                                      /
 // - Kompakte Ansicht: Aktiv-Modus zeigt Satz-Fortschritt + Timer in Grün           /
-// - Kompakte Ansicht: Pausen-Modus zeigt Icon + Countdown mit Farbverlauf          /
-//   (Grün → Orange bei 50% → Rot bei letzten 10 Sekunden)                          /
-// - Pulsier-Animation in den letzten 10 Sekunden der Pause                         /
-// - Erweiterte Ansicht: Angepasste Farben passend zur kompakten Ansicht            /
+// - Kompakte Ansicht: Pausen-Modus zeigt Icon + Countdown in blauem Gradient       /
+//   (blue → cyan), Pulsier-Animation in den letzten 10 Sekunden                   /
+// - Erweiterte Ansicht: Pausen-Timer ebenfalls in blauem Gradient                  /
+// - Lock Screen: Liquid Glass Redesign mit blauem Gradient-Header                  /
 // ---------------------------------------------------------------------------------/
 //
 import ActivityKit
@@ -116,9 +116,9 @@ struct MotionCoreWidgetsLiveActivity: Widget {
             } compactLeading: {
                 // Kompakt Links - Icon + Satz-Fortschritt je nach Modus
                 if context.state.isResting {
-                    // PAUSEN-MODUS: Pause-Icon mit Farbverlauf
+                    // PAUSEN-MODUS: Pause-Icon mit blauem Gradient
                     Image(systemName: "pause.circle.fill")
-                        .foregroundStyle(restTimerColor(for: context))
+                        .foregroundStyle(blueRestGradient)
                         .font(.body)
                         .symbolEffect(.pulse, options: .repeating, isActive: isInFinalCountdown(context))
                 } else if context.state.isPaused {
