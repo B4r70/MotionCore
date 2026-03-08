@@ -56,6 +56,7 @@ struct ActiveWorkoutView: View {
 
     // Progression
     @State private var dismissedProgressionExercises: Set<String> = []
+    @State private var cachedProgressionRecommendations: [ProgressionRecommendation] = []
 
         // Rest
     @State private var restTimerSeconds: Int = 0
@@ -117,17 +118,15 @@ struct ActiveWorkoutView: View {
             .last
     }
 
-    private var progressionRecommendations: [ProgressionRecommendation] {
+    private func refreshProgressionRecommendations() {
         let engine = ProgressionCalcEngine()
         let exerciseNames = Set(session.safeExerciseSets.map { $0.exerciseName })
 
-        return exerciseNames.compactMap { name in
+        cachedProgressionRecommendations = exerciseNames.compactMap { name in
             guard !dismissedProgressionExercises.contains(name) else { return nil }
-
             let firstSet = session.safeExerciseSets.first { $0.exerciseName == name }
             let targetRIR = firstSet?.targetRIR ?? 2
             let step = firstSet?.exercise?.progressionStep ?? 2.5
-
             return engine.recommendation(
                 for: name,
                 targetRIR: targetRIR,
@@ -230,6 +229,7 @@ struct ActiveWorkoutView: View {
             PhoneSessionManager.shared.onAction = { action in
                 handleWatchAction(action)
             }
+            refreshProgressionRecommendations()
         }
 
         // =====================================================================
@@ -1005,18 +1005,20 @@ struct ActiveWorkoutView: View {
 
     @ViewBuilder
     private var progressionBanners: some View {
-        if !progressionRecommendations.isEmpty {
+        if !cachedProgressionRecommendations.isEmpty {
             VStack(spacing: 8) {
-                ForEach(progressionRecommendations, id: \.exerciseName) { rec in
+                ForEach(cachedProgressionRecommendations, id: \.exerciseName) { rec in
                     ProgressionBannerView(recommendation: rec) {
                         withAnimation(.easeOut) {
                             dismissedProgressionExercises.insert(rec.exerciseName)
+                            refreshProgressionRecommendations()
                         }
                     }
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
-            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: progressionRecommendations.count)
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: cachedProgressionRecommendations.count)
+            .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
 
