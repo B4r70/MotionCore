@@ -5,7 +5,7 @@
 // Datei . . . . : MotionCoreWidgetsLiveActivity.swift                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 02.01.2026                                                       /
-// Geändert am . : 03.01.2026                                                       /
+// Geändert am . : 08.03.2026                                                       /
 // Beschreibung  : Live Activity UI für Dynamic Island und Sperrbildschirm          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
@@ -358,13 +358,11 @@ struct MotionCoreWidgetsLiveActivity: Widget {
     }
 
     /// Blauer Gradient für den Rest-Timer (Satzpause)
-    private var blueRestGradient: LinearGradient {
-        LinearGradient(
-            colors: [Color.blue, Color.cyan],
-            startPoint: .leading,
-            endPoint: .trailing
-        )
-    }
+    private let blueRestGradient = LinearGradient(
+        colors: [Color.blue, Color.cyan],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
 }
 
 // MARK: - Preview
