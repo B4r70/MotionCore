@@ -51,6 +51,8 @@ final class OutdoorSession {
     var isLiveSession: Bool = false // Live getrackt vs. manuell eingetragen
     /// Wurde diese Session bereits zu Supabase hochgeladen?
     var syncedToSupabase: Bool = false
+    /// Wurde die Session nach erstem Supabase-Upload lokal geändert?
+    var needsSupabaseResync: Bool = false
     var startedAt: Date? // Wann gestartet?
     var completedAt: Date? // Wann beendet?
 
