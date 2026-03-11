@@ -247,7 +247,13 @@ struct ActiveWorkoutView: View {
             syncLiveActivityStates()
         }
         .onChange(of: session.completedSets) { _, _ in
-            syncLiveActivityStates()
+            // Nur updaten wenn gerade kein Rest-Timer startet.
+            // Startet ein Rest-Timer, übernimmt onChange(of: isResting) das Update –
+            // ein doppeltes Update würde ActivityKit-Throttling auslösen und das
+            // restEndDate-Update der Dynamic Island verwerfen.
+            if !isResting {
+                syncLiveActivityStates()
+            }
             sendWatchState()
         }
         .onChange(of: selectedExerciseKey) { _, newValue in
@@ -256,12 +262,22 @@ struct ActiveWorkoutView: View {
             sendWatchState()
         }
         .onChange(of: scenePhase) { _, newPhase in
-            guard newPhase == .active,
-                  isResting,
-                  let end = restEndDate,
-                  end > Date() else { return }
-            restTimerSeconds = max(0, Int(end.timeIntervalSinceNow.rounded()))
-            restartLocalRestTimerFromResume()
+            if newPhase == .active {
+                recalculateRestTimerIfNeeded()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            guard isResting else { return }
+            if let end = restEndDate, end > Date() {
+                // Timer läuft noch – lokalen Timer neu starten
+                restTimerSeconds = max(0, Int(end.timeIntervalSinceNow.rounded()))
+                restartLocalRestTimerFromResume()
+            } else {
+                // Timer ist im Hintergrund abgelaufen – State bereinigen.
+                // Ohne diesen Cleanup bleibt isResting=true und onChange(of: isResting)
+                // feuert beim nächsten Set-Abschluss nicht mehr (kein State-Change).
+                endRestTimer()
+            }
         }
         .onDisappear {
             cleanupLocalTimer()
@@ -639,24 +655,41 @@ struct ActiveWorkoutView: View {
         let restTime = set.restSeconds
         guard restTime > 0 else { return }
 
-        restTimerSeconds = restTime
+        // Anker setzen
         restEndDate = Date().addingTimeInterval(Double(restTime))
+        restTimerSeconds = restTime
 
-        withAnimation(.easeInOut) {
-            isResting = true
-        }
+        withAnimation(.easeInOut) { isResting = true }
+
         restTimer?.invalidate()
         restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            if self.restTimerSeconds > 0 {
-                self.restTimerSeconds -= 1
+            // Berechnung aus restEndDate statt blindem -=1
+            let remaining = Int(self.restEndDate?.timeIntervalSinceNow ?? 0)
+            if remaining > 0 {
+                self.restTimerSeconds = remaining
             } else {
                 self.endRestTimer()
-
                 if self.appSettings.enableRestTimerHaptic {
-                    let generator = UINotificationFeedbackGenerator()
-                    generator.notificationOccurred(.success)
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
                 }
             }
+        }
+
+        if let t = restTimer {
+            RunLoop.current.add(t, forMode: .common)
+        }
+    }
+
+    private func recalculateRestTimerIfNeeded() {
+        guard isResting, let endDate = restEndDate else { return }
+
+        let remaining = Int(endDate.timeIntervalSinceNow)
+
+        if remaining <= 0 {
+            endRestTimer()
+        } else {
+            restTimerSeconds = remaining
+            restartLocalRestTimerFromResume()
         }
     }
 
@@ -678,8 +711,16 @@ struct ActiveWorkoutView: View {
     }
 
     private func adjustRestTimer(delta: Int) {
-        let newValue = restTimerSeconds + delta
-        restTimerSeconds = max(5, min(300, newValue))  // 5s bis 5min
+        guard let currentEnd = restEndDate else { return }
+
+        // restEndDate verschieben – restTimerSeconds folgt beim nächsten Timer-Tick
+        let newEnd = currentEnd.addingTimeInterval(Double(delta))
+        let clampedRemaining = max(5, min(300, Int(newEnd.timeIntervalSinceNow)))
+        restEndDate = Date().addingTimeInterval(Double(clampedRemaining))
+        restTimerSeconds = clampedRemaining
+
+        // Live Activity sofort mit neuem restEndDate aktualisieren
+        syncLiveActivityStates()
     }
 
     // =========================================================================
@@ -825,7 +866,9 @@ struct ActiveWorkoutView: View {
     }
 
     private func makeLiveContentState() -> WorkoutActivityAttributes.ContentState {
-        if !sessionManager.isPaused {
+        // workoutStartDate nur aktualisieren wenn Session aktiv läuft (nicht pausiert, kein Rest).
+        // Während Rest/Pause bleibt der Anker stabil – verhindert Flickern im Widget-Timer.
+        if !sessionManager.isPaused && !isResting {
             workoutStartDate = Date().addingTimeInterval(-Double(sessionManager.elapsedSeconds))
         }
 
@@ -838,7 +881,8 @@ struct ActiveWorkoutView: View {
             isResting: isResting,
             restEndDate: isResting ? restEndDate : nil,
             completedSets: session.completedSets,
-            totalSets: session.totalSets
+            totalSets: session.totalSets,
+            totalSetsForCurrentExercise: setsForCurrentExercise > 0 ? setsForCurrentExercise : nil
         )
     }
 
@@ -895,9 +939,14 @@ struct ActiveWorkoutView: View {
         restTimer?.invalidate()
         guard let end = restEndDate else { return }
 
-        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+        // Timer(timeInterval:) statt scheduledTimer – verhindert Doppel-Registrierung im RunLoop.
+        // RunLoop.main.add(..., forMode: .common) stellt sicher, dass der Timer auch beim
+        // Scrollen (RunLoop wechselt in .tracking-Modus) und nach Hintergrund-Rückkehr feuert.
+        let timer = Timer(timeInterval: 1.0, repeats: true) { _ in
             let remaining = Int(end.timeIntervalSinceNow.rounded())
             if remaining > 0 {
+                // Nur lokalen State aktualisieren – Text(date, style: .timer) im Widget
+                // zählt systemseitig selbst runter, kein ActivityKit-Update nötig.
                 self.restTimerSeconds = remaining
             } else {
                 self.endRestTimer()
@@ -907,6 +956,8 @@ struct ActiveWorkoutView: View {
                 }
             }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        restTimer = timer
     }
 
     private func saveResumeState() {
@@ -1028,6 +1079,8 @@ struct ActiveWorkoutView: View {
             progressionBanners
             exercisesOverview
         }
+        // Animiert den Wechsel zwischen ActiveSetCard und RestTimerCard
+        .animation(.easeInOut, value: isResting)
         .padding(.horizontal)
         .padding(.top, 16)
         .padding(.bottom, 100)

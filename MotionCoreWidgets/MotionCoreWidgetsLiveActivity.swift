@@ -13,7 +13,7 @@
 // Änderungen:                                                                      /
 // - Kompakte Ansicht: Aktiv-Modus zeigt Satz-Fortschritt + Timer in Grün           /
 // - Kompakte Ansicht: Pausen-Modus zeigt Icon + Countdown in blauem Gradient       /
-//   (blue → cyan), Pulsier-Animation in den letzten 10 Sekunden                   /
+//   (blue → cyan), Pulsier-Animation in den letzten 10 Sekunden                    /
 // - Erweiterte Ansicht: Pausen-Timer ebenfalls in blauem Gradient                  /
 // - Lock Screen: Liquid Glass Redesign mit blauem Gradient-Header                  /
 // ---------------------------------------------------------------------------------/
@@ -39,46 +39,53 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         Text(context.state.currentExercise ?? "Training")
                             .font(.caption.bold())
                             .foregroundStyle(.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
 
                         if let set = context.state.currentSet {
-                            Text(set)
+                            Text(context.state.totalSetsForCurrentExercise.map { "\(set)/\($0)" } ?? set)
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
+                                .lineLimit(1)
                         }
                     }
+                    .padding(.leading, 4)
                 }
 
                 DynamicIslandExpandedRegion(.trailing) {
                     // Timer-Anzeige mit angepassten Farben
-                    if context.state.isResting, let end = context.state.restEndDate {
-                        // PAUSEN-MODUS (erweitert)
-                        VStack(spacing: 2) {
-                            Text("Pause")
-                                .font(.caption2)
-                                .foregroundStyle(blueRestGradient)
+                    Group {
+                        if context.state.isResting, let end = context.state.restEndDate {
+                            // PAUSEN-MODUS (erweitert)
+                            VStack(spacing: 2) {
+                                Text("Pause")
+                                    .font(.caption2)
+                                    .foregroundStyle(blueRestGradient)
 
-                            Text(timerInterval: Date.now...end, countsDown: true)
-                                .font(.title2.bold().monospacedDigit())
-                                .foregroundStyle(blueRestGradient)
-                        }
-                    } else {
-                        // AKTIV-MODUS (erweitert)
-                        VStack(spacing: 2) {
-                            Text(context.state.isPaused ? "Pausiert" : "Läuft")
-                                .font(.caption2)
-                                .foregroundStyle(context.state.isPaused ? .orange : .green)
+                                Text(end, style: .timer)
+                                    .font(.title2.bold().monospacedDigit())
+                                    .foregroundStyle(blueRestGradient)
+                            }
+                        } else {
+                            // AKTIV-MODUS (erweitert)
+                            VStack(spacing: 2) {
+                                Text(context.state.isPaused ? "Pausiert" : "Läuft")
+                                    .font(.caption2)
+                                    .foregroundStyle(context.state.isPaused ? .orange : .green)
 
-                            if context.state.isPaused {
-                                Text(formatTime(context.state.elapsedAtPause ?? 0))
-                                    .font(.title2.bold().monospacedDigit())
-                                    .foregroundStyle(.orange)
-                            } else {
-                                Text(context.state.workoutStartDate, style: .timer)
-                                    .font(.title2.bold().monospacedDigit())
-                                    .foregroundStyle(.green)
+                                if context.state.isPaused {
+                                    Text(formatTime(context.state.elapsedAtPause ?? 0))
+                                        .font(.title2.bold().monospacedDigit())
+                                        .foregroundStyle(.orange)
+                                } else {
+                                    Text(context.state.workoutStartDate, style: .timer)
+                                        .font(.title2.bold().monospacedDigit())
+                                        .foregroundStyle(.green)
+                                }
                             }
                         }
                     }
+                    .padding(.trailing, 4)
                 }
 
                 DynamicIslandExpandedRegion(.bottom) {
@@ -128,7 +135,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         .font(.body)
                 } else {
                     // AKTIV-MODUS: Icon + Satz-Fortschritt
-                    HStack(spacing: 6) {
+                    HStack(spacing: 4) {
                         Image(systemName: "figure.strengthtraining.traditional")
                             .foregroundStyle(.green)
                             .font(.body)
@@ -137,14 +144,16 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         Text("\(context.state.completedSets)/\(context.state.totalSets)")
                             .font(.caption.bold().monospacedDigit())
                             .foregroundStyle(.white)
+                            .lineLimit(1)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
             } compactTrailing: {
                 // Kompakt Rechts - Timer rechtsbündig
                 if context.state.isResting, let end = context.state.restEndDate {
                     // PAUSEN-MODUS: Countdown mit blauem Gradient
-                    Text(timerInterval: Date.now...end, countsDown: true)
+                    Text(end, style: .timer)
                         .font(.caption.bold().monospacedDigit())
                         .foregroundStyle(blueRestGradient)
                 } else if context.state.isPaused {
@@ -225,7 +234,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                             Text("Pause")
                                 .font(.caption.bold())
                                 .foregroundStyle(blueRestGradient)
-                            Text(timerInterval: Date.now...end, countsDown: true)
+                            Text(end, style: .timer)
                                 .font(.title.bold().monospacedDigit())
                                 .foregroundStyle(blueRestGradient)
                         }

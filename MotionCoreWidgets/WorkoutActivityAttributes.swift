@@ -38,6 +38,9 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
         public var completedSets: Int
         public var totalSets: Int
 
+        // Sätze für die aktuelle Übung (für "Satz X/Y" Anzeige)
+        public var totalSetsForCurrentExercise: Int?
+
         // MARK: - Public initializer
 
         public init(
@@ -49,7 +52,8 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
             isResting: Bool,
             restEndDate: Date? = nil,
             completedSets: Int,
-            totalSets: Int
+            totalSets: Int,
+            totalSetsForCurrentExercise: Int? = nil
         ) {
             self.workoutStartDate = workoutStartDate
             self.isPaused = isPaused
@@ -60,6 +64,7 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
             self.restEndDate = restEndDate
             self.completedSets = completedSets
             self.totalSets = totalSets
+            self.totalSetsForCurrentExercise = totalSetsForCurrentExercise
         }
     }
 
