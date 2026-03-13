@@ -62,7 +62,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                                     .font(.caption2)
                                     .foregroundStyle(blueRestGradient)
 
-                                Text(end, style: .timer)
+                                Text(timerInterval: Date()...end, countsDown: true)
+                                    .monospacedDigit()
                                     .font(.title2.bold().monospacedDigit())
                                     .foregroundStyle(blueRestGradient)
                             }
@@ -153,7 +154,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                 // Kompakt Rechts - Timer rechtsbündig
                 if context.state.isResting, let end = context.state.restEndDate {
                     // PAUSEN-MODUS: Countdown mit blauem Gradient
-                    Text(end, style: .timer)
+                    Text(timerInterval: Date()...end, countsDown: true)
+                        .monospacedDigit()
                         .font(.caption.bold().monospacedDigit())
                         .foregroundStyle(blueRestGradient)
                 } else if context.state.isPaused {
@@ -234,7 +236,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                             Text("Pause")
                                 .font(.caption.bold())
                                 .foregroundStyle(blueRestGradient)
-                            Text(end, style: .timer)
+                            Text(timerInterval: Date()...end, countsDown: true)
+                                .monospacedDigit()
                                 .font(.title.bold().monospacedDigit())
                                 .foregroundStyle(blueRestGradient)
                         }

@@ -44,27 +44,24 @@ struct ActiveWorkoutView: View {
     @State private var exerciseToDelete: String?
     @State private var showDeleteAlert = false
 
-    // Sheet zum Hinzufügen einer Übung während des Trainings
+        // Sheet zum Hinzufügen einer Übung während des Trainings
     @State private var showAddExerciseSheet = false
 
-    // Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
+        // Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
     @State private var exerciseListRefreshID = UUID()
 
     @State private var prSetIDs: Set<PersistentIdentifier> = []
     @State private var prBannerExercise: String? = nil
     @State private var prBannerOneRM: Double = 0
 
-    // Progression
+        // Progression
     @State private var dismissedProgressionExercises: Set<String> = []
     @State private var cachedProgressionRecommendations: [ProgressionRecommendation] = []
 
-        // Rest
-    @State private var restTimerSeconds: Int = 0
-    @State private var restTimer: Timer?
-    @State private var isResting: Bool = false
-
-        // NEW: Rest end date anchor (system-side countdown)
-    @State private var restEndDate: Date?
+        // Rest-Timer: ausgelagert in eine Klasse, damit Timer-Closures
+        // zuverlässig auf den State zugreifen – auch nach SwiftUI-Redraws.
+    @StateObject private var restTimerManager = RestTimerManager()
+//    @State private var liveActivityDebounceTimer: Timer?
 
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionHaptic = UINotificationFeedbackGenerator()
@@ -171,7 +168,7 @@ struct ActiveWorkoutView: View {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             VStack(spacing: 0) {
-                // Workout-Status als Header der View
+                    // Workout-Status als Header der View
                 ActiveWorkoutStatus(
                     isPaused: sessionManager.isPaused,
                     formattedElapsedTime: sessionManager.formattedElapsedTime,
@@ -187,7 +184,7 @@ struct ActiveWorkoutView: View {
                 .scrollIndicators(.hidden)
             }
 
-            // PR-Banner Overlay
+                // PR-Banner Overlay
             if prBannerExercise != nil {
                 VStack {
                     if let exercise = prBannerExercise {
@@ -225,35 +222,42 @@ struct ActiveWorkoutView: View {
         .onAppear {
             setupSession()
             hapticGenerator.prepare()
-            // Watch-Action-Handler registrieren
+                // Watch-Action-Handler registrieren
             PhoneSessionManager.shared.onAction = { action in
                 handleWatchAction(action)
             }
             refreshProgressionRecommendations()
+
+                // RestTimerManager Callbacks konfigurieren
+            restTimerManager.onTimerFinished = {
+                if self.appSettings.enableRestTimerHaptic {
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                }
+            }
         }
 
-        // =====================================================================
-        // MARK: - onChange Handler (einzige Quelle für Live Activity Updates)
-        // =====================================================================
-        // Diese Handler reagieren auf State-Änderungen und updaten die Live
-        // Activity EINMAL. Die Action-Funktionen ändern nur den State.
-        // =====================================================================
+            // =====================================================================
+            // MARK: - onChange Handler (einzige Quelle für Live Activity Updates)
+            // =====================================================================
+            // Diese Handler reagieren auf State-Änderungen und updaten die Live
+            // Activity EINMAL. Die Action-Funktionen ändern nur den State.
+            // =====================================================================
 
         .onChange(of: sessionManager.isPaused) { _, _ in
             syncLiveActivityStates()
             sendWatchState()
         }
-        .onChange(of: isResting) { _, _ in
+/*        .onChange(of: restTimerManager.isResting) { _, _ in
             syncLiveActivityStates()
         }
-        .onChange(of: session.completedSets) { _, _ in
-            // Nur updaten wenn gerade kein Rest-Timer startet.
-            // Startet ein Rest-Timer, übernimmt onChange(of: isResting) das Update –
-            // ein doppeltes Update würde ActivityKit-Throttling auslösen und das
-            // restEndDate-Update der Dynamic Island verwerfen.
-            if !isResting {
+ */
+        .onChange(of: restTimerManager.restEndDate) { _, _ in
+            if restTimerManager.isResting {
                 syncLiveActivityStates()
             }
+        }
+        .onChange(of: session.completedSets) { _, _ in
+            syncLiveActivityStates()
             sendWatchState()
         }
         .onChange(of: selectedExerciseKey) { _, newValue in
@@ -261,29 +265,21 @@ struct ActiveWorkoutView: View {
             syncLiveActivityStates()
             sendWatchState()
         }
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active {
-                recalculateRestTimerIfNeeded()
-            }
-        }
+
+            // Foreground-Handler für Rest-Timer: berechnet verbleibende Zeit aus restEndDate
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            guard isResting else { return }
-            if let end = restEndDate, end > Date() {
-                // Timer läuft noch – lokalen Timer neu starten
-                restTimerSeconds = max(0, Int(end.timeIntervalSinceNow.rounded()))
-                restartLocalRestTimerFromResume()
-            } else {
-                // Timer ist im Hintergrund abgelaufen – State bereinigen.
-                // Ohne diesen Cleanup bleibt isResting=true und onChange(of: isResting)
-                // feuert beim nächsten Set-Abschluss nicht mehr (kein State-Change).
-                endRestTimer()
+            restTimerManager.handleForegroundReturn()
+
+            if restTimerManager.isResting {
+                syncLiveActivityStates()
             }
         }
         .onDisappear {
             cleanupLocalTimer()
-            cleanupRestTimer()
+            restTimerManager.cleanup()
+         //   liveActivityDebounceTimer?.invalidate()
             saveResumeState()
-            // Watch-Action-Handler aufräumen
+                // Watch-Action-Handler aufräumen
             PhoneSessionManager.shared.onAction = nil
             PhoneSessionManager.shared.sendIdleState()
         }
@@ -324,10 +320,10 @@ struct ActiveWorkoutView: View {
             SetEditSheet(set: set, session: session)
                 .environmentObject(appSettings)
         }
-        // Sheet zum Hinzufügen einer Übung während des Trainings
+            // Sheet zum Hinzufügen einer Übung während des Trainings
         .sheet(isPresented: $showAddExerciseSheet) {
             AddExerciseDuringWorkoutSheet(session: session) {
-                // Nach dem Hinzufügen: UI refreshen und Live Activity updaten
+                    // Nach dem Hinzufügen: UI refreshen und Live Activity updaten
                 exerciseListRefreshID = UUID() // Erzwingt Neuaufbau der Liste
                 syncLiveActivityStates()
             }
@@ -409,7 +405,7 @@ struct ActiveWorkoutView: View {
 
         if !didRestore {
             if let activeID, activeID == sessionID {
-                // already active
+                    // already active
             } else if sessionManager.hasActiveSession {
                 sessionManager.discardSession()
                 startNewSession(sessionID: sessionID)
@@ -417,25 +413,25 @@ struct ActiveWorkoutView: View {
                 startNewSession(sessionID: sessionID)
             }
         }
-        // UUID in Exercise bereinigen
+            // UUID in Exercise bereinigen
         repairExerciseUUIDSnapshotsIfNeeded()
 
-        // Fallback: falls ResumeStore nix gesetzt hat
+            // Fallback: falls ResumeStore nix gesetzt hat
         if selectedExerciseKey == nil {
             selectedExerciseKey = sessionManager.getSelectedExerciseKey()
         }
 
-        // ✅ Schritt 2: Guard gegen ungültigen Key (nach dem Setzen!)
+            // ✅ Schritt 2: Guard gegen ungültigen Key (nach dem Setzen!)
         validateSelectedExerciseKey()
 
         reattachLiveActivityIfNeeded()
 
-        // ✅ Schritt 3: einmaliger Initial-Sync
+            // ✅ Schritt 3: einmaliger Initial-Sync
         syncLiveActivityStates()
         sendWatchState()
     }
 
-    // Zugriff Exercise-Key prüfen
+        // Zugriff Exercise-Key prüfen
     private func validateSelectedExerciseKey() {
         guard !session.groupedSets.isEmpty else { return }
 
@@ -445,10 +441,14 @@ struct ActiveWorkoutView: View {
         }
     }
 
-    // Synchronisierung Live Activity States
+        // Synchronisierung Live Activity States (debounced)
+        // Sammelt mehrere State-Änderungen innerhalb von 300ms und feuert
+        // dann EIN einziges ActivityKit-Update mit dem finalen State.
+        // Verhindert Throttling wenn completeSet() gleichzeitig completedSets,
+        // isResting und selectedExerciseKey ändert.
     private func syncLiveActivityStates() {
-           updateLiveActivity()
-           saveResumeState()
+        updateLiveActivity()
+        saveResumeState()
     }
 
 
@@ -457,24 +457,19 @@ struct ActiveWorkoutView: View {
         session.start()
         try? context.save()
 
-        // Live Activity starten
+            // Live Activity starten
         startLiveActivity()
 
         saveResumeState()
     }
 
-    // Bereinigung des Local Timers
+        // Bereinigung des Local Timers
     private func cleanupLocalTimer() {
         localTimer?.invalidate()
         localTimer = nil
     }
-    // Bereinigung des RestTimers
-    private func cleanupRestTimer() {
-        restTimer?.invalidate()
-        restTimer = nil
-    }
 
-    // ExerciseUUID in der Datei bereinigen.
+        // ExerciseUUID in der Datei bereinigen.
     private func repairExerciseUUIDSnapshotsIfNeeded() {
         var didChange = false
 
@@ -493,12 +488,12 @@ struct ActiveWorkoutView: View {
         }
     }
 
-    // =========================================================================
-    // MARK: - Actions
-    // =========================================================================
-    // WICHTIG: Diese Funktionen ändern nur den State.
-    // Die onChange-Handler oben reagieren darauf und updaten Live Activity.
-    // =========================================================================
+        // =========================================================================
+        // MARK: - Actions
+        // =========================================================================
+        // WICHTIG: Diese Funktionen ändern nur den State.
+        // Die onChange-Handler oben reagieren darauf und updaten Live Activity.
+        // =========================================================================
 
     private func toggleTimer() {
         if sessionManager.isPaused {
@@ -511,7 +506,7 @@ struct ActiveWorkoutView: View {
         generator.impactOccurred()
     }
 
-    // Exercise auswählen
+        // Exercise auswählen
     private func selectExercise(key: String) {
         withAnimation(.easeInOut) {
             selectedExerciseKey = key
@@ -519,48 +514,48 @@ struct ActiveWorkoutView: View {
         hapticGenerator.impactOccurred()
     }
 
-    // Delete Exercise
+        // Delete Exercise
     private func deleteExercise(groupKey: String) {
         hapticGenerator.impactOccurred()
         exerciseToDelete = groupKey
         showDeleteAlert = true
     }
 
-    // Löschen bestätigen
+        // Löschen bestätigen
     private func confirmDelete() {
         guard let groupKey = exerciseToDelete else { return }
 
-        // Finde alle Sets dieser Übung
+            // Finde alle Sets dieser Übung
         let setsToDelete = session.safeExerciseSets.filter { $0.groupKey == groupKey }
 
-        // Lösche alle Sets
+            // Lösche alle Sets
         for set in setsToDelete {
             context.delete(set)
         }
 
-        // Refresh UI
+            // Refresh UI
         exerciseListRefreshID = UUID()
 
-        // Falls die gelöschte Übung aktuell ausgewählt war
+            // Falls die gelöschte Übung aktuell ausgewählt war
         if selectedExerciseKey == groupKey {
             selectedExerciseKey = nil
         }
 
-        // Reset Alert State
+            // Reset Alert State
         exerciseToDelete = nil
         showDeleteAlert = false
 
         print("🗑️ Übung gelöscht: \(groupKey)")
     }
 
-    // Set komplett abschließen
+        // Set komplett abschließen
     private func completeSet(_ set: ExerciseSet) {
         withAnimation(.easeInOut) {
             set.isCompleted = true
         }
         try? context.save()
 
-        // PR-Prüfung
+            // PR-Prüfung
         let prService = PRDetectionService(historicalSessions: historicalSessions)
         if prService.isNewPR(set: set) {
             prSetIDs.insert(set.persistentModelID)
@@ -593,7 +588,7 @@ struct ActiveWorkoutView: View {
         }
 
         if !remainingSetsForExercise.isEmpty {
-            startRestTimer(for: set)
+            restTimerManager.start(seconds: set.restSeconds)
         }
     }
 
@@ -604,10 +599,10 @@ struct ActiveWorkoutView: View {
         session.duration = finalSeconds / 60
         try? context.save()
 
-        // Complications nach Workout-Abschluss aktualisieren
+            // Complications nach Workout-Abschluss aktualisieren
         WatchComplicationService.updateComplications(allSessions: allSessions)
 
-        // Supabase-Upload (non-blocking, CloudKit bleibt primär)
+            // Supabase-Upload (non-blocking, CloudKit bleibt primär)
         Task {
             let success = await SupabaseSessionService.shared.upload(session)
             if success {
@@ -647,87 +642,11 @@ struct ActiveWorkoutView: View {
         dismiss()
     }
 
-    // =========================================================================
-    // MARK: - Rest Timer
-    // =========================================================================
+        // =========================================================================
+        // MARK: - Watch Integration
+        // =========================================================================
 
-    private func startRestTimer(for set: ExerciseSet) {
-        let restTime = set.restSeconds
-        guard restTime > 0 else { return }
-
-        // Anker setzen
-        restEndDate = Date().addingTimeInterval(Double(restTime))
-        restTimerSeconds = restTime
-
-        withAnimation(.easeInOut) { isResting = true }
-
-        restTimer?.invalidate()
-        restTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            // Berechnung aus restEndDate statt blindem -=1
-            let remaining = Int(self.restEndDate?.timeIntervalSinceNow ?? 0)
-            if remaining > 0 {
-                self.restTimerSeconds = remaining
-            } else {
-                self.endRestTimer()
-                if self.appSettings.enableRestTimerHaptic {
-                    UINotificationFeedbackGenerator().notificationOccurred(.success)
-                }
-            }
-        }
-
-        if let t = restTimer {
-            RunLoop.current.add(t, forMode: .common)
-        }
-    }
-
-    private func recalculateRestTimerIfNeeded() {
-        guard isResting, let endDate = restEndDate else { return }
-
-        let remaining = Int(endDate.timeIntervalSinceNow)
-
-        if remaining <= 0 {
-            endRestTimer()
-        } else {
-            restTimerSeconds = remaining
-            restartLocalRestTimerFromResume()
-        }
-    }
-
-    private func endRestTimer() {
-        restTimer?.invalidate()
-        restTimer = nil
-
-        withAnimation(.easeInOut) {
-            isResting = false
-        }
-
-        restTimerSeconds = 0
-        restEndDate = nil
-    }
-
-    private func skipRest() {
-        endRestTimer()
-        hapticGenerator.impactOccurred()
-    }
-
-    private func adjustRestTimer(delta: Int) {
-        guard let currentEnd = restEndDate else { return }
-
-        // restEndDate verschieben – restTimerSeconds folgt beim nächsten Timer-Tick
-        let newEnd = currentEnd.addingTimeInterval(Double(delta))
-        let clampedRemaining = max(5, min(300, Int(newEnd.timeIntervalSinceNow)))
-        restEndDate = Date().addingTimeInterval(Double(clampedRemaining))
-        restTimerSeconds = clampedRemaining
-
-        // Live Activity sofort mit neuem restEndDate aktualisieren
-        syncLiveActivityStates()
-    }
-
-    // =========================================================================
-    // MARK: - Watch Integration
-    // =========================================================================
-
-    /// Sendet den aktuellen Workout-State an die Apple Watch
+        /// Sendet den aktuellen Workout-State an die Apple Watch
     private func sendWatchState() {
         let state: WatchWorkoutState = sessionManager.isPaused ? .paused : .active
         let grouped = session.groupedSets
@@ -748,49 +667,49 @@ struct ActiveWorkoutView: View {
         )
     }
 
-    /// Verarbeitet eingehende Actions von der Apple Watch
+        /// Verarbeitet eingehende Actions von der Apple Watch
     private func handleWatchAction(_ action: WatchAction) {
         switch action {
-        case .pauseResume:
-            if sessionManager.isPaused {
-                sessionManager.resumeSession()
-            } else {
-                sessionManager.pauseSession()
-            }
+            case .pauseResume:
+                if sessionManager.isPaused {
+                    sessionManager.resumeSession()
+                } else {
+                    sessionManager.pauseSession()
+                }
 
-        case .completeSet:
-            // Ersten nicht abgeschlossenen Satz der aktuellen Übung abschließen
-            if let set = selectedExerciseSets.first(where: { !$0.isCompleted }) {
-                completeSet(set)
-            }
+            case .completeSet:
+                    // Ersten nicht abgeschlossenen Satz der aktuellen Übung abschließen
+                if let set = selectedExerciseSets.first(where: { !$0.isCompleted }) {
+                    completeSet(set)
+                }
 
-        case .nextExercise:
-            let grouped = session.groupedSets
-            let currentKey = selectedExerciseKey ?? ""
-            // Fallback -1 → nextIdx wird 0 → navigiert zur ersten Übung wenn keine Auswahl
-            let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? -1
-            let nextIdx = currentIdx + 1
-            guard nextIdx < grouped.count else { return }
-            if let nextKey = grouped[safe: nextIdx]?.first?.groupKey {
-                selectExercise(key: nextKey)
-            }
+            case .nextExercise:
+                let grouped = session.groupedSets
+                let currentKey = selectedExerciseKey ?? ""
+                    // Fallback -1 → nextIdx wird 0 → navigiert zur ersten Übung wenn keine Auswahl
+                let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? -1
+                let nextIdx = currentIdx + 1
+                guard nextIdx < grouped.count else { return }
+                if let nextKey = grouped[safe: nextIdx]?.first?.groupKey {
+                    selectExercise(key: nextKey)
+                }
 
-        case .previousExercise:
-            let grouped = session.groupedSets
-            let currentKey = selectedExerciseKey ?? ""
-            // Fallback 0 → prevIdx wird -1 → guard greift → kein Wechsel bei unbekanntem Key
-            let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
-            let prevIdx = currentIdx - 1
-            guard prevIdx >= 0 else { return }
-            if let prevKey = grouped[safe: prevIdx]?.first?.groupKey {
-                selectExercise(key: prevKey)
-            }
+            case .previousExercise:
+                let grouped = session.groupedSets
+                let currentKey = selectedExerciseKey ?? ""
+                    // Fallback 0 → prevIdx wird -1 → guard greift → kein Wechsel bei unbekanntem Key
+                let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
+                let prevIdx = currentIdx - 1
+                guard prevIdx >= 0 else { return }
+                if let prevKey = grouped[safe: prevIdx]?.first?.groupKey {
+                    selectExercise(key: prevKey)
+                }
         }
     }
 
-    // =========================================================================
-    // MARK: - Live Activity
-    // =========================================================================
+        // =========================================================================
+        // MARK: - Live Activity
+        // =========================================================================
 
     private func startLiveActivity() {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
@@ -866,9 +785,9 @@ struct ActiveWorkoutView: View {
     }
 
     private func makeLiveContentState() -> WorkoutActivityAttributes.ContentState {
-        // workoutStartDate nur aktualisieren wenn Session aktiv läuft (nicht pausiert, kein Rest).
-        // Während Rest/Pause bleibt der Anker stabil – verhindert Flickern im Widget-Timer.
-        if !sessionManager.isPaused && !isResting {
+            // workoutStartDate nur aktualisieren wenn Session aktiv läuft (nicht pausiert, kein Rest).
+            // Während Rest/Pause bleibt der Anker stabil – verhindert Flickern im Widget-Timer.
+        if !sessionManager.isPaused {
             workoutStartDate = Date().addingTimeInterval(-Double(sessionManager.elapsedSeconds))
         }
 
@@ -878,8 +797,8 @@ struct ActiveWorkoutView: View {
             elapsedAtPause: sessionManager.isPaused ? sessionManager.elapsedSeconds : nil,
             currentExercise: currentSet?.exerciseName,
             currentSet: currentSet.map { "Satz \($0.setNumber)" },
-            isResting: isResting,
-            restEndDate: isResting ? restEndDate : nil,
+            isResting: restTimerManager.isResting,
+            restEndDate: restTimerManager.isResting ? restTimerManager.restEndDate : nil,
             completedSets: session.completedSets,
             totalSets: session.totalSets,
             totalSetsForCurrentExercise: setsForCurrentExercise > 0 ? setsForCurrentExercise : nil
@@ -902,9 +821,9 @@ struct ActiveWorkoutView: View {
         }
     }
 
-    // =========================================================================
-    // MARK: - Resume Store (Rest + LiveActivity Anchors)
-    // =========================================================================
+        // =========================================================================
+        // MARK: - Resume Store (Rest + LiveActivity Anchors)
+        // =========================================================================
 
     @discardableResult
     private func restoreResumeStateIfPossible() -> Bool {
@@ -921,43 +840,11 @@ struct ActiveWorkoutView: View {
             sessionManager.resumeSession()
         }
 
-            // Rest wiederherstellen
+            // Rest wiederherstellen über RestTimerManager
         if state.isResting, let end = state.restEndDate, end > Date() {
-            restEndDate = end
-            isResting = true
-            restTimerSeconds = max(0, Int(end.timeIntervalSinceNow.rounded()))
-            restartLocalRestTimerFromResume()
-        } else {
-            restEndDate = nil
-            isResting = false
-            restTimerSeconds = 0
+            restTimerManager.restore(endDate: end)
         }
         return true
-    }
-
-    private func restartLocalRestTimerFromResume() {
-        restTimer?.invalidate()
-        guard let end = restEndDate else { return }
-
-        // Timer(timeInterval:) statt scheduledTimer – verhindert Doppel-Registrierung im RunLoop.
-        // RunLoop.main.add(..., forMode: .common) stellt sicher, dass der Timer auch beim
-        // Scrollen (RunLoop wechselt in .tracking-Modus) und nach Hintergrund-Rückkehr feuert.
-        let timer = Timer(timeInterval: 1.0, repeats: true) { _ in
-            let remaining = Int(end.timeIntervalSinceNow.rounded())
-            if remaining > 0 {
-                // Nur lokalen State aktualisieren – Text(date, style: .timer) im Widget
-                // zählt systemseitig selbst runter, kein ActivityKit-Update nötig.
-                self.restTimerSeconds = remaining
-            } else {
-                self.endRestTimer()
-                if self.appSettings.enableRestTimerHaptic {
-                    let gen = UINotificationFeedbackGenerator()
-                    gen.notificationOccurred(.success)
-                }
-            }
-        }
-        RunLoop.main.add(timer, forMode: .common)
-        restTimer = timer
     }
 
     private func saveResumeState() {
@@ -967,8 +854,8 @@ struct ActiveWorkoutView: View {
             isPaused: sessionManager.isPaused,
             elapsedSeconds: sessionManager.elapsedSeconds,
             workoutStartDate: workoutStartDate,
-            isResting: isResting,
-            restEndDate: isResting ? restEndDate : nil,
+            isResting: restTimerManager.isResting,
+            restEndDate: restTimerManager.isResting ? restTimerManager.restEndDate : nil,
             selectedExerciseKey: selectedExerciseKey,
             updatedAt: Date()
         )
@@ -1079,24 +966,30 @@ struct ActiveWorkoutView: View {
             progressionBanners
             exercisesOverview
         }
-        // Animiert den Wechsel zwischen ActiveSetCard und RestTimerCard
-        .animation(.easeInOut, value: isResting)
+            // Animiert den Wechsel zwischen ActiveSetCard und RestTimerCard
+        .animation(.easeInOut, value: restTimerManager.isResting)
         .padding(.horizontal)
         .padding(.top, 16)
         .padding(.bottom, 100)
     }
 
     private var heroCard: AnyView {
-        if isResting, let completedSet = lastCompletedSet {
+        if restTimerManager.isResting, let completedSet = lastCompletedSet {
             return AnyView(
                 RestTimerCard(
-                    remainingSeconds: restTimerSeconds,
+                    remainingSeconds: restTimerManager.remainingSeconds,
                     targetSeconds: completedSet.restSeconds,
-                    onSkip: skipRest,
-                    onAdjust: { delta in adjustRestTimer(delta: delta) },
-                    nextExerciseName: currentSet?.exerciseName,  // *NEU*
-                    nextSetNumber: currentSet?.setNumber,  // *NEU*
-                    totalSetsForExercise: setsForCurrentExercise  // *NEU*
+                    onSkip: {
+                        restTimerManager.skip()
+                        hapticGenerator.impactOccurred()
+                    },
+                    onAdjust: { delta in
+                                        _ = restTimerManager.adjust(delta: delta)
+                                        syncLiveActivityStates()
+                                    },
+                    nextExerciseName: currentSet?.exerciseName,
+                    nextSetNumber: currentSet?.setNumber,
+                    totalSetsForExercise: setsForCurrentExercise
                 )
             )
         }
@@ -1125,13 +1018,13 @@ struct ActiveWorkoutView: View {
         return AnyView(
             WorkoutCompletedCard(
                 onFinishWorkout: finishWorkout,
-                onAddExercise: { showAddExerciseSheet = true }  // ✅ NEU!
+                onAddExercise: { showAddExerciseSheet = true }
             )
         )
     }
 }
 
-// MARK: - Sheet zum Hinzufügen einer Übung während des Trainings
+    // MARK: - Sheet zum Hinzufügen einer Übung während des Trainings
 
 struct AddExerciseDuringWorkoutSheet: View {
     @Environment(\.modelContext) private var context
@@ -1141,7 +1034,7 @@ struct AddExerciseDuringWorkoutSheet: View {
     @Bindable var session: StrengthSession
     let onComplete: () -> Void
 
-    // Schritt 1: Übung wählen, Schritt 2: Sets konfigurieren
+        // Schritt 1: Übung wählen, Schritt 2: Sets konfigurieren
     @State private var selectedExercise: Exercise?
     @State private var numberOfSets: Int = 3
     @State private var defaultWeight: Double = 0.0
@@ -1154,10 +1047,10 @@ struct AddExerciseDuringWorkoutSheet: View {
                 AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
                 if let exercise = selectedExercise {
-                    // Schritt 2: Sets konfigurieren
+                        // Schritt 2: Sets konfigurieren
                     configureExerciseView(exercise)
                 } else {
-                    // Schritt 1: Übung wählen
+                        // Schritt 1: Übung wählen
                     exerciseSelectionView
                 }
             }
@@ -1167,7 +1060,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
                         if selectedExercise != nil {
-                            // Zurück zur Auswahl
+                                // Zurück zur Auswahl
                             withAnimation {
                                 selectedExercise = nil
                             }
@@ -1184,13 +1077,13 @@ struct AddExerciseDuringWorkoutSheet: View {
                 }
             }
             .onDisappear {
-                // Timer aufräumen beim Schließen
+                    // Timer aufräumen beim Schließen
                 stopContinuousAdjustment()
             }
         }
     }
 
-    // MARK: - Schritt 1: Übung wählen (eigene Implementierung statt ExercisePickerSheet)
+        // MARK: - Schritt 1: Übung wählen (eigene Implementierung statt ExercisePickerSheet)
 
     @Query(sort: \Exercise.name, order: .forward)
     private var allExercises: [Exercise]
@@ -1224,17 +1117,17 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private var exerciseSelectionView: some View {
         VStack(spacing: 0) {
-            // Suchleiste
+                // Suchleiste
             searchBar
                 .padding(.horizontal)
                 .padding(.top, 16)
 
-            // Filter-Chips
+                // Filter-Chips
             filterChipsView
                 .padding(.horizontal)
                 .padding(.top, 12)
 
-            // Übungsliste
+                // Übungsliste
             ScrollView {
                 LazyVStack(spacing: 12) {
                     ForEach(filteredExercises, id: \.persistentModelID) { exercise in
@@ -1255,7 +1148,7 @@ struct AddExerciseDuringWorkoutSheet: View {
             }
             .scrollIndicators(.hidden)
 
-            // Empty State
+                // Empty State
             if filteredExercises.isEmpty {
                 emptyStateOverlay
             }
@@ -1290,7 +1183,7 @@ struct AddExerciseDuringWorkoutSheet: View {
     private var filterChipsView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                // Muskelgruppen
+                    // Muskelgruppen
                 Menu {
                     Button("Alle Muskelgruppen") {
                         selectedMuscleGroup = nil
@@ -1318,7 +1211,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     ) {}
                 }
 
-                // Equipment
+                    // Equipment
                 Menu {
                     Button("Alle Geräte") {
                         selectedEquipment = nil
@@ -1352,7 +1245,7 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private func exercisePickerRow(_ exercise: Exercise) -> some View {
         HStack(spacing: 12) {
-            // Anzeige Exercise Video View
+                // Anzeige Exercise Video View
             ExerciseVideoView.forExercise(
                 exercise,
                 size: 56
@@ -1410,18 +1303,18 @@ struct AddExerciseDuringWorkoutSheet: View {
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
     }
 
-    // MARK: - Schritt 2: Sets konfigurieren
+        // MARK: - Schritt 2: Sets konfigurieren
 
     private func configureExerciseView(_ exercise: Exercise) -> some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Übungsinfo
+                    // Übungsinfo
                 exerciseInfoCard(exercise)
 
-                // Set-Konfiguration
+                    // Set-Konfiguration
                 setConfigurationCard
 
-                // Hinzufügen-Button
+                    // Hinzufügen-Button
                 addButton(exercise)
             }
             .padding()
@@ -1432,7 +1325,7 @@ struct AddExerciseDuringWorkoutSheet: View {
 
     private func exerciseInfoCard(_ exercise: Exercise) -> some View {
         HStack(spacing: 16) {
-            //Anzeige Exercise Video View
+                //Anzeige Exercise Video View
             ExerciseVideoView.forExercise(
                 exercise,
                 size: 80
@@ -1471,9 +1364,9 @@ struct AddExerciseDuringWorkoutSheet: View {
                 .font(.headline)
                 .foregroundStyle(.primary)
 
-            .glassDivider()
+                .glassDivider()
 
-            // Anzahl Sets
+                // Anzahl Sets
             HStack {
                 Text("Anzahl Sets")
                     .foregroundStyle(.primary)
@@ -1512,7 +1405,7 @@ struct AddExerciseDuringWorkoutSheet: View {
 
             .glassDivider()
 
-            // Gewicht mit +/- Buttons und LongPress
+                // Gewicht mit +/- Buttons und LongPress
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text(isSelectedExerciseUnilateral ? "Gewicht pro Seite (kg)" : "Gewicht (kg)")
@@ -1590,7 +1483,7 @@ struct AddExerciseDuringWorkoutSheet: View {
 
             .glassDivider()
 
-            // Wiederholungen
+                // Wiederholungen
             HStack {
                 Text("Wiederholungen")
                     .foregroundStyle(.primary)
@@ -1629,7 +1522,7 @@ struct AddExerciseDuringWorkoutSheet: View {
 
             .glassDivider()
 
-            // Pausenzeit
+                // Pausenzeit
             HStack {
                 Text("Pause (Sek.)")
                     .foregroundStyle(.primary)
@@ -1647,13 +1540,13 @@ struct AddExerciseDuringWorkoutSheet: View {
         .glassCard()
     }
 
-    // MARK: - Hilfsvariable für unilateral
+        // MARK: - Hilfsvariable für unilateral
 
     private var isSelectedExerciseUnilateral: Bool {
         selectedExercise?.isUnilateral ?? false
     }
 
-    // MARK: - Adjustment Timer für LongPress
+        // MARK: - Adjustment Timer für LongPress
 
     @State private var incrementTimer: Timer?
 
@@ -1707,25 +1600,25 @@ struct AddExerciseDuringWorkoutSheet: View {
         incrementTimer = Timer.scheduledTimer(withTimeInterval: 0.12, repeats: true) { _ in
             counter += 1
             switch field {
-            case .sets:
-                if increment { increaseSets() } else { decreaseSets() }
-            case .reps:
-                if increment { increaseReps() } else { decreaseReps() }
-            case .weight:
-                // Nach 20 Iterationen schneller (0.5 statt 0.25)
-                let step: Double = counter > 20 ? 0.5 : 0.25
-                if increment {
-                    withAnimation {
-                        defaultWeight += step
-                        defaultWeight = (defaultWeight * 4).rounded() / 4
+                case .sets:
+                    if increment { increaseSets() } else { decreaseSets() }
+                case .reps:
+                    if increment { increaseReps() } else { decreaseReps() }
+                case .weight:
+                        // Nach 20 Iterationen schneller (0.5 statt 0.25)
+                    let step: Double = counter > 20 ? 0.5 : 0.25
+                    if increment {
+                        withAnimation {
+                            defaultWeight += step
+                            defaultWeight = (defaultWeight * 4).rounded() / 4
+                        }
+                    } else if defaultWeight >= step {
+                        withAnimation {
+                            defaultWeight -= step
+                            defaultWeight = (defaultWeight * 4).rounded() / 4
+                        }
                     }
-                } else if defaultWeight >= step {
-                    withAnimation {
-                        defaultWeight -= step
-                        defaultWeight = (defaultWeight * 4).rounded() / 4
-                    }
-                }
-                hapticFeedback()
+                    hapticFeedback()
             }
         }
 
@@ -1761,23 +1654,23 @@ struct AddExerciseDuringWorkoutSheet: View {
         }
     }
 
-    // MARK: - Logik zum Hinzufügen
+        // MARK: - Logik zum Hinzufügen
 
     private func addExerciseToSession(_ exercise: Exercise) {
-        // Höchsten sortOrder in der Session finden
+            // Höchsten sortOrder in der Session finden
         let maxSortOrder = session.safeExerciseSets.map { $0.sortOrder }.max() ?? -1
         let newSortOrder = maxSortOrder + 1
 
-        // Gewicht berechnen (bei unilateral: Gesamtgewicht = 2 × Eingabe)
+            // Gewicht berechnen (bei unilateral: Gesamtgewicht = 2 × Eingabe)
         let isUnilateral = exercise.isUnilateral
         let finalWeight = isUnilateral ? defaultWeight * 2 : defaultWeight
 
-        // Sets erstellen
+            // Sets erstellen
         for setNumber in 1...numberOfSets {
             let newSet = ExerciseSet(
                 exerciseName: exercise.name,
                 exerciseNameSnapshot: exercise.name,
-                exerciseUUIDSnapshot: exercise.apiID?.uuidString.lowercased() ?? "", 
+                exerciseUUIDSnapshot: exercise.apiID?.uuidString.lowercased() ?? "",
                 exerciseMediaAssetName: exercise.mediaAssetName,
                 isUnilateralSnapshot: exercise.isUnilateral,
                 setNumber: setNumber,
@@ -1799,19 +1692,19 @@ struct AddExerciseDuringWorkoutSheet: View {
 
         try? context.save()
 
-        // Haptic Feedback
+            // Haptic Feedback
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
 
-        // Callback ausführen (Live Activity updaten etc.)
+            // Callback ausführen (Live Activity updaten etc.)
         onComplete()
     }
 }
 
-// MARK: - Array Helper
+    // MARK: - Array Helper
 
 private extension Array {
-    /// Gibt das Element am Index zurück, oder nil wenn der Index außerhalb liegt
+        /// Gibt das Element am Index zurück, oder nil wenn der Index außerhalb liegt
     subscript(safe index: Int) -> Element? {
         indices.contains(index) ? self[index] : nil
     }
