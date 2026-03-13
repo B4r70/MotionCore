@@ -11,6 +11,7 @@
 		4E02E9B42F643A5500D44873 /* SwiftUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B72F08133700C603DC /* SwiftUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E02E9B62F643A5600D44873 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B52F08133600C603DC /* WidgetKit.framework */; };
 		4E02E9B72F643A5600D44873 /* WidgetKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF7B9B52F08133600C603DC /* WidgetKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4E02ED852F6471DA00D44873 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4E02ED842F6471D300D44873 /* README.md */; };
 		4ECC817D2F5B4C30004A3D66 /* MotionCoreWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4ECC81732F5B4C2F004A3D66 /* MotionCoreWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4ECC81832F5B4C80004A3D66 /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECC81822F5B4C80004A3D66 /* WatchConnectivity.framework */; };
 		4ECC81852F5B4C88004A3D66 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECC81842F5B4C88004A3D66 /* WidgetKit.framework */; };
@@ -66,6 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4E02ED842F6471D300D44873 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4EBA616D2EA7C87D002426EE /* MotionCore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionCore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4ECC81732F5B4C2F004A3D66 /* MotionCoreWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MotionCoreWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4ECC81822F5B4C80004A3D66 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS26.2.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
@@ -159,6 +161,7 @@
 				4EF7B9B42F08133600C603DC /* Frameworks */,
 				4EBA616E2EA7C87D002426EE /* Products */,
 				4EBA616F2EA7C87D002426EE /* MotionCore */,
+				4E02ED842F6471D300D44873 /* README.md */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -323,6 +326,7 @@
 		4EBA61692EA7C87D002426EE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
+				4E02ED852F6471DA00D44873 /* README.md in Sources */,
 			);
 		};
 		4ECC816F2F5B4C2F004A3D66 /* Sources */ = {
