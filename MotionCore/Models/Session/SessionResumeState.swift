@@ -22,6 +22,7 @@ struct SessionResumeState: Codable {
     let workoutStartDate: Date
 
     let isResting: Bool
+    let restStartDate: Date?
     let restEndDate: Date?
 
     let selectedExerciseKey: String?

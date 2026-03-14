@@ -36,6 +36,7 @@ class RestTimerManager: ObservableObject {
 
     /// Absoluter Zeitpunkt, wann der Rest-Timer endet (für Live Activity)
     @Published private(set) var restEndDate: Date?
+    @Published private(set) var restStartDate: Date?
 
     // MARK: - Callback
 
@@ -53,6 +54,7 @@ class RestTimerManager: ObservableObject {
         guard seconds > 0 else { return }
 
         let end = Date().addingTimeInterval(Double(seconds))
+        restStartDate = Date()
         restEndDate = end
         remainingSeconds = seconds
         // isResting wird ZULETZT gesetzt, damit restEndDate bereits steht
@@ -68,6 +70,7 @@ class RestTimerManager: ObservableObject {
         timer?.invalidate()
         timer = nil
         remainingSeconds = 0
+        restStartDate = nil
         restEndDate = nil
         isResting = false
     }

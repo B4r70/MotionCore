@@ -61,7 +61,6 @@ struct ActiveWorkoutView: View {
         // Rest-Timer: ausgelagert in eine Klasse, damit Timer-Closures
         // zuverlässig auf den State zugreifen – auch nach SwiftUI-Redraws.
     @StateObject private var restTimerManager = RestTimerManager()
-//    @State private var liveActivityDebounceTimer: Timer?
 
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionHaptic = UINotificationFeedbackGenerator()
@@ -243,18 +242,8 @@ struct ActiveWorkoutView: View {
             // Activity EINMAL. Die Action-Funktionen ändern nur den State.
             // =====================================================================
 
-        .onChange(of: sessionManager.isPaused) { _, _ in
+        .onChange(of: restTimerManager.isResting) { _, _ in
             syncLiveActivityStates()
-            sendWatchState()
-        }
-/*        .onChange(of: restTimerManager.isResting) { _, _ in
-            syncLiveActivityStates()
-        }
- */
-        .onChange(of: restTimerManager.restEndDate) { _, _ in
-            if restTimerManager.isResting {
-                syncLiveActivityStates()
-            }
         }
         .onChange(of: session.completedSets) { _, _ in
             syncLiveActivityStates()
@@ -750,7 +739,9 @@ struct ActiveWorkoutView: View {
     }
 
     private func updateLiveActivity() {
-        guard let activity = currentActivity else { return }
+        guard let activity = currentActivity else {
+            return
+        }
 
         let contentState = makeLiveContentState()
         let content = ActivityContent(state: contentState, staleDate: nil)
@@ -770,6 +761,7 @@ struct ActiveWorkoutView: View {
             currentExercise: nil,
             currentSet: nil,
             isResting: false,
+            restStartDate: nil,
             restEndDate: nil,
             completedSets: session.completedSets,
             totalSets: session.totalSets
@@ -798,6 +790,7 @@ struct ActiveWorkoutView: View {
             currentExercise: currentSet?.exerciseName,
             currentSet: currentSet.map { "Satz \($0.setNumber)" },
             isResting: restTimerManager.isResting,
+            restStartDate: restTimerManager.isResting ? restTimerManager.restStartDate : nil,
             restEndDate: restTimerManager.isResting ? restTimerManager.restEndDate : nil,
             completedSets: session.completedSets,
             totalSets: session.totalSets,
@@ -855,6 +848,7 @@ struct ActiveWorkoutView: View {
             elapsedSeconds: sessionManager.elapsedSeconds,
             workoutStartDate: workoutStartDate,
             isResting: restTimerManager.isResting,
+            restStartDate: restTimerManager.isResting ? restTimerManager.restStartDate : nil,
             restEndDate: restTimerManager.isResting ? restTimerManager.restEndDate : nil,
             selectedExerciseKey: selectedExerciseKey,
             updatedAt: Date()
@@ -915,6 +909,7 @@ struct ActiveWorkoutView: View {
                 currentExercise: nil,
                 currentSet: nil,
                 isResting: false,
+                restStartDate: nil,
                 restEndDate: nil,
                 completedSets: session.completedSets,
                 totalSets: session.totalSets
@@ -984,9 +979,9 @@ struct ActiveWorkoutView: View {
                         hapticGenerator.impactOccurred()
                     },
                     onAdjust: { delta in
-                                        _ = restTimerManager.adjust(delta: delta)
-                                        syncLiveActivityStates()
-                                    },
+                        _ = restTimerManager.adjust(delta: delta)
+                        syncLiveActivityStates()
+                    },
                     nextExerciseName: currentSet?.exerciseName,
                     nextSetNumber: currentSet?.setNumber,
                     totalSetsForExercise: setsForCurrentExercise

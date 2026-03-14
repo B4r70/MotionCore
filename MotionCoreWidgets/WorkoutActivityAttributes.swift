@@ -32,6 +32,7 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
 
         // Rest timer (system-side countdown via Date)
         public var isResting: Bool
+        public var restStartDate: Date?    // NEU: Fester Startanker für timerInterval
         public var restEndDate: Date?
 
         // Progress
@@ -50,6 +51,7 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
             currentExercise: String? = nil,
             currentSet: String? = nil,
             isResting: Bool,
+            restStartDate: Date? = nil,
             restEndDate: Date? = nil,
             completedSets: Int,
             totalSets: Int,
@@ -61,6 +63,7 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
             self.currentExercise = currentExercise
             self.currentSet = currentSet
             self.isResting = isResting
+            self.restStartDate = restStartDate
             self.restEndDate = restEndDate
             self.completedSets = completedSets
             self.totalSets = totalSets
@@ -82,5 +85,5 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
         self.workoutType = workoutType
         self.planName = planName
     }
-    
+
 }
