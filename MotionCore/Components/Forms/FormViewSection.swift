@@ -1152,6 +1152,263 @@ struct SetKindSelectionSection: View {
     }
 }
 
+// MARK: - Exercise Progression Section
+
+struct ExerciseProgressionSection: View {
+    @Binding var strategy: ProgressionStrategy
+    @Binding var targetRIR: Int
+    @Binding var sessionsRequired: Int
+    @Binding var minDaysBetween: Int
+    @Binding var customStep: Double?
+    let baseStep: Double
+
+    private let stepPresets: [Double] = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 5.0, 7.0]
+    private let stepColumns = [GridItem(.adaptive(minimum: 56), spacing: 8)]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 8) {
+                Image(systemName: "chart.line.uptrend.xyaxis")
+                    .foregroundStyle(.blue)
+                Text("Progression")
+                    .font(.headline)
+            }
+
+            // MARK: Strategie — alle Optionen direkt sichtbar
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Strategie")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
+                VStack(spacing: 6) {
+                    ForEach(ProgressionStrategy.allCases, id: \.self) { s in
+                        Button {
+                            strategy = s
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: s.icon)
+                                    .font(.body)
+                                    .foregroundStyle(strategy == s ? .blue : .secondary)
+                                    .frame(width: 24)
+
+                                Text(s.displayName)
+                                    .font(.subheadline.weight(.medium))
+
+                                Spacer()
+
+                                if strategy == s {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.blue)
+                                }
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 10)
+                            .background(strategy == s ? Color.blue.opacity(0.1) : Color.white.opacity(0.04))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(strategy == s ? Color.blue : Color.white.opacity(0.15), lineWidth: 1.5)
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .foregroundStyle(strategy == s ? .blue : .primary)
+                    }
+                }
+
+                Text(strategy.description)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 2)
+            }
+
+            if strategy != .manual {
+                // MARK: Gewichtsschritt
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Gewichtsschritt")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(customStep == nil ? "Auto (\(formatStep(baseStep)) kg)" : "\(formatStep(customStep!)) kg")
+                            .font(.caption.monospacedDigit().weight(.medium))
+                            .foregroundStyle(customStep == nil ? .secondary : Color.green)
+                    }
+
+                    LazyVGrid(columns: stepColumns, spacing: 8) {
+                        // Auto-Option
+                        Button {
+                            customStep = nil
+                        } label: {
+                            Text("Auto")
+                                .font(.caption.weight(.medium))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .background(customStep == nil ? Color.blue.opacity(0.15) : Color.white.opacity(0.04))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(customStep == nil ? Color.blue : Color.white.opacity(0.15), lineWidth: 1.5)
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        .foregroundStyle(customStep == nil ? .blue : .primary)
+
+                        ForEach(stepPresets, id: \.self) { step in
+                            Button {
+                                customStep = step
+                            } label: {
+                                Text(formatStep(step))
+                                    .font(.caption.weight(.medium).monospacedDigit())
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(customStep == step ? Color.green.opacity(0.15) : Color.white.opacity(0.04))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(customStep == step ? Color.green : Color.white.opacity(0.15), lineWidth: 1.5)
+                                    )
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                            .foregroundStyle(customStep == step ? .green : .primary)
+                        }
+                    }
+
+                    Text("Auto = \(formatStep(baseStep)) kg (basierend auf Kategorie & Equipment)")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+
+                // MARK: Ziel-RIR
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Ziel-RIR")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(rirLabel)
+                            .font(.caption.weight(.medium))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(rirColor.opacity(0.2))
+                            .foregroundStyle(rirColor)
+                            .clipShape(Capsule())
+                    }
+
+                    HStack(spacing: 8) {
+                        ForEach(0...5, id: \.self) { rir in
+                            Button {
+                                targetRIR = rir
+                            } label: {
+                                Text("\(rir)")
+                                    .font(.headline)
+                                    .frame(width: 44, height: 44)
+                                    .background(
+                                        Circle()
+                                            .fill(targetRIR == rir ? rirColorFor(rir).opacity(0.2) : Color.clear)
+                                    )
+                                    .overlay(
+                                        Circle()
+                                            .stroke(targetRIR == rir ? rirColorFor(rir) : Color.white.opacity(0.2), lineWidth: 2)
+                                    )
+                            }
+                            .foregroundStyle(targetRIR == rir ? rirColorFor(rir) : .primary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+
+                // MARK: Sessions bis Empfehlung
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Sessions bis Empfehlung")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    HStack(spacing: 16) {
+                        Button {
+                            if sessionsRequired > 1 { sessionsRequired -= 1 }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .foregroundStyle(.blue)
+                                .font(.title3)
+                        }
+
+                        Text("\(sessionsRequired)")
+                            .font(.title2.bold())
+                            .frame(minWidth: 32)
+                            .contentTransition(.numericText())
+
+                        Button {
+                            if sessionsRequired < 5 { sessionsRequired += 1 }
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundStyle(.blue)
+                                .font(.title3)
+                        }
+
+                        Spacer()
+
+                        Text("aufeinanderfolgende Sessions")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // MARK: Cooldown
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Cooldown zwischen Steigerungen")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    HStack(spacing: 8) {
+                        ForEach([3, 5, 7, 10, 14], id: \.self) { days in
+                            Button {
+                                minDaysBetween = days
+                            } label: {
+                                Text("\(days)d")
+                                    .font(.caption.weight(.medium))
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 6)
+                                    .background(minDaysBetween == days ? Color.purple.opacity(0.2) : Color.clear)
+                                    .overlay(
+                                        Capsule()
+                                            .stroke(minDaysBetween == days ? Color.purple : Color.white.opacity(0.2), lineWidth: 1.5)
+                                    )
+                                    .clipShape(Capsule())
+                            }
+                            .foregroundStyle(minDaysBetween == days ? .purple : .primary)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func formatStep(_ value: Double) -> String {
+        value.truncatingRemainder(dividingBy: 1) == 0
+            ? String(Int(value))
+            : String(format: "%g", value)
+    }
+
+    private var rirLabel: String {
+        switch targetRIR {
+        case 0: return "Bis Limit"
+        case 1: return "Fast am Limit"
+        case 2: return "Moderat"
+        case 3: return "Kontrolliert"
+        default: return "Leicht"
+        }
+    }
+
+    private var rirColor: Color { rirColorFor(targetRIR) }
+
+    private func rirColorFor(_ rir: Int) -> Color {
+        switch rir {
+        case 0: return .red
+        case 1: return .orange
+        case 2: return .yellow
+        case 3: return .green
+        default: return .blue
+        }
+    }
+}
+
 // MARK: - Helper Extension für conditional modifiers
 
 extension View {

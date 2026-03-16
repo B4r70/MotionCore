@@ -8,6 +8,7 @@ Deployment Target: iOS 17+. Kein XCTest — Verifikation via SwiftUI Previews + 
 - Build: Xcode (`Cmd+B`) — kein CLI-Build-Command
 - Previews: `PreviewData.sharedContainer` als modelContainer, `AppSettings.shared` als EnvironmentObject
 - Keine Unit-Tests vorhanden
+- Git Remote: Forgejo auf git.barto.cloud
 
 ## Datei-Konventionen
 - Jede Swift-Datei beginnt mit dem Standard-Kommentar-Header (von bestehender Datei kopieren)
@@ -33,6 +34,7 @@ Deployment Target: iOS 17+. Kein XCTest — Verifikation via SwiftUI Previews + 
 ## Git-Konventionen
 - Commit-Präfixe: `feat()`, `fix()`, `refactor()`, `docs()`, `bug()`
 - Branch-Schema: `feature/`, `refactor/`, `fix/`
+- Kein Force-Push auf main
 
 ## Pläne & Docs
 - Design-Dokumente: `Documentation/plans/YYYY-MM-DD-*-design.md`

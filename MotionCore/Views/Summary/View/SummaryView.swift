@@ -29,6 +29,9 @@ struct SummaryView: View {
     @Query(sort: \OutdoorSession.date, order: .reverse)
     private var outdoorSessions: [OutdoorSession]
 
+    @Query(sort: \Exercise.name)
+    private var exercises: [Exercise]
+
     // MARK: - Environment
 
     @EnvironmentObject private var appSettings: AppSettings
@@ -54,6 +57,14 @@ struct SummaryView: View {
         case .year: return summaryCalc.thisYear
         case .all: return summaryCalc
         }
+    }
+
+    private var progressionAnalyses: [ProgressionAnalysis] {
+        guard !strengthSessions.isEmpty else { return [] }
+        let engine = ProgressionCalcEngine()
+        return exercises
+            .filter { $0.progressionStrategy != .manual && $0.category != .bodyweight }
+            .map { engine.analyze(exercise: $0, sessions: strengthSessions) }
     }
 
     private let gridColumns: [GridItem] = [
@@ -126,6 +137,10 @@ struct SummaryView: View {
                             longestWorkout: summaryCalc.longestWorkout,
                             longestStreak: summaryCalc.longestStreak
                         )
+                    }
+
+                    if !strengthSessions.isEmpty {
+                        ProgressionSummaryCard(analyses: progressionAnalyses)
                     }
                 }
                 .scrollViewContentPadding()

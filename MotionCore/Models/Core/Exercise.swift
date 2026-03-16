@@ -25,6 +25,15 @@ final class Exercise {
     var repRangeMin: Int = 0
     var repRangeMax: Int = 0
     var progressionStep: Double = 2.5    // Progressionsschritt in kg (z.B. 2.5 oder 5.0)
+
+    // MARK: - Progressions-Konfiguration
+    var targetRIR: Int = 2                              // Ziel-RIR für Progressions-Analyse
+    var progressionSessionsRequired: Int = 2            // Konsistente Sessions bis zur Empfehlung
+    var progressionStrategyRaw: String = "double"       // ProgressionStrategy Raw-Value
+    var customProgressionStep: Double? = nil            // Überschreibt automatischen Step (nil = Auto)
+    var minDaysBetweenProgressions: Int = 7             // Cooldown zwischen Steigerungen
+    var lastProgressionDate: Date? = nil                // Datum der letzten Gewichtssteigerung
+
     var sortIndex: Int = 0
     var cautionNote: String = ""
     var isArchived: Bool = false
@@ -70,6 +79,12 @@ final class Exercise {
         repRangeMin: Int = 8,
         repRangeMax: Int = 12,
         progressionStep: Double = 2.5,
+        targetRIR: Int = 2,
+        progressionSessionsRequired: Int = 2,
+        progressionStrategyRaw: String = "double",
+        customProgressionStep: Double? = nil,
+        minDaysBetweenProgressions: Int = 7,
+        lastProgressionDate: Date? = nil,
         sortIndex: Int = 0,
         cautionNote: String = "",
         isArchived: Bool = false,
@@ -106,6 +121,12 @@ final class Exercise {
         self.repRangeMin = repRangeMin
         self.repRangeMax = repRangeMax
         self.progressionStep = progressionStep
+        self.targetRIR = targetRIR
+        self.progressionSessionsRequired = progressionSessionsRequired
+        self.progressionStrategyRaw = progressionStrategyRaw
+        self.customProgressionStep = customProgressionStep
+        self.minDaysBetweenProgressions = minDaysBetweenProgressions
+        self.lastProgressionDate = lastProgressionDate
         self.sortIndex = sortIndex
         self.cautionNote = cautionNote
         self.isArchived = isArchived
@@ -207,6 +228,35 @@ extension Exercise {
 
     var repRangeFormatted: String {
         "\(repRangeMin)-\(repRangeMax) Wdh."
+    }
+
+    // MARK: - Progressions-Computed Properties
+
+    var progressionStrategy: ProgressionStrategy {
+        get { ProgressionStrategy(rawValue: progressionStrategyRaw) ?? .double }
+        set { progressionStrategyRaw = newValue.rawValue }
+    }
+
+    /// Automatischer Schritt basierend auf Kategorie/Equipment (ohne Custom-Override)
+    var baseProgressionStep: Double {
+        switch category {
+        case .compound:   return equipment == .barbell ? 2.5 : 2.0
+        case .isolation:  return 1.25
+        case .bodyweight: return 0
+        default:          return 2.5
+        }
+    }
+
+    /// Effektiver Progressionsschritt: customProgressionStep oder baseProgressionStep
+    var effectiveProgressionStep: Double {
+        customProgressionStep ?? baseProgressionStep
+    }
+
+    /// Kann gerade eine Progression empfohlen werden? (Cooldown-Check)
+    var canRecommendProgression: Bool {
+        guard let lastDate = lastProgressionDate else { return true }
+        let days = Calendar.current.dateComponents([.day], from: lastDate, to: Date()).day ?? 0
+        return days >= minDaysBetweenProgressions
     }
 
     var trainingType: String {

@@ -27,6 +27,16 @@ struct ExerciseFormView: View {
     // Instruktionen zur Übung
     @State private var isEditingInstructions = false
 
+    // Progressions-Analyse (nur Edit-Modus)
+    @Query(sort: \StrengthSession.date, order: .reverse)
+    private var strengthSessions: [StrengthSession]
+
+    private var progressionAnalysis: ProgressionAnalysis? {
+        guard mode == .edit, exercise.progressionStrategy != .manual,
+              exercise.category != .bodyweight else { return nil }
+        return ProgressionCalcEngine().analyze(exercise: exercise, sessions: strengthSessions)
+    }
+
     var body: some View {
         ZStack {
             // Hintergrund
@@ -88,6 +98,18 @@ struct ExerciseFormView: View {
                             repRangeMax: $exercise.repRangeMax
                         )
 
+                        // MARK: Progression
+                        if exercise.category != .bodyweight {
+                            ExerciseProgressionSection(
+                                strategy: $exercise.progressionStrategy,
+                                targetRIR: $exercise.targetRIR,
+                                sessionsRequired: $exercise.progressionSessionsRequired,
+                                minDaysBetween: $exercise.minDaysBetweenProgressions,
+                                customStep: $exercise.customProgressionStep,
+                                baseStep: exercise.baseProgressionStep
+                            )
+                        }
+
                         // MARK: Sicherheitshinweis
                         ExerciseCautionNoteSection(cautionNote: $exercise.cautionNote)
 
@@ -102,6 +124,12 @@ struct ExerciseFormView: View {
                     .glassCard()
                     .padding(.horizontal)
                     .padding(.top, 16)
+
+                    // MARK: Progressions-Analyse (nur Edit-Modus)
+                    if let analysis = progressionAnalysis {
+                        ProgressionInsightCard(analysis: analysis)
+                            .padding(.horizontal)
+                    }
                 }
                 .padding(.bottom, 80)
             }
