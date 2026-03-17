@@ -17,7 +17,7 @@ struct StatisticIntensityCard: View {
 
     // MARK: Aufruf der Berechnungen für Statistiken
     private var calcStatistics: StatisticCalcEngine {
-        StatisticCalcEngine(workouts: allWorkouts)
+        StatisticCalcEngine(cardioSessions: allWorkouts, strengthSessions: [], outdoorSessions: [])
     }
 
     private let intensities: [Intensity] = [

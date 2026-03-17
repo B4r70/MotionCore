@@ -16,7 +16,7 @@ struct StatisticDeviceCard: View {
     let allWorkouts: [CardioSession]
 
     private var calcStatistics: StatisticCalcEngine {
-        StatisticCalcEngine(workouts: allWorkouts)
+        StatisticCalcEngine(cardioSessions: allWorkouts, strengthSessions: [], outdoorSessions: [])
     }
 
     var body: some View {

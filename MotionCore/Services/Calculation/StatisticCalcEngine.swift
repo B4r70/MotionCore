@@ -11,7 +11,9 @@
 // ---------------------------------------------------------------------------------/
 // Hinweis  . . : Gemeinsame Berechnungen werden an CoreSessionCalcEngine           /
 //                delegiert. Cardio-spezifische Berechnungen (distance, cardioDevice,/
-//                mets, trainingProgram) bleiben hier.                              /
+//                mets, trainingProgram) bleiben hier. Typübergreifende KPIs         /
+//                (totalWorkoutsAll, totalCaloriesAll, etc.) berechnen über alle    /
+//                drei Session-Typen.                                               /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation
@@ -20,30 +22,29 @@ import SwiftUI
 
 // MARK: - Helper Types
 
-// Summary for a given workout intensity.
+// Zusammenfassung einer Belastungsintensität.
 struct IntensitySummary {
     let intensity: Intensity
     let count: Int
     let total: Int
 }
 
-// Generic trend point for charts (date/value pair).
-// NEU: Wird jetzt auch von CoreSessionCalcEngine genutzt - Definition bleibt hier
-// oder kann in eine separate Datei (z.B. ChartTypes.swift) verschoben werden
+// Generischer Trend-Punkt für Charts (Datum/Wert-Paar).
+// Definition bleibt hier — wird auch von CoreSessionCalcEngine genutzt.
 struct TrendPoint: Identifiable {
     let id = UUID()
     let trendDate: Date
     let trendValue: Double
 }
 
-// Generische Datenstruktur für Donut/Pie Charts
+// Generische Datenstruktur für Donut/Pie Charts.
 struct DonutChartData: Identifiable {
     let id = UUID()
     let label: String
     let value: Int
 }
 
-// Summary for training programs (Intern für Berechnung)
+// Zusammenfassung eines Trainingsprogramms (intern für Berechnung).
 struct ProgramSummary: Identifiable {
     let id = UUID()
     let program: TrainingProgram
@@ -54,208 +55,196 @@ struct ProgramSummary: Identifiable {
 
 struct StatisticCalcEngine {
 
-    // Abruf aus Einstellungen der Körpergröße, Geschlecht und Alter
-    @EnvironmentObject private var appSettings: AppSettings
+    // MARK: - Input (alle drei Session-Typen)
 
-    // MARK: - Input
-
-    // All workouts used as data source for the statistics.
-    let allWorkouts: [CardioSession]
-
-    // MARK: - NEU: CoreSessionCalcEngine für gemeinsame Berechnungen
-
-    /// Delegiert gemeinsame Berechnungen an die generische CoreSessionCalcEngine.
-    /// Nutzt lazy initialization für Performance.
-    private var coreCalc: CoreSessionCalcEngine<CardioSession> {
-        CoreSessionCalcEngine(sessions: allWorkouts)
-    }
+    let allCardioSessions: [CardioSession]
+    let allStrengthSessions: [StrengthSession]
+    let allOutdoorSessions: [OutdoorSession]
 
     // MARK: - Initializer
 
-    init(workouts: [CardioSession]) {
-        self.allWorkouts = workouts
+    init(
+        cardioSessions: [CardioSession],
+        strengthSessions: [StrengthSession],
+        outdoorSessions: [OutdoorSession]
+    ) {
+        self.allCardioSessions = cardioSessions
+        self.allStrengthSessions = strengthSessions
+        self.allOutdoorSessions = outdoorSessions
     }
 
-    // MARK: - Basic totals (NEU: Delegiert an CoreSessionCalcEngine)
+    // MARK: - Timeframe-Filter
 
-    /// Summe aller Workouts
-    /// NEU: Delegiert an coreCalc.totalSessions
-    var totalWorkouts: Int {
-        coreCalc.totalSessions
+    /// Gibt eine neue Engine zurück, deren Sessions auf den gewählten Zeitraum gefiltert sind.
+    func filtered(by timeframe: SummaryTimeframe) -> StatisticCalcEngine {
+        let now = Date()
+        let calendar = Calendar.current
+
+        // Startdatum für den Zeitraum — nil bedeutet "Alle" (kein Filter)
+        let startDate: Date?
+        switch timeframe {
+        case .week:  startDate = calendar.date(byAdding: .day,   value: -7,  to: now)
+        case .month: startDate = calendar.date(byAdding: .month, value: -1,  to: now)
+        case .year:  startDate = calendar.date(byAdding: .year,  value: -1,  to: now)
+        case .all:   startDate = nil
+        }
+
+        guard let start = startDate else { return self }
+
+        return StatisticCalcEngine(
+            cardioSessions:   allCardioSessions.filter   { $0.date >= start },
+            strengthSessions: allStrengthSessions.filter { $0.date >= start },
+            outdoorSessions:  allOutdoorSessions.filter  { $0.date >= start }
+        )
     }
 
-    /// Summe aller verbrannter Kalorien
-    /// NEU: Delegiert an coreCalc.totalCalories
-    var totalCalories: Int {
-        coreCalc.totalCalories
+    // MARK: - Interne Delegate-Engines
+
+    private var coreCalc: CoreSessionCalcEngine<CardioSession> {
+        CoreSessionCalcEngine(sessions: allCardioSessions)
     }
 
-    /// Gesamt-Distanz aller Workouts
-    /// BLEIBT: Cardio-spezifisch (distance ist nicht in CoreSession)
+    private var strengthCalc: StrengthStatisticCalcEngine {
+        StrengthStatisticCalcEngine(sessions: allStrengthSessions)
+    }
+
+    // MARK: - Typübergreifende KPIs
+
+    /// Gesamtanzahl aller Workouts (Cardio + Kraft + Outdoor).
+    var totalWorkoutsAll: Int {
+        allCardioSessions.count + allStrengthSessions.count + allOutdoorSessions.count
+    }
+
+    /// Gesamtkalorien über alle Workout-Typen.
+    var totalCaloriesAll: Int {
+        allCardioSessions.reduce(0) { $0 + $1.calories }
+        + allStrengthSessions.reduce(0) { $0 + $1.calories }
+        + allOutdoorSessions.reduce(0) { $0 + $1.calories }
+    }
+
+    /// Gewichteter Durchschnitt der Herzfrequenz über alle Typen (nur Sessions mit HR > 0).
+    var averageHeartRateAll: Int {
+        let cardioWithHR = allCardioSessions.filter { $0.heartRate > 0 }
+        let strengthWithHR = allStrengthSessions.filter { $0.heartRate > 0 }
+        let outdoorWithHR = allOutdoorSessions.filter { $0.heartRate > 0 }
+        let count = cardioWithHR.count + strengthWithHR.count + outdoorWithHR.count
+        guard count > 0 else { return 0 }
+        let total = cardioWithHR.reduce(0) { $0 + $1.heartRate }
+                  + strengthWithHR.reduce(0) { $0 + $1.heartRate }
+                  + outdoorWithHR.reduce(0) { $0 + $1.heartRate }
+        return total / count
+    }
+
+    /// Durchschnittliche Trainingsdauer über alle Workout-Typen in Minuten.
+    var averageDurationAll: Int {
+        let count = totalWorkoutsAll
+        guard count > 0 else { return 0 }
+        let total = allCardioSessions.reduce(0) { $0 + $1.duration }
+                  + allStrengthSessions.reduce(0) { $0 + $1.duration }
+                  + allOutdoorSessions.reduce(0) { $0 + $1.duration }
+        return total / count
+    }
+
+    /// Gesamtdistanz über Cardio- und Outdoor-Sessions in Kilometern.
+    var totalDistanceAll: Double {
+        allCardioSessions.reduce(0.0) { $0 + $1.distance }
+        + allOutdoorSessions.reduce(0.0) { $0 + $1.distance }
+    }
+
+    // MARK: - Kraft-spezifische KPIs (delegiert an StrengthStatisticCalcEngine)
+
+    /// Gesamtvolumen aller Kraft-Sessions.
+    var totalStrengthVolume: Double { strengthCalc.totalVolume }
+
+    /// Durchschnittliches Volumen pro Kraft-Session.
+    var averageStrengthVolumePerSession: Double { strengthCalc.averageVolumePerSession }
+
+    /// Gesamtanzahl der Sätze über alle Kraft-Sessions.
+    var totalStrengthSets: Int {
+        allStrengthSessions.reduce(0) { $0 + $1.totalSets }
+    }
+
+    /// Durchschnittliche Sätze pro Kraft-Session.
+    var averageStrengthSetsPerSession: Double { strengthCalc.averageSetsPerSession }
+
+    /// Volumen-Trend für Charts.
+    var strengthVolumeTrend: [TrendPoint] { strengthCalc.volumeTrend }
+
+    /// Alle trainierten Übungsnamen (unique, sortiert) für den 1RM-Chart.
+    var allTrainedExerciseNames: [String] { strengthCalc.allTrainedExerciseNames }
+
+    // MARK: - Cardio-spezifische KPIs (delegiert an CoreSessionCalcEngine)
+
+    /// Gesamtanzahl aller Cardio-Workouts.
+    var totalWorkouts: Int { coreCalc.totalSessions }
+
+    /// Gesamtkalorien aller Cardio-Workouts.
+    var totalCalories: Int { coreCalc.totalCalories }
+
+    /// Durchschnittliche Herzfrequenz aller Cardio-Workouts.
+    var averageHeartRate: Int { coreCalc.averageHeartRate }
+
+    /// Durchschnittliche Dauer aller Cardio-Workouts.
+    var averageDuration: Int { coreCalc.averageDuration }
+
+    /// Durchschnittliche Belastungsintensität (Cardio).
+    var averageIntensity: Double { coreCalc.averageIntensity }
+
+    /// Gesamtdistanz aller Cardio-Workouts.
     var totalDistance: Double {
-        allWorkouts.reduce(0.0) { $0 + $1.distance }
+        allCardioSessions.reduce(0.0) { $0 + $1.distance }
     }
 
-    /// Durchschnittliche Herzfrequenz
-    /// NEU: Delegiert an coreCalc.averageHeartRate
-    var averageHeartRate: Int {
-        coreCalc.averageHeartRate
-    }
-
-    /// Durchschnittliche Workout-Zeit
-    /// NEU: Delegiert an coreCalc.averageDuration
-    var averageDuration: Int {
-        coreCalc.averageDuration
-    }
-
-    /// Durchschnittliche metabolisches Äquivalent
-    /// BLEIBT: Cardio-spezifisch (mets ist nicht in CoreSession)
+    /// Durchschnittliches metabolisches Äquivalent (Cardio-spezifisch).
     var averageMETS: Double {
-        let relevantWorkouts = allWorkouts.filter { $0.mets > 0.0 }
-        guard !relevantWorkouts.isEmpty else {
-            return 0.0
-        }
-        let totalMETSValue = relevantWorkouts.reduce(0.0) { sum, workout in
-            sum + workout.mets
-        }
-        return totalMETSValue / Double(relevantWorkouts.count)
+        let relevant = allCardioSessions.filter { $0.mets > 0.0 }
+        guard !relevant.isEmpty else { return 0.0 }
+        return relevant.reduce(0.0) { $0 + $1.mets } / Double(relevant.count)
     }
 
-    /// Relative Kaloriendichte
-    /// BLEIBT: Cardio-spezifisch (relativeCaloricDensity ist nicht in CoreSession)
+    /// Relative Kaloriendichte zum Körpergewicht (Cardio-spezifisch).
     var averageCaloricDensity: Double {
-        guard !allWorkouts.isEmpty else { return 0.0 }
-
-        let totalDensity = allWorkouts.reduce(0.0) { sum, session in
-            sum + session.relativeCaloricDensity
-        }
-
-        return totalDensity / Double(allWorkouts.count)
+        guard !allCardioSessions.isEmpty else { return 0.0 }
+        return allCardioSessions.reduce(0.0) { $0 + $1.relativeCaloricDensity }
+            / Double(allCardioSessions.count)
     }
 
-    // MARK: - Device based calculations (Cardio-spezifisch)
+    // MARK: - Gerätebasierte Berechnungen (Cardio-spezifisch)
 
-    /// Number of workouts for a specific device.
-    /// BLEIBT: Cardio-spezifisch (cardioDevice ist nicht in CoreSession)
+    /// Anzahl Workouts für ein bestimmtes Cardio-Gerät.
     func workoutCountDevice(for device: CardioDevice) -> Int {
-        allWorkouts.filter { $0.cardioDevice == device }.count
+        allCardioSessions.filter { $0.cardioDevice == device }.count
     }
 
-    // MARK: - Intensity based calculations (NEU: Teilweise delegiert)
+    // MARK: - Intensitätsbasierte Berechnungen
 
-    /// Number of workouts for a specific intensity.
-    /// NEU: Delegiert an coreCalc.sessionCount(for:)
+    /// Anzahl Workouts für eine bestimmte Intensität (Cardio).
     func intensityCount(_ intensity: Intensity) -> Int {
         coreCalc.sessionCount(for: intensity)
     }
 
-    /// Summary (count + total) for a given intensity.
+    /// Zusammenfassung (Anzahl + Gesamt) für eine Intensitätsstufe (Cardio).
     func intensitySummary(for intensity: Intensity) -> IntensitySummary {
-        // NEU: Nutzt coreCalc für count
-        let count = coreCalc.sessionCount(for: intensity)
-        let total = coreCalc.totalSessions
-
-        return IntensitySummary(
+        IntensitySummary(
             intensity: intensity,
-            count: count,
-            total: total
+            count: coreCalc.sessionCount(for: intensity),
+            total: coreCalc.totalSessions
         )
     }
 
-    /// Durchschnittliche Belastungsintensität in den Workouts
-    /// NEU: Delegiert an coreCalc.averageIntensity
-    var averageIntensity: Double {
-        coreCalc.averageIntensity
-    }
+    // MARK: - Trend-Daten für Charts
 
-    // MARK: - Trend data for charts (NEU: Gemeinsame Trends delegiert)
+    /// Herzfrequenz-Trend über Zeit (Cardio).
+    var trendHeartRate: [TrendPoint] { coreCalc.heartRateTrend }
 
-    /// Heart rate trend over time (date vs. average heart rate).
-    /// NEU: Delegiert an coreCalc.heartRateTrend
-    var trendHeartRate: [TrendPoint] {
-        coreCalc.heartRateTrend
-    }
+    /// Kalorien-Trend über Zeit (Cardio).
+    var trendCalories: [TrendPoint] { coreCalc.caloriesTrend }
 
-    /// Calories trend over time (date vs. calories).
-    /// NEU: Delegiert an coreCalc.caloriesTrend
-    var trendCalories: [TrendPoint] {
-        coreCalc.caloriesTrend
-    }
-
-    /// Distanz sortiert nach Datum
-    /// BLEIBT: Cardio-spezifisch (distance ist nicht in CoreSession)
-    var trendDistance: [TrendPoint] {
-        allWorkouts
-            .filter { $0.distance > 0 }
-            .sorted { $0.date < $1.date }
-            .map { workout in
-                TrendPoint(
-                    trendDate: workout.date,
-                    trendValue: workout.distance
-                )
-            }
-    }
-
-    // MARK: - Trends gerätespezifisch (Cardio-spezifisch)
-
-    /// Distanz-Trend für ein bestimmtes Gerät
-    /// BLEIBT: Cardio-spezifisch (cardioDevice, distance sind nicht in CoreSession)
+    /// Distanz-Trend für ein bestimmtes Cardio-Gerät.
     func trendDistanceDevice(for device: CardioDevice) -> [TrendPoint] {
-        allWorkouts
-            .filter { $0.cardioDevice == device }
-            .filter { $0.distance > 0 }
+        allCardioSessions
+            .filter { $0.cardioDevice == device && $0.distance > 0 }
             .sorted { $0.date < $1.date }
-            .map { workout in
-                TrendPoint(
-                    trendDate: workout.date,
-                    trendValue: workout.distance
-                )
-            }
-    }
-
-    /// Kaloriendichte für Chart
-    /// BLEIBT: Cardio-spezifisch (relativeCaloricDensity ist nicht in CoreSession)
-    var trendCaloricDensity: [(Date, Double)] {
-        allWorkouts
-            .sorted(by: { $0.date < $1.date })
-            .map { ($0.date, $0.relativeCaloricDensity) }
-    }
-
-    // MARK: - Donut-Chart (Cardio-spezifisch)
-
-    /// Berechnung für die verwendeten Programme je Workout
-    /// BLEIBT: Cardio-spezifisch (trainingProgram ist nicht in CoreSession)
-    var programDistribution: [ProgramSummary] {
-        let grouped = Dictionary(grouping: allWorkouts, by: { $0.trainingProgram })
-        return grouped.map { key, value in
-            ProgramSummary(program: key, count: value.count)
-        }.sorted { $0.count > $1.count }
-    }
-
-    /// Aufbereitung der Daten für Donut-Chart
-    var programData: [DonutChartData] {
-        programDistribution.map { summary in
-            DonutChartData(
-                label: summary.program.description,
-                value: summary.count
-            )
-        }
-    }
-
-    // MARK: - NEU: Convenience für zeitbasierte Analysen
-
-    /// Statistiken für diese Woche
-    var thisWeek: CoreSessionCalcEngine<CardioSession> {
-        coreCalc.thisWeek
-    }
-
-    /// Statistiken für diesen Monat
-    var thisMonth: CoreSessionCalcEngine<CardioSession> {
-        coreCalc.thisMonth
-    }
-
-    /// Statistiken für die letzten N Tage
-    func lastDays(_ days: Int) -> CoreSessionCalcEngine<CardioSession> {
-        coreCalc.lastDays(days)
+            .map { TrendPoint(trendDate: $0.date, trendValue: $0.distance) }
     }
 }

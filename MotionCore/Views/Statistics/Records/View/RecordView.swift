@@ -5,7 +5,7 @@
 // Datei . . . . : RecordView.swift                                                 /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 11.11.2025                                                       /
-// Beschreibung  : Hauptdisplay für den Bereich Rekorde                             /
+// Beschreibung  : Hauptdisplay für den Bereich Rekorde                            /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -14,123 +14,178 @@ import SwiftData
 import SwiftUI
 
 struct RecordView: View {
-    @Query(sort: \CardioSession.date, order: .reverse)
-    private var allWorkouts: [CardioSession]
 
-    // Globaler Zugriff auf AppSettings
+    // MARK: - Queries
+
+    @Query(sort: \CardioSession.date, order: .reverse)
+    private var allCardioSessions: [CardioSession]
+
+    @Query(sort: \StrengthSession.date, order: .reverse)
+    private var allStrengthSessions: [StrengthSession]
+
+    // MARK: - Environment
+
     @EnvironmentObject private var appSettings: AppSettings
 
+    // MARK: - Computed
+
     private var calcRecords: RecordCalcEngine {
-        RecordCalcEngine(workouts: allWorkouts)
+        RecordCalcEngine(workouts: allCardioSessions)
     }
 
-        // Anzahl der Cards je Zeile im Grid
+    private var calcStrengthRecords: StrengthRecordCalcEngine {
+        StrengthRecordCalcEngine(sessions: allStrengthSessions)
+    }
+
     private let gridColumns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
 
+    // MARK: - Body
+
     var body: some View {
         ZStack {
-                // Hintergrund
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             ScrollView {
                 VStack(spacing: 20) {
-                        // Beste Leistung nach Distanz auf dem Crosstrainer
-                    if let bestCrosstrainer = calcRecords.bestCrosstrainerWorkout {
-                        RecordCard(
-                            title: "Beste Leistung",
-                            subtitle: "Längste Distanz auf dem Crosstrainer",
-                            icon: .system(bestCrosstrainer.cardioDevice.symbol),
-                            color: bestCrosstrainer.cardioDevice.tint,
-                            allWorkouts: bestCrosstrainer
-                        )
-                        .padding(.horizontal)
-                        .padding(.top)
-                    }
-                        // Beste Leistung nach Distanz auf dem Ergometer
-                    if let bestErgometer = calcRecords.bestErgometerWorkout {
-                        RecordCard(
-                            title: "Beste Leistung",
-                            subtitle: "Längste Distanz auf dem Ergometer",
-                            icon: .system(bestErgometer.cardioDevice.symbol),
-                            color: bestErgometer.cardioDevice.tint,
-                            allWorkouts: bestErgometer
-                        )
-                        .padding(.horizontal)
-                    }
-                    // Doppeltes Grid-Layout für andere Rekorde
-                    LazyVGrid(columns: gridColumns, spacing: 20) {
-                            // Absoluter Distanz-Rekord
-                        if let longestDistance = calcRecords.longestDistanceWorkout {
-                            RecordGridCard(
-                                metricTitle: "Längste Distanz",
-                                recordValue: String(format: "%.2f km", longestDistance.distance),
-                                bestWorkout: longestDistance,
-                                metricIcon: .system("arrow.left.and.right"),
-                                metricColor: .green
-                            )
-                        }
 
-                            // Absoluter Kalorien-Rekord
-                        if let effectiveWorkout = calcRecords.highestBurnedCaloriesWorkout {
-                            RecordGridCard(
-                                metricTitle: "Effektivstes Workout",
-                                recordValue: "\(effectiveWorkout.calories) kcal",
-                                bestWorkout: effectiveWorkout,
-                                metricIcon: .system("flame.fill"),
-                                metricColor: .red
-                            )
-                        }
-                            // Absoluter Kalorien-Rekord
-                        if let fastestCrosstrainer = calcRecords.fastestCardioDevice(for: .crosstrainer) {
-                            RecordGridCard(
-                                metricTitle: "Schnellste Crosstrainer",
-                                recordValue: String(format: "%.0f m/min", fastestCrosstrainer.averageSpeed),
-                                bestWorkout: fastestCrosstrainer,
-                                metricIcon: .system("gauge.open.with.lines.needle.67percent.and.arrowtriangle"),
-                                metricColor: .indigo
-                            )
-                        }
-                            // Absoluter Kalorien-Rekord
-                        if let fastestErgometer = calcRecords.fastestCardioDevice(for: .ergometer) {
-                            RecordGridCard(
-                                metricTitle: "Schnellstes Ergometer",
-                                recordValue: String(format: "%.0f m/min", fastestErgometer.averageSpeed),
-                                bestWorkout: fastestErgometer,
-                                metricIcon: .system("gauge.open.with.lines.needle.67percent.and.arrowtriangle"),
-                                metricColor: .orange
-                            )
-                        }
-                            // Niedrigstes Körpergewicht
-                        if let lowestBodyWeight = calcRecords.lowestBodyWeight {
-                            RecordGridCard(
-                                metricTitle: "Niedrigstes Gewicht",
-                                recordValue: "\(lowestBodyWeight.bodyWeight) kg",
-                                bestWorkout: lowestBodyWeight,
-                                metricIcon: .system("arrow.down.circle.fill"),
-                                metricColor: .green
-                            )
-                        }
-                            // Höchstes Körpergewicht
-                        if let highestBodyWeight = calcRecords.highestBodyWeight {
-                            RecordGridCard(
-                                metricTitle: "Höchstes Gewicht",
-                                recordValue: "\(highestBodyWeight.bodyWeight) kg",
-                                bestWorkout: highestBodyWeight,
-                                metricIcon: .system("arrow.up.circle.fill"),
-                                metricColor: .red
-                            )
-                        }
+                    // MARK: Kraft-Rekorde (prominent, oben)
+                    if !allStrengthSessions.isEmpty {
+                        strengthRecordsSection
                     }
-                    .scrollViewContentPadding()
+
+                    // MARK: Cardio-Rekorde (reduziert, unten)
+                    if !allCardioSessions.isEmpty {
+                        cardioRecordsSection
+                    }
                 }
-                .scrollIndicators(.hidden)
+                .scrollViewContentPadding()
+            }
+            .scrollIndicators(.hidden)
 
-                    // Empty State
-                if allWorkouts.isEmpty {
-                    EmptyState()
+            if allCardioSessions.isEmpty && allStrengthSessions.isEmpty {
+                EmptyState()
+            }
+        }
+    }
+
+    // MARK: - Kraft-Rekorde Section
+
+    @ViewBuilder
+    private var strengthRecordsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Kraft-Rekorde")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+
+            LazyVGrid(columns: gridColumns, spacing: 16) {
+
+                // Höchstes Gewichtsvolumen
+                if let record = calcStrengthRecords.highestVolumeSession {
+                    StrengthRecordGridCard(
+                        record: record,
+                        metricTitle: "Höchstes Volumen",
+                        metricIcon: .system("scalemass.fill"),
+                        metricColor: .purple
+                    )
+                }
+
+                // Meiste Sätze
+                if let record = calcStrengthRecords.mostSetsSession {
+                    StrengthRecordGridCard(
+                        record: record,
+                        metricTitle: "Meiste Sätze",
+                        metricIcon: .system("list.number"),
+                        metricColor: .teal
+                    )
+                }
+
+                // Meiste Reps gesamt
+                if let record = calcStrengthRecords.mostRepsSession {
+                    StrengthRecordGridCard(
+                        record: record,
+                        metricTitle: "Meiste Reps",
+                        metricIcon: .system("repeat"),
+                        metricColor: .blue
+                    )
+                }
+
+                // Schwerster Einzelsatz
+                if let record = calcStrengthRecords.heaviestSingleSet {
+                    StrengthRecordGridCard(
+                        record: record,
+                        metricTitle: "Schwerster Satz",
+                        metricIcon: .system("dumbbell.fill"),
+                        metricColor: .orange
+                    )
+                }
+
+                // Längstes Kraft-Training
+                if let record = calcStrengthRecords.longestStrengthSession {
+                    StrengthRecordGridCard(
+                        record: record,
+                        metricTitle: "Längstes Training",
+                        metricIcon: .system("clock.fill"),
+                        metricColor: .indigo
+                    )
+                }
+
+                // Meiste Übungen
+                if let record = calcStrengthRecords.mostExercisesSession {
+                    StrengthRecordGridCard(
+                        record: record,
+                        metricTitle: "Meiste Übungen",
+                        metricIcon: .system("figure.strengthtraining.traditional"),
+                        metricColor: .green
+                    )
+                }
+
+                // Höchstes geschätztes 1RM
+                if let record = calcStrengthRecords.highestEstimated1RM {
+                    StrengthRecordGridCard(
+                        record: record,
+                        metricTitle: "Höchstes 1RM",
+                        metricIcon: .system("trophy.fill"),
+                        metricColor: .yellow
+                    )
+                }
+            }
+        }
+    }
+
+    // MARK: - Cardio-Rekorde Section
+
+    @ViewBuilder
+    private var cardioRecordsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Cardio-Rekorde")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+
+            LazyVGrid(columns: gridColumns, spacing: 16) {
+
+                // Längste Distanz
+                if let longestDistance = calcRecords.longestDistanceWorkout {
+                    RecordGridCard(
+                        metricTitle: "Längste Distanz",
+                        recordValue: String(format: "%.2f km", longestDistance.distance),
+                        bestWorkout: longestDistance,
+                        metricIcon: .system("arrow.left.and.right"),
+                        metricColor: .green
+                    )
+                }
+
+                // Höchster Kalorienverbrauch
+                if let highestCalories = calcRecords.highestBurnedCaloriesWorkout {
+                    RecordGridCard(
+                        metricTitle: "Höchste Kalorien",
+                        recordValue: "\(highestCalories.calories) kcal",
+                        bestWorkout: highestCalories,
+                        metricIcon: .system("flame.fill"),
+                        metricColor: .red
+                    )
                 }
             }
         }
@@ -138,7 +193,9 @@ struct RecordView: View {
 }
 
 // MARK: - Preview
+
 #Preview("Rekorde") {
     RecordView()
         .modelContainer(PreviewData.sharedContainer)
+        .environmentObject(AppSettings.shared)
 }
