@@ -18,7 +18,10 @@ struct ActiveSetCard: View {
         // 2. Input
     let set: ExerciseSet
     let setsForCurrentExercise: Int
-    let supersetNextExercise: String?
+    let supersetExerciseNames: [String]?
+    let supersetCurrentIndex: Int
+    let supersetCurrentRound: Int
+    let supersetTotalRounds: Int
         // 3. Bindings
     @Binding var selectedSetForEdit: ExerciseSet?
         // 4. Actions
@@ -79,17 +82,64 @@ struct ActiveSetCard: View {
                 .accessibilityLabel("Übungsanleitung anzeigen")
             }
 
-            if let nextExercise = supersetNextExercise {
-                HStack(spacing: 6) {
-                    Image(systemName: "link")
-                        .font(.caption.bold())
-                    Text("Superset — weiter mit: \(nextExercise)")
-                        .font(.caption)
+            // Superset-Rotations-Tracker
+            if let exerciseNames = supersetExerciseNames {
+                VStack(alignment: .leading, spacing: 6) {
+                    // Kopfzeile: Icon + Runden-Info
+                    HStack(spacing: 6) {
+                        Image(systemName: "bolt.fill")
+                            .font(.caption.bold())
+                            .foregroundStyle(.green)
+                        Text("Superset – Runde \(supersetCurrentRound)/\(supersetTotalRounds)")
+                            .font(.caption.bold())
+                            .foregroundStyle(.green)
+                        Spacer()
+                    }
+
+                    // Übungs-Dots: aktiv (grüner Punkt), abgeschlossen (Haken), ausstehend (leerer Kreis)
+                    HStack(spacing: 8) {
+                        ForEach(Array(exerciseNames.enumerated()), id: \.offset) { idx, name in
+                            HStack(spacing: 4) {
+                                // Dot-Indikator
+                                ZStack {
+                                    if idx == supersetCurrentIndex {
+                                        // Aktive Übung in dieser Runde
+                                        Circle()
+                                            .fill(Color.green)
+                                            .frame(width: 8, height: 8)
+                                    } else if idx < supersetCurrentIndex {
+                                        // In dieser Runde bereits abgeschlossen
+                                        Image(systemName: "checkmark")
+                                            .font(.system(size: 7, weight: .bold))
+                                            .foregroundStyle(.green)
+                                    } else {
+                                        // Noch ausstehend in dieser Runde
+                                        Circle()
+                                            .stroke(Color.green.opacity(0.5), lineWidth: 1.5)
+                                            .frame(width: 8, height: 8)
+                                    }
+                                }
+                                .frame(width: 10)
+
+                                // Übungsname (kurz abschneiden)
+                                Text(name)
+                                    .font(.caption2)
+                                    .foregroundStyle(idx == supersetCurrentIndex ? .primary : .secondary)
+                                    .lineLimit(1)
+                            }
+
+                            // Trennpfeil zwischen Übungen
+                            if idx < exerciseNames.count - 1 {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 7))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
                 }
-                .foregroundStyle(.blue)
                 .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+                .padding(.vertical, 8)
+                .background(Color.green.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
             }
 
             GlassDivider()

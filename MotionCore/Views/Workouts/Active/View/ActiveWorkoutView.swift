@@ -132,18 +132,55 @@ struct ActiveWorkoutView: View {
         }
     }
 
-    private func supersetNextExercise(for set: ExerciseSet) -> String? {
+    /// Alle Übungsnamen der Superset-Gruppe für die aktive Übung (sortiert nach sortOrder)
+    private func supersetExerciseNames(for set: ExerciseSet) -> [String]? {
         guard let groupId = set.supersetGroupId else { return nil }
-        let groups = session.groupedSets
-        guard let currentGroupIndex = groups.firstIndex(where: { group in
-            group.contains { $0.groupKey == set.groupKey }
-        }) else { return nil }
+        let keys = session.groupedSets
+            .filter { $0.first?.supersetGroupId == groupId }
+            .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
+        guard keys.count >= 2 else { return nil }
+        return keys.compactMap { group -> String? in
+            guard let first = group.first else { return nil }
+            let snapshot = first.exerciseNameSnapshot
+            return snapshot.isEmpty ? first.exerciseName : snapshot
+        }
+    }
 
-        let nextIndex = currentGroupIndex + 1
-        guard nextIndex < groups.count,
-              let nextSet = groups[nextIndex].first,
-              nextSet.supersetGroupId == groupId else { return nil }
-        return nextSet.exerciseName
+    /// Index der aktuellen Übung innerhalb der Superset-Gruppe (0-basiert)
+    private func supersetCurrentIndex(for set: ExerciseSet) -> Int {
+        guard let groupId = set.supersetGroupId else { return 0 }
+        let keys = session.groupedSets
+            .filter { $0.first?.supersetGroupId == groupId }
+            .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
+            .compactMap { $0.first?.groupKey }
+        return keys.firstIndex(of: set.groupKey) ?? 0
+    }
+
+    /// Aktuelle Runde innerhalb des Supersets (1-basiert)
+    /// Berechnung: Anzahl abgeschlossener Sätze der ersten Übung + 1
+    private func supersetCurrentRound(for set: ExerciseSet) -> Int {
+        guard let groupId = set.supersetGroupId else { return 1 }
+        let firstKey = session.groupedSets
+            .filter { $0.first?.supersetGroupId == groupId }
+            .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
+            .first?.first?.groupKey ?? ""
+        let completedRounds = session.safeExerciseSets
+            .filter { $0.groupKey == firstKey && $0.isCompleted }
+            .count
+        return completedRounds + 1
+    }
+
+    /// Gesamtanzahl Runden des Supersets (maximale Satzanzahl über alle Übungen der Gruppe)
+    private func supersetTotalRounds(for set: ExerciseSet) -> Int {
+        guard let groupId = set.supersetGroupId else { return 1 }
+        let groupKeys = Set(
+            session.groupedSets
+                .filter { $0.first?.supersetGroupId == groupId }
+                .compactMap { $0.first?.groupKey }
+        )
+        return groupKeys.map { key in
+            session.safeExerciseSets.filter { $0.groupKey == key }.count
+        }.max() ?? 1
     }
 
     private var currentVideoThumb: ExerciseVideoView {
@@ -572,12 +609,94 @@ struct ActiveWorkoutView: View {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
 
+        // Superset-Rotation hat Vorrang vor normalem Rest-Timer-Handling
+        if let groupId = set.supersetGroupId {
+            handleSupersetRotation(completedSet: set, supersetGroupId: groupId)
+            return
+        }
+
+        // Normales Handling (kein Superset): Rest-Timer starten falls weitere Sätze übrig
         let remainingSetsForExercise = session.safeExerciseSets.filter {
             $0.groupKey == set.groupKey && !$0.isCompleted
         }
 
         if !remainingSetsForExercise.isEmpty {
             restTimerManager.start(seconds: set.restSeconds)
+        }
+    }
+
+    /// Steuert die Rotation innerhalb eines Supersets.
+    ///
+    /// Ablauf:
+    ///   Übung A (Satz 1) → Übung B (Satz 1) → Übung C (Satz 1) → PAUSE
+    ///   Übung A (Satz 2) → Übung B (Satz 2) → Übung C (Satz 2) → PAUSE
+    ///   ...
+    ///
+    /// Regeln:
+    /// - Zwischen Superset-Übungen: KEIN Rest-Timer
+    /// - Nach vollständiger Runde: Rest-Timer mit restSeconds der letzten Übung
+    /// - Nach letztem Satz des gesamten Supersets: zur nächsten Nicht-Superset-Übung
+    private func handleSupersetRotation(completedSet: ExerciseSet, supersetGroupId: String) {
+        // Alle Übungs-Keys in der Superset-Gruppe, sortiert nach sortOrder
+        let supersetKeys: [String] = session.groupedSets
+            .filter { $0.first?.supersetGroupId == supersetGroupId }
+            .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
+            .compactMap { $0.first?.groupKey }
+
+        guard !supersetKeys.isEmpty else { return }
+
+        // Position der abgeschlossenen Übung in der Rotation
+        let currentIndex = supersetKeys.firstIndex(of: completedSet.groupKey) ?? 0
+
+        // Nächste Übung in der aktuellen Runde (nur NACH der aktuellen, kein Wrap-around)
+        let nextInRound = Array(supersetKeys.dropFirst(currentIndex + 1)).first { key in
+            session.safeExerciseSets.contains { $0.groupKey == key && !$0.isCompleted }
+        }
+
+        if let nextKey = nextInRound {
+            // Noch nicht am Ende der Runde → direkt weiter, KEIN Rest-Timer
+            withAnimation(.easeInOut) {
+                selectedExerciseKey = nextKey
+            }
+            return
+        }
+
+        // Runde ist komplett — prüfen ob weitere Runden im Superset existieren
+        let anyOpenInGroup = supersetKeys.contains { key in
+            session.safeExerciseSets.contains { $0.groupKey == key && !$0.isCompleted }
+        }
+
+        if anyOpenInGroup {
+            // Weitere Runden vorhanden → Rest-Timer + zur ersten offenen Übung der Gruppe
+            restTimerManager.start(seconds: completedSet.restSeconds)
+            let firstOpenKey = supersetKeys.first { key in
+                session.safeExerciseSets.contains { $0.groupKey == key && !$0.isCompleted }
+            }
+            if let key = firstOpenKey {
+                withAnimation(.easeInOut) {
+                    selectedExerciseKey = key
+                }
+            }
+        } else {
+            // Gesamtes Superset abgeschlossen → zur nächsten Nicht-Superset-Übung wechseln
+            let supersetGroupKeys = Set(supersetKeys)
+            let nextExerciseKey = session.groupedSets
+                .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
+                .first { group in
+                    guard let key = group.first?.groupKey,
+                          let firstSet = group.first else { return false }
+                    // Nicht Teil des abgeschlossenen Supersets und hat noch offene Sätze
+                    return !supersetGroupKeys.contains(key)
+                        && firstSet.supersetGroupId != supersetGroupId
+                        && group.contains { !$0.isCompleted }
+                }?
+                .first?.groupKey
+
+            if let key = nextExerciseKey {
+                withAnimation(.easeInOut) {
+                    selectedExerciseKey = key
+                }
+            }
         }
     }
 
@@ -994,7 +1113,10 @@ struct ActiveWorkoutView: View {
                 ActiveSetCard(
                     set: activeSet,
                     setsForCurrentExercise: setsForCurrentExercise,
-                    supersetNextExercise: supersetNextExercise(for: activeSet),
+                    supersetExerciseNames: supersetExerciseNames(for: activeSet),
+                    supersetCurrentIndex: supersetCurrentIndex(for: activeSet),
+                    supersetCurrentRound: supersetCurrentRound(for: activeSet),
+                    supersetTotalRounds: supersetTotalRounds(for: activeSet),
                     selectedSetForEdit: $selectedSetForEdit,
                     onComplete: completeSet
                 )
