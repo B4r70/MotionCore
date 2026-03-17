@@ -54,6 +54,9 @@ struct ActiveWorkoutView: View {
     @State private var prBannerExercise: String? = nil
     @State private var prBannerOneRM: Double = 0
 
+        // Debounce-Task für Live Activity Sync
+    @State private var syncDebounceTask: Task<Void, Never>? = nil
+
         // Progression
     @State private var dismissedProgressionExercises: Set<String> = []
     @State private var cachedProgressionRecommendations: [ProgressionRecommendation] = []
@@ -132,55 +135,71 @@ struct ActiveWorkoutView: View {
         }
     }
 
-    /// Alle Übungsnamen der Superset-Gruppe für die aktive Übung (sortiert nach sortOrder)
-    private func supersetExerciseNames(for set: ExerciseSet) -> [String]? {
+    // MARK: - Superset Display Context
+
+    /// Alle für die UI benötigten Superset-Anzeige-Daten in einer einzigen Berechnung
+    private struct SupersetDisplayContext {
+        let exerciseNames: [String]
+        let currentIndex: Int
+        let currentRound: Int
+        let totalRounds: Int
+    }
+
+    /// Berechnet alle Superset-Anzeige-Daten in einem einzigen groupedSets-Durchlauf.
+    /// Gibt nil zurück wenn die Übung nicht Teil eines Supersets ist.
+    private func supersetDisplayContext(for set: ExerciseSet) -> SupersetDisplayContext? {
         guard let groupId = set.supersetGroupId else { return nil }
-        let keys = session.groupedSets
+
+        let groups = session.groupedSets
             .filter { $0.first?.supersetGroupId == groupId }
             .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
-        guard keys.count >= 2 else { return nil }
-        return keys.compactMap { group -> String? in
+
+        guard groups.count >= 2 else { return nil }
+
+        // Übungsnamen sortiert nach Reihenfolge in der Gruppe
+        let names = groups.compactMap { group -> String? in
             guard let first = group.first else { return nil }
-            let snapshot = first.exerciseNameSnapshot
-            return snapshot.isEmpty ? first.exerciseName : snapshot
+            return first.exerciseNameSnapshot.isEmpty ? first.exerciseName : first.exerciseNameSnapshot
         }
-    }
 
-    /// Index der aktuellen Übung innerhalb der Superset-Gruppe (0-basiert)
-    private func supersetCurrentIndex(for set: ExerciseSet) -> Int {
-        guard let groupId = set.supersetGroupId else { return 0 }
-        let keys = session.groupedSets
-            .filter { $0.first?.supersetGroupId == groupId }
-            .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
-            .compactMap { $0.first?.groupKey }
-        return keys.firstIndex(of: set.groupKey) ?? 0
-    }
+        // groupKey-Liste für Index- und Rundenberechnung
+        let keys = groups.compactMap { $0.first?.groupKey }
+        let currentIndex = keys.firstIndex(of: set.groupKey) ?? 0
 
-    /// Aktuelle Runde innerhalb des Supersets (1-basiert)
-    /// Berechnung: Anzahl abgeschlossener Sätze der ersten Übung + 1
-    private func supersetCurrentRound(for set: ExerciseSet) -> Int {
-        guard let groupId = set.supersetGroupId else { return 1 }
-        let firstKey = session.groupedSets
-            .filter { $0.first?.supersetGroupId == groupId }
-            .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
-            .first?.first?.groupKey ?? ""
+        // Aktuelle Runde: Anzahl abgeschlossener Sätze der ersten Übung + 1
+        let firstKey = keys.first ?? ""
         let completedRounds = session.safeExerciseSets
             .filter { $0.groupKey == firstKey && $0.isCompleted }
             .count
-        return completedRounds + 1
-    }
+        let currentRound = completedRounds + 1
 
-    /// Gesamtanzahl Runden des Supersets (maximale Satzanzahl über alle Übungen der Gruppe)
-    private func supersetTotalRounds(for set: ExerciseSet) -> Int {
-        guard let groupId = set.supersetGroupId else { return 1 }
-        let groupKeys = Set(
-            session.groupedSets
-                .filter { $0.first?.supersetGroupId == groupId }
-                .compactMap { $0.first?.groupKey }
-        )
-        return groupKeys.map { key in
+        // Gesamtrunden: maximale Satzanzahl über alle Übungen der Gruppe
+        let totalRounds = keys.map { key in
             session.safeExerciseSets.filter { $0.groupKey == key }.count
         }.max() ?? 1
+
+        return SupersetDisplayContext(
+            exerciseNames: names,
+            currentIndex: currentIndex,
+            currentRound: currentRound,
+            totalRounds: totalRounds
+        )
+    }
+
+    /// Übungsnamen der nächsten Superset-Runde (nur Übungen mit noch offenen Sätzen)
+    private func supersetNextRoundNames(for set: ExerciseSet) -> [String]? {
+        guard let groupId = set.supersetGroupId else { return nil }
+        let groups = session.groupedSets
+            .filter { $0.first?.supersetGroupId == groupId }
+            .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
+        let names = groups.compactMap { group -> String? in
+            guard group.contains(where: { !$0.isCompleted }) else { return nil }
+            let first = group.first
+            return first?.exerciseNameSnapshot.isEmpty == false
+                ? first?.exerciseNameSnapshot
+                : first?.exerciseName
+        }
+        return names.isEmpty ? nil : names
     }
 
     private var currentVideoThumb: ExerciseVideoView {
@@ -303,7 +322,7 @@ struct ActiveWorkoutView: View {
         .onDisappear {
             cleanupLocalTimer()
             restTimerManager.cleanup()
-         //   liveActivityDebounceTimer?.invalidate()
+            syncDebounceTask?.cancel()
             saveResumeState()
                 // Watch-Action-Handler aufräumen
             PhoneSessionManager.shared.onAction = nil
@@ -467,21 +486,29 @@ struct ActiveWorkoutView: View {
         }
     }
 
-        // Synchronisierung Live Activity States (debounced)
-        // Sammelt mehrere State-Änderungen innerhalb von 300ms und feuert
-        // dann EIN einziges ActivityKit-Update mit dem finalen State.
-        // Verhindert Throttling wenn completeSet() gleichzeitig completedSets,
-        // isResting und selectedExerciseKey ändert.
+    /// Synchronisiert Live Activity und ResumeState mit Debounce.
+    /// Mehrere schnelle State-Änderungen (completedSets + selectedExerciseKey)
+    /// werden zu einem einzigen Update zusammengefasst.
     private func syncLiveActivityStates() {
-        updateLiveActivity()
-        saveResumeState()
+        // Laufenden Task abbrechen und durch neuen ersetzen
+        syncDebounceTask?.cancel()
+        syncDebounceTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(150))
+            guard !Task.isCancelled else { return }
+            updateLiveActivity()
+            saveResumeState()
+        }
     }
 
 
     private func startNewSession(sessionID: String) {
         sessionManager.startSession(sessionID: sessionID, workoutType: .strength)
         session.start()
-        try? context.save()
+
+        // context.save() asynchron — blockiert den Main Thread nicht
+        Task { @MainActor in
+            try? context.save()
+        }
 
             // Live Activity starten
         startLiveActivity()
@@ -579,15 +606,24 @@ struct ActiveWorkoutView: View {
         withAnimation(.easeInOut) {
             set.isCompleted = true
         }
-        try? context.save()
 
-            // PR-Prüfung
-        let prService = PRDetectionService(historicalSessions: historicalSessions)
-        if prService.isNewPR(set: set) {
-            prSetIDs.insert(set.persistentModelID)
-            prBannerExercise = set.exerciseName
-            prBannerOneRM = prService.calculatedOneRM(for: set)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+        // context.save() asynchron — blockiert den Main Thread nicht
+        Task { @MainActor in
+            try? context.save()
+        }
+
+        // PR-Prüfung asynchron — blockiert den Main Thread nicht
+        let setID = set.persistentModelID
+        let exerciseName = set.exerciseName
+        let sessions = historicalSessions
+        // ExerciseSet ist ein SwiftData-Referenztyp — Zugriff auf MainActor ist sicher
+        Task { @MainActor in
+            let prService = PRDetectionService(historicalSessions: sessions)
+            if prService.isNewPR(set: set) {
+                self.prSetIDs.insert(setID)
+                self.prBannerExercise = exerciseName
+                self.prBannerOneRM = prService.calculatedOneRM(for: set)
+                try? await Task.sleep(for: .seconds(3))
                 withAnimation(.easeOut) {
                     self.prBannerExercise = nil
                 }
@@ -1103,20 +1139,25 @@ struct ActiveWorkoutView: View {
                     },
                     nextExerciseName: currentSet?.exerciseName,
                     nextSetNumber: currentSet?.setNumber,
-                    totalSetsForExercise: setsForCurrentExercise
+                    totalSetsForExercise: setsForCurrentExercise,
+                    supersetNextRoundNames: completedSet.supersetGroupId != nil
+                        ? supersetNextRoundNames(for: completedSet)
+                        : nil
                 )
             )
         }
 
         if let activeSet = currentSet {
+            // Alle Superset-Anzeige-Daten in einem einzigen groupedSets-Durchlauf berechnen
+            let ctx = supersetDisplayContext(for: activeSet)
             return AnyView(
                 ActiveSetCard(
                     set: activeSet,
                     setsForCurrentExercise: setsForCurrentExercise,
-                    supersetExerciseNames: supersetExerciseNames(for: activeSet),
-                    supersetCurrentIndex: supersetCurrentIndex(for: activeSet),
-                    supersetCurrentRound: supersetCurrentRound(for: activeSet),
-                    supersetTotalRounds: supersetTotalRounds(for: activeSet),
+                    supersetExerciseNames: ctx?.exerciseNames,
+                    supersetCurrentIndex: ctx?.currentIndex ?? 0,
+                    supersetCurrentRound: ctx?.currentRound ?? 1,
+                    supersetTotalRounds: ctx?.totalRounds ?? 1,
                     selectedSetForEdit: $selectedSetForEdit,
                     onComplete: completeSet
                 )

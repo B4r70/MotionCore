@@ -22,6 +22,9 @@ struct RestTimerCard: View {
     let nextSetNumber: Int?
     let totalSetsForExercise: Int?
 
+    // Superset: Übungsnamen der nächsten Runde (nil = kein Superset)
+    let supersetNextRoundNames: [String]?
+
     var body: some View {
         VStack(spacing: 24) {
             // "Pause" Label
@@ -35,8 +38,33 @@ struct RestTimerCard: View {
             // Zeitanpassung
             adjustButtons
 
-            // Nächster Satz Info
-            if let exerciseName = nextExerciseName,
+            // Nächster Satz / Nächste Runde Info
+            if let names = supersetNextRoundNames, !names.isEmpty {
+                // Superset: Nächste Runde anzeigen
+                VStack(spacing: 6) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "bolt.fill")
+                            .font(.caption.bold())
+                            .foregroundStyle(.green)
+                        Text("Nächste Runde")
+                            .font(.caption.bold())
+                            .foregroundStyle(.green)
+                    }
+                    HStack(spacing: 4) {
+                        ForEach(Array(names.enumerated()), id: \.offset) { idx, name in
+                            if idx > 0 {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 8))
+                                    .foregroundStyle(.secondary)
+                            }
+                            Text(name)
+                                .font(.caption)
+                                .foregroundStyle(.primary)
+                                .lineLimit(1)
+                        }
+                    }
+                }
+            } else if let exerciseName = nextExerciseName,
                let setNumber = nextSetNumber,
                let totalSets = totalSetsForExercise {
                 VStack(spacing: 4) {
@@ -175,7 +203,19 @@ struct RestTimerCard: View {
                 onAdjust: { _ in },
                 nextExerciseName: "Bankdrücken",
                 nextSetNumber: 3,
-                totalSetsForExercise: 4
+                totalSetsForExercise: 4,
+                supersetNextRoundNames: nil
+            )
+
+            RestTimerCard(
+                remainingSeconds: 45,
+                targetSeconds: 60,
+                onSkip: {},
+                onAdjust: { _ in },
+                nextExerciseName: nil,
+                nextSetNumber: nil,
+                totalSetsForExercise: nil,
+                supersetNextRoundNames: ["Crunches", "Beinheben", "Russian Twist"]
             )
 
             RestTimerCard(
@@ -185,7 +225,8 @@ struct RestTimerCard: View {
                 onAdjust: { _ in },
                 nextExerciseName: nil,
                 nextSetNumber: nil,
-                totalSetsForExercise: nil
+                totalSetsForExercise: nil,
+                supersetNextRoundNames: nil
             )
         }
         .padding()
