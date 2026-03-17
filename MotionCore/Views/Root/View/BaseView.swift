@@ -75,9 +75,9 @@ struct BaseView: View {
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 
-    //  Tab-Enum angepasst (5 Tabs: summary, workouts, stats, health, training)
+    //  Tab-Enum angepasst (5 Tabs: summary, workouts, stats, analyse, training)
     enum Tab: Hashable {
-        case summary, workouts, stats, health, training
+        case summary, workouts, stats, analyse, training
     }
 
     var body: some View {
@@ -169,23 +169,23 @@ struct BaseView: View {
             }
             .tag(Tab.stats)
 
-            // MARK: Tab 4 - Gesundheitsdaten
+            // MARK: Tab 4 - Progressions-Analyse
             NavigationStack {
-                HealthMetricView()
+                ProgressionAnalyseView()
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             HeaderView(
                                 title: "MotionCore",
-                                subtitle: "Gesundheitsdaten"
+                                subtitle: "Analyse"
                             )
                         }
                     }
             }
             .tabItem {
-                Label("Health", systemImage: "bolt.heart")
+                Label("Analyse", systemImage: "brain.head.profile")
             }
-            .tag(Tab.health)
+            .tag(Tab.analyse)
 
             // MARK: Tab 5 - Trainingsplan
             NavigationStack {
