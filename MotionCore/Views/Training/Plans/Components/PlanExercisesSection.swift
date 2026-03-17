@@ -93,7 +93,7 @@ struct PlanExercisesSection: View {
                                 selectedGroupIndicesForSuperset = []
                             }
                         } label: {
-                            Image(systemName: "rectangle.stack.badge.plus")
+                            Image(systemName: "bolt")
                                 .font(.title2)
                                 .foregroundStyle(.blue)
                         }
@@ -409,18 +409,6 @@ struct ReorderableExerciseList: View {
         let alreadyInSuperset = isInSuperset && isSupersetSelectionMode
 
         ZStack(alignment: .leading) {
-            // Linker blauer Seitenstreifen für Superset-Mitglieder
-            if isInSuperset {
-                HStack(spacing: 0) {
-                    Rectangle()
-                        .fill(Color.blue)
-                        .frame(width: 3)
-                    Spacer()
-                }
-                // Streifen läuft durch den Abstand zur nächsten Karte
-                .frame(height: (cardHeights[index] ?? averageCardHeight) + (isLastInGroup ? 0 : supersetSpacing))
-            }
-
             ReorderableCard(
                 exerciseName: firstSet.exerciseName,
                 mediaAssetName: firstSet.exerciseMediaAssetName,
@@ -436,6 +424,16 @@ struct ReorderableExerciseList: View {
                 onDragEnded: { endDragging(fromIndex: index) },
                 onHeightMeasured: { height in cardHeights[index] = height },
                 onRemoveFromSuperset: isInSuperset ? { onRemoveFromSuperset(index) } : nil
+            )
+            // Pastellgrüner Superset-Tint (nur im Normalmodus sichtbar)
+            .overlay(
+                Group {
+                    if isInSuperset && !isSupersetSelectionMode {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.green.opacity(0.08))
+                            .allowsHitTesting(false)
+                    }
+                }
             )
             // Auswahl-Overlay im Superset-Modus
             .overlay(
