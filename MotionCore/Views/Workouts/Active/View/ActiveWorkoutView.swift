@@ -23,7 +23,7 @@ struct ActiveWorkoutView: View {
 
     @Bindable var session: StrengthSession
 
-    @Query(sort: \StrengthSession.date, order: .reverse)
+    @Query(filter: #Predicate<StrengthSession> { $0.isCompleted }, sort: \StrengthSession.date, order: .reverse)
     private var allSessions: [StrengthSession]
 
         // MARK: - Local timers (UI only)
@@ -50,6 +50,10 @@ struct ActiveWorkoutView: View {
         // Refresh-Trigger für die Übersicht nach dem Hinzufügen neuer Übungen
     @State private var exerciseListRefreshID = UUID()
 
+        // Gecachte Kopie von session.groupedSets — verhindert wiederholte
+        // Neuberechnungen bei jedem Re-Render der View.
+    @State private var cachedGroupedSets: [[ExerciseSet]] = []
+
     @State private var prSetIDs: Set<PersistentIdentifier> = []
     @State private var prBannerExercise: String? = nil
     @State private var prBannerOneRM: Double = 0
@@ -67,6 +71,7 @@ struct ActiveWorkoutView: View {
 
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionHaptic = UINotificationFeedbackGenerator()
+    private let completionHapticMedium = UIImpactFeedbackGenerator(style: .medium)
 
         // MARK: - Derived
 
@@ -85,9 +90,7 @@ struct ActiveWorkoutView: View {
     }
 
     private var historicalSessions: [StrengthSession] {
-        allSessions.filter {
-            $0.isCompleted && $0.persistentModelID != session.persistentModelID
-        }
+        allSessions.filter { $0.persistentModelID != session.persistentModelID }
     }
 
     private var currentSet: ExerciseSet? {
@@ -98,15 +101,13 @@ struct ActiveWorkoutView: View {
     }
 
     private var currentExerciseIndex: Int {
-        let grouped = session.groupedSets
-
         if let key = selectedExerciseKey,
-           let idx = grouped.firstIndex(where: { $0.first?.groupKey == key }) {
+           let idx = cachedGroupedSets.firstIndex(where: { $0.first?.groupKey == key }) {
             return idx
         }
 
         guard let current = session.nextUncompletedSet else { return 0 }
-        return grouped.firstIndex(where: { group in
+        return cachedGroupedSets.firstIndex(where: { group in
             group.contains { $0.id == current.id }
         }) ?? 0
     }
@@ -150,7 +151,7 @@ struct ActiveWorkoutView: View {
     private func supersetDisplayContext(for set: ExerciseSet) -> SupersetDisplayContext? {
         guard let groupId = set.supersetGroupId else { return nil }
 
-        let groups = session.groupedSets
+        let groups = cachedGroupedSets
             .filter { $0.first?.supersetGroupId == groupId }
             .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
 
@@ -189,7 +190,7 @@ struct ActiveWorkoutView: View {
     /// Übungsnamen der nächsten Superset-Runde (nur Übungen mit noch offenen Sätzen)
     private func supersetNextRoundNames(for set: ExerciseSet) -> [String]? {
         guard let groupId = set.supersetGroupId else { return nil }
-        let groups = session.groupedSets
+        let groups = cachedGroupedSets
             .filter { $0.first?.supersetGroupId == groupId }
             .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
         let names = groups.compactMap { group -> String? in
@@ -277,6 +278,7 @@ struct ActiveWorkoutView: View {
         .onAppear {
             setupSession()
             hapticGenerator.prepare()
+            completionHapticMedium.prepare()
                 // Watch-Action-Handler registrieren
             PhoneSessionManager.shared.onAction = { action in
                 handleWatchAction(action)
@@ -289,6 +291,9 @@ struct ActiveWorkoutView: View {
                     UINotificationFeedbackGenerator().notificationOccurred(.success)
                 }
             }
+
+                // Initialer Cache-Aufbau
+            cachedGroupedSets = session.groupedSets
         }
 
             // =====================================================================
@@ -302,8 +307,12 @@ struct ActiveWorkoutView: View {
             syncLiveActivityStates()
         }
         .onChange(of: session.completedSets) { _, _ in
+            cachedGroupedSets = session.groupedSets
             syncLiveActivityStates()
             sendWatchState()
+        }
+        .onChange(of: exerciseListRefreshID) { _, _ in
+            cachedGroupedSets = session.groupedSets
         }
         .onChange(of: selectedExerciseKey) { _, newValue in
             sessionManager.setSelectedExerciseKey(newValue)
@@ -378,7 +387,7 @@ struct ActiveWorkoutView: View {
 
     private var setsForCurrentExercise: Int {
         guard let current = currentSet else { return 0 }
-        return session.groupedSets.first(where: { $0.first?.groupKey == current.groupKey })?.count ?? 0
+        return cachedGroupedSets.first(where: { $0.first?.groupKey == current.groupKey })?.count ?? 0
     }
 
     private var isSelectedExerciseComplete: Bool {
@@ -478,10 +487,12 @@ struct ActiveWorkoutView: View {
 
         // Zugriff Exercise-Key prüfen
     private func validateSelectedExerciseKey() {
-        guard !session.groupedSets.isEmpty else { return }
+        // groupedSets direkt aufrufen, da setupSession vor dem ersten Cache-Aufbau läuft
+        let groups = session.groupedSets
+        guard !groups.isEmpty else { return }
 
         if let key = selectedExerciseKey,
-           !session.groupedSets.contains(where: { $0.first?.groupKey == key }) {
+           !groups.contains(where: { $0.first?.groupKey == key }) {
             selectedExerciseKey = nil
         }
     }
@@ -607,6 +618,9 @@ struct ActiveWorkoutView: View {
             set.isCompleted = true
         }
 
+        // Cache sofort aktualisieren, damit nachfolgende Berechnungen aktuell sind
+        cachedGroupedSets = session.groupedSets
+
         // context.save() asynchron — blockiert den Main Thread nicht
         Task { @MainActor in
             try? context.save()
@@ -631,7 +645,7 @@ struct ActiveWorkoutView: View {
         }
 
         if selectedExerciseKey == nil {
-            if let key = session.groupedSets
+            if let key = cachedGroupedSets
                 .first(where: { group in group.contains(where: { $0.id == set.id }) })?
                 .first?.groupKey {
                 selectedExerciseKey = key
@@ -642,8 +656,7 @@ struct ActiveWorkoutView: View {
             selectedExerciseKey = set.groupKey
         }
 
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
+        completionHapticMedium.impactOccurred()
 
         // Superset-Rotation hat Vorrang vor normalem Rest-Timer-Handling
         if let groupId = set.supersetGroupId {
@@ -674,7 +687,7 @@ struct ActiveWorkoutView: View {
     /// - Nach letztem Satz des gesamten Supersets: zur nächsten Nicht-Superset-Übung
     private func handleSupersetRotation(completedSet: ExerciseSet, supersetGroupId: String) {
         // Alle Übungs-Keys in der Superset-Gruppe, sortiert nach sortOrder
-        let supersetKeys: [String] = session.groupedSets
+        let supersetKeys: [String] = cachedGroupedSets
             .filter { $0.first?.supersetGroupId == supersetGroupId }
             .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
             .compactMap { $0.first?.groupKey }
@@ -716,7 +729,7 @@ struct ActiveWorkoutView: View {
         } else {
             // Gesamtes Superset abgeschlossen → zur nächsten Nicht-Superset-Übung wechseln
             let supersetGroupKeys = Set(supersetKeys)
-            let nextExerciseKey = session.groupedSets
+            let nextExerciseKey = cachedGroupedSets
                 .sorted { ($0.first?.sortOrder ?? 0) < ($1.first?.sortOrder ?? 0) }
                 .first { group in
                     guard let key = group.first?.groupKey,
@@ -793,7 +806,7 @@ struct ActiveWorkoutView: View {
         /// Sendet den aktuellen Workout-State an die Apple Watch
     private func sendWatchState() {
         let state: WatchWorkoutState = sessionManager.isPaused ? .paused : .active
-        let grouped = session.groupedSets
+        let grouped = cachedGroupedSets
         let currentKey = selectedExerciseKey ?? session.nextUncompletedSet?.groupKey ?? ""
         let exIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
         let currentExName = grouped[safe: exIdx]?.first?.exerciseName ?? ""
@@ -828,7 +841,7 @@ struct ActiveWorkoutView: View {
                 }
 
             case .nextExercise:
-                let grouped = session.groupedSets
+                let grouped = cachedGroupedSets
                 let currentKey = selectedExerciseKey ?? ""
                     // Fallback -1 → nextIdx wird 0 → navigiert zur ersten Übung wenn keine Auswahl
                 let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? -1
@@ -839,7 +852,7 @@ struct ActiveWorkoutView: View {
                 }
 
             case .previousExercise:
-                let grouped = session.groupedSets
+                let grouped = cachedGroupedSets
                 let currentKey = selectedExerciseKey ?? ""
                     // Fallback 0 → prevIdx wird -1 → guard greift → kein Wechsel bei unbekanntem Key
                 let currentIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
@@ -1077,7 +1090,7 @@ struct ActiveWorkoutView: View {
     }
     private var exercisesOverview: some View {
         ExercisesOverviewCard(
-            groupedSets: session.groupedSets,
+            groupedSets: cachedGroupedSets,
             currentExerciseIndex: currentExerciseIndex,
             refreshID: exerciseListRefreshID,
             prSetIDs: prSetIDs,
@@ -1123,66 +1136,82 @@ struct ActiveWorkoutView: View {
         .padding(.bottom, 100)
     }
 
-    private var heroCard: AnyView {
+    @ViewBuilder
+    private var heroCard: some View {
         if restTimerManager.isResting, let completedSet = lastCompletedSet {
-            return AnyView(
-                RestTimerCard(
-                    remainingSeconds: restTimerManager.remainingSeconds,
-                    targetSeconds: completedSet.restSeconds,
-                    onSkip: {
-                        restTimerManager.skip()
-                        hapticGenerator.impactOccurred()
-                    },
-                    onAdjust: { delta in
-                        _ = restTimerManager.adjust(delta: delta)
-                        syncLiveActivityStates()
-                    },
-                    nextExerciseName: currentSet?.exerciseName,
-                    nextSetNumber: currentSet?.setNumber,
-                    totalSetsForExercise: setsForCurrentExercise,
-                    supersetNextRoundNames: completedSet.supersetGroupId != nil
-                        ? supersetNextRoundNames(for: completedSet)
-                        : nil
-                )
+            RestTimerCardContainer(
+                restTimerManager: restTimerManager,
+                completedSet: completedSet,
+                currentSet: currentSet,
+                setsForCurrentExercise: setsForCurrentExercise,
+                supersetNextRoundNames: completedSet.supersetGroupId != nil
+                    ? supersetNextRoundNames(for: completedSet)
+                    : nil,
+                onSkip: {
+                    restTimerManager.skip()
+                    hapticGenerator.impactOccurred()
+                },
+                onAdjust: { delta in
+                    _ = restTimerManager.adjust(delta: delta)
+                    syncLiveActivityStates()
+                }
             )
-        }
-
-        if let activeSet = currentSet {
+        } else if let activeSet = currentSet {
             // Alle Superset-Anzeige-Daten in einem einzigen groupedSets-Durchlauf berechnen
             let ctx = supersetDisplayContext(for: activeSet)
-            return AnyView(
-                ActiveSetCard(
-                    set: activeSet,
-                    setsForCurrentExercise: setsForCurrentExercise,
-                    supersetExerciseNames: ctx?.exerciseNames,
-                    supersetCurrentIndex: ctx?.currentIndex ?? 0,
-                    supersetCurrentRound: ctx?.currentRound ?? 1,
-                    supersetTotalRounds: ctx?.totalRounds ?? 1,
-                    selectedSetForEdit: $selectedSetForEdit,
-                    onComplete: completeSet
-                )
+            ActiveSetCard(
+                set: activeSet,
+                setsForCurrentExercise: setsForCurrentExercise,
+                supersetExerciseNames: ctx?.exerciseNames,
+                supersetCurrentIndex: ctx?.currentIndex ?? 0,
+                supersetCurrentRound: ctx?.currentRound ?? 1,
+                supersetTotalRounds: ctx?.totalRounds ?? 1,
+                selectedSetForEdit: $selectedSetForEdit,
+                onComplete: completeSet
             )
-        }
-
-        if isSelectedExerciseComplete, !session.allSetsCompleted {
-            return AnyView(
-                ExerciseCompletedCard(
-                    exerciseName: selectedExerciseName,
-                    onNextExercise: { selectedExerciseKey = nil }
-                )
+        } else if isSelectedExerciseComplete, !session.allSetsCompleted {
+            ExerciseCompletedCard(
+                exerciseName: selectedExerciseName,
+                onNextExercise: { selectedExerciseKey = nil }
             )
-        }
-
-        return AnyView(
+        } else {
             WorkoutCompletedCard(
                 onFinishWorkout: finishWorkout,
                 onAddExercise: { showAddExerciseSheet = true }
             )
-        )
+        }
     }
 }
 
     // MARK: - Sheet zum Hinzufügen einer Übung während des Trainings
+
+// MARK: - RestTimerCardContainer
+
+/// Kapselt RestTimerCard mit eigenem @ObservedObject für restTimerManager.
+/// Dadurch lösen sekündliche Timer-Ticks nur Re-Renders dieser Sub-View aus,
+/// nicht die gesamte ActiveWorkoutView.
+private struct RestTimerCardContainer: View {
+    @ObservedObject var restTimerManager: RestTimerManager
+    let completedSet: ExerciseSet
+    let currentSet: ExerciseSet?
+    let setsForCurrentExercise: Int
+    let supersetNextRoundNames: [String]?
+    let onSkip: () -> Void
+    let onAdjust: (Int) -> Void
+
+    var body: some View {
+        RestTimerCard(
+            remainingSeconds: restTimerManager.remainingSeconds,
+            targetSeconds: completedSet.restSeconds,
+            onSkip: onSkip,
+            onAdjust: onAdjust,
+            nextExerciseName: currentSet?.exerciseName,
+            nextSetNumber: currentSet?.setNumber,
+            totalSetsForExercise: setsForCurrentExercise,
+            supersetNextRoundNames: supersetNextRoundNames
+        )
+    }
+}
 
 struct AddExerciseDuringWorkoutSheet: View {
     @Environment(\.modelContext) private var context
