@@ -19,6 +19,7 @@ struct TemplateSetCard<Trailing: View>: View {
     let onDelete: () -> Void
     let onEdit: () -> Void
     let showsEditMenu: Bool
+    /// Callback zum Entfernen aus dem Superset — nur gesetzt wenn die Übung im Superset ist
     let onSupersetToggle: (() -> Void)?
     let trailing: () -> Trailing
 
@@ -44,7 +45,7 @@ struct TemplateSetCard<Trailing: View>: View {
         self.trailing = trailing
     }
 
-    // MARK: - Calculated Values
+    // MARK: - Berechnete Werte
 
     private var workingSets: [ExerciseSet] {
         sets.filter { $0.setKind == .work }
@@ -89,6 +90,7 @@ struct TemplateSetCard<Trailing: View>: View {
                     .foregroundStyle(.secondary)
                 }
 
+                // Superset-Badge nur wenn die Übung Teil eines Supersets ist
                 if isInSuperset {
                     Image(systemName: "link")
                         .font(.caption.bold())
@@ -100,22 +102,19 @@ struct TemplateSetCard<Trailing: View>: View {
 
                 Spacer()
 
-                // Menu nur im Normalmodus (wenn kein Trailing geliefert wird)
+                // Kontextmenü nur im Normalmodus
                 if showsEditMenu {
                     Menu {
                         Button { onEdit() } label: {
                             Label("Bearbeiten", systemImage: "pencil")
                         }
 
-                        if let toggle = onSupersetToggle {
+                        // Superset-Option: nur wenn die Übung bereits im Superset ist
+                        if isInSuperset, let toggle = onSupersetToggle {
                             Button {
                                 toggle()
                             } label: {
-                                if isInSuperset {
-                                    Label("Superset auflösen", systemImage: "link.badge.minus")
-                                } else {
-                                    Label("Superset mit nächster", systemImage: "link.badge.plus")
-                                }
+                                Label("Aus Superset entfernen", systemImage: "link.badge.minus")
                             }
 
                             Divider()
@@ -212,7 +211,7 @@ struct TemplateSetCard<Trailing: View>: View {
         }
     }
 
-    // MARK: - Summaries
+    // MARK: - Zusammenfassungen
 
     private var warmupSummary: String {
         guard let first = warmupSets.first else { return "" }

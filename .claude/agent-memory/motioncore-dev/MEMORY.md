@@ -62,6 +62,21 @@ Sobald ein `CodingKeys`-Enum im Encodable-Struct vorhanden ist, wird `.convertTo
   - Aufruf in `ActiveWorkoutView.finishWorkout()` nach `context.save()`, vor Supabase-Upload
 - Watch-Complication-Keys: `WatchComplicationKey.streakCount`, `.weeklyWorkoutCount`, `.weeklyWorkoutGoal`
 
+## Superset-Gruppierung (Phase 1+2 abgeschlossen 17.03.2026)
+- `TrainingPlan.createSuperset(fromGroupIndices:)` — erstellt Superset aus beliebig vielen Gruppen
+- `TrainingPlan.removeFromSuperset(groupAt:)` — entfernt einzelne Übung; löst auf wenn < 2 übrig
+- `TrainingPlan.reindexSortOrders()` — private, wird von createSuperset aufgerufen
+- `toggleSuperset(forGroupAt:)` — @available(*, deprecated), nicht mehr verwenden
+- `groupedTemplateSets` — `groupKey`-basiert (UUID-Snapshot oder Name)
+- Phase-2-UI in `PlanExercisesSection.swift`:
+  - `isSupersetSelectionMode` + `selectedGroupIndicesForSuperset` → Multi-Select-Modus
+  - Floating Action Bar mit "Superset erstellen" + "Abbrechen"
+  - Superset-Label (Double/Tri/Giant Set) über erster Übung der Gruppe
+  - Linker blauer 3pt-Seitenstreifen an jeder Superset-Card
+  - Reduzierter 4pt-Abstand innerhalb Supersets (statt 12pt)
+  - Drag deaktiviert für Superset-Mitglieder (link-Icon statt drag-handle)
+- `ReorderableExerciseList` nimmt jetzt `onRemoveFromSuperset: (Int) -> Void` (kein toggleSuperset mehr)
+
 ## Bekannte Einschränkungen (Supabase Sync)
 - `exerciseUUIDSnapshot: String` ist KEIN UUID-Typ (Int-Hash-String) → Supabase-Spalte `exercise_uuid` muss TEXT sein
 - Supabase: nur Anon-Key – kein User-Auth. `user_id` nullable, RLS deaktiviert
