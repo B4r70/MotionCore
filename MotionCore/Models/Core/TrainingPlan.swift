@@ -107,20 +107,24 @@ final class TrainingPlan {
         return session
     }
 
-    // Gruppierte Template-Sets, sortiert nach sortOrder
+    // Gruppierte Template-Sets, sortiert nach sortOrder (Superset-kompatibel)
     var groupedTemplateSets: [[ExerciseSet]] {
         let sets = safeTemplateSets
 
-        // Gruppieren nach sortOrder (Gruppen-ID)
-        let grouped = Dictionary(grouping: sets, by: { $0.sortOrder })
+        // Gruppieren nach groupKey (UUID-Snapshot oder Name) — identisch zu StrengthSession.groupedSets
+        let grouped = Dictionary(grouping: sets) { $0.groupKey }
 
-        // Gruppen nach sortOrder sortieren (wichtig!)
-        let orderedKeys = grouped.keys.sorted()
-
-        // Optional: Sets innerhalb der Gruppe nach setNumber
-        return orderedKeys.map { key in
-            (grouped[key] ?? []).sorted { $0.setNumber < $1.setNumber }
-        }
+        // Gruppen nach sortOrder der ersten Übung sortieren; bei Gleichstand alphabetisch
+        return grouped.values
+            .map { $0.sorted { $0.setNumber < $1.setNumber } }
+            .sorted { group1, group2 in
+                let s1 = group1.first?.sortOrder ?? Int.max
+                let s2 = group2.first?.sortOrder ?? Int.max
+                if s1 != s2 { return s1 < s2 }
+                let name1 = group1.first?.exerciseNameSnapshot ?? group1.first?.exerciseName ?? ""
+                let name2 = group2.first?.exerciseNameSnapshot ?? group2.first?.exerciseName ?? ""
+                return name1 < name2
+            }
     }
 
     // Naechste verfuegbare sortOrder fuer neue Uebungen
@@ -226,6 +230,7 @@ final class TrainingPlan {
 
     /// Verbindet Übung an `index` mit der nächsten Übung als Superset.
     /// Falls die Übung bereits in einem Superset ist, wird das gesamte Superset aufgelöst.
+    @available(*, deprecated, renamed: "createSuperset(fromGroupIndices:)")
     func toggleSuperset(forGroupAt index: Int) {
         let groups = groupedTemplateSets
         guard index < groups.count else { return }
@@ -244,6 +249,62 @@ final class TrainingPlan {
             let groupId = nextGroup.first?.supersetGroupId ?? UUID().uuidString
             currentGroup.forEach { $0.supersetGroupId = groupId }
             nextGroup.forEach { $0.supersetGroupId = groupId }
+        }
+    }
+
+    /// Erstellt ein neues Superset aus den übergebenen Gruppen-Indizes (0-basiert, bezogen auf groupedTemplateSets).
+    /// Passt sortOrder an, sodass die gewählten Übungen aufeinanderfolgend stehen.
+    /// Maximal 5 Übungen pro Superset.
+    func createSuperset(fromGroupIndices indices: [Int]) {
+        let groups = groupedTemplateSets
+        let validIndices = indices.filter { $0 < groups.count }.sorted()
+        guard validIndices.count >= 2, validIndices.count <= 5 else { return }
+
+        let newGroupId = UUID().uuidString
+
+        // Alle ausgewählten Übungen bekommen die neue supersetGroupId
+        for index in validIndices {
+            groups[index].forEach { $0.supersetGroupId = newGroupId }
+        }
+
+        // sortOrder: Erste ausgewählte Übung bleibt an ihrer Position,
+        // die anderen rücken direkt dahinter (fortlaufend)
+        let anchorOrder = groups[validIndices[0]].first?.sortOrder ?? 1
+        for (offset, index) in validIndices.enumerated() {
+            groups[index].forEach { $0.sortOrder = anchorOrder + offset }
+        }
+
+        // Alle sortOrder-Werte lückenlos neu vergeben
+        reindexSortOrders()
+    }
+
+    /// Entfernt eine einzelne Übung (Gruppe an Gruppen-Index) aus ihrem Superset.
+    /// Falls danach nur noch eine Übung in der Gruppe verbleibt, wird das gesamte Superset aufgelöst.
+    func removeFromSuperset(groupAt index: Int) {
+        let groups = groupedTemplateSets
+        guard index < groups.count else { return }
+        let targetGroup = groups[index]
+
+        guard let groupId = targetGroup.first?.supersetGroupId else { return }
+
+        // Diese Übung aus dem Superset entfernen
+        targetGroup.forEach { $0.supersetGroupId = nil }
+
+        // Prüfen ob die verbleibende Gruppe noch ≥ 2 Übungen hat
+        let remaining = safeTemplateSets.filter { $0.supersetGroupId == groupId }
+        let remainingExerciseCount = Set(remaining.map { $0.groupKey }).count
+
+        if remainingExerciseCount < 2 {
+            remaining.forEach { $0.supersetGroupId = nil }
+        }
+    }
+
+    /// Nummeriert alle sortOrder-Werte lückenlos neu (1-basiert, pro Übungsgruppe).
+    /// Behält die relative Reihenfolge der Gruppen bei.
+    private func reindexSortOrders() {
+        let allGroups = groupedTemplateSets
+        for (index, group) in allGroups.enumerated() {
+            group.forEach { $0.sortOrder = index + 1 }
         }
     }
 
