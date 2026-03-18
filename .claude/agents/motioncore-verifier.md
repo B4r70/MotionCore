@@ -45,7 +45,13 @@ Search for obvious compiler issues:
 - Verify existing computed properties are still correct
 - Search for hardcoded values that may be wrong after the change
 
-### 5. Document Results
+### 5. Performance Check
+- Grep for `.sorted`, `.filter`, `.map` inside View `body` properties
+- Grep for `@Query` without `filter:` or `sort:` parameters
+- Search for `ForEach` without explicit `id:` parameter
+- Flag any computation that scales with session/set count inside a View
+
+### 6. Document Results
 Write the verification result in `tasks/todo.md`:
 
 ```markdown

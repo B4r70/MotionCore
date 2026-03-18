@@ -72,6 +72,9 @@ struct ActiveWorkoutView: View {
     @State private var dismissedProgressionExercises: Set<String> = []
     @State private var cachedProgressionRecommendations: [ProgressionRecommendation] = []
 
+        // Workout-Analyse Sheet
+    @State private var showAnalyseSheet = false
+
         // Rest-Timer: ausgelagert in eine Klasse, damit Timer-Closures
         // zuverlässig auf den State zugreifen – auch nach SwiftUI-Redraws.
     @StateObject private var restTimerManager = RestTimerManager()
@@ -401,6 +404,11 @@ struct ActiveWorkoutView: View {
                 syncLiveActivityStates()
             }
             .environmentObject(appSettings)
+        }
+            // Progressions-Analyse Sheet
+        .sheet(isPresented: $showAnalyseSheet) {
+            WorkoutAnalyseView(session: session)
+                .environmentObject(appSettings)
         }
     }
 
@@ -1146,12 +1154,40 @@ struct ActiveWorkoutView: View {
             heroCard
             progressionBanners
             exercisesOverview
+
+            // Analyse-Button: nur sichtbar wenn historische Daten vorhanden
+            if !historicalSessions.isEmpty {
+                analyseButton
+            }
         }
             // Animiert den Wechsel zwischen ActiveSetCard und RestTimerCard
         .animation(.easeInOut, value: restTimerManager.isResting)
         .padding(.horizontal)
         .padding(.top, 16)
         .padding(.bottom, 100)
+    }
+
+    // MARK: - Analyse-Button
+
+    private var analyseButton: some View {
+        Button {
+            showAnalyseSheet = true
+        } label: {
+            HStack {
+                Image(systemName: "brain.head.profile")
+                    .font(.subheadline)
+                Text("Progressions-Analyse")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, 16)
+            .background(Color.purple.opacity(0.15))
+            .foregroundStyle(.purple)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
     }
 
     @ViewBuilder

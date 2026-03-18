@@ -73,6 +73,11 @@ Brief description of what needs to be done and why.
 - **Check Shared Types**: Never redefine existing types (see CLAUDE.md)
 - **Minimal Impact**: Only touch what's necessary
 
+- **Performance Awareness**
+- Consider data scale (100+ sessions, 1000+ sets) — will this approach still be performant? 
+- Flag if lazy loading, pagination, or caching is needed. 
+- Ensure expensive computations live in CalcEngines (computed once), not in Views (recomputed on every redraw).
+
 ### 4. Wrap-Up
 - Summarize the plan briefly
 - List open questions the user needs to clarify

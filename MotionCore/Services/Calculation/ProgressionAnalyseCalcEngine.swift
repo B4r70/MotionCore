@@ -82,9 +82,9 @@ struct ProgressionAnalyseCalcEngine {
         allAnalyses.filter { $0.trend == .improving }.count
     }
 
-    /// Anzahl Übungen mit stabilem Trend.
+    /// Anzahl Übungen mit stabilem Trend (inkl. volatil — konsistent mit ProgressionViewModel).
     var stableCount: Int {
-        allAnalyses.filter { $0.trend == .stable }.count
+        allAnalyses.filter { $0.trend == .stable || $0.trend == .volatile }.count
     }
 
     /// Anzahl Übungen mit Abwärtstrend.
@@ -94,4 +94,20 @@ struct ProgressionAnalyseCalcEngine {
 
     /// Deload-Warnung: mindestens 3 Übungen zeigen einen Abwärtstrend.
     var needsDeload: Bool { decliningCount >= 3 }
+
+    // MARK: - Session-spezifische Analysen
+
+    /// Gibt alle Analysen für Übungen zurück, die in der angegebenen Session trainiert wurden.
+    /// Nützlich um eine Workout-Analyse auf die tatsächlich ausgeführten Übungen zu beschränken.
+    func analysesForSession(_ session: StrengthSession) -> [ProgressionAnalysis] {
+        let trainedNames: Set<String> = Set(
+            session.safeExerciseSets.compactMap { set -> String? in
+                let name = set.exerciseNameSnapshot
+                return name.isEmpty ? nil : name
+            }
+        )
+        return trainedExercises
+            .filter { trainedNames.contains($0.name) }
+            .map { analysis(for: $0) }
+    }
 }

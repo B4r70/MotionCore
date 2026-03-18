@@ -24,6 +24,12 @@ You review code for quality, architectural compliance, and potential issues. You
 
 ### 2. Review Checklist
 
+#### Performance
+- [ ] No expensive computations inside `body` or computed View properties?
+- [ ] No redundant array copies, sorting, or filtering on every redraw?
+- [ ] SwiftData queries use predicates/sort descriptors instead of fetching all + filtering in memory?
+- [ ] Large lists use `LazyVStack`/`LazyVGrid` instead of `VStack`/`VGrid`?
+
 #### Architecture
 - [ ] Business logic in CalcEngines, not in Views?
 - [ ] CalcEngines are pure structs without state?
