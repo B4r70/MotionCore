@@ -16,7 +16,6 @@ import SwiftUI
 struct ExercisesOverviewCard: View {
     let groupedSets: [[ExerciseSet]]
     let currentExerciseIndex: Int
-    let refreshID: UUID
     let prSetIDs: Set<PersistentIdentifier>
 
     let onAddExercise: () -> Void
@@ -49,7 +48,9 @@ struct ExercisesOverviewCard: View {
         VStack(alignment: .leading, spacing: 12) {
             header
 
-            ForEach(Array(groupedSets.enumerated()), id: \.offset) { index, sets in
+            // groupKey als stabile ID: SwiftUI kann Rows bei Reihenfolge-Änderungen
+            // animieren statt sie komplett neu zu erstellen.
+            ForEach(Array(groupedSets.enumerated()), id: \.element.first?.groupKey) { index, sets in
                 if let firstSet = sets.first {
                     ExerciseOverviewRow(
                         index: index + 1,
@@ -84,7 +85,6 @@ struct ExercisesOverviewCard: View {
             }
         }
         .glassCard()
-        .id(refreshID)
     }
 
     private var header: some View {

@@ -27,16 +27,7 @@ struct ProgressionAnalyseView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
     @State private var selectedExercise: Exercise?
-
-    // MARK: - Computed
-
-    private var progressionCalc: ProgressionAnalyseCalcEngine {
-        ProgressionAnalyseCalcEngine(sessions: allSessions, exercises: allExercises)
-    }
-
-    private var trainedExercises: [Exercise] {
-        progressionCalc.trainedExercises
-    }
+    @State private var viewModel = ProgressionViewModel()
 
     // MARK: - Body
 
@@ -48,23 +39,23 @@ struct ProgressionAnalyseView: View {
                 VStack(spacing: 16) {
 
                     // Hero-Card: Aggregierte Übersicht
-                    if !trainedExercises.isEmpty {
+                    if !viewModel.trainedExercises.isEmpty {
                         ProgressionOverviewCard(
-                            improvingCount: progressionCalc.improvingCount,
-                            stableCount: progressionCalc.stableCount,
-                            decliningCount: progressionCalc.decliningCount,
-                            needsDeload: progressionCalc.needsDeload
+                            improvingCount: viewModel.improvingCount,
+                            stableCount: viewModel.stableCount,
+                            decliningCount: viewModel.decliningCount,
+                            needsDeload: viewModel.needsDeload
                         )
                     }
 
                     // Übungsliste
                     VStack(spacing: 10) {
-                        ForEach(trainedExercises) { exercise in
-                            ProgressionExerciseCard(
-                                analysis: progressionCalc.analysis(for: exercise)
-                            )
-                            .onTapGesture {
-                                selectedExercise = exercise
+                        ForEach(viewModel.trainedExercises) { exercise in
+                            if let analysis = viewModel.analysis(for: exercise) {
+                                ProgressionExerciseCard(analysis: analysis)
+                                    .onTapGesture {
+                                        selectedExercise = exercise
+                                    }
                             }
                         }
                     }
@@ -73,16 +64,28 @@ struct ProgressionAnalyseView: View {
             }
             .scrollIndicators(.hidden)
 
-            if trainedExercises.isEmpty {
+            if viewModel.trainedExercises.isEmpty {
                 EmptyState()
             }
         }
         .sheet(item: $selectedExercise) { exercise in
-            ProgressionDetailView(
-                analysis: progressionCalc.analysis(for: exercise),
-                oneRMData: progressionCalc.oneRMTrend(for: exercise),
-                volumeData: progressionCalc.volumeTrend(for: exercise)
-            )
+            // Analyse ist im Cache — bei korrektem onChange immer vorhanden
+            if let analysis = viewModel.analysis(for: exercise) {
+                ProgressionDetailView(
+                    analysis: analysis,
+                    oneRMData: viewModel.oneRMTrendMap[exercise.persistentModelID] ?? [],
+                    volumeData: viewModel.volumeTrendMap[exercise.persistentModelID] ?? []
+                )
+            }
+        }
+        .task {
+            viewModel.recalculate(sessions: allSessions, exercises: allExercises)
+        }
+        .onChange(of: allSessions) { _, new in
+            viewModel.recalculate(sessions: new, exercises: allExercises)
+        }
+        .onChange(of: allExercises) { _, new in
+            viewModel.recalculate(sessions: allSessions, exercises: new)
         }
     }
 }

@@ -39,33 +39,7 @@ struct SummaryView: View {
     // MARK: - State
 
     @State private var selectedTimeframe: SummaryTimeframe = .week
-
-    // MARK: - Computed Properties
-
-    private var summaryCalc: SummaryCalcEngine {
-        SummaryCalcEngine(
-            cardio: cardioSessions,
-            strength: strengthSessions,
-            outdoor: outdoorSessions
-        )
-    }
-
-    private var filteredCalc: SummaryCalcEngine {
-        switch selectedTimeframe {
-        case .week: return summaryCalc.thisWeek
-        case .month: return summaryCalc.thisMonth
-        case .year: return summaryCalc.thisYear
-        case .all: return summaryCalc
-        }
-    }
-
-    private var progressionAnalyses: [ProgressionAnalysis] {
-        guard !strengthSessions.isEmpty else { return [] }
-        let engine = ProgressionCalcEngine()
-        return exercises
-            .filter { $0.progressionStrategy != .manual && $0.category != .bodyweight }
-            .map { engine.analyze(exercise: $0, sessions: strengthSessions) }
-    }
+    @State private var viewModel = SummaryViewModel()
 
     private let gridColumns: [GridItem] = [
         GridItem(.flexible()),
@@ -82,11 +56,11 @@ struct SummaryView: View {
                 VStack(spacing: 20) {
                     TimeframePicker(selection: $selectedTimeframe)
 
-                    if summaryCalc.totalWorkouts > 0 {
+                    if viewModel.totalWorkouts > 0 {
                         StreakCard(
-                            currentStreak: summaryCalc.currentStreak,
-                            workoutsThisWeek: summaryCalc.workoutsThisWeek,
-                            averagePerWeek: summaryCalc.averageWorkoutsPerWeek
+                            currentStreak: viewModel.currentStreak,
+                            workoutsThisWeek: viewModel.workoutsThisWeek,
+                            averagePerWeek: viewModel.averageWorkoutsPerWeek
                         )
                     }
 
@@ -94,62 +68,116 @@ struct SummaryView: View {
                         StatisticGridCard(
                             icon: .system("figure.mixed.cardio"),
                             title: "Workouts",
-                            valueView: Text("\(filteredCalc.totalWorkouts)"),
+                            valueView: Text("\(viewModel.filteredTotalWorkouts)"),
                             color: .blue
                         )
 
                         StatisticGridCard(
                             icon: .system("flame.fill"),
                             title: "Kalorien",
-                            valueView: Text("\(filteredCalc.totalCalories)"),
+                            valueView: Text("\(viewModel.filteredTotalCalories)"),
                             color: .orange
                         )
 
                         StatisticGridCard(
                             icon: .system("clock.fill"),
                             title: "Trainingszeit",
-                            valueView: Text(filteredCalc.formattedTotalDuration),
+                            valueView: Text(viewModel.filteredFormattedDuration),
                             color: .purple
                         )
 
                         StatisticGridCard(
                             icon: .system("heart.fill"),
                             title: "⌀ Herzfrequenz",
-                            valueView: Text("\(filteredCalc.averageHeartRate)"),
+                            valueView: Text("\(viewModel.filteredAverageHeartRate)"),
                             color: .red
                         )
                     }
 
-                    if !filteredCalc.workoutTypeDistribution.isEmpty {
-                        TypeBreakdownCard(distribution: filteredCalc.workoutTypeDistribution)
+                    if !viewModel.filteredWorkoutTypeDistribution.isEmpty {
+                        TypeBreakdownCard(distribution: viewModel.filteredWorkoutTypeDistribution)
                     }
 
-                    if filteredCalc.workoutTypeDistribution.count > 1 {
+                    if viewModel.filteredWorkoutTypeDistribution.count > 1 {
                         StatisticDonutChart(
                             title: "Workouts nach Typ",
-                            data: filteredCalc.workoutTypeChartData
+                            data: viewModel.filteredWorkoutTypeChartData
                         )
                     }
 
-                    if summaryCalc.totalWorkouts > 0 {
+                    if viewModel.totalWorkouts > 0 {
                         SummaryRecordsCard(
-                            highestCaloriesBurn: summaryCalc.highestCaloriesBurn,
-                            longestWorkout: summaryCalc.longestWorkout,
-                            longestStreak: summaryCalc.longestStreak
+                            highestCaloriesBurn: viewModel.highestCaloriesBurn,
+                            longestWorkout: viewModel.longestWorkout,
+                            longestStreak: viewModel.longestStreak
                         )
                     }
 
                     if !strengthSessions.isEmpty {
-                        ProgressionSummaryCard(analyses: progressionAnalyses)
+                        ProgressionSummaryCard(analyses: viewModel.progressionAnalyses)
                     }
                 }
                 .scrollViewContentPadding()
             }
             .scrollIndicators(.hidden)
 
-            if summaryCalc.totalWorkouts == 0 {
+            if viewModel.totalWorkouts == 0 {
                 EmptyState()
             }
+        }
+        .task {
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                exercises: exercises,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: cardioSessions) { _, new in
+            viewModel.recalculate(
+                cardio: new,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                exercises: exercises,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: strengthSessions) { _, new in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: new,
+                outdoor: outdoorSessions,
+                exercises: exercises,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: outdoorSessions) { _, new in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: new,
+                exercises: exercises,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: exercises) { _, new in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                exercises: new,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: selectedTimeframe) { _, new in
+            // Nur gefilterte Werte neu berechnen — günstiger als volle Neuberechnung
+            viewModel.recalculateFiltered(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                timeframe: new
+            )
         }
     }
 }

@@ -54,6 +54,13 @@ struct ActiveWorkoutView: View {
         // Neuberechnungen bei jedem Re-Render der View.
     @State private var cachedGroupedSets: [[ExerciseSet]] = []
 
+        // Performance-Caches: werden nur bei echten Datenänderungen aktualisiert,
+        // nicht bei jedem sekündlichen Timer-Tick des ActiveSessionManager.
+    @State private var cachedSessionVolume: Double = 0
+    @State private var cachedCurrentSet: ExerciseSet? = nil
+    @State private var cachedLastCompletedSet: ExerciseSet? = nil
+    @State private var cachedCurrentExerciseIndex: Int = 0
+
     @State private var prSetIDs: Set<PersistentIdentifier> = []
     @State private var prBannerExercise: String? = nil
     @State private var prBannerOneRM: Double = 0
@@ -83,7 +90,7 @@ struct ActiveWorkoutView: View {
             .sorted { $0.setNumber < $1.setNumber }
     }
 
-    private var sessionVolume: Double {
+    private func computeSessionVolume() -> Double {
         session.safeExerciseSets
             .filter { $0.isCompleted }
             .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
@@ -93,29 +100,35 @@ struct ActiveWorkoutView: View {
         allSessions.filter { $0.persistentModelID != session.persistentModelID }
     }
 
-    private var currentSet: ExerciseSet? {
-        if selectedExerciseKey != nil {
-            return selectedExerciseSets.first { !$0.isCompleted }
-        }
-        return session.nextUncompletedSet
-    }
+    /// Aktualisiert alle Set-Caches in einem einzigen safeExerciseSets-Durchlauf.
+    /// Muss nach jeder Änderung an completedSets oder selectedExerciseKey aufgerufen werden.
+    private func refreshSetCaches() {
+        let safeSets = session.safeExerciseSets
 
-    private var currentExerciseIndex: Int {
+        // lastCompletedSet: letzter abgeschlossener Satz
+        cachedLastCompletedSet = safeSets.last { $0.isCompleted }
+
+        // currentSet: nächster offener Satz (nach selectedExerciseKey oder global)
+        if let key = selectedExerciseKey {
+            cachedCurrentSet = safeSets
+                .filter { $0.groupKey == key }
+                .sorted { $0.setNumber < $1.setNumber }
+                .first { !$0.isCompleted }
+        } else {
+            cachedCurrentSet = session.nextUncompletedSet
+        }
+
+        // currentExerciseIndex: Position der aktuellen Übung in cachedGroupedSets
         if let key = selectedExerciseKey,
            let idx = cachedGroupedSets.firstIndex(where: { $0.first?.groupKey == key }) {
-            return idx
+            cachedCurrentExerciseIndex = idx
+        } else if let current = cachedCurrentSet {
+            cachedCurrentExerciseIndex = cachedGroupedSets.firstIndex(where: { group in
+                group.contains { $0.id == current.id }
+            }) ?? 0
+        } else {
+            cachedCurrentExerciseIndex = 0
         }
-
-        guard let current = session.nextUncompletedSet else { return 0 }
-        return cachedGroupedSets.firstIndex(where: { group in
-            group.contains { $0.id == current.id }
-        }) ?? 0
-    }
-
-    private var lastCompletedSet: ExerciseSet? {
-        session.safeExerciseSets
-            .filter { $0.isCompleted }
-            .last
     }
 
     private func refreshProgressionRecommendations() {
@@ -204,14 +217,14 @@ struct ActiveWorkoutView: View {
     }
 
     private var currentVideoThumb: ExerciseVideoView {
-        guard let set = currentSet else {
+        guard let set = cachedCurrentSet else {
             return ExerciseVideoView(assetName: "", size: 80)
         }
         return .forSet(set, size: 80)
     }
 
     private var lastCompletedVideoThumb: ExerciseVideoView {
-        guard let set = lastCompletedSet else {
+        guard let set = cachedLastCompletedSet else {
             return ExerciseVideoView(assetName: "", size: 56)
         }
         return .forSet(set, size: 56)
@@ -231,7 +244,7 @@ struct ActiveWorkoutView: View {
                     completedSets: session.completedSets,
                     totalSets: session.totalSets,
                     progress: session.progress,
-                    sessionVolume: sessionVolume,
+                    sessionVolume: cachedSessionVolume,
                     planTitle: session.sourceTrainingPlan?.title
                 )
                 ScrollView {
@@ -294,6 +307,8 @@ struct ActiveWorkoutView: View {
 
                 // Initialer Cache-Aufbau
             cachedGroupedSets = session.groupedSets
+            refreshSetCaches()
+            cachedSessionVolume = computeSessionVolume()
         }
 
             // =====================================================================
@@ -308,13 +323,17 @@ struct ActiveWorkoutView: View {
         }
         .onChange(of: session.completedSets) { _, _ in
             cachedGroupedSets = session.groupedSets
+            refreshSetCaches()
+            cachedSessionVolume = computeSessionVolume()
             syncLiveActivityStates()
             sendWatchState()
         }
         .onChange(of: exerciseListRefreshID) { _, _ in
             cachedGroupedSets = session.groupedSets
+            refreshSetCaches()
         }
         .onChange(of: selectedExerciseKey) { _, newValue in
+            refreshSetCaches()
             sessionManager.setSelectedExerciseKey(newValue)
             syncLiveActivityStates()
             sendWatchState()
@@ -386,7 +405,7 @@ struct ActiveWorkoutView: View {
     }
 
     private var setsForCurrentExercise: Int {
-        guard let current = currentSet else { return 0 }
+        guard let current = cachedCurrentSet else { return 0 }
         return cachedGroupedSets.first(where: { $0.first?.groupKey == current.groupKey })?.count ?? 0
     }
 
@@ -955,8 +974,8 @@ struct ActiveWorkoutView: View {
             workoutStartDate: workoutStartDate,
             isPaused: sessionManager.isPaused,
             elapsedAtPause: sessionManager.isPaused ? sessionManager.elapsedSeconds : nil,
-            currentExercise: currentSet?.exerciseName,
-            currentSet: currentSet.map { "Satz \($0.setNumber)" },
+            currentExercise: cachedCurrentSet?.exerciseName,
+            currentSet: cachedCurrentSet.map { "Satz \($0.setNumber)" },
             isResting: restTimerManager.isResting,
             restStartDate: restTimerManager.isResting ? restTimerManager.restStartDate : nil,
             restEndDate: restTimerManager.isResting ? restTimerManager.restEndDate : nil,
@@ -1091,8 +1110,7 @@ struct ActiveWorkoutView: View {
     private var exercisesOverview: some View {
         ExercisesOverviewCard(
             groupedSets: cachedGroupedSets,
-            currentExerciseIndex: currentExerciseIndex,
-            refreshID: exerciseListRefreshID,
+            currentExerciseIndex: cachedCurrentExerciseIndex,
             prSetIDs: prSetIDs,
             onAddExercise: { showAddExerciseSheet = true },
             onSelectExercise: { key in
@@ -1138,11 +1156,11 @@ struct ActiveWorkoutView: View {
 
     @ViewBuilder
     private var heroCard: some View {
-        if restTimerManager.isResting, let completedSet = lastCompletedSet {
+        if restTimerManager.isResting, let completedSet = cachedLastCompletedSet {
             RestTimerCardContainer(
                 restTimerManager: restTimerManager,
                 completedSet: completedSet,
-                currentSet: currentSet,
+                currentSet: cachedCurrentSet,
                 setsForCurrentExercise: setsForCurrentExercise,
                 supersetNextRoundNames: completedSet.supersetGroupId != nil
                     ? supersetNextRoundNames(for: completedSet)
@@ -1156,7 +1174,7 @@ struct ActiveWorkoutView: View {
                     syncLiveActivityStates()
                 }
             )
-        } else if let activeSet = currentSet {
+        } else if let activeSet = cachedCurrentSet {
             // Alle Superset-Anzeige-Daten in einem einzigen groupedSets-Durchlauf berechnen
             let ctx = supersetDisplayContext(for: activeSet)
             ActiveSetCard(

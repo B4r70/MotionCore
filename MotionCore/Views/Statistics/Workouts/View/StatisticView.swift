@@ -30,31 +30,12 @@ struct StatisticView: View {
 
     @State private var selectedTimeframe: SummaryTimeframe = .month
     @State private var healthSectionExpanded: Bool = false
+    @State private var viewModel = StatisticsViewModel()
 
     // MARK: - Environment
 
     @EnvironmentObject private var appSettings: AppSettings
     @ObservedObject private var healthKitManager = HealthKitManager.shared
-
-    // MARK: - Computed
-
-    /// Gefilterte CalcEngine für den aktuellen Zeitraum.
-    private var calc: StatisticCalcEngine {
-        StatisticCalcEngine(
-            cardioSessions: cardioSessions,
-            strengthSessions: strengthSessions,
-            outdoorSessions: outdoorSessions
-        ).filtered(by: selectedTimeframe)
-    }
-
-    /// Separate Engine für die StrengthCharts (1RM, Volumen).
-    private var strengthChartCalc: StrengthStatisticCalcEngine {
-        StrengthStatisticCalcEngine(sessions: calc.allStrengthSessions)
-    }
-
-    private var allSessionsEmpty: Bool {
-        cardioSessions.isEmpty && strengthSessions.isEmpty && outdoorSessions.isEmpty
-    }
 
     private let gridColumns: [GridItem] = [
         GridItem(.flexible()),
@@ -77,17 +58,17 @@ struct StatisticView: View {
                     kpiGrid
 
                     // Kraft-spezifische Charts
-                    if !calc.allStrengthSessions.isEmpty {
+                    if !viewModel.allStrengthSessions.isEmpty {
                         strengthCharts
                     }
 
                     // Typübergreifende Trend-Charts
-                    if !cardioSessions.isEmpty {
+                    if !viewModel.allCardioSessions.isEmpty {
                         typeCrossCharts
                     }
 
                     // Cardio & Outdoor-Section
-                    if !cardioSessions.isEmpty {
+                    if !viewModel.allCardioSessions.isEmpty {
                         cardioSection
                     }
 
@@ -98,9 +79,49 @@ struct StatisticView: View {
             }
             .scrollIndicators(.hidden)
 
-            if allSessionsEmpty {
+            if viewModel.allSessionsEmpty {
                 EmptyState()
             }
+        }
+        .task {
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: cardioSessions) { _, new in
+            viewModel.recalculate(
+                cardio: new,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: strengthSessions) { _, new in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: new,
+                outdoor: outdoorSessions,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: outdoorSessions) { _, new in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: new,
+                timeframe: selectedTimeframe
+            )
+        }
+        .onChange(of: selectedTimeframe) { _, new in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                timeframe: new
+            )
         }
     }
 
@@ -114,7 +135,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("figure.run"),
                 title: "Gesamt Workouts",
-                valueView: Text("\(calc.totalWorkoutsAll)"),
+                valueView: Text("\(viewModel.totalWorkoutsAll)"),
                 color: .blue
             )
 
@@ -122,7 +143,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("flame.fill"),
                 title: "Gesamt Kalorien",
-                valueView: Text("\(calc.totalCaloriesAll)"),
+                valueView: Text("\(viewModel.totalCaloriesAll)"),
                 color: .orange
             )
 
@@ -130,7 +151,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("scalemass.fill"),
                 title: "Gesamt Volumen",
-                valueView: Text(formattedVolume(calc.totalStrengthVolume)),
+                valueView: Text(formattedVolume(viewModel.totalStrengthVolume)),
                 color: .purple
             )
 
@@ -138,7 +159,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("heart.fill"),
                 title: "⌀ Herzfrequenz",
-                valueView: Text("\(calc.averageHeartRateAll) bpm"),
+                valueView: Text("\(viewModel.averageHeartRateAll) bpm"),
                 color: .red
             )
 
@@ -146,7 +167,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("list.number"),
                 title: "Gesamt Sets",
-                valueView: Text("\(calc.totalStrengthSets)"),
+                valueView: Text("\(viewModel.totalStrengthSets)"),
                 color: .teal
             )
 
@@ -154,7 +175,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("chart.bar.fill"),
                 title: "⌀ Volumen/Session",
-                valueView: Text(formattedVolume(calc.averageStrengthVolumePerSession)),
+                valueView: Text(formattedVolume(viewModel.averageStrengthVolumePerSession)),
                 color: .indigo
             )
 
@@ -162,7 +183,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("clock.fill"),
                 title: "⌀ Dauer",
-                valueView: Text("\(calc.averageDurationAll) min"),
+                valueView: Text("\(viewModel.averageDurationAll) min"),
                 color: .cyan
             )
 
@@ -170,7 +191,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("bolt.fill"),
                 title: "⌀ METs",
-                valueView: Text(String(format: "%.1f", calc.averageMETS)),
+                valueView: Text(String(format: "%.1f", viewModel.averageMETS)),
                 color: .yellow
             )
 
@@ -178,7 +199,7 @@ struct StatisticView: View {
             StatisticGridCard(
                 icon: .system("arrow.left.and.right"),
                 title: "Gesamt Strecke",
-                valueView: Text(String(format: "%.2f km", calc.totalDistanceAll)),
+                valueView: Text(String(format: "%.2f km", viewModel.totalDistanceAll)),
                 color: .green
             )
         }
@@ -190,13 +211,13 @@ struct StatisticView: View {
     private var strengthCharts: some View {
         VStack(spacing: 20) {
             // Volumen-Trend
-            StrengthVolumeChart(data: strengthChartCalc.volumeTrend)
+            StrengthVolumeChart(data: viewModel.strengthVolumeTrend)
 
-            // 1RM-Progression (Kurzfassung — nur wenn Übungen vorhanden)
-            if !strengthChartCalc.allTrainedExerciseNames.isEmpty {
+            // 1RM-Progression (interaktiv — Engine wird direkt übergeben)
+            if !viewModel.strengthChartCalc.allTrainedExerciseNames.isEmpty {
                 StrengthOneRMChart(
-                    exerciseNames: strengthChartCalc.allTrainedExerciseNames,
-                    calcEngine: strengthChartCalc
+                    exerciseNames: viewModel.strengthChartCalc.allTrainedExerciseNames,
+                    calcEngine: viewModel.strengthChartCalc
                 )
             }
         }
@@ -210,12 +231,12 @@ struct StatisticView: View {
             StatisticTrendChart(
                 title: "Herzfrequenz-Trend",
                 yLabel: "Puls",
-                data: calc.trendHeartRate
+                data: viewModel.trendHeartRate
             )
             StatisticTrendChart(
                 title: "Kalorien-Trend",
                 yLabel: "kcal",
-                data: calc.trendCalories
+                data: viewModel.trendCalories
             )
         }
     }
@@ -234,7 +255,7 @@ struct StatisticView: View {
                 icon: .system("figure.strengthtraining.traditional"),
                 title: "⌀ Belastung",
                 valueView: ShowStarRating(
-                    starRating: calc.averageIntensity,
+                    starRating: viewModel.averageIntensity,
                     starMaxRating: Intensity.maxRating,
                     starColor: .orange
                 ),
@@ -245,15 +266,15 @@ struct StatisticView: View {
             StatisticCard(
                 icon: .system("flame.fill"),
                 title: "⌀ Kaloriendichte",
-                valueView: Text(String(format: "%.3f", calc.averageCaloricDensity)),
+                valueView: Text(String(format: "%.3f", viewModel.averageCaloricDensity)),
                 color: .purple
             )
 
             // Geräte-Verteilung
-            StatisticDeviceCard(allWorkouts: calc.allCardioSessions)
+            StatisticDeviceCard(allWorkouts: viewModel.allCardioSessions)
 
             // Intensitäts-Verteilung
-            StatisticIntensityCard(allWorkouts: calc.allCardioSessions)
+            StatisticIntensityCard(allWorkouts: viewModel.allCardioSessions)
         }
     }
 

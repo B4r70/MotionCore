@@ -73,7 +73,7 @@ struct ProgressionAnalyseCalcEngine {
     // MARK: - Aggregierte Übersicht
 
     /// Alle Analysen auf einmal (lazy über trainedExercises).
-    private var allAnalyses: [ProgressionAnalysis] {
+    var allAnalyses: [ProgressionAnalysis] {
         trainedExercises.map { analysis(for: $0) }
     }
 

@@ -27,15 +27,9 @@ struct RecordView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
 
-    // MARK: - Computed
+    // MARK: - State
 
-    private var calcRecords: RecordCalcEngine {
-        RecordCalcEngine(workouts: allCardioSessions)
-    }
-
-    private var calcStrengthRecords: StrengthRecordCalcEngine {
-        StrengthRecordCalcEngine(sessions: allStrengthSessions)
-    }
+    @State private var viewModel = RecordsViewModel()
 
     private let gridColumns: [GridItem] = [
         GridItem(.flexible()),
@@ -69,6 +63,16 @@ struct RecordView: View {
                 EmptyState()
             }
         }
+        .task {
+            viewModel.recalculateStrength(sessions: allStrengthSessions)
+            viewModel.recalculateCardio(sessions: allCardioSessions)
+        }
+        .onChange(of: allStrengthSessions) { _, new in
+            viewModel.recalculateStrength(sessions: new)
+        }
+        .onChange(of: allCardioSessions) { _, new in
+            viewModel.recalculateCardio(sessions: new)
+        }
     }
 
     // MARK: - Kraft-Rekorde Section
@@ -83,7 +87,7 @@ struct RecordView: View {
             LazyVGrid(columns: gridColumns, spacing: 16) {
 
                 // Höchstes Gewichtsvolumen
-                if let record = calcStrengthRecords.highestVolumeSession {
+                if let record = viewModel.highestVolumeSession {
                     StrengthRecordGridCard(
                         record: record,
                         metricTitle: "Höchstes Volumen",
@@ -93,7 +97,7 @@ struct RecordView: View {
                 }
 
                 // Meiste Sätze
-                if let record = calcStrengthRecords.mostSetsSession {
+                if let record = viewModel.mostSetsSession {
                     StrengthRecordGridCard(
                         record: record,
                         metricTitle: "Meiste Sätze",
@@ -103,7 +107,7 @@ struct RecordView: View {
                 }
 
                 // Meiste Reps gesamt
-                if let record = calcStrengthRecords.mostRepsSession {
+                if let record = viewModel.mostRepsSession {
                     StrengthRecordGridCard(
                         record: record,
                         metricTitle: "Meiste Reps",
@@ -113,7 +117,7 @@ struct RecordView: View {
                 }
 
                 // Schwerster Einzelsatz
-                if let record = calcStrengthRecords.heaviestSingleSet {
+                if let record = viewModel.heaviestSingleSet {
                     StrengthRecordGridCard(
                         record: record,
                         metricTitle: "Schwerster Satz",
@@ -123,7 +127,7 @@ struct RecordView: View {
                 }
 
                 // Längstes Kraft-Training
-                if let record = calcStrengthRecords.longestStrengthSession {
+                if let record = viewModel.longestStrengthSession {
                     StrengthRecordGridCard(
                         record: record,
                         metricTitle: "Längstes Training",
@@ -133,7 +137,7 @@ struct RecordView: View {
                 }
 
                 // Meiste Übungen
-                if let record = calcStrengthRecords.mostExercisesSession {
+                if let record = viewModel.mostExercisesSession {
                     StrengthRecordGridCard(
                         record: record,
                         metricTitle: "Meiste Übungen",
@@ -143,7 +147,7 @@ struct RecordView: View {
                 }
 
                 // Höchstes geschätztes 1RM
-                if let record = calcStrengthRecords.highestEstimated1RM {
+                if let record = viewModel.highestEstimated1RM {
                     StrengthRecordGridCard(
                         record: record,
                         metricTitle: "Höchstes 1RM",
@@ -167,7 +171,7 @@ struct RecordView: View {
             LazyVGrid(columns: gridColumns, spacing: 16) {
 
                 // Längste Distanz
-                if let longestDistance = calcRecords.longestDistanceWorkout {
+                if let longestDistance = viewModel.longestDistanceWorkout {
                     RecordGridCard(
                         metricTitle: "Längste Distanz",
                         recordValue: String(format: "%.2f km", longestDistance.distance),
@@ -178,7 +182,7 @@ struct RecordView: View {
                 }
 
                 // Höchster Kalorienverbrauch
-                if let highestCalories = calcRecords.highestBurnedCaloriesWorkout {
+                if let highestCalories = viewModel.highestBurnedCaloriesWorkout {
                     RecordGridCard(
                         metricTitle: "Höchste Kalorien",
                         recordValue: "\(highestCalories.calories) kcal",

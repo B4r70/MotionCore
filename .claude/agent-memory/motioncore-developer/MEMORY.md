@@ -1,4 +1,4 @@
-# MotionCore Agent Memory
+# MotionCore Developer Agent Memory
 
 ## Session UUIDs (stabile Primärschlüssel)
 - `StrengthSession.sessionUUID: UUID` — bereits vorhanden
@@ -76,6 +76,28 @@ Sobald ein `CodingKeys`-Enum im Encodable-Struct vorhanden ist, wird `.convertTo
   - Reduzierter 4pt-Abstand innerhalb Supersets (statt 12pt)
   - Drag deaktiviert für Superset-Mitglieder (link-Icon statt drag-handle)
 - `ReorderableExerciseList` nimmt jetzt `onRemoveFromSuperset: (Int) -> Void` (kein toggleSuperset mehr)
+
+## ActiveWorkoutView Performance (18.03.2026)
+- `ActiveSessionManager.elapsedSeconds` ist `@Published` → triggert jede Sekunde einen vollen body-Render
+- Computed properties im body-Aufrufpfad MÜSSEN gecacht sein wenn sie SwiftData scannen
+- Caching-Pattern: `@State private var cachedX` + `private func refreshX()` + Aufruf in onChange/onAppear
+- Gecachte Properties: `cachedSessionVolume`, `cachedCurrentSet`, `cachedLastCompletedSet`, `cachedCurrentExerciseIndex`
+- `refreshSetCaches()` befüllt alle 3 Set-Caches in einem einzigen `safeExerciseSets`-Durchlauf
+- Aufruf-Trigger für Caches: `onAppear`, `onChange(of: session.completedSets)`, `onChange(of: selectedExerciseKey)`, `onChange(of: exerciseListRefreshID)`
+- `ExercisesOverviewCard`: kein `refreshID: UUID` Prop mehr (entfernt), kein `.id(refreshID)` mehr
+- `ForEach` in ExercisesOverviewCard: `id: \.element.first?.groupKey` statt `id: \.offset`
+- `RestTimerCardContainer` kapselt `@ObservedObject restTimerManager` → Timer-Ticks rendern nur diese Sub-View
+
+## @Observable ViewModels (abgeschlossen 18.03.2026)
+- ViewModels-Ordner: `Services/ViewModels/` (4 Dateien)
+- Pattern: `@Observable final class XxxViewModel` + `@State private var viewModel = XxxViewModel()` in Views
+- Kein `@StateObject` — iOS 17 `@Observable` + `@State` stattdessen
+- Datenfluss: View `@Query` → `.task` / `.onChange` → `viewModel.recalculate()` → View liest `viewModel.X`
+- `ProgressionViewModel` → `ProgressionAnalyseView` — `allAnalyses` musste von `private` auf `internal` geändert werden in `ProgressionAnalyseCalcEngine`
+- `SummaryViewModel` → `SummaryView` — zwei `recalculate`-Methoden: voll + nur-filtered (Timeframe-Wechsel)
+- `StatisticsViewModel` → `StatisticView` — cacht `StrengthStatisticCalcEngine`-Instanz für interaktiven `StrengthOneRMChart` (Übungs-Auswahl vom User zur Laufzeit)
+- `RecordsViewModel` → `RecordView` — getrennte `recalculateStrength` + `recalculateCardio`-Methoden
+- Xcode 16: `PBXFileSystemSynchronizedBuildFileExceptionSet` → neue Swift-Dateien im Ordner werden automatisch erkannt, kein manuelles pbxproj-Editing nötig
 
 ## Bekannte Einschränkungen (Supabase Sync)
 - `exerciseUUIDSnapshot: String` ist KEIN UUID-Typ (Int-Hash-String) → Supabase-Spalte `exercise_uuid` muss TEXT sein
