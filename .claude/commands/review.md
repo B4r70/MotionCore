@@ -1,15 +1,17 @@
 ---
-description: Runs a code review of recent changes. Checks architecture, code quality, and conventions.
+description: Performs a quality review of the current MotionCore changes.
 ---
 
-# Code Review
+# Review Task
 
-Delegate to the **motioncore-reviewer** agent:
+Delegate to `motioncore-reviewer`.
 
 **Scope:** $ARGUMENTS
 
-If no specific scope was provided:
-- Read `tasks/todo.md` for context on the latest changes
-- Review all modified files mentioned there
+If no scope is provided:
 
-Check against the full review checklist and document the result in `tasks/todo.md`.
+- use `tasks/current.md` as context
+- review all changed or affected files listed there
+
+Write the report to:
+`tasks/reviews/YYYY-MM-DD-[task-slug]-review.md`

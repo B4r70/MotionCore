@@ -1,15 +1,17 @@
 ---
-description: Validates a feature or implementation against real-world fitness training practices and sports science.
+description: Validates MotionCore fitness logic against training practice and sensible defaults.
 ---
 
-# Domain Validation
+# Validate Domain
 
-Delegate to the **motioncore-fitness-expert** agent:
+Delegate to `motioncore-fitness-expert`.
 
 **Scope:** $ARGUMENTS
 
-If no specific scope was provided:
-- Read `tasks/todo.md` for context on the current plan or latest changes
-- Validate the concept and any default values against training reality
+If no scope is provided:
 
-Document the validation result in `tasks/todo.md`.
+- use `tasks/current.md` as context
+- validate the plan and/or implementation only if fitness logic is affected
+
+Write the report to:
+`tasks/domain/YYYY-MM-DD-[task-slug]-domain.md`

@@ -1,22 +1,21 @@
 ---
-description: Creates an implementation plan for a feature or refactoring without writing any code.
+description: Creates a robust implementation plan for MotionCore without making code changes.
 ---
 
-# Feature Planning
+# Plan Task
 
-Delegate to the **motioncore-planner** agent:
+Delegate to `motioncore-planner`.
 
 **Task:** $ARGUMENTS
 
-Create a complete implementation plan in `tasks/todo.md`.
+Expected result:
 
-Analyze:
-1. The current codebase and affected files
-2. Dependencies and risks
-3. Concrete implementation steps with complexity estimates
-4. Verification steps
+- analysis of the affected architecture
+- UX placement
+- affected files
+- risks
+- concrete implementation steps
+- manual verification
 
-Present at the end:
-- The plan as a summary
-- Open questions that need to be clarified
-- Recommendation whether implementation should happen in one pass or in phases
+Write the plan to `tasks/current.md`.
+At the end, provide a short summary and only the truly necessary open questions.

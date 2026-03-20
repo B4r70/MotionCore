@@ -1,43 +1,82 @@
 # Lessons Learned
 
-Patterns and mistakes documented here should be avoided in future sessions.
-Format: Date, Context, Mistake, Rule.
+Only add project-wide, high-value, recurring MotionCore learnings.
+Do not add generic notes from unrelated projects.
+
+## Format
+
+### [Short Title]
+
+- Added: YYYY-MM-DD
+- Trigger: What typically causes the issue
+- Symptom: How it shows up
+- Root Cause: The actual cause
+- Rule: The concrete rule going forward
+- Applies To: affected layers / files / areas
+- Example: optional
 
 ---
 
-## Known Patterns
+### Live Activity Timer Anchors
 
-### iOS 18.4 Beta — Live Activity Timer
-- **Context**: `Text(date, style: .timer)` in Live Activities
-- **Mistake**: Freezes in background
-- **Rule**: Always use `Text(timerInterval: start...end, countsDown: true)` with fixed anchor dates from `ContentState`
+- Added: 2026-03-19
+- Trigger: countdown / timer in Live Activities
+- Symptom: timer freezes in background or drifts
+- Root Cause: render-time based timer rendering / unsuitable timer approach
+- Rule: For Live Activities, use fixed time anchors from `ContentState`; prefer `Text(timerInterval: start...end, countsDown: true)`
+- Applies To: `ActivityKit`, `MotionCoreWidgetsLiveActivity.swift`
 
-### Background Timers
-- **Context**: `Timer.scheduledTimer` is suspended by iOS in background
-- **Mistake**: Timer stops, UI shows wrong values
-- **Rule**: Always use `Date()` anchor + elapsed time calculation for background-safe timers
+### Background-Safe Time Logic
 
-### SwiftData + CloudKit Schema Changes
-- **Context**: Schema changes in production
-- **Mistake**: CloudKit schema cannot be easily changed
-- **Rule**: Use a separate `dev.store` with DEBUG flag and disabled CloudKit for testing
+- Added: 2026-03-19
+- Trigger: ongoing time measurement with `Timer.scheduledTimer`
+- Symptom: timer stops in background
+- Root Cause: iOS suspends classic timers in background
+- Rule: Compute time deltas from date anchors, not from continuously running background timers
+- Applies To: `RestTimerManager.swift`, `ActiveSessionManager.swift`, `ActiveWorkoutView.swift`
 
-### Shared Types
-- **Context**: Defining new types
-- **Mistake**: Types defined twice, causing conflicts
-- **Rule**: Always check CLAUDE.md first to see if the type already exists
+### SwiftData Shared Types
 
-### SwiftData Model-Identifiers
-- **Context**: Dictionary-Keys für SwiftData-`@Model`-Instanzen
-- **Mistake**: `exercise.id` ist `PersistentIdentifier`, nicht `UUID`. `exercise.name` ist nicht unique (Duplikat-Keys). Beides führt zu Build-Fehlern oder Runtime-Crashes.
-- **Rule**: `exercise.persistentModelID` (`PersistentIdentifier`) als Dictionary-Key verwenden. Für Lookups nach Inhalt: `exerciseName`-Feld des zugehörigen Value-Structs nutzen.
+- Added: 2026-03-19
+- Trigger: new DTOs / view models / chart types are introduced
+- Symptom: duplicate definitions, conflicts, unnecessary types
+- Root Cause: existing shared types were not checked first
+- Rule: Before creating any new type, check `CLAUDE.md` and the existing CalcEngines first
+- Applies To: `Services/Calculation/`, `StatisticCalcEngine.swift`, `StrengthRecordCalcEngine.swift`
+
+### SwiftData + CloudKit Schema Safety
+
+- Added: 2026-03-19
+- Trigger: changes to production-adjacent models
+- Symptom: CloudKit / schema problems
+- Root Cause: risky changes without a dev-safe path
+- Rule: Plan schema changes deliberately and validate them locally / in a dev-safe way first
+- Applies To: `Models/Core/`, `StrengthSession.swift`, `CardioSession.swift`, `OutdoorSession.swift`
+
+### SwiftData Model-Identifiers as Dictionary Keys
+
+- Added: 2026-03-19
+- Trigger: using SwiftData `@Model` instances as Dictionary keys
+- Symptom: build errors or runtime crashes from non-unique keys
+- Root Cause: `exercise.id` is `PersistentIdentifier` (not `UUID`), and `exercise.name` is not unique — both lead to duplicate keys
+- Rule: Use `exercise.persistentModelID` as Dictionary key. For content-based lookups, use the `exerciseName` field of the associated value struct.
+- Applies To: `Services/Calculation/`, any code building dictionaries from SwiftData queries
+- Example: `trained.map { ex -> (PersistentIdentifier, [TrendPoint]) in ... }`
 
 ### @Observable ViewModels — CalcEngine Caching
-- **Context**: CalcEngines als computed properties in Views → werden bei jedem Render neu berechnet
-- **Mistake**: O(n·k) Operationen (z.B. `allAnalyses`) 4× pro Render-Zyklus wiederholt
-- **Rule**: CalcEngines in `@Observable` ViewModels wrappen. `recalculate()` nur via `.task` + `.onChange(of:)` triggern. `allAnalyses` einmal aufrufen und als `let` speichern, dann alle abgeleiteten Counts daraus berechnen.
 
-### Dictionary aus SwiftData-Ergebnissen
-- **Context**: `Dictionary(uniqueKeysWithValues:)` mit SwiftData-Objekten
-- **Mistake**: Closure-Return-Typ kann vom Compiler nicht inferiert werden → "ambiguous without type annotation"
-- **Rule**: Immer expliziten Return-Typ annotieren: `trained.map { ex -> (PersistentIdentifier, [TrendPoint]) in ... }`
+- Added: 2026-03-19
+- Trigger: CalcEngines used as computed properties directly in Views
+- Symptom: expensive operations (e.g. `allAnalyses`) recalculated 4× per render cycle
+- Root Cause: computed properties in Views are re-evaluated on every render
+- Rule: Wrap CalcEngines in `@Observable` ViewModels. Trigger `recalculate()` only via `.task {}` + `.onChange(of:)`. Call expensive operations once and store as `let`, then derive all counts from that result.
+- Applies To: `ProgressionViewModel.swift`, `StatisticsViewModel.swift`, `RecordsViewModel.swift`, `SummaryViewModel.swift`
+
+### Dictionary from SwiftData Results — Type Annotation
+
+- Added: 2026-03-19
+- Trigger: `Dictionary(uniqueKeysWithValues:)` with SwiftData objects in a `map` closure
+- Symptom: compiler error "ambiguous without type annotation"
+- Root Cause: Swift compiler cannot infer return type of the closure
+- Rule: Always annotate the explicit return type in the closure: `trained.map { ex -> (PersistentIdentifier, [TrendPoint]) in ... }`
+- Applies To: any `Dictionary(uniqueKeysWithValues:)` call with SwiftData model objects

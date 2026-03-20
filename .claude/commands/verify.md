@@ -1,15 +1,17 @@
 ---
-description: Verifies recent changes for build errors, consistency, and regression issues.
+description: Performs static plausibility checks and creates a manual test checklist.
 ---
 
-# Verification
+# Verify Task
 
-Delegate to the **motioncore-verifier** agent:
+Delegate to `motioncore-verifier`.
 
 **Scope:** $ARGUMENTS
 
-If no specific scope was provided:
-- Read `tasks/todo.md` for context on the latest changes
-- Verify all modified files mentioned there
+If no scope is provided:
 
-Create a complete verification report in `tasks/todo.md` and a list of manual verification steps for the user.
+- use `tasks/current.md` as context
+- check all affected files from the current task
+
+Write the report to:
+`tasks/verifications/YYYY-MM-DD-[task-slug]-verification.md`

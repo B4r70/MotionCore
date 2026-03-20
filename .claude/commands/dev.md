@@ -1,53 +1,67 @@
 ---
-description: Runs the complete development workflow — planning, implementation, review, and verification as a pipeline with subagents.
+description: Runs the full MotionCore workflow: Plan → optional domain validation → implementation → review → verification.
 ---
 
-# Full Development Workflow
+# Full Dev Workflow
 
-You are now orchestrating the complete development cycle for the following task:
+Task: $ARGUMENTS
 
-**Task:** $ARGUMENTS
+## Phase 1 — Planning
 
-## Pipeline
+1. Delegate to `motioncore-planner`
+2. Create `tasks/current.md`
+3. Present the plan to the user
 
-### Phase 1: Planning
-Delegate to the **motioncore-planner** agent:
-- Analyze the requirement
-- Create a detailed plan in `tasks/todo.md`
-- Identify affected files and risks
+**HARD STOP**
+Request exactly **one** approval for implementation.
 
-**Wait for the result and present the plan to the user.**
-**Ask the user: "Soll ich mit der Implementierung fortfahren?" (Should I proceed with implementation?)**
+## Phase 2 — Optional Domain Validation
 
-### Phase 1.5: Domain Validation
-Delegate to the **[project]-fitness-expert** agent:
-- Validate the plan against real-world training practices
-- Check default values and formulas
+Only if fitness logic is affected:
 
-**If the expert flags issues: Present them to the user before proceeding.**
+1. Delegate to `motioncore-fitness-expert`
+2. Write the report to `tasks/domain/...`
+3. If major domain issues exist: inform the user and stop
 
-### Phase 2: Development
-Only if the user confirmed the plan. Delegate to the **motioncore-developer** agent:
-- Execute the plan from `tasks/todo.md` step by step
-- Mark each completed step
+## Phase 3 — Implementation
 
-**Summarize the changes.**
+1. Delegate to `motioncore-developer`
+2. Implement all approved open steps from `tasks/current.md`
+3. Update progress in `tasks/current.md`
 
-### Phase 3: Review
-Delegate to the **motioncore-reviewer** agent:
-- Review the implemented code
-- Document findings in `tasks/todo.md`
+No stop after every individual step.
+Only stop if:
+- a real product decision is missing
+- a critical issue changes the direction
+- a step from `tasks/current.md` cannot be completed as specified
 
-**If critical findings exist: Inform the user and wait for instructions.**
+## Phase 4 — Review
 
-### Phase 4: Verification
-Delegate to the **motioncore-verifier** agent:
-- Check consistency and potential build errors
-- Create a list of manual verification steps
+1. Delegate to `motioncore-reviewer`
+2. Write the report to `tasks/reviews/...`
 
-**Present the overall result with a summary to the user.**
+If fundamental issues are found:
+
+- inform the user
+- stop before claiming completion
+
+## Phase 5 — Verification
+
+1. Delegate to `motioncore-verifier`
+2. Write the report to `tasks/verifications/...`
+3. List manual build / preview / simulator checks
+
+## Phase 6 — Wrap-Up
+
+- What was implemented?
+- Which files were changed?
+- What does the review say?
+- What does the verification say?
+- Which manual checks still need to be performed?
 
 ## Rules
-- Report to the user between phases
-- On critical issues in any phase: STOP and ask the user
-- At the end: Summary of all changes and next steps
+
+- Provide short updates between phases
+- Do not ask unnecessary questions
+- Stop only for real direction-changing decisions
+- Never mark the task complete without review and verification
