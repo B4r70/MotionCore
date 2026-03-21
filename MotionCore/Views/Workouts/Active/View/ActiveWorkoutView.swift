@@ -783,6 +783,20 @@ struct ActiveWorkoutView: View {
         session.duration = finalSeconds / 60
         try? context.save()
 
+        // Smart Plan-Update: Analyse nach Session-Ende
+        if appSettings.smartPlanUpdateEnabled,
+           let sourcePlan = session.sourceTrainingPlan {
+            let engine = PlanUpdateCalcEngine(
+                minWeightDelta: appSettings.planUpdateMinWeightDelta,
+                minRepsDelta: appSettings.planUpdateMinRepsDelta,
+                trendSessionCount: appSettings.planUpdateTrendSessionCount
+            )
+            let proposal = engine.analyze(plan: sourcePlan)
+            if proposal.hasChanges {
+                sessionManager.pendingPlanUpdateProposal = proposal
+            }
+        }
+
             // Complications nach Workout-Abschluss aktualisieren
         WatchComplicationService.updateComplications(allSessions: allSessions)
 

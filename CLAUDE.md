@@ -21,7 +21,7 @@
 - For bug fixes, analyze autonomously and resolve the issue
 - Do not ask about technical uncertainty if it can be clarified through analysis
 - Only ask follow-up questions for real product / UX / data model decisions
-- Never mark a task as done without review and verification
+- Never mark a task as done without the quality gate
 - After every relevant user correction, check whether `tasks/lessons.md` should be updated
 
 ## Project Context
@@ -74,8 +74,7 @@ There is no XCTest suite; verification is done through Xcode build, SwiftUI prev
 ## File System for Work Artifacts
 
 - Active plan: `tasks/current.md`
-- Reviews: `tasks/reviews/`
-- Verifications: `tasks/verifications/`
+- Quality reports: `tasks/quality/`
 - Domain validations: `tasks/domain/`
 - Archived plans: `tasks/archive/`
 - Lessons learned: `tasks/lessons.md`

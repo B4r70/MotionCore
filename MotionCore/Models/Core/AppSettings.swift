@@ -139,6 +139,36 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // MARK: - Smart Plan-Update
+
+    // Smart Plan-Update: aktiviert/deaktiviert den automatischen Vorschlag nach Session-Ende
+    @Published var smartPlanUpdateEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(smartPlanUpdateEnabled, forKey: "workout.smartPlanUpdateEnabled")
+        }
+    }
+
+    // Minimale Gewichtsdifferenz (in kg) damit eine Änderung als Trend gilt
+    @Published var planUpdateMinWeightDelta: Double {
+        didSet {
+            UserDefaults.standard.set(planUpdateMinWeightDelta, forKey: "workout.planUpdateMinWeightDelta")
+        }
+    }
+
+    // Minimale Wiederholungsdifferenz damit eine Änderung als Trend gilt
+    @Published var planUpdateMinRepsDelta: Int {
+        didSet {
+            UserDefaults.standard.set(planUpdateMinRepsDelta, forKey: "workout.planUpdateMinRepsDelta")
+        }
+    }
+
+    // Anzahl der Sessions die für die Trend-Erkennung herangezogen werden
+    @Published var planUpdateTrendSessionCount: Int {
+        didSet {
+            UserDefaults.standard.set(planUpdateTrendSessionCount, forKey: "workout.planUpdateTrendSessionCount")
+        }
+    }
+
     // MARK: Health Metrics Einstellungen
     // Userdefaults: Aktivitätslevel
     @Published var userActivityLevel: UserActivityLevel {
@@ -229,6 +259,18 @@ class AppSettings: ObservableObject {
         } else {
             userActivityLevel = .moderatelyActive // Default
         }
+
+        // Smart Plan-Update: aktiviert (Default: true)
+        smartPlanUpdateEnabled = defaults.object(forKey: "workout.smartPlanUpdateEnabled") as? Bool ?? true
+
+        // Smart Plan-Update: Gewichts-Schwelle (Default: 2.5 kg)
+        planUpdateMinWeightDelta = defaults.object(forKey: "workout.planUpdateMinWeightDelta") as? Double ?? 2.5
+
+        // Smart Plan-Update: Reps-Schwelle (Default: 2)
+        planUpdateMinRepsDelta = defaults.object(forKey: "workout.planUpdateMinRepsDelta") as? Int ?? 2
+
+        // Smart Plan-Update: Trend-Sessions (Default: 3)
+        planUpdateTrendSessionCount = defaults.object(forKey: "workout.planUpdateTrendSessionCount") as? Int ?? 3
 
         // Initialisiere das tägliche Kalorienziel
         dailyActiveCalorieGoal = UserDefaults.standard.integer(forKey: "user.dailyActiveCalorieGoal")

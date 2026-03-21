@@ -10,10 +10,11 @@ Delegate to `motioncore-planner`.
 
 Expected result:
 
+- complexity assessment (small / medium / large)
 - analysis of the affected architecture
-- UX placement
 - affected files
-- risks
+- risks (for medium / large)
+- UX placement (for large only)
 - concrete implementation steps
 - manual verification
 

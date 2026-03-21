@@ -17,11 +17,15 @@ struct TrainingDetailView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appSettings: AppSettings
+    @EnvironmentObject private var sessionManager: ActiveSessionManager
 
     @Bindable var plan: TrainingPlan
 
     @State private var showDeleteAlert = false
     @State private var startedSession: StrengthSession?
+    /// Lokale Kopie für das Sheet — getrennt von pendingPlanUpdateProposal
+    /// damit Banner-Sichtbarkeit und Sheet-Öffnen unabhängig voneinander sind.
+    @State private var planUpdateSheetProposal: PlanUpdateProposal?
 
     // MARK: - Body
 
@@ -40,6 +44,18 @@ struct TrainingDetailView: View {
                     if !plan.safeTemplateSets.isEmpty {
                         PlanStatisticsCard(plan: plan)
                             .padding(.horizontal)
+                    }
+
+                    // Plan-Update Banner (nach Workout-Ende, wenn Vorschlag vorhanden)
+                    if let proposal = sessionManager.pendingPlanUpdateProposal,
+                       proposal.hasChanges,
+                       proposal.plan.planUUID == plan.planUUID {
+                        PlanUpdateBanner(
+                            proposal: proposal,
+                            onTap: { planUpdateSheetProposal = proposal },
+                            onDismiss: { sessionManager.pendingPlanUpdateProposal = nil }
+                        )
+                        .padding(.horizontal)
                     }
 
                     // Übungen
@@ -72,6 +88,12 @@ struct TrainingDetailView: View {
             .environmentObject(appSettings)
             .environmentObject(ActiveSessionManager.shared)
         }
+        .sheet(item: $planUpdateSheetProposal) { proposal in
+            PlanUpdateSheet(proposal: proposal, onApply: {
+                sessionManager.pendingPlanUpdateProposal = nil
+                planUpdateSheetProposal = nil
+            })
+        }
     }
 
     // MARK: - Aktionen
@@ -100,6 +122,7 @@ struct TrainingDetailView: View {
             planType: .strength
         ))
         .environmentObject(AppSettings.shared)
+        .environmentObject(ActiveSessionManager.shared)
     }
 }
 
@@ -110,5 +133,6 @@ struct TrainingDetailView: View {
             planType: .mixed
         ))
         .environmentObject(AppSettings.shared)
+        .environmentObject(ActiveSessionManager.shared)
     }
 }

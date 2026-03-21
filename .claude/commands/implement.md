@@ -19,4 +19,4 @@ If a scope is provided:
 Update `tasks/current.md` in-place:
 
 - checkboxes
-- short progress block
+- short progress block at the end

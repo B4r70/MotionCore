@@ -155,6 +155,7 @@ struct BaseView: View {
             NavigationStack {
                 StatsAndRecordsView()
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.hidden, for: .navigationBar)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             HeaderView(

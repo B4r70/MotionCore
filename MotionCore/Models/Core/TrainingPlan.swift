@@ -43,6 +43,14 @@ final class TrainingPlan {
         set { planTypeRaw = newValue.rawValue }
     }
 
+    // MARK: - Plan-Update Tracking
+
+    // Zeitpunkt des letzten automatischen Plan-Updates
+    var lastUpdatedFromSession: Date? = nil
+
+    // UUID-String der Session, die den letzten Update ausgelöst hat (String? für CloudKit-Kompatibilität)
+    var lastUpdateSourceSessionUUID: String? = nil
+
     // MARK: - Beziehungen
 
     @Relationship(deleteRule: .cascade, inverse: \ExerciseSet.trainingPlan)

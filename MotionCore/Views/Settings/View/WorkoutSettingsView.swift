@@ -117,6 +117,26 @@ struct WorkoutSettingsView: View {
                 .pickerStyle(.menu)
                 .tint(.secondary)
             }
+            // MARK: - Smart Plan-Update
+
+            Section("Smart Plan-Update") {
+                Toggle("Smart Plan-Update aktivieren", isOn: $appSettings.smartPlanUpdateEnabled)
+
+                if appSettings.smartPlanUpdateEnabled {
+                    Stepper(
+                        "Gewichts-Schwelle: \(String(format: "%.1f", appSettings.planUpdateMinWeightDelta)) kg",
+                        value: $appSettings.planUpdateMinWeightDelta,
+                        in: 1.0...10.0,
+                        step: 0.5
+                    )
+
+                    Stepper(
+                        "Trend-Sessions: \(appSettings.planUpdateTrendSessionCount)",
+                        value: $appSettings.planUpdateTrendSessionCount,
+                        in: 2...10
+                    )
+                }
+            }
         }
         .navigationTitle("Defaultwerte für Workouts")
         .navigationBarTitleDisplayMode(.inline)
@@ -127,4 +147,5 @@ struct WorkoutSettingsView: View {
     NavigationStack {
         WorkoutSettingsView()
     }
+    .environmentObject(AppSettings.shared)
 }

@@ -45,6 +45,9 @@ class ActiveSessionManager: ObservableObject {
     // Startzeit der Session
     @Published private(set) var sessionStartedAt: Date?
 
+    // Ausstehender Plan-Update-Vorschlag nach Workout-Ende
+    @Published var pendingPlanUpdateProposal: PlanUpdateProposal? = nil
+
     // MARK: - Private Properties
 
     private let userDefaultsKey = "session.activeSessionState"
