@@ -18,6 +18,10 @@ import SwiftData
 
 struct StatsAndRecordsView: View {
 
+    // MARK: - Environment
+
+    @EnvironmentObject private var appSettings: AppSettings
+
     // MARK: - State
 
     @State private var selectedSegment: StatsSegment = .statistics
@@ -25,24 +29,28 @@ struct StatsAndRecordsView: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Segmented Control
-            Picker("Ansicht", selection: $selectedSegment) {
-                ForEach(StatsSegment.allCases) { segment in
-                    Text(segment.label).tag(segment)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 12)
+        ZStack {
+            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
-            // Content basierend auf Auswahl
-            switch selectedSegment {
-            case .statistics:
-                StatisticView()
-            case .records:
-                RecordView()
+            VStack(spacing: 0) {
+                // Segmented Control
+                Picker("Ansicht", selection: $selectedSegment) {
+                    ForEach(StatsSegment.allCases) { segment in
+                        Text(segment.label).tag(segment)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 12)
+
+                // Content basierend auf Auswahl
+                switch selectedSegment {
+                case .statistics:
+                    StatisticView()
+                case .records:
+                    RecordView()
+                }
             }
         }
     }

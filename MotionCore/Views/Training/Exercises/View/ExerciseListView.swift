@@ -315,7 +315,7 @@ struct ExerciseListView: View {
 
                 // Importierte Übungen
                 FilterChip(
-                    title: "Aus ExerciseDB",
+                    title: "Aus Supabase",
                     icon: .system("cloud.fill"),
                     count: systemExercises.count,
                     isSelected: showSystemExercises
