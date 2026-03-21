@@ -60,6 +60,16 @@ struct StrengthEditView: View {
                                     .frame(width: 80)
                             }
                             
+                            // Herzfrequenz
+                            HStack {
+                                Text("Ø Herzfrequenz (bpm)")
+                                Spacer()
+                                TextField("0", value: $session.heartRate, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(width: 80)
+                            }
+
                             // Intensität
                             HStack {
                                 Text("Belastung")

@@ -188,3 +188,40 @@ Nach Abschluss einer plan-basierten Session analysiert MotionCore automatisch di
 **Offene Punkte:**
 - Xcode Build (`Cmd+B`) notwendig — neue Dateien müssen manuell zum Target hinzugefügt werden
 - Quality Gate ausstehend
+
+---
+
+# SetEditSheet — Erweiterung
+
+## Implementierungsschritte
+
+- [x] 1. State-Properties für Timer und restSeconds hinzufügen
+- [x] 2. Timer-Hilfsfunktionen aus SetConfigurationSheet übernehmen
+- [x] 3. Gewicht-Sektion: Long Press + Unilateral-Anzeige ("2 × X.XX kg")
+- [x] 4. CautionNote unter Übungs-Info anzeigen
+- [x] 5. Satzanzahl-Buttons: Long Press (0.3s Intervall)
+- [x] 6. Reps-Buttons: Long Press (0.15s Intervall)
+- [x] 7. Pausenzeit-Sektion mit SetRestTimeSection einfügen
+- [x] 8. VStack in ScrollView wrappen
+- [x] 9. Timer aufräumen bei onDisappear
+- [x] 10. saveChanges() um restSeconds + Unilateral erweitern
+
+## Progress Log
+
+### 21.03.2026 — Vollständige Implementierung
+
+**Abgeschlossene Schritte:** 1–10 (alle)
+
+**Geänderte Dateien:**
+- `MotionCore/Views/Workouts/Components/SetEditSheet.swift` — Long Press Auto-Repeat für alle Stepper, Bilateral-Anzeige, CautionNote, Pausenzeit-Sektion, ScrollView-Wrapper, restSeconds in saveChanges()
+
+**Wichtige Entscheidungen:**
+- `CautionNote` aus `set.exercise?.cautionNote` (Optional-Chaining, kein Crash wenn kein Exercise-Link)
+- `weight` State bleibt Gesamtgewicht (nicht per Seite) — Display zeigt `weight / 2` mit "2 ×" Prefix
+- `weightPerSide = weight / 2` wird in `saveChanges()` und Auto-Propagation mitgeschrieben
+- `makeStepButton()` als `@ViewBuilder` Helper reduziert Wiederholung in allen drei Stepper-Sektionen
+- Datei: 308 Zeilen (Limit 350 eingehalten)
+
+**Offene Punkte:**
+- Xcode Build (`Cmd+B`) erforderlich
+- Quality Gate ausstehend
