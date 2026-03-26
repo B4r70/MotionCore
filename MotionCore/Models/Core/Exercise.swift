@@ -65,6 +65,12 @@ final class Exercise {
     var primaryMusclesRaw: [String] = []
     var secondaryMusclesRaw: [String] = []
 
+    // Feingranulare Muskeldaten (DetailedMuscle rawValues = Supabase-Identifier)
+    // Diese Felder werden bei zukünftigen Imports und durch In-Place Enrichment befüllt.
+    // Bestehende Exercises haben hier [] — der Fallback auf primaryMusclesRaw greift dann.
+    var detailedPrimaryMusclesRaw: [String] = []
+    var detailedSecondaryMusclesRaw: [String] = []
+
     @Relationship(deleteRule: .nullify, inverse: \ExerciseSet.exercise)
     var sets: [ExerciseSet]? = []
 
@@ -109,7 +115,9 @@ final class Exercise {
         movementPatternRaw: String = "",
         bodyPositionRaw: String = "",
         primaryMusclesRaw: [String] = [],
-        secondaryMusclesRaw: [String] = []
+        secondaryMusclesRaw: [String] = [],
+        detailedPrimaryMusclesRaw: [String] = [],
+        detailedSecondaryMusclesRaw: [String] = []
     ) {
         self.name = name
         self.exerciseDescription = exerciseDescription
@@ -157,6 +165,8 @@ final class Exercise {
         self.bodyPositionRaw = bodyPositionRaw
         self.primaryMusclesRaw = primaryMusclesRaw
         self.secondaryMusclesRaw = secondaryMusclesRaw
+        self.detailedPrimaryMusclesRaw = detailedPrimaryMusclesRaw
+        self.detailedSecondaryMusclesRaw = detailedSecondaryMusclesRaw
     }
 }
 
@@ -189,13 +199,35 @@ extension Exercise {
     }
 
     var primaryMuscles: [MuscleGroup] {
-        get { primaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) } }
+        get {
+            // Bevorzugt: Aus DetailedMuscle ableiten (feingranular → grob)
+            if !detailedPrimaryMusclesRaw.isEmpty {
+                return Array(Set(detailedPrimaryMuscles.map { $0.parentGroup }))
+            }
+            // Fallback: Alte Daten direkt lesen (bestehende Exercises)
+            return primaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) }
+        }
         set { primaryMusclesRaw = newValue.map { $0.rawValue } }
     }
 
     var secondaryMuscles: [MuscleGroup] {
-        get { secondaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) } }
+        get {
+            if !detailedSecondaryMusclesRaw.isEmpty {
+                return Array(Set(detailedSecondaryMuscles.map { $0.parentGroup }))
+            }
+            return secondaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) }
+        }
         set { secondaryMusclesRaw = newValue.map { $0.rawValue } }
+    }
+
+    var detailedPrimaryMuscles: [DetailedMuscle] {
+        get { detailedPrimaryMusclesRaw.compactMap { DetailedMuscle(rawValue: $0) } }
+        set { detailedPrimaryMusclesRaw = newValue.map { $0.rawValue } }
+    }
+
+    var detailedSecondaryMuscles: [DetailedMuscle] {
+        get { detailedSecondaryMusclesRaw.compactMap { DetailedMuscle(rawValue: $0) } }
+        set { detailedSecondaryMusclesRaw = newValue.map { $0.rawValue } }
     }
 
     var allMuscles: [MuscleGroup] {
