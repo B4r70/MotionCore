@@ -417,15 +417,21 @@ extension Exercise {
         let instructionsText = supabase.instructions ?? ""
         let tipsText = supabase.tips ?? ""
 
-        let primaryMusclesList = supabase.primaryMuscles.compactMap {
-            MuscleGroupMapper.map(supabaseValue: $0)
+        // Feingranulare Muskeln: Supabase-Identifier direkt als DetailedMuscle speichern
+        let detailedPrimaryList = supabase.primaryMuscles.compactMap {
+            MuscleGroupMapper.mapDetailed(supabaseValue: $0)
         }
-        let secondaryMusclesList = supabase.secondaryMuscles.compactMap {
-            MuscleGroupMapper.map(supabaseValue: $0)
+        let detailedSecondaryList = supabase.secondaryMuscles.compactMap {
+            MuscleGroupMapper.mapDetailed(supabaseValue: $0)
         }
 
-        let primaryMusclesRaw = primaryMusclesList.map { $0.rawValue }
-        let secondaryMusclesRaw = secondaryMusclesList.map { $0.rawValue }
+        // DetailedMuscle rawValues speichern (verlustfrei)
+        let detailedPrimaryMusclesRaw = detailedPrimaryList.map { $0.rawValue }
+        let detailedSecondaryMusclesRaw = detailedSecondaryList.map { $0.rawValue }
+
+        // Grobe MuscleGroup für Compat ableiten (bestehende Views nutzen das weiterhin)
+        let primaryMusclesRaw = Array(Set(detailedPrimaryList.map { $0.parentGroup.rawValue }))
+        let secondaryMusclesRaw = Array(Set(detailedSecondaryList.map { $0.parentGroup.rawValue }))
 
         let equipmentEnum = ExerciseEquipment.fromSupabase(supabase.equipment.first)
         let equipmentRaw = equipmentEnum.rawValue
@@ -476,7 +482,9 @@ extension Exercise {
             movementPatternRaw: "push",
             bodyPositionRaw: "standing",
             primaryMusclesRaw: primaryMusclesRaw,
-            secondaryMusclesRaw: secondaryMusclesRaw
+            secondaryMusclesRaw: secondaryMusclesRaw,
+            detailedPrimaryMusclesRaw: detailedPrimaryMusclesRaw,
+            detailedSecondaryMusclesRaw: detailedSecondaryMusclesRaw
         )
     }
 }

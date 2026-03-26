@@ -183,3 +183,13 @@ extension MuscleGroupMapper {
         }
     }
 }
+
+// MARK: - DetailedMuscle Mapping
+
+extension MuscleGroupMapper {
+    /// Konvertiert Supabase-Identifier direkt zu DetailedMuscle.
+    /// Da DetailedMuscle.rawValue == Supabase-Identifier, ist das ein direktes init.
+    static func mapDetailed(supabaseValue: String) -> DetailedMuscle? {
+        DetailedMuscle(rawValue: supabaseValue.lowercased())
+    }
+}

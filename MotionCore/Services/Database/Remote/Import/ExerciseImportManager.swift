@@ -186,4 +186,74 @@ class ExerciseImportManager {
 
         return (total, supabase, custom)
     }
+
+    // MARK: - In-Place Enrichment
+
+    /// Reichert bestehende Exercises um feingranulare DetailedMuscle-Daten an.
+    /// Lädt Exercises von Supabase und aktualisiert NUR die neuen Felder.
+    /// Alle Relationships, Favoriten, RepRanges, Trainingspläne etc. bleiben komplett unberührt.
+    ///
+    /// SICHERHEITS-GARANTIE: Diese Methode löscht KEINE Exercises und ändert KEINE
+    /// bestehenden Felder. Sie befüllt ausschließlich detailedPrimaryMusclesRaw und
+    /// detailedSecondaryMusclesRaw auf bestehenden Objekten.
+    static func enrichWithDetailedMuscles(
+        context: ModelContext,
+        progressHandler: ((Int, Int) -> Void)? = nil
+    ) async throws {
+        print("🔬 Starte DetailedMuscle Enrichment...")
+
+        // 1. Alle Supabase-Exercises laden (mit Muscle-Identifiers)
+        let supabaseExercises = try await SupabaseExerciseService.shared.fetchAllExercises()
+        print("📥 \(supabaseExercises.count) Exercises von Supabase geladen")
+
+        // 2. Lokale Exercises mit apiID laden
+        let descriptor = FetchDescriptor<Exercise>()
+        let allLocal = try context.fetch(descriptor)
+        let localWithApiID = allLocal.filter { $0.apiID != nil }
+        print("📦 \(localWithApiID.count) lokale Exercises mit apiID gefunden")
+
+        // 3. Lookup: apiID → lokale Exercise
+        let localByApiID = Dictionary(
+            uniqueKeysWithValues: localWithApiID.compactMap { ex -> (UUID, Exercise)? in
+                guard let apiID = ex.apiID else { return nil }
+                return (apiID, ex)
+            }
+        )
+
+        // 4. Anreicherung — NUR die neuen Felder setzen
+        var enriched = 0
+        var skipped = 0
+        for (index, supabaseExercise) in supabaseExercises.enumerated() {
+            guard let local = localByApiID[supabaseExercise.id] else {
+                skipped += 1
+                continue
+            }
+
+            // Nur befüllen wenn noch leer (idempotent)
+            guard local.detailedPrimaryMusclesRaw.isEmpty else {
+                skipped += 1
+                continue
+            }
+
+            local.detailedPrimaryMusclesRaw = supabaseExercise.primaryMuscles
+                .compactMap { DetailedMuscle(rawValue: $0.lowercased())?.rawValue }
+            local.detailedSecondaryMusclesRaw = supabaseExercise.secondaryMuscles
+                .compactMap { DetailedMuscle(rawValue: $0.lowercased())?.rawValue }
+
+            enriched += 1
+            progressHandler?(index + 1, supabaseExercises.count)
+
+            // Zwischenspeichern alle 100 Exercises
+            if enriched % 100 == 0 {
+                try context.save()
+            }
+        }
+
+        // Finale Speicherung
+        try context.save()
+
+        print("✅ Enrichment abgeschlossen:")
+        print("   - Angereichert: \(enriched)")
+        print("   - Übersprungen: \(skipped)")
+    }
 }
