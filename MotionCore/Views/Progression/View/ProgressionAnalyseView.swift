@@ -28,10 +28,34 @@ struct ProgressionAnalyseView: View {
     @EnvironmentObject private var appSettings: AppSettings
     @State private var selectedExercise: Exercise?
     @State private var viewModel = ProgressionViewModel()
+    @State private var selectedSegment: AnalyseSegment = .progression
 
     // MARK: - Body
 
     var body: some View {
+        VStack(spacing: 0) {
+            Picker("Ansicht", selection: $selectedSegment) {
+                ForEach(AnalyseSegment.allCases) { segment in
+                    Text(segment.label).tag(segment)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
+
+            switch selectedSegment {
+            case .progression:
+                progressionContent
+            case .heatmap:
+                MuscleHeatmapView()
+            }
+        }
+    }
+
+    // MARK: - Progressions-Inhalt
+
+    private var progressionContent: some View {
         ZStack {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
@@ -86,6 +110,22 @@ struct ProgressionAnalyseView: View {
         }
         .onChange(of: allExercises) { _, new in
             viewModel.recalculate(sessions: allSessions, exercises: new)
+        }
+    }
+}
+
+// MARK: - AnalyseSegment
+
+enum AnalyseSegment: String, CaseIterable, Identifiable {
+    case progression = "progression"
+    case heatmap = "heatmap"
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .progression: return "Progression"
+        case .heatmap: return "Heatmap"
         }
     }
 }

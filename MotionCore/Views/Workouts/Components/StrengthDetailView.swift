@@ -45,6 +45,9 @@ struct StrengthDetailView: View {
                     // Statistiken
                     statisticsCard
 
+                    // Trainierte Muskeln
+                    MuscleHeatmapMiniView(session: session)
+
                     // Übungen Details
                     exercisesDetailSection
 
