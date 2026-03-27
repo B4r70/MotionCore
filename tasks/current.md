@@ -1,102 +1,55 @@
-# Muskel-Heatmap — Implementierungsplan
+# Toolbar-Buttons vereinheitlichen — Icons statt Text
 
-**Komplexität:** Large (4 Blocks)
-**Freigabe:** Block A (aktiv) | Block B–D (pending)
+**Complexity:** Small
+**Datum:** 27.03.2026
 
 ## Summary
 
-Interaktive Muskel-Heatmap für MotionCore basierend auf einem neuen feingranularen `DetailedMuscle` Enum (39 Cases, 1:1 mit Supabase-Identifiern) und SVG-Visualisierung. Integration in den Analyse-Tab als zweites Segment neben Progression.
+Alle Text-Labels in Toolbar-Buttons (`"Abbrechen"`, `"Fertig"`, `"Speichern"`, `"Übernehmen"`) durch Icons ersetzen:
+- "Abbrechen" → `chevron.left`
+- "Fertig" / "Speichern" / "Übernehmen" → `checkmark` (blau)
 
-## Datensicherheits-Garantie
+## Affected Files (12)
 
-- Keine bestehende Exercise, Relationship oder Funktionalität darf verloren gehen
-- `MuscleGroup` Enum bleibt unverändert
-- `primaryMusclesRaw` und `secondaryMusclesRaw` bleiben als Felder erhalten
-- Convenience Init und Supabase Init werden in Block A NICHT angefasst
+1. `Views/Workouts/Components/StrengthEditView.swift` — bereits erledigt ✅
+2. `Views/Progression/View/WorkoutAnalyseView.swift`
+3. `Views/Muscles/View/MuscleHeatmapView.swift`
+4. `Views/Progression/View/ExerciseProgressionView.swift`
+5. `Views/Progression/View/ProgressionDetailView.swift`
+6. `Views/Training/Sheets/PlanPickerSheet.swift`
+7. `Views/Training/PlanUpdate/PlanUpdateSheet.swift`
+8. `Views/Workouts/Sheets/SetEditSheet.swift`
+9. `Views/Workouts/Sheets/ExercisePickerSheet.swift`
+10. `Views/Muscles/Components/MuscleGroupPicker.swift`
+11. `Views/Workouts/Sheets/SetConfigurationSheet.swift`
 
----
+## Implementation Steps
 
-## Block A: DetailedMuscle Enum + Exercise-Felder [AKTIV]
+- [x] StrengthEditView — bereits erledigt
+- [x] Alle verbleibenden 10 Dateien: Text-Buttons durch Icons ersetzen
 
-### A1 — DetailedMuscle ersetzen [OPEN]
-- **Datei:** `MotionCore/Models/Types/StrengthTypes.swift`
-- Altes `enum DetailedMuscle` (Zeile 53–120) durch neues 39-Case-Enum ersetzen
-- Extension mit: `svgRegionId: String?`, `parentGroup: MuscleGroup`, `displayName: String`, `supabaseIdentifier: String?`
-- `MuscleGroup` + `StrengthWorkoutType` bleiben unberührt
+## Manual Verification
 
-### A2 — Exercise neue Felder [OPEN]
-- **Datei:** `MotionCore/Models/Core/Exercise.swift`
-- **A2a:** `detailedPrimaryMusclesRaw` + `detailedSecondaryMusclesRaw` nach `secondaryMusclesRaw` (Zeile 66), vor `@Relationship` (Zeile 68)
-- **A2b:** Computed Properties `detailedPrimaryMuscles` + `detailedSecondaryMuscles` nach `secondaryMuscles` (Zeile 199), vor `allMuscles` (Zeile 201)
-- **A2c:** `primaryMuscles` + `secondaryMuscles` Getter mit Fallback-Logik (DetailedMuscle → parentGroup, sonst alte Raw-Felder)
-- **A2d:** Haupt-Init um 2 neue Parameter erweitern nach `secondaryMusclesRaw: [String] = []` (Zeile 112)
-- Convenience Init + Supabase Init: NICHT ändern
-
-### Validierung Block A
-- [ ] Xcode Build (`Cmd+B`) erfolgreich
-- [ ] `DetailedMuscle` Treffer nur in `StrengthTypes.swift` und `Exercise.swift`
-- [ ] `detailedPrimaryMusclesRaw` Treffer nur in `Exercise.swift`
-- [ ] Keine anderen Dateien verändert
+- [ ] Xcode Build (`Cmd+B`)
+- [ ] Stichprobe: SetEditSheet, PlanUpdateSheet, ExerciseProgressionView — Icons sichtbar
 
 ---
 
-## Block B: Import-Pipeline + Enrichment [PENDING]
+## Fortschritt
 
-### B1 — MuscleGroupMapper erweitern [PENDING]
-- `mapDetailed(supabaseValue:) -> DetailedMuscle?` hinzufügen
+**27.03.2026**
+Abgeschlossene Steps: alle (10 Dateien, 12 Ersetzungen)
 
-### B2 — Exercise Supabase-Init anpassen [PENDING]
-- Muscle-Mapping auf DetailedMuscle umstellen, `detailedPrimaryMusclesRaw` befüllen
+Geänderte Dateien:
+- `MotionCore/Views/Progression/View/WorkoutAnalyseView.swift`
+- `MotionCore/Views/Progression/View/MuscleHeatmapView.swift` (korrekter Pfad: Views/Progression/View/)
+- `MotionCore/Views/Progression/View/ExerciseProgressionView.swift`
+- `MotionCore/Views/Progression/View/ProgressionDetailView.swift`
+- `MotionCore/Views/Workouts/Sheets/PlanPickerSheet.swift` (korrekter Pfad: Views/Workouts/Sheets/)
+- `MotionCore/Views/Training/PlanUpdate/PlanUpdateSheet.swift`
+- `MotionCore/Views/Workouts/Components/SetEditSheet.swift` (korrekter Pfad: Views/Workouts/Components/)
+- `MotionCore/Views/Training/Exercises/Sheets/ExercisePickerSheet.swift` (korrekter Pfad: Views/Training/Exercises/Sheets/)
+- `MotionCore/Views/Training/Exercises/Components/MuscleGroupPicker.swift` (korrekter Pfad: Views/Training/Exercises/Components/)
+- `MotionCore/Views/Training/Plans/Components/SetConfigurationSheet.swift` (korrekter Pfad: Views/Training/Plans/Components/)
 
-### B3 — In-Place Enrichment [PENDING]
-- `ExerciseImportManager.enrichWithDetailedMuscles(context:progressHandler:)` hinzufügen
-
----
-
-## Block C: Types + CalcEngine + ViewModel [PENDING]
-
-### C1 — MuscleHeatmapTypes.swift [PENDING]
-- `HeatLevel` Enum, `MuscleHeatData` Struct, `MuscleHeatmapAnalysis` Struct
-
-### C2 — MuscleHeatmapCalcEngine.swift [PENDING]
-- Reiner Struct, `analyze(sessions:timeframe:) -> MuscleHeatmapAnalysis`
-
-### C3 — MuscleHeatmapViewModel.swift [PENDING]
-- `@Observable`, gecachtes Ergebnis
-
----
-
-## Block D: SVG + Views + Tab-Umbau [PENDING]
-
-### D1–D5 — Neue View-Dateien [PENDING]
-- `MuscleHeatmapSVGView`, `MuscleHeatmapLegend`, `MuscleHeatmapView`, `MuscleHeatmapMiniView`
-
-### D6 — ProgressionAnalyseView Umbau [PENDING]
-- Segmented Control (Progression | Heatmap)
-
-### D7 — StrengthDetailView Mini-Heatmap [PENDING]
-- `MuscleHeatmapMiniView(session:)` einfügen
-
----
-
-## Geänderte/neue Dateien (Gesamt)
-
-| Datei | Block | Status |
-|---|---|---|
-| `StrengthTypes.swift` | A | OPEN |
-| `Exercise.swift` | A+B | OPEN |
-| `MuscleGroupMapper.swift` | B | PENDING |
-| `ExerciseImportManager.swift` | B | PENDING |
-| `MuscleHeatmapTypes.swift` (neu) | C | PENDING |
-| `MuscleHeatmapCalcEngine.swift` (neu) | C | PENDING |
-| `MuscleHeatmapViewModel.swift` (neu) | C | PENDING |
-| `MuscleHeatmapSVGView.swift` (neu) | D | PENDING |
-| `MuscleHeatmapLegend.swift` (neu) | D | PENDING |
-| `MuscleHeatmapView.swift` (neu) | D | PENDING |
-| `MuscleHeatmapMiniView.swift` (neu) | D | PENDING |
-| `ProgressionAnalyseView.swift` | D | PENDING |
-| `StrengthDetailView.swift` | D | PENDING |
-
-## Progress Log
-
-### 26.03.2026 — Block A gestartet
+Offene Punkte: Xcode Build + manuelle Stichprobe ausstehend

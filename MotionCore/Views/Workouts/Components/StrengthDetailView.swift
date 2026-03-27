@@ -67,6 +67,24 @@ struct StrengthDetailView: View {
         }
         .navigationTitle("Training Details")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                // Bearbeiten-Button
+                Button {
+                    showEditSheet = true
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                }
+
+                // Löschen-Button
+                Button {
+                    showDeleteAlert = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                }
+            }
+        }
         .alert("Training löschen?", isPresented: $showDeleteAlert) {
             Button("Abbrechen", role: .cancel) {}
             Button("Löschen", role: .destructive) {
@@ -448,23 +466,25 @@ struct StrengthDetailView: View {
                 }
             }
 
-            // Bearbeiten
-            Button {
-                showEditSheet = true
-            } label: {
-                HStack {
-                    Image(systemName: "pencil")
-                    Text("Training bearbeiten")
-                        .font(.subheadline.weight(.semibold))
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
+            // Plan bearbeiten (nur sichtbar wenn Session einem Plan zugeordnet ist)
+            if let plan = session.sourceTrainingPlan {
+                NavigationLink {
+                    TrainingDetailView(plan: plan)
+                } label: {
+                    HStack {
+                        Image(systemName: "doc.text")
+                        Text("Plan bearbeiten")
+                            .font(.subheadline.weight(.semibold))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                    }
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 14)
+                    .background(Color.blue.opacity(0.15))
+                    .foregroundStyle(.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
-                .padding(.vertical, 14)
-                .padding(.horizontal, 14)
-                .background(Color.blue.opacity(0.15))
-                .foregroundStyle(.blue)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
             }
 
             // Wiederholen (neues Training aus diesem Template)
@@ -486,23 +506,6 @@ struct StrengthDetailView: View {
                     .foregroundStyle(.green)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
-            }
-
-            // Löschen
-            Button(role: .destructive) {
-                showDeleteAlert = true
-            } label: {
-                HStack {
-                    Image(systemName: "trash")
-                    Text("Training löschen")
-                        .font(.subheadline.weight(.semibold))
-                    Spacer()
-                }
-                .padding(.vertical, 14)
-                .padding(.horizontal, 14)
-                .background(Color.red.opacity(0.12))
-                .foregroundStyle(.red)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
             }
         }
     }

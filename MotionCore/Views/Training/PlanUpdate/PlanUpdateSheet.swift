@@ -76,15 +76,11 @@ struct PlanUpdateSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") {
-                        dismiss()
-                    }
+                    Button { dismiss() } label: { Image(systemName: "chevron.left") }
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Übernehmen") {
-                        applyChanges()
-                    }
+                    Button { applyChanges() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
                     .disabled(selectedCount == 0)
                     .fontWeight(.semibold)
                 }

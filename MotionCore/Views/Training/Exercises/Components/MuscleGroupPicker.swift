@@ -47,9 +47,7 @@ struct MuscleGroupPicker: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Fertig") {
-                    dismiss()
-                }
+                Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
             }
         }
     }

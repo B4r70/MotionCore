@@ -216,7 +216,7 @@ private struct MuscleDetailSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Fertig") { dismiss() }
+                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
                 }
             }
         }

@@ -61,7 +61,7 @@ struct ProgressionDetailView: View {
                         .lineLimit(1)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Fertig") { dismiss() }
+                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
                 }
             }
         }

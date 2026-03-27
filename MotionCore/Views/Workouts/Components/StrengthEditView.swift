@@ -104,19 +104,23 @@ struct StrengthEditView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
                     }
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Fertig") {
+                    Button {
                         if session.syncedToSupabase {
                             session.needsSupabaseResync = true
                         }
                         dismiss()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(.blue)
                     }
-                    .fontWeight(.semibold)
                 }
             }
         }

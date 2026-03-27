@@ -104,9 +104,7 @@ struct ExercisePickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") {
-                        dismiss()
-                    }
+                    Button { dismiss() } label: { Image(systemName: "chevron.left") }
                 }
             }
         }

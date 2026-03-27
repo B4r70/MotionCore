@@ -65,11 +65,10 @@ struct SetEditSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Abbrechen") { dismiss() }
+                    Button { dismiss() } label: { Image(systemName: "chevron.left") }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Speichern") { saveChanges(); dismiss() }
-                        .fontWeight(.semibold)
+                    Button { saveChanges(); dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
                 }
             }
             .onDisappear { stopTimer() }
