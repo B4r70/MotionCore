@@ -661,6 +661,116 @@ struct ExerciseSecondaryMuscleGroupsSection: View {
     }
 }
 
+// MARK: Exercise Detailed Primary Muscles Section
+struct ExerciseDetailedPrimaryMusclesSection: View {
+    @Binding var selectedMuscles: [DetailedMuscle]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Primäre Muskeln (detailliert)")
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            NavigationLink {
+                DetailedMusclePicker(
+                    selectedMuscles: $selectedMuscles,
+                    title: "Primäre Muskeln"
+                )
+            } label: {
+                HStack {
+                    if selectedMuscles.isEmpty {
+                        Text("Keine ausgewählt")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                ForEach(selectedMuscles, id: \.self) { muscle in
+                                    Text(muscle.displayName)
+                                        .font(.caption)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 6)
+                                        .background(.blue.opacity(0.2))
+                                        .foregroundStyle(.blue)
+                                        .clipShape(Capsule())
+                                }
+                            }
+                        }
+                        // ScrollView-Gesten nicht mit NavigationLink-Tap konkurrieren lassen
+                        .allowsHitTesting(false)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(12)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                )
+            }
+        }
+    }
+}
+
+// MARK: Exercise Detailed Secondary Muscles Section
+struct ExerciseDetailedSecondaryMusclesSection: View {
+    @Binding var selectedMuscles: [DetailedMuscle]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Sekundäre Muskeln (detailliert, optional)")
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            NavigationLink {
+                DetailedMusclePicker(
+                    selectedMuscles: $selectedMuscles,
+                    title: "Sekundäre Muskeln"
+                )
+            } label: {
+                HStack {
+                    if selectedMuscles.isEmpty {
+                        Text("Keine ausgewählt")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 6) {
+                                ForEach(selectedMuscles, id: \.self) { muscle in
+                                    Text(muscle.displayName)
+                                        .font(.caption)
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 6)
+                                        .background(.purple.opacity(0.2))
+                                        .foregroundStyle(.purple)
+                                        .clipShape(Capsule())
+                                }
+                            }
+                        }
+                        // ScrollView-Gesten nicht mit NavigationLink-Tap konkurrieren lassen
+                        .allowsHitTesting(false)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(12)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                )
+            }
+        }
+    }
+}
+
 // MARK: Exercise Media Asset Section
 struct ExerciseMediaAssetSection: View {
     @Binding var mediaAssetName: String

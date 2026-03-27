@@ -202,7 +202,7 @@ extension Exercise {
         get {
             // Bevorzugt: Aus DetailedMuscle ableiten (feingranular → grob)
             if !detailedPrimaryMusclesRaw.isEmpty {
-                return Array(Set(detailedPrimaryMuscles.map { $0.parentGroup }))
+                return Array(Set(detailedPrimaryMuscles.map { $0.parentGroup })).sorted { $0.rawValue < $1.rawValue }
             }
             // Fallback: Alte Daten direkt lesen (bestehende Exercises)
             return primaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) }
@@ -217,7 +217,7 @@ extension Exercise {
     var secondaryMuscles: [MuscleGroup] {
         get {
             if !detailedSecondaryMusclesRaw.isEmpty {
-                return Array(Set(detailedSecondaryMuscles.map { $0.parentGroup }))
+                return Array(Set(detailedSecondaryMuscles.map { $0.parentGroup })).sorted { $0.rawValue < $1.rawValue }
             }
             return secondaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) }
         }
@@ -230,12 +230,20 @@ extension Exercise {
 
     var detailedPrimaryMuscles: [DetailedMuscle] {
         get { detailedPrimaryMusclesRaw.compactMap { DetailedMuscle(rawValue: $0) } }
-        set { detailedPrimaryMusclesRaw = newValue.map { $0.rawValue } }
+        set {
+            detailedPrimaryMusclesRaw = newValue.map { $0.rawValue }
+            // Grobe Gruppen aus den feingranularen Muskeln ableiten (Compat)
+            primaryMusclesRaw = Array(Set(newValue.map { $0.parentGroup.rawValue })).sorted()
+        }
     }
 
     var detailedSecondaryMuscles: [DetailedMuscle] {
         get { detailedSecondaryMusclesRaw.compactMap { DetailedMuscle(rawValue: $0) } }
-        set { detailedSecondaryMusclesRaw = newValue.map { $0.rawValue } }
+        set {
+            detailedSecondaryMusclesRaw = newValue.map { $0.rawValue }
+            // Grobe Gruppen aus den feingranularen Muskeln ableiten (Compat)
+            secondaryMusclesRaw = Array(Set(newValue.map { $0.parentGroup.rawValue })).sorted()
+        }
     }
 
     var allMuscles: [MuscleGroup] {

@@ -1,4 +1,60 @@
-# Muscle Heatmap Bug + Exercise-Edit Absicherung
+# Plan: DetailedMuscle-Bearbeitung in ExerciseFormView
+
+**Komplexität:** Medium
+**Status:** Warte auf Genehmigung
+
+## Summary
+
+Der User soll in der ExerciseFormView die feingranularen Muskeln (`detailedPrimaryMuscles` / `detailedSecondaryMuscles`) einsehen und bearbeiten können. Die Heatmap arbeitet bereits auf `DetailedMuscle`-Ebene und bevorzugt diese Daten gegenüber den groben `MuscleGroup`-Daten. Aktuell können nur Supabase-importierte Exercises von dieser Genauigkeit profitieren — mit diesem Feature auch custom und manuell korrigierte Exercises.
+
+## Kontext
+
+- `Exercise.primaryMuscles` Getter bevorzugt `detailedPrimaryMusclesRaw` (wenn nicht leer)
+- `MuscleHeatmapCalcEngine` bevorzugt `detailedPrimaryMuscles`, fällt sonst auf alle Sub-Muskeln der `MuscleGroup` zurück (ungenauer)
+- 42 `DetailedMuscle`-Cases, gruppiert nach 9 `parentGroup`-Werten
+- `primaryMuscles`-Setter leert `detailedPrimaryMusclesRaw` (Fix aus letzter Session)
+
+## Affected Files
+
+- `MotionCore/Views/Training/Exercises/Components/DetailedMusclePicker.swift` — **NEU**: Picker gruppiert nach `parentGroup`, Multi-Select
+- `MotionCore/Components/Forms/FormViewSection.swift` — 2 neue Sections: Primary + Secondary Detailed
+- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — Integration der Sections
+- `MotionCore/Models/Core/Exercise.swift` — `detailedPrimaryMuscles`/`detailedSecondaryMuscles` Setter sync `primaryMusclesRaw`/`secondaryMusclesRaw`
+
+## Implementation Steps
+
+- [x] **Step 1: `DetailedMusclePicker.swift` erstellen** — Analog `MuscleGroupPicker`. `List` mit `Section` pro `parentGroup`, Checkmarks. Binding auf `[DetailedMuscle]`.
+- [x] **Step 2: Neue Form-Sections in `FormViewSection.swift`** — `ExerciseDetailedPrimaryMusclesSection` + `ExerciseDetailedSecondaryMusclesSection`. Capsule-Tags + NavigationLink zum Picker.
+- [x] **Step 3: Integration in `ExerciseFormView.swift`** — Sections unterhalb der bestehenden MuscleGroup-Sections. Zeigen "Keine" wenn leer.
+- [x] **Step 4: `Exercise.swift` — Setter synchronisieren** — `detailedPrimaryMuscles`-Setter leitet `primaryMusclesRaw` aus `parentGroup` ab. Analog Secondary.
+
+## Manual Verification
+
+- [ ] Xcode Build (`Cmd+B`)
+- [ ] ExerciseFormView ohne DetailedMuscles — Sections zeigen "Keine"
+- [ ] ExerciseFormView mit Supabase-Exercise — Capsule-Tags sichtbar
+- [ ] DetailedMusclePicker — 9 Gruppen-Sektionen, Checkmarks korrekt
+- [ ] DetailedMuscles setzen → Heatmap zeigt feingranulare Daten
+- [ ] MuscleGroup ändern → DetailedMuscles werden geleert
+
+---
+
+## Fortschritt
+
+**Datum:** 2026-03-27
+**Abgeschlossene Steps:** alle 4 Implementation Steps
+
+**Geänderte Dateien:**
+- `MotionCore/Views/Training/Exercises/Components/DetailedMusclePicker.swift` — **NEU**: List mit Section pro parentGroup, Multi-Select Checkmarks
+- `MotionCore/Components/Forms/FormViewSection.swift` — `ExerciseDetailedPrimaryMusclesSection` + `ExerciseDetailedSecondaryMusclesSection` nach Zeile 662 eingefügt
+- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — 2 neue Sections nach SekundäreMuscleGroups eingebunden
+- `MotionCore/Models/Core/Exercise.swift` — `detailedPrimaryMuscles`/`detailedSecondaryMuscles` Setter leiten jetzt `primaryMusclesRaw`/`secondaryMusclesRaw` aus `parentGroup`-Werten ab
+
+**Hinweis:** `DetailedMusclePicker.swift` ist eine neue Datei — muss manuell zum Xcode-Target hinzugefügt werden (falls nicht durch `PBXFileSystemSynchronizedBuildFileExceptionSet` automatisch erkannt).
+
+---
+
+# Abgeschlossener Plan: Muscle Heatmap Bug + Exercise-Edit Absicherung
 
 **Complexity:** Medium
 **Datum:** 2026-03-27

@@ -235,10 +235,11 @@ class ExerciseImportManager {
                 continue
             }
 
-            local.detailedPrimaryMusclesRaw = supabaseExercise.primaryMuscles
-                .compactMap { DetailedMuscle(rawValue: $0.lowercased())?.rawValue }
-            local.detailedSecondaryMusclesRaw = supabaseExercise.secondaryMuscles
-                .compactMap { DetailedMuscle(rawValue: $0.lowercased())?.rawValue }
+            // Setter verwenden — synchronisiert auch primaryMusclesRaw automatisch
+            local.detailedPrimaryMuscles = supabaseExercise.primaryMuscles
+                .compactMap { DetailedMuscle(rawValue: $0.lowercased()) }
+            local.detailedSecondaryMuscles = supabaseExercise.secondaryMuscles
+                .compactMap { DetailedMuscle(rawValue: $0.lowercased()) }
 
             enriched += 1
             progressHandler?(index + 1, supabaseExercises.count)

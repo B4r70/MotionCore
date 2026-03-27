@@ -87,6 +87,12 @@ struct ExerciseFormView: View {
                         // MARK: Sekundäre Muskelgruppen
                         ExerciseSecondaryMuscleGroupsSection(selectedMuscles: $exercise.secondaryMuscles)
 
+                        // MARK: Primäre Muskeln (detailliert)
+                        ExerciseDetailedPrimaryMusclesSection(selectedMuscles: $exercise.detailedPrimaryMuscles)
+
+                        // MARK: Sekundäre Muskeln (detailliert)
+                        ExerciseDetailedSecondaryMusclesSection(selectedMuscles: $exercise.detailedSecondaryMuscles)
+
                         // MARK: Media Asset Name
                         ExerciseMediaAssetSection(mediaAssetName: $exercise.mediaAssetName)
 

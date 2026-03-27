@@ -130,13 +130,13 @@ enum DetailedMuscle: String, CaseIterable, Identifiable, Codable {
 
 extension DetailedMuscle {
 
-    /// Supabase-Identifier — identisch mit rawValue für alle außer .neck
+    // Supabase-Identifier — identisch mit rawValue für alle außer .neck
     var supabaseIdentifier: String? {
         self == .neck ? nil : rawValue
     }
 
-    /// SVG-Element-ID für die Muskel-Heatmap
-    /// nil für absTransverse (tiefe Muskulatur, kein sichtbares SVG-Element)
+    // SVG-Element-ID für die Muskel-Heatmap
+    // nil für absTransverse (tiefe Muskulatur, kein sichtbares SVG-Element)
     var svgRegionId: String? {
         switch self {
         // Brust
