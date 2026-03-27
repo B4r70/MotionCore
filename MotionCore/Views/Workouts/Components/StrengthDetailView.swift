@@ -27,6 +27,7 @@ struct StrengthDetailView: View {
     @State private var showDeleteAlert = false
     @State private var showEditSheet = false
     @State private var showAnalyseSheet = false
+    @State private var exerciseToEdit: Exercise? = nil
 
     // Historische Sessions exklusive der aktuellen Session
     private var historicalSessions: [StrengthSession] {
@@ -100,6 +101,12 @@ struct StrengthDetailView: View {
         .sheet(isPresented: $showAnalyseSheet) {
             WorkoutAnalyseView(session: session)
                 .environmentObject(appSettings)
+        }
+        .sheet(item: $exerciseToEdit) { exercise in
+            NavigationStack {
+                ExerciseFormView(mode: .edit, exercise: exercise, showDeleteButton: false)
+                    .environmentObject(appSettings)
+            }
         }
     }
 
@@ -311,7 +318,8 @@ struct StrengthDetailView: View {
                         name: firstSet.exerciseName,
                         mediaAssetName: firstSet.exerciseMediaAssetName,
                         sets: sets,
-                        index: index + 1
+                        index: index + 1,
+                        exercise: firstSet.exercise
                     )
                 }
             }
@@ -319,7 +327,7 @@ struct StrengthDetailView: View {
         .glassCard()
     }
 
-    private func exerciseDetailCard(name: String, mediaAssetName: String, sets: [ExerciseSet], index: Int) -> some View {
+    private func exerciseDetailCard(name: String, mediaAssetName: String, sets: [ExerciseSet], index: Int, exercise: Exercise?) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack(spacing: 12) {
@@ -349,6 +357,17 @@ struct StrengthDetailView: View {
                     Text(formatVolume(exerciseVolume(sets)))
                         .font(.caption.bold())
                         .foregroundStyle(.green)
+                }
+
+                // Übung bearbeiten (nur wenn Exercise-Referenz vorhanden)
+                if let exercise {
+                    Button {
+                        exerciseToEdit = exercise
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
 

@@ -48,10 +48,10 @@ struct MuscleHeatmapCalcEngine {
                     updateLastTrained(&lastTrainedByRegion, regionId: regionId, date: session.date)
                 }
 
-                // Sekundäre Muskeln → halbe Gewichtung
+                // Sekundäre Muskeln → reduzierte Gewichtung (30%)
                 for muscle in secondaryDetailed {
                     guard let regionId = muscle.svgRegionId else { continue }
-                    volumeByRegion[regionId, default: 0] += volume * 0.5
+                    volumeByRegion[regionId, default: 0] += volume * 0.3
                     musclesByRegion[regionId, default: []].insert(muscle)
                     updateLastTrained(&lastTrainedByRegion, regionId: regionId, date: session.date)
                 }

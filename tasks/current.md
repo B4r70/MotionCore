@@ -1,55 +1,56 @@
-# Toolbar-Buttons vereinheitlichen — Icons statt Text
+# Muscle Heatmap Bug + Exercise-Edit Absicherung
 
-**Complexity:** Small
-**Datum:** 27.03.2026
+**Complexity:** Medium
+**Datum:** 2026-03-27
 
 ## Summary
 
-Alle Text-Labels in Toolbar-Buttons (`"Abbrechen"`, `"Fertig"`, `"Speichern"`, `"Übernehmen"`) durch Icons ersetzen:
-- "Abbrechen" → `chevron.left`
-- "Fertig" / "Speichern" / "Übernehmen" → `checkmark` (blau)
+Die Muscles Heatmap zeigt falsche Muskeln (Quadrizeps statt Brust/Arme) aus zwei Gründen:
+1. **Setter-Bug im Exercise-Modell**: Der `primaryMuscles`-Setter leert `detailedPrimaryMusclesRaw` nicht — nach einer manuellen Korrektur in ExerciseFormView werden die alten (falschen) Detailed-Daten weiterhin bevorzugt.
+2. **Sekundär-Faktor zu hoch**: `0.5` überschätzt den sekundären Stimulus systematisch → auf `0.3` senken.
 
-## Affected Files (12)
+Zusätzlich: ExerciseFormView zeigt aus StrengthDetailView heraus einen unerwünschten Löschen-Button (Quality Gate Finding aus vorheriger Session).
 
-1. `Views/Workouts/Components/StrengthEditView.swift` — bereits erledigt ✅
-2. `Views/Progression/View/WorkoutAnalyseView.swift`
-3. `Views/Muscles/View/MuscleHeatmapView.swift`
-4. `Views/Progression/View/ExerciseProgressionView.swift`
-5. `Views/Progression/View/ProgressionDetailView.swift`
-6. `Views/Training/Sheets/PlanPickerSheet.swift`
-7. `Views/Training/PlanUpdate/PlanUpdateSheet.swift`
-8. `Views/Workouts/Sheets/SetEditSheet.swift`
-9. `Views/Workouts/Sheets/ExercisePickerSheet.swift`
-10. `Views/Muscles/Components/MuscleGroupPicker.swift`
-11. `Views/Workouts/Sheets/SetConfigurationSheet.swift`
+ExerciseSets brauchen **keine** Muscle-Snapshots — die Engine liest Muskeln live von `Exercise`.
+
+## Affected Files
+
+- `MotionCore/Models/Core/Exercise.swift` — Setter-Fix für primary + secondary muscles
+- `MotionCore/Services/Calculation/MuscleHeatmapCalcEngine.swift` — Sekundär-Faktor 0.5 → 0.3
+- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — `showDeleteButton`-Parameter
+- `MotionCore/Views/Workouts/Components/StrengthDetailView.swift` — `showDeleteButton: false` übergeben
 
 ## Implementation Steps
 
-- [x] StrengthEditView — bereits erledigt
-- [x] Alle verbleibenden 10 Dateien: Text-Buttons durch Icons ersetzen
-
-## Manual Verification
-
-- [ ] Xcode Build (`Cmd+B`)
-- [ ] Stichprobe: SetEditSheet, PlanUpdateSheet, ExerciseProgressionView — Icons sichtbar
+- [x] **Exercise.swift — `primaryMuscles` Setter fixen**: Im Setter zusätzlich `detailedPrimaryMusclesRaw = []` setzen
+- [x] **Exercise.swift — `secondaryMuscles` Setter fixen**: Analog `detailedSecondaryMusclesRaw = []` im Setter
+- [x] **MuscleHeatmapCalcEngine.swift — Sekundär-Faktor**: `volume * 0.5` → `volume * 0.3`
+- [x] **ExerciseFormView.swift — `showDeleteButton: Bool = true` hinzufügen**: Property + Condition `if mode == .edit && showDeleteButton`
+- [x] **StrengthDetailView.swift — `showDeleteButton: false` übergeben**: Im bestehenden `sheet(item: $exerciseToEdit)` Aufruf
 
 ---
 
 ## Fortschritt
 
-**27.03.2026**
-Abgeschlossene Steps: alle (10 Dateien, 12 Ersetzungen)
+**Datum:** 2026-03-27
+**Abgeschlossene Steps:** alle 5 Implementation Steps
 
-Geänderte Dateien:
-- `MotionCore/Views/Progression/View/WorkoutAnalyseView.swift`
-- `MotionCore/Views/Progression/View/MuscleHeatmapView.swift` (korrekter Pfad: Views/Progression/View/)
-- `MotionCore/Views/Progression/View/ExerciseProgressionView.swift`
-- `MotionCore/Views/Progression/View/ProgressionDetailView.swift`
-- `MotionCore/Views/Workouts/Sheets/PlanPickerSheet.swift` (korrekter Pfad: Views/Workouts/Sheets/)
-- `MotionCore/Views/Training/PlanUpdate/PlanUpdateSheet.swift`
-- `MotionCore/Views/Workouts/Components/SetEditSheet.swift` (korrekter Pfad: Views/Workouts/Components/)
-- `MotionCore/Views/Training/Exercises/Sheets/ExercisePickerSheet.swift` (korrekter Pfad: Views/Training/Exercises/Sheets/)
-- `MotionCore/Views/Training/Exercises/Components/MuscleGroupPicker.swift` (korrekter Pfad: Views/Training/Exercises/Components/)
-- `MotionCore/Views/Training/Plans/Components/SetConfigurationSheet.swift` (korrekter Pfad: Views/Training/Plans/Components/)
+**Geänderte Dateien:**
+- `MotionCore/Models/Core/Exercise.swift` — Setter `primaryMuscles` und `secondaryMuscles` leeren jetzt `detailedPrimaryMusclesRaw` bzw. `detailedSecondaryMusclesRaw`
+- `MotionCore/Services/Calculation/MuscleHeatmapCalcEngine.swift` — Sekundär-Faktor 0.5 → 0.3
+- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — `showDeleteButton: Bool = true` Property + Condition `mode == .edit && showDeleteButton`
+- `MotionCore/Views/Workouts/Components/StrengthDetailView.swift` — `showDeleteButton: false` im Sheet-Aufruf
 
-Offene Punkte: Xcode Build + manuelle Stichprobe ausstehend
+**Offene Punkte:** keine — bereit für Xcode Build und Manual Verification
+
+---
+
+## Manual Verification
+
+- [ ] Xcode Build (`Cmd+B`)
+- [ ] Exercise mit falschen Muskeln via `ellipsis.circle` in StrengthDetailView öffnen
+- [ ] Primary Muscles korrigieren (z.B. Chest statt Legs), speichern
+- [ ] Heatmap in StrengthDetailView zeigt jetzt korrekte Muskeln
+- [ ] Heatmap in MuscleHeatmapView (Analyse-Tab) zeigt korrekte Muskeln
+- [ ] ExerciseFormView aus StrengthDetailView — kein Löschen-Button sichtbar
+- [ ] ExerciseFormView aus ExerciseListView — Löschen-Button weiterhin sichtbar

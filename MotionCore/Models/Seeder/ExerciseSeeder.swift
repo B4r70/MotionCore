@@ -128,8 +128,8 @@ struct ExerciseSeeder {
         existing.difficulty = seed.difficulty
         existing.movementPattern = seed.movementPattern
         existing.bodyPosition = seed.bodyPosition
-        existing.primaryMuscles = seed.primaryMuscles
-        existing.secondaryMuscles = seed.secondaryMuscles
+        existing.primaryMusclesRaw = seed.primaryMusclesRaw
+        existing.secondaryMusclesRaw = seed.secondaryMusclesRaw
         existing.isUnilateral = seed.isUnilateral
         existing.repRangeMin = seed.repRangeMin
         existing.repRangeMax = seed.repRangeMax

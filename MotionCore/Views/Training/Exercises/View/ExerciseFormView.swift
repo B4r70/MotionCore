@@ -20,6 +20,7 @@ struct ExerciseFormView: View {
 
     @Bindable var exercise: Exercise
     @EnvironmentObject private var appSettings: AppSettings
+    var showDeleteButton: Bool = true
 
     // Lösch-Bestätigung
     @State private var showDeleteAlert = false
@@ -155,8 +156,8 @@ struct ExerciseFormView: View {
                 .disabled(exercise.name.isEmpty)
             }
 
-            // Löschen im Edit-Modus
-            if mode == .edit {
+            // Löschen im Edit-Modus (nur wenn erlaubt)
+            if mode == .edit && showDeleteButton {
                 ToolbarItem(placement: .destructiveAction) {
                     Button(role: .destructive) {
                         dismissKeyboard()

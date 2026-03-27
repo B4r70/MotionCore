@@ -207,7 +207,11 @@ extension Exercise {
             // Fallback: Alte Daten direkt lesen (bestehende Exercises)
             return primaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) }
         }
-        set { primaryMusclesRaw = newValue.map { $0.rawValue } }
+        set {
+            primaryMusclesRaw = newValue.map { $0.rawValue }
+            // Detaillierte Daten leeren, damit der Getter nicht veraltete Werte bevorzugt
+            detailedPrimaryMusclesRaw = []
+        }
     }
 
     var secondaryMuscles: [MuscleGroup] {
@@ -217,7 +221,11 @@ extension Exercise {
             }
             return secondaryMusclesRaw.compactMap { MuscleGroup(rawValue: $0) }
         }
-        set { secondaryMusclesRaw = newValue.map { $0.rawValue } }
+        set {
+            secondaryMusclesRaw = newValue.map { $0.rawValue }
+            // Detaillierte Daten leeren, damit der Getter nicht veraltete Werte bevorzugt
+            detailedSecondaryMusclesRaw = []
+        }
     }
 
     var detailedPrimaryMuscles: [DetailedMuscle] {
