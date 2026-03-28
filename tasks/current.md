@@ -1,3 +1,57 @@
+# Übungs-Reihenfolge in ActiveWorkoutView
+
+**Complexity:** Medium
+**Status:** Warte auf Genehmigung
+
+## Summary
+
+LongPress auf eine Übung aktiviert einen Edit-Modus. Pro Row erscheinen ein X-Button (Löschen) und ↑↓-Pfeile (Verschieben). "Fertig"-Button oder erneuter LongPress beendet den Modus. Reihenfolge wird via `sortOrder` auf allen Sets der Gruppe persistiert.
+
+## Affected Files
+
+- `MotionCore/Views/Workouts/Active/Components/ExercisesOverviewCard.swift` — Edit-Modus State, UI-Buttons, Callbacks
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `reorderExercise()`-Funktion, Callback-Integration
+
+## Implementation Steps
+
+- [x] **Step 1: ExercisesOverviewCard — Edit-Modus State + Callbacks**
+  - `@State private var isEditMode: Bool = false`
+  - Neuer Callback: `onMoveExercise: (String, Int) -> Void` (groupKey, direction: -1 oben, +1 unten)
+  - LongPress togglet `isEditMode` (statt direkt zu löschen)
+  - Header: "Fertig"-Button wenn `isEditMode == true`
+
+- [x] **Step 2: ExercisesOverviewCard — Edit-Modus UI pro Row**
+  - Pro Row im Edit-Modus: ↑ (nur wenn nicht erste Gruppe), ↓ (nur wenn nicht letzte), ✕ (Löschen)
+  - Superset-Block: Up/Down verschiebt die gesamte Superset-Gruppe als Block
+  - Im Edit-Modus: Tap auf Row löst kein `onSelectExercise` aus
+
+- [x] **Step 3: ActiveWorkoutView — `reorderExercise()` + Integration**
+  - Gruppe per `groupKey` finden, Superset-Block erkennen, Array-Swap, neue `sortOrder`-Werte per `enumerated()` vergeben, alle Sets der Gruppe updaten, Cache refresh + Haptic
+
+## Manual Verification
+
+- [ ] Xcode Build (`Cmd+B`)
+- [ ] LongPress → Edit-Modus, Pfeile + X sichtbar
+- [ ] Up/Down-Pfeile verschieben Übung korrekt
+- [ ] Erster/letzter Eintrag: Pfeil in Richtung Ende nicht sichtbar
+- [ ] X-Button → Delete-Alert wie bisher
+- [ ] "Fertig" / erneuter LongPress → beendet Edit-Modus
+- [ ] Superset-Block wird als Ganzes verschoben
+- [ ] Nach Reorder: `sortOrder` persistent nach Session-Neustart
+
+## Fortschritt
+
+**Datum:** 2026-03-28
+**Abgeschlossene Steps:** alle 3 Implementation Steps
+
+**Geänderte Dateien:**
+- `MotionCore/Views/Workouts/Active/Components/ExercisesOverviewCard.swift` — `isEditMode` State, `onMoveExercise`-Callback, Edit-Modus UI (Pfeile + X per Row), LongPress togglet Edit-Modus, "Fertig"-Button im Header, Tap-Guard im Edit-Modus
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `reorderExercise(groupKey:direction:)` Funktion (normaler Swap + Superset-Block-Logik, sortOrder-Vergabe, Cache-Refresh, Haptic), `onMoveExercise`-Integration in `exercisesOverview`
+
+**Offene Punkte:** Manual Verification in Xcode (Cmd+B)
+
+---
+
 # Progressions-Übersicht: Trend-Gruppierung
 
 **Complexity:** Medium

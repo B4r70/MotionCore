@@ -21,8 +21,9 @@ struct ExercisesOverviewCard: View {
     let onAddExercise: () -> Void
     let onSelectExercise: (String) -> Void
     let onDeleteExercise: (String) -> Void
+    let onMoveExercise: (String, Int) -> Void
 
-    @State private var pressedGroupKey: String? = nil
+    @State private var isEditMode: Bool = false
 
     private func isSupersetConnectedBelow(at index: Int) -> Bool {
         guard index + 1 < groupedSets.count else { return false }
@@ -52,35 +53,78 @@ struct ExercisesOverviewCard: View {
             // animieren statt sie komplett neu zu erstellen.
             ForEach(Array(groupedSets.enumerated()), id: \.element.first?.groupKey) { index, sets in
                 if let firstSet = sets.first {
-                    ExerciseOverviewRow(
-                        index: index + 1,
-                        name: firstSet.exerciseName,
-                        sets: sets,
-                        isCurrentExercise: index == currentExerciseIndex,
-                        isPressed: pressedGroupKey == firstSet.groupKey,
-                        hasSupersetAbove: isSupersetConnectedAbove(at: index),
-                        hasSupersetBelow: isSupersetConnectedBelow(at: index),
-                        hasPR: hasPR(in: sets)
-                    )
-                    .onTapGesture {
-                        onSelectExercise(firstSet.groupKey)
-                    }
-                    .onLongPressGesture(
-                        minimumDuration: 0.5,
-                        perform: {
-                            onDeleteExercise(firstSet.groupKey)
-                            pressedGroupKey = nil
-                        },
-                        onPressingChanged: { isPressing in
-                            if isPressing {
-                                pressedGroupKey = firstSet.groupKey
-                            } else {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                    pressedGroupKey = nil
+                    VStack(spacing: 0) {
+                        // ↑ oberhalb der Row (nur im Edit-Modus)
+                        if isEditMode {
+                            Button {
+                                onMoveExercise(firstSet.groupKey, -1)
+                            } label: {
+                                Image(systemName: "chevron.up")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(.blue)
+                                    .frame(maxWidth: .infinity, minHeight: 28)
+                            }
+                            .opacity(index == 0 ? 0 : 1)
+                            .disabled(index == 0)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                        }
+
+                        // Row mit ✕-Overlay rechts mittig
+                        ExerciseOverviewRow(
+                            index: index + 1,
+                            name: firstSet.exerciseName,
+                            sets: sets,
+                            isCurrentExercise: index == currentExerciseIndex,
+                            isPressed: false,
+                            hasSupersetAbove: isSupersetConnectedAbove(at: index),
+                            hasSupersetBelow: isSupersetConnectedBelow(at: index),
+                            hasPR: hasPR(in: sets)
+                        )
+                        .frame(maxWidth: .infinity)
+                        .overlay {
+                            if isEditMode {
+                                HStack {
+                                    Spacer()
+                                    Button {
+                                        onDeleteExercise(firstSet.groupKey)
+                                    } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .font(.system(size: 20))
+                                            .foregroundStyle(.red)
+                                            .frame(minWidth: 44, minHeight: 44)
+                                    }
+                                    .padding(.trailing, 4)
                                 }
+                                .transition(.opacity)
                             }
                         }
-                    )
+                        .onTapGesture {
+                            guard !isEditMode else { return }
+                            onSelectExercise(firstSet.groupKey)
+                        }
+                        .onLongPressGesture(minimumDuration: 0.5) {
+                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                            generator.impactOccurred()
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                isEditMode.toggle()
+                            }
+                        }
+
+                        // ↓ unterhalb der Row (nur im Edit-Modus)
+                        if isEditMode {
+                            Button {
+                                onMoveExercise(firstSet.groupKey, 1)
+                            } label: {
+                                Image(systemName: "chevron.down")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(.blue)
+                                    .frame(maxWidth: .infinity, minHeight: 28)
+                            }
+                            .opacity(index == groupedSets.count - 1 ? 0 : 1)
+                            .disabled(index == groupedSets.count - 1)
+                            .transition(.opacity.combined(with: .move(edge: .bottom)))
+                        }
+                    }
                 }
             }
         }
@@ -95,12 +139,25 @@ struct ExercisesOverviewCard: View {
 
             Spacer()
 
-            Button {
-                onAddExercise()
-            } label: {
-                Label("Übung", systemImage: "plus.circle.fill")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.blue)
+            // Fertig-Button im Edit-Modus
+            if isEditMode {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isEditMode = false
+                    }
+                } label: {
+                    Text("Fertig")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.blue)
+                }
+            } else {
+                Button {
+                    onAddExercise()
+                } label: {
+                    Label("Übung", systemImage: "plus.circle.fill")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.blue)
+                }
             }
         }
     }
