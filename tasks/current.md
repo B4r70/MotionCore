@@ -1,3 +1,88 @@
+# Progressions-Übersicht: Trend-Gruppierung
+
+**Complexity:** Medium
+**Status:** Genehmigt
+
+## Summary
+
+Flache Übungsliste in `ProgressionAnalyseView` durch aufklappbare Sektionen nach `PerformanceTrend` ersetzen.
+Reihenfolge: Aufwärtstrend → Stabil → Rückgang → Zu wenig Daten.
+Default-Zustand: alle Sektionen offen. Labels kurz und deutsch.
+
+## Affected Files
+
+- `MotionCore/Services/ViewModels/ProgressionViewModel.swift` — neues `groupedByTrend` Property
+- `MotionCore/Views/Progression/View/ProgressionAnalyseView.swift` — flache ForEach durch DisclosureGroup-Sektionen ersetzen
+- `MotionCore/Views/Progression/Components/ProgressionSectionHeader.swift` — **NEU**: Sektions-Header (Trend-Icon + Label + Count)
+
+## Implementation Steps
+
+- [x] **Step 1: `ProgressionViewModel.swift`** — `groupedByTrend: [(trend: PerformanceTrend, exercises: [(Exercise, ProgressionAnalysis)])]` computed Property. Reihenfolge: `.improving` → `.stable`/`.volatile` → `.declining` → `.insufficient`. Innerhalb jeder Gruppe alphabetisch. `volatile` → `.stable`-Gruppe. `.insufficient`-Sektion nur wenn vorhanden.
+- [x] **Step 2: `ProgressionSectionHeader.swift` erstellen** — Trend-Icon + Label + Count-Badge. Labels: `.improving` → "Aufwärtstrend", `.stable` → "Stabil", `.declining` → "Rückgang", `.insufficient` → "Zu wenig Daten". Kein `.glassCard()` auf den Header.
+- [x] **Step 3: `ProgressionAnalyseView.swift`** — `VStack { ForEach(trainedExercises) }` durch Sektionen ersetzen. Pro Gruppe ein `DisclosureGroup` mit `ProgressionSectionHeader` als Label. State: `@State private var expandedSections: Set<PerformanceTrend> = [.improving, .stable, .declining, .insufficient]` (alle offen). `sheet(item:)` bleibt unverändert.
+
+## Manual Verification
+
+- [ ] Xcode Build (`Cmd+B`)
+- [ ] Sektionen sichtbar, korrekt gruppiert und benannt
+- [ ] Auf-/Zuklappen funktioniert
+- [ ] Tap auf Card → ProgressionDetailView Sheet öffnet korrekt
+- [ ] Hero-Card zeigt weiterhin korrekte Zahlen
+- [ ] EmptyState bei null Übungen weiterhin sichtbar
+
+## Fortschritt
+
+**Datum:** 2026-03-28
+**Abgeschlossene Steps:** alle 3 Implementation Steps
+
+**Geänderte Dateien:**
+- `MotionCore/Services/ViewModels/ProgressionViewModel.swift` — computed Property `groupedByTrend` hinzugefügt
+- `MotionCore/Views/Progression/Components/ProgressionSectionHeader.swift` — **NEU**: Trend-Icon + Label + Count-Badge
+- `MotionCore/Views/Progression/View/ProgressionAnalyseView.swift` — `expandedSections`-State + DisclosureGroup-Sektionen statt flachem ForEach
+
+**Hinweis:** `ProgressionSectionHeader.swift` ist eine neue Datei — muss manuell zum Xcode-Target hinzugefügt werden (falls nicht durch `PBXFileSystemSynchronizedBuildFileExceptionSet` automatisch erkannt).
+
+**Offene Punkte:** Manual Verification in Xcode (Cmd+B)
+
+---
+
+# Exercise-Navigation aus SetConfigurationSheet
+
+**Complexity:** Small
+
+## Summary
+
+In der `exerciseInfoCard` des `SetConfigurationSheet` soll ein NavigationLink-Icon ergänzt werden, das zur `ExerciseFormView` (Edit-Modus) der jeweiligen Exercise navigiert. Das Icon erscheint nur, wenn eine Exercise-Referenz vorhanden ist (Init A), nicht im Snapshot-Modus (Init B).
+
+## Affected Files
+
+- `MotionCore/Views/Training/Plans/Components/SetConfigurationSheet.swift` — NavigationLink-Icon in `exerciseInfoCard` ergänzen
+
+## Implementation Steps
+
+- [x] In `exerciseInfoCard` (nach `Spacer()`): einen `NavigationLink` ergänzen, der nur angezeigt wird wenn `exercise != nil`
+- [x] NavigationLink-Ziel: `ExerciseFormView(mode: .edit, exercise: ex, showDeleteButton: false)`
+- [x] Icon: `Image(systemName: "arrow.right.circle")` mit passendem Stil
+
+## Manual Verification
+
+- [ ] Xcode Build (`Cmd+B`)
+- [ ] Icon sichtbar in PlanExerciseCard, Tap → ExerciseFormView
+- [ ] Zurück-Navigation funktioniert korrekt
+- [ ] Snapshot-Modus (Init B): Icon NICHT sichtbar
+
+## Fortschritt
+
+**Datum:** 2026-03-28
+**Abgeschlossene Steps:** alle 3 Implementation Steps
+
+**Geänderte Dateien:**
+- `MotionCore/Views/Training/Plans/Components/SetConfigurationSheet.swift` — NavigationLink nach `Spacer()` in `exerciseInfoCard` eingefügt; nur sichtbar wenn `exercise != nil`
+
+**Offene Punkte:** Manual Verification in Xcode (Cmd+B)
+
+---
+
 # Plan: DetailedMuscle-Bearbeitung in ExerciseFormView
 
 **Komplexität:** Medium

@@ -26,7 +26,7 @@ struct ProgressionAnalyseCalcEngine {
 
     // MARK: - Trainierte Übungen
 
-    /// Alle Übungen, die in mindestens einer Session trainiert wurden (alphabetisch).
+    /// Alle Übungen, die in mindestens einer Session trainiert wurden (alphabetisch, ohne Duplikate).
     var trainedExercises: [Exercise] {
         let trainedNames: Set<String> = Set(
             sessions.flatMap { session in
@@ -36,8 +36,10 @@ struct ProgressionAnalyseCalcEngine {
                 }
             }
         )
+        var seen = Set<String>()
         return exercises
             .filter { trainedNames.contains($0.name) }
+            .filter { seen.insert($0.name).inserted }
             .sorted { $0.name < $1.name }
     }
 

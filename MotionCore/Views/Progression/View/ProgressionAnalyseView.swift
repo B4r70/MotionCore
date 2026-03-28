@@ -29,26 +29,31 @@ struct ProgressionAnalyseView: View {
     @State private var selectedExercise: Exercise?
     @State private var viewModel = ProgressionViewModel()
     @State private var selectedSegment: AnalyseSegment = .progression
+    @State private var expandedSections: Set<PerformanceTrend> = [.improving, .stable, .declining, .insufficient]
 
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 0) {
-            Picker("Ansicht", selection: $selectedSegment) {
-                ForEach(AnalyseSegment.allCases) { segment in
-                    Text(segment.label).tag(segment)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 12)
+        ZStack {
+            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
-            switch selectedSegment {
-            case .progression:
-                progressionContent
-            case .heatmap:
-                MuscleHeatmapView()
+            VStack(spacing: 0) {
+                Picker("Ansicht", selection: $selectedSegment) {
+                    ForEach(AnalyseSegment.allCases) { segment in
+                        Text(segment.label).tag(segment)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 12)
+
+                switch selectedSegment {
+                case .progression:
+                    progressionContent
+                case .heatmap:
+                    MuscleHeatmapView()
+                }
             }
         }
     }
@@ -56,44 +61,56 @@ struct ProgressionAnalyseView: View {
     // MARK: - Progressions-Inhalt
 
     private var progressionContent: some View {
-        ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+        ScrollView {
+            VStack(spacing: 16) {
 
-            ScrollView {
-                VStack(spacing: 16) {
+                // Hero-Card: Aggregierte Übersicht
+                if !viewModel.trainedExercises.isEmpty {
+                    ProgressionOverviewCard(
+                        improvingCount: viewModel.improvingCount,
+                        stableCount: viewModel.stableCount,
+                        decliningCount: viewModel.decliningCount,
+                        needsDeload: viewModel.needsDeload
+                    )
+                }
 
-                    // Hero-Card: Aggregierte Übersicht
-                    if !viewModel.trainedExercises.isEmpty {
-                        ProgressionOverviewCard(
-                            improvingCount: viewModel.improvingCount,
-                            stableCount: viewModel.stableCount,
-                            decliningCount: viewModel.decliningCount,
-                            needsDeload: viewModel.needsDeload
+                // Übungsliste — nach Trend gruppiert
+                ForEach(viewModel.groupedByTrend, id: \.trend) { group in
+                    DisclosureGroup(
+                        isExpanded: Binding(
+                            get: { expandedSections.contains(group.trend) },
+                            set: { isOpen in
+                                if isOpen {
+                                    expandedSections.insert(group.trend)
+                                } else {
+                                    expandedSections.remove(group.trend)
+                                }
+                            }
                         )
-                    }
-
-                    // Übungsliste
-                    VStack(spacing: 10) {
-                        ForEach(viewModel.trainedExercises) { exercise in
-                            if let analysis = viewModel.analysis(for: exercise) {
+                    ) {
+                        VStack(spacing: 10) {
+                            ForEach(group.exercises, id: \.0.persistentModelID) { exercise, analysis in
                                 ProgressionExerciseCard(analysis: analysis)
                                     .onTapGesture {
                                         selectedExercise = exercise
                                     }
                             }
                         }
+                        .padding(.top, 8)
+                    } label: {
+                        ProgressionSectionHeader(trend: group.trend, count: group.exercises.count)
                     }
                 }
-                .scrollViewContentPadding()
             }
-            .scrollIndicators(.hidden)
-
+            .scrollViewContentPadding()
+        }
+        .scrollIndicators(.hidden)
+        .overlay {
             if viewModel.trainedExercises.isEmpty {
                 EmptyState()
             }
         }
         .sheet(item: $selectedExercise) { exercise in
-            // Analyse ist im Cache — bei korrektem onChange immer vorhanden
             if let analysis = viewModel.analysis(for: exercise) {
                 ProgressionDetailView(
                     analysis: analysis,

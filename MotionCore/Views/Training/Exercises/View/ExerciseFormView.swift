@@ -25,17 +25,29 @@ struct ExerciseFormView: View {
     // Lösch-Bestätigung
     @State private var showDeleteAlert = false
 
+    // Doppelter Name
+    @State private var showDuplicateNameAlert = false
+
     // Instruktionen zur Übung
     @State private var isEditingInstructions = false
 
-    // Progressions-Analyse (nur Edit-Modus)
+    // Alle Übungen für Namens-Duplikatprüfung
+    @Query(sort: \Exercise.name)
+    private var allExercises: [Exercise]
+
+    // Progressions-Analyse (nur Edit-Modus) — gecacht, nicht per Render berechnet
     @Query(sort: \StrengthSession.date, order: .reverse)
     private var strengthSessions: [StrengthSession]
 
-    private var progressionAnalysis: ProgressionAnalysis? {
-        guard mode == .edit, exercise.progressionStrategy != .manual,
-              exercise.category != .bodyweight else { return nil }
-        return ProgressionCalcEngine().analyze(exercise: exercise, sessions: strengthSessions)
+    @State private var progressionAnalysis: ProgressionAnalysis?
+
+    private var isDuplicateName: Bool {
+        let trimmed = exercise.name.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !trimmed.isEmpty else { return false }
+        return allExercises.contains {
+            $0.name.lowercased() == trimmed &&
+            $0.persistentModelID != exercise.persistentModelID
+        }
     }
 
     var body: some View {
@@ -149,6 +161,10 @@ struct ExerciseFormView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button {
                     dismissKeyboard()
+                    guard !isDuplicateName else {
+                        showDuplicateNameAlert = true
+                        return
+                    }
                     if mode == .add {
                         exercise.isCustom = true
                         context.insert(exercise)
@@ -159,7 +175,7 @@ struct ExerciseFormView: View {
                     IconType(icon: .system("checkmark"), color: .blue, size: 16)
                         .glassButton(size: 36, accentColor: .blue)
                 }
-                .disabled(exercise.name.isEmpty)
+                .disabled(exercise.name.trimmingCharacters(in: .whitespaces).isEmpty)
             }
 
             // Löschen im Edit-Modus (nur wenn erlaubt)
@@ -175,6 +191,15 @@ struct ExerciseFormView: View {
                 }
             }
         }
+        .task { recalculateAnalysis() }
+        .onChange(of: strengthSessions) { recalculateAnalysis() }
+        .onChange(of: exercise.progressionStrategy) { recalculateAnalysis() }
+        .onChange(of: exercise.category) { recalculateAnalysis() }
+        .alert("Name bereits vergeben", isPresented: $showDuplicateNameAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Eine Übung mit dem Namen \"\(exercise.name)\" existiert bereits. Bitte wähle einen anderen Namen.")
+        }
         .alert("Übung löschen?", isPresented: $showDeleteAlert) {
             Button("Abbrechen", role: .cancel) {}
             Button("Löschen", role: .destructive) {
@@ -186,6 +211,15 @@ struct ExerciseFormView: View {
     }
 
     // MARK: - Hilfsfunktionen
+
+    private func recalculateAnalysis() {
+        guard mode == .edit, exercise.progressionStrategy != .manual,
+              exercise.category != .bodyweight else {
+            progressionAnalysis = nil
+            return
+        }
+        progressionAnalysis = ProgressionCalcEngine().analyze(exercise: exercise, sessions: strengthSessions)
+    }
 
     private func deleteExercise() {
         context.delete(exercise)

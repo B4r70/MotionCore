@@ -14,13 +14,11 @@ import SwiftUI
 
     // Apple Mail Style Filter Section (minimalistisch)
 struct FilterSection: View {
-    @Binding var selectedDeviceFilter: CardioDevice
     @Binding var selectedTimeFilter: TimeFilter
 
     var body: some View {
         // Kein HStack, kein Spacer, kein padding - nur das Menu
         Menu {
-            // Zeitfilter-Sektion
             Section("Zeitraum") {
                 ForEach(TimeFilter.allCases) { filter in
                     Button {
@@ -38,47 +36,6 @@ struct FilterSection: View {
                             }
                         } icon: {
                             Image(systemName: filter.intervalSymbol)
-                        }
-                    }
-                }
-            }
-
-                // GerÃ¤tefilter-Sektion
-            Section("GerÃ¤t") {
-                Button {
-                    withAnimation(.spring(response: 0.3)) {
-                        selectedDeviceFilter = .none
-                    }
-                } label: {
-                    Label {
-                        HStack {
-                            Text("Alle GerÃ¤te")
-                            Spacer()
-                            if selectedDeviceFilter == .none {
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    } icon: {
-                        Image(systemName: "rectangle.3.group")
-                    }
-                }
-
-                ForEach([CardioDevice.crosstrainer, .ergometer], id: \.self) { device in
-                    Button {
-                        withAnimation(.spring(response: 0.3)) {
-                            selectedDeviceFilter = device
-                        }
-                    } label: {
-                        Label {
-                            HStack {
-                                Text(device.description)
-                                Spacer()
-                                if selectedDeviceFilter == device {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        } icon: {
-                            Image(systemName: device.symbol)
                         }
                     }
                 }
@@ -110,6 +67,6 @@ struct FilterSection: View {
         // MARK: - Computed Properties
 
     private var isFiltered: Bool {
-        selectedTimeFilter != .all || selectedDeviceFilter != .none
+        selectedTimeFilter != .all
     }
 }

@@ -246,6 +246,17 @@ struct SetConfigurationSheet: View {
             }
 
             Spacer()
+
+            // NavigationLink zur ExerciseFormView — nur im Exercise-Modus (Init A)
+            if let ex = exercise {
+                NavigationLink {
+                    ExerciseFormView(mode: .edit, exercise: ex, showDeleteButton: false)
+                } label: {
+                    Image(systemName: "arrow.right.circle")
+                        .font(.title2)
+                        .foregroundStyle(.blue)
+                }
+            }
         }
         .glassCard()
     }

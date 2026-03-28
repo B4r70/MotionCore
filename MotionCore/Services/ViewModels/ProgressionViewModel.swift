@@ -27,6 +27,7 @@ final class ProgressionViewModel {
     private(set) var needsDeload: Bool = false
     private(set) var oneRMTrendMap: [PersistentIdentifier: [TrendPoint]] = [:]
     private(set) var volumeTrendMap: [PersistentIdentifier: [TrendPoint]] = [:]
+    private(set) var groupedByTrend: [(trend: PerformanceTrend, exercises: [(Exercise, ProgressionAnalysis)])] = []
 
     // MARK: - Neuberechnung
 
@@ -53,6 +54,21 @@ final class ProgressionViewModel {
         self.volumeTrendMap = Dictionary(uniqueKeysWithValues: trained.map { ex -> (PersistentIdentifier, [TrendPoint]) in
             (ex.persistentModelID, engine.volumeTrend(for: ex))
         })
+
+        // Gruppierung nach Trend cachen — O(1) lesen in der View
+        let trendOrder: [PerformanceTrend] = [.improving, .stable, .declining, .insufficient]
+        let analysisMap = Dictionary(allAnalyses.map { ($0.exerciseName, $0) }, uniquingKeysWith: { first, _ in first })
+
+        self.groupedByTrend = trendOrder.compactMap { trend in
+            let matching = trained.compactMap { exercise -> (Exercise, ProgressionAnalysis)? in
+                guard let analysis = analysisMap[exercise.name] else { return nil }
+                let effectiveTrend: PerformanceTrend = analysis.trend == .volatile ? .stable : analysis.trend
+                guard effectiveTrend == trend else { return nil }
+                return (exercise, analysis)
+            }
+            .sorted { $0.0.name < $1.0.name }
+            return matching.isEmpty ? nil : (trend: trend, exercises: matching)
+        }
     }
 
     // MARK: - Lookup

@@ -118,10 +118,7 @@ struct BaseView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
-                        FilterSection(
-                            selectedDeviceFilter: $selectedDeviceFilter,
-                            selectedTimeFilter: $selectedTimeFilter
-                        )
+                        FilterSection(selectedTimeFilter: $selectedTimeFilter)
                     }
 
                     ToolbarItem(placement: .principal) {
