@@ -41,13 +41,26 @@ struct PlanExercisesSection: View {
     var onAddExercise: (() -> Void)? = nil
     var onEditExercise: ((ExerciseSet) -> Void)? = nil
     var onDeleteExercise: ((ExerciseSet) -> Void)? = nil
-    var onMoveExercise: ((IndexSet, Int) -> Void)? = nil
 
     @State private var isEditing = false
 
     // Multi-Select-Modus fuer Superset-Erstellung
     @State private var isSupersetSelectionMode: Bool = false
     @State private var selectedGroupIndicesForSuperset: Set<Int> = []
+
+    // Drag & Drop State
+    @State private var draggingIndex: Int? = nil
+    @State private var dragOffset: CGSize = .zero
+    @State private var cardHeights: [Int: CGFloat] = [:]
+    @State private var lastTargetIndex: Int? = nil
+
+    private var averageCardHeight: CGFloat {
+        guard !cardHeights.isEmpty else { return 72 }
+        return cardHeights.values.reduce(0, +) / CGFloat(cardHeights.count)
+    }
+
+    private let cardSpacing: CGFloat = 12
+    private let supersetSpacing: CGFloat = 4
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -70,6 +83,17 @@ struct PlanExercisesSection: View {
             }
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isSupersetSelectionMode)
+        .onChange(of: isEditing) { _, newValue in
+            if newValue { isSupersetSelectionMode = false }
+            if !newValue {
+                draggingIndex = nil
+                dragOffset = .zero
+                lastTargetIndex = nil
+            }
+        }
+        .onChange(of: isSupersetSelectionMode) { _, newValue in
+            if newValue { isEditing = false }
+        }
     }
 
     // MARK: - Header
@@ -187,23 +211,8 @@ struct PlanExercisesSection: View {
     private var exercisesList: some View {
         switch mode {
         case .form:
-            ReorderableExerciseList(
-                isEditing: $isEditing,
-                isSupersetSelectionMode: $isSupersetSelectionMode,
-                selectedGroupIndices: $selectedGroupIndicesForSuperset,
-                plan: plan,
-                onEdit: { set in onEditExercise?(set) },
-                onDelete: { set in onDeleteExercise?(set) },
-                onReorder: { from, to in
-                    onMoveExercise?(IndexSet(integer: from), to)
-                    plan.reorderExercise(from: from, to: to)
-                },
-                onRemoveFromSuperset: { index in
-                    plan.removeFromSuperset(groupAt: index)
-                    try? modelContext.save()
-                }
-            )
-            .padding(.horizontal)
+            formExercisesList
+                .padding(.horizontal)
 
         case .detail:
             VStack(spacing: 12) {
@@ -213,7 +222,7 @@ struct PlanExercisesSection: View {
                 ) { index, setsGroup in
                     if let firstSet = setsGroup.first {
                         ExerciseDetailRow(
-                            exerciseName: firstSet.exerciseName,
+                            exerciseName: firstSet.exerciseNameSnapshot,
                             mediaAssetName: firstSet.exerciseMediaAssetName,
                             sets: setsGroup,
                             index: index + 1,
@@ -224,6 +233,247 @@ struct PlanExercisesSection: View {
             }
             .padding(.horizontal)
         }
+    }
+
+    // MARK: - Form-Modus Drag & Drop Liste
+
+    private var formExercisesList: some View {
+        ZStack(alignment: .top) {
+            // Hintergrund-Cards (verschieben sich beim Drag)
+            VStack(spacing: 0) {
+                let groups = plan.groupedTemplateSets
+                ForEach(Array(groups.enumerated()), id: \.element.first?.persistentModelID) { index, setsGroup in
+                    if let firstSet = setsGroup.first {
+                        let isInSuperset = firstSet.supersetGroupId != nil
+                        let groupId = firstSet.supersetGroupId
+                        let isFirstInGroup = isFirstSupersetMember(at: index, in: groups)
+                        let isLastInGroup = isLastSupersetMember(at: index, in: groups)
+
+                        VStack(spacing: 0) {
+                            // Superset-Label über der ersten Übung einer Gruppe
+                            if isInSuperset, isFirstInGroup, let gId = groupId {
+                                let size = supersetSize(for: gId)
+                                HStack {
+                                    Text(supersetLabel(for: size))
+                                        .font(.caption.bold())
+                                        .foregroundStyle(.blue)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 3)
+                                        .background(Color.blue.opacity(0.12), in: Capsule())
+                                    Spacer()
+                                }
+                                .padding(.bottom, 4)
+                                .padding(.top, index == 0 ? 0 : 4)
+                            }
+
+                            // Die eigentliche Card mit allen Overlays
+                            exerciseCard(
+                                setsGroup: setsGroup,
+                                firstSet: firstSet,
+                                index: index,
+                                isInSuperset: isInSuperset,
+                                isLastInGroup: isLastInGroup
+                            )
+                        }
+                        .padding(.bottom, spacingAfter(index: index, in: groups))
+                    }
+                }
+            }
+
+            // Schwebende Card während Drag
+            if let dragIndex = draggingIndex,
+               let setsGroup = plan.groupedTemplateSets[safe: dragIndex],
+               let firstSet = setsGroup.first {
+
+                let yPosition = calculateFloatingCardPosition(for: dragIndex)
+
+                TemplateSetCard(
+                    exerciseName: firstSet.exerciseNameSnapshot,
+                    mediaAssetName: firstSet.exerciseMediaAssetName,
+                    sets: setsGroup,
+                    onDelete: {},
+                    onEdit: {},
+                    showsEditMenu: false
+                ) {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 36, height: 36)
+                }
+                .shadow(color: .black.opacity(0.25), radius: 10, x: 0, y: 4)
+                .scaleEffect(1.02)
+                .offset(y: yPosition + dragOffset.height)
+                .zIndex(1000)
+            }
+        }
+    }
+
+    // MARK: - Einzelne Card mit Superset-Overlays und Drag-Handle
+
+    @ViewBuilder
+    private func exerciseCard(
+        setsGroup: [ExerciseSet],
+        firstSet: ExerciseSet,
+        index: Int,
+        isInSuperset: Bool,
+        isLastInGroup: Bool
+    ) -> some View {
+        let isSelected = selectedGroupIndicesForSuperset.contains(index)
+        let alreadyInSuperset = isInSuperset && isSupersetSelectionMode
+        let isFollower = isSupersetFollower(at: index)
+
+        ZStack(alignment: .leading) {
+            TemplateSetCard(
+                exerciseName: firstSet.exerciseNameSnapshot,
+                mediaAssetName: firstSet.exerciseMediaAssetName,
+                sets: setsGroup,
+                onDelete: { onDeleteExercise?(firstSet) },
+                onEdit: { onEditExercise?(firstSet) },
+                showsEditMenu: !isEditing,
+                onSupersetToggle: isInSuperset ? {
+                    plan.removeFromSuperset(groupAt: index)
+                    try? modelContext.save()
+                } : nil
+            ) {
+                if isEditing {
+                    if isFollower {
+                        // Superset-Folgemitglied: kein Drag (werden als Block verschoben)
+                        Image(systemName: "link")
+                            .font(.title3)
+                            .foregroundStyle(.blue.opacity(0.5))
+                            .frame(width: 36, height: 36)
+                    } else {
+                        dragHandleView(index: index)
+                    }
+                } else {
+                    EmptyView()
+                }
+            }
+            // Höhe messen für Drag-Berechnung
+            .background(
+                GeometryReader { geo in
+                    Color.clear
+                        .onAppear { cardHeights[index] = geo.size.height }
+                        .onChange(of: geo.size.height) { _, newHeight in
+                            cardHeights[index] = newHeight
+                        }
+                }
+            )
+            // Ziehende Card ausblenden
+            .opacity(draggingIndex == index ? 0 : 1)
+            .animation(nil, value: draggingIndex)
+            // Verschiebe-Animation
+            .modifier(RowOffsetModifier(offset: offsetForIndex(index)))
+
+            // Pastellgrüner Superset-Tint (nur im Normalmodus)
+            .overlay(
+                Group {
+                    if isInSuperset && !isSupersetSelectionMode {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.green.opacity(0.08))
+                            .allowsHitTesting(false)
+                    }
+                }
+            )
+            // Auswahl-Overlay im Superset-Modus
+            .overlay(
+                Group {
+                    if isSupersetSelectionMode {
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(
+                                isSelected ? Color.blue : Color.clear,
+                                lineWidth: 2
+                            )
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(
+                                        alreadyInSuperset
+                                            ? Color.black.opacity(0.25)
+                                            : (isSelected ? Color.blue.opacity(0.08) : Color.clear)
+                                    )
+                            )
+                    }
+                }
+            )
+            // Checkmark-Badge bei Selektion
+            .overlay(alignment: .topTrailing) {
+                if isSupersetSelectionMode && isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.white, .blue)
+                        .padding(8)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            // Hinweis-Icon bei bereits im Superset
+            .overlay(alignment: .topTrailing) {
+                if isSupersetSelectionMode && alreadyInSuperset && !isSelected {
+                    Image(systemName: "link.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.white, Color.blue.opacity(0.5))
+                        .padding(8)
+                }
+            }
+            // Tap-Overlay im Superset-Auswahl-Modus
+            .contentShape(Rectangle())
+            .onTapGesture {
+                guard isSupersetSelectionMode else { return }
+                withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                    if selectedGroupIndicesForSuperset.contains(index) {
+                        selectedGroupIndicesForSuperset.remove(index)
+                    } else {
+                        selectedGroupIndicesForSuperset.insert(index)
+                    }
+                }
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }
+        }
+    }
+
+    // MARK: - Drag Handle
+
+    @ViewBuilder
+    private func dragHandleView(index: Int) -> some View {
+        Image(systemName: "line.3.horizontal")
+            .font(.title3)
+            .foregroundStyle(.secondary)
+            .frame(width: 36, height: 36)
+            .contentShape(Rectangle())
+            .gesture(
+                LongPressGesture(minimumDuration: 0.2)
+                    .sequenced(before: DragGesture())
+                    .onChanged { value in
+                        if case .second(true, let drag) = value {
+                            if draggingIndex == nil {
+                                withAnimation(.easeOut(duration: 0.2)) {
+                                    draggingIndex = index
+                                }
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            }
+                            if let drag {
+                                dragOffset = drag.translation
+                                let target = calculateTargetIndex(from: index)
+                                if target != lastTargetIndex && target != index {
+                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    lastTargetIndex = target
+                                }
+                            }
+                        }
+                    }
+                    .onEnded { _ in
+                        let toIndex = calculateTargetIndex(from: index)
+                        withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.8)) {
+                            draggingIndex = nil
+                            dragOffset = .zero
+                            lastTargetIndex = nil
+                        }
+                        if toIndex != index {
+                            plan.reorderExercise(from: index, to: toIndex)
+                            try? modelContext.save()
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        }
+                    }
+            )
     }
 
     // MARK: - Floating Action Bar
@@ -287,216 +537,17 @@ struct PlanExercisesSection: View {
         )
         .shadow(color: .black.opacity(0.2), radius: 12, x: 0, y: 4)
     }
-}
-
-// MARK: - Reorderable Exercise List mit Custom Drag & Drop
-
-struct ReorderableExerciseList: View {
-    @Binding var isEditing: Bool
-    @Binding var isSupersetSelectionMode: Bool
-    @Binding var selectedGroupIndices: Set<Int>
-    let plan: TrainingPlan
-    let onEdit: (ExerciseSet) -> Void
-    let onDelete: (ExerciseSet) -> Void
-    let onReorder: (Int, Int) -> Void
-    let onRemoveFromSuperset: (Int) -> Void
-
-    // Drag State
-    @State private var draggingIndex: Int? = nil
-    @State private var dragOffset: CGSize = .zero
-    @State private var cardHeights: [Int: CGFloat] = [:]
-    @State private var lastTargetIndex: Int? = nil
-
-    private var averageCardHeight: CGFloat {
-        guard !cardHeights.isEmpty else { return 120 }
-        return cardHeights.values.reduce(0, +) / CGFloat(cardHeights.count)
-    }
-
-    private let cardSpacing: CGFloat = 12
-    private let supersetSpacing: CGFloat = 4
-
-    // Anzahl der Übungen in jedem Superset (nach supersetGroupId)
-    private func supersetSize(for groupId: String) -> Int {
-        let groups = plan.groupedTemplateSets
-        return groups.filter { $0.first?.supersetGroupId == groupId }.count
-    }
-
-    var body: some View {
-        ZStack(alignment: .top) {
-            // Hintergrund-Cards (die sich verschieben)
-            VStack(spacing: 0) {
-                let groups = plan.groupedTemplateSets
-                ForEach(Array(groups.enumerated()), id: \.element.first?.persistentModelID) { index, setsGroup in
-                    if let firstSet = setsGroup.first {
-                        let isInSuperset = firstSet.supersetGroupId != nil
-                        let groupId = firstSet.supersetGroupId
-                        let isFirstInGroup = isFirstSupersetMember(at: index, in: groups)
-                        let isLastInGroup = isLastSupersetMember(at: index, in: groups)
-
-                        VStack(spacing: 0) {
-                            // Superset-Label über der ersten Übung einer Gruppe
-                            if isInSuperset, isFirstInGroup, let gId = groupId {
-                                let size = supersetSize(for: gId)
-                                HStack {
-                                    Text(supersetLabel(for: size))
-                                        .font(.caption.bold())
-                                        .foregroundStyle(.blue)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 3)
-                                        .background(Color.blue.opacity(0.12), in: Capsule())
-                                    Spacer()
-                                }
-                                .padding(.bottom, 4)
-                                .padding(.top, index == 0 ? 0 : 4)
-                            }
-
-                            // Die eigentliche Card
-                            supersetCardWrapper(
-                                setsGroup: setsGroup,
-                                firstSet: firstSet,
-                                index: index,
-                                isInSuperset: isInSuperset,
-                                isLastInGroup: isLastInGroup
-                            )
-                        }
-                        // Abstand: kleiner innerhalb eines Supersets, normal zwischen Gruppen
-                        .padding(.bottom, spacingAfter(index: index, in: groups))
-                    }
-                }
-            }
-
-            // Schwebende Card (die mit dem Finger bewegt wird)
-            if let dragIndex = draggingIndex,
-               let setsGroup = plan.groupedTemplateSets[safe: dragIndex],
-               let firstSet = setsGroup.first {
-
-                let yPosition = calculateFloatingCardPosition(for: dragIndex)
-
-                FloatingDragCard(
-                    exerciseName: firstSet.exerciseName,
-                    mediaAssetName: firstSet.exerciseMediaAssetName,
-                    sets: setsGroup
-                )
-                .offset(y: yPosition + dragOffset.height)
-                .zIndex(1000)
-            }
-        }
-        .onChange(of: isEditing) { _, newValue in
-            if !newValue {
-                draggingIndex = nil
-                dragOffset = .zero
-                lastTargetIndex = nil
-            }
-        }
-        .onChange(of: isSupersetSelectionMode) { _, newValue in
-            if !newValue {
-                selectedGroupIndices = []
-            }
-        }
-    }
-
-    // MARK: - Card mit optionalem Superset-Seitenstreifen
-
-    @ViewBuilder
-    private func supersetCardWrapper(
-        setsGroup: [ExerciseSet],
-        firstSet: ExerciseSet,
-        index: Int,
-        isInSuperset: Bool,
-        isLastInGroup: Bool
-    ) -> some View {
-        let isSelected = selectedGroupIndices.contains(index)
-        let alreadyInSuperset = isInSuperset && isSupersetSelectionMode
-
-        ZStack(alignment: .leading) {
-            ReorderableCard(
-                exerciseName: firstSet.exerciseName,
-                mediaAssetName: firstSet.exerciseMediaAssetName,
-                sets: setsGroup,
-                index: index,
-                isDragging: draggingIndex == index,
-                isEditing: isEditing,
-                offset: offsetForIndex(index),
-                onEdit: { onEdit(firstSet) },
-                onDelete: { onDelete(firstSet) },
-                onDragStarted: { startDragging(index: index) },
-                onDragChanged: { translation in updateDrag(translation: translation, fromIndex: index) },
-                onDragEnded: { endDragging(fromIndex: index) },
-                onHeightMeasured: { height in cardHeights[index] = height },
-                onRemoveFromSuperset: isInSuperset ? { onRemoveFromSuperset(index) } : nil
-            )
-            // Pastellgrüner Superset-Tint (nur im Normalmodus sichtbar)
-            .overlay(
-                Group {
-                    if isInSuperset && !isSupersetSelectionMode {
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.green.opacity(0.08))
-                            .allowsHitTesting(false)
-                    }
-                }
-            )
-            // Auswahl-Overlay im Superset-Modus
-            .overlay(
-                Group {
-                    if isSupersetSelectionMode {
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(
-                                isSelected ? Color.blue : Color.clear,
-                                lineWidth: 2
-                            )
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(
-                                        alreadyInSuperset
-                                            ? Color.black.opacity(0.25)
-                                            : (isSelected ? Color.blue.opacity(0.08) : Color.clear)
-                                    )
-                            )
-                    }
-                }
-            )
-            // Checkmark-Badge bei Selektion
-            .overlay(alignment: .topTrailing) {
-                if isSupersetSelectionMode && isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title3)
-                        .foregroundStyle(.white, .blue)
-                        .padding(8)
-                        .transition(.scale.combined(with: .opacity))
-                }
-            }
-            // Hinweis-Icon bei bereits im Superset
-            .overlay(alignment: .topTrailing) {
-                if isSupersetSelectionMode && alreadyInSuperset && !isSelected {
-                    Image(systemName: "link.circle.fill")
-                        .font(.title3)
-                        .foregroundStyle(.white, Color.blue.opacity(0.5))
-                        .padding(8)
-                }
-            }
-            // Tap-Overlay im Superset-Auswahl-Modus
-            .contentShape(Rectangle())
-            .onTapGesture {
-                guard isSupersetSelectionMode else { return }
-                withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
-                    if selectedGroupIndices.contains(index) {
-                        selectedGroupIndices.remove(index)
-                    } else {
-                        selectedGroupIndices.insert(index)
-                    }
-                }
-                let generator = UIImpactFeedbackGenerator(style: .light)
-                generator.impactOccurred()
-            }
-        }
-    }
 
     // MARK: - Superset-Hilfsmethoden
+
+    /// Gibt die Anzahl der Übungen in einem Superset zurück
+    private func supersetSize(for groupId: String) -> Int {
+        plan.groupedTemplateSets.filter { $0.first?.supersetGroupId == groupId }.count
+    }
 
     /// Prüft ob die Gruppe an diesem Index die erste ihrer Superset-Gruppe ist
     private func isFirstSupersetMember(at index: Int, in groups: [[ExerciseSet]]) -> Bool {
         guard let groupId = groups[index].first?.supersetGroupId else { return false }
-        // Die erste Gruppe mit dieser ID vor diesem Index?
         return !groups[0..<index].contains { $0.first?.supersetGroupId == groupId }
     }
 
@@ -504,6 +555,16 @@ struct ReorderableExerciseList: View {
     private func isLastSupersetMember(at index: Int, in groups: [[ExerciseSet]]) -> Bool {
         guard let groupId = groups[index].first?.supersetGroupId else { return false }
         return !groups[(index + 1)...].contains { $0.first?.supersetGroupId == groupId }
+    }
+
+    /// Prüft ob eine Gruppe ein nachfolgendes Superset-Mitglied ist (nicht das erste)
+    private func isSupersetFollower(at index: Int) -> Bool {
+        guard index > 0,
+              let thisID = plan.groupedTemplateSets[safe: index]?.first?.supersetGroupId,
+              !thisID.isEmpty,
+              let prevID = plan.groupedTemplateSets[safe: index - 1]?.first?.supersetGroupId
+        else { return false }
+        return thisID == prevID
     }
 
     /// Gibt den Abstand nach einem bestimmten Index zurück
@@ -522,68 +583,7 @@ struct ReorderableExerciseList: View {
         return cardSpacing
     }
 
-    // MARK: - Drag Handlers
-
-    private func startDragging(index: Int) {
-        guard isEditing else { return }
-        withAnimation(.easeOut(duration: 0.2)) {
-            draggingIndex = index
-        }
-        hapticFeedback(.medium)
-    }
-
-    private func updateDrag(translation: CGSize, fromIndex: Int) {
-        dragOffset = translation
-
-        let targetIndex = calculateTargetIndex(from: fromIndex)
-        if targetIndex != lastTargetIndex && targetIndex != fromIndex {
-            hapticFeedback(.light)
-            lastTargetIndex = targetIndex
-        }
-    }
-
-    private func endDragging(fromIndex: Int) {
-        let toIndex = calculateTargetIndex(from: fromIndex)
-
-        withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.8)) {
-            dragOffset = .zero
-            draggingIndex = nil
-            lastTargetIndex = nil
-        }
-
-        if toIndex != fromIndex {
-            onReorder(fromIndex, toIndex)
-            hapticFeedback(.medium)
-        }
-    }
-
-    // MARK: - Position Calculations
-
-    private func calculateFloatingCardPosition(for index: Int) -> CGFloat {
-        var position: CGFloat = 0
-        let groups = plan.groupedTemplateSets
-        for i in 0..<index {
-            position += (cardHeights[i] ?? averageCardHeight) + spacingAfter(index: i, in: groups)
-        }
-        return position
-    }
-
-    private func offsetForIndex(_ index: Int) -> CGFloat {
-        guard let dragIndex = draggingIndex else { return 0 }
-        if index == dragIndex { return 0 }
-
-        let target = calculateTargetIndex(from: dragIndex)
-        let draggedHeight = cardHeights[dragIndex] ?? averageCardHeight
-        let shift = draggedHeight + cardSpacing
-
-        if dragIndex < target {
-            if (dragIndex + 1)...target ~= index { return -shift }
-        } else if target < dragIndex {
-            if target..<(dragIndex) ~= index { return shift }
-        }
-
-        return 0
-    }
+    // MARK: - Positions-Berechnung (Drag & Drop)
 
     private func yStart(for index: Int) -> CGFloat {
         var y: CGFloat = 0
@@ -592,6 +592,10 @@ struct ReorderableExerciseList: View {
             y += (cardHeights[i] ?? averageCardHeight) + spacingAfter(index: i, in: groups)
         }
         return y
+    }
+
+    private func calculateFloatingCardPosition(for index: Int) -> CGFloat {
+        yStart(for: index)
     }
 
     private func calculateTargetIndex(from dragIndex: Int) -> Int {
@@ -617,125 +621,32 @@ struct ReorderableExerciseList: View {
         return bestIndex
     }
 
-    private func hapticFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
-        let generator = UIImpactFeedbackGenerator(style: style)
-        generator.impactOccurred()
+    private func offsetForIndex(_ index: Int) -> CGFloat {
+        guard let dragIndex = draggingIndex else { return 0 }
+        if index == dragIndex { return 0 }
+
+        let target = calculateTargetIndex(from: dragIndex)
+        let groups = plan.groupedTemplateSets
+        let draggedHeight = (cardHeights[dragIndex] ?? averageCardHeight) + spacingAfter(index: dragIndex, in: groups)
+
+        if dragIndex < target {
+            if (dragIndex + 1)...target ~= index { return -draggedHeight }
+        } else if target < dragIndex {
+            if target..<dragIndex ~= index { return draggedHeight }
+        }
+
+        return 0
     }
 }
 
-// MARK: - Reorderable Card mit Drag Handle
+// MARK: - Row Offset Modifier
 
-private struct ReorderableCard: View {
-    let exerciseName: String
-    let mediaAssetName: String
-    let sets: [ExerciseSet]
-    let index: Int
-    let isDragging: Bool
-    let isEditing: Bool
+private struct RowOffsetModifier: ViewModifier {
     let offset: CGFloat
-    let onEdit: () -> Void
-    let onDelete: () -> Void
-    let onDragStarted: () -> Void
-    let onDragChanged: (CGSize) -> Void
-    let onDragEnded: () -> Void
-    let onHeightMeasured: (CGFloat) -> Void
-    let onRemoveFromSuperset: (() -> Void)?
-
-    @State private var hasStartedDrag = false
-
-    private var isInSuperset: Bool {
-        sets.first?.supersetGroupId != nil
-    }
-
-    var body: some View {
-        TemplateSetCard(
-            exerciseName: exerciseName,
-            mediaAssetName: mediaAssetName,
-            sets: sets,
-            onDelete: onDelete,
-            onEdit: onEdit,
-            showsEditMenu: !isEditing,
-            onSupersetToggle: onRemoveFromSuperset
-        ) {
-            if isEditing {
-                // Superset-Mitglieder: kein Drag-Handle (werden als Block dargestellt)
-                if isInSuperset {
-                    Image(systemName: "link")
-                        .font(.title3)
-                        .foregroundStyle(.blue.opacity(0.5))
-                        .frame(width: 36, height: 36)
-                } else {
-                    dragHandle
-                }
-            } else {
-                EmptyView()
-            }
-        }
-        .opacity(isDragging ? 0 : 1)
-        .animation(nil, value: isDragging)
-        .offset(y: offset)
-        .animation(.interactiveSpring(response: 0.3, dampingFraction: 0.7), value: offset)
-        .background(
-            GeometryReader { geo in
-                Color.clear
-                    .onAppear { onHeightMeasured(geo.size.height) }
-                    .onChange(of: geo.size.height) { _, newHeight in
-                        onHeightMeasured(newHeight)
-                    }
-            }
-        )
-    }
-
-    private var dragHandle: some View {
-        Image(systemName: "line.3.horizontal")
-            .font(.title3)
-            .foregroundStyle(.secondary)
-            .frame(width: 36, height: 36)
-            .contentShape(Rectangle())
-            .gesture(
-                LongPressGesture(minimumDuration: 0.2)
-                    .sequenced(before: DragGesture())
-                    .onChanged { value in
-                        if case .second(true, let drag) = value {
-                            if !hasStartedDrag {
-                                hasStartedDrag = true
-                                onDragStarted()
-                            }
-                            if let drag { onDragChanged(drag.translation) }
-                        }
-                    }
-                    .onEnded { _ in
-                        if hasStartedDrag {
-                            hasStartedDrag = false
-                            onDragEnded()
-                        }
-                    }
-            )
-    }
-}
-
-// MARK: - Floating Drag Card
-
-private struct FloatingDragCard: View {
-    let exerciseName: String
-    let mediaAssetName: String
-    let sets: [ExerciseSet]
-
-    var body: some View {
-        TemplateSetCard(
-            exerciseName: exerciseName,
-            mediaAssetName: mediaAssetName,
-            sets: sets,
-            onDelete: {},
-            onEdit: {}
-        ) {
-            Image(systemName: "line.3.horizontal")
-                .font(.title3)
-                .foregroundStyle(.secondary)
-                .frame(width: 36, height: 36)
-        }
-        .shadow(color: .black.opacity(0.3), radius: 12, x: 0, y: 8)
-        .scaleEffect(1.02)
+    func body(content: Content) -> some View {
+        content
+            .offset(y: offset)
+            .animation(.interactiveSpring(response: 0.3, dampingFraction: 0.7), value: offset)
     }
 }
 

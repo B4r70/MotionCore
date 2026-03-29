@@ -60,9 +60,6 @@ struct TrainingFormView: View {
                         },
                         onDeleteExercise: { set in
                             deleteExercise(set)
-                        },
-                        onMoveExercise: { source, destination in
-                            moveExercise(from: source, to: destination)
                         }
                     )
                 }
@@ -179,12 +176,6 @@ struct TrainingFormView: View {
         pendingReplacement = nil
 
         addSets(pending.newSets, keepingSortOrder: pending.sortOrder)
-    }
-
-    // MARK: - Sortierung
-
-    private func moveExercise(from source: IndexSet, to destination: Int) {
-        plan.reorderExercises(fromOffsets: source, toOffset: destination)
     }
 
     // MARK: - Delete

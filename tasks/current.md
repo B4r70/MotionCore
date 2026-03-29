@@ -1,251 +1,76 @@
-# Übungs-Reihenfolge in ActiveWorkoutView
+# PlanExercisesSection Drag & Drop Redesign
 
 **Complexity:** Medium
 **Status:** Warte auf Genehmigung
 
 ## Summary
 
-LongPress auf eine Übung aktiviert einen Edit-Modus. Pro Row erscheinen ein X-Button (Löschen) und ↑↓-Pfeile (Verschieben). "Fertig"-Button oder erneuter LongPress beendet den Modus. Reihenfolge wird via `sortOrder` auf allen Sets der Gruppe persistiert.
+Die komplexe dreiteilige Drag-Architektur (`ReorderableExerciseList` + `ReorderableCard` + `FloatingDragCard`) in `PlanExercisesSection.swift` wird durch das schlankere, bewährte Pattern aus `ExercisesOverviewCard.swift` ersetzt. Drag-State und -Logik werden direkt in `PlanExercisesSection` integriert, Drag-Handle als Overlay auf `TemplateSetCard`, Floating Card als ZStack-Overlay. Der Superset-Selection-Modus bleibt vollständig erhalten. Ein Doppel-Sortierungs-Bug (Zeile 197-199) wird dabei bereinigt.
+
+## Scope
+
+- **Enthalten**: Entfernung von `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard`; Integration der Drag-Logik direkt in `PlanExercisesSection`; `RowOffsetModifier` als private struct; Bereinigung des Doppel-Sortierungs-Bugs; Anpassung `TrainingFormView` (Entfernung des jetzt unnötigen `onMoveExercise`-Callbacks)
+- **Nicht enthalten**: Änderungen an `TemplateSetCard`, `ExerciseDetailRow`, dem `.detail`-Modus, dem Superset-Selection-Modus (inhaltlich), `TrainingDetailView`
 
 ## Affected Files
 
-- `MotionCore/Views/Workouts/Active/Components/ExercisesOverviewCard.swift` — Edit-Modus State, UI-Buttons, Callbacks
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `reorderExercise()`-Funktion, Callback-Integration
+- `MotionCore/Views/Training/Plans/Components/PlanExercisesSection.swift` — Entfernung von `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard`; Drag-State + Drag-Logik + ZStack-Pattern direkt in `PlanExercisesSection` integrieren
+- `MotionCore/Views/Training/Plans/View/TrainingFormView.swift` — `onMoveExercise`-Callback entfernen
+
+## Risks
+
+- Superset-Selection-Modus und Sort-Modus müssen gegenseitig exklusiv bleiben
+- `TemplateSetCard` hat eigenen `.glassCard()`-Modifier — Offset/Opacity-Modifikation muss außerhalb erfolgen
+- Doppel-Sortierungs-Bug: aktuell wird bei jedem Reorder sowohl der Parent-Callback als auch direkt `plan.reorderExercise` aufgerufen — im neuen Pattern nur noch einmal direkt
 
 ## Implementation Steps
 
-- [x] **Step 1: ExercisesOverviewCard — Edit-Modus State + Callbacks**
-  - `@State private var isEditMode: Bool = false`
-  - Neuer Callback: `onMoveExercise: (String, Int) -> Void` (groupKey, direction: -1 oben, +1 unten)
-  - LongPress togglet `isEditMode` (statt direkt zu löschen)
-  - Header: "Fertig"-Button wenn `isEditMode == true`
+### Phase 1: PlanExercisesSection umbauen
 
-- [x] **Step 2: ExercisesOverviewCard — Edit-Modus UI pro Row**
-  - Pro Row im Edit-Modus: ↑ (nur wenn nicht erste Gruppe), ↓ (nur wenn nicht letzte), ✕ (Löschen)
-  - Superset-Block: Up/Down verschiebt die gesamte Superset-Gruppe als Block
-  - Im Edit-Modus: Tap auf Row löst kein `onSelectExercise` aus
+- [x] **1.1 Drag-State in PlanExercisesSection integrieren**: Die vier States (`draggingIndex: Int?`, `dragOffset: CGSize`, `cardHeights: [Int: CGFloat]`, `lastTargetIndex: Int?`) direkt als `@State` in `PlanExercisesSection` hinzufügen. `averageCardHeight` und `cardSpacing` (12) übernehmen.
 
-- [x] **Step 3: ActiveWorkoutView — `reorderExercise()` + Integration**
-  - Gruppe per `groupKey` finden, Superset-Block erkennen, Array-Swap, neue `sortOrder`-Werte per `enumerated()` vergeben, alle Sets der Gruppe updaten, Cache refresh + Haptic
+- [x] **1.2 `onMoveExercise`-Callback entfernen**: Die Property `var onMoveExercise: ((IndexSet, Int) -> Void)? = nil` aus `PlanExercisesSection` entfernen. Reordering geschieht direkt via `plan.reorderExercise(from:to:)` + `try? modelContext.save()`.
+
+- [x] **1.3 `exercisesList` für `.form`-Modus neu schreiben**: Statt `ReorderableExerciseList` direkt ein `ZStack(alignment: .top)` mit Hintergrund-VStack (ForEach über `plan.groupedTemplateSets.enumerated()`) + Floating Card Overlay. Superset-Labels und -Spacing bleiben.
+
+- [x] **1.4 Drag-Handle als Overlay**: Im Sort-Modus auf jeder `TemplateSetCard` ein `.overlay(alignment: .trailing)` mit Drag-Handle (`line.3.horizontal`) + `LongPressGesture(0.2s).sequenced(before: DragGesture())`. Superset-Mitglieder: `link`-Icon ohne Gesture.
+
+- [x] **1.5 Superset-Overlays beibehalten**: Die Superset-Selection-Overlays (grüner Tint, Auswahl-Stroke, Checkmark-Badge, Tap-Gesture) direkt auf `TemplateSetCard` anwenden.
+
+- [x] **1.6 Drag-Logik-Methoden integrieren**: `yStart(for:)`, `calculateFloatingCardPosition(for:)`, `calculateTargetIndex(from:)`, `offsetForIndex(_:)` analog zum `ExercisesOverviewCard`-Pattern in `PlanExercisesSection` integrieren.
+
+- [x] **1.7 `RowOffsetModifier` als private struct**: 6-zeiligen `RowOffsetModifier` am Ende der Datei als `private struct` hinzufügen.
+
+- [x] **1.8 Gegenseitige Exklusivität**: Beim Aktivieren von `isSupersetSelectionMode` → `isEditing = false`. Beim Aktivieren von `isEditing` → `isSupersetSelectionMode = false`. Drag-State beim Verlassen des Sort-Modus zurücksetzen.
+
+- [x] **1.9 `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard` entfernen**: Die drei Structs komplett löschen.
+
+### Phase 2: TrainingFormView anpassen
+
+- [x] **2.1 `onMoveExercise`-Parameter entfernen**: In `TrainingFormView` den `onMoveExercise:`-Parameter aus dem `PlanExercisesSection`-Aufruf entfernen. Methode `moveExercise(from:to:)` ebenfalls entfernen.
 
 ## Manual Verification
 
 - [ ] Xcode Build (`Cmd+B`)
-- [ ] LongPress → Edit-Modus, Pfeile + X sichtbar
-- [ ] Up/Down-Pfeile verschieben Übung korrekt
-- [ ] Erster/letzter Eintrag: Pfeil in Richtung Ende nicht sichtbar
-- [ ] X-Button → Delete-Alert wie bisher
-- [ ] "Fertig" / erneuter LongPress → beendet Edit-Modus
-- [ ] Superset-Block wird als Ganzes verschoben
-- [ ] Nach Reorder: `sortOrder` persistent nach Session-Neustart
-
-## Fortschritt
-
-**Datum:** 2026-03-28
-**Abgeschlossene Steps:** alle 3 Implementation Steps
-
-**Geänderte Dateien:**
-- `MotionCore/Views/Workouts/Active/Components/ExercisesOverviewCard.swift` — `isEditMode` State, `onMoveExercise`-Callback, Edit-Modus UI (Pfeile + X per Row), LongPress togglet Edit-Modus, "Fertig"-Button im Header, Tap-Guard im Edit-Modus
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `reorderExercise(groupKey:direction:)` Funktion (normaler Swap + Superset-Block-Logik, sortOrder-Vergabe, Cache-Refresh, Haptic), `onMoveExercise`-Integration in `exercisesOverview`
-
-**Offene Punkte:** Manual Verification in Xcode (Cmd+B)
-
----
-
-# Progressions-Übersicht: Trend-Gruppierung
-
-**Complexity:** Medium
-**Status:** Genehmigt
-
-## Summary
-
-Flache Übungsliste in `ProgressionAnalyseView` durch aufklappbare Sektionen nach `PerformanceTrend` ersetzen.
-Reihenfolge: Aufwärtstrend → Stabil → Rückgang → Zu wenig Daten.
-Default-Zustand: alle Sektionen offen. Labels kurz und deutsch.
-
-## Affected Files
-
-- `MotionCore/Services/ViewModels/ProgressionViewModel.swift` — neues `groupedByTrend` Property
-- `MotionCore/Views/Progression/View/ProgressionAnalyseView.swift` — flache ForEach durch DisclosureGroup-Sektionen ersetzen
-- `MotionCore/Views/Progression/Components/ProgressionSectionHeader.swift` — **NEU**: Sektions-Header (Trend-Icon + Label + Count)
-
-## Implementation Steps
-
-- [x] **Step 1: `ProgressionViewModel.swift`** — `groupedByTrend: [(trend: PerformanceTrend, exercises: [(Exercise, ProgressionAnalysis)])]` computed Property. Reihenfolge: `.improving` → `.stable`/`.volatile` → `.declining` → `.insufficient`. Innerhalb jeder Gruppe alphabetisch. `volatile` → `.stable`-Gruppe. `.insufficient`-Sektion nur wenn vorhanden.
-- [x] **Step 2: `ProgressionSectionHeader.swift` erstellen** — Trend-Icon + Label + Count-Badge. Labels: `.improving` → "Aufwärtstrend", `.stable` → "Stabil", `.declining` → "Rückgang", `.insufficient` → "Zu wenig Daten". Kein `.glassCard()` auf den Header.
-- [x] **Step 3: `ProgressionAnalyseView.swift`** — `VStack { ForEach(trainedExercises) }` durch Sektionen ersetzen. Pro Gruppe ein `DisclosureGroup` mit `ProgressionSectionHeader` als Label. State: `@State private var expandedSections: Set<PerformanceTrend> = [.improving, .stable, .declining, .insufficient]` (alle offen). `sheet(item:)` bleibt unverändert.
-
-## Manual Verification
-
-- [ ] Xcode Build (`Cmd+B`)
-- [ ] Sektionen sichtbar, korrekt gruppiert und benannt
-- [ ] Auf-/Zuklappen funktioniert
-- [ ] Tap auf Card → ProgressionDetailView Sheet öffnet korrekt
-- [ ] Hero-Card zeigt weiterhin korrekte Zahlen
-- [ ] EmptyState bei null Übungen weiterhin sichtbar
-
-## Fortschritt
-
-**Datum:** 2026-03-28
-**Abgeschlossene Steps:** alle 3 Implementation Steps
-
-**Geänderte Dateien:**
-- `MotionCore/Services/ViewModels/ProgressionViewModel.swift` — computed Property `groupedByTrend` hinzugefügt
-- `MotionCore/Views/Progression/Components/ProgressionSectionHeader.swift` — **NEU**: Trend-Icon + Label + Count-Badge
-- `MotionCore/Views/Progression/View/ProgressionAnalyseView.swift` — `expandedSections`-State + DisclosureGroup-Sektionen statt flachem ForEach
-
-**Hinweis:** `ProgressionSectionHeader.swift` ist eine neue Datei — muss manuell zum Xcode-Target hinzugefügt werden (falls nicht durch `PBXFileSystemSynchronizedBuildFileExceptionSet` automatisch erkannt).
-
-**Offene Punkte:** Manual Verification in Xcode (Cmd+B)
-
----
-
-# Exercise-Navigation aus SetConfigurationSheet
-
-**Complexity:** Small
-
-## Summary
-
-In der `exerciseInfoCard` des `SetConfigurationSheet` soll ein NavigationLink-Icon ergänzt werden, das zur `ExerciseFormView` (Edit-Modus) der jeweiligen Exercise navigiert. Das Icon erscheint nur, wenn eine Exercise-Referenz vorhanden ist (Init A), nicht im Snapshot-Modus (Init B).
-
-## Affected Files
-
-- `MotionCore/Views/Training/Plans/Components/SetConfigurationSheet.swift` — NavigationLink-Icon in `exerciseInfoCard` ergänzen
-
-## Implementation Steps
-
-- [x] In `exerciseInfoCard` (nach `Spacer()`): einen `NavigationLink` ergänzen, der nur angezeigt wird wenn `exercise != nil`
-- [x] NavigationLink-Ziel: `ExerciseFormView(mode: .edit, exercise: ex, showDeleteButton: false)`
-- [x] Icon: `Image(systemName: "arrow.right.circle")` mit passendem Stil
-
-## Manual Verification
-
-- [ ] Xcode Build (`Cmd+B`)
-- [ ] Icon sichtbar in PlanExerciseCard, Tap → ExerciseFormView
-- [ ] Zurück-Navigation funktioniert korrekt
-- [ ] Snapshot-Modus (Init B): Icon NICHT sichtbar
-
-## Fortschritt
-
-**Datum:** 2026-03-28
-**Abgeschlossene Steps:** alle 3 Implementation Steps
-
-**Geänderte Dateien:**
-- `MotionCore/Views/Training/Plans/Components/SetConfigurationSheet.swift` — NavigationLink nach `Spacer()` in `exerciseInfoCard` eingefügt; nur sichtbar wenn `exercise != nil`
-
-**Offene Punkte:** Manual Verification in Xcode (Cmd+B)
-
----
-
-# Plan: DetailedMuscle-Bearbeitung in ExerciseFormView
-
-**Komplexität:** Medium
-**Status:** Warte auf Genehmigung
-
-## Summary
-
-Der User soll in der ExerciseFormView die feingranularen Muskeln (`detailedPrimaryMuscles` / `detailedSecondaryMuscles`) einsehen und bearbeiten können. Die Heatmap arbeitet bereits auf `DetailedMuscle`-Ebene und bevorzugt diese Daten gegenüber den groben `MuscleGroup`-Daten. Aktuell können nur Supabase-importierte Exercises von dieser Genauigkeit profitieren — mit diesem Feature auch custom und manuell korrigierte Exercises.
-
-## Kontext
-
-- `Exercise.primaryMuscles` Getter bevorzugt `detailedPrimaryMusclesRaw` (wenn nicht leer)
-- `MuscleHeatmapCalcEngine` bevorzugt `detailedPrimaryMuscles`, fällt sonst auf alle Sub-Muskeln der `MuscleGroup` zurück (ungenauer)
-- 42 `DetailedMuscle`-Cases, gruppiert nach 9 `parentGroup`-Werten
-- `primaryMuscles`-Setter leert `detailedPrimaryMusclesRaw` (Fix aus letzter Session)
-
-## Affected Files
-
-- `MotionCore/Views/Training/Exercises/Components/DetailedMusclePicker.swift` — **NEU**: Picker gruppiert nach `parentGroup`, Multi-Select
-- `MotionCore/Components/Forms/FormViewSection.swift` — 2 neue Sections: Primary + Secondary Detailed
-- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — Integration der Sections
-- `MotionCore/Models/Core/Exercise.swift` — `detailedPrimaryMuscles`/`detailedSecondaryMuscles` Setter sync `primaryMusclesRaw`/`secondaryMusclesRaw`
-
-## Implementation Steps
-
-- [x] **Step 1: `DetailedMusclePicker.swift` erstellen** — Analog `MuscleGroupPicker`. `List` mit `Section` pro `parentGroup`, Checkmarks. Binding auf `[DetailedMuscle]`.
-- [x] **Step 2: Neue Form-Sections in `FormViewSection.swift`** — `ExerciseDetailedPrimaryMusclesSection` + `ExerciseDetailedSecondaryMusclesSection`. Capsule-Tags + NavigationLink zum Picker.
-- [x] **Step 3: Integration in `ExerciseFormView.swift`** — Sections unterhalb der bestehenden MuscleGroup-Sections. Zeigen "Keine" wenn leer.
-- [x] **Step 4: `Exercise.swift` — Setter synchronisieren** — `detailedPrimaryMuscles`-Setter leitet `primaryMusclesRaw` aus `parentGroup` ab. Analog Secondary.
-
-## Manual Verification
-
-- [ ] Xcode Build (`Cmd+B`)
-- [ ] ExerciseFormView ohne DetailedMuscles — Sections zeigen "Keine"
-- [ ] ExerciseFormView mit Supabase-Exercise — Capsule-Tags sichtbar
-- [ ] DetailedMusclePicker — 9 Gruppen-Sektionen, Checkmarks korrekt
-- [ ] DetailedMuscles setzen → Heatmap zeigt feingranulare Daten
-- [ ] MuscleGroup ändern → DetailedMuscles werden geleert
+- [ ] Sortier-Button im Header sichtbar
+- [ ] Sort-Button aktiviert Sortiermodus: Drag-Handles erscheinen, Plus/Bolt-Buttons verschwinden
+- [ ] Drag auf Handle verschiebt Übung mit Floating Card + Haptic
+- [ ] Reihenfolge persistiert nach Dismiss und Rückkehr
+- [ ] Superset-Selection-Modus funktioniert wie bisher
+- [ ] Superset-Mitglieder zeigen Link-Icon statt Drag-Handle
+- [ ] Kontextmenü (Edit/Delete) funktioniert außerhalb des Sort-Modus
+- [ ] `.detail`-Modus (`TrainingDetailView`) unverändert
 
 ---
 
 ## Fortschritt
 
-**Datum:** 2026-03-27
-**Abgeschlossene Steps:** alle 4 Implementation Steps
+**Datum:** 2026-03-29
+
+**Abgeschlossene Schritte:** 1.1–1.9, 2.1
 
 **Geänderte Dateien:**
-- `MotionCore/Views/Training/Exercises/Components/DetailedMusclePicker.swift` — **NEU**: List mit Section pro parentGroup, Multi-Select Checkmarks
-- `MotionCore/Components/Forms/FormViewSection.swift` — `ExerciseDetailedPrimaryMusclesSection` + `ExerciseDetailedSecondaryMusclesSection` nach Zeile 662 eingefügt
-- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — 2 neue Sections nach SekundäreMuscleGroups eingebunden
-- `MotionCore/Models/Core/Exercise.swift` — `detailedPrimaryMuscles`/`detailedSecondaryMuscles` Setter leiten jetzt `primaryMusclesRaw`/`secondaryMusclesRaw` aus `parentGroup`-Werten ab
+- `MotionCore/Views/Training/Plans/Components/PlanExercisesSection.swift` — `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard` entfernt; Drag-State + Drag-Logik + ZStack-Pattern direkt in `PlanExercisesSection` integriert; `onMoveExercise`-Property entfernt; gegenseitige Exklusivität via `.onChange` gesichert; `RowOffsetModifier` als private struct; `isSupersetFollower(at:)` als neue Hilfsmethode; `spacingAfter` in `offsetForIndex` und `yStart` eingebaut für korrekte Superset-Abstände
+- `MotionCore/Views/Training/Plans/View/TrainingFormView.swift` — `onMoveExercise:`-Parameter aus `PlanExercisesSection`-Aufruf entfernt; `moveExercise(from:to:)`-Methode entfernt
 
-**Hinweis:** `DetailedMusclePicker.swift` ist eine neue Datei — muss manuell zum Xcode-Target hinzugefügt werden (falls nicht durch `PBXFileSystemSynchronizedBuildFileExceptionSet` automatisch erkannt).
-
----
-
-# Abgeschlossener Plan: Muscle Heatmap Bug + Exercise-Edit Absicherung
-
-**Complexity:** Medium
-**Datum:** 2026-03-27
-
-## Summary
-
-Die Muscles Heatmap zeigt falsche Muskeln (Quadrizeps statt Brust/Arme) aus zwei Gründen:
-1. **Setter-Bug im Exercise-Modell**: Der `primaryMuscles`-Setter leert `detailedPrimaryMusclesRaw` nicht — nach einer manuellen Korrektur in ExerciseFormView werden die alten (falschen) Detailed-Daten weiterhin bevorzugt.
-2. **Sekundär-Faktor zu hoch**: `0.5` überschätzt den sekundären Stimulus systematisch → auf `0.3` senken.
-
-Zusätzlich: ExerciseFormView zeigt aus StrengthDetailView heraus einen unerwünschten Löschen-Button (Quality Gate Finding aus vorheriger Session).
-
-ExerciseSets brauchen **keine** Muscle-Snapshots — die Engine liest Muskeln live von `Exercise`.
-
-## Affected Files
-
-- `MotionCore/Models/Core/Exercise.swift` — Setter-Fix für primary + secondary muscles
-- `MotionCore/Services/Calculation/MuscleHeatmapCalcEngine.swift` — Sekundär-Faktor 0.5 → 0.3
-- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — `showDeleteButton`-Parameter
-- `MotionCore/Views/Workouts/Components/StrengthDetailView.swift` — `showDeleteButton: false` übergeben
-
-## Implementation Steps
-
-- [x] **Exercise.swift — `primaryMuscles` Setter fixen**: Im Setter zusätzlich `detailedPrimaryMusclesRaw = []` setzen
-- [x] **Exercise.swift — `secondaryMuscles` Setter fixen**: Analog `detailedSecondaryMusclesRaw = []` im Setter
-- [x] **MuscleHeatmapCalcEngine.swift — Sekundär-Faktor**: `volume * 0.5` → `volume * 0.3`
-- [x] **ExerciseFormView.swift — `showDeleteButton: Bool = true` hinzufügen**: Property + Condition `if mode == .edit && showDeleteButton`
-- [x] **StrengthDetailView.swift — `showDeleteButton: false` übergeben**: Im bestehenden `sheet(item: $exerciseToEdit)` Aufruf
-
----
-
-## Fortschritt
-
-**Datum:** 2026-03-27
-**Abgeschlossene Steps:** alle 5 Implementation Steps
-
-**Geänderte Dateien:**
-- `MotionCore/Models/Core/Exercise.swift` — Setter `primaryMuscles` und `secondaryMuscles` leeren jetzt `detailedPrimaryMusclesRaw` bzw. `detailedSecondaryMusclesRaw`
-- `MotionCore/Services/Calculation/MuscleHeatmapCalcEngine.swift` — Sekundär-Faktor 0.5 → 0.3
-- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — `showDeleteButton: Bool = true` Property + Condition `mode == .edit && showDeleteButton`
-- `MotionCore/Views/Workouts/Components/StrengthDetailView.swift` — `showDeleteButton: false` im Sheet-Aufruf
-
-**Offene Punkte:** keine — bereit für Xcode Build und Manual Verification
-
----
-
-## Manual Verification
-
-- [ ] Xcode Build (`Cmd+B`)
-- [ ] Exercise mit falschen Muskeln via `ellipsis.circle` in StrengthDetailView öffnen
-- [ ] Primary Muscles korrigieren (z.B. Chest statt Legs), speichern
-- [ ] Heatmap in StrengthDetailView zeigt jetzt korrekte Muskeln
-- [ ] Heatmap in MuscleHeatmapView (Analyse-Tab) zeigt korrekte Muskeln
-- [ ] ExerciseFormView aus StrengthDetailView — kein Löschen-Button sichtbar
-- [ ] ExerciseFormView aus ExerciseListView — Löschen-Button weiterhin sichtbar
+**Verbleibend:** Manuelle Verifikation via Xcode Build + Simulator

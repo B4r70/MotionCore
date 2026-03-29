@@ -612,42 +612,18 @@ struct ActiveWorkoutView: View {
         showDeleteAlert = true
     }
 
-        // Übung in der Reihenfolge verschieben (direction: -1 = hoch, +1 = runter)
-    private func reorderExercise(groupKey: String, direction: Int) {
+        // Übung per Drag & Drop an neue Position verschieben (from/to: Gruppenindex)
+    private func reorderExercise(from: Int, to: Int) {
+        guard from != to,
+              from >= 0, to >= 0,
+              from < cachedGroupedSets.count,
+              to < cachedGroupedSets.count else { return }
+
         var groups = cachedGroupedSets
 
-        // Index der Ziel-Gruppe finden
-        guard let targetIndex = groups.firstIndex(where: { $0.first?.groupKey == groupKey }) else { return }
-
-        // Superset-Block prüfen: alle Gruppen mit demselben supersetGroupId zusammenfassen
-        let supersetId = groups[targetIndex].first?.supersetGroupId
-
-        if let supersetId = supersetId, !supersetId.isEmpty {
-            // Superset-Block als Einheit verschieben
-            let blockIndices = groups.indices.filter { groups[$0].first?.supersetGroupId == supersetId }
-            guard let blockStart = blockIndices.min(), let blockEnd = blockIndices.max() else { return }
-
-            let newBlockStart = blockStart + direction
-            let newBlockEnd = blockEnd + direction
-
-            // Guard: Block würde außerhalb des Arrays enden
-            guard newBlockStart >= 0, newBlockEnd < groups.count else { return }
-
-            // Block-Elemente aus der Liste extrahieren und an neuer Position einfügen
-            let blockElements = blockIndices.map { groups[$0] }
-            // Indices in umgekehrter Reihenfolge entfernen, damit Indizes stabil bleiben
-            for idx in blockIndices.sorted(by: >) {
-                groups.remove(at: idx)
-            }
-            for (offset, element) in blockElements.enumerated() {
-                groups.insert(element, at: newBlockStart + offset)
-            }
-        } else {
-            // Normales Verschieben: Swap mit Nachbar
-            let newIndex = targetIndex + direction
-            guard newIndex >= 0, newIndex < groups.count else { return }
-            groups.swapAt(targetIndex, newIndex)
-        }
+        // Element aus der alten Position entfernen und an neuer einfügen
+        let element = groups.remove(at: from)
+        groups.insert(element, at: to)
 
         // Neue sortOrder-Werte vergeben: Index als neuer sortOrder für alle Sets der Gruppe
         for (newOrder, groupSets) in groups.enumerated() {
@@ -656,8 +632,8 @@ struct ActiveWorkoutView: View {
             }
         }
 
-        // Cache aktualisieren und UI-Caches neu berechnen
-        cachedGroupedSets = session.groupedSets
+        // Cache direkt aus bereits geordnetem Array setzen (kein erneuter groupedSets-Durchlauf)
+        cachedGroupedSets = groups
         refreshSetCaches()
 
         // Reihenfolge persistieren
@@ -1197,8 +1173,8 @@ struct ActiveWorkoutView: View {
             onDeleteExercise: { key in
                 deleteExercise(groupKey: key)
             },
-            onMoveExercise: { key, direction in
-                reorderExercise(groupKey: key, direction: direction)
+            onReorderExercise: { from, to in
+                reorderExercise(from: from, to: to)
             }
         )
     }
