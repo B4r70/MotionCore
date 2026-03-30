@@ -169,6 +169,86 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // MARK: - E-Bike Profil
+
+    // E-Bike: Name des Fahrrads
+    @Published var eBikeName: String {
+        didSet { UserDefaults.standard.set(eBikeName, forKey: "ebike.name") }
+    }
+
+    // E-Bike: Fahrradtyp als Rohwert (String)
+    @Published var eBikeTypeRaw: String {
+        didSet { UserDefaults.standard.set(eBikeTypeRaw, forKey: "ebike.type") }
+    }
+
+    // E-Bike: Typisierter Fahrradtyp (berechnete Property)
+    var eBikeType: BikeType {
+        get { BikeType(rawValue: eBikeTypeRaw) ?? .eBikeTrekking }
+        set { eBikeTypeRaw = newValue.rawValue }
+    }
+
+    // E-Bike: Rahmengröße in cm
+    @Published var eBikeFrameSize: Int {
+        didSet { UserDefaults.standard.set(eBikeFrameSize, forKey: "ebike.frameSize") }
+    }
+
+    // E-Bike: Gewicht des Fahrrads in kg
+    @Published var eBikeWeight: Double {
+        didSet { UserDefaults.standard.set(eBikeWeight, forKey: "ebike.weight") }
+    }
+
+    // E-Bike: Akkukapazität in Wh
+    @Published var eBikeBatteryCapacity: Int {
+        didSet { UserDefaults.standard.set(eBikeBatteryCapacity, forKey: "ebike.batteryCapacity") }
+    }
+
+    // E-Bike: Reifengröße als Rohwert (String)
+    @Published var eBikeTireSizeRaw: String {
+        didSet { UserDefaults.standard.set(eBikeTireSizeRaw, forKey: "ebike.tireSize") }
+    }
+
+    // E-Bike: Typisierte Reifengröße (berechnete Property)
+    var eBikeTireSize: TireSize {
+        get { TireSize(rawValue: eBikeTireSizeRaw) ?? .t28 }
+        set { eBikeTireSizeRaw = newValue.rawValue }
+    }
+
+    // E-Bike: Fahrradzustand als Rohwert (Int)
+    @Published var eBikeConditionRaw: Int {
+        didSet { UserDefaults.standard.set(eBikeConditionRaw, forKey: "ebike.condition") }
+    }
+
+    // E-Bike: Typisierter Fahrradzustand (berechnete Property)
+    var eBikeCondition: BikeCondition {
+        get { BikeCondition(rawValue: eBikeConditionRaw) ?? .good }
+        set { eBikeConditionRaw = newValue.rawValue }
+    }
+
+    // E-Bike: Aktueller Kilometerstand
+    @Published var eBikeKilometers: Double {
+        didSet { UserDefaults.standard.set(eBikeKilometers, forKey: "ebike.kilometers") }
+    }
+
+    // E-Bike: Kaufdatum (optional)
+    @Published var eBikePurchaseDate: Date? {
+        didSet { UserDefaults.standard.set(eBikePurchaseDate, forKey: "ebike.purchaseDate") }
+    }
+
+    // E-Bike: Wartungsintervall in km
+    @Published var eBikeMaintenanceIntervalKm: Double {
+        didSet { UserDefaults.standard.set(eBikeMaintenanceIntervalKm, forKey: "ebike.maintenanceIntervalKm") }
+    }
+
+    // E-Bike: Datum der letzten Wartung (optional)
+    @Published var eBikeLastMaintenanceDate: Date? {
+        didSet { UserDefaults.standard.set(eBikeLastMaintenanceDate, forKey: "ebike.lastMaintenanceDate") }
+    }
+
+    // E-Bike: Freitextnotizen zum Fahrrad
+    @Published var eBikeNotes: String {
+        didSet { UserDefaults.standard.set(eBikeNotes, forKey: "ebike.notes") }
+    }
+
     // MARK: Health Metrics Einstellungen
     // Userdefaults: Aktivitätslevel
     @Published var userActivityLevel: UserActivityLevel {
@@ -277,6 +357,20 @@ class AppSettings: ObservableObject {
 
         // Initialisiere das tägliche Ziel an Schritten
         dailyStepsGoal = UserDefaults.standard.integer(forKey: "user.dailyStepsGoal")
+
+        // E-Bike Profil
+        eBikeName = defaults.string(forKey: "ebike.name") ?? ""
+        eBikeTypeRaw = defaults.string(forKey: "ebike.type") ?? BikeType.eBikeTrekking.rawValue
+        eBikeFrameSize = defaults.integer(forKey: "ebike.frameSize")
+        eBikeWeight = defaults.double(forKey: "ebike.weight")
+        eBikeBatteryCapacity = defaults.integer(forKey: "ebike.batteryCapacity")
+        eBikeTireSizeRaw = defaults.string(forKey: "ebike.tireSize") ?? TireSize.t28.rawValue
+        eBikeConditionRaw = defaults.object(forKey: "ebike.condition") as? Int ?? BikeCondition.good.rawValue
+        eBikeKilometers = defaults.double(forKey: "ebike.kilometers")
+        eBikePurchaseDate = defaults.object(forKey: "ebike.purchaseDate") as? Date
+        eBikeMaintenanceIntervalKm = defaults.object(forKey: "ebike.maintenanceIntervalKm") as? Double ?? 1000.0
+        eBikeLastMaintenanceDate = defaults.object(forKey: "ebike.lastMaintenanceDate") as? Date
+        eBikeNotes = defaults.string(forKey: "ebike.notes") ?? ""
     }
 }
 

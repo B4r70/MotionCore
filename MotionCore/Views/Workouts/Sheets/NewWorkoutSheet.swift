@@ -59,10 +59,9 @@ struct NewWorkoutSheet: View {
                     
                     WorkoutTypeButton(
                         icon: "figure.outdoor.cycle",
-                        title: "Outdoor",
-                        subtitle: "Aktivität im Freien",
-                        color: .blue,
-                        isDisabled: true
+                        title: "E-Bike Tour",
+                        subtitle: "E-Bike Tour erfassen",
+                        color: .teal
                     ) {
                         onOutdoorSelected()
                     }

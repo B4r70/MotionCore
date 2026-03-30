@@ -47,6 +47,14 @@ final class StatisticsViewModel {
     private(set) var strengthChartCalc: StrengthStatisticCalcEngine = StrengthStatisticCalcEngine(sessions: [])
     private(set) var allStrengthSessions: [StrengthSession] = []
 
+    // MARK: - Gecachte Outdoor-KPIs (timeframe-gefiltert)
+
+    private(set) var outdoorTotalDistance: Double = 0
+    private(set) var outdoorTotalElevation: Double = 0
+    private(set) var outdoorTourCount: Int = 0
+    private(set) var outdoorLongestTourDistance: Double = 0
+    private(set) var hasOutdoorSessions: Bool = false
+
     // MARK: - Leerprüfungen
 
     private(set) var allSessionsEmpty: Bool = true
@@ -95,5 +103,13 @@ final class StatisticsViewModel {
         let chartCalc = StrengthStatisticCalcEngine(sessions: calc.allStrengthSessions)
         self.strengthVolumeTrend = chartCalc.volumeTrend
         self.strengthChartCalc = chartCalc
+
+        // Outdoor KPIs
+        let outdoorCalc = OutdoorRecordCalcEngine(sessions: calc.allOutdoorSessions)
+        self.outdoorTotalDistance = outdoorCalc.totalDistance
+        self.outdoorTotalElevation = outdoorCalc.totalElevationGain
+        self.outdoorTourCount = outdoorCalc.tourCount
+        self.outdoorLongestTourDistance = outdoorCalc.longestTour?.value ?? 0
+        self.hasOutdoorSessions = !calc.allOutdoorSessions.isEmpty
     }
 }

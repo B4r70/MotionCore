@@ -201,9 +201,24 @@ struct SupabaseOutdoorSessionDTO: Encodable {
     let elevationGain: Double
     let averageSpeed: Double
     let maxSpeed: Double
+    let heartRate: Int
+    let maxHeartRate: Int
+    let bodyWeight: Double
     let routeName: String
     let startLocation: String
     let endLocation: String
+    // GPS-Koordinaten (Phase 3: automatisch via LocationHelper)
+    let startLatitude: Double?
+    let startLongitude: Double?
+    let endLatitude: Double?
+    let endLongitude: Double?
+    // Strukturierte Adressfelder
+    let startStreet: String
+    let startPostalCode: String
+    let startCity: String
+    let endStreet: String
+    let endPostalCode: String
+    let endCity: String
     let notes: String
     let temperature: Double?
     let weatherConditionRaw: String
@@ -227,9 +242,22 @@ struct SupabaseOutdoorSessionDTO: Encodable {
         case elevationGain          = "elevation_gain"
         case averageSpeed           = "average_speed"
         case maxSpeed               = "max_speed"
+        case heartRate              = "heart_rate"
+        case maxHeartRate           = "max_heart_rate"
+        case bodyWeight             = "body_weight"
         case routeName              = "route_name"
         case startLocation          = "start_location"
         case endLocation            = "end_location"
+        case startLatitude          = "start_latitude"
+        case startLongitude         = "start_longitude"
+        case endLatitude            = "end_latitude"
+        case endLongitude           = "end_longitude"
+        case startStreet            = "start_street"
+        case startPostalCode        = "start_postal_code"
+        case startCity              = "start_city"
+        case endStreet              = "end_street"
+        case endPostalCode          = "end_postal_code"
+        case endCity                = "end_city"
         case notes
         case temperature
         case weatherConditionRaw    = "weather_condition"

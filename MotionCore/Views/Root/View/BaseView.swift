@@ -29,6 +29,8 @@ struct BaseView: View {
     // Workout-Erstellung
     @State private var showingWorkoutPicker = false
     @State private var showingAddCardio = false
+    @State private var showingAddOutdoor = false
+    @State private var outdoorDraft: OutdoorSession?
     @State private var showingTrainingPlanPicker = false
     @State private var selectedPlanToStart: TrainingPlan?
 
@@ -221,6 +223,10 @@ struct BaseView: View {
                 },
                 onOutdoorSelected: {
                     showingWorkoutPicker = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        outdoorDraft = OutdoorSession()
+                        showingAddOutdoor = true
+                    }
                 }
             )
             .presentationDetents([.height(320)])
@@ -246,6 +252,21 @@ struct BaseView: View {
                     trainingProgram: .manual,
                     cardioDevice: .none
                 )
+            }
+        }
+
+        // Outdoor-Formular (E-Bike Tour)
+        .sheet(isPresented: $showingAddOutdoor) {
+            if let draft = outdoorDraft {
+                NavigationStack {
+                    OutdoorFormView(mode: .add, session: draft)
+                }
+                .environmentObject(appSettings)
+            }
+        }
+        .onChange(of: showingAddOutdoor) { _, isShowing in
+            if !isShowing {
+                outdoorDraft = nil
             }
         }
 

@@ -42,6 +42,20 @@ final class OutdoorSession {
     var endLocation: String = "" // Optional: Zielpunkt
     var notes: String = "" // Notizen zur Session
 
+    // MARK: - GPS-Koordinaten (Phase 3: automatisch via LocationHelper)
+    var startLatitude: Double? = nil
+    var startLongitude: Double? = nil
+    var endLatitude: Double? = nil
+    var endLongitude: Double? = nil
+
+    // MARK: - Strukturierte Adressfelder
+    var startStreet: String = ""
+    var startPostalCode: String = ""
+    var startCity: String = ""
+    var endStreet: String = ""
+    var endPostalCode: String = ""
+    var endCity: String = ""
+
     // MARK: - Wetter (optional)
     var temperature: Double? = nil // Grad Celsius
     var weatherConditionRaw: String = "unknown"

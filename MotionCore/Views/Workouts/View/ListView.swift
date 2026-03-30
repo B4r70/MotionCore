@@ -19,6 +19,7 @@ enum WorkoutTypeFilter: String, CaseIterable, Identifiable {
     case all = "Alle"
     case cardio = "Cardio"
     case strength = "Kraft"
+    case outdoor = "Outdoor"
 
     var id: String { rawValue }
 
@@ -27,6 +28,7 @@ enum WorkoutTypeFilter: String, CaseIterable, Identifiable {
         case .all: return "list.bullet"
         case .cardio: return "heart.fill"
         case .strength: return "dumbbell.fill"
+        case .outdoor: return "figure.outdoor.cycle"
         }
     }
 }
@@ -43,6 +45,10 @@ struct ListView: View {
     // Strength Sessions
     @Query(sort: \StrengthSession.date, order: .reverse)
     private var allStrengthWorkouts: [StrengthSession]
+
+    // Outdoor Sessions
+    @Query(sort: \OutdoorSession.date, order: .reverse)
+    private var allOutdoorWorkouts: [OutdoorSession]
 
     @State private var exportURL: URL?
 
@@ -90,6 +96,19 @@ struct ListView: View {
         return workouts
     }
 
+    // Outdoor-Filter (nur abgeschlossene Sessions)
+    var filteredOutdoorWorkouts: [OutdoorSession] {
+        var workouts = allOutdoorWorkouts.filter { $0.isCompleted }
+
+        if let dateRange = selectedTimeFilter.dateRange() {
+            workouts = workouts.filter {
+                $0.date >= dateRange.start && $0.date <= dateRange.end
+            }
+        }
+
+        return workouts
+    }
+
     // Aktive (laufende) Workouts
     var activeStrengthWorkouts: [StrengthSession] {
         allStrengthWorkouts.filter { !$0.isCompleted }
@@ -99,11 +118,13 @@ struct ListView: View {
     var isListEmpty: Bool {
         switch selectedWorkoutType {
         case .all:
-            return filteredCardioWorkouts.isEmpty && filteredStrengthWorkouts.isEmpty
+            return filteredCardioWorkouts.isEmpty && filteredStrengthWorkouts.isEmpty && filteredOutdoorWorkouts.isEmpty
         case .cardio:
             return filteredCardioWorkouts.isEmpty
         case .strength:
             return filteredStrengthWorkouts.isEmpty
+        case .outdoor:
+            return filteredOutdoorWorkouts.isEmpty
         }
     }
 
@@ -123,7 +144,7 @@ struct ListView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         // Aktive Workouts (wenn vorhanden)
-                        if !activeStrengthWorkouts.isEmpty && selectedWorkoutType != .cardio {
+                        if !activeStrengthWorkouts.isEmpty && selectedWorkoutType != .cardio && selectedWorkoutType != .outdoor {
                             activeWorkoutsSection
                         }
 
@@ -266,6 +287,24 @@ struct ListView: View {
                     }
                 }
             }
+
+        case .outdoor:
+            // Nur Outdoor
+            ForEach(filteredOutdoorWorkouts) { session in
+                NavigationLink {
+                    OutdoorDetailView(session: session)
+                } label: {
+                    OutdoorSessionCard(session: session)
+                }
+                .buttonStyle(.plain)
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        deleteOutdoorSession(session)
+                    } label: {
+                        Label("Löschen", systemImage: "trash")
+                    }
+                }
+            }
         }
     }
 
@@ -305,6 +344,21 @@ struct ListView: View {
                         Label("Löschen", systemImage: "trash")
                     }
                 }
+
+            case .outdoor(let session):
+                NavigationLink {
+                    OutdoorDetailView(session: session)
+                } label: {
+                    OutdoorSessionCard(session: session)
+                }
+                .buttonStyle(.plain)
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        deleteOutdoorSession(session)
+                    } label: {
+                        Label("Löschen", systemImage: "trash")
+                    }
+                }
             }
         }
     }
@@ -319,6 +373,13 @@ struct ListView: View {
     }
 
     private func deleteStrengthSession(_ session: StrengthSession) {
+        withAnimation {
+            modelContext.delete(session)
+            try? modelContext.save()
+        }
+    }
+
+    private func deleteOutdoorSession(_ session: OutdoorSession) {
         withAnimation {
             modelContext.delete(session)
             try? modelContext.save()
@@ -340,6 +401,11 @@ struct ListView: View {
             items.append(.strength(session))
         }
 
+        // Outdoor hinzufügen
+        for session in filteredOutdoorWorkouts {
+            items.append(.outdoor(session))
+        }
+
         // Nach Datum sortieren (neueste zuerst)
         items.sort { $0.date > $1.date }
 
@@ -352,6 +418,7 @@ struct ListView: View {
 enum MixedWorkoutItem {
     case cardio(CardioSession)
     case strength(StrengthSession)
+    case outdoor(OutdoorSession)
 
     var id: String {
         switch self {
@@ -359,6 +426,8 @@ enum MixedWorkoutItem {
             return "cardio-\(workout.id)"
         case .strength(let session):
             return "strength-\(session.id)"
+        case .outdoor(let session):
+            return "outdoor-\(session.sessionUUID.uuidString)"
         }
     }
 
@@ -367,6 +436,8 @@ enum MixedWorkoutItem {
         case .cardio(let workout):
             return workout.date
         case .strength(let session):
+            return session.date
+        case .outdoor(let session):
             return session.date
         }
     }

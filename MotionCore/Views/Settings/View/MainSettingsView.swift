@@ -44,6 +44,12 @@ struct MainSettingsView: View {
                 }
 
                 NavigationLink {
+                    EBikeProfileView()
+                } label: {
+                    Label("E-Bike Profil", systemImage: "bicycle")
+                }
+
+                NavigationLink {
                     DisplaySettingsView()
                 } label: {
                     Label("Displayeinstellungen", systemImage: "display")

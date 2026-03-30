@@ -72,6 +72,11 @@ struct StatisticView: View {
                         cardioSection
                     }
 
+                    // E-Bike Section (nur bei vorhandenen Touren)
+                    if viewModel.hasOutdoorSessions {
+                        eBikeSection
+                    }
+
                     // Gesundheits-Section (HealthKit)
                     healthSection
                 }
@@ -275,6 +280,52 @@ struct StatisticView: View {
 
             // Intensitäts-Verteilung
             StatisticIntensityCard(allWorkouts: viewModel.allCardioSessions)
+        }
+    }
+
+    // MARK: - E-Bike Section
+
+    @ViewBuilder
+    private var eBikeSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("E-Bike")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+
+            LazyVGrid(columns: gridColumns, spacing: 12) {
+
+                // Anzahl Touren
+                StatisticGridCard(
+                    icon: .system("figure.outdoor.cycle"),
+                    title: "Touren",
+                    valueView: Text("\(viewModel.outdoorTourCount)"),
+                    color: .green
+                )
+
+                // Gesamtdistanz
+                StatisticGridCard(
+                    icon: .system("arrow.left.and.right"),
+                    title: "Gesamtdistanz",
+                    valueView: Text(String(format: "%.1f km", viewModel.outdoorTotalDistance)),
+                    color: .blue
+                )
+
+                // Höhenmeter gesamt
+                StatisticGridCard(
+                    icon: .system("mountain.2"),
+                    title: "Höhenmeter",
+                    valueView: Text(String(format: "%.0f m", viewModel.outdoorTotalElevation)),
+                    color: .brown
+                )
+
+                // Längste Tour
+                StatisticGridCard(
+                    icon: .system("flag.fill"),
+                    title: "Längste Tour",
+                    valueView: Text(String(format: "%.1f km", viewModel.outdoorLongestTourDistance)),
+                    color: .teal
+                )
+            }
         }
     }
 
