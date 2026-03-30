@@ -12,7 +12,7 @@
 //
 import SwiftUI
 
-struct ContentView: View {
+struct WatchBaseView: View {
     @EnvironmentObject private var watchSession: WatchSessionManager
 
     var body: some View {

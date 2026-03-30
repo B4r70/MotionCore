@@ -1,76 +1,122 @@
-# PlanExercisesSection Drag & Drop Redesign
+# Supabase Full-Backup Service
 
-**Complexity:** Medium
-**Status:** Warte auf Genehmigung
+**Complexity:** Large
 
 ## Summary
 
-Die komplexe dreiteilige Drag-Architektur (`ReorderableExerciseList` + `ReorderableCard` + `FloatingDragCard`) in `PlanExercisesSection.swift` wird durch das schlankere, bewährte Pattern aus `ExercisesOverviewCard.swift` ersetzt. Drag-State und -Logik werden direkt in `PlanExercisesSection` integriert, Drag-Handle als Overlay auf `TemplateSetCard`, Floating Card als ZStack-Overlay. Der Superset-Selection-Modus bleibt vollständig erhalten. Ein Doppel-Sortierungs-Bug (Zeile 197-199) wird dabei bereinigt.
+Implementierung eines `SupabaseFullBackupService`, der alle lokalen SwiftData-Daten vollständig nach Supabase hochlädt: alle Sessions (Strength, Cardio, Outdoor), alle TrainingPlans und alle ExerciseSets (Session-Sets UND Template-Sets). Idempotent durch UPSERT, manuell aufrufbar über einen Button in den Einstellungen.
 
 ## Scope
 
-- **Enthalten**: Entfernung von `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard`; Integration der Drag-Logik direkt in `PlanExercisesSection`; `RowOffsetModifier` als private struct; Bereinigung des Doppel-Sortierungs-Bugs; Anpassung `TrainingFormView` (Entfernung des jetzt unnötigen `onMoveExercise`-Callbacks)
-- **Nicht enthalten**: Änderungen an `TemplateSetCard`, `ExerciseDetailRow`, dem `.detail`-Modus, dem Superset-Selection-Modus (inhaltlich), `TrainingDetailView`
+- **Enthalten**: Supabase-Schema-Änderung (SQL), DTO-Anpassung (`sessionId` optional), neuer Service (`SupabaseFullBackupService`), neue UI-Section (`SupabaseFullBackupSection`), Einbindung in `MainSettingsView`
+- **Nicht enthalten**: Automatischer Backup-Trigger, Restore/Download von Supabase, Änderungen an `SupabaseMigrationService` oder `SupabaseResyncService`
+
+## UX Placement
+
+- **Ort**: `MainSettingsView`, als eigene Section unterhalb der bestehenden `SupabaseSyncSection`
+- **Einstiegspunkt**: Button "Vollständiges Backup starten" mit Fortschrittsanzeige
+- **Begründung**: Trennung von "historische Migration" (bestehend) und "Full Backup" (neu) — unterschiedliche Verantwortlichkeiten, klar getrennt für den Benutzer
 
 ## Affected Files
 
-- `MotionCore/Views/Training/Plans/Components/PlanExercisesSection.swift` — Entfernung von `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard`; Drag-State + Drag-Logik + ZStack-Pattern direkt in `PlanExercisesSection` integrieren
-- `MotionCore/Views/Training/Plans/View/TrainingFormView.swift` — `onMoveExercise`-Callback entfernen
+- **Supabase Dashboard** (manuell) — `ALTER TABLE exercise_sets ALTER COLUMN session_id DROP NOT NULL`
+- `MotionCore/Services/Database/Remote/Session/SupabaseSessionModels.swift` — `sessionId: UUID` → `UUID?` in `SupabaseExerciseSetDTO`
+- `MotionCore/Services/Database/Remote/Session/SupabaseFullBackupService.swift` — **NEU**: kompletter Backup-Service mit Progress-Tracking
+- `MotionCore/Views/Settings/Components/SupabaseFullBackupSection.swift` — **NEU**: UI-Section für den Backup-Button + Fortschritt
+- `MotionCore/Views/Settings/View/MainSettingsView.swift` — Einbindung von `SupabaseFullBackupSection` unterhalb `SupabaseSyncSection`
 
 ## Risks
 
-- Superset-Selection-Modus und Sort-Modus müssen gegenseitig exklusiv bleiben
-- `TemplateSetCard` hat eigenen `.glassCard()`-Modifier — Offset/Opacity-Modifikation muss außerhalb erfolgen
-- Doppel-Sortierungs-Bug: aktuell wird bei jedem Reorder sowohl der Parent-Callback als auch direkt `plan.reorderExercise` aufgerufen — im neuen Pattern nur noch einmal direkt
+- **Schema-Änderung muss ZUERST erfolgen**: Ohne `session_id DROP NOT NULL` schlagen Template-Set-Uploads fehl (Supabase gibt 400/409)
+- **Batch-Größe**: Chunking in 50er-Batches verhindert Payload-Limit-Überschreitung
+- **DTO-Änderung rückwärtskompatibel**: `sessionId: UUID?` — bestehender `SupabaseSessionService` übergibt immer non-nil UUID
+- **Kein Datenverlust**: Service führt nur INSERT/UPDATE aus, nie DELETE
 
 ## Implementation Steps
 
-### Phase 1: PlanExercisesSection umbauen
+### Vorbereitung: Supabase Schema-Änderung (manuell)
 
-- [x] **1.1 Drag-State in PlanExercisesSection integrieren**: Die vier States (`draggingIndex: Int?`, `dragOffset: CGSize`, `cardHeights: [Int: CGFloat]`, `lastTargetIndex: Int?`) direkt als `@State` in `PlanExercisesSection` hinzufügen. `averageCardHeight` und `cardSpacing` (12) übernehmen.
+- [ ] **0.1** Im Supabase Dashboard SQL ausführen:
+  ```sql
+  ALTER TABLE public.exercise_sets ALTER COLUMN session_id DROP NOT NULL;
+  ```
+  Verifizieren: `SELECT is_nullable FROM information_schema.columns WHERE table_name = 'exercise_sets' AND column_name = 'session_id';` → muss `YES` zurückgeben.
 
-- [x] **1.2 `onMoveExercise`-Callback entfernen**: Die Property `var onMoveExercise: ((IndexSet, Int) -> Void)? = nil` aus `PlanExercisesSection` entfernen. Reordering geschieht direkt via `plan.reorderExercise(from:to:)` + `try? modelContext.save()`.
+### Phase 1: DTO-Anpassung
 
-- [x] **1.3 `exercisesList` für `.form`-Modus neu schreiben**: Statt `ReorderableExerciseList` direkt ein `ZStack(alignment: .top)` mit Hintergrund-VStack (ForEach über `plan.groupedTemplateSets.enumerated()`) + Floating Card Overlay. Superset-Labels und -Spacing bleiben.
+- [x] **1.1** In `SupabaseSessionModels.swift`: `let sessionId: UUID` → `let sessionId: UUID?` in `SupabaseExerciseSetDTO`. Keine weiteren Änderungen nötig.
 
-- [x] **1.4 Drag-Handle als Overlay**: Im Sort-Modus auf jeder `TemplateSetCard` ein `.overlay(alignment: .trailing)` mit Drag-Handle (`line.3.horizontal`) + `LongPressGesture(0.2s).sequenced(before: DragGesture())`. Superset-Mitglieder: `link`-Icon ohne Gesture.
+### Phase 2: SupabaseFullBackupService erstellen
 
-- [x] **1.5 Superset-Overlays beibehalten**: Die Superset-Selection-Overlays (grüner Tint, Auswahl-Stroke, Checkmark-Badge, Tap-Gesture) direkt auf `TemplateSetCard` anwenden.
+- [x] **2.1** Neue Datei `MotionCore/Services/Database/Remote/Session/SupabaseFullBackupService.swift` erstellen.
 
-- [x] **1.6 Drag-Logik-Methoden integrieren**: `yStart(for:)`, `calculateFloatingCardPosition(for:)`, `calculateTargetIndex(from:)`, `offsetForIndex(_:)` analog zum `ExercisesOverviewCard`-Pattern in `PlanExercisesSection` integrieren.
+- [x] **2.2** Klasse: `@MainActor final class SupabaseFullBackupService: ObservableObject` mit `static let shared`, `private let client = SupabaseClient.shared`.
 
-- [x] **1.7 `RowOffsetModifier` als private struct**: 6-zeiligen `RowOffsetModifier` am Ende der Datei als `private struct` hinzufügen.
+- [x] **2.3** Progress-Tracking:
+  - `@Published var isRunning: Bool = false`
+  - `@Published var progress: BackupProgress = .idle`
+  - `BackupProgress` Enum: `.idle`, `.running(step: String, current: Int, total: Int)`, `.completed(stats: BackupStats)`, `.failed(error: String)` (Equatable)
+  - `BackupStats` Struct: `strengthSessions`, `cardioSessions`, `outdoorSessions`, `trainingPlans`, `exerciseSets`, `templateSets` (alle Int, Equatable)
 
-- [x] **1.8 Gegenseitige Exklusivität**: Beim Aktivieren von `isSupersetSelectionMode` → `isEditing = false`. Beim Aktivieren von `isEditing` → `isSupersetSelectionMode = false`. Drag-State beim Verlassen des Sort-Modus zurücksetzen.
+- [x] **2.4** `func runFullBackup(context: ModelContext) async` implementieren:
+  - Guard `!isRunning`
+  - Reihenfolge: (1) TrainingPlans, (2) StrengthSessions + deren Sets, (3) CardioSessions, (4) OutdoorSessions, (5) Template-Sets
+  - TrainingPlans MÜSSEN zuerst (Foreign Key `training_plan_id` in `exercise_sets`)
+  - Am Ende: `try? context.save()`, `progress = .completed(stats:)`
+  - Bei Fehler: `progress = .failed(error:)`, `isRunning = false`
 
-- [x] **1.9 `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard` entfernen**: Die drei Structs komplett löschen.
+- [x] **2.5** Private Upload-Methoden:
+  - `uploadAllTrainingPlans(context:) -> Int`: bestehenden `SupabaseTrainingPlanDTO` verwenden, `plan.syncedToSupabase = true`
+  - `uploadAllStrengthSessions(context:) -> (sessions: Int, sets: Int)`: StrengthSession DTO + `safeExerciseSets` in 50er-Batches, `session.syncedToSupabase = true`, `needsSupabaseResync = false`
+  - `uploadAllCardioSessions(context:) -> Int`: analog zu bestehendem Service
+  - `uploadAllOutdoorSessions(context:) -> Int`: analog zu bestehendem Service
+  - `uploadAllTemplateSets(context:) -> Int`: Filter `trainingPlan != nil && session == nil`, `sessionId: nil`, `trainingPlanId: plan.planUUID`, 50er-Batches
 
-### Phase 2: TrainingFormView anpassen
+- [x] **2.6** Chunking-Hilfsmethode: `private func uploadInChunks(_ dtos: [SupabaseExerciseSetDTO], chunkSize: Int = 50) async throws`
 
-- [x] **2.1 `onMoveExercise`-Parameter entfernen**: In `TrainingFormView` den `onMoveExercise:`-Parameter aus dem `PlanExercisesSection`-Aufruf entfernen. Methode `moveExercise(from:to:)` ebenfalls entfernen.
+### Phase 3: UI-Section erstellen
+
+- [x] **3.1** Neue Datei `MotionCore/Views/Settings/Components/SupabaseFullBackupSection.swift`.
+
+- [x] **3.2** `SupabaseFullBackupSection: View`:
+  - `@Environment(\.modelContext)` + `@ObservedObject private var service = SupabaseFullBackupService.shared`
+  - Section "Supabase Full-Backup":
+    - **Idle**: Button "Vollständiges Backup starten" mit `icloud.and.arrow.up` Icon
+    - **Running**: `ProgressView` + Step-Text + "(current/total)"
+    - **Completed**: Grüner Haken + Zusammenfassung (Kraft/Cardio/Outdoor/Pläne/Template-Sets)
+    - **Failed**: Rote Fehlermeldung
+  - Button disabled wenn `service.isRunning`
+
+### Phase 4: MainSettingsView-Integration
+
+- [x] **4.1** In `MainSettingsView.swift` nach `SupabaseSyncSection()`: `SupabaseFullBackupSection()` einfügen.
+
+### Phase 5: Xcode-Target
+
+- [ ] **5.1** Beide neuen Dateien manuell zum Xcode-Target hinzufügen: `SupabaseFullBackupService.swift`, `SupabaseFullBackupSection.swift`
 
 ## Manual Verification
 
-- [ ] Xcode Build (`Cmd+B`)
-- [ ] Sortier-Button im Header sichtbar
-- [ ] Sort-Button aktiviert Sortiermodus: Drag-Handles erscheinen, Plus/Bolt-Buttons verschwinden
-- [ ] Drag auf Handle verschiebt Übung mit Floating Card + Haptic
-- [ ] Reihenfolge persistiert nach Dismiss und Rückkehr
-- [ ] Superset-Selection-Modus funktioniert wie bisher
-- [ ] Superset-Mitglieder zeigen Link-Icon statt Drag-Handle
-- [ ] Kontextmenü (Edit/Delete) funktioniert außerhalb des Sort-Modus
-- [ ] `.detail`-Modus (`TrainingDetailView`) unverändert
+- [x] Xcode Build (`Cmd+B`) — keine Kompilierfehler
+- [x] Supabase Dashboard: `session_id` in `exercise_sets` ist NULLABLE
+- [x] "Supabase Full-Backup" Section erscheint in den Einstellungen unterhalb "Supabase Sync"
+- [x] Fortschritt wird während des Backups angezeigt (Step-Name + Zähler)
+- [x] Nach Abschluss: grüne Zusammenfassung mit Anzahlen
+- [x] Supabase Dashboard: `exercise_sets` enthält Einträge mit `session_id IS NULL` (Template-Sets)
+- [x] Bestehende `SupabaseSyncSection` funktioniert weiterhin (Regression-Check)
+- [x] Erneutes Ausführen: idempotent, keine Duplikate
+- [x] Xcode-Target: beide neuen Dateien manuell hinzugefügt
 
 ---
 
-## Fortschritt
+## Implementierungsfortschritt
 
-**Datum:** 2026-03-29
+**Status:** ✅ ABGESCHLOSSEN
 
-**Abgeschlossene Schritte:** 1.1–1.9, 2.1
+**Backup-Ergebnis (zweiter Lauf, nach CloudKit-Sync):**
+- 7 Trainingspläne, 32 Krafttrainings, 49 Cardio-Sessions, 992 Sets, 209 Template-Sets
 
-**Geänderte Dateien:**
-- `MotionCore/Views/Training/Plans/Components/PlanExercisesSection.swift` — `ReorderableExerciseList`, `ReorderableCard`, `FloatingDragCard` entfernt; Drag-State + Drag-Logik + ZStack-Pattern direkt in `PlanExercisesSection` integriert; `onMoveExercise`-Property entfernt; gegenseitige Exklusivität via `.onChange` gesichert; `RowOffsetModifier` als private struct; `isSupersetFollower(at:)` als neue Hilfsmethode; `spacingAfter` in `offsetForIndex` und `yStart` eingebaut für korrekte Superset-Abstände
-- `MotionCore/Views/Training/Plans/View/TrainingFormView.swift` — `onMoveExercise:`-Parameter aus `PlanExercisesSection`-Aufruf entfernt; `moveExercise(from:to:)`-Methode entfernt
-
-**Verbleibend:** Manuelle Verifikation via Xcode Build + Simulator
+**Erkenntnisse:**
+- Erster Backup-Lauf zeigte nur 2/7 Pläne: CloudKit-Timing-Problem — die anderen 5 Pläne waren noch nicht im lokalen SwiftData-Store (noch von iCloud ausstehend).
+- Nach vollständigem CloudKit-Sync: alle 7 Pläne + 209 Template-Sets korrekt gesichert.
+- Diagnose-Logging in `uploadAllTrainingPlans` und `uploadAllTemplateSets` hinzugefügt (permanente Prints für zukünftige Nachvollziehbarkeit).

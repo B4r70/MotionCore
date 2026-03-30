@@ -20,7 +20,7 @@ struct MotionCoreWatchApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WatchBaseView()
                 .environmentObject(watchSession)
         }
     }

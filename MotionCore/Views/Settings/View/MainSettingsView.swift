@@ -127,6 +127,9 @@ struct MainSettingsView: View {
             // MARK: - Supabase Sync
             SupabaseSyncSection()
 
+            // MARK: - Supabase Full-Backup
+            SupabaseFullBackupSection()
+
             // MARK: - App Information
             Section("App") {
                 HStack {

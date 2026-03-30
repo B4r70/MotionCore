@@ -2,15 +2,15 @@
 //  # MotionCore                                                                    /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Services                                                         /
-// Datei . . . . : SupabaseMigrationService.swift                                  /
+// Datei . . . . : SupabaseMigrationService.swift                                   /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 04.03.2026                                                       /
-// Beschreibung  : Migriert alle lokalen Sessions nach Supabase (einmalig)        /
+// Beschreibung  : Migriert alle lokalen Sessions nach Supabase (einmalig)          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Hinweis  . . : Sequenzieller Upload schützt vor Rate-Limit beim Anon-Key.    /
-//                syncedToSupabase-Flag wird nach erfolgreichem Upload gesetzt.  /
+// Hinweis  . . : Sequenzieller Upload schützt vor Rate-Limit beim Anon-Key.        /
+//                syncedToSupabase-Flag wird nach erfolgreichem Upload gesetzt.     /
 // ---------------------------------------------------------------------------------/
 //
 

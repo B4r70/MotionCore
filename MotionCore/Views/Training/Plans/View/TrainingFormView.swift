@@ -34,7 +34,7 @@ struct TrainingFormView: View {
         let id = UUID()
         let exercise: Exercise?              // optional: Library-Exercise
         let exerciseName: String             // Snapshot-Fallback
-        let mediaAssetName: String             // Snapshot-Fallback
+        let mediaAssetName: String           // Snapshot-Fallback
         let isUnilateral: Bool               // Snapshot-Fallback
         let sets: [ExerciseSet]              // ORIGINALE Sets (nur zum Vorbefüllen)
         let sortOrder: Int                   // Gruppen-Key im Plan

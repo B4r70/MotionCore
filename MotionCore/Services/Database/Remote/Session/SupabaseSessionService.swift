@@ -5,12 +5,12 @@
 // Datei . . . . : SupabaseSessionService.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 04.03.2026                                                       /
-// Beschreibung  : Lädt abgeschlossene Sessions additiv nach Supabase hoch         /
+// Beschreibung  : Lädt abgeschlossene Sessions additiv nach Supabase hoch          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Hinweis  . . : CloudKit bleibt primäre Persistenz – Supabase ist sekundär      /
-//                Fehler beim Upload werden geloggt, aber nicht weitergereicht.   /
+// Hinweis  . . : CloudKit bleibt primäre Persistenz – Supabase ist sekundär        /
+//                Fehler beim Upload werden geloggt, aber nicht weitergereicht.     /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation

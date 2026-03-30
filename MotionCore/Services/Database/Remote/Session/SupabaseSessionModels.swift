@@ -5,13 +5,13 @@
 // Datei . . . . : SupabaseSessionModels.swift                                      /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 04.03.2026                                                       /
-// Beschreibung  : Encodable DTOs für den Supabase Session Sync                    /
+// Beschreibung  : Encodable DTOs für den Supabase Session Sync                     /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Hinweis  . . : Nur Encodable – kein Lesen zurück aus Supabase                  /
-//                CodingKeys müssen vollständig sein – bei vorhandenem CodingKeys  /
-//                Enum ignoriert Swift den convertToSnakeCase-Encoder komplett.    /
+// Hinweis  . . : Nur Encodable – kein Lesen zurück aus Supabase                    /
+//                CodingKeys müssen vollständig sein – bei vorhandenem CodingKeys   /
+//                Enum ignoriert Swift den convertToSnakeCase-Encoder komplett.     /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation
@@ -88,7 +88,7 @@ struct SupabaseStrengthSessionDTO: Encodable {
 
 struct SupabaseExerciseSetDTO: Encodable {
     let id: UUID
-    let sessionId: UUID
+    let sessionId: UUID?
     let trainingPlanId: UUID?
     let exerciseNameSnapshot: String
     let exerciseUUIDSnapshot: String

@@ -5,12 +5,12 @@
 // Datei . . . . : SupabaseResyncService.swift                                      /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 08.03.2026                                                       /
-// Beschreibung  : Synct Sessions die nach erstem Upload lokal geändert wurden    /
+// Beschreibung  : Synct Sessions die nach erstem Upload lokal geändert wurden      /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Hinweis  . . : Läuft bei App-Start und Foreground-Rückkehr.                  /
-//                needsSupabaseResync wird nach Erfolg auf false gesetzt.        /
+// Hinweis  . . : Läuft bei App-Start und Foreground-Rückkehr.                      /
+//                needsSupabaseResync wird nach Erfolg auf false gesetzt.           /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation
