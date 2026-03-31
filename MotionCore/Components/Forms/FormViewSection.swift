@@ -161,24 +161,10 @@ struct DistanceInputRow: View {
         HStack {
             Text("Distanz")
             Spacer()
-            TextField(
-                "0,00",
-                text: Binding(
-                    get: { String(format: "%.2f", distance) },
-                    set: { raw in
-                        let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                        if let val = Double(normalized) {
-                            distance = val
-                        }
-                    }
-                )
-            )
-            .keyboardType(.decimalPad)
-            .multilineTextAlignment(.trailing)
-            .if(focusedField != nil) { view in
-                view.focused(focusedField!, equals: .distance)
-            }
-
+            DecimalTextField(value: $distance, placeholder: "0", decimalPlaces: 2)
+                .if(focusedField != nil) { view in
+                    view.focused(focusedField!, equals: .distance)
+                }
             Text("km")
                 .foregroundStyle(.secondary)
         }
@@ -194,13 +180,10 @@ struct BodyWeightInputRow: View {
         HStack {
             Text("Gewicht")
             Spacer()
-            TextField("0.0", value: $bodyWeight, format: .number)
-                .keyboardType(.decimalPad)
-                .multilineTextAlignment(.trailing)
+            DecimalTextField(value: $bodyWeight, placeholder: "0", decimalPlaces: 1)
                 .if(focusedField != nil) { view in
                     view.focused(focusedField!, equals: .bodyWeight)
                 }
-
             Text("kg")
                 .foregroundStyle(.secondary)
         }

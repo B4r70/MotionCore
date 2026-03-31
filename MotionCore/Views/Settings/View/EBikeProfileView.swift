@@ -19,53 +19,6 @@ struct EBikeProfileView: View {
     @State private var showPurchaseDatePicker = false
     @State private var showLastMaintenancePicker = false
 
-    // MARK: - Double-zu-String Binding Helpers
-
-    /// Binding fuer Gewicht (kg) mit Komma/Punkt-Normalisierung
-    private var weightBinding: Binding<String> {
-        Binding(
-            get: {
-                appSettings.eBikeWeight > 0
-                    ? String(format: "%.1f", appSettings.eBikeWeight)
-                    : ""
-            },
-            set: { raw in
-                let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                appSettings.eBikeWeight = Double(normalized) ?? 0
-            }
-        )
-    }
-
-    /// Binding fuer Kilometerstand mit Komma/Punkt-Normalisierung
-    private var kilometersBinding: Binding<String> {
-        Binding(
-            get: {
-                appSettings.eBikeKilometers > 0
-                    ? String(format: "%.1f", appSettings.eBikeKilometers)
-                    : ""
-            },
-            set: { raw in
-                let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                appSettings.eBikeKilometers = Double(normalized) ?? 0
-            }
-        )
-    }
-
-    /// Binding fuer Wartungsintervall mit Komma/Punkt-Normalisierung
-    private var maintenanceIntervalBinding: Binding<String> {
-        Binding(
-            get: {
-                appSettings.eBikeMaintenanceIntervalKm > 0
-                    ? String(format: "%.0f", appSettings.eBikeMaintenanceIntervalKm)
-                    : ""
-            },
-            set: { raw in
-                let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                appSettings.eBikeMaintenanceIntervalKm = Double(normalized) ?? 1000
-            }
-        )
-    }
-
     // MARK: - Berechnete Werte
 
     /// Berechnet das Alter des Fahrrads als lesbaren String
@@ -138,9 +91,7 @@ struct EBikeProfileView: View {
             HStack {
                 Text("Gewicht")
                 Spacer()
-                TextField("0,0", text: weightBinding)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
+                DecimalTextField(value: $appSettings.eBikeWeight, placeholder: "0", decimalPlaces: 1)
                     .frame(width: 70)
                 Text("kg").foregroundStyle(.secondary)
             }
@@ -184,9 +135,7 @@ struct EBikeProfileView: View {
             HStack {
                 Text("Kilometerstand")
                 Spacer()
-                TextField("0", text: kilometersBinding)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
+                DecimalTextField(value: $appSettings.eBikeKilometers, placeholder: "0", decimalPlaces: 1)
                     .frame(width: 80)
                 Text("km").foregroundStyle(.secondary)
             }
@@ -208,9 +157,7 @@ struct EBikeProfileView: View {
             HStack {
                 Text("Wartungsintervall")
                 Spacer()
-                TextField("1000", text: maintenanceIntervalBinding)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
+                DecimalTextField(value: $appSettings.eBikeMaintenanceIntervalKm, placeholder: "1000", decimalPlaces: 0)
                     .frame(width: 80)
                 Text("km").foregroundStyle(.secondary)
             }

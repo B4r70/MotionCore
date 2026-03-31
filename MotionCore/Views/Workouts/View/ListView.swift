@@ -173,13 +173,8 @@ struct ListView: View {
                         selectedWorkoutType = type
                     }
                 } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: type.icon)
-                            .font(.caption)
-
-                        Text(type.rawValue)
-                            .font(.subheadline.weight(.medium))
-                    }
+                    Image(systemName: type.icon)
+                        .font(.subheadline.weight(.medium))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .frame(maxWidth: .infinity)

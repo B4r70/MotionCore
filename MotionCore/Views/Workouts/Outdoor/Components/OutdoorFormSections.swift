@@ -150,9 +150,6 @@ struct OutdoorWeatherSection: View {
     @Binding var temperature: Double?
     var focusedField: FocusState<OutdoorFocusedField?>.Binding
 
-    // Lokale Hilfsvariable für das TextField
-    @State private var temperatureText: String = ""
-
     var body: some View {
         VStack(spacing: 12) {
             // Wetter-Picker
@@ -181,33 +178,24 @@ struct OutdoorWeatherSection: View {
 
             Divider()
 
-            // Temperatur
+            // Temperatur — Double?-Wrapper: nil wird als 0 behandelt, 0 wird wieder nil
+            // Bekannte Einschränkung (Phase 1): 0 °C ist nicht erfassbar (→ nil);
+            // negative Temperaturen sind über .decimalPad strukturell nicht möglich.
             HStack {
                 Text("Temperatur")
                 Spacer()
-                TextField(
-                    "z.B. 18",
-                    text: Binding(
-                        get: { temperatureText },
-                        set: { raw in
-                            temperatureText = raw
-                            let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                            temperature = Double(normalized)
-                        }
-                    )
+                DecimalTextField(
+                    value: Binding(
+                        get: { temperature ?? 0 },
+                        set: { temperature = $0 == 0 ? nil : $0 }
+                    ),
+                    placeholder: "z.B. 18",
+                    decimalPlaces: 1
                 )
-                .keyboardType(.decimalPad)
-                .multilineTextAlignment(.trailing)
                 .focused(focusedField, equals: .temperature)
 
                 Text("°C")
                     .foregroundStyle(.secondary)
-            }
-        }
-        .onAppear {
-            // Initialwert setzen wenn vorhanden
-            if let temp = temperature {
-                temperatureText = String(format: "%.1f", temp)
             }
         }
     }

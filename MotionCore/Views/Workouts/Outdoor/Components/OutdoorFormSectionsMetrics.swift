@@ -24,20 +24,8 @@ struct OutdoorDistanceSection: View {
         HStack {
             Text("Distanz")
             Spacer()
-            TextField(
-                "0,00",
-                text: Binding(
-                    get: { distance > 0 ? String(format: "%.2f", distance) : "" },
-                    set: { raw in
-                        let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                        if let val = Double(normalized) { distance = val }
-                    }
-                )
-            )
-            .keyboardType(.decimalPad)
-            .multilineTextAlignment(.trailing)
-            .focused(focusedField, equals: .distance)
-
+            DecimalTextField(value: $distance, placeholder: "0", decimalPlaces: 2)
+                .focused(focusedField, equals: .distance)
             Text("km")
                 .foregroundStyle(.secondary)
         }
@@ -54,20 +42,8 @@ struct OutdoorElevationSection: View {
         HStack {
             Text("Höhenmeter")
             Spacer()
-            TextField(
-                "0",
-                text: Binding(
-                    get: { elevationGain > 0 ? String(format: "%.0f", elevationGain) : "" },
-                    set: { raw in
-                        let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                        if let val = Double(normalized) { elevationGain = val }
-                    }
-                )
-            )
-            .keyboardType(.decimalPad)
-            .multilineTextAlignment(.trailing)
-            .focused(focusedField, equals: .elevationGain)
-
+            DecimalTextField(value: $elevationGain, placeholder: "0", decimalPlaces: 0)
+                .focused(focusedField, equals: .elevationGain)
             Text("m")
                 .foregroundStyle(.secondary)
         }
@@ -87,20 +63,8 @@ struct OutdoorSpeedSection: View {
             HStack {
                 Text("Ø Geschwindigkeit")
                 Spacer()
-                TextField(
-                    "0,0",
-                    text: Binding(
-                        get: { averageSpeed > 0 ? String(format: "%.1f", averageSpeed) : "" },
-                        set: { raw in
-                            let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                            if let val = Double(normalized) { averageSpeed = val }
-                        }
-                    )
-                )
-                .keyboardType(.decimalPad)
-                .multilineTextAlignment(.trailing)
-                .focused(focusedField, equals: .averageSpeed)
-
+                DecimalTextField(value: $averageSpeed, placeholder: "0", decimalPlaces: 1)
+                    .focused(focusedField, equals: .averageSpeed)
                 Text("km/h")
                     .foregroundStyle(.secondary)
             }
@@ -111,20 +75,8 @@ struct OutdoorSpeedSection: View {
             HStack {
                 Text("Max. Geschwindigkeit")
                 Spacer()
-                TextField(
-                    "0,0",
-                    text: Binding(
-                        get: { maxSpeed > 0 ? String(format: "%.1f", maxSpeed) : "" },
-                        set: { raw in
-                            let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                            if let val = Double(normalized) { maxSpeed = val }
-                        }
-                    )
-                )
-                .keyboardType(.decimalPad)
-                .multilineTextAlignment(.trailing)
-                .focused(focusedField, equals: .maxSpeed)
-
+                DecimalTextField(value: $maxSpeed, placeholder: "0", decimalPlaces: 1)
+                    .focused(focusedField, equals: .maxSpeed)
                 Text("km/h")
                     .foregroundStyle(.secondary)
             }
@@ -227,20 +179,8 @@ struct OutdoorBodyWeightSection: View {
         HStack {
             Text("Gewicht")
             Spacer()
-            TextField(
-                "0,0",
-                text: Binding(
-                    get: { bodyWeight > 0 ? String(format: "%.1f", bodyWeight) : "" },
-                    set: { raw in
-                        let normalized = raw.replacingOccurrences(of: ",", with: ".")
-                        if let val = Double(normalized) { bodyWeight = val }
-                    }
-                )
-            )
-            .keyboardType(.decimalPad)
-            .multilineTextAlignment(.trailing)
-            .focused(focusedField, equals: .bodyWeight)
-
+            DecimalTextField(value: $bodyWeight, placeholder: "0", decimalPlaces: 1)
+                .focused(focusedField, equals: .bodyWeight)
             Text("kg")
                 .foregroundStyle(.secondary)
         }

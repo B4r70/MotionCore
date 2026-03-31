@@ -9,8 +9,8 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Hinweis  . . :  SummaryView als erster Tab hinzugefügt.                      /
-//                 Statistik und Rekorde in einem Tab kombiniert.               /
+// Hinweis  . . :  SummaryView als erster Tab hinzugefügt.                          /
+//                 Statistik und Rekorde in einem Tab kombiniert.                   /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftData
