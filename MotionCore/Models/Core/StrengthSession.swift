@@ -42,6 +42,12 @@ final class StrengthSession {
     @Relationship(deleteRule: .cascade, inverse: \ExerciseSet.session)
     var exerciseSets: [ExerciseSet]? = []
 
+    // MARK: - Health-Metriken (pro Übung)
+    @Relationship(deleteRule: .cascade, inverse: \ExerciseMetrics.session)
+    var exerciseMetrics: [ExerciseMetrics]? = []
+
+    var safeExerciseMetrics: [ExerciseMetrics] { exerciseMetrics ?? [] }
+
     // Referenz zum Trainingsplan (Template)
     @Relationship(deleteRule: .nullify)
     var sourceTrainingPlan: TrainingPlan?

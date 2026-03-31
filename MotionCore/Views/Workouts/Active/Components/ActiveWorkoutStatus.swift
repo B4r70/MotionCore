@@ -12,6 +12,14 @@
 //
 import SwiftUI
 
+// Watch-Verbindungsstatus für den ⌚-Indikator in der Status-Bar
+enum WatchConnectionState {
+    case hidden         // Kein Icon (Watch-Tracking nicht aktiv)
+    case connected      // Verbunden (blau)
+    case activeTracking // Aktives HR-Tracking (grün + Puls-Animation)
+    case disconnected   // Verbindung unterbrochen (grau)
+}
+
 struct ActiveWorkoutStatus: View {
     let isPaused: Bool
     let formattedElapsedTime: String
@@ -20,6 +28,10 @@ struct ActiveWorkoutStatus: View {
     let progress: Double
     let sessionVolume: Double
     let planTitle: String?          // Optional: Plan-Name als Badge
+    var watchConnectionState: WatchConnectionState = .hidden
+
+    // Puls-Animation für activeTracking
+    @State private var watchPulse: Bool = false
 
     var body: some View {
         VStack(spacing: 12) {
@@ -27,6 +39,9 @@ struct ActiveWorkoutStatus: View {
                 // Timer (links)
                 VStack(spacing: 2) {
                     HStack(spacing: 6) {
+                        // Watch-Indikator (nur wenn nicht hidden)
+                        watchIndicator
+
                         Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
                             .foregroundStyle(isPaused ? .orange : .blue)
                         Text(formattedElapsedTime)
@@ -97,6 +112,34 @@ struct ActiveWorkoutStatus: View {
         }
         .padding()
         .background(.ultraThinMaterial)
+    }
+
+    // MARK: - Watch-Indikator
+
+    @ViewBuilder
+    private var watchIndicator: some View {
+        switch watchConnectionState {
+        case .hidden:
+            EmptyView()
+        case .activeTracking:
+            Image(systemName: "applewatch")
+                .font(.caption2)
+                .foregroundStyle(.green)
+                .scaleEffect(watchPulse ? 1.2 : 1.0)
+                .animation(
+                    .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
+                    value: watchPulse
+                )
+                .onAppear { watchPulse = true }
+        case .connected:
+            Image(systemName: "applewatch")
+                .font(.caption2)
+                .foregroundStyle(.blue)
+        case .disconnected:
+            Image(systemName: "applewatch")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
     }
 
     // MARK: - Formatierung

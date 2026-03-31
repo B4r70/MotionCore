@@ -145,64 +145,65 @@ MotionCore startet eine eigene `HKWorkoutSession` auf der Apple Watch, sodass He
 
 ### Phase 3: iPhone Model + UI (Schritte 10–15)
 
-- [ ] **10. ExerciseMetrics.swift erstellen (iPhone-Target)**
+- [x] **10. ExerciseMetrics.swift erstellen (iPhone-Target)**
   - `@Model final class ExerciseMetrics`
   - Properties mit Default-Werten: exerciseGroupKey, exerciseNameSnapshot, avgHeartRate, minHeartRate, maxHeartRate, activeCalories, durationSeconds
   - `@Relationship(deleteRule: .nullify) var session: StrengthSession?`
 
-- [ ] **11. StrengthSession.swift erweitern — Inverse Relationship**
+- [x] **11. StrengthSession.swift erweitern — Inverse Relationship**
   - `@Relationship(deleteRule: .cascade, inverse: \ExerciseMetrics.session) var exerciseMetrics: [ExerciseMetrics]? = []`
   - `var safeExerciseMetrics: [ExerciseMetrics] { exerciseMetrics ?? [] }`
 
-- [ ] **12. MotionCoreApp.swift — ExerciseMetrics zum Schema**
-  - `ExerciseMetrics.self` zum appSchema Array hinzufügen
+- [x] **12. MotionCoreApp.swift — ExerciseMetrics zum Schema**
+  - `ExerciseMetrics.self` zum appSchema Array hinzugefügt (nach ExerciseSet.self)
 
-- [ ] **13. HealthDataCalcEngine.swift erstellen (iPhone-Target)**
+- [x] **13. HealthDataCalcEngine.swift erstellen (iPhone-Target)**
   - `struct HealthDataCalcEngine` mit `sessionSummary(from:) -> SessionHealthSummary`
   - `struct SessionHealthSummary` (avgHR, maxHR, totalCalories, totalDuration)
 
-- [ ] **14. LiveHealthCard.swift erstellen (iPhone-Target)**
+- [x] **14. LiveHealthCard.swift erstellen (iPhone-Target)**
   - GlassCard mit `currentHR`, `averageHR`, `maxHR`, `activeCalories`
   - Herz-Icon rot, Flamme-Icon für Kalorien
   - Nur anzeigen wenn mindestens ein Wert > 0
   - Preview mit Beispieldaten
 
-- [ ] **15. ActiveWorkoutStatus.swift erweitern — Watch-Indikator**
+- [x] **15. ActiveWorkoutStatus.swift erweitern — Watch-Indikator**
   - Enum `WatchConnectionState: hidden, connected, activeTracking, disconnected`
   - Parameter `watchConnectionState: WatchConnectionState = .hidden`
-  - ⌚ Icon links neben Timer: grün (activeTracking), blau (connected), grau (disconnected), kein Icon (hidden)
-  - Bestehende Previews dürfen nicht brechen
+  - ⌚ Icon links neben Timer: grün (activeTracking, Puls-Animation), blau (connected), grau (disconnected), kein Icon (hidden)
+  - Bestehende Previews brechen nicht (Default = .hidden)
 
 ### Phase 4: Integration + Settings (Schritte 16–19)
 
-- [ ] **16. AppSettings.swift erweitern**
+- [x] **16. AppSettings.swift erweitern**
   - `@Published var enableLiveHeartbeatTimer: Bool`
   - UserDefaults-Key: `"workout.enableLiveHeartbeatTimer"`, Default: `false`
 
-- [ ] **17. WorkoutSettingsView.swift erweitern**
+- [x] **17. WorkoutSettingsView.swift erweitern**
   - Neue Section "Apple Watch Health-Tracking"
   - Toggle mit Footer-Erklärung
 
-- [ ] **18. ActiveWorkoutView.swift erweitern — volle Integration**
+- [x] **18. ActiveWorkoutView.swift erweitern — volle Integration**
   - **ACHTUNG: Minimale, chirurgische Änderungen — 8 Einfügepunkte:**
-    1. `onAppear`: Health-Tracking starten + ggf. Heartbeat aktivieren
-    2. `onChange(of: selectedExerciseKey)`: ExerciseMetrics vorherige Übung speichern + Transition senden
-    3. `scrollContent`: LiveHealthCard vor heroCard (wenn isWatchTrackingActive)
-    4. `ActiveWorkoutStatus`-Aufruf: watchConnectionState Parameter
-    5. `completeSet()`: `sendRequestSnapshot()` nach PR-Check
-    6. `finishWorkout()`: Health-Daten in Session + saveCurrentExerciseMetrics() + sendStopHealthTracking()
-    7. `cancelWorkout()`: showCancelHealthAlert wenn isWatchTrackingActive
-    8. `toggleTimer()`: Pause/Resume Health-Sync
-  - Neuer @State: `showCancelHealthAlert: Bool = false`
-  - Neuer Alert: 3 Buttons (behalten / verwerfen / abbrechen)
-  - Neue Funktion: `saveCurrentExerciseMetrics()`
+    1. `onAppear`: Health-Tracking starten + ggf. Heartbeat aktivieren ✅
+    2. `onChange(of: selectedExerciseKey)`: ExerciseMetrics vorherige Übung speichern + Transition senden ✅ (oldValue ergänzt)
+    3. `scrollContent`: LiveHealthCard vor heroCard (wenn isWatchTrackingActive) ✅
+    4. `ActiveWorkoutStatus`-Aufruf: watchConnectionState Parameter ✅
+    5. `completeSet()`: `sendRequestSnapshot()` nach Haptic, vor Superset-Branch ✅
+    6. `finishWorkout()`: Health-Daten in Session + saveCurrentExerciseMetrics() + sendStopHealthTracking() ✅
+    7. `cancelWorkout()`: showCancelHealthAlert wenn isWatchTrackingActive ✅
+    8. Kein toggleTimer-Einfügepunkt nötig (Pause/Resume läuft via WatchSessionManager)
+  - Neuer @ObservedObject: `phoneSession = PhoneSessionManager.shared` ✅
+  - Neuer @State: `showCancelHealthAlert: Bool = false` ✅
+  - Neuer Alert: 3 Buttons (behalten / verwerfen / abbrechen) ✅
+  - Neue Funktion: `saveCurrentExerciseMetrics(forKey:)` ✅
 
 - [ ] **19. BUILD + DEVICE TEST Phase 4**
   - Kompletter Flow: Start → Sätze → Pause → Finish → Apple Health prüfen
 
 ### Phase 5: Polish (Schritte 20–22)
 
-- [ ] **20. WatchActiveWorkoutView.swift — HR-Anzeige**
+- [x] **20. WatchActiveWorkoutView.swift — HR-Anzeige**
   - Herz-Icon (rot) + aktuelle BPM unter Timer (wenn > 0)
 
 - [ ] **21. Cancel-Alert testen**
@@ -236,9 +237,9 @@ MotionCore startet eine eigene `HKWorkoutSession` auf der Apple Watch, sodass He
 
 **Datum:** 31.03.2026
 
-**Abgeschlossene Schritte:** 1–5 (Phase 1) + 7–8 (Phase 2)
+**Abgeschlossene Schritte:** 1–5 (Phase 1) + 7–8 (Phase 2) + 10–15 (Phase 3) + 16–18 (Phase 4) + 20 (Phase 5)
 
-**Geänderte Dateien:**
+**Geänderte / neue Dateien:**
 - `MotionCoreWatch Watch App/MotionCoreWatch Watch App.entitlements` — `com.apple.developer.healthkit` hinzugefügt
 - `MotionCoreWatch Watch App/Info.plist` — NEU erstellt mit NSHealthShare/UpdateUsageDescription
 - `MotionCore/Services/Watch/WatchHealthDataTypes.swift` — NEU (iPhone-Target)
@@ -246,6 +247,15 @@ MotionCore startet eine eigene `HKWorkoutSession` auf der Apple Watch, sodass He
 - `MotionCoreWatch Watch App/Services/WatchWorkoutManager.swift` — NEU (Watch-Target)
 - `MotionCoreWatch Watch App/Services/WatchSessionManager.swift` — erweitert: workoutManager, heartbeatTimer, handleHealthLifecycle
 - `MotionCore/Services/Watch/PhoneSessionManager.swift` — erweitert: ObservableObject, @Published Health-Properties, ExerciseSnapshotData, Lifecycle-Methoden, didReceiveMessage
+- `MotionCore/Models/Core/ExerciseMetrics.swift` — NEU (iPhone-Target), @Model mit 7 Properties
+- `MotionCore/Models/Core/StrengthSession.swift` — Inverse Relationship + safeExerciseMetrics hinzugefügt
+- `MotionCore/App/MotionCoreApp.swift` — ExerciseMetrics.self zum appSchema hinzugefügt
+- `MotionCore/Services/Calculation/HealthDataCalcEngine.swift` — NEU (iPhone-Target), SessionHealthSummary + HealthDataCalcEngine
+- `MotionCore/Views/Workouts/Active/Components/LiveHealthCard.swift` — NEU (iPhone-Target), GlassCard HR + Kalorien
+- `MotionCore/Views/Workouts/Active/Components/ActiveWorkoutStatus.swift` — WatchConnectionState Enum + watchIndicator + Puls-Animation
+- `MotionCore/Models/Core/AppSettings.swift` — enableLiveHeartbeatTimer Property + init
+- `MotionCore/Views/Settings/View/WorkoutSettingsView.swift` — Section "Apple Watch Health-Tracking" + Toggle
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — @ObservedObject phoneSession, showCancelHealthAlert, alle 8 Einfügepunkte, saveCurrentExerciseMetrics(forKey:), Cancel-Health-Alert
 
 **Ausstehende manuelle Schritte (Xcode):**
 1. Watch-Target → Signing & Capabilities → HealthKit Capability hinzufügen
@@ -253,5 +263,8 @@ MotionCore startet eine eigene `HKWorkoutSession` auf der Apple Watch, sodass He
 3. `WatchHealthDataTypes.swift` (iPhone-Target): Target Membership auf MotionCore setzen
 4. `WatchHealthDataTypes.swift` (Watch-Target): Target Membership auf MotionCoreWatch Watch App setzen
 5. `WatchWorkoutManager.swift`: Target Membership auf MotionCoreWatch Watch App setzen
+6. `ExerciseMetrics.swift`: Target Membership auf MotionCore setzen
+7. `HealthDataCalcEngine.swift`: Target Membership auf MotionCore setzen
+8. `LiveHealthCard.swift`: Target Membership auf MotionCore setzen
 
-**Offene Schritte:** 6 (Build+Test Phase 1), 9 (Build+Test Phase 2), 10–22 (Phase 3–5)
+**Offene Schritte:** 6 (Build+Test Phase 1), 9 (Build+Test Phase 2), 19 (Build+Test Phase 4), 21–22 (Phase 5)

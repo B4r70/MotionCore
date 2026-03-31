@@ -117,6 +117,21 @@ struct WorkoutSettingsView: View {
                 .pickerStyle(.menu)
                 .tint(.secondary)
             }
+            // MARK: - Apple Watch Health-Tracking
+
+            Section(
+                header: Text("Apple Watch Health-Tracking"),
+                footer: Text("Sendet alle 60 Sekunden die aktuelle Herzfrequenz von der Watch. Deaktiviert: HR wird nur bei Satz-Abschluss aktualisiert.")
+            ) {
+                Toggle(isOn: $appSettings.enableLiveHeartbeatTimer) {
+                    HStack {
+                        Image(systemName: "applewatch")
+                            .foregroundStyle(.red)
+                        Text("Live-Herzfrequenz (60 Sek)")
+                    }
+                }
+            }
+
             // MARK: - Smart Plan-Update
 
             Section("Smart Plan-Update") {

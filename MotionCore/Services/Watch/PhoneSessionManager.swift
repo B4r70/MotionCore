@@ -161,8 +161,9 @@ final class PhoneSessionManager: NSObject, ObservableObject {
         sendLifecycleMessage([WatchHeartbeatKey.enableHeartbeat: enabled])
     }
 
-    /// Setzt alle Live-Health-Daten zurück.
+    /// Setzt alle Live-Health-Daten zurück (inkl. Tracking-Flag).
     func resetHealthData() {
+        isWatchTrackingActive = false
         liveCurrentHR = 0
         liveAverageHR = 0
         liveMaxHR = 0

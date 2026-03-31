@@ -79,6 +79,12 @@ struct ActiveWorkoutView: View {
         // zuverlässig auf den State zugreifen – auch nach SwiftUI-Redraws.
     @StateObject private var restTimerManager = RestTimerManager()
 
+    // Watch-Health-Tracking: ObservableObject für reaktive UI-Updates
+    @ObservedObject private var phoneSession = PhoneSessionManager.shared
+
+    // Health-Alert bei Workout-Abbruch wenn Watch-Tracking aktiv
+    @State private var showCancelHealthAlert = false
+
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionHaptic = UINotificationFeedbackGenerator()
     private let completionHapticMedium = UIImpactFeedbackGenerator(style: .medium)
@@ -248,7 +254,8 @@ struct ActiveWorkoutView: View {
                     totalSets: session.totalSets,
                     progress: session.progress,
                     sessionVolume: cachedSessionVolume,
-                    planTitle: session.sourceTrainingPlan?.title
+                    planTitle: session.sourceTrainingPlan?.title,
+                    watchConnectionState: phoneSession.isWatchTrackingActive ? .activeTracking : .hidden
                 )
                 ScrollView {
                     scrollContent
@@ -312,6 +319,12 @@ struct ActiveWorkoutView: View {
             cachedGroupedSets = session.groupedSets
             refreshSetCaches()
             cachedSessionVolume = computeSessionVolume()
+
+            // Health-Tracking starten wenn Watch verbunden
+            PhoneSessionManager.shared.sendStartHealthTracking()
+            if appSettings.enableLiveHeartbeatTimer {
+                PhoneSessionManager.shared.sendHeartbeatEnabled(true)
+            }
         }
 
             // =====================================================================
@@ -335,11 +348,15 @@ struct ActiveWorkoutView: View {
             cachedGroupedSets = session.groupedSets
             refreshSetCaches()
         }
-        .onChange(of: selectedExerciseKey) { _, newValue in
+        .onChange(of: selectedExerciseKey) { oldValue, newValue in
             refreshSetCaches()
             sessionManager.setSelectedExerciseKey(newValue)
             syncLiveActivityStates()
             sendWatchState()
+
+            // ExerciseMetrics für vorherige Übung speichern (F2), dann Transition senden
+            saveCurrentExerciseMetrics(forKey: oldValue)
+            PhoneSessionManager.shared.sendExerciseTransition()
         }
 
             // Foreground-Handler für Rest-Timer: berechnet verbleibende Zeit aus restEndDate
@@ -377,6 +394,21 @@ struct ActiveWorkoutView: View {
             }
         } message: {
             Text("Du hast \(session.completedSets) von \(session.totalSets) Sätzen abgeschlossen.")
+        }
+        .alert("Training verwerfen", isPresented: $showCancelHealthAlert) {
+            Button("Health-Daten behalten") {
+                PhoneSessionManager.shared.sendStopHealthTracking()
+                PhoneSessionManager.shared.resetHealthData()
+                cancelWorkout()
+            }
+            Button("Alles verwerfen", role: .destructive) {
+                PhoneSessionManager.shared.sendDiscardHealthTracking()
+                PhoneSessionManager.shared.resetHealthData()
+                cancelWorkout()
+            }
+            Button("Abbrechen", role: .cancel) {}
+        } message: {
+            Text("Möchtest du die Health-Daten (HR, Kalorien) in Apple Health behalten oder ebenfalls verwerfen?")
         }
         .alert("Übung löschen?", isPresented: $showDeleteAlert) {
             Button("Löschen", role: .destructive) {
@@ -717,6 +749,9 @@ struct ActiveWorkoutView: View {
 
         completionHapticMedium.impactOccurred()
 
+        // Health-Snapshot von Watch anfordern
+        PhoneSessionManager.shared.sendRequestSnapshot()
+
         // Superset-Rotation hat Vorrang vor normalem Rest-Timer-Handling
         if let groupId = set.supersetGroupId {
             handleSupersetRotation(completedSet: set, supersetGroupId: groupId)
@@ -813,6 +848,24 @@ struct ActiveWorkoutView: View {
 
         session.complete()
         session.duration = finalSeconds / 60
+
+        // Health-Daten der letzten Übung speichern
+        saveCurrentExerciseMetrics(forKey: selectedExerciseKey)
+
+        // Finale Health-Daten in Session schreiben
+        let phone = PhoneSessionManager.shared
+        if phone.liveAverageHR > 0 {
+            session.heartRate = Int(phone.liveAverageHR)
+            session.maxHeartRate = Int(phone.liveMaxHR)
+        }
+        if phone.liveActiveCalories > 0 {
+            session.calories = Int(phone.liveActiveCalories)
+        }
+
+        // Watch-Workout beenden + Daten zurücksetzen
+        PhoneSessionManager.shared.sendStopHealthTracking()
+        PhoneSessionManager.shared.resetHealthData()
+
         try? context.save()
 
         // Smart Plan-Update: Analyse nach Session-Ende
@@ -851,6 +904,12 @@ struct ActiveWorkoutView: View {
     }
 
     private func cancelWorkout() {
+        // Wenn Watch-Tracking aktiv: erst fragen ob Health-Daten behalten werden sollen
+        guard !PhoneSessionManager.shared.isWatchTrackingActive else {
+            showCancelHealthAlert = true
+            return
+        }
+
         sessionManager.discardSession()
 
         context.delete(session)
@@ -935,6 +994,30 @@ struct ActiveWorkoutView: View {
                     selectExercise(key: prevKey)
                 }
         }
+    }
+
+    /// Speichert Health-Metriken der angegebenen Übung als ExerciseMetrics-Objekt.
+    /// Wird bei Übungswechsel (F2) und beim Workout-Ende aufgerufen.
+    private func saveCurrentExerciseMetrics(forKey key: String?) {
+        guard let key,
+              let snapshot = PhoneSessionManager.shared.lastExerciseSnapshot,
+              snapshot.avgHR > 0 || snapshot.calories > 0 else { return }
+
+        let name = session.safeExerciseSets
+            .first(where: { $0.groupKey == key })?
+            .exerciseNameSnapshot ?? key
+
+        let metrics = ExerciseMetrics(
+            exerciseGroupKey: key,
+            exerciseNameSnapshot: name,
+            avgHeartRate: snapshot.avgHR,
+            minHeartRate: snapshot.minHR,
+            maxHeartRate: snapshot.maxHR,
+            activeCalories: snapshot.calories,
+            durationSeconds: snapshot.durationSeconds
+        )
+        metrics.session = session
+        context.insert(metrics)
     }
 
         // =========================================================================
@@ -1201,6 +1284,16 @@ struct ActiveWorkoutView: View {
     private var scrollContent: some View {
         VStack(spacing: 20) {
             heroCard
+
+            // Live Health-Karte (unter RestTimer/ActiveSet, nur wenn Watch-Tracking aktiv)
+            if phoneSession.isWatchTrackingActive {
+                LiveHealthCard(
+                    currentHR: phoneSession.liveCurrentHR,
+                    averageHR: phoneSession.liveAverageHR,
+                    maxHR: phoneSession.liveMaxHR,
+                    activeCalories: phoneSession.liveActiveCalories
+                )
+            }
             progressionBanners
             exercisesOverview
 

@@ -42,6 +42,7 @@ struct MotionCoreApp: App {
         StrengthSession.self,
         OutdoorSession.self,
         ExerciseSet.self,
+        ExerciseMetrics.self,
         Exercise.self,
         TrainingPlan.self
     ])

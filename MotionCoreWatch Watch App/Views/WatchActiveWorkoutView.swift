@@ -33,6 +33,18 @@ struct WatchActiveWorkoutView: View {
                 .foregroundStyle(watchSession.workoutState == .paused ? .orange : .secondary)
             }
 
+            // HR-Anzeige (nur wenn aktive Messung vorliegt)
+            if let hr = watchSession.workoutManager?.currentHeartRate, hr > 0 {
+                HStack(spacing: 4) {
+                    Image(systemName: "heart.fill")
+                        .foregroundStyle(.red)
+                        .font(.caption2)
+                    Text("\(Int(hr)) bpm")
+                        .font(.system(.caption, design: .monospaced))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
             // Übungsname und Position
             Text(watchSession.exerciseName)
                 .font(.headline)
