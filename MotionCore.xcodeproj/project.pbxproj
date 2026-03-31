@@ -587,7 +587,10 @@
 				DEVELOPMENT_TEAM = 6XVYRUG73C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MotionCoreWatch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MotionCoreWatch;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "MotionCore liest Herzfrequenz und Kaloriendaten während des Trainings, um live Gesundheitsmetriken anzuzeigen.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "MotionCore schreibt Workout-Daten in Apple Health, damit dein Krafttraining vollständig erfasst wird.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.barto.motioncore;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -624,7 +627,10 @@
 				DEVELOPMENT_TEAM = 6XVYRUG73C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MotionCoreWatch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MotionCoreWatch;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "MotionCore liest Herzfrequenz und Kaloriendaten während des Trainings, um live Gesundheitsmetriken anzuzeigen.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "MotionCore schreibt Workout-Daten in Apple Health, damit dein Krafttraining vollständig erfasst wird.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.barto.motioncore;
 				LD_RUNPATH_SEARCH_PATHS = (

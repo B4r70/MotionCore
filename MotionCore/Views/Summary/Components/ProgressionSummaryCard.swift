@@ -5,7 +5,7 @@
 // Datei . . . . : ProgressionSummaryCard.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-16                                                       /
-// Beschreibung  : Dashboard-Karte mit Progressions-Empfehlungen                   /
+// Beschreibung  : Dashboard-Karte mit Progressions-Empfehlungen                    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

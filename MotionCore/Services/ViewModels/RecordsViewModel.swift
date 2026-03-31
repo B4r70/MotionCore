@@ -5,7 +5,7 @@
 // Datei . . . . : RecordsViewModel.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Gecachte Rekord-Daten — berechnet einmal, O(1) lesbar.          /
+// Beschreibung  : Gecachte Rekord-Daten — berechnet einmal, O(1) lesbar.           /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

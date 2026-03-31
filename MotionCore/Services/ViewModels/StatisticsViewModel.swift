@@ -5,7 +5,7 @@
 // Datei . . . . : StatisticsViewModel.swift                                        /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Gecachte Statistik-Daten — berechnet bei Daten- oder Timeframe- /
+// Beschreibung  : Gecachte Statistik-Daten — berechnet bei Daten- oder Timeframe-  /
 //                 Änderung, cached alle KPIs und Chart-Daten.                      /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /

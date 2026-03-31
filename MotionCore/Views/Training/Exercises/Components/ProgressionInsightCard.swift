@@ -5,7 +5,7 @@
 // Datei . . . . : ProgressionInsightCard.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-16                                                       /
-// Beschreibung  : Detailkarte für Progressions-Analyse einer Übung               /
+// Beschreibung  : Detailkarte für Progressions-Analyse einer Übung                 /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

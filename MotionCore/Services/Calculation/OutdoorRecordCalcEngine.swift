@@ -2,10 +2,10 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Rekorde                                                          /
-// Datei . . . . : OutdoorRecordCalcEngine.swift                                   /
+// Datei . . . . : OutdoorRecordCalcEngine.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-30                                                       /
-// Beschreibung  : Berechnungen für Outdoor-spezifische Rekorde und Aggregatwerte  /
+// Beschreibung  : Berechnungen für Outdoor-spezifische Rekorde und Aggregatwerte   /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

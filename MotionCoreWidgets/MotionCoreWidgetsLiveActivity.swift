@@ -17,7 +17,7 @@
 // - Pulsier-Animation in den letzten 10 Sekunden der Pause                         /
 // - Erweiterte Ansicht: Angepasste Farben passend zur kompakten Ansicht            /
 // - Fix: Text(timerInterval:countsDown:) mit festen Ankern statt                   /
-//   Text(date, style: .timer) – kompatibel mit iOS 18.4+ Beta                     /
+//   Text(date, style: .timer) – kompatibel mit iOS 18.4+ Beta                      /
 // ---------------------------------------------------------------------------------/
 //
 import ActivityKit

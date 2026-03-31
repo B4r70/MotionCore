@@ -2,10 +2,10 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Rekorde                                                          /
-// Datei . . . . : StrengthRecordCalcEngine.swift                                  /
+// Datei . . . . : StrengthRecordCalcEngine.swift                                   /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-17                                                       /
-// Beschreibung  : Berechnungen für Kraft-spezifische Rekorde                      /
+// Beschreibung  : Berechnungen für Kraft-spezifische Rekorde                       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -5,7 +5,7 @@
 // Datei . . . . : MuscleHeatmapView.swift                                          /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.03.2026                                                       /
-// Beschreibung  : Interaktive Muskel-Heatmap mit Zeitraum-Filter und Detail-Sheet /
+// Beschreibung  : Interaktive Muskel-Heatmap mit Zeitraum-Filter und Detail-Sheet  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

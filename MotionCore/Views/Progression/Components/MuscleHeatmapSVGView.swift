@@ -5,7 +5,7 @@
 // Datei . . . . : MuscleHeatmapSVGView.swift                                       /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.03.2026                                                       /
-// Beschreibung  : SVG-Heatmap via WKWebView mit dynamischer CSS-Injection         /
+// Beschreibung  : SVG-Heatmap via WKWebView mit dynamischer CSS-Injection          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

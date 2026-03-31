@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Statistik                                                        /
-// Datei . . . . : StrengthStatisticCalcEngine.swift                               /
+// Datei . . . . : StrengthStatisticCalcEngine.swift                                /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-03                                                       /
 // Beschreibung  : Berechnungen für Kraft-Statistiken                               /

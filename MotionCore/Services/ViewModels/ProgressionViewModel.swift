@@ -5,7 +5,7 @@
 // Datei . . . . : ProgressionViewModel.swift                                       /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Gecachte Progressions-Analyse — einmal berechnen, O(1) lesen.  /
+// Beschreibung  : Gecachte Progressions-Analyse — einmal berechnen, O(1) lesen.    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : ProgressionSectionHeader.swift                                  /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : ProgressionSectionHeader.swift                                   /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-28                                                       /
-// Beschreibung  : Sektions-Header für Trend-Gruppen in der Progressions-Übersicht /
+// Beschreibung  : Sektions-Header für Trend-Gruppen in der Progressions-Übersicht  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

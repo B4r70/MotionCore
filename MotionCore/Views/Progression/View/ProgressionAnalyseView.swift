@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : ProgressionAnalyseView.swift                                    /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : ProgressionAnalyseView.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-17                                                       /
-// Beschreibung  : Tab-View für die Progressions-Analyse aller trainierten Übungen /
+// Beschreibung  : Tab-View für die Progressions-Analyse aller trainierten Übungen  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

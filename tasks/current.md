@@ -1,98 +1,257 @@
-# DecimalTextField — Dezimal-Eingabe ohne Nullen-Auffüllung
+# HealthKit Live-Workout-Session (Apple Watch HR + Kalorien)
 
-**Complexity:** Medium
+**Complexity:** Large
+**Status:** In Implementierung
 
 ## Summary
 
-Behebung des UX-Problems bei Dezimal-Eingaben in OutdoorFormSections und anderen FormViews. Aktuell füllt `String(format:)` im `Binding(get:)` nach jeder Ziffer Nullen auf (z.B. "1" wird zu "1.00"), was die Eingabe über das Numpad sehr mühsam macht. Lösung: Eine wiederverwendbare `DecimalTextField`-Komponente mit lokalem String-Puffer, die während der Eingabe den rohen Text anzeigt und erst beim Verlassen des Feldes formatiert.
+MotionCore startet eine eigene `HKWorkoutSession` auf der Apple Watch, sodass Herzfrequenz und Kalorienverbrauch automatisch gemessen werden. Die Werte erscheinen live auf dem iPhone in der `ActiveWorkoutView`. Nach Beenden steht ein vollständiges `HKWorkout` in Apple Health. Das Feature ist optional — ohne Watch läuft das Workout wie bisher.
 
 ## Scope
 
 **Enthalten:**
-- Neue wiederverwendbare Komponente `DecimalTextField` in `Components/Forms/`
-- Adoption in `OutdoorFormSectionsMetrics.swift` (5 Felder: Distanz, Elevation, avgSpeed, maxSpeed, bodyWeight)
-- Adoption in `OutdoorFormSections.swift` (1 Feld: Temperatur — Vereinfachung des bestehenden @State-Workarounds)
-- Adoption in `FormViewSection.swift` (2 Felder: DistanceInputRow, BodyWeightInputRow)
-- Adoption in `EBikeProfileView.swift` (3 Bindings: weight, kilometers, maintenanceInterval)
+- `HKWorkoutSession` + `HKLiveWorkoutBuilder` auf der Watch
+- HealthKit Write-Berechtigungen auf der Watch (Read bleibt wie bisher)
+- Watch→iPhone Kommunikation für HR/Kalorien (Event-basiert + optionaler 60-Sek-Heartbeat)
+- Neues `ExerciseMetrics` SwiftData Model für pro-Übung Health-Daten
+- `LiveHealthCard` UI in der `ActiveWorkoutView`
+- Watch-Connection-Indikator in `ActiveWorkoutStatus`
+- HR-Anzeige auf der Watch
+- Cancel-Alert mit Health-Entscheidung (behalten/verwerfen)
+- Setting für Heartbeat-Timer
+- Nur Krafttraining (`StrengthSession`)
 
 **Explizit ausgeschlossen:**
-- Keine Änderung an Int-basierten Feldern (Kalorien, Herzfrequenz, Dauer)
-- Keine Änderung an der Datenstruktur/Model-Ebene
+- Cardio/Outdoor Sessions (separates Feature)
+- Historische Backfills
+- HR-basierte Pausenempfehlungen
+- Eigenständiges Watch-Workout-Starten
+- iPhone-seitiges HealthKit-Write
+- Supabase-Schema für ExerciseMetrics (spätere Session)
+- StrengthDetailView-Anzeige von HR pro Übung (spätere Session)
+
+## Getroffene Entscheidungen
+
+| # | Frage | Entscheidung |
+|---|---|---|
+| F1 | HealthKit-Auth Zeitpunkt | Automatisch beim ersten Workout-Start (kein Button in Settings) |
+| F2 | ExerciseMetrics bei Exercise-Transition | Ja — bei jedem Übungswechsel für die vorherige Übung speichern |
+| F3 | WatchConnectionState-Logik | Einfach: `isWatchTrackingActive ? .activeTracking : .hidden` |
+
+---
 
 ## Affected Files
 
-### Neue Datei
-- `MotionCore/Components/Forms/DecimalTextField.swift` — Wiederverwendbare Komponente mit lokalem @State String-Puffer und Focus-gesteuerter Formatierung
+### Neue Dateien (6 Stück inkl. Duplikat)
 
-### Geänderte Dateien
-- `MotionCore/Views/Workouts/Outdoor/Components/OutdoorFormSectionsMetrics.swift` — 5 Dezimalfelder ersetzen
-- `MotionCore/Views/Workouts/Outdoor/Components/OutdoorFormSections.swift` — Temperatur-Feld vereinfachen
-- `MotionCore/Components/Forms/FormViewSection.swift` — DistanceInputRow + BodyWeightInputRow ersetzen
-- `MotionCore/Views/Settings/View/EBikeProfileView.swift` — 3 computed Binding-Properties ersetzen
+| Datei | Target | Beschreibung |
+|---|---|---|
+| `MotionCore/Services/Watch/WatchHealthDataTypes.swift` | iPhone | Shared Keys: WatchHealthKey, WatchExerciseSnapshotKey, WatchWorkoutLifecycleKey, WatchHeartbeatKey |
+| `MotionCoreWatch Watch App/Services/WatchHealthDataTypes.swift` | Watch | Identische Kopie (wie WatchMessageKeys.swift) |
+| `MotionCoreWatch Watch App/Services/WatchWorkoutManager.swift` | Watch | HKWorkoutSession + HKLiveWorkoutBuilder, Delegates, Snapshots |
+| `MotionCore/Models/Core/ExerciseMetrics.swift` | iPhone | SwiftData @Model für pro-Übung Health-Metriken |
+| `MotionCore/Views/Workouts/Active/Components/LiveHealthCard.swift` | iPhone | GlassCard: aktuelle HR, Ø HR, max HR, Kalorien |
+| `MotionCore/Services/Calculation/HealthDataCalcEngine.swift` | iPhone | Pure Struct: aggregiert ExerciseMetrics |
+
+### Geänderte Dateien (10 Stück)
+
+| Datei | Änderung |
+|---|---|
+| `MotionCore/App/MotionCoreApp.swift` | ExerciseMetrics.self zum appSchema hinzufügen |
+| `MotionCore/Models/Core/StrengthSession.swift` | Inverse Relationship + safeExerciseMetrics |
+| `MotionCore/Models/Core/AppSettings.swift` | enableLiveHeartbeatTimer: Bool |
+| `MotionCore/Services/Watch/PhoneSessionManager.swift` | @Published Health-Properties, Lifecycle-Methoden, Message-Empfang |
+| `MotionCoreWatch Watch App/Services/WatchSessionManager.swift` | workoutManager Property, Lifecycle-Handling, Heartbeat-Timer |
+| `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` | LiveHealthCard, Transitions, finishWorkout, cancelWorkout |
+| `MotionCore/Views/Workouts/Active/Components/ActiveWorkoutStatus.swift` | watchConnectionState Parameter + ⌚ Icon |
+| `MotionCore/Views/Settings/View/WorkoutSettingsView.swift` | Toggle für Heartbeat-Timer |
+| `MotionCoreWatch Watch App/Views/WatchActiveWorkoutView.swift` | HR-Anzeige unter Timer |
+| `MotionCoreWatch Watch App/WatchBaseView.swift` | HealthKit-Auth Button |
+
+### Xcode-Konfiguration (manuell in Xcode)
+
+- Watch-Target: HealthKit Capability aktivieren
+- Watch-Target: Background Modes → "Workout processing" aktivieren
+- Watch-Target Info.plist: NSHealthShareUsageDescription + NSHealthUpdateUsageDescription
+- `MotionCoreWatch Watch App.entitlements`: com.apple.developer.healthkit = true
+
+---
 
 ## Risks
 
-- **Focus-Tracking:** `@FocusState` kann bei schnellem Feldwechsel Zwischenzustände haben — Formatierung auch auf `onSubmit` als Safety-Net
-- **Komma/Punkt-Lokalisierung:** iOS decimalPad zeigt je nach Locale Komma oder Punkt — beide normalisieren
-- **Breite Adoption:** 4 betroffene Dateien — bei nicht-identischer Signatur Build-Fehler
+### Kritisch
+- **SwiftData-Schema-Änderung:** `ExerciseMetrics` als neues @Model + inverse Relationship in `StrengthSession`. Alle Felder haben Default-Werte → CloudKit-kompatibel. Vor Merge auf echtem Gerät mit bestehenden Daten testen.
+- **ActiveWorkoutView Komplexität:** ~2000 Zeilen. Änderungen chirurgisch präzise — nur existierende Funktionen erweitern, keine Umstrukturierung.
+
+### Mittel
+- **WatchConnectivity-Zuverlässigkeit:** `sendMessage()` nur wenn Watch reachable. Fallback: Workout ohne HR-Daten, kein Fehler.
+- **Nur auf echter Hardware testbar:** HKWorkoutSession liefert im Simulator keine Daten.
+- **Dual-Target Dateisync:** `WatchHealthDataTypes.swift` muss in beiden Targets identisch sein.
+
+---
 
 ## Implementation Steps
 
-- [x] **1. DecimalTextField erstellen** (`MotionCore/Components/Forms/DecimalTextField.swift`)
-  - Signatur: `value: Binding<Double>`, `placeholder: String = "0"`, `decimalPlaces: Int = 1`
-  - Interner `@State private var text: String` und `@FocusState private var isFocused: Bool`
-  - `onAppear`: Wert formatiert in `text` schreiben (nur wenn value > 0)
-  - `onChange(of: isFocused)`: Bei Focus-Verlust — Komma zu Punkt normalisieren, parsen, value aktualisieren, text formatieren
-  - Während der Eingabe: rohen String in `text` speichern, value parallel aktualisieren
-  - `.keyboardType(.decimalPad)`, `.multilineTextAlignment(.trailing)`
+### Phase 1: Foundation Watch-seitig (Schritte 1–6)
 
-- [x] **2. OutdoorFormSectionsMetrics.swift migrieren**
-  - `OutdoorDistanceSection`: DecimalTextField, decimalPlaces: 2
-  - `OutdoorElevationSection`: DecimalTextField, decimalPlaces: 0
-  - `OutdoorSpeedSection` (2 Felder): DecimalTextField, decimalPlaces: 1
-  - `OutdoorBodyWeightSection`: DecimalTextField, decimalPlaces: 1
-  - `.focused(focusedField, equals: .xxx)` als äußerer Modifier beibehalten
+- [x] **1. Watch-Target Capabilities konfigurieren (Xcode manuell)**
+  - HealthKit Capability im Watch-Target aktivieren (MANUELL in Xcode)
+  - Background Modes: "Workout processing" aktivieren (MANUELL in Xcode)
+  - Info.plist: `NSHealthShareUsageDescription` + `NSHealthUpdateUsageDescription` ✅ erstellt
+  - Entitlements: `com.apple.developer.healthkit = true` ✅ hinzugefügt
 
-- [x] **3. OutdoorFormSections.swift migrieren**
-  - `OutdoorWeatherSection`: `@State temperatureText` + onAppear entfernen, durch DecimalTextField ersetzen
-  - Double?-Binding via Wrapper-Binding (nil → 0.0)
+- [x] **2. WatchHealthDataTypes.swift erstellen (BEIDE Targets)**
+  - iPhone-Datei: `MotionCore/Services/Watch/WatchHealthDataTypes.swift` ✅
+  - Watch-Kopie: `MotionCoreWatch Watch App/Services/WatchHealthDataTypes.swift` ✅
+  - Enums: `WatchHealthKey`, `WatchExerciseSnapshotKey`, `WatchWorkoutLifecycleKey`, `WatchHeartbeatKey` ✅
+  - **Target Membership: beide Dateien manuell in Xcode dem richtigen Target zuweisen**
 
-- [x] **4. FormViewSection.swift migrieren**
-  - `DistanceInputRow`: Binding(get:set:) durch DecimalTextField ersetzen (decimalPlaces: 2)
-  - `BodyWeightInputRow`: `TextField(value:format:)` durch DecimalTextField ersetzen (decimalPlaces: 1)
+- [x] **3. WatchWorkoutManager.swift erstellen (Watch-Target)**
+  - `final class WatchWorkoutManager: NSObject, ObservableObject` ✅
+  - @Published: `currentHeartRate`, `averageHeartRate`, `maxHeartRate`, `activeCalories`, `isActive` ✅
+  - Methoden: `requestAuthorization()`, `startWorkout()`, `pauseWorkout()`, `resumeWorkout()`, `endWorkout()`, `discardWorkout()`, `markExerciseTransition()`, `currentSnapshot()`, `exerciseSnapshot()` ✅
+  - Delegates: `HKWorkoutSessionDelegate`, `HKLiveWorkoutBuilderDelegate` ✅
+  - Config: `.traditionalStrengthTraining`, `.indoor` ✅
+  - **Target Membership: manuell in Xcode dem Watch-Target zuweisen**
 
-- [x] **5. EBikeProfileView.swift migrieren**
-  - `weightBinding`, `kilometersBinding`, `maintenanceIntervalBinding` computed Properties entfernen
-  - Durch direkte DecimalTextField-Aufrufe ersetzen
+- [x] **4. WatchSessionManager.swift — requestAuthorization beim Workout-Start**
+  - Kein Auth-Button in Settings (F1: automatisch) ✅
+  - `startWorkout()`-Handling: Zuerst `workoutManager.requestAuthorization()`, dann `startWorkout()` ✅
+  - Wenn Auth verweigert: Workout läuft ohne HR-Tracking (Fallback), kein Fehler ✅
+
+- [x] **5. WatchSessionManager.swift erweitern — workoutManager + Lifecycle (inkl. Auto-Auth)**
+  - Neue Property: `@Published private(set) var workoutManager: WatchWorkoutManager?` ✅
+  - Heartbeat-Timer Properties + Methoden ✅
+  - In `didReceiveMessage`: Lifecycle-Keys verarbeiten (start/stop/pause/resume/transition/snapshot/discard/heartbeat) ✅
+
+- [ ] **6. BUILD + DEVICE TEST Phase 1**
+  - HealthKit-Auth genehmigen, HR-Samples in Console prüfen
+
+### Phase 2: Kommunikation Watch → iPhone (Schritte 7–9)
+
+- [x] **7. PhoneSessionManager.swift erweitern**
+  - @Published: `liveCurrentHR`, `liveAverageHR`, `liveMaxHR`, `liveActiveCalories`, `isWatchTrackingActive`, `lastExerciseSnapshot` ✅
+  - Struct `ExerciseSnapshotData` (avgHR, minHR, maxHR, calories, durationSeconds) ✅
+  - Lifecycle-Methoden: alle 9 Methoden implementiert ✅
+  - `didReceiveMessage` erweitern: WatchHealthKey + WatchExerciseSnapshotKey verarbeitet ✅
+  - `PhoneSessionManager` jetzt `ObservableObject` (war vorher kein ObservableObject) ✅
+
+- [x] **8. WatchSessionManager Snapshot-Senden prüfen**
+  - Combined-Snapshot (currentSnapshot + exerciseSnapshot) korrekt zusammengebaut ✅
+  - `exerciseSnapshot`-Marker-Key für iPhone-seitige Erkennung gesetzt ✅
+
+- [ ] **9. BUILD + DEVICE TEST Phase 2**
+  - Set abschließen → Snapshot in Console auf iPhone
+
+### Phase 3: iPhone Model + UI (Schritte 10–15)
+
+- [ ] **10. ExerciseMetrics.swift erstellen (iPhone-Target)**
+  - `@Model final class ExerciseMetrics`
+  - Properties mit Default-Werten: exerciseGroupKey, exerciseNameSnapshot, avgHeartRate, minHeartRate, maxHeartRate, activeCalories, durationSeconds
+  - `@Relationship(deleteRule: .nullify) var session: StrengthSession?`
+
+- [ ] **11. StrengthSession.swift erweitern — Inverse Relationship**
+  - `@Relationship(deleteRule: .cascade, inverse: \ExerciseMetrics.session) var exerciseMetrics: [ExerciseMetrics]? = []`
+  - `var safeExerciseMetrics: [ExerciseMetrics] { exerciseMetrics ?? [] }`
+
+- [ ] **12. MotionCoreApp.swift — ExerciseMetrics zum Schema**
+  - `ExerciseMetrics.self` zum appSchema Array hinzufügen
+
+- [ ] **13. HealthDataCalcEngine.swift erstellen (iPhone-Target)**
+  - `struct HealthDataCalcEngine` mit `sessionSummary(from:) -> SessionHealthSummary`
+  - `struct SessionHealthSummary` (avgHR, maxHR, totalCalories, totalDuration)
+
+- [ ] **14. LiveHealthCard.swift erstellen (iPhone-Target)**
+  - GlassCard mit `currentHR`, `averageHR`, `maxHR`, `activeCalories`
+  - Herz-Icon rot, Flamme-Icon für Kalorien
+  - Nur anzeigen wenn mindestens ein Wert > 0
+  - Preview mit Beispieldaten
+
+- [ ] **15. ActiveWorkoutStatus.swift erweitern — Watch-Indikator**
+  - Enum `WatchConnectionState: hidden, connected, activeTracking, disconnected`
+  - Parameter `watchConnectionState: WatchConnectionState = .hidden`
+  - ⌚ Icon links neben Timer: grün (activeTracking), blau (connected), grau (disconnected), kein Icon (hidden)
+  - Bestehende Previews dürfen nicht brechen
+
+### Phase 4: Integration + Settings (Schritte 16–19)
+
+- [ ] **16. AppSettings.swift erweitern**
+  - `@Published var enableLiveHeartbeatTimer: Bool`
+  - UserDefaults-Key: `"workout.enableLiveHeartbeatTimer"`, Default: `false`
+
+- [ ] **17. WorkoutSettingsView.swift erweitern**
+  - Neue Section "Apple Watch Health-Tracking"
+  - Toggle mit Footer-Erklärung
+
+- [ ] **18. ActiveWorkoutView.swift erweitern — volle Integration**
+  - **ACHTUNG: Minimale, chirurgische Änderungen — 8 Einfügepunkte:**
+    1. `onAppear`: Health-Tracking starten + ggf. Heartbeat aktivieren
+    2. `onChange(of: selectedExerciseKey)`: ExerciseMetrics vorherige Übung speichern + Transition senden
+    3. `scrollContent`: LiveHealthCard vor heroCard (wenn isWatchTrackingActive)
+    4. `ActiveWorkoutStatus`-Aufruf: watchConnectionState Parameter
+    5. `completeSet()`: `sendRequestSnapshot()` nach PR-Check
+    6. `finishWorkout()`: Health-Daten in Session + saveCurrentExerciseMetrics() + sendStopHealthTracking()
+    7. `cancelWorkout()`: showCancelHealthAlert wenn isWatchTrackingActive
+    8. `toggleTimer()`: Pause/Resume Health-Sync
+  - Neuer @State: `showCancelHealthAlert: Bool = false`
+  - Neuer Alert: 3 Buttons (behalten / verwerfen / abbrechen)
+  - Neue Funktion: `saveCurrentExerciseMetrics()`
+
+- [ ] **19. BUILD + DEVICE TEST Phase 4**
+  - Kompletter Flow: Start → Sätze → Pause → Finish → Apple Health prüfen
+
+### Phase 5: Polish (Schritte 20–22)
+
+- [ ] **20. WatchActiveWorkoutView.swift — HR-Anzeige**
+  - Herz-Icon (rot) + aktuelle BPM unter Timer (wenn > 0)
+
+- [ ] **21. Cancel-Alert testen**
+  - Beide Pfade auf echtem Gerät testen
+
+- [ ] **22. Fallback testen**
+  - Ohne Watch → kein Fehler, kein LiveHealthCard, kein ⌚ Icon
+
+---
 
 ## Manual Verification
 
-- [ ] Xcode Build (`Cmd+B`) — gesamtes Projekt kompiliert fehlerfrei
-- [ ] OutdoorFormView Preview: Dezimalfelder zeigen Placeholder bei 0
-- [ ] Simulator: Distanz-Feld antippen, "42" tippen → "42" (NICHT "42.00"), Feld verlassen → "42.00"
-- [ ] Simulator: Speed-Feld antippen, "25" tippen, nächstes Feld → "25.0"
-- [ ] Simulator: Feld leeren, nichts eingeben, Feld verlassen → leer oder Placeholder
-- [ ] Simulator: Komma tippen (deutsches Keyboard) → korrekt als Dezimaltrennzeichen akzeptiert
-- [ ] Keyboard-Navigation (Pfeile oben/unten) in OutdoorFormView funktioniert weiterhin
-- [ ] EBikeProfileView: Gewicht eingeben — kein Nullen-Auffüllen
-- [ ] Cardio FormView: Distanz eingeben — kein Nullen-Auffüllen
-- [ ] Session speichern — korrekte Werte in SwiftData
+- [ ] Xcode Build (`Cmd+B`) — beide Targets kompilieren fehlerfrei
+- [ ] Watch-App: HealthKit-Auth Button sichtbar, Auth-Dialog erscheint
+- [ ] Watch-App: HR-Anzeige während Workout sichtbar
+- [ ] iPhone: LiveHealthCard erscheint wenn Watch-Tracking aktiv
+- [ ] iPhone: ⌚ grünes Icon in ActiveWorkoutStatus
+- [ ] iPhone: completeSet → Snapshot empfangen → LiveHealthCard aktualisiert
+- [ ] iPhone: Exercise-Wechsel → Transition gesendet + ExerciseMetrics gespeichert
+- [ ] iPhone: Pause → Watch pausiert HR-Tracking
+- [ ] iPhone: finishWorkout → HKWorkout in Apple Health, HR/Kalorien in StrengthSession
+- [ ] iPhone: cancelWorkout → Alert mit 3 Optionen (wenn Watch aktiv)
+- [ ] iPhone: Ohne Watch → Workout normal, kein Fehler
+- [ ] WorkoutSettingsView: Toggle sichtbar und funktional
+- [ ] Bestehende ActiveWorkoutStatus Previews brechen nicht
+- [ ] ExerciseMetrics werden in SwiftData gespeichert
 
 ---
 
 ## Fortschritt
 
-**Datum:** 2026-03-31
+**Datum:** 31.03.2026
 
-**Abgeschlossene Schritte:** 1–5 (alle Implementierungsschritte)
+**Abgeschlossene Schritte:** 1–5 (Phase 1) + 7–8 (Phase 2)
 
-**Geänderte / neue Dateien:**
-- `MotionCore/Components/Forms/DecimalTextField.swift` — NEU erstellt
-- `MotionCore/Views/Workouts/Outdoor/Components/OutdoorFormSectionsMetrics.swift` — 5 Felder migriert
-- `MotionCore/Views/Workouts/Outdoor/Components/OutdoorFormSections.swift` — Temperatur-Feld migriert, @State temperatureText + onAppear entfernt
-- `MotionCore/Components/Forms/FormViewSection.swift` — DistanceInputRow + BodyWeightInputRow migriert
-- `MotionCore/Views/Settings/View/EBikeProfileView.swift` — 3 computed Binding-Properties entfernt, DecimalTextField direkt eingesetzt
+**Geänderte Dateien:**
+- `MotionCoreWatch Watch App/MotionCoreWatch Watch App.entitlements` — `com.apple.developer.healthkit` hinzugefügt
+- `MotionCoreWatch Watch App/Info.plist` — NEU erstellt mit NSHealthShare/UpdateUsageDescription
+- `MotionCore/Services/Watch/WatchHealthDataTypes.swift` — NEU (iPhone-Target)
+- `MotionCoreWatch Watch App/Services/WatchHealthDataTypes.swift` — NEU (Watch-Target, identische Kopie)
+- `MotionCoreWatch Watch App/Services/WatchWorkoutManager.swift` — NEU (Watch-Target)
+- `MotionCoreWatch Watch App/Services/WatchSessionManager.swift` — erweitert: workoutManager, heartbeatTimer, handleHealthLifecycle
+- `MotionCore/Services/Watch/PhoneSessionManager.swift` — erweitert: ObservableObject, @Published Health-Properties, ExerciseSnapshotData, Lifecycle-Methoden, didReceiveMessage
 
-**Hinweis:** `DecimalTextField.swift` ist eine neue Datei — muss in Xcode manuell zum Target hinzugefügt werden (File Inspector → Target Membership), sofern Xcode 16 die Datei nicht automatisch erkennt.
+**Ausstehende manuelle Schritte (Xcode):**
+1. Watch-Target → Signing & Capabilities → HealthKit Capability hinzufügen
+2. Watch-Target → Signing & Capabilities → Background Modes → "Workout processing" aktivieren
+3. `WatchHealthDataTypes.swift` (iPhone-Target): Target Membership auf MotionCore setzen
+4. `WatchHealthDataTypes.swift` (Watch-Target): Target Membership auf MotionCoreWatch Watch App setzen
+5. `WatchWorkoutManager.swift`: Target Membership auf MotionCoreWatch Watch App setzen
 
-**Offene Punkte:** Manual Verification (Xcode Build + Simulator-Tests) — durch Quality Gate zu prüfen.
+**Offene Schritte:** 6 (Build+Test Phase 1), 9 (Build+Test Phase 2), 10–22 (Phase 3–5)

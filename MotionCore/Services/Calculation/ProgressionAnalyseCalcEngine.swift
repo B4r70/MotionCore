@@ -2,11 +2,11 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Berechnung                                                       /
-// Datei . . . . : ProgressionAnalyseCalcEngine.swift                              /
+// Datei . . . . : ProgressionAnalyseCalcEngine.swift                               /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-17                                                       /
-// Beschreibung  : Aggregierte Progressions-Übersicht über alle trainierten        /
-//                 Übungen — delegiert Einzelanalysen an ProgressionCalcEngine.    /
+// Beschreibung  : Aggregierte Progressions-Übersicht über alle trainierten         /
+//                 Übungen — delegiert Einzelanalysen an ProgressionCalcEngine.     /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

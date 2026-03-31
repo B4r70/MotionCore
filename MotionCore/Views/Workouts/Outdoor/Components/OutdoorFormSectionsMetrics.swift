@@ -5,9 +5,9 @@
 // Datei . . . . : OutdoorFormSectionsMetrics.swift                                 /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 30.03.2026                                                       /
-// Beschreibung  : Wiederverwendbare Form-Sections für OutdoorFormView               /
+// Beschreibung  : Wiederverwendbare Form-Sections für OutdoorFormView              /
 //                 (Distanz, Höhe, Speed, Kalorien, HR, Gewicht, RPE, Energie,      /
-//                  Intensität)                                                      /
+//                  Intensität)                                                     /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

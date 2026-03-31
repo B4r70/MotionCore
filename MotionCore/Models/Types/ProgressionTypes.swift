@@ -5,7 +5,7 @@
 // Datei . . . . : ProgressionTypes.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-16                                                       /
-// Beschreibung  : Typen für das intelligente Progressionssystem                   /
+// Beschreibung  : Typen für das intelligente Progressionssystem                    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

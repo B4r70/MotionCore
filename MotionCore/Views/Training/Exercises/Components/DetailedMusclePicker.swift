@@ -6,7 +6,7 @@
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 27.03.2026                                                       /
 // Beschreibung  : Multi-Select Picker für feingranulare Muskeln, gruppiert nach    /
-//                 MuscleGroup (parentGroup)                                         /
+//                 MuscleGroup (parentGroup)                                        /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

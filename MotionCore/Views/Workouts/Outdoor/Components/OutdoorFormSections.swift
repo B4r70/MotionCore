@@ -5,7 +5,7 @@
 // Datei . . . . : OutdoorFormSections.swift                                        /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 30.03.2026                                                       /
-// Beschreibung  : Wiederverwendbare Form-Sections für OutdoorFormView               /
+// Beschreibung  : Wiederverwendbare Form-Sections für OutdoorFormView              /
 //                 (Route, Adresse, Wetter, Dauer)                                  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /

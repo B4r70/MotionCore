@@ -5,7 +5,7 @@
 // Datei . . . . : MuscleHeatmapCalcEngine.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.03.2026                                                       /
-// Beschreibung  : Berechnet Muskel-Heatmap-Daten aus StrengthSessions             /
+// Beschreibung  : Berechnet Muskel-Heatmap-Daten aus StrengthSessions              /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

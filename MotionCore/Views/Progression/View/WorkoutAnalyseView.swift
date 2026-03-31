@@ -1,12 +1,12 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : WorkoutAnalyseView.swift                                        /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : WorkoutAnalyseView.swift                                         /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Aggregierte Progressions-Analyse für ein einzelnes Workout.    /
-//                 Zeigt Übersicht + kompakte Karten aller trainierten Übungen.    /
+// Beschreibung  : Aggregierte Progressions-Analyse für ein einzelnes Workout.      /
+//                 Zeigt Übersicht + kompakte Karten aller trainierten Übungen.     /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

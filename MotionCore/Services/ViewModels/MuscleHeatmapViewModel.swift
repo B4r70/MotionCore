@@ -5,7 +5,7 @@
 // Datei . . . . : MuscleHeatmapViewModel.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.03.2026                                                       /
-// Beschreibung  : Gecachte Heatmap-Analyse — einmal berechnen, O(1) lesen.       /
+// Beschreibung  : Gecachte Heatmap-Analyse — einmal berechnen, O(1) lesen.         /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -7,7 +7,7 @@
 // Erstellt am . : 01.01.2026                                                       /
 // Beschreibung  : Edit-Sheet für die Anpassung des Trainings innerhalb der View    /
 // ---------------------------------------------------------------------------------/
-// (C) Copyright by Bartosz Stryjewski                                               /
+// (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI

@@ -5,7 +5,7 @@
 // Datei . . . . : ProgressionCalcEngine.swift                                      /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-08                                                       /
-// Beschreibung  : Intelligentes Progressionssystem (Double Progression, Trend,    /
+// Beschreibung  : Intelligentes Progressionssystem (Double Progression, Trend,     /
 //                 Konfidenz, Auto-Detect Trainings-Level)                          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /

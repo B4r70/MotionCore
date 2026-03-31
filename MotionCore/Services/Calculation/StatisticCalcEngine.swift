@@ -10,8 +10,8 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 // Hinweis  . . : Gemeinsame Berechnungen werden an CoreSessionCalcEngine           /
-//                delegiert. Cardio-spezifische Berechnungen (distance, cardioDevice,/
-//                mets, trainingProgram) bleiben hier. Typübergreifende KPIs         /
+//                delegiert. Cardio-spez. Berechnungen (distance, cardioDevice,     /
+//                mets, trainingProgram) bleiben. Typübergreifende KPIs             /
 //                (totalWorkoutsAll, totalCaloriesAll, etc.) berechnen über alle    /
 //                drei Session-Typen.                                               /
 // ---------------------------------------------------------------------------------/

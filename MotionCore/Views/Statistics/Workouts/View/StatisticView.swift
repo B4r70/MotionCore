@@ -5,7 +5,7 @@
 // Datei . . . . : StatisticView.swift                                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 11.11.2025                                                       /
-// Beschreibung  : Hauptdisplay für den Bereich Statistik (alle Workout-Typen)     /
+// Beschreibung  : Hauptdisplay für den Bereich Statistik (alle Workout-Typen)      /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

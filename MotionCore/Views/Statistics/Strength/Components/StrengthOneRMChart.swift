@@ -5,7 +5,7 @@
 // Datei . . . . : StrengthOneRMChart.swift                                         /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-03                                                       /
-// Beschreibung  : 1RM-Progressionschart je Übung (Epley-Formel)                   /
+// Beschreibung  : 1RM-Progressionschart je Übung (Epley-Formel)                    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

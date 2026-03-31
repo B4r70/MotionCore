@@ -5,7 +5,7 @@
 // Datei . . . . : RecordView.swift                                                 /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 11.11.2025                                                       /
-// Beschreibung  : Hauptdisplay für den Bereich Rekorde                            /
+// Beschreibung  : Hauptdisplay für den Bereich Rekorde                             /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

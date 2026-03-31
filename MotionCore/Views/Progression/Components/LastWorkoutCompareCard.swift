@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : LastWorkoutCompareCard.swift                                    /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : LastWorkoutCompareCard.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Vergleich aktueller Stand vs. letztes Workout pro Übung        /
+// Beschreibung  : Vergleich aktueller Stand vs. letztes Workout pro Übung          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

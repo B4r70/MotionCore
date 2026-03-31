@@ -1,12 +1,12 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : ExerciseProgressionView.swift                                   /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : ExerciseProgressionView.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Detailansicht für die Progressions-Analyse einer einzelnen     /
-//                 Übung — Vergleich letztes Workout + Insight-Card + Charts       /
+// Beschreibung  : Detailansicht für die Progressions-Analyse einer einzelnen       /
+//                 Übung — Vergleich letztes Workout + Insight-Card + Charts        /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

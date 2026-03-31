@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : ProgressionExerciseCard.swift                                   /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : ProgressionExerciseCard.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-17                                                       /
-// Beschreibung  : Kompakte Card für eine Übung in der Progressions-Liste          /
+// Beschreibung  : Kompakte Card für eine Übung in der Progressions-Liste           /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : MiniSparkline.swift                                             /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : MiniSparkline.swift                                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Kompakte Inline-Sparkline für TrendPoint-Arrays                /
+// Beschreibung  : Kompakte Inline-Sparkline für TrendPoint-Arrays                  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

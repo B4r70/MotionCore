@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Progressions-Analyse                                            /
-// Datei . . . . : ProgressionOverviewCard.swift                                   /
+// Abschnitt . . : Progressions-Analyse                                             /
+// Datei . . . . : ProgressionOverviewCard.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-17                                                       /
-// Beschreibung  : Hero-Card mit aggregierter Progressions-Übersicht              /
+// Beschreibung  : Hero-Card mit aggregierter Progressions-Übersicht                /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -5,8 +5,8 @@
 // Datei . . . . : SummaryViewModel.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-18                                                       /
-// Beschreibung  : Gecachte Summary-Daten — trennt vollständige von gefilterten    /
-//                 Berechnungen und aktualisiert nur bei echten Datenänderungen.   /
+// Beschreibung  : Gecachte Summary-Daten — trennt vollständige von gefilterten     /
+//                 Berechnungen und aktualisiert nur bei echten Datenänderungen.    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

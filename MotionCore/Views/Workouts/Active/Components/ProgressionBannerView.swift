@@ -5,7 +5,7 @@
 // Datei . . . . : ProgressionBannerView.swift                                      /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-08                                                       /
-// Beschreibung  : Liquid Glass Banner für RIR-basierte Gewichtsempfehlung         /
+// Beschreibung  : Liquid Glass Banner für RIR-basierte Gewichtsempfehlung          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -5,7 +5,7 @@
 // Datei . . . . : MuscleHeatmapMiniView.swift                                      /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.03.2026                                                       /
-// Beschreibung  : Kompakte Session-Heatmap für StrengthDetailView (nicht-interaktiv)/
+// Beschreibung  : Kompakte Session-Heatmap für StrengthDetailView (nicht-interakt. /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

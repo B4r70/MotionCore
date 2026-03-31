@@ -1,12 +1,13 @@
 //----------------------------------------------------------------------------------/
-// # MotionCore
+// # MotionCore                                                                     /
 //----------------------------------------------------------------------------------/
-// Abschnitt . . : Daten-Modell
-// Datei . . . . : SleepTypes.swift
-// Autor  . . . : Bartosz Stryjewski
-// Erstellt am . : 09.12.2025
-// Beschreibung  : Datentypen für Schlafauswertung
+// Abschnitt . . : Daten-Modell                                                     /
+// Datei . . . . : SleepTypes.swift                                                 /
+// Autor . . . . : Bartosz Stryjewski                                               /
+// Erstellt am . : 09.12.2025                                                       /
+// Beschreibung  : Datentypen für Schlafauswertung                                  /
 //----------------------------------------------------------------------------------/
+//
 import Foundation
 import SwiftUI
 

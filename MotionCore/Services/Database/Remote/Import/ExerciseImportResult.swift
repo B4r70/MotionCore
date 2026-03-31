@@ -9,7 +9,7 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-// Hinweis  . . : Dieses Modell wird vom ExerciseImportManager zurückgegeben,      /
+// Hinweis  . . : Dieses Modell wird vom ExerciseImportManager zurückgegeben,       /
 //                um das Ergebnis eines Batch-Imports zu dokumentieren.             /
 //                Enthält Statistiken über importierte, übersprungene und           /
 //                fehlerhafte Übungen.                                              /

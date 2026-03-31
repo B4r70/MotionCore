@@ -5,7 +5,7 @@
 // Datei . . . . : MuscleHeatmapLegend.swift                                        /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 26.03.2026                                                       /
-// Beschreibung  : Kompakte Farbskala-Legende für die Muskel-Heatmap               /
+// Beschreibung  : Kompakte Farbskala-Legende für die Muskel-Heatmap                /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

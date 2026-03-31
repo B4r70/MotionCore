@@ -2,10 +2,10 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Rekorde                                                          /
-// Datei . . . . : StrengthRecordGridCard.swift                                    /
+// Datei . . . . : StrengthRecordGridCard.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-03-17                                                       /
-// Beschreibung  : Kompakte Grid-Card für Kraft-Rekorde                            /
+// Beschreibung  : Kompakte Grid-Card für Kraft-Rekorde                             /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -5,7 +5,7 @@
 // Datei . . . . : DataSettingsView.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 02.11.2025                                                       /
-// Beschreibung  : Konfigurationshauptdisplay für Datenimport/-export              /
+// Beschreibung  : Konfigurationshauptdisplay für Datenimport/-export               /
 //----------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 //----------------------------------------------------------------------------------/

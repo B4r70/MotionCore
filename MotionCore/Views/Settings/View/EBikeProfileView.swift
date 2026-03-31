@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Einstellungen                                                    /
 // Datei . . . . : EBikeProfileView.swift                                           /
-// Autor . . . . : Bartosz Stryjewski                                               //
+// Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 30.03.2026                                                       /
 // Beschreibung  : E-Bike-Profil in den Einstellungen (kein SwiftData, AppSettings) /
 // ---------------------------------------------------------------------------------/
