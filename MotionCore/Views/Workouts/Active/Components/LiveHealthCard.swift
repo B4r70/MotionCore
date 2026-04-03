@@ -18,14 +18,8 @@ struct LiveHealthCard: View {
     let maxHR: Double
     let activeCalories: Double
 
-    // Nur rendern wenn mindestens ein Wert vorhanden
-    private var hasData: Bool {
-        currentHR > 0 || activeCalories > 0
-    }
-
     var body: some View {
-        if hasData {
-            HStack(spacing: 0) {
+        HStack(spacing: 0) {
                 // Linke Hälfte: Herzfrequenz
                 HStack(spacing: 8) {
                     Image(systemName: "heart.fill")
@@ -66,7 +60,6 @@ struct LiveHealthCard: View {
             }
             .padding()
             .glassCard()
-        }
     }
 }
 

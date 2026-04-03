@@ -148,15 +148,6 @@ class AppSettings: ObservableObject {
         }
     }
 
-    // MARK: - Apple Watch Health-Tracking
-
-    // Watch: Live-Herzfrequenz alle 60 Sekunden senden (Default: false)
-    @Published var enableLiveHeartbeatTimer: Bool {
-        didSet {
-            UserDefaults.standard.set(enableLiveHeartbeatTimer, forKey: "workout.enableLiveHeartbeatTimer")
-        }
-    }
-
     // MARK: - Smart Plan-Update
 
     // Smart Plan-Update: aktiviert/deaktiviert den automatischen Vorschlag nach Session-Ende
@@ -360,9 +351,6 @@ class AppSettings: ObservableObject {
 
         // Wochenziel: Workouts pro Woche (Default: 4)
         weeklyWorkoutGoal = defaults.object(forKey: "workout.weeklyWorkoutGoal") as? Int ?? 4
-
-        // Watch: Live-Herzfrequenz-Timer (Default: false)
-        enableLiveHeartbeatTimer = defaults.bool(forKey: "workout.enableLiveHeartbeatTimer")
 
         // Smart Plan-Update: aktiviert (Default: true)
         smartPlanUpdateEnabled = defaults.object(forKey: "workout.smartPlanUpdateEnabled") as? Bool ?? true

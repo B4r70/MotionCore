@@ -322,9 +322,8 @@ struct ActiveWorkoutView: View {
 
             // Health-Tracking starten wenn Watch verbunden
             PhoneSessionManager.shared.sendStartHealthTracking()
-            if appSettings.enableLiveHeartbeatTimer {
-                PhoneSessionManager.shared.sendHeartbeatEnabled(true)
-            }
+            // Heartbeat immer aktivieren für Live-HR-Updates
+            PhoneSessionManager.shared.sendHeartbeatEnabled(true)
         }
 
             // =====================================================================
@@ -397,11 +396,13 @@ struct ActiveWorkoutView: View {
         }
         .alert("Training verwerfen", isPresented: $showCancelHealthAlert) {
             Button("Health-Daten behalten") {
+                PhoneSessionManager.shared.sendHeartbeatEnabled(false)
                 PhoneSessionManager.shared.sendStopHealthTracking()
                 PhoneSessionManager.shared.resetHealthData()
                 cancelWorkout()
             }
             Button("Alles verwerfen", role: .destructive) {
+                PhoneSessionManager.shared.sendHeartbeatEnabled(false)
                 PhoneSessionManager.shared.sendDiscardHealthTracking()
                 PhoneSessionManager.shared.resetHealthData()
                 cancelWorkout()
@@ -852,55 +853,62 @@ struct ActiveWorkoutView: View {
         // Health-Daten der letzten Übung speichern
         saveCurrentExerciseMetrics(forKey: selectedExerciseKey)
 
-        // Finale Health-Daten in Session schreiben
-        let phone = PhoneSessionManager.shared
-        if phone.liveAverageHR > 0 {
-            session.heartRate = Int(phone.liveAverageHR)
-            session.maxHeartRate = Int(phone.liveMaxHR)
-        }
-        if phone.liveActiveCalories > 0 {
-            session.calories = Int(phone.liveActiveCalories)
-        }
-
-        // Watch-Workout beenden + Daten zurücksetzen
-        PhoneSessionManager.shared.sendStopHealthTracking()
-        PhoneSessionManager.shared.resetHealthData()
-
-        try? context.save()
-
-        // Smart Plan-Update: Analyse nach Session-Ende
-        if appSettings.smartPlanUpdateEnabled,
-           let sourcePlan = session.sourceTrainingPlan {
-            let engine = PlanUpdateCalcEngine(
-                minWeightDelta: appSettings.planUpdateMinWeightDelta,
-                minRepsDelta: appSettings.planUpdateMinRepsDelta,
-                trendSessionCount: appSettings.planUpdateTrendSessionCount
-            )
-            let proposal = engine.analyze(plan: sourcePlan)
-            if proposal.hasChanges {
-                sessionManager.pendingPlanUpdateProposal = proposal
-            }
-        }
-
-            // Complications nach Workout-Abschluss aktualisieren
-        WatchComplicationService.updateComplications(allSessions: allSessions)
-
-            // Supabase-Upload (non-blocking, CloudKit bleibt primär)
+        // Finalen Snapshot von Watch holen, danach Session speichern
         Task {
-            let success = await SupabaseSessionService.shared.upload(session)
-            if success {
-                await MainActor.run {
-                    session.syncedToSupabase = true
-                    try? context.save()
+            // Aktuellsten HR/Kalorien-Stand von der Watch anfordern (max. 3s Timeout)
+            await PhoneSessionManager.shared.requestFinalSnapshot()
+
+            // Finale Health-Daten in Session schreiben (nach Snapshot-Update)
+            let phone = PhoneSessionManager.shared
+            if phone.liveAverageHR > 0 {
+                session.heartRate = Int(phone.liveAverageHR)
+                session.maxHeartRate = Int(phone.liveMaxHR)
+            }
+            if phone.liveActiveCalories > 0 {
+                session.calories = Int(phone.liveActiveCalories)
+            }
+
+            // Watch-Workout beenden + Daten zurücksetzen
+            PhoneSessionManager.shared.sendHeartbeatEnabled(false)
+            PhoneSessionManager.shared.sendStopHealthTracking()
+            PhoneSessionManager.shared.resetHealthData()
+
+            try? context.save()
+
+            // Smart Plan-Update: Analyse nach Session-Ende
+            if appSettings.smartPlanUpdateEnabled,
+               let sourcePlan = session.sourceTrainingPlan {
+                let engine = PlanUpdateCalcEngine(
+                    minWeightDelta: appSettings.planUpdateMinWeightDelta,
+                    minRepsDelta: appSettings.planUpdateMinRepsDelta,
+                    trendSessionCount: appSettings.planUpdateTrendSessionCount
+                )
+                let proposal = engine.analyze(plan: sourcePlan)
+                if proposal.hasChanges {
+                    sessionManager.pendingPlanUpdateProposal = proposal
                 }
             }
+
+            // Complications nach Workout-Abschluss aktualisieren
+            WatchComplicationService.updateComplications(allSessions: allSessions)
+
+            // Supabase-Upload (non-blocking, CloudKit bleibt primär)
+            Task {
+                let success = await SupabaseSessionService.shared.upload(session)
+                if success {
+                    await MainActor.run {
+                        session.syncedToSupabase = true
+                        try? context.save()
+                    }
+                }
+            }
+
+            endLiveActivity()
+            SessionResumeStore.clear()
+
+            PhoneSessionManager.shared.sendIdleState()
+            dismiss()
         }
-
-        endLiveActivity()
-        SessionResumeStore.clear()
-
-        PhoneSessionManager.shared.sendIdleState()
-        dismiss()
     }
 
     private func cancelWorkout() {

@@ -16,11 +16,11 @@ struct WatchActiveWorkoutView: View {
     @EnvironmentObject private var watchSession: WatchSessionManager
 
     var body: some View {
-        VStack(spacing: 8) {
-            // Timer und Pause-Button
+        VStack(spacing: 6) {
+            // Timer + Pause-Button
             HStack {
                 Text(formattedTime)
-                    .font(.system(.body, design: .monospaced).bold())
+                    .font(.system(.title3, design: .monospaced).bold())
                     .foregroundStyle(watchSession.workoutState == .paused ? .orange : .primary)
                 Spacer()
                 Button {
@@ -33,84 +33,73 @@ struct WatchActiveWorkoutView: View {
                 .foregroundStyle(watchSession.workoutState == .paused ? .orange : .secondary)
             }
 
-            // HR-Anzeige (nur wenn aktive Messung vorliegt)
-            if let hr = watchSession.workoutManager?.currentHeartRate, hr > 0 {
-                HStack(spacing: 4) {
-                    Image(systemName: "heart.fill")
-                        .foregroundStyle(.red)
-                        .font(.caption2)
-                    Text("\(Int(hr)) bpm")
-                        .font(.system(.caption, design: .monospaced))
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            // Übungsname und Position
-            Text(watchSession.exerciseName)
+            // Übungsname + Set-Info
+            Text(watchSession.exerciseName.isEmpty ? "–" : watchSession.exerciseName)
                 .font(.headline)
                 .lineLimit(2)
                 .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            Text("Übung \(watchSession.exerciseIndex + 1)/\(watchSession.totalExercises)")
+            Text("Satz \(watchSession.setIndex + 1)/\(watchSession.totalSets)  ·  Übung \(watchSession.exerciseIndex + 1)/\(watchSession.totalExercises)")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            Spacer(minLength: 4)
+            // HR + Kalorien
+            HStack(spacing: 0) {
+                HStack(spacing: 4) {
+                    Image(systemName: "heart.fill")
+                        .foregroundStyle(.red)
+                        .font(.caption2)
+                    let hr = watchSession.workoutManager?.currentHeartRate ?? 0
+                    Text(hr > 0 ? "\(Int(hr))" : "–")
+                        .font(.system(.caption, design: .monospaced).bold())
+                    Text("bpm")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Haupt-Action: Satz abschließen
+                HStack(spacing: 4) {
+                    Image(systemName: "flame.fill")
+                        .foregroundStyle(.orange)
+                        .font(.caption2)
+                    let cal = watchSession.workoutManager?.activeCalories ?? 0
+                    Text(cal > 0 ? "\(Int(cal))" : "–")
+                        .font(.system(.caption, design: .monospaced).bold())
+                    Text("kcal")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            Spacer(minLength: 2)
+
+            // Satz abschließen (kompakter)
             Button {
                 watchSession.sendAction(.completeSet)
             } label: {
-                VStack(spacing: 2) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title2)
-                    Text("Satz \(watchSession.setIndex + 1)/\(watchSession.totalSets)")
-                        .font(.caption2)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
+                Label("Satz \(watchSession.setIndex + 1)", systemImage: "checkmark.circle.fill")
+                    .font(.caption.bold())
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.bordered)
             .tint(.green)
             .disabled(watchSession.workoutState == .paused)
-
-            // Übungs-Navigation
-            HStack(spacing: 0) {
-                Button {
-                    watchSession.sendAction(.previousExercise)
-                } label: {
-                    Image(systemName: "backward.fill")
-                        .font(.caption)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-
-                Button {
-                    watchSession.sendAction(.nextExercise)
-                } label: {
-                    Image(systemName: "forward.fill")
-                        .font(.caption)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-            }
         }
         .padding(.horizontal, 4)
     }
 
     // MARK: - Formatierung
 
-    /// Formatiert die verstrichene Zeit als MM:SS oder H:MM:SS
+    /// Formatiert die live verstrichene Zeit als MM:SS oder H:MM:SS
     private var formattedTime: String {
-        let seconds = Int(watchSession.elapsedTime)
+        let seconds = Int(watchSession.liveElapsedSeconds)
         let hours   = seconds / 3600
         let minutes = (seconds % 3600) / 60
         let secs    = seconds % 60
-
         if hours > 0 {
             return String(format: "%d:%02d:%02d", hours, minutes, secs)
         }

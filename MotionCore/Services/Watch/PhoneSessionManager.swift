@@ -156,9 +156,73 @@ final class PhoneSessionManager: NSObject, ObservableObject {
         sendLifecycleMessage([WatchWorkoutLifecycleKey.requestSnapshot: true])
     }
 
-    /// Aktiviert oder deaktiviert den 60-Sekunden-Heartbeat-Timer auf der Watch.
+    /// Aktiviert oder deaktiviert den Heartbeat-Timer auf der Watch.
     func sendHeartbeatEnabled(_ enabled: Bool) {
         sendLifecycleMessage([WatchHeartbeatKey.enableHeartbeat: enabled])
+    }
+
+    /// Fordert einen finalen Snapshot von der Watch via Request/Response an.
+    /// Wartet maximal 3 Sekunden auf eine Antwort.
+    /// Gibt `true` zurück wenn der Snapshot erfolgreich empfangen wurde, sonst `false`.
+    func requestFinalSnapshot() async -> Bool {
+        guard WCSession.default.activationState == .activated,
+              WCSession.default.isReachable else {
+            print("PhoneSessionManager: Watch nicht erreichbar, finaler Snapshot übersprungen.")
+            return false
+        }
+
+        return await withCheckedContinuation { continuation in
+            // Sicherheits-Flag — alle Zugriffe laufen auf dem Main Thread (serialisiert)
+            var resumed = false
+
+            // Timeout nach 3 Sekunden — auf Main Thread serialisiert
+            let timeoutTask = Task {
+                try? await Task.sleep(for: .seconds(3))
+                DispatchQueue.main.async {
+                    guard !resumed else { return }
+                    resumed = true
+                    continuation.resume(returning: false)
+                }
+            }
+
+            WCSession.default.sendMessage(
+                [WatchWorkoutLifecycleKey.requestSnapshot: true],
+                replyHandler: { [weak self] reply in
+                    timeoutTask.cancel()
+                    DispatchQueue.main.async {
+                        guard !resumed else { return }
+                        resumed = true
+                        guard let self else {
+                            continuation.resume(returning: false)
+                            return
+                        }
+                        // Snapshot-Daten in Live-Properties übernehmen
+                        if let hr = reply[WatchHealthKey.currentHR] as? Double {
+                            self.liveCurrentHR = hr
+                        }
+                        if let avg = reply[WatchHealthKey.averageHR] as? Double {
+                            self.liveAverageHR = avg
+                        }
+                        if let max = reply[WatchHealthKey.maxHR] as? Double {
+                            self.liveMaxHR = max
+                        }
+                        if let cal = reply[WatchHealthKey.activeCalories] as? Double {
+                            self.liveActiveCalories = cal
+                        }
+                        continuation.resume(returning: true)
+                    }
+                },
+                errorHandler: { error in
+                    timeoutTask.cancel()
+                    DispatchQueue.main.async {
+                        guard !resumed else { return }
+                        resumed = true
+                        print("PhoneSessionManager: Fehler beim finalen Snapshot: \(error.localizedDescription)")
+                        continuation.resume(returning: false)
+                    }
+                }
+            )
+        }
     }
 
     /// Setzt alle Live-Health-Daten zurück (inkl. Tracking-Flag).

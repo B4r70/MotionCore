@@ -38,9 +38,15 @@ final class WatchSessionManager: NSObject, ObservableObject {
     /// Aktiver WatchWorkoutManager — nil wenn kein Health-Tracking läuft
     @Published private(set) var workoutManager: WatchWorkoutManager?
 
-    // MARK: - Private Properties (Heartbeat)
+    // MARK: - Published State (Live-Timer)
+
+    /// Lokale verstrichene Sekunden (sekündlich inkrementiert, wird via iPhone-State synchronisiert)
+    @Published private(set) var liveElapsedSeconds: TimeInterval = 0
+
+    // MARK: - Private Properties (Heartbeat + lokaler Timer)
 
     private var heartbeatTimer: Timer?
+    private var localTimer: Timer?
 
     // MARK: - Init
 
@@ -100,8 +106,76 @@ extension WatchSessionManager: WCSessionDelegate {
             self.totalExercises = message[WatchStateKey.totalExercises] as? Int ?? self.totalExercises
             self.elapsedTime    = message[WatchStateKey.elapsedTime] as? TimeInterval ?? self.elapsedTime
 
+            // elapsedTime aus iPhone-Nachricht als Basis für den Live-Timer setzen
+            if let elapsed = message[WatchStateKey.elapsedTime] as? TimeInterval {
+                self.liveElapsedSeconds = elapsed
+            }
+
+            // Lokaler Timer je nach Workout-State starten oder stoppen
+            if self.workoutState == .active {
+                self.startLocalTimer()
+            } else {
+                self.stopLocalTimer()
+            }
+
             // Health-Tracking Lifecycle verarbeiten
             self.handleHealthLifecycle(message: message)
+
+            // Self-Healing: Workout aktiv aber kein Health-Tracking läuft → auto-starten
+            // Guard: nicht bei Stop/Discard auslösen (workoutManager ist dort gerade nil gesetzt worden,
+            // aber workoutState noch nicht .idle — Idle kommt als separate Nachricht vom iPhone)
+            let isStoppingNow = message[WatchWorkoutLifecycleKey.stopHealthTracking] != nil
+                             || message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil
+            if self.workoutState != .idle && self.workoutManager == nil && !isStoppingNow {
+                let manager = WatchWorkoutManager()
+                self.workoutManager = manager
+                Task {
+                    let authorized = await manager.requestAuthorization()
+                    if !authorized {
+                        print("WatchSessionManager: HealthKit-Auth verweigert (Self-Healing)")
+                    }
+                    do {
+                        try await manager.startWorkout()
+                        try? await Task.sleep(for: .seconds(2))
+                        await MainActor.run { self.sendHeartbeatUpdate() }
+                    } catch {
+                        print("WatchSessionManager: Self-Healing Workout-Start fehlgeschlagen: \(error.localizedDescription)")
+                        await MainActor.run {
+                            self.workoutManager = nil
+                            self.stopLocalTimer()
+                        }
+                    }
+                }
+                self.startHeartbeatTimer()
+            }
+
+            // liveElapsedSeconds auf 0 zurücksetzen wenn Workout endet
+            if self.workoutState == .idle {
+                self.liveElapsedSeconds = 0
+            }
+        }
+    }
+
+    /// Empfängt Nachrichten vom iPhone mit replyHandler (Request/Response)
+    func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
+        // Snapshot-Anforderung mit sofortiger Antwort via replyHandler
+        if message[WatchWorkoutLifecycleKey.requestSnapshot] != nil {
+            DispatchQueue.main.async { [weak self] in
+                guard let self, let manager = self.workoutManager else {
+                    replyHandler([:])
+                    return
+                }
+                var combined = manager.currentSnapshot()
+                let exerciseSnap = manager.exerciseSnapshot()
+                for (key, value) in exerciseSnap {
+                    combined[key] = value
+                }
+                combined[WatchExerciseSnapshotKey.exerciseSnapshot] = true
+                replyHandler(combined)
+            }
+        } else {
+            // Alle anderen Nachrichten mit leerem Reply quittieren
+            replyHandler([:])
         }
     }
 }
@@ -126,6 +200,9 @@ extension WatchSessionManager {
                 }
                 do {
                     try await manager.startWorkout()
+                    // Initialen Snapshot nach Workout-Start senden (2s Wartezeit für ersten HR-Wert)
+                    try? await Task.sleep(for: .seconds(2))
+                    await MainActor.run { self.sendHeartbeatUpdate() }
                 } catch {
                     print("WatchSessionManager: Workout-Start fehlgeschlagen: \(error.localizedDescription)")
                     await MainActor.run { self.workoutManager = nil }
@@ -189,10 +266,10 @@ extension WatchSessionManager {
 
     // MARK: - Heartbeat Timer
 
-    /// Startet den 60-Sekunden-Heartbeat-Timer für periodische HR-Updates.
+    /// Startet den 5-Sekunden-Heartbeat-Timer für periodische HR-Updates.
     private func startHeartbeatTimer() {
         stopHeartbeatTimer()
-        heartbeatTimer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { [weak self] _ in
+        heartbeatTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
             self?.sendHeartbeatUpdate()
         }
     }
@@ -201,6 +278,20 @@ extension WatchSessionManager {
     private func stopHeartbeatTimer() {
         heartbeatTimer?.invalidate()
         heartbeatTimer = nil
+    }
+
+    /// Startet den lokalen 1-Sekunden-Timer für den Live-Timer.
+    private func startLocalTimer() {
+        stopLocalTimer()
+        localTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.liveElapsedSeconds += 1
+        }
+    }
+
+    /// Stoppt den lokalen Live-Timer.
+    private func stopLocalTimer() {
+        localTimer?.invalidate()
+        localTimer = nil
     }
 
     /// Sendet ein periodisches HR-Update an das iPhone.

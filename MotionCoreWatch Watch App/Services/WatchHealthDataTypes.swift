@@ -52,8 +52,8 @@ enum WatchWorkoutLifecycleKey {
 
 // MARK: - Heartbeat Keys
 
-/// Keys für den optionalen 60-Sekunden-Heartbeat-Timer
+/// Keys für den optionalen 5-Sekunden-Heartbeat-Timer
 enum WatchHeartbeatKey {
-    /// iPhone sendet diesen Key um den 60-Sek-Timer auf der Watch zu aktivieren/deaktivieren
+    /// iPhone sendet diesen Key um den 5-Sek-Timer auf der Watch zu aktivieren/deaktivieren
     static let enableHeartbeat = "enableHeartbeat"
 }

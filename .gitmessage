@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------------------------------------------------------
 # Verwendung von Keywords bei der Ausführung eines >>commit<<:
 #
+# MotionCore:
 # feat:     neues Feature, neue Funktion oder Komponente
 # fix:      Fehlerbehebung, Bugfix
 # chore:    interne Änderung (Build, Farben, Struktur, Config)
@@ -15,6 +16,12 @@
 # sync:     Tages- oder Zwischenstand, mehrere gemischte Änderungen
 # backup:   vollständige Sicherung vor Umbauten oder Refactoring
 # release:  Vorbereitung auf eine neue Version (z. B. v1.2.0)
+# 
+# Claude Tools
+# claude:   Anpassungen in der CLAUDE.md
+# agents:   Anpassungen in den agent-markdowns für "motioncore-planner", "motioncore-developer", "motioncore-quality-gate"
+#           und "motioncore-fitness-expert".
+# skills:   Anpassungen der Skills
 # -------------------------------------------------------------------------------------------------------------------
 # Folgende Scopes können hierfür bspw. verwendet werden:
 #
