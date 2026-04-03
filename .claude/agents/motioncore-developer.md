@@ -64,6 +64,7 @@ Otherwise:
 - Name the problem clearly
 - If needed, add a re-plan note to `tasks/current.md`
 - Stop only if clean continuation is impossible without a user decision
+- After resolving a bug fix, check whether `tasks/lessons.md` should be updated with the root cause
 
 ## Agent Memory
 
