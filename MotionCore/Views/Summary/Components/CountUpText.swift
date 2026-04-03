@@ -28,7 +28,6 @@ struct CountUpText: View {
     // MARK: - State
 
     @State private var displayValue: Int = 0
-    @State private var hasAnimated: Bool = false
 
     // MARK: - Body
 
@@ -36,10 +35,8 @@ struct CountUpText: View {
         Text("\(displayValue)\(suffix)")
             .font(font)
             .contentTransition(.numericText(value: Double(displayValue)))
-            .task {
-                // Animation nur einmal starten
-                guard !hasAnimated else { return }
-                hasAnimated = true
+            .task(id: targetValue) {
+                // Animation neu starten wenn sich der Zielwert ändert
                 await animateCountUp()
             }
     }

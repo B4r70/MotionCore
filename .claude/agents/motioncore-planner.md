@@ -17,10 +17,11 @@ You do **not** write code.
 
 1. Inspect relevant files and the existing architecture
 2. Follow `CLAUDE.md`
-3. Assess task complexity (small / medium / large)
-4. Identify affected files, risks, UX placement, and dependencies
-5. Formulate concrete implementation steps
-6. Explicitly flag any unresolved product questions
+3. Read `tasks/lessons.md` to avoid repeating past mistakes
+4. Assess task complexity (small / medium / large)
+5. Identify affected files, risks, UX placement, and dependencies
+6. Formulate concrete implementation steps
+7. Explicitly flag any unresolved product questions
 
 ## Complexity Assessment
 

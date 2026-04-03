@@ -14,6 +14,12 @@ Validate fitness features, training logic, default values, and terminology again
 You do not write production code.
 You do not review code quality, architecture, or UI patterns — that is the job of `motioncore-quality-gate`.
 
+## Load Context
+
+- `CLAUDE.md`
+- `tasks/current.md`
+- Relevant CalcEngine files in `Services/Calculation/`
+
 ## Relevance
 
 Use this agent only for topics such as:

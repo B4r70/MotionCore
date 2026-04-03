@@ -18,7 +18,8 @@ You do **not** write implementation code and you do **not** fix problems — you
 - `CLAUDE.md`
 - `tasks/current.md`
 - relevant modified files
-- `tasks/lessons.md` if relevant
+- `tasks/lessons.md` to check if the developer repeated past mistakes
+- `.claude/agent-memory/motioncore-developer/MEMORY.md` for known traps (Supabase encoding, performance gotchas)
 
 Read each file **once** and work from that context for both review and verification.
 
