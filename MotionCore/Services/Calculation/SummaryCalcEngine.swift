@@ -236,78 +236,22 @@ struct SummaryCalcEngine {
 
     // MARK: - Streak-Berechnung
 
-    // Alle Trainingstage als sortiertes Set (neueste zuerst)
-    private var allTrainingDays: [Date] {
-        let calendar = Calendar.current
-        let allDates = (
-            cardioSessions.map { $0.date } +
-            strengthSessions.map { $0.date } +
-            outdoorSessions.map { $0.date }
-        )
-
-        // Einzigartige Tage extrahieren und sortieren (neueste zuerst)
-        return Set(allDates.map { calendar.startOfDay(for: $0) })
-            .sorted(by: >)
+    // Alle Trainingstage als sortiertes Array (neueste zuerst)
+    // Sichtbarkeit auf internal erhöht — wird von StreakCalcEngine verwendet
+    var allTrainingDays: [Date] {
+        cardioSessions.map { $0.date } +
+        strengthSessions.map { $0.date } +
+        outdoorSessions.map { $0.date }
     }
 
-    // Aktuelle Trainings-Streak (aufeinanderfolgende Tage mit Training)
-    // Zählt auch wenn das letzte Training gestern war (Streak noch aktiv)
+    // Aktuelle Trainings-Streak — Forwarding an StreakCalcEngine
     var currentStreak: Int {
-        let uniqueDays = allTrainingDays
-
-        guard !uniqueDays.isEmpty else {
-            return 0
-        }
-
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
-
-        // Prüfen ob das letzte Training heute oder gestern war
-        // Wenn nicht, ist die Streak unterbrochen
-        guard let lastTrainingDay = uniqueDays.first,
-              lastTrainingDay == today || lastTrainingDay == yesterday else {
-            return 0
-        }
-
-        // Streak zählen, beginnend vom letzten Trainingstag
-        var streak = 0
-        var expectedDate = lastTrainingDay
-
-        for day in uniqueDays {
-            if day == expectedDate {
-                streak += 1
-                expectedDate = calendar.date(byAdding: .day, value: -1, to: expectedDate)!
-            } else if day < expectedDate {
-                // Lücke gefunden - Streak beenden
-                break
-            }
-        }
-
-        return streak
+        StreakCalcEngine(allTrainingDays: allTrainingDays).currentStreak
     }
 
-    // Längste Trainings-Streak aller Zeiten
+    // Längste Trainings-Streak aller Zeiten — Forwarding an StreakCalcEngine
     var longestStreak: Int {
-        let uniqueDays = allTrainingDays.sorted() // Älteste zuerst für diese Berechnung
-        guard !uniqueDays.isEmpty else { return 0 }
-
-        let calendar = Calendar.current
-        var maxStreak = 1
-        var currentStreakCount = 1
-
-        for i in 1..<uniqueDays.count {
-            let daysBetween = calendar.dateComponents([.day], from: uniqueDays[i-1], to: uniqueDays[i]).day ?? 0
-
-            if daysBetween == 1 {
-                currentStreakCount += 1
-                maxStreak = max(maxStreak, currentStreakCount)
-            } else {
-                currentStreakCount = 1
-            }
-        }
-
-        return maxStreak
+        StreakCalcEngine(allTrainingDays: allTrainingDays).longestStreak
     }
 
     // MARK: - Trainingsfrequenz
@@ -327,7 +271,7 @@ struct SummaryCalcEngine {
 
     // Datum des letzten Workouts
     var lastWorkoutDate: Date? {
-        allTrainingDays.first
+        allTrainingDays.max()
     }
 
     // Tage seit dem letzten Workout

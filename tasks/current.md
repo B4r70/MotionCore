@@ -1,270 +1,387 @@
-# HealthKit Live-Workout-Session (Apple Watch HR + Kalorien)
+# SummaryView Redesign — Gamifiziertes Trainings-Dashboard
 
 **Complexity:** Large
-**Status:** In Implementierung
+**Status:** Implementierung abgeschlossen — bereit für Xcode Build
+**Konzeptdokument:** `Documentation/Concepts/MotionCore_SummaryView_Redesign_Concept.md`
 
 ## Summary
 
-MotionCore startet eine eigene `HKWorkoutSession` auf der Apple Watch, sodass Herzfrequenz und Kalorienverbrauch automatisch gemessen werden. Die Werte erscheinen live auf dem iPhone in der `ActiveWorkoutView`. Nach Beenden steht ein vollständiges `HKWorkout` in Apple Health. Das Feature ist optional — ohne Watch läuft das Workout wie bisher.
+Das SummaryView-Dashboard wird von einer statischen Zahlen-Liste in ein gamifiziertes Trainings-Dashboard verwandelt. Neue Features: XP-System mit Leveln und Rängen, Wochenziel-Ring, 7-Tage-Aktivitäts-Strip mit expandierbarem Monats-Kalender, Trend-Vergleiche, Muskel-Heatmap, Übung der Woche, CountUp-Animationen. Bestehende Cards (Streak, Records, TypeBreakdown, ProgressionSummary) werden beibehalten und teilweise redesigned.
+
+## Geklärte Entscheidungen
+
+| Frage | Entscheidung |
+|---|---|
+| Timeframe-Abhängigkeit | Sektionen 1–3 zeigen aktuelle Woche; ab Sektion 5 folgt alles SummaryTimeframe |
+| Kalender-Expansion | Inline mit `if showCalendar` + `.animation(.easeInOut)` |
+| Kalorien-Trendpfeil | Mehr Kalorien = grüner Pfeil (positiv) |
+| CountUpText | `targetValue: Int`, Volumen gerundet auf ganze kg, Dauer in "min" |
+| Wochenziel-Schnitt | Durchschnitt der letzten 4 Wochen |
+| XP-Gewinne Liste | Letzte 6 Workouts mit ihren XP-Gewinnen |
 
 ## Scope
 
 **Enthalten:**
-- `HKWorkoutSession` + `HKLiveWorkoutBuilder` auf der Watch
-- HealthKit Write-Berechtigungen auf der Watch (Read bleibt wie bisher)
-- Watch→iPhone Kommunikation für HR/Kalorien (Event-basiert + optionaler 60-Sek-Heartbeat)
-- Neues `ExerciseMetrics` SwiftData Model für pro-Übung Health-Daten
-- `LiveHealthCard` UI in der `ActiveWorkoutView`
-- Watch-Connection-Indikator in `ActiveWorkoutStatus`
-- HR-Anzeige auf der Watch
-- Cancel-Alert mit Health-Entscheidung (behalten/verwerfen)
-- Setting für Heartbeat-Timer
-- Nur Krafttraining (`StrengthSession`)
+- 5 neue CalcEngines: `XPCalcEngine`, `StreakCalcEngine`, `TrendCalcEngine`, `ActivityGridCalcEngine`, `WeeklyGoalCalcEngine`
+- 1 neue Types-Datei: `SummaryDashboardTypes.swift`
+- 9 neue View-Dateien: `CountUpText`, `SummaryHeroCard`, `SummaryWeekStrip`, `SummaryActivityCalendar`, `SummaryWeeklyGoalRing`, `SummaryTrendCard`, `SummaryMuscleHeatmapCard`, `SummaryBestExerciseCard`, `SummaryXPCard`
+- Modifikation von 7 bestehenden Dateien: `SummaryView`, `SummaryViewModel`, `SummaryCalcEngine`, `StreakCard`, `SummaryRecordsCard`, `AppSettings`, `WorkoutSettingsView`
+- Wiederverwendung bestehender `MuscleHeatmapCalcEngine`, `MiniSparkline`, `ProgressionCalcEngine`
 
 **Explizit ausgeschlossen:**
-- Cardio/Outdoor Sessions (separates Feature)
-- Historische Backfills
-- HR-basierte Pausenempfehlungen
-- Eigenständiges Watch-Workout-Starten
-- iPhone-seitiges HealthKit-Write
-- Supabase-Schema für ExerciseMetrics (spätere Session)
-- StrengthDetailView-Anzeige von HR pro Übung (spätere Session)
+- Persistierung von XP in SwiftData
+- Localization
+- Änderungen an `TimeframePicker`, `SummaryTimeframe`, `TypeBreakdownCard`, `ProgressionSummaryCard`, `StatisticDonutChart`
+- Parallax- oder Spring-Animationen
+- Supabase-Änderungen
 
-## Getroffene Entscheidungen
+## UX Placement
 
-| # | Frage | Entscheidung |
-|---|---|---|
-| F1 | HealthKit-Auth Zeitpunkt | Automatisch beim ersten Workout-Start (kein Button in Settings) |
-| F2 | ExerciseMetrics bei Exercise-Transition | Ja — bei jedem Übungswechsel für die vorherige Übung speichern |
-| F3 | WatchConnectionState-Logik | Einfach: `isWatchTrackingActive ? .activeTracking : .hidden` |
+- **Tab:** `BaseView.Tab.summary` — erster Tab, Hauptscreen
+- **Layout (von oben nach unten):**
+  1. Hero Card (Begrüßung + XP-Level + Motivationstext)
+  2. 7-Tage-Strip (expandierbar zum Monats-Kalender)
+  3. Wochenziel-Ring + Trend-Stats (side-by-side HStack)
+  4. TimeframePicker (bestehend, verschoben)
+  5. Stat-Grid 2×2 (bestehend, mit CountUp)
+  6. Muskel-Heatmap
+  7. Übung der Woche
+  8. Streak-Card (redesigned)
+  9. XP & Rang Card
+  10. Typ-Aufschlüsselung (bestehend)
+  11. Rekorde (redesigned)
+  12. Progressions-Empfehlungen (bestehend)
 
----
+## Abhängigkeitsgraph
 
-## Affected Files
+```
+SummaryDashboardTypes.swift (keine Abhängigkeiten)
+    |
+    +-- XPCalcEngine.swift
+    +-- StreakCalcEngine.swift
+    +-- TrendCalcEngine.swift
+    +-- ActivityGridCalcEngine.swift
+    +-- WeeklyGoalCalcEngine.swift
+    |
+CountUpText.swift (unabhängig)
+    |
+    +-- SummaryHeroCard.swift
+    +-- SummaryTrendCard.swift
+    +-- SummaryXPCard.swift
+    |
+SummaryWeekStrip.swift, SummaryActivityCalendar.swift
+SummaryWeeklyGoalRing.swift
+SummaryMuscleHeatmapCard.swift (+ bestehender MuscleHeatmapCalcEngine)
+SummaryBestExerciseCard.swift (+ bestehender ProgressionCalcEngine)
+    |
+    v
+SummaryViewModel.swift (orchestriert alle CalcEngines)
+    |
+    v
+SummaryView.swift (rendert alle Cards)
+```
 
-### Neue Dateien (6 Stück inkl. Duplikat)
-
-| Datei | Target | Beschreibung |
-|---|---|---|
-| `MotionCore/Services/Watch/WatchHealthDataTypes.swift` | iPhone | Shared Keys: WatchHealthKey, WatchExerciseSnapshotKey, WatchWorkoutLifecycleKey, WatchHeartbeatKey |
-| `MotionCoreWatch Watch App/Services/WatchHealthDataTypes.swift` | Watch | Identische Kopie (wie WatchMessageKeys.swift) |
-| `MotionCoreWatch Watch App/Services/WatchWorkoutManager.swift` | Watch | HKWorkoutSession + HKLiveWorkoutBuilder, Delegates, Snapshots |
-| `MotionCore/Models/Core/ExerciseMetrics.swift` | iPhone | SwiftData @Model für pro-Übung Health-Metriken |
-| `MotionCore/Views/Workouts/Active/Components/LiveHealthCard.swift` | iPhone | GlassCard: aktuelle HR, Ø HR, max HR, Kalorien |
-| `MotionCore/Services/Calculation/HealthDataCalcEngine.swift` | iPhone | Pure Struct: aggregiert ExerciseMetrics |
-
-### Geänderte Dateien (10 Stück)
-
-| Datei | Änderung |
-|---|---|
-| `MotionCore/App/MotionCoreApp.swift` | ExerciseMetrics.self zum appSchema hinzufügen |
-| `MotionCore/Models/Core/StrengthSession.swift` | Inverse Relationship + safeExerciseMetrics |
-| `MotionCore/Models/Core/AppSettings.swift` | enableLiveHeartbeatTimer: Bool |
-| `MotionCore/Services/Watch/PhoneSessionManager.swift` | @Published Health-Properties, Lifecycle-Methoden, Message-Empfang |
-| `MotionCoreWatch Watch App/Services/WatchSessionManager.swift` | workoutManager Property, Lifecycle-Handling, Heartbeat-Timer |
-| `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` | LiveHealthCard, Transitions, finishWorkout, cancelWorkout |
-| `MotionCore/Views/Workouts/Active/Components/ActiveWorkoutStatus.swift` | watchConnectionState Parameter + ⌚ Icon |
-| `MotionCore/Views/Settings/View/WorkoutSettingsView.swift` | Toggle für Heartbeat-Timer |
-| `MotionCoreWatch Watch App/Views/WatchActiveWorkoutView.swift` | HR-Anzeige unter Timer |
-| `MotionCoreWatch Watch App/WatchBaseView.swift` | HealthKit-Auth Button |
-
-### Xcode-Konfiguration (manuell in Xcode)
-
-- Watch-Target: HealthKit Capability aktivieren
-- Watch-Target: Background Modes → "Workout processing" aktivieren
-- Watch-Target Info.plist: NSHealthShareUsageDescription + NSHealthUpdateUsageDescription
-- `MotionCoreWatch Watch App.entitlements`: com.apple.developer.healthkit = true
-
----
-
-## Risks
+## Risiken
 
 ### Kritisch
-- **SwiftData-Schema-Änderung:** `ExerciseMetrics` als neues @Model + inverse Relationship in `StrengthSession`. Alle Felder haben Default-Werte → CloudKit-kompatibel. Vor Merge auf echtem Gerät mit bestehenden Daten testen.
-- **ActiveWorkoutView Komplexität:** ~2000 Zeilen. Änderungen chirurgisch präzise — nur existierende Funktionen erweitern, keine Umstrukturierung.
+- **Performance:** `XPCalcEngine` iteriert über ALLE Sessions bei jedem vollen `recalculate()`. Bei 500+ Sessions könnte das spürbar sein. Mitigation: XP-Berechnung nur beim vollen `recalculate()`, nicht bei Timeframe-Wechsel.
+- **SummaryViewModel Größe:** Wächst von ~108 auf ~200 Zeilen. Akzeptabel aber nah an Grenze.
 
 ### Mittel
-- **WatchConnectivity-Zuverlässigkeit:** `sendMessage()` nur wenn Watch reachable. Fallback: Workout ohne HR-Daten, kein Fehler.
-- **Nur auf echter Hardware testbar:** HKWorkoutSession liefert im Simulator keine Daten.
-- **Dual-Target Dateisync:** `WatchHealthDataTypes.swift` muss in beiden Targets identisch sein.
+- **MuscleHeatmapMiniSVGView ist `private`** — muss auf `internal` geändert werden (minimaler Eingriff).
+- **CountUp + ScrollView:** Animation könnte bei schnellem Scrollen neu starten. Mitigation: `hasAnimated`-Flag.
+
+### Gering
+- **15 neue Dateien** müssen manuell in Xcode dem MotionCore-Target zugewiesen werden.
+
+## Referenz-Dateien (vor Implementierung lesen)
+
+| Datei | Warum |
+|---|---|
+| `Views/Summary/View/SummaryView.swift` | Aktuelles Layout, Einfügepunkte |
+| `Services/ViewModels/SummaryViewModel.swift` | recalculate()-Pattern, gecachte Properties |
+| `Services/Calculation/SummaryCalcEngine.swift` | Streak-Code der extrahiert wird |
+| `Services/Calculation/MuscleHeatmapCalcEngine.swift` | API für MuscleHeatmapCard |
+| `Views/Workouts/Components/MuscleHeatmapMiniView.swift` | MuscleHeatmapMiniSVGView Signatur |
+| `Views/Progression/Components/MiniSparkline.swift` | API für BestExerciseCard |
+| `Services/Calculation/ProgressionCalcEngine.swift` | API für BestExerciseCard |
+| `Views/Statistics/Workouts/Components/StatisticCard.swift` | StatisticGridCard Signatur |
+| `Models/Core/AppSettings.swift` | UserDefaults-Pattern für weeklyWorkoutGoal |
+| `Views/Settings/View/WorkoutSettingsView.swift` | Einfügepunkt Wochenziel-Section |
+| `Models/Types/MuscleHeatmapTypes.swift` | MuscleHeatData, MuscleHeatmapAnalysis |
+| `Views/Summary/Components/StreakCard.swift` | Bestehendes Layout + Parameter |
+| `Views/Summary/Components/SummaryRecordsCard.swift` | Bestehendes Layout + Parameter |
 
 ---
 
 ## Implementation Steps
 
-### Phase 1: Foundation Watch-seitig (Schritte 1–6)
+### Phase 1: Fundament — Types + CalcEngines
 
-- [x] **1. Watch-Target Capabilities konfigurieren (Xcode manuell)**
-  - HealthKit Capability im Watch-Target aktivieren (MANUELL in Xcode)
-  - Background Modes: "Workout processing" aktivieren (MANUELL in Xcode)
-  - Info.plist: `NSHealthShareUsageDescription` + `NSHealthUpdateUsageDescription` ✅ erstellt
-  - Entitlements: `com.apple.developer.healthkit = true` ✅ hinzugefügt
+- [x] **1. `SummaryDashboardTypes.swift` erstellen**
+  - Pfad: `MotionCore/Models/Types/SummaryDashboardTypes.swift`
+  - Kein SwiftUI-Import, nur Foundation
+  - Typen:
+    - `enum Rank: Int, CaseIterable` — 7 Cases (rookie/athlet/warrior/champion/elite/master/legende) mit `icon: String` und `displayName: String`
+    - `struct XPLevel` — level: Int, totalXP: Int, xpForCurrentLevel: Int, xpRequiredForNextLevel: Int, rank: Rank, progressToNextLevel: Double (0.0–1.0)
+    - `struct WeeklyGoal` — target: Int, current: Int, averageLast4Weeks: Double, isReached: Bool, isAboveAverage: Bool, progressFraction: Double
+    - `struct ActivityDay: Identifiable` — id: Date, date: Date, workoutTypes: [WorkoutType], workoutCount: Int, isToday: Bool
+    - `struct TrendComparison` — currentValue: Double, previousValue: Double, percentageChange: Double, trend: TrendDirection
+    - `enum TrendDirection` — up, down, stable
+    - `enum StreakMilestone: Int, CaseIterable` — 7, 14, 30, 60, 100 mit `icon: String` und `text: String`
+    - `struct XPGain: Identifiable` — id: UUID, description: String, xpAmount: Int, date: Date
+    - `struct MotivationalContext` — greeting: String, motivationalText: String
+  - Geschätzte Größe: ~150 Zeilen
 
-- [x] **2. WatchHealthDataTypes.swift erstellen (BEIDE Targets)**
-  - iPhone-Datei: `MotionCore/Services/Watch/WatchHealthDataTypes.swift` ✅
-  - Watch-Kopie: `MotionCoreWatch Watch App/Services/WatchHealthDataTypes.swift` ✅
-  - Enums: `WatchHealthKey`, `WatchExerciseSnapshotKey`, `WatchWorkoutLifecycleKey`, `WatchHeartbeatKey` ✅
-  - **Target Membership: beide Dateien manuell in Xcode dem richtigen Target zuweisen**
+- [x] **2. `XPCalcEngine.swift` erstellen**
+  - Pfad: `MotionCore/Services/Calculation/XPCalcEngine.swift`
+  - Kein SwiftUI-Import, nur Foundation
+  - `struct XPCalcEngine`
+  - Input: `cardioSessions: [CardioSession]`, `strengthSessions: [StrengthSession]`, `outdoorSessions: [OutdoorSession]`, `weeklyGoal: Int`, `strengthRecordDates: [Date]`
+  - Methoden:
+    - `func calculateTotalXP() -> Int` — iteriert über ALLE Sessions chronologisch
+    - `func calculateLevel(totalXP: Int) -> XPLevel` — Schwelle Level N: `500 * N * (N+1) / 2`, Max-Level 50
+    - `func recentXPGains(lastCount: Int = 6) -> [XPGain]` — letzte N Workouts mit XP-Gewinnen
+    - `func motivationalContext(streak: Int, workoutsThisWeek: Int, weeklyGoal: Int, lastWorkoutDate: Date?) -> MotivationalContext` — Prioritäts-Reihenfolge aus Konzept
+  - XP-Quellen: Basis +100, Dauer +1/min, Streak-Bonus +10×streak (max 500), PR +250, Wochenziel +200, Konsistenz-Bonus +500
+  - Geschätzte Größe: ~250 Zeilen
+  - Abhängigkeit: `SummaryDashboardTypes.swift`
 
-- [x] **3. WatchWorkoutManager.swift erstellen (Watch-Target)**
-  - `final class WatchWorkoutManager: NSObject, ObservableObject` ✅
-  - @Published: `currentHeartRate`, `averageHeartRate`, `maxHeartRate`, `activeCalories`, `isActive` ✅
-  - Methoden: `requestAuthorization()`, `startWorkout()`, `pauseWorkout()`, `resumeWorkout()`, `endWorkout()`, `discardWorkout()`, `markExerciseTransition()`, `currentSnapshot()`, `exerciseSnapshot()` ✅
-  - Delegates: `HKWorkoutSessionDelegate`, `HKLiveWorkoutBuilderDelegate` ✅
-  - Config: `.traditionalStrengthTraining`, `.indoor` ✅
-  - **Target Membership: manuell in Xcode dem Watch-Target zuweisen**
+- [x] **3. `StreakCalcEngine.swift` erstellen**
+  - Pfad: `MotionCore/Services/Calculation/StreakCalcEngine.swift`
+  - Kein SwiftUI-Import, nur Foundation
+  - `struct StreakCalcEngine`
+  - Input: `allTrainingDays: [Date]`
+  - Streak-Logik 1:1 aus `SummaryCalcEngine.swift` extrahiert
+  - Neue Methoden: `func currentMilestone(streak: Int) -> StreakMilestone?`, `func nextMilestone(streak: Int) -> StreakMilestone?`
+  - Geschätzte Größe: ~100 Zeilen
+  - Abhängigkeit: `SummaryDashboardTypes.swift` (StreakMilestone)
 
-- [x] **4. WatchSessionManager.swift — requestAuthorization beim Workout-Start**
-  - Kein Auth-Button in Settings (F1: automatisch) ✅
-  - `startWorkout()`-Handling: Zuerst `workoutManager.requestAuthorization()`, dann `startWorkout()` ✅
-  - Wenn Auth verweigert: Workout läuft ohne HR-Tracking (Fallback), kein Fehler ✅
+- [x] **4. `TrendCalcEngine.swift` erstellen**
+  - Pfad: `MotionCore/Services/Calculation/TrendCalcEngine.swift`
+  - Kein SwiftUI-Import, nur Foundation
+  - `struct TrendCalcEngine`
+  - Input: `cardioSessions: [CardioSession]`, `strengthSessions: [StrengthSession]`, `outdoorSessions: [OutdoorSession]`
+  - Methoden: `volumeTrend() -> TrendComparison`, `caloriesTrend() -> TrendComparison`, `durationTrend() -> TrendComparison`
+  - Diese Woche vs. Vorwoche. Mehr = positiv für alle drei Metriken.
+  - Geschätzte Größe: ~120 Zeilen
+  - Abhängigkeit: `SummaryDashboardTypes.swift` (TrendComparison, TrendDirection)
 
-- [x] **5. WatchSessionManager.swift erweitern — workoutManager + Lifecycle (inkl. Auto-Auth)**
-  - Neue Property: `@Published private(set) var workoutManager: WatchWorkoutManager?` ✅
-  - Heartbeat-Timer Properties + Methoden ✅
-  - In `didReceiveMessage`: Lifecycle-Keys verarbeiten (start/stop/pause/resume/transition/snapshot/discard/heartbeat) ✅
+- [x] **5. `ActivityGridCalcEngine.swift` erstellen**
+  - Pfad: `MotionCore/Services/Calculation/ActivityGridCalcEngine.swift`
+  - Kein SwiftUI-Import, nur Foundation
+  - `struct ActivityGridCalcEngine`
+  - Input: Alle 3 Session-Typen
+  - Methoden: `currentWeekStrip() -> [ActivityDay]`, `monthGrid(for month: Date) -> [[ActivityDay?]]`, `monthStats(for month: Date) -> (trainingDays: Int, averagePerWeek: Double)`
+  - Geschätzte Größe: ~150 Zeilen
+  - Abhängigkeit: `SummaryDashboardTypes.swift` (ActivityDay)
 
-- [ ] **6. BUILD + DEVICE TEST Phase 1**
-  - HealthKit-Auth genehmigen, HR-Samples in Console prüfen
+- [x] **6. `WeeklyGoalCalcEngine.swift` erstellen**
+  - Pfad: `MotionCore/Services/Calculation/WeeklyGoalCalcEngine.swift`
+  - Kein SwiftUI-Import, nur Foundation
+  - `struct WeeklyGoalCalcEngine`
+  - Input: Alle 3 Session-Typen + `weeklyGoal: Int`
+  - Methoden: `currentWeekGoal() -> WeeklyGoal`, `consecutiveWeeksGoalReached() -> Int`
+  - Durchschnitt = letzte 4 Wochen
+  - Geschätzte Größe: ~80 Zeilen
+  - Abhängigkeit: `SummaryDashboardTypes.swift` (WeeklyGoal)
 
-### Phase 2: Kommunikation Watch → iPhone (Schritte 7–9)
+### Phase 2: Shared Component
 
-- [x] **7. PhoneSessionManager.swift erweitern**
-  - @Published: `liveCurrentHR`, `liveAverageHR`, `liveMaxHR`, `liveActiveCalories`, `isWatchTrackingActive`, `lastExerciseSnapshot` ✅
-  - Struct `ExerciseSnapshotData` (avgHR, minHR, maxHR, calories, durationSeconds) ✅
-  - Lifecycle-Methoden: alle 9 Methoden implementiert ✅
-  - `didReceiveMessage` erweitern: WatchHealthKey + WatchExerciseSnapshotKey verarbeitet ✅
-  - `PhoneSessionManager` jetzt `ObservableObject` (war vorher kein ObservableObject) ✅
+- [x] **7. `CountUpText.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/CountUpText.swift`
+  - `struct CountUpText: View`
+  - Parameter: `targetValue: Int`, `duration: Double = 0.8`, `font: Font = .system(size: 26, weight: .bold, design: .rounded)`, `suffix: String = ""`
+  - `@State private var displayValue: Int = 0`, `@State private var hasAnimated = false`
+  - Animation via `.task {}` + SwiftUI-native Interpolation — KEIN `Timer.scheduledTimer`
+  - Werte > 10.000: Animation startet bei 80% des Zielwerts
+  - Geschätzte Größe: ~80 Zeilen
 
-- [x] **8. WatchSessionManager Snapshot-Senden prüfen**
-  - Combined-Snapshot (currentSnapshot + exerciseSnapshot) korrekt zusammengebaut ✅
-  - `exerciseSnapshot`-Marker-Key für iPhone-seitige Erkennung gesetzt ✅
+### Phase 3: Neue Cards
 
-- [ ] **9. BUILD + DEVICE TEST Phase 2**
-  - Set abschließen → Snapshot in Console auf iPhone
+- [x] **8. `SummaryHeroCard.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryHeroCard.swift`
+  - Parameter: `motivationalContext: MotivationalContext`, `xpLevel: XPLevel`
+  - Inhalt: Tageszeit-Begrüßung + Rang-Badge, Motivationstext, kompakter XP-Fortschrittsbalken
+  - Design: `.glassCard()` + 2px Gradient-Akzent oben (`#C9E6FF` → `#9BD2FF`)
+  - Geschätzte Größe: ~120 Zeilen
 
-### Phase 3: iPhone Model + UI (Schritte 10–15)
+- [x] **9. `SummaryWeekStrip.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryWeekStrip.swift`
+  - Parameter: `days: [ActivityDay]`, `showCalendar: Binding<Bool>`
+  - 7 Kreise à 36pt, 8pt Spacing, Buchstaben Mo–So
+  - Heute: pulsierender Rand (einmalig beim Erscheinen)
+  - Kein eigenes `.glassCard()` — kompakte eingebettete Zeile
+  - Geschätzte Größe: ~100 Zeilen
 
-- [x] **10. ExerciseMetrics.swift erstellen (iPhone-Target)**
-  - `@Model final class ExerciseMetrics`
-  - Properties mit Default-Werten: exerciseGroupKey, exerciseNameSnapshot, avgHeartRate, minHeartRate, maxHeartRate, activeCalories, durationSeconds
-  - `@Relationship(deleteRule: .nullify) var session: StrengthSession?`
+- [x] **10. `SummaryWeeklyGoalRing.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryWeeklyGoalRing.swift`
+  - Parameter: `goal: WeeklyGoal`
+  - Animierter Ring (Circle + trim), Zahltext innen, Kontexttext darunter
+  - `.glassCard()`
+  - Geschätzte Größe: ~100 Zeilen
 
-- [x] **11. StrengthSession.swift erweitern — Inverse Relationship**
-  - `@Relationship(deleteRule: .cascade, inverse: \ExerciseMetrics.session) var exerciseMetrics: [ExerciseMetrics]? = []`
-  - `var safeExerciseMetrics: [ExerciseMetrics] { exerciseMetrics ?? [] }`
+- [x] **11. `SummaryTrendCard.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryTrendCard.swift`
+  - Parameter: `volumeTrend: TrendComparison`, `caloriesTrend: TrendComparison`, `durationTrend: TrendComparison`
+  - 3 Zeilen: Icon + CountUp-Wert + Trendpfeil + Prozent
+  - Volumen in kg (gerundet), Kalorien in kcal, Dauer in "min"
+  - `.glassCard()`
+  - Geschätzte Größe: ~120 Zeilen
 
-- [x] **12. MotionCoreApp.swift — ExerciseMetrics zum Schema**
-  - `ExerciseMetrics.self` zum appSchema Array hinzugefügt (nach ExerciseSet.self)
+- [x] **12. `SummaryMuscleHeatmapCard.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryMuscleHeatmapCard.swift`
+  - Parameter: `analysis: MuscleHeatmapAnalysis`
+  - Header "Trainierte Muskeln", `MuscleHeatmapMiniSVGView` (internal gemacht), Top-2-3-Muskelgruppen-Tags
+  - Nur anzeigen wenn `analysis.totalSets > 0`
+  - `.glassCard()`
+  - Geschätzte Größe: ~100 Zeilen
 
-- [x] **13. HealthDataCalcEngine.swift erstellen (iPhone-Target)**
-  - `struct HealthDataCalcEngine` mit `sessionSummary(from:) -> SessionHealthSummary`
-  - `struct SessionHealthSummary` (avgHR, maxHR, totalCalories, totalDuration)
+- [x] **13. `SummaryBestExerciseCard.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryBestExerciseCard.swift`
+  - Parameter: `analysis: ProgressionAnalysis`, `trendPoints: [TrendPoint]`
+  - Header "⭐ Übung der Woche", Übungsname, Progressions-Info, MiniSparkline
+  - Nur anzeigen wenn Progressionsdaten vorhanden
+  - `.glassCard()`
+  - Geschätzte Größe: ~80 Zeilen
 
-- [x] **14. LiveHealthCard.swift erstellen (iPhone-Target)**
-  - GlassCard mit `currentHR`, `averageHR`, `maxHR`, `activeCalories`
-  - Herz-Icon rot, Flamme-Icon für Kalorien
-  - Nur anzeigen wenn mindestens ein Wert > 0
-  - Preview mit Beispieldaten
+- [x] **14. `SummaryXPCard.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryXPCard.swift`
+  - Parameter: `xpLevel: XPLevel`, `recentGains: [XPGain]`
+  - Rang-Badge groß, Level-Text, animierter Fortschrittsbalken, letzte 6 XP-Gewinne
+  - `.glassCard()`
+  - Geschätzte Größe: ~130 Zeilen
 
-- [x] **15. ActiveWorkoutStatus.swift erweitern — Watch-Indikator**
-  - Enum `WatchConnectionState: hidden, connected, activeTracking, disconnected`
-  - Parameter `watchConnectionState: WatchConnectionState = .hidden`
-  - ⌚ Icon links neben Timer: grün (activeTracking, Puls-Animation), blau (connected), grau (disconnected), kein Icon (hidden)
-  - Bestehende Previews brechen nicht (Default = .hidden)
+- [x] **15. `SummaryActivityCalendar.swift` erstellen**
+  - Pfad: `MotionCore/Views/Summary/Components/SummaryActivityCalendar.swift`
+  - Parameter: `monthGrid: [[ActivityDay?]]`, `displayedMonth: Binding<Date>`, `stats: (trainingDays: Int, averagePerWeek: Double)`
+  - Kalender-Grid (7 Spalten), farbcodierte Tage, Monats-Navigation, Statistik-Zeile
+  - Farben: kein Training → transparent, 1 → `#C9E6FF`, 2 → `#9BD2FF`, 3+ → `#3B82F6`
+  - `.glassCard()`
+  - Geschätzte Größe: ~150 Zeilen
 
-### Phase 4: Integration + Settings (Schritte 16–19)
+### Phase 4: Integration
 
-- [x] **16. AppSettings.swift erweitern**
-  - `@Published var enableLiveHeartbeatTimer: Bool`
-  - UserDefaults-Key: `"workout.enableLiveHeartbeatTimer"`, Default: `false`
+- [x] **16. `AppSettings.swift` erweitern**
+  - Neues Property: `@Published var weeklyWorkoutGoal: Int`
+  - Key: `"workout.weeklyWorkoutGoal"`, Default: 4, Range 1–7 (Validierung via Stepper)
 
-- [x] **17. WorkoutSettingsView.swift erweitern**
-  - Neue Section "Apple Watch Health-Tracking"
-  - Toggle mit Footer-Erklärung
+- [x] **17. `WorkoutSettingsView.swift` erweitern**
+  - Neue Section "Wochenziel" mit `Stepper("Workouts pro Woche: \(appSettings.weeklyWorkoutGoal)", value: $appSettings.weeklyWorkoutGoal, in: 1...7)`
+  - ~5 Zeilen Änderung
 
-- [x] **18. ActiveWorkoutView.swift erweitern — volle Integration**
-  - **ACHTUNG: Minimale, chirurgische Änderungen — 8 Einfügepunkte:**
-    1. `onAppear`: Health-Tracking starten + ggf. Heartbeat aktivieren ✅
-    2. `onChange(of: selectedExerciseKey)`: ExerciseMetrics vorherige Übung speichern + Transition senden ✅ (oldValue ergänzt)
-    3. `scrollContent`: LiveHealthCard vor heroCard (wenn isWatchTrackingActive) ✅
-    4. `ActiveWorkoutStatus`-Aufruf: watchConnectionState Parameter ✅
-    5. `completeSet()`: `sendRequestSnapshot()` nach Haptic, vor Superset-Branch ✅
-    6. `finishWorkout()`: Health-Daten in Session + saveCurrentExerciseMetrics() + sendStopHealthTracking() ✅
-    7. `cancelWorkout()`: showCancelHealthAlert wenn isWatchTrackingActive ✅
-    8. Kein toggleTimer-Einfügepunkt nötig (Pause/Resume läuft via WatchSessionManager)
-  - Neuer @ObservedObject: `phoneSession = PhoneSessionManager.shared` ✅
-  - Neuer @State: `showCancelHealthAlert: Bool = false` ✅
-  - Neuer Alert: 3 Buttons (behalten / verwerfen / abbrechen) ✅
-  - Neue Funktion: `saveCurrentExerciseMetrics(forKey:)` ✅
+- [x] **18. `SummaryCalcEngine.swift` — Streak extrahieren**
+  - `allTrainingDays` von `private` auf `internal`
+  - `currentStreak` und `longestStreak` zu Forwarding-Properties → `StreakCalcEngine`
+  - Originalen Streak-Code entfernen
+  - Rückwärtskompatible API bleibt erhalten
 
-- [ ] **19. BUILD + DEVICE TEST Phase 4**
-  - Kompletter Flow: Start → Sätze → Pause → Finish → Apple Health prüfen
+- [x] **19. `MuscleHeatmapMiniView.swift` — Access-Level fix**
+  - `MuscleHeatmapMiniSVGView` von `private` auf `internal`
+  - Neuen Initializer mit `svgStylesCSS: String` hinzufügen (bestehender `trainedRegionIds`-Initializer bleibt)
+  - ~10 Zeilen Änderung
 
-### Phase 5: Polish (Schritte 20–22)
+- [x] **20. `SummaryViewModel.swift` erweitern**
+  - Neue gecachte Properties (zeitraum-unabhängig):
+    - `xpLevel: XPLevel`, `recentXPGains: [XPGain]`, `motivationalContext: MotivationalContext`
+    - `currentStreakMilestone: StreakMilestone?`, `nextStreakMilestone: StreakMilestone?`
+    - `weeklyGoal: WeeklyGoal`, `currentWeekStrip: [ActivityDay]`
+    - `volumeTrend: TrendComparison`, `caloriesTrend: TrendComparison`, `durationTrend: TrendComparison`
+    - `bestExerciseAnalysis: ProgressionAnalysis?`, `bestExerciseTrendPoints: [TrendPoint]`
+  - Neue gecachte Properties (timeframe-gefiltert): `filteredHeatmapAnalysis: MuscleHeatmapAnalysis?`
+  - `recalculate()` bekommt Parameter `weeklyGoal: Int`
+  - Kalender-Methode: `func calendarData(for month: Date) -> (grid: [[ActivityDay?]], stats: (Int, Double))`
+  - Geschätzte Endgröße: ~200 Zeilen
 
-- [x] **20. WatchActiveWorkoutView.swift — HR-Anzeige**
-  - Herz-Icon (rot) + aktuelle BPM unter Timer (wenn > 0)
+- [x] **21. `StreakCard.swift` redesignen**
+  - Neue Parameter (mit Default `nil`): `streakMilestone: StreakMilestone? = nil`, `nextMilestone: StreakMilestone? = nil`
+  - Milestone-Badge-Bereich wenn vorhanden
+  - Flammen-Glow-Animation bei aktiver Streak (einmalig)
 
-- [ ] **21. Cancel-Alert testen**
-  - Beide Pfade auf echtem Gerät testen
+- [x] **22. `SummaryRecordsCard.swift` redesignen**
+  - Neuer Parameter: `recentRecordDates: [Date] = []`
+  - "Neu!"-Badge (Capsule, .orange) bei Rekord aus den letzten 7 Tagen
+  - Kompakteres Layout
 
-- [ ] **22. Fallback testen**
-  - Ohne Watch → kein Fehler, kein LiveHealthCard, kein ⌚ Icon
+- [x] **23. `SummaryView.swift` — neues Layout**
+  - Neue `@State`: `showCalendar: Bool = false`, `displayedMonth: Date = Date()`
+  - Neues Layout: alle 12 Sektionen in ScrollView VStack(spacing: 20)
+  - `.task {}` mit `weeklyGoal: appSettings.weeklyWorkoutGoal`
+  - `.onChange(of: appSettings.weeklyWorkoutGoal)` für Live-Update
+  - `.onChange(of: displayedMonth)` für Kalender-Daten
+  - Geschätzte Endgröße: ~120 Zeilen
 
----
+### Phase 5: Build + Verifikation
 
-## Manual Verification
-
-- [ ] Xcode Build (`Cmd+B`) — beide Targets kompilieren fehlerfrei
-- [ ] Watch-App: HealthKit-Auth Button sichtbar, Auth-Dialog erscheint
-- [ ] Watch-App: HR-Anzeige während Workout sichtbar
-- [ ] iPhone: LiveHealthCard erscheint wenn Watch-Tracking aktiv
-- [ ] iPhone: ⌚ grünes Icon in ActiveWorkoutStatus
-- [ ] iPhone: completeSet → Snapshot empfangen → LiveHealthCard aktualisiert
-- [ ] iPhone: Exercise-Wechsel → Transition gesendet + ExerciseMetrics gespeichert
-- [ ] iPhone: Pause → Watch pausiert HR-Tracking
-- [ ] iPhone: finishWorkout → HKWorkout in Apple Health, HR/Kalorien in StrengthSession
-- [ ] iPhone: cancelWorkout → Alert mit 3 Optionen (wenn Watch aktiv)
-- [ ] iPhone: Ohne Watch → Workout normal, kein Fehler
-- [ ] WorkoutSettingsView: Toggle sichtbar und funktional
-- [ ] Bestehende ActiveWorkoutStatus Previews brechen nicht
-- [ ] ExerciseMetrics werden in SwiftData gespeichert
+- [ ] **24. Xcode Build (`Cmd+B`)** — alle Compile-Errors beheben, Target Membership prüfen
+- [ ] **25. UI-Feinschliff** — Spacing/Padding, CountUp-Timing, Kalender-Animation
 
 ---
 
 ## Fortschritt
 
-**Datum:** 31.03.2026
+**Datum:** 2026-04-02
 
-**Abgeschlossene Schritte:** 1–5 (Phase 1) + 7–8 (Phase 2) + 10–15 (Phase 3) + 16–18 (Phase 4) + 20 (Phase 5)
+**Abgeschlossene Schritte:** 1–23 (Phasen 1–4 vollständig)
 
-**Geänderte / neue Dateien:**
-- `MotionCoreWatch Watch App/MotionCoreWatch Watch App.entitlements` — `com.apple.developer.healthkit` hinzugefügt
-- `MotionCoreWatch Watch App/Info.plist` — NEU erstellt mit NSHealthShare/UpdateUsageDescription
-- `MotionCore/Services/Watch/WatchHealthDataTypes.swift` — NEU (iPhone-Target)
-- `MotionCoreWatch Watch App/Services/WatchHealthDataTypes.swift` — NEU (Watch-Target, identische Kopie)
-- `MotionCoreWatch Watch App/Services/WatchWorkoutManager.swift` — NEU (Watch-Target)
-- `MotionCoreWatch Watch App/Services/WatchSessionManager.swift` — erweitert: workoutManager, heartbeatTimer, handleHealthLifecycle
-- `MotionCore/Services/Watch/PhoneSessionManager.swift` — erweitert: ObservableObject, @Published Health-Properties, ExerciseSnapshotData, Lifecycle-Methoden, didReceiveMessage
-- `MotionCore/Models/Core/ExerciseMetrics.swift` — NEU (iPhone-Target), @Model mit 7 Properties
-- `MotionCore/Models/Core/StrengthSession.swift` — Inverse Relationship + safeExerciseMetrics hinzugefügt
-- `MotionCore/App/MotionCoreApp.swift` — ExerciseMetrics.self zum appSchema hinzugefügt
-- `MotionCore/Services/Calculation/HealthDataCalcEngine.swift` — NEU (iPhone-Target), SessionHealthSummary + HealthDataCalcEngine
-- `MotionCore/Views/Workouts/Active/Components/LiveHealthCard.swift` — NEU (iPhone-Target), GlassCard HR + Kalorien
-- `MotionCore/Views/Workouts/Active/Components/ActiveWorkoutStatus.swift` — WatchConnectionState Enum + watchIndicator + Puls-Animation
-- `MotionCore/Models/Core/AppSettings.swift` — enableLiveHeartbeatTimer Property + init
-- `MotionCore/Views/Settings/View/WorkoutSettingsView.swift` — Section "Apple Watch Health-Tracking" + Toggle
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — @ObservedObject phoneSession, showCancelHealthAlert, alle 8 Einfügepunkte, saveCurrentExerciseMetrics(forKey:), Cancel-Health-Alert
+**Geänderte/erstellte Dateien:**
 
-**Ausstehende manuelle Schritte (Xcode):**
-1. Watch-Target → Signing & Capabilities → HealthKit Capability hinzufügen
-2. Watch-Target → Signing & Capabilities → Background Modes → "Workout processing" aktivieren
-3. `WatchHealthDataTypes.swift` (iPhone-Target): Target Membership auf MotionCore setzen
-4. `WatchHealthDataTypes.swift` (Watch-Target): Target Membership auf MotionCoreWatch Watch App setzen
-5. `WatchWorkoutManager.swift`: Target Membership auf MotionCoreWatch Watch App setzen
-6. `ExerciseMetrics.swift`: Target Membership auf MotionCore setzen
-7. `HealthDataCalcEngine.swift`: Target Membership auf MotionCore setzen
-8. `LiveHealthCard.swift`: Target Membership auf MotionCore setzen
+Neu erstellt:
+- `MotionCore/Models/Types/SummaryDashboardTypes.swift`
+- `MotionCore/Services/Calculation/XPCalcEngine.swift`
+- `MotionCore/Services/Calculation/StreakCalcEngine.swift`
+- `MotionCore/Services/Calculation/TrendCalcEngine.swift`
+- `MotionCore/Services/Calculation/ActivityGridCalcEngine.swift`
+- `MotionCore/Services/Calculation/WeeklyGoalCalcEngine.swift`
+- `MotionCore/Views/Summary/Components/CountUpText.swift`
+- `MotionCore/Views/Summary/Components/SummaryHeroCard.swift`
+- `MotionCore/Views/Summary/Components/SummaryWeekStrip.swift`
+- `MotionCore/Views/Summary/Components/SummaryWeeklyGoalRing.swift`
+- `MotionCore/Views/Summary/Components/SummaryTrendCard.swift`
+- `MotionCore/Views/Summary/Components/SummaryMuscleHeatmapCard.swift`
+- `MotionCore/Views/Summary/Components/SummaryBestExerciseCard.swift`
+- `MotionCore/Views/Summary/Components/SummaryXPCard.swift`
+- `MotionCore/Views/Summary/Components/SummaryActivityCalendar.swift`
 
-**Offene Schritte:** 6 (Build+Test Phase 1), 9 (Build+Test Phase 2), 19 (Build+Test Phase 4), 21–22 (Phase 5)
+Geändert:
+- `MotionCore/Models/Core/AppSettings.swift` — weeklyWorkoutGoal hinzugefügt
+- `MotionCore/Views/Settings/View/WorkoutSettingsView.swift` — Wochenziel-Section
+- `MotionCore/Services/Calculation/SummaryCalcEngine.swift` — Streak extrahiert, allTrainingDays internal
+- `MotionCore/Views/Workouts/Components/MuscleHeatmapMiniView.swift` — internal + neuer Initializer
+- `MotionCore/Services/ViewModels/SummaryViewModel.swift` — vollständig erweitert
+- `MotionCore/Views/Summary/Components/StreakCard.swift` — Milestone-Badge, Glow
+- `MotionCore/Views/Summary/Components/SummaryRecordsCard.swift` — Neu!-Badge
+- `MotionCore/Views/Summary/Components/SummaryRecordRow.swift` — isNew-Parameter
+- `MotionCore/Views/Summary/View/SummaryView.swift` — neues Layout
+
+**Offene Punkte:**
+- Schritt 24: Xcode Build (Cmd+B) — muss manuell in Xcode ausgeführt werden
+- Schritt 25: UI-Feinschliff nach Build-Verifikation
+- Alle 15 neuen Dateien müssen in Xcode dem MotionCore-Target manuell zugewiesen werden
+
+---
+
+## Manual Verification Checklist
+
+- [ ] Xcode Build kompiliert fehlerfrei
+- [ ] SummaryView Preview: alle 12 Sektionen mit PreviewData sichtbar
+- [ ] SummaryView Preview: EmptyState bei keinen Sessions
+- [ ] HeroCard: Tageszeit-Begrüßung korrekt (Morgen/Tag/Abend)
+- [ ] HeroCard: Rang-Badge und XP-Level angezeigt
+- [ ] WeekStrip: 7 Tage farbcodiert, heute markiert
+- [ ] WeekStrip Tap: Kalender expandiert inline mit Animation
+- [ ] ActivityCalendar: Monatswechsel funktioniert
+- [ ] WeeklyGoalRing: Ring-Animation beim Erscheinen
+- [ ] WeeklyGoalRing: Kontexttext korrekt (unter/über Schnitt)
+- [ ] TrendCard: 3 Zeilen mit CountUp und Trendpfeil
+- [ ] TrendCard: Kalorien-Anstieg = grüner Pfeil
+- [ ] StatGrid: CountUp-Animation spielt einmal beim Erscheinen
+- [ ] MuscleHeatmapCard: Silhouette farbig (nur bei Kraft-Sessions)
+- [ ] BestExerciseCard: Sparkline sichtbar (nur bei Progressionsdaten)
+- [ ] StreakCard: Milestone-Badge bei Streak ≥ 7
+- [ ] XPCard: Level + Fortschrittsbalken + letzte 6 Gains
+- [ ] RecordsCard: "Neu!"-Badge bei Rekord aus letzten 7 Tagen
+- [ ] TimeframePicker: Wechsel aktualisiert Sektionen 5+
+- [ ] WorkoutSettingsView: Wochenziel-Stepper 1–7 funktional
+- [ ] Wochenziel-Änderung: WeeklyGoalRing aktualisiert live
+- [ ] Scrolling-Performance: Kein sichtbarer Lag

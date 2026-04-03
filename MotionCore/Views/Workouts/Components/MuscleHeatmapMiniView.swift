@@ -65,9 +65,25 @@ struct MuscleHeatmapMiniView: View {
 
 // MARK: - Mini SVG WebView (nicht-interaktiv)
 
-private struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
+// Access-Level auf internal geändert damit SummaryMuscleHeatmapCard diesen View nutzen kann
+struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
 
-    let trainedRegionIds: Set<String>
+    // Variante 1: Einfache trainierte Regionen (gelbe Einfärbung)
+    private let trainedRegionIds: Set<String>?
+    // Variante 2: Vollständige CSS-Styles aus MuscleHeatmapAnalysis (Heatmap-Farbskala)
+    private let svgStylesCSS: String?
+
+    // Initializer für einfache binäre Einfärbung (bestehend)
+    init(trainedRegionIds: Set<String>) {
+        self.trainedRegionIds = trainedRegionIds
+        self.svgStylesCSS = nil
+    }
+
+    // Initializer für volle Heatmap-CSS aus MuscleHeatmapAnalysis
+    init(svgStylesCSS: String) {
+        self.trainedRegionIds = nil
+        self.svgStylesCSS = svgStylesCSS
+    }
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView(frame: .zero)
@@ -95,9 +111,17 @@ private struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
     }
 
     private func buildHTML(svgContent: String) -> String {
-        let css = trainedRegionIds.map { regionId in
-            "#\(regionId) path { fill: #F59E0B !important; }"
-        }.joined(separator: "\n")
+        // CSS aus übergebenem String oder aus trainedRegionIds generieren
+        let css: String
+        if let styles = svgStylesCSS {
+            css = styles
+        } else if let regions = trainedRegionIds {
+            css = regions.map { regionId in
+                "#\(regionId) path { fill: #F59E0B !important; }"
+            }.joined(separator: "\n")
+        } else {
+            css = ""
+        }
 
         return """
         <!DOCTYPE html>

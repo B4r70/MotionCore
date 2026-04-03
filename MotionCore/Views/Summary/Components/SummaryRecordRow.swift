@@ -14,36 +14,52 @@ import SwiftUI
 
 // MARK: - Summary Record Row
 
-// Einzelne Zeile für einen Rekord
+// Einzelne Zeile für einen Rekord.
+// isNew: zeigt "Neu!"-Badge wenn true (Rekord aus den letzten 7 Tagen).
 struct SummaryRecordRow: View {
     let icon: String
     let iconColor: Color
     let title: String
     let value: String
     let subtitle: String
+    var isNew: Bool = false
 
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.title2)
                 .foregroundStyle(iconColor)
-                .frame(width: 32)
+                .frame(width: 24)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    Text(title)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
 
-                Text(value)
-                    .font(.headline)
+                    // "Neu!"-Badge bei frischem Rekord
+                    if isNew {
+                        Text("Neu!")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.orange)
+                            .clipShape(Capsule())
+                    }
+                }
 
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .foregroundStyle(.secondary)
             }
 
             Spacer()
+
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.bold)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 2)
     }
 }

@@ -139,6 +139,15 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // MARK: - Wochenziel
+
+    // Wochenziel: Anzahl Workouts pro Woche (Range 1–7, Default: 4)
+    @Published var weeklyWorkoutGoal: Int {
+        didSet {
+            UserDefaults.standard.set(weeklyWorkoutGoal, forKey: "workout.weeklyWorkoutGoal")
+        }
+    }
+
     // MARK: - Apple Watch Health-Tracking
 
     // Watch: Live-Herzfrequenz alle 60 Sekunden senden (Default: false)
@@ -348,6 +357,9 @@ class AppSettings: ObservableObject {
         } else {
             userActivityLevel = .moderatelyActive // Default
         }
+
+        // Wochenziel: Workouts pro Woche (Default: 4)
+        weeklyWorkoutGoal = defaults.object(forKey: "workout.weeklyWorkoutGoal") as? Int ?? 4
 
         // Watch: Live-Herzfrequenz-Timer (Default: false)
         enableLiveHeartbeatTimer = defaults.bool(forKey: "workout.enableLiveHeartbeatTimer")

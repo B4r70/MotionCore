@@ -99,6 +99,20 @@ Sobald ein `CodingKeys`-Enum im Encodable-Struct vorhanden ist, wird `.convertTo
 - `RecordsViewModel` → `RecordView` — getrennte `recalculateStrength` + `recalculateCardio`-Methoden
 - Xcode 16: `PBXFileSystemSynchronizedBuildFileExceptionSet` → neue Swift-Dateien im Ordner werden automatisch erkannt, kein manuelles pbxproj-Editing nötig
 
+## SummaryView Redesign (abgeschlossen 02.04.2026)
+- 5 neue CalcEngines: `XPCalcEngine`, `StreakCalcEngine`, `TrendCalcEngine`, `ActivityGridCalcEngine`, `WeeklyGoalCalcEngine`
+- 1 neue Types-Datei: `SummaryDashboardTypes.swift` (Rank, XPLevel, WeeklyGoal, ActivityDay, TrendComparison, StreakMilestone, XPGain, MotivationalContext)
+- 9 neue View-Komponenten in `Views/Summary/Components/`: CountUpText, SummaryHeroCard, SummaryWeekStrip, SummaryWeeklyGoalRing, SummaryTrendCard, SummaryMuscleHeatmapCard, SummaryBestExerciseCard, SummaryXPCard, SummaryActivityCalendar
+- `SummaryViewModel` erweitert: `recalculate` bekommt `weeklyGoalTarget: Int = 4`, neue gecachte Properties für XP/Streak/Trends
+- `SummaryCalcEngine.allTrainingDays` auf internal gehoben (vorher private), Streak-Logik zu `StreakCalcEngine` forwarded
+- `MuscleHeatmapMiniSVGView` von `private` auf `internal` geändert, zweiter Initializer `init(svgStylesCSS: String)` hinzugefügt
+- `AppSettings.weeklyWorkoutGoal: Int` hinzugefügt (Key: "workout.weeklyWorkoutGoal", Default: 4)
+- `WorkoutSettingsView`: neue Section "Wochenziel" mit Stepper 1–7
+- `StreakCard` erweitert: optionale `streakMilestone` + `nextMilestone` Parameter
+- `SummaryRecordsCard`/`SummaryRecordRow` erweitert: optionaler `isNew: Bool = false` Parameter
+- CountUpText: Animation via `.task {}` + `Task.sleep`, kein Timer. `hasAnimated`-Flag verhindert Re-Animation.
+- Previews die `@Binding` brauchen: immer als Wrapper-Struct implementieren (nicht `@State var` direkt in `#Preview`)
+
 ## Bekannte Einschränkungen (Supabase Sync)
 - `exerciseUUIDSnapshot: String` ist KEIN UUID-Typ (Int-Hash-String) → Supabase-Spalte `exercise_uuid` muss TEXT sein
 - Supabase: nur Anon-Key – kein User-Auth. `user_id` nullable, RLS deaktiviert

@@ -132,6 +132,19 @@ struct WorkoutSettingsView: View {
                 }
             }
 
+            // MARK: - Wochenziel
+
+            Section(
+                header: Text("Wochenziel"),
+                footer: Text("Legt fest, wie viele Workouts pro Woche du anstrebenst. Wird im Dashboard als Ring angezeigt.")
+            ) {
+                Stepper(
+                    "Workouts pro Woche: \(appSettings.weeklyWorkoutGoal)",
+                    value: $appSettings.weeklyWorkoutGoal,
+                    in: 1...7
+                )
+            }
+
             // MARK: - Smart Plan-Update
 
             Section("Smart Plan-Update") {

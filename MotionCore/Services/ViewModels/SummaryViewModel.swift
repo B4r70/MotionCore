@@ -28,6 +28,35 @@ final class SummaryViewModel {
     private(set) var longestStreak: Int = 0
     private(set) var progressionAnalyses: [ProgressionAnalysis] = []
 
+    // MARK: - Gecachte Werte (Dashboard — zeitraum-unabhängig)
+
+    private(set) var xpLevel: XPLevel = XPLevel(
+        level: 0, totalXP: 0, xpForCurrentLevel: 0,
+        xpRequiredForNextLevel: 500, rank: .rookie, progressToNextLevel: 0
+    )
+    private(set) var recentXPGains: [XPGain] = []
+    private(set) var motivationalContext: MotivationalContext = MotivationalContext(
+        greeting: "Hallo", motivationalText: "Los geht's!"
+    )
+    private(set) var currentStreakMilestone: StreakMilestone? = nil
+    private(set) var nextStreakMilestone: StreakMilestone? = nil
+    private(set) var weeklyGoal: WeeklyGoal = WeeklyGoal(
+        target: 4, current: 0, averageLast4Weeks: 0,
+        isReached: false, isAboveAverage: false, progressFraction: 0
+    )
+    private(set) var currentWeekStrip: [ActivityDay] = []
+    private(set) var volumeTrend: TrendComparison = TrendComparison(
+        currentValue: 0, previousValue: 0, percentageChange: 0, trend: .stable
+    )
+    private(set) var caloriesTrend: TrendComparison = TrendComparison(
+        currentValue: 0, previousValue: 0, percentageChange: 0, trend: .stable
+    )
+    private(set) var durationTrend: TrendComparison = TrendComparison(
+        currentValue: 0, previousValue: 0, percentageChange: 0, trend: .stable
+    )
+    private(set) var bestExerciseAnalysis: ProgressionAnalysis? = nil
+    private(set) var bestExerciseTrendPoints: [TrendPoint] = []
+
     // MARK: - Gecachte Werte (timeframe-gefiltert)
 
     private(set) var filteredTotalWorkouts: Int = 0
@@ -36,6 +65,7 @@ final class SummaryViewModel {
     private(set) var filteredAverageHeartRate: Int = 0
     private(set) var filteredWorkoutTypeDistribution: [SummaryCalcEngine.WorkoutTypeSummary] = []
     private(set) var filteredWorkoutTypeChartData: [DonutChartData] = []
+    private(set) var filteredHeatmapAnalysis: MuscleHeatmapAnalysis? = nil
 
     // MARK: - Neuberechnung (vollständige Datenmenge)
 
@@ -46,11 +76,12 @@ final class SummaryViewModel {
         strength: [StrengthSession],
         outdoor: [OutdoorSession],
         exercises: [Exercise],
-        timeframe: SummaryTimeframe
+        timeframe: SummaryTimeframe,
+        weeklyGoalTarget: Int = 4
     ) {
         let engine = SummaryCalcEngine(cardio: cardio, strength: strength, outdoor: outdoor)
 
-        // Streak-Daten (immer über alle Sessions)
+        // Basis-Statistiken
         self.totalWorkouts = engine.totalWorkouts
         self.currentStreak = engine.currentStreak
         self.workoutsThisWeek = engine.workoutsThisWeek
@@ -60,8 +91,8 @@ final class SummaryViewModel {
         self.longestStreak = engine.longestStreak
 
         // Progressions-Analysen (nur wenn Kraft-Sessions vorhanden)
+        let progressionEngine = ProgressionCalcEngine()
         if !strength.isEmpty {
-            let progressionEngine = ProgressionCalcEngine()
             self.progressionAnalyses = exercises
                 .filter { $0.progressionStrategy != .manual && $0.category != .bodyweight }
                 .map { progressionEngine.analyze(exercise: $0, sessions: strength) }
@@ -69,8 +100,62 @@ final class SummaryViewModel {
             self.progressionAnalyses = []
         }
 
+        // XP-System
+        recalculateXP(cardio: cardio, strength: strength, outdoor: outdoor, weeklyGoalTarget: weeklyGoalTarget)
+
+        // Streak-Meilensteine
+        let streakEngine = StreakCalcEngine(allTrainingDays: engine.allTrainingDays)
+        self.currentStreakMilestone = streakEngine.currentMilestone(streak: engine.currentStreak)
+        self.nextStreakMilestone = streakEngine.nextMilestone(streak: engine.currentStreak)
+
+        // Wochenziel
+        let goalEngine = WeeklyGoalCalcEngine(
+            cardioSessions: cardio,
+            strengthSessions: strength,
+            outdoorSessions: outdoor,
+            weeklyGoal: weeklyGoalTarget
+        )
+        self.weeklyGoal = goalEngine.currentWeekGoal()
+
+        // Aktivitäts-Strip
+        let activityEngine = ActivityGridCalcEngine(
+            cardioSessions: cardio,
+            strengthSessions: strength,
+            outdoorSessions: outdoor
+        )
+        self.currentWeekStrip = activityEngine.currentWeekStrip()
+
+        // Trend-Berechnungen
+        let trendEngine = TrendCalcEngine(
+            cardioSessions: cardio,
+            strengthSessions: strength,
+            outdoorSessions: outdoor
+        )
+        self.volumeTrend = trendEngine.volumeTrend
+        self.caloriesTrend = trendEngine.caloriesTrend
+        self.durationTrend = trendEngine.durationTrend
+
+        // Beste Übung der Woche (höchste Konfidenz)
+        recalculateBestExercise(strength: strength, progressionEngine: progressionEngine)
+
+        // Motivations-Kontext
+        let xpEngine = XPCalcEngine(
+            cardioSessions: cardio,
+            strengthSessions: strength,
+            outdoorSessions: outdoor,
+            weeklyGoal: weeklyGoalTarget,
+            // TODO: Phase 2 — echte PR-Daten aus StrengthRecordCalcEngine übergeben (+250 XP)
+            strengthRecordDates: []
+        )
+        self.motivationalContext = xpEngine.motivationalContext(
+            streak: engine.currentStreak,
+            workoutsThisWeek: engine.workoutsThisWeek,
+            weeklyGoal: weeklyGoalTarget,
+            lastWorkoutDate: engine.lastWorkoutDate
+        )
+
         // Gefilterte Werte direkt mitberechnen
-        recalculateFiltered(engine: engine, timeframe: timeframe)
+        recalculateFiltered(engine: engine, timeframe: timeframe, strength: strength)
     }
 
     // MARK: - Neuberechnung (nur Timeframe-Wechsel)
@@ -84,12 +169,33 @@ final class SummaryViewModel {
         timeframe: SummaryTimeframe
     ) {
         let engine = SummaryCalcEngine(cardio: cardio, strength: strength, outdoor: outdoor)
-        recalculateFiltered(engine: engine, timeframe: timeframe)
+        recalculateFiltered(engine: engine, timeframe: timeframe, strength: strength)
+    }
+
+    // MARK: - Kalender-Daten (on-demand)
+
+    /// Gibt Grid und Statistiken für einen bestimmten Monat zurück.
+    func calendarData(
+        for month: Date,
+        cardio: [CardioSession],
+        strength: [StrengthSession],
+        outdoor: [OutdoorSession]
+    ) -> (grid: [[ActivityDay?]], stats: (trainingDays: Int, averagePerWeek: Double)) {
+        let engine = ActivityGridCalcEngine(
+            cardioSessions: cardio,
+            strengthSessions: strength,
+            outdoorSessions: outdoor
+        )
+        return (engine.monthGrid(for: month), engine.monthStats(for: month))
     }
 
     // MARK: - Intern
 
-    private func recalculateFiltered(engine: SummaryCalcEngine, timeframe: SummaryTimeframe) {
+    private func recalculateFiltered(
+        engine: SummaryCalcEngine,
+        timeframe: SummaryTimeframe,
+        strength: [StrengthSession]
+    ) {
         let filtered: SummaryCalcEngine
         switch timeframe {
         case .week:  filtered = engine.thisWeek
@@ -104,5 +210,66 @@ final class SummaryViewModel {
         self.filteredAverageHeartRate = filtered.averageHeartRate
         self.filteredWorkoutTypeDistribution = filtered.workoutTypeDistribution
         self.filteredWorkoutTypeChartData = filtered.workoutTypeChartData
+
+        // Muskel-Heatmap für gefilterten Zeitraum
+        // Sessions sind bereits durch filtered.strengthSessions vorgefiltert → timeframe .all übergeben
+        if !filtered.strengthSessions.isEmpty {
+            let heatmapEngine = MuscleHeatmapCalcEngine()
+            self.filteredHeatmapAnalysis = heatmapEngine.analyze(
+                sessions: filtered.strengthSessions,
+                timeframe: .all
+            )
+        } else {
+            self.filteredHeatmapAnalysis = nil
+        }
+    }
+
+    private func recalculateXP(
+        cardio: [CardioSession],
+        strength: [StrengthSession],
+        outdoor: [OutdoorSession],
+        weeklyGoalTarget: Int
+    ) {
+        let xpEngine = XPCalcEngine(
+            cardioSessions: cardio,
+            strengthSessions: strength,
+            outdoorSessions: outdoor,
+            weeklyGoal: weeklyGoalTarget,
+            // TODO: Phase 2 — echte PR-Daten aus StrengthRecordCalcEngine übergeben (+250 XP)
+            strengthRecordDates: []
+        )
+        let totalXP = xpEngine.calculateTotalXP()
+        self.xpLevel = xpEngine.calculateLevel(totalXP: totalXP)
+        self.recentXPGains = xpEngine.recentXPGains()
+    }
+
+    private func recalculateBestExercise(
+        strength: [StrengthSession],
+        progressionEngine: ProgressionCalcEngine
+    ) {
+        // Übung der Woche = höchste Konfidenz unter allen Analysen
+        guard let best = progressionAnalyses
+            .filter({ $0.sessionsAnalyzed >= 3 })
+            .max(by: { $0.confidence < $1.confidence })
+        else {
+            self.bestExerciseAnalysis = nil
+            self.bestExerciseTrendPoints = []
+            return
+        }
+
+        self.bestExerciseAnalysis = best
+
+        // TrendPoints aus den letzten 5 Snapshots berechnen
+        let snapshots = progressionEngine
+            .extractSnapshots(for: best.exerciseName, from: strength)
+            .prefix(5)
+            .reversed()
+
+        self.bestExerciseTrendPoints = snapshots.map { snapshot in
+            TrendPoint(
+                trendDate: snapshot.date,
+                trendValue: snapshot.estimatedOneRM ?? snapshot.totalVolume
+            )
+        }
     }
 }

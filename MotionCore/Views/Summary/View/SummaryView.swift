@@ -5,12 +5,9 @@
 // Datei . . . . : SummaryView.swift                                                /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 07.01.2026                                                       /
-// Beschreibung  : Kombinierte Übersicht aller Workout-Typen                        /
+// Beschreibung  : Gamifiziertes Trainings-Dashboard (Redesign 2026-04)             /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
-// ---------------------------------------------------------------------------------/
-// Hinweis  . . : Diese View zeigt aggregierte Statistiken über CardioSession,      /
-//                StrengthSession und OutdoorSession. Nutzt CoreSession-Protokoll.  /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftData
@@ -40,6 +37,10 @@ struct SummaryView: View {
 
     @State private var selectedTimeframe: SummaryTimeframe = .week
     @State private var viewModel = SummaryViewModel()
+    @State private var showCalendar: Bool = false
+    @State private var displayedMonth: Date = Date()
+    @State private var calendarGrid: [[ActivityDay?]] = []
+    @State private var calendarStats: (trainingDays: Int, averagePerWeek: Double) = (0, 0.0)
 
     private let gridColumns: [GridItem] = [
         GridItem(.flexible()),
@@ -54,28 +55,56 @@ struct SummaryView: View {
 
             ScrollView {
                 VStack(spacing: 20) {
-                    TimeframePicker(selection: $selectedTimeframe)
 
-                    if viewModel.totalWorkouts > 0 {
-                        StreakCard(
-                            currentStreak: viewModel.currentStreak,
-                            workoutsThisWeek: viewModel.workoutsThisWeek,
-                            averagePerWeek: viewModel.averageWorkoutsPerWeek
+                    // 1. Hero Card
+                    SummaryHeroCard(
+                        motivationalContext: viewModel.motivationalContext,
+                        xpLevel: viewModel.xpLevel
+                    )
+
+                    // 2. 7-Tage-Strip + expandierbarer Kalender
+                    SummaryWeekStrip(
+                        days: viewModel.currentWeekStrip,
+                        showCalendar: $showCalendar
+                    )
+
+                    if showCalendar {
+                        SummaryActivityCalendar(
+                            monthGrid: calendarGrid,
+                            displayedMonth: $displayedMonth,
+                            stats: calendarStats
                         )
+                        .transition(.opacity.combined(with: .move(edge: .top)))
                     }
 
+                    // 3. Wochenziel-Ring + Trend-Stats (untereinander)
+                    SummaryWeeklyGoalRing(goal: viewModel.weeklyGoal)
+
+                    SummaryTrendCard(
+                        volumeTrend: viewModel.volumeTrend,
+                        caloriesTrend: viewModel.caloriesTrend,
+                        durationTrend: viewModel.durationTrend
+                    )
+
+                    // 4. TimeframePicker
+                    TimeframePicker(selection: $selectedTimeframe)
+
+                    // 5. Stat-Grid 2×2 (timeframe-gefiltert)
                     LazyVGrid(columns: gridColumns, spacing: 20) {
                         StatisticGridCard(
                             icon: .system("figure.mixed.cardio"),
                             title: "Workouts",
-                            valueView: Text("\(viewModel.filteredTotalWorkouts)"),
+                            valueView: CountUpText(targetValue: viewModel.filteredTotalWorkouts),
                             color: .blue
                         )
 
                         StatisticGridCard(
                             icon: .system("flame.fill"),
                             title: "Kalorien",
-                            valueView: Text("\(viewModel.filteredTotalCalories)"),
+                            valueView: CountUpText(
+                                targetValue: viewModel.filteredTotalCalories,
+                                suffix: " kcal"
+                            ),
                             color: .orange
                         )
 
@@ -89,11 +118,47 @@ struct SummaryView: View {
                         StatisticGridCard(
                             icon: .system("heart.fill"),
                             title: "⌀ Herzfrequenz",
-                            valueView: Text("\(viewModel.filteredAverageHeartRate)"),
+                            valueView: CountUpText(
+                                targetValue: viewModel.filteredAverageHeartRate,
+                                suffix: " bpm"
+                            ),
                             color: .red
                         )
                     }
 
+                    // 6. Muskel-Heatmap (nur bei Kraft-Sessions)
+                    if let heatmap = viewModel.filteredHeatmapAnalysis {
+                        SummaryMuscleHeatmapCard(analysis: heatmap)
+                    }
+
+                    // 7. Übung der Woche
+                    if let bestExercise = viewModel.bestExerciseAnalysis {
+                        SummaryBestExerciseCard(
+                            analysis: bestExercise,
+                            trendPoints: viewModel.bestExerciseTrendPoints
+                        )
+                    }
+
+                    // 8. Streak-Card
+                    if viewModel.totalWorkouts > 0 {
+                        StreakCard(
+                            currentStreak: viewModel.currentStreak,
+                            workoutsThisWeek: viewModel.workoutsThisWeek,
+                            averagePerWeek: viewModel.averageWorkoutsPerWeek,
+                            streakMilestone: viewModel.currentStreakMilestone,
+                            nextMilestone: viewModel.nextStreakMilestone
+                        )
+                    }
+
+                    // 9. XP & Rang Card
+                    if viewModel.totalWorkouts > 0 {
+                        SummaryXPCard(
+                            xpLevel: viewModel.xpLevel,
+                            recentGains: viewModel.recentXPGains
+                        )
+                    }
+
+                    // 10. Typ-Aufschlüsselung
                     if !viewModel.filteredWorkoutTypeDistribution.isEmpty {
                         TypeBreakdownCard(distribution: viewModel.filteredWorkoutTypeDistribution)
                     }
@@ -105,6 +170,7 @@ struct SummaryView: View {
                         )
                     }
 
+                    // 11. Rekorde
                     if viewModel.totalWorkouts > 0 {
                         SummaryRecordsCard(
                             highestCaloriesBurn: viewModel.highestCaloriesBurn,
@@ -113,11 +179,13 @@ struct SummaryView: View {
                         )
                     }
 
+                    // 12. Progressions-Empfehlungen
                     if !strengthSessions.isEmpty {
                         ProgressionSummaryCard(analyses: viewModel.progressionAnalyses)
                     }
                 }
                 .scrollViewContentPadding()
+                .animation(.easeInOut(duration: 0.3), value: showCalendar)
             }
             .scrollIndicators(.hidden)
 
@@ -131,8 +199,10 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
                 exercises: exercises,
-                timeframe: selectedTimeframe
+                timeframe: selectedTimeframe,
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
+            refreshCalendarData()
         }
         .onChange(of: cardioSessions) { _, new in
             viewModel.recalculate(
@@ -140,7 +210,8 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
                 exercises: exercises,
-                timeframe: selectedTimeframe
+                timeframe: selectedTimeframe,
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
         }
         .onChange(of: strengthSessions) { _, new in
@@ -149,7 +220,8 @@ struct SummaryView: View {
                 strength: new,
                 outdoor: outdoorSessions,
                 exercises: exercises,
-                timeframe: selectedTimeframe
+                timeframe: selectedTimeframe,
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
         }
         .onChange(of: outdoorSessions) { _, new in
@@ -158,7 +230,8 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: new,
                 exercises: exercises,
-                timeframe: selectedTimeframe
+                timeframe: selectedTimeframe,
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
         }
         .onChange(of: exercises) { _, new in
@@ -167,7 +240,8 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
                 exercises: new,
-                timeframe: selectedTimeframe
+                timeframe: selectedTimeframe,
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
         }
         .onChange(of: selectedTimeframe) { _, new in
@@ -179,6 +253,32 @@ struct SummaryView: View {
                 timeframe: new
             )
         }
+        .onChange(of: appSettings.weeklyWorkoutGoal) { _, _ in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                exercises: exercises,
+                timeframe: selectedTimeframe,
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
+            )
+        }
+        .onChange(of: displayedMonth) { _, _ in
+            refreshCalendarData()
+        }
+    }
+
+    // MARK: - Kalender-Daten
+
+    private func refreshCalendarData() {
+        let result = viewModel.calendarData(
+            for: displayedMonth,
+            cardio: cardioSessions,
+            strength: strengthSessions,
+            outdoor: outdoorSessions
+        )
+        calendarGrid = result.grid
+        calendarStats = result.stats
     }
 }
 

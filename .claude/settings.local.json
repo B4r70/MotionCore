@@ -4,5 +4,6 @@
       "Bash(git:*)",
       "Skill(claude-md-management:revise-claude-md)"
     ]
-  }
+  },
+  "spinnerTipsEnabled": true
 }
