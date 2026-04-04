@@ -49,7 +49,7 @@ struct WatchActiveWorkoutView: View {
             HStack(spacing: 0) {
                 HStack(spacing: 4) {
                     Image(systemName: "heart.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Color.red)
                         .font(.caption2)
                     let hr = watchSession.workoutManager?.currentHeartRate ?? 0
                     Text(hr > 0 ? "\(Int(hr))" : "–")
@@ -62,7 +62,7 @@ struct WatchActiveWorkoutView: View {
 
                 HStack(spacing: 4) {
                     Image(systemName: "flame.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                         .font(.caption2)
                     let cal = watchSession.workoutManager?.activeCalories ?? 0
                     Text(cal > 0 ? "\(Int(cal))" : "–")
@@ -86,7 +86,7 @@ struct WatchActiveWorkoutView: View {
                     .padding(.vertical, 6)
             }
             .buttonStyle(.bordered)
-            .tint(.green)
+            .tint(Color.green)
             .disabled(watchSession.workoutState == .paused)
         }
         .padding(.horizontal, 4)

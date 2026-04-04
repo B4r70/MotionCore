@@ -119,7 +119,7 @@ struct StrengthEditView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "checkmark")
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                 }
             }

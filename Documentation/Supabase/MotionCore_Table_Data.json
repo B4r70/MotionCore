@@ -1,0 +1,2226 @@
+[
+  {
+    "table": "training_split_translations",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "split_type_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "language_code",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "name",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "description",
+        "default": null,
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_split_translation",
+        "references_table": "training_split_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "training_split_translations_language_code_check",
+        "references_table": "training_split_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "training_split_translations_pkey",
+        "references_table": "training_split_translations",
+        "references_column": "id"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "split_type_id",
+        "constraint_name": "training_split_translations_split_type_id_fkey",
+        "references_table": "training_split_types",
+        "references_column": "id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "split_type_id",
+        "constraint_name": "unique_split_translation",
+        "references_table": "training_split_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "split_type_id",
+        "constraint_name": "unique_split_translation",
+        "references_table": "training_split_translations",
+        "references_column": "split_type_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17651_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17651_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17651_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17651_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_split_translation",
+        "references_table": "training_split_translations",
+        "references_column": "split_type_id"
+      }
+    ]
+  },
+  {
+    "table": "exercise_equipment",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "exercise_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "equipment_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "boolean",
+        "column": "is_required",
+        "default": "true",
+        "nullable": "YES"
+      },
+      {
+        "type": "boolean",
+        "column": "is_primary",
+        "default": "true",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17616_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17616_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "exercise_id",
+        "constraint_name": "exercise_equipment_exercise_id_fkey",
+        "references_table": "exercises",
+        "references_column": "id"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "exercise_equipment_pkey",
+        "references_table": "exercise_equipment",
+        "references_column": "id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_equipment",
+        "references_table": "exercise_equipment",
+        "references_column": "equipment_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_equipment",
+        "references_table": "exercise_equipment",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "equipment_id",
+        "constraint_name": "unique_exercise_equipment",
+        "references_table": "exercise_equipment",
+        "references_column": "equipment_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "equipment_id",
+        "constraint_name": "unique_exercise_equipment",
+        "references_table": "exercise_equipment",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17616_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "equipment_id",
+        "constraint_name": "exercise_equipment_equipment_id_fkey",
+        "references_table": "equipment",
+        "references_column": "id"
+      }
+    ]
+  },
+  {
+    "table": "split_days",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "split_type_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "identifier",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "integer",
+        "column": "day_order",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "UNIQUE",
+        "column": "identifier",
+        "constraint_name": "unique_split_day",
+        "references_table": "split_days",
+        "references_column": "split_type_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "identifier",
+        "constraint_name": "unique_split_day",
+        "references_table": "split_days",
+        "references_column": "identifier"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17667_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17667_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "split_type_id",
+        "constraint_name": "unique_split_day",
+        "references_table": "split_days",
+        "references_column": "split_type_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "split_type_id",
+        "constraint_name": "unique_split_day",
+        "references_table": "split_days",
+        "references_column": "identifier"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "split_type_id",
+        "constraint_name": "split_days_split_type_id_fkey",
+        "references_table": "training_split_types",
+        "references_column": "id"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "split_days_pkey",
+        "references_table": "split_days",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17667_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17667_2_not_null",
+        "references_table": null,
+        "references_column": null
+      }
+    ]
+  },
+  {
+    "table": "training_split_types",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "identifier",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "integer",
+        "column": "days_per_week",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "recommended_level",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "integer",
+        "column": "display_order",
+        "default": "0",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "training_split_types_pkey",
+        "references_table": "training_split_types",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17637_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "identifier",
+        "constraint_name": "training_split_types_identifier_key",
+        "references_table": "training_split_types",
+        "references_column": "identifier"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17637_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "training_split_types_days_per_week_check",
+        "references_table": "training_split_types",
+        "references_column": "days_per_week"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "training_split_types_recommended_level_check",
+        "references_table": "training_split_types",
+        "references_column": "recommended_level"
+      }
+    ]
+  },
+  {
+    "table": "exercise_translations",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "exercise_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "language_code",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "name",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "instructions",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "tips",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "common_mistakes",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "updated_at",
+        "default": "now()",
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "translation_source",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "translation_quality",
+        "default": "'raw'::text",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "translated_at",
+        "default": null,
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_exercise_language",
+        "references_table": "exercise_translations",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "exercise_translations_exercise_lang_unique",
+        "references_table": "exercise_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "exercise_translations_exercise_lang_unique",
+        "references_table": "exercise_translations",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "exercise_translations_exercise_lang_unique",
+        "references_table": "exercise_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "exercise_translations_exercise_lang_unique",
+        "references_table": "exercise_translations",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17511_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17511_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17511_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17511_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_exercise_language",
+        "references_table": "exercise_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "exercise_id",
+        "constraint_name": "exercise_translations_exercise_id_fkey",
+        "references_table": "exercises",
+        "references_column": "id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_language",
+        "references_table": "exercise_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_language",
+        "references_table": "exercise_translations",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercise_translations_translation_quality_check",
+        "references_table": "exercise_translations",
+        "references_column": "translation_quality"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "exercise_translations_pkey",
+        "references_table": "exercise_translations",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercise_translations_language_code_check",
+        "references_table": "exercise_translations",
+        "references_column": "language_code"
+      }
+    ]
+  },
+  {
+    "table": "exercises",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "exercise_db_id",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "category",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "force_type",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "mechanic_type",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "difficulty",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "poster_path",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "video_path",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "text",
+        "column": "source",
+        "default": "'exercisedb'::text",
+        "nullable": "YES"
+      },
+      {
+        "type": "boolean",
+        "column": "is_verified",
+        "default": "false",
+        "nullable": "YES"
+      },
+      {
+        "type": "boolean",
+        "column": "is_archived",
+        "default": "false",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "updated_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17491_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17491_6_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercises_mechanic_type_check",
+        "references_table": "exercises",
+        "references_column": "mechanic_type"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercises_force_type_check",
+        "references_table": "exercises",
+        "references_column": "force_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_db_id",
+        "constraint_name": "exercises_exercise_db_id_key",
+        "references_table": "exercises",
+        "references_column": "exercise_db_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercises_difficulty_check",
+        "references_table": "exercises",
+        "references_column": "difficulty"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercises_category_check",
+        "references_table": "exercises",
+        "references_column": "category"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17491_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercises_source_check",
+        "references_table": "exercises",
+        "references_column": "source"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "exercises_pkey",
+        "references_table": "exercises",
+        "references_column": "id"
+      }
+    ]
+  },
+  {
+    "table": "muscle_group_translations",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "muscle_group_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "language_code",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "name",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "description",
+        "default": null,
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_muscle_group_language",
+        "references_table": "muscle_group_translations",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_muscle_group_language",
+        "references_table": "muscle_group_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_muscle_group_language",
+        "references_table": "muscle_group_translations",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17548_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17548_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17548_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17548_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "muscle_group_translations_language_code_check",
+        "references_table": "muscle_group_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "muscle_group_id",
+        "constraint_name": "muscle_group_translations_muscle_group_id_fkey",
+        "references_table": "muscle_groups",
+        "references_column": "id"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "muscle_group_translations_pkey",
+        "references_table": "muscle_group_translations",
+        "references_column": "id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_muscle_group_language",
+        "references_table": "muscle_group_translations",
+        "references_column": "language_code"
+      }
+    ]
+  },
+  {
+    "table": "equipment_translations",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "equipment_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "language_code",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "name",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "description",
+        "default": null,
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "UNIQUE",
+        "column": "equipment_id",
+        "constraint_name": "unique_equipment_language",
+        "references_table": "equipment_translations",
+        "references_column": "equipment_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "equipment_translations_language_code_check",
+        "references_table": "equipment_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "equipment_id",
+        "constraint_name": "equipment_translations_equipment_id_fkey",
+        "references_table": "equipment",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17600_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17600_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17600_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17600_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_equipment_language",
+        "references_table": "equipment_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_equipment_language",
+        "references_table": "equipment_translations",
+        "references_column": "equipment_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "equipment_id",
+        "constraint_name": "unique_equipment_language",
+        "references_table": "equipment_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "equipment_translations_pkey",
+        "references_table": "equipment_translations",
+        "references_column": "id"
+      }
+    ]
+  },
+  {
+    "table": "muscle_groups",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "identifier",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "parent_id",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "integer",
+        "column": "hierarchy_level",
+        "default": "0",
+        "nullable": "YES"
+      },
+      {
+        "type": "integer",
+        "column": "display_order",
+        "default": "0",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "FOREIGN KEY",
+        "column": "parent_id",
+        "constraint_name": "muscle_groups_parent_id_fkey",
+        "references_table": "muscle_groups",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17529_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17529_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "muscle_groups_hierarchy_level_check",
+        "references_table": "muscle_groups",
+        "references_column": "hierarchy_level"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "identifier",
+        "constraint_name": "muscle_groups_identifier_key",
+        "references_table": "muscle_groups",
+        "references_column": "identifier"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "muscle_groups_pkey",
+        "references_table": "muscle_groups",
+        "references_column": "id"
+      }
+    ]
+  },
+  {
+    "table": "equipment",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "identifier",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "category",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "integer",
+        "column": "display_order",
+        "default": "0",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "equipment_pkey",
+        "references_table": "equipment",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17587_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17587_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "equipment_category_check",
+        "references_table": "equipment",
+        "references_column": "category"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "identifier",
+        "constraint_name": "equipment_identifier_key",
+        "references_table": "equipment",
+        "references_column": "identifier"
+      }
+    ]
+  },
+  {
+    "table": "exercise_muscles",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "exercise_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "muscle_group_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "involvement_type",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "integer",
+        "column": "intensity_percentage",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercise_muscles_intensity_percentage_check",
+        "references_table": "exercise_muscles",
+        "references_column": "intensity_percentage"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "exercise_id",
+        "constraint_name": "exercise_muscles_exercise_id_fkey",
+        "references_table": "exercises",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17564_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17564_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17564_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17564_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_exercise_muscle",
+        "references_table": "exercise_muscles",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_exercise_muscle",
+        "references_table": "exercise_muscles",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_muscle",
+        "references_table": "exercise_muscles",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_muscle",
+        "references_table": "exercise_muscles",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "exercise_muscles_pkey",
+        "references_table": "exercise_muscles",
+        "references_column": "id"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "muscle_group_id",
+        "constraint_name": "exercise_muscles_muscle_group_id_fkey",
+        "references_table": "muscle_groups",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercise_muscles_involvement_type_check",
+        "references_table": "exercise_muscles",
+        "references_column": "involvement_type"
+      }
+    ]
+  },
+  {
+    "table": "taxonomy_types",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "key",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "description",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "NO"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "taxonomy_types_pkey",
+        "references_table": "taxonomy_types",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27268_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "key",
+        "constraint_name": "taxonomy_types_key_key",
+        "references_table": "taxonomy_types",
+        "references_column": "key"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27268_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27268_1_not_null",
+        "references_table": null,
+        "references_column": null
+      }
+    ]
+  },
+  {
+    "table": "taxonomy_values",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "taxonomy_type_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "identifier",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "integer",
+        "column": "display_order",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "boolean",
+        "column": "is_active",
+        "default": "true",
+        "nullable": "NO"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "NO"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "taxonomy_values_pkey",
+        "references_table": "taxonomy_values",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27279_5_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27279_6_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27279_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "identifier",
+        "constraint_name": "taxonomy_values_taxonomy_type_id_identifier_key",
+        "references_table": "taxonomy_values",
+        "references_column": "identifier"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "identifier",
+        "constraint_name": "taxonomy_values_taxonomy_type_id_identifier_key",
+        "references_table": "taxonomy_values",
+        "references_column": "taxonomy_type_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27279_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27279_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "taxonomy_type_id",
+        "constraint_name": "taxonomy_values_taxonomy_type_id_identifier_key",
+        "references_table": "taxonomy_values",
+        "references_column": "taxonomy_type_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "taxonomy_type_id",
+        "constraint_name": "taxonomy_values_taxonomy_type_id_identifier_key",
+        "references_table": "taxonomy_values",
+        "references_column": "identifier"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "taxonomy_type_id",
+        "constraint_name": "taxonomy_values_taxonomy_type_id_fkey",
+        "references_table": "taxonomy_types",
+        "references_column": "id"
+      }
+    ]
+  },
+  {
+    "table": "split_day_muscle_groups",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "split_day_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "muscle_group_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "integer",
+        "column": "priority",
+        "default": "1",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "UNIQUE",
+        "column": "split_day_id",
+        "constraint_name": "unique_split_day_muscle",
+        "references_table": "split_day_muscle_groups",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17699_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17699_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "muscle_group_id",
+        "constraint_name": "split_day_muscle_groups_muscle_group_id_fkey",
+        "references_table": "muscle_groups",
+        "references_column": "id"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "split_day_muscle_groups_pkey",
+        "references_table": "split_day_muscle_groups",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17699_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "split_day_muscle_groups_priority_check",
+        "references_table": "split_day_muscle_groups",
+        "references_column": "priority"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "split_day_id",
+        "constraint_name": "split_day_muscle_groups_split_day_id_fkey",
+        "references_table": "split_days",
+        "references_column": "id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_split_day_muscle",
+        "references_table": "split_day_muscle_groups",
+        "references_column": "split_day_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_split_day_muscle",
+        "references_table": "split_day_muscle_groups",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "split_day_id",
+        "constraint_name": "unique_split_day_muscle",
+        "references_table": "split_day_muscle_groups",
+        "references_column": "split_day_id"
+      }
+    ]
+  },
+  {
+    "table": "split_day_translations",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "split_day_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "language_code",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "name",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "description",
+        "default": null,
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17683_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17683_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17683_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17683_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "split_day_translations_language_code_check",
+        "references_table": "split_day_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "split_day_translations_pkey",
+        "references_table": "split_day_translations",
+        "references_column": "id"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "split_day_id",
+        "constraint_name": "split_day_translations_split_day_id_fkey",
+        "references_table": "split_days",
+        "references_column": "id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "split_day_id",
+        "constraint_name": "unique_split_day_translation",
+        "references_table": "split_day_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "split_day_id",
+        "constraint_name": "unique_split_day_translation",
+        "references_table": "split_day_translations",
+        "references_column": "split_day_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_split_day_translation",
+        "references_table": "split_day_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_split_day_translation",
+        "references_table": "split_day_translations",
+        "references_column": "split_day_id"
+      }
+    ]
+  },
+  {
+    "table": "exercise_relationships",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "exercise_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "related_exercise_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "relationship_type",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "notes",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "exercise_relationships_pkey",
+        "references_table": "exercise_relationships",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17720_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17720_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17720_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_17720_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "relationship_type",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "relationship_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "relationship_type",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "related_exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "relationship_type",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "related_exercise_id",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "relationship_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "related_exercise_id",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "related_exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "related_exercise_id",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "relationship_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "related_exercise_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "exercise_id",
+        "constraint_name": "unique_exercise_relationship",
+        "references_table": "exercise_relationships",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "no_self_reference",
+        "references_table": "exercise_relationships",
+        "references_column": "related_exercise_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "no_self_reference",
+        "references_table": "exercise_relationships",
+        "references_column": "exercise_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "exercise_relationships_relationship_type_check",
+        "references_table": "exercise_relationships",
+        "references_column": "relationship_type"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "related_exercise_id",
+        "constraint_name": "exercise_relationships_related_exercise_id_fkey",
+        "references_table": "exercises",
+        "references_column": "id"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "exercise_id",
+        "constraint_name": "exercise_relationships_exercise_id_fkey",
+        "references_table": "exercises",
+        "references_column": "id"
+      }
+    ]
+  },
+  {
+    "table": "muscle_aliases",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "muscle_group_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "language_code",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "alias_type",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "alias",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "boolean",
+        "column": "is_preferred",
+        "default": "false",
+        "nullable": "YES"
+      },
+      {
+        "type": "integer",
+        "column": "display_order",
+        "default": "0",
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "YES"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "UNIQUE",
+        "column": "alias_type",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "muscle_aliases_alias_type_check",
+        "references_table": "muscle_aliases",
+        "references_column": "alias_type"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "muscle_aliases_language_code_check",
+        "references_table": "muscle_aliases",
+        "references_column": "language_code"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "muscle_group_id",
+        "constraint_name": "muscle_aliases_muscle_group_id_fkey",
+        "references_table": "muscle_groups",
+        "references_column": "id"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "muscle_aliases_pkey",
+        "references_table": "muscle_aliases",
+        "references_column": "id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "muscle_group_id",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "alias_type",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "alias_type",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "alias_type",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "alias",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "alias",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "alias_type"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "alias",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "alias",
+        "constraint_name": "unique_alias",
+        "references_table": "muscle_aliases",
+        "references_column": "muscle_group_id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_19043_1_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_19043_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_19043_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_19043_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_19043_5_not_null",
+        "references_table": null,
+        "references_column": null
+      }
+    ]
+  },
+  {
+    "table": "taxonomy_value_translations",
+    "columns": [
+      {
+        "type": "uuid",
+        "column": "id",
+        "default": "gen_random_uuid()",
+        "nullable": "NO"
+      },
+      {
+        "type": "uuid",
+        "column": "taxonomy_value_id",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "language_code",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "name",
+        "default": null,
+        "nullable": "NO"
+      },
+      {
+        "type": "text",
+        "column": "description",
+        "default": null,
+        "nullable": "YES"
+      },
+      {
+        "type": "timestamp with time zone",
+        "column": "created_at",
+        "default": "now()",
+        "nullable": "NO"
+      }
+    ],
+    "constraints": [
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27298_4_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "taxonomy_value_translations_taxonomy_value_id_language_code_key",
+        "references_table": "taxonomy_value_translations",
+        "references_column": "taxonomy_value_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "language_code",
+        "constraint_name": "taxonomy_value_translations_taxonomy_value_id_language_code_key",
+        "references_table": "taxonomy_value_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "taxonomy_value_id",
+        "constraint_name": "taxonomy_value_translations_taxonomy_value_id_language_code_key",
+        "references_table": "taxonomy_value_translations",
+        "references_column": "taxonomy_value_id"
+      },
+      {
+        "type": "UNIQUE",
+        "column": "taxonomy_value_id",
+        "constraint_name": "taxonomy_value_translations_taxonomy_value_id_language_code_key",
+        "references_table": "taxonomy_value_translations",
+        "references_column": "language_code"
+      },
+      {
+        "type": "FOREIGN KEY",
+        "column": "taxonomy_value_id",
+        "constraint_name": "taxonomy_value_translations_taxonomy_value_id_fkey",
+        "references_table": "taxonomy_values",
+        "references_column": "id"
+      },
+      {
+        "type": "PRIMARY KEY",
+        "column": "id",
+        "constraint_name": "taxonomy_value_translations_pkey",
+        "references_table": "taxonomy_value_translations",
+        "references_column": "id"
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27298_6_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27298_3_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27298_2_not_null",
+        "references_table": null,
+        "references_column": null
+      },
+      {
+        "type": "CHECK",
+        "column": null,
+        "constraint_name": "19039_27298_1_not_null",
+        "references_table": null,
+        "references_column": null
+      }
+    ]
+  }
+]

@@ -272,13 +272,15 @@ extension ExerciseEquipment {
         guard let value = value?.lowercased() else { return .none }
 
         switch value {
-        case "barbell": return .barbell
+        case "barbell", "ez_bar": return .barbell
         case "dumbbell": return .dumbbell
         case "kettlebell": return .kettlebell
-        case "cable": return .cable
-        case "machine": return .machine
+        case "cable", "cable_machine": return .cable
+        case "machine", "smith_machine", "leg_press": return .machine
         case "bodyweight", "body weight", "body_only": return .bodyweight
-        case "resistance band", "bands": return .band
+        case "resistance band", "bands", "resistance_band": return .band
+        case "foam_roller", "exercise_ball", "elliptical",
+             "stationary_bike", "rowing_machine", "treadmill": return .other
         case "none", "other": return .other
         default:
             print("⚠️ Unbekanntes Equipment aus Supabase: '\(value)' → Fallback: .other")

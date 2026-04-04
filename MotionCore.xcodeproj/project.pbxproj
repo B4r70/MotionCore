@@ -84,6 +84,7 @@
 			membershipExceptions = (
 				Config/MotionCoreSecrets.xcconfig,
 				Info.plist,
+				Ressources/muscles_seed.json,
 			);
 			target = 4EBA616C2EA7C87D002426EE /* MotionCore */;
 		};

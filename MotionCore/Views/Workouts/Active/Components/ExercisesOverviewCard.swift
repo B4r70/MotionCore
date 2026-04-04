@@ -188,7 +188,7 @@ struct ExercisesOverviewCard: View {
                     } label: {
                         Label("Übung", systemImage: "plus.circle.fill")
                             .font(.subheadline.weight(.medium))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                 }
 
@@ -363,7 +363,7 @@ private struct ExerciseOverviewRow: View {
                 if hasSupersetAbove || hasSupersetBelow {
                     Image(systemName: "link")
                         .font(.system(size: 8, weight: .bold))
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                         .padding(.vertical, 2)
                 }
 
@@ -405,11 +405,11 @@ private struct ExerciseOverviewRow: View {
                 if hasPR {
                     Image(systemName: "crown.fill")
                         .font(.caption)
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(Color.yellow)
                 }
                 if isAllCompleted {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                 } else {
                     Text("\(completedCount)/\(sets.count)")
                         .font(.caption)

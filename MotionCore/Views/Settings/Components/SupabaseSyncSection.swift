@@ -38,12 +38,12 @@ struct SupabaseSyncSection: View {
                     "\(service.uploadedCount) Sessions hochgeladen",
                     systemImage: "checkmark.circle.fill"
                 )
-                .foregroundStyle(.green)
+                .foregroundStyle(Color.green)
 
                 if service.failedCount > 0 {
                     Text("\(service.failedCount) fehlgeschlagen – beim nächsten Sync wiederholt")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                 }
 
             } else {

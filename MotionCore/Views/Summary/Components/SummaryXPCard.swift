@@ -148,7 +148,7 @@ struct SummaryXPCard: View {
                 HStack {
                     Image(systemName: "bolt.fill")
                         .font(.caption2)
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(Color.yellow)
                         .frame(width: 14)
 
                     Text(gain.description)

@@ -100,15 +100,6 @@ final class Exercise {
         posterPath: String? = nil,
         instructions: String? = nil,
         localVideoFileName: String? = nil,
-        apiBodyPart: String? = nil,
-        apiTarget: String? = nil,
-        apiEquipment: String? = nil,
-        apiSecondaryMuscles: [String]? = nil,
-        apiProvider: String? = nil,
-        apiOverview: String? = nil,
-        apiExerciseTips: [String]? = nil,
-        apiVariations: [String]? = nil,
-        apiImageURL: String? = nil,
         categoryRaw: String = "",
         equipmentRaw: String = "",
         difficultyRaw: String = "",
@@ -146,17 +137,6 @@ final class Exercise {
         self.posterPath = posterPath
         self.instructions = instructions
         self.localVideoFileName = localVideoFileName
-
-        self.apiBodyPart = apiBodyPart
-        self.apiTarget = apiTarget
-        self.apiEquipment = apiEquipment
-        self.apiSecondaryMuscles = apiSecondaryMuscles
-
-        self.apiProvider = apiProvider
-        self.apiOverview = apiOverview
-        self.apiExerciseTips = apiExerciseTips
-        self.apiVariations = apiVariations
-        self.apiImageURL = apiImageURL
 
         self.categoryRaw = categoryRaw
         self.equipmentRaw = equipmentRaw
@@ -318,19 +298,9 @@ extension Exercise {
     }
 
     var sourceLabel: String {
-        if let provider = apiProvider {
-            switch provider {
-            case "supabase": return "Supabase"
-            case "rapidapi", "exercisedb_v2": return "ExerciseDB"
-            default: return "API"
-            }
-        } else if isSystemExercise {
-            return "System"
-        } else if isCustom {
-            return "Eigene Übung"
-        } else {
-            return "Standard"
-        }
+        if isSystemExercise { return "System-Übung" }
+        if isCustom { return "Eigene Übung" }
+        return "Standard"
     }
 
     var fullDescription: String {
@@ -375,16 +345,7 @@ extension Exercise {
         videoPath: String? = nil,
         posterPath: String? = nil,
         instructions: String? = nil,
-        localVideoFileName: String? = nil,
-        apiBodyPart: String? = nil,
-        apiTarget: String? = nil,
-        apiEquipment: String? = nil,
-        apiSecondaryMuscles: [String]? = nil,
-        apiProvider: String? = nil,
-        apiOverview: String? = nil,
-        apiExerciseTips: [String]? = nil,
-        apiVariations: [String]? = nil,
-        apiImageURL: String? = nil
+        localVideoFileName: String? = nil
     ) {
         self.init(
             name: name,
@@ -405,15 +366,6 @@ extension Exercise {
             posterPath: posterPath,
             instructions: instructions,
             localVideoFileName: localVideoFileName,
-            apiBodyPart: apiBodyPart,
-            apiTarget: apiTarget,
-            apiEquipment: apiEquipment,
-            apiSecondaryMuscles: apiSecondaryMuscles,
-            apiProvider: apiProvider,
-            apiOverview: apiOverview,
-            apiExerciseTips: apiExerciseTips,
-            apiVariations: apiVariations,
-            apiImageURL: apiImageURL,
             categoryRaw: category.rawValue,
             equipmentRaw: equipment.rawValue,
             difficultyRaw: difficulty.rawValue,
@@ -483,15 +435,6 @@ extension Exercise {
             posterPath: posterPath,
             instructions: instructionsText,
             localVideoFileName: nil,
-            apiBodyPart: nil,
-            apiTarget: nil,
-            apiEquipment: nil,
-            apiSecondaryMuscles: nil,
-            apiProvider: "supabase",
-            apiOverview: tipsText,
-            apiExerciseTips: nil,
-            apiVariations: nil,
-            apiImageURL: nil,
             categoryRaw: categoryRaw,
             equipmentRaw: equipmentRaw,
             difficultyRaw: difficultyRaw,

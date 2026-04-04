@@ -82,7 +82,7 @@ struct StrengthDetailView: View {
                     showDeleteAlert = true
                 } label: {
                     Image(systemName: "trash")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Color.red)
                 }
             }
         }
@@ -123,7 +123,7 @@ struct StrengthDetailView: View {
 
                     Image(systemName: "dumbbell.fill")
                         .font(.title3)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -141,10 +141,10 @@ struct StrengthDetailView: View {
                 // Status Badge
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                     Text("Abgeschlossen")
                         .font(.caption.bold())
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
@@ -155,7 +155,7 @@ struct StrengthDetailView: View {
             if let planName = session.planName {
                 HStack(spacing: 8) {
                     Image(systemName: "doc.text.fill")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                     Text(planName)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -170,7 +170,7 @@ struct StrengthDetailView: View {
                         .foregroundStyle(.primary)
                 } icon: {
                     Image(systemName: session.workoutType.icon)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                 }
 
                 Spacer()
@@ -181,7 +181,7 @@ struct StrengthDetailView: View {
                             .foregroundStyle(.primary)
                     } icon: {
                         Image(systemName: "clock.fill")
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                 }
             }
@@ -333,9 +333,9 @@ struct StrengthDetailView: View {
             HStack(spacing: 12) {
                 Text("\(index)")
                     .font(.caption.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.white)
                     .frame(width: 24, height: 24)
-                    .background(Circle().fill(.blue))
+                    .background(Circle().fill(Color.blue))
 
                 ExerciseVideoView(
                     assetName: mediaAssetName,
@@ -356,7 +356,7 @@ struct StrengthDetailView: View {
 
                     Text(formatVolume(exerciseVolume(sets)))
                         .font(.caption.bold())
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                 }
 
                 // Übung bearbeiten (nur wenn Exercise-Referenz vorhanden)
@@ -411,7 +411,7 @@ struct StrengthDetailView: View {
                         if set.rpe > 0 {
                             Text("RPE \(set.rpe)")
                                 .font(.caption2)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.white)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(rpeColor(set.rpe), in: Capsule())
@@ -501,7 +501,7 @@ struct StrengthDetailView: View {
                     .padding(.vertical, 14)
                     .padding(.horizontal, 14)
                     .background(Color.blue.opacity(0.15))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             }
@@ -522,7 +522,7 @@ struct StrengthDetailView: View {
                     .padding(.vertical, 14)
                     .padding(.horizontal, 14)
                     .background(Color.green.opacity(0.15))
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             }

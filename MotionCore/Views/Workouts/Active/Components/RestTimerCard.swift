@@ -45,10 +45,10 @@ struct RestTimerCard: View {
                     HStack(spacing: 6) {
                         Image(systemName: "bolt.fill")
                             .font(.caption.bold())
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.green)
                         Text("Nächste Runde")
                             .font(.caption.bold())
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.green)
                     }
                     HStack(spacing: 4) {
                         ForEach(Array(names.enumerated()), id: \.offset) { idx, name in
@@ -89,7 +89,7 @@ struct RestTimerCard: View {
                     Text("Pause überspringen")
                         .font(.headline)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(.blue, in: RoundedRectangle(cornerRadius: 16))

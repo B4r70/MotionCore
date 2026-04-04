@@ -21,17 +21,17 @@ struct ExerciseAPIView: View {
         VStack(alignment: .leading, spacing: 16) {
             // Header
             HStack {
-                Image(systemName: "cloud.fill")
-                    .foregroundStyle(.blue)
+                Image(systemName: "info.circle.fill")
+                    .foregroundStyle(Color.blue)
 
-                Text("API-Informationen")
+                Text("Übungsdaten")
                     .font(.headline)
 
                 Spacer()
 
-                // Provider Badge
-                if let provider = exercise.apiProvider {
-                    ProviderBadge(provider: provider)
+                // System Badge
+                if exercise.isSystemExercise {
+                    SystemBadge()
                 }
             }
 
@@ -89,13 +89,13 @@ struct ExerciseAPIView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Trainingstipps", systemImage: "lightbulb.fill")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
 
                     ForEach(tips, id: \.self) { tip in
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.caption)
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.green)
                             Text(tip)
                                 .font(.caption)
                         }
@@ -108,7 +108,7 @@ struct ExerciseAPIView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Variationen", systemImage: "arrow.triangle.branch")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
 
                     ForEach(variations, id: \.self) { variation in
                         HStack(alignment: .top, spacing: 8) {
@@ -123,63 +123,32 @@ struct ExerciseAPIView: View {
                 }
             }
 
-            // API Details
+            // Kenndaten
             VStack(alignment: .leading, spacing: 4) {
-                Label("API Details", systemImage: "info.circle")
+                Label("Kenndaten", systemImage: "info.circle")
                     .font(.subheadline.bold())
                     .foregroundStyle(.secondary)
 
+                DetailRow(label: "Kategorie", value: exercise.category.description)
+                DetailRow(label: "Equipment", value: exercise.equipment.description)
+                DetailRow(label: "Schwierigkeit", value: exercise.difficulty.description)
                 if let apiID = exercise.apiID {
                     DetailRow(label: "ID", value: apiID.uuidString)
-                }
-                if let bodyPart = exercise.apiBodyPart {
-                    DetailRow(label: "Körperteil", value: bodyPart)
-                }
-                if let target = exercise.apiTarget {
-                    DetailRow(label: "Zielmuskel", value: target)
-                }
-                if let equipment = exercise.apiEquipment {
-                    DetailRow(label: "Equipment", value: equipment)
                 }
             }
         }
     }
 }
 
-// MARK: - Provider Badge
-private struct ProviderBadge: View {
-    let provider: String
-
+// MARK: - System Badge
+private struct SystemBadge: View {
     var body: some View {
-        let label: String
-        let bg: Color
-        let fg: Color
-
-        switch provider {
-        case "exercisedb_v2":
-            label = "ExerciseDB v2"
-            bg = Color.purple.opacity(0.2)
-            fg = .purple
-        case "rapidapi":
-            label = "RapidAPI"
-            bg = Color.blue.opacity(0.2)
-            fg = .blue
-        case "supabase":
-            label = "Supabase"
-            bg = Color.green.opacity(0.2)
-            fg = .green
-        default:
-            label = provider
-            bg = Color.gray.opacity(0.2)
-            fg = .secondary
-        }
-
-        return Text(label)
+        Text("System-Übung")
             .font(.caption2)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(bg)
-            .foregroundStyle(fg)
+            .background(Color.blue.opacity(0.15))
+            .foregroundStyle(.blue)
             .clipShape(Capsule())
     }
 }

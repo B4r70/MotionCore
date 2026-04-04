@@ -23,7 +23,7 @@ struct LiveHealthCard: View {
                 // Linke Hälfte: Herzfrequenz
                 HStack(spacing: 8) {
                     Image(systemName: "heart.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Color.red)
                         .font(.title2)
 
                     VStack(alignment: .leading, spacing: 2) {
@@ -44,7 +44,7 @@ struct LiveHealthCard: View {
                 // Rechte Hälfte: Kalorien
                 HStack(spacing: 8) {
                     Image(systemName: "flame.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                         .font(.title2)
 
                     VStack(alignment: .leading, spacing: 2) {

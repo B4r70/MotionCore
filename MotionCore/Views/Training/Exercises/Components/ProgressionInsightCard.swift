@@ -22,7 +22,7 @@ struct ProgressionInsightCard: View {
             // MARK: Header
             HStack(spacing: 10) {
                 Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                 Text("Progressions-Analyse")
                     .font(.headline)
                 Spacer()

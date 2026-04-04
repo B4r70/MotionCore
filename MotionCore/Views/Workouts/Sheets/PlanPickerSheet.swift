@@ -133,7 +133,7 @@ private struct PlanRow: View {
 
                 Image(systemName: "play.circle.fill")
                     .font(.title)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
             }
             .padding()
             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))

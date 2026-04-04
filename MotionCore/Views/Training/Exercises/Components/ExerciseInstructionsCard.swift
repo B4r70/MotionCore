@@ -94,7 +94,7 @@ struct ExerciseInstructionsCard: View {
         } label: {
             HStack {
                 Image(systemName: "list.bullet.clipboard")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
 
                 Text("Anleitung")
                     .font(.headline)
@@ -180,7 +180,7 @@ struct ExerciseInstructionsCard: View {
                         } label: {
                             Text("Bearbeiten")
                                 .font(.caption)
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
                     }
                 }
@@ -190,7 +190,7 @@ struct ExerciseInstructionsCard: View {
                         Text("\(index + 1)")
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.white)
                             .frame(width: 24, height: 24)
                             .background(
                                 Circle().fill(Color.blue.gradient)
@@ -213,7 +213,7 @@ struct ExerciseInstructionsCard: View {
                     Text("Anleitung hinzufügen")
                 }
                 .font(.subheadline)
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.blue)
             }
         }
     }
@@ -264,7 +264,7 @@ struct ExerciseInstructionsCard: View {
             HStack {
                 Image(systemName: "lock.fill")
                     .font(.caption2)
-                Text("Quelle: ExerciseDB (nicht editierbar)")
+                Text("System-Übung (nicht editierbar)")
                     .font(.caption2)
             }
             .foregroundStyle(.tertiary)
@@ -305,7 +305,7 @@ struct ExerciseInstructionsPreview: View {
         if !previewText.isEmpty {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "list.bullet.clipboard")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                     .imageScale(.medium)
 
                 VStack(alignment: .leading, spacing: 4) {

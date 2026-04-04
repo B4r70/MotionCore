@@ -31,7 +31,7 @@ struct LastWorkoutCompareCard: View {
             // Header
             HStack(spacing: 8) {
                 Image(systemName: "arrow.left.arrow.right")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                 Text("Vergleich letztes Training")
                     .font(.headline)
                 Spacer()
@@ -79,7 +79,7 @@ struct LastWorkoutCompareCard: View {
                 HStack(alignment: .center, spacing: 12) {
                     HStack(spacing: 6) {
                         Image(systemName: "trophy.fill")
-                            .foregroundStyle(.yellow)
+                            .foregroundStyle(Color.yellow)
                             .font(.caption)
                         Text("1RM-Trend")
                             .font(.caption)

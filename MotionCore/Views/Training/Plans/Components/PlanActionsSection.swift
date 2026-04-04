@@ -74,7 +74,7 @@ struct PlanActionsSection: View {
             .padding(.vertical, 14)
             .padding(.horizontal, 14)
             .background(Color.green.opacity(0.15))
-            .foregroundStyle(.green)
+            .foregroundStyle(Color.green)
             .clipShape(RoundedRectangle(cornerRadius: 14))
         }
     }
@@ -113,7 +113,7 @@ struct PlanActionsSection: View {
             .padding(.vertical, 14)
             .padding(.horizontal, 14)
             .background(Color.red.opacity(0.12))
-            .foregroundStyle(.red)
+            .foregroundStyle(Color.red)
             .clipShape(RoundedRectangle(cornerRadius: 14))
         }
     }

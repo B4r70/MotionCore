@@ -74,7 +74,7 @@ struct ExerciseProgressionView: View {
                         .lineLimit(1)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
+                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
                 }
             }
         }
@@ -86,7 +86,7 @@ struct ExerciseProgressionView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
                 Text("Volumen-Verlauf")
                     .font(.headline)
                 Spacer()

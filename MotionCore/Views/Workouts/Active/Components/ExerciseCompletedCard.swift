@@ -20,7 +20,7 @@ struct ExerciseCompletedCard: View {
         VStack(spacing: 20) {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 60))
-                .foregroundStyle(.green)
+                .foregroundStyle(Color.green)
 
             if let exerciseName {
                 Text("Übung \"\(exerciseName)\" abgeschlossen!")
@@ -44,7 +44,7 @@ struct ExerciseCompletedCard: View {
                     Text("Nächste Übung")
                         .font(.headline)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(.blue, in: RoundedRectangle(cornerRadius: 16))

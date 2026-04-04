@@ -34,7 +34,7 @@ struct SummaryMuscleHeatmapCard: View {
             // Überschrift
             HStack {
                 Image(systemName: "figure.strengthtraining.traditional")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
                 Text("Trainierte Muskeln")
                     .font(.subheadline)
                     .fontWeight(.semibold)

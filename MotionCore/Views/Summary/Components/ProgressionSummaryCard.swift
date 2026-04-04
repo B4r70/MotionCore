@@ -28,14 +28,14 @@ struct ProgressionSummaryCard: View {
             // MARK: Header
             HStack(spacing: 10) {
                 Image(systemName: "arrow.up.circle.fill")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
                 Text("Progressions-Empfehlungen")
                     .font(.headline)
                 Spacer()
                 if !ready.isEmpty {
                     Text("\(ready.count)")
                         .font(.caption.weight(.bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
                         .background(Color.green.gradient)

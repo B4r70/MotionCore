@@ -68,7 +68,7 @@ struct OutdoorDetailView: View {
                     showDeleteAlert = true
                 } label: {
                     Image(systemName: "trash")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Color.red)
                 }
             }
         }
@@ -123,7 +123,7 @@ struct OutdoorDetailView: View {
 
                 HStack(spacing: 8) {
                     Image(systemName: "road.lanes")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                         .font(.subheadline)
                     Text(session.routeName)
                         .font(.subheadline)
@@ -137,7 +137,7 @@ struct OutdoorDetailView: View {
 
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "mappin")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                         .font(.subheadline)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Start")
@@ -156,7 +156,7 @@ struct OutdoorDetailView: View {
 
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "mappin.and.ellipse")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Color.red)
                         .font(.subheadline)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Ziel")
@@ -175,7 +175,7 @@ struct OutdoorDetailView: View {
 
                 HStack(spacing: 8) {
                     Image(systemName: session.weatherCondition.icon)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                         .font(.subheadline)
                     Text(session.weatherCondition.description)
                         .font(.subheadline)

@@ -80,7 +80,7 @@ struct PlanUpdateSheet: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button { applyChanges() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
+                    Button { applyChanges() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
                     .disabled(selectedCount == 0)
                     .fontWeight(.semibold)
                 }
@@ -94,7 +94,7 @@ struct PlanUpdateSheet: View {
         HStack(spacing: 12) {
             Image(systemName: "sparkles")
                 .font(.title2)
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.blue)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Vorschlag basierend auf \(proposal.analyzedSessionCount) Sessions")

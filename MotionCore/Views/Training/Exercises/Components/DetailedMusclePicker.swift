@@ -52,7 +52,7 @@ struct DetailedMusclePicker: View {
 
                                 if selectedMuscles.contains(muscle) {
                                     Image(systemName: "checkmark")
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(Color.blue)
                                 }
                             }
                         }
@@ -68,7 +68,7 @@ struct DetailedMusclePicker: View {
                     dismiss()
                 } label: {
                     Image(systemName: "checkmark")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                 }
             }
         }

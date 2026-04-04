@@ -132,7 +132,7 @@ struct PlanBasicDataCard: View {
                 Text("Enddatum festlegen")
                     .foregroundStyle(.primary)
             }
-            .tint(.blue)
+            .tint(Color.blue)
 
             if plan.endDate != nil {
                 DatePicker(
@@ -159,7 +159,7 @@ struct PlanBasicDataCard: View {
                     .foregroundStyle(.primary)
             }
         }
-        .tint(.green)
+        .tint(Color.green)
     }
 }
 

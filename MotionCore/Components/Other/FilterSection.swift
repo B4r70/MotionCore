@@ -56,7 +56,7 @@ struct FilterSection: View {
                 // Blauer Punkt wenn Filter aktiv (rechts oben)
                 if isFiltered {
                     Circle()
-                        .fill(.blue)
+                        .fill(Color.blue)
                         .frame(width: 10, height: 10)
                         .offset(x: 10, y: -10)
                 }

@@ -496,7 +496,7 @@ struct ActiveWorkoutView: View {
                     Text("Beenden")
                         .font(.headline)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .padding(.horizontal, 24)
                 .padding(.vertical, 16)
                 .background(
@@ -1657,7 +1657,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(.blue.opacity(0.2))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                             .clipShape(Capsule())
                     }
                 }
@@ -1738,7 +1738,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(.blue.opacity(0.2))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                             .clipShape(Capsule())
                     }
                 }
@@ -1808,7 +1808,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Color.orange.opacity(0.2))
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                             .clipShape(Capsule())
                     }
                 }
@@ -1831,7 +1831,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                         HStack(spacing: 4) {
                             Text("2×")
                                 .font(.title3)
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(Color.orange)
                             Text(String(format: "%.2f", defaultWeight))
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                         }
@@ -1847,7 +1847,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { increaseWeight() } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
                         if pressing { startContinuousAdjustment(field: .weight, increment: true) }
@@ -2038,7 +2038,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                 Text("\(numberOfSets) \(numberOfSets == 1 ? "Set" : "Sets") hinzufügen")
                     .font(.headline)
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(Color.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .background(.blue, in: RoundedRectangle(cornerRadius: 16))

@@ -54,7 +54,7 @@ struct StrengthSessionCard: View {
 
                 Image(systemName: "dumbbell.fill")
                     .font(.title3)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
             }
 
             // Datum und Plan-Name
@@ -88,7 +88,7 @@ struct StrengthSessionCard: View {
                 // Abgeschlossen
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title2)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
             } else {
                 // Prüfen ob pausiert
                 let isPaused = sessionManager.getActiveSessionID() == session.sessionUUID.uuidString
@@ -101,7 +101,7 @@ struct StrengthSessionCard: View {
                         // Pausiert - pulsierendes Pause-Icon
                         Image(systemName: "pause.circle.fill")
                             .font(.caption)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                             .scaleEffect(pauseIconScale)
                             .animation(
                                 .easeInOut(duration: 1.0)
@@ -114,7 +114,7 @@ struct StrengthSessionCard: View {
                     } else {
                         // Aktiv laufend - pulsierender Kreis
                         Circle()
-                            .fill(.orange)
+                            .fill(Color.orange)
                             .frame(width: 8, height: 8)
                             .scaleEffect(runningCircleScale)
                             .animation(
@@ -129,7 +129,7 @@ struct StrengthSessionCard: View {
 
                     Text("\(Int(session.progress * 100))%")
                         .font(.caption.bold())
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
@@ -227,9 +227,9 @@ struct StrengthSessionCard: View {
             // Nummer
             Text("\(index)")
                 .font(.caption2.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .frame(width: 18, height: 18)
-                .background(Circle().fill(.blue))
+                .background(Circle().fill(Color.blue))
 
             // Name
             Text(name)
@@ -249,7 +249,7 @@ struct StrengthSessionCard: View {
             if completedCount == sets.count {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.caption)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
             }
         }
         .padding(.vertical, 4)
@@ -289,7 +289,7 @@ struct StrengthSessionCard: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Color.blue.opacity(0.15))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                             .clipShape(Capsule())
                     }
                 }

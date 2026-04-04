@@ -24,7 +24,7 @@ struct ProgressionOverviewCard: View {
             // Header
             HStack(spacing: 8) {
                 Image(systemName: "brain.head.profile")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                 Text("Progressions-Übersicht")
                     .font(.headline)
             }
@@ -34,10 +34,10 @@ struct ProgressionOverviewCard: View {
             if needsDeload {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                     Text("Deload empfohlen — mindestens 3 Übungen mit Abwärtstrend")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                 }
                 .padding(10)
                 .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))

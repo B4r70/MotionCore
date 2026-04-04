@@ -19,7 +19,6 @@ import os.log
 struct MotionCoreApp: App {
     @StateObject private var appSettings = AppSettings.shared
     @StateObject private var activeSessionManager = ActiveSessionManager.shared
-    @StateObject private var filterService = SupabaseFilterService.shared
 
     @State private var showSessionRestoreAlert = false
     @State private var pendingRestoreInfo: (sessionID: String, workoutType: WorkoutType)?
@@ -111,10 +110,16 @@ struct MotionCoreApp: App {
             BaseView()
                 .environmentObject(appSettings)
                 .environmentObject(activeSessionManager)
-                .environmentObject(filterService)
                 .preferredColorScheme(appSettings.appTheme.colorScheme)
                 .handleSessionLifecycle()
                 .onAppear { checkForActiveSession() }
+                .task {
+                    let context = sharedModelContainer.mainContext
+                    // 1. Bundle-Seeder zuerst (apiID-basiert, 1324 Übungen)
+                    await BundledExerciseSeeder.seedIfNeeded(context: context)
+                    // 2. Handgepflegte Übungen nur ergänzen wenn noch nicht vorhanden (Name-basiert)
+                    ExerciseSeeder.seedMissing(context: context)
+                }
                 .alert("Aktive Session gefunden", isPresented: $showSessionRestoreAlert) {
                     Button("Fortsetzen") { restoreSession() }
                     Button("Verwerfen", role: .cancel) {

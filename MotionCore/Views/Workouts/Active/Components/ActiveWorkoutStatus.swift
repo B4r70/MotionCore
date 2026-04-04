@@ -51,7 +51,7 @@ struct ActiveWorkoutStatus: View {
                     if isPaused {
                         Text("Pausiert")
                             .font(.caption2)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                     }
                     // Plan-Badge: nur anzeigen wenn Workout aus einem Plan stammt
                     if let title = planTitle {
@@ -124,7 +124,7 @@ struct ActiveWorkoutStatus: View {
         case .activeTracking:
             Image(systemName: "applewatch")
                 .font(.caption2)
-                .foregroundStyle(.green)
+                .foregroundStyle(Color.green)
                 .scaleEffect(watchPulse ? 1.2 : 1.0)
                 .animation(
                     .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
@@ -134,7 +134,7 @@ struct ActiveWorkoutStatus: View {
         case .connected:
             Image(systemName: "applewatch")
                 .font(.caption2)
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.blue)
         case .disconnected:
             Image(systemName: "applewatch")
                 .font(.caption2)

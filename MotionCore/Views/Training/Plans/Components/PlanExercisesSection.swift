@@ -119,7 +119,7 @@ struct PlanExercisesSection: View {
                         } label: {
                             Image(systemName: "bolt")
                                 .font(.title2)
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
                         .opacity(isEditing ? 0 : 1)
                         .scaleEffect(isEditing ? 0.5 : 1)
@@ -130,7 +130,7 @@ struct PlanExercisesSection: View {
                         Button { onAdd() } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
                         .opacity(isEditing ? 0 : 1)
                         .scaleEffect(isEditing ? 0.5 : 1)
@@ -155,7 +155,7 @@ struct PlanExercisesSection: View {
                     } label: {
                         Text("Bearbeiten")
                             .font(.subheadline)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                 }
             }
@@ -184,7 +184,7 @@ struct PlanExercisesSection: View {
                 Button { onAdd() } label: {
                     Label("Übung hinzufügen", systemImage: "plus")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.white)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
                         .background(.blue, in: Capsule())
@@ -195,7 +195,7 @@ struct PlanExercisesSection: View {
                 } label: {
                     Text("Übungen hinzufügen")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                 }
             }
         }
@@ -256,7 +256,7 @@ struct PlanExercisesSection: View {
                                 HStack {
                                     Text(supersetLabel(for: size))
                                         .font(.caption.bold())
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(Color.blue)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 3)
                                         .background(Color.blue.opacity(0.12), in: Capsule())
@@ -516,7 +516,7 @@ struct PlanExercisesSection: View {
             } label: {
                 Text("Superset")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.white)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
                     .background(
@@ -679,13 +679,13 @@ struct ExerciseDetailRow: View {
         HStack(spacing: 12) {
             Text("\(index)")
                 .font(.caption.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .frame(width: 24, height: 24)
-                .background(Circle().fill(.blue))
+                .background(Circle().fill(Color.blue))
             if isInSuperset {
                 Image(systemName: "link")
                     .font(.caption2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
             }
             // Anzeige MP4 Übungsdurchführung
             ExerciseVideoView(
@@ -717,7 +717,7 @@ struct ExerciseDetailRow: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Color.orange.opacity(0.2))
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                             .clipShape(Capsule())
                     }
                 }

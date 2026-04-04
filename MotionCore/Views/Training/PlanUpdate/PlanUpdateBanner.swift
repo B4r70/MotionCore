@@ -26,7 +26,7 @@ struct PlanUpdateBanner: View {
                 // Icon
                 Image(systemName: "sparkles")
                     .font(.title2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
 
                 // Texte
                 VStack(alignment: .leading, spacing: 2) {

@@ -72,7 +72,7 @@ struct ActiveSetCard: View {
                 } label: {
                     Image(systemName: "figure.run.square.stack")
                         .font(.headline)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                         .padding(10)
                         .background(.ultraThinMaterial, in: Circle())
                         .overlay(Circle().fill(Color.white.opacity(0.06)))
@@ -89,10 +89,10 @@ struct ActiveSetCard: View {
                     HStack(spacing: 6) {
                         Image(systemName: "bolt.fill")
                             .font(.caption.bold())
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.green)
                         Text("Superset – Runde \(supersetCurrentRound)/\(supersetTotalRounds)")
                             .font(.caption.bold())
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.green)
                         Spacer()
                     }
 
@@ -111,7 +111,7 @@ struct ActiveSetCard: View {
                                         // In dieser Runde bereits abgeschlossen
                                         Image(systemName: "checkmark")
                                             .font(.system(size: 7, weight: .bold))
-                                            .foregroundStyle(.green)
+                                            .foregroundStyle(Color.green)
                                     } else {
                                         // Noch ausstehend in dieser Runde
                                         Circle()
@@ -177,7 +177,7 @@ struct ActiveSetCard: View {
             } label: {
                 Label("Anpassen", systemImage: "pencil")
                     .font(.subheadline)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
             }
 
             .glassDivider()
@@ -190,7 +190,7 @@ struct ActiveSetCard: View {
                     Text("Satz abschließen")
                         .font(.headline)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(.green, in: RoundedRectangle(cornerRadius: 16))

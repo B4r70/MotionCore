@@ -148,7 +148,7 @@ struct ExerciseListView: View {
                                         systemImage: exercise.isArchived ? "tray.and.arrow.up" : "archivebox"
                                     )
                                 }
-                                .tint(.orange)
+                                .tint(Color.orange)
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 // Favorit-Toggle
@@ -160,7 +160,7 @@ struct ExerciseListView: View {
                                         systemImage: exercise.isFavorite ? "star.slash" : "star.fill"
                                     )
                                 }
-                                .tint(.yellow)
+                                .tint(Color.yellow)
                             }
                         }
                     }
@@ -203,10 +203,13 @@ struct ExerciseListView: View {
                 draft = Exercise()
             }
         }
-        // *NEU* - Sheet für API-Suche
+        // Sheet für lokale Übungssuche (SwiftData-basiert, kein Supabase-RPC)
         .sheet(isPresented: $showingAPISearch) {
-            ExerciseSearchView()
-                .environmentObject(appSettings)
+            LocalExerciseSearchView { exercise in
+                // Zur Übungsdetail-Ansicht navigieren ist im Sheet-Kontext nicht möglich;
+                // Sheet schließt sich — User findet die Übung jetzt in der Liste
+            }
+            .environmentObject(appSettings)
         }
     }
 
@@ -219,7 +222,7 @@ struct ExerciseListView: View {
             HStack(spacing: 6) {
                 Image(systemName: "dumbbell.fill")
                     .font(.caption)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
 
                 Text("\(allExercises.count)")
                     .font(.headline.bold())
@@ -237,7 +240,7 @@ struct ExerciseListView: View {
             HStack(spacing: 6) {
                 Image(systemName: "person.fill")
                     .font(.caption)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.green)
 
                 Text("\(userExercises.count)")
                     .font(.headline.bold())
@@ -251,17 +254,17 @@ struct ExerciseListView: View {
             Divider()
                 .frame(height: 20)
 
-            // Importiert
+            // System-Übungen
             HStack(spacing: 6) {
-                Image(systemName: "cloud.fill")
+                Image(systemName: "bookmark.fill")
                     .font(.caption)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
 
                 Text("\(systemExercises.count)")
                     .font(.headline.bold())
                     .foregroundStyle(.primary)
 
-                Text("API")
+                Text("System")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -313,10 +316,10 @@ struct ExerciseListView: View {
                     showUserExercises.toggle()
                 }
 
-                // Importierte Übungen
+                // System-Übungen
                 FilterChip(
-                    title: "Aus Supabase",
-                    icon: .system("cloud.fill"),
+                    title: "System-Übungen",
+                    icon: .system("bookmark.fill"),
                     count: systemExercises.count,
                     isSelected: showSystemExercises
                 ) {
@@ -430,7 +433,7 @@ struct ExerciseListView: View {
 
                 Image(systemName: "dumbbell.fill")
                     .font(.system(size: 50))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
             }
             .shadow(color: .black.opacity(0.1), radius: 20)
 

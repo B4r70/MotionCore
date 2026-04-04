@@ -68,7 +68,7 @@ struct SetEditSheet: View {
                     Button { dismiss() } label: { Image(systemName: "chevron.left") }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button { saveChanges(); dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
+                    Button { saveChanges(); dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
                 }
             }
             .onDisappear { stopTimer() }
@@ -91,8 +91,8 @@ struct SetEditSheet: View {
             if let note = set.exercise?.cautionNote, !note.isEmpty {
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange).font(.caption)
-                    Text(note).font(.caption).foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange).font(.caption)
+                    Text(note).font(.caption).foregroundStyle(Color.orange)
                 }
                 .padding(.horizontal, 12).padding(.vertical, 8)
                 .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
@@ -108,7 +108,7 @@ struct SetEditSheet: View {
                 if set.isUnilateralSnapshot {
                     Text("2×").font(.caption.bold())
                         .padding(.horizontal, 6).padding(.vertical, 2)
-                        .background(Color.orange.opacity(0.2)).foregroundStyle(.orange).clipShape(Capsule())
+                        .background(Color.orange.opacity(0.2)).foregroundStyle(Color.orange).clipShape(Capsule())
                 }
                 Spacer()
             }
@@ -121,7 +121,7 @@ struct SetEditSheet: View {
                 // Bilateral-Anzeige bei unilateralen Übungen
                 if set.isUnilateralSnapshot && weight > 0 {
                     HStack(spacing: 6) {
-                        Text("2 ×").font(.title2).foregroundStyle(.orange)
+                        Text("2 ×").font(.title2).foregroundStyle(Color.orange)
                         Text(String(format: "%.2f", weight / 2))
                             .font(.system(size: 40, weight: .bold, design: .rounded))
                     }

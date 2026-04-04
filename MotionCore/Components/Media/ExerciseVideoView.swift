@@ -156,7 +156,7 @@ struct ExerciseVideoView: View {
 
             Image(systemName: "play.fill")
                 .font(.system(size: size * 0.15))
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
         }
     }
 
@@ -164,7 +164,7 @@ struct ExerciseVideoView: View {
         ZStack {
             Color.black.opacity(0.3)
             ProgressView()
-                .tint(.white)
+                .tint(Color.white)
                 .scaleEffect(0.8)
         }
     }
@@ -196,7 +196,7 @@ struct ExerciseVideoView: View {
                             .frame(width: size * 2, height: size * 2)
 
                         ProgressView()
-                            .tint(.white)
+                            .tint(Color.white)
                             .scaleEffect(1.5)
                     }
                     .onTapGesture {
@@ -221,22 +221,16 @@ struct ExerciseVideoView: View {
     private func loadPosterIfNeeded() {
         guard hasRemotePoster, posterImage == nil else { return }
         guard let path = posterPath else { return }
-        guard let url = SupabaseStorageURLBuilder.publicURL(bucket: .exercisePosters, path: path) else { return }
+        guard let remoteURL = SupabaseStorageURLBuilder.publicURL(bucket: .exercisePosters, path: path) else { return }
 
         isLoadingPoster = true
 
         Task {
-            do {
-                let (data, _) = try await URLSession.shared.data(from: url)
-                await MainActor.run {
-                    posterImage = UIImage(data: data)
-                    isLoadingPoster = false
-                }
-            } catch {
-                print("⚠️ Failed to load poster: \(error)")
-                await MainActor.run {
-                    isLoadingPoster = false
-                }
+            // Cache-First: gecachtes Poster oder Remote-Download mit anschließendem Cachen
+            let image = await VideoCacheService.shared.loadPoster(path: path, from: remoteURL)
+            await MainActor.run {
+                posterImage = image
+                isLoadingPoster = false
             }
         }
     }
@@ -275,12 +269,20 @@ struct ExerciseVideoView: View {
 
         var videoURL: URL?
 
-        // Priorität: Lokales Asset, dann Remote
+        // Priorität: Lokales Asset → Cache → Remote
         if hasLocalAsset, let localURL = mediaURL(for: assetName, extension: "mp4") ?? mediaURL(for: assetName, extension: "mov") {
             videoURL = localURL
-        } else if hasRemoteVideo, let path = videoPath {
-            videoURL = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path)
-            isLoadingVideo = true
+        } else if hasRemoteVideo, let path = videoPath,
+                  let remoteURL = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path) {
+            if let cachedURL = VideoCacheService.localVideoURL(for: path) {
+                // Cache-Hit: lokale Datei direkt nutzen
+                videoURL = cachedURL
+            } else {
+                // Cache-Miss: Remote streamen + im Hintergrund cachen
+                videoURL = remoteURL
+                isLoadingVideo = true
+                Task { await VideoCacheService.shared.cacheVideo(path: path, from: remoteURL) }
+            }
         }
 
         guard let url = videoURL else { return }
@@ -337,12 +339,20 @@ struct ExerciseVideoView: View {
 
         var videoURL: URL?
 
-        // Priorität: Lokales Asset, dann Remote
+        // Priorität: Lokales Asset → Cache → Remote
         if hasLocalAsset, let localURL = mediaURL(for: assetName, extension: "mp4") ?? mediaURL(for: assetName, extension: "mov") {
             videoURL = localURL
-        } else if hasRemoteVideo, let path = videoPath {
-            videoURL = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path)
-            isLoadingVideo = true
+        } else if hasRemoteVideo, let path = videoPath,
+                  let remoteURL = SupabaseStorageURLBuilder.publicURL(bucket: .exerciseVideos, path: path) {
+            if let cachedURL = VideoCacheService.localVideoURL(for: path) {
+                // Cache-Hit: lokale Datei direkt nutzen
+                videoURL = cachedURL
+            } else {
+                // Cache-Miss: Remote streamen + im Hintergrund cachen
+                videoURL = remoteURL
+                isLoadingVideo = true
+                Task { await VideoCacheService.shared.cacheVideo(path: path, from: remoteURL) }
+            }
         }
 
         guard let url = videoURL else { return }

@@ -41,7 +41,7 @@ struct SummaryRecordRow: View {
                         Text("Neu!")
                             .font(.caption2)
                             .fontWeight(.bold)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Color.orange)

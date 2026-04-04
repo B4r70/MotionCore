@@ -123,19 +123,19 @@ extension View {
                     // Plus Button (wie Floating Action Button)
                 Image(systemName: "plus")
                     .font(.system(size: 24))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                     .glassButton(size: 60, accentColor: .primary)
 
                     // Filter Button
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .font(.system(size: 14))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                     .glassButton(size: 36, accentColor: .primary)
 
                     // Settings Button
                 Image(systemName: "gearshape")
                     .font(.system(size: 14))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                     .glassButton(size: 36, accentColor: .primary)
             }
 
@@ -148,7 +148,7 @@ extension View {
                         .cornerRadius(20)
 
                     Image(systemName: "heart.fill")
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Color.red)
                         .glassButton(size: 44, accentColor: .primary)
                 }
 
@@ -159,7 +159,7 @@ extension View {
                         .cornerRadius(20)
 
                     Image(systemName: "star.fill")
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(Color.yellow)
                         .glassButton(size: 44, accentColor: .primary)
                 }
 
@@ -170,7 +170,7 @@ extension View {
                         .cornerRadius(20)
 
                     Image(systemName: "flame.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                         .glassButton(size: 44, accentColor: .primary)
                 }
             }
@@ -202,12 +202,12 @@ extension View {
         VStack(spacing: 40) {
             Text("Glass Button - Dark Mode")
                 .font(.title2.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .padding(.top, 40)
 
             Image(systemName: "plus")
                 .font(.system(size: 24))
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.blue)
                 .glassButton(size: 60, accentColor: .primary)
 
             Image(systemName: "gearshape")

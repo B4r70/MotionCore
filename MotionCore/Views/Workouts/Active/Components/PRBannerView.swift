@@ -20,7 +20,7 @@ struct PRBannerView: View {
         HStack(spacing: 12) {
             Image(systemName: "crown.fill")
                 .font(.title2)
-                .foregroundStyle(.yellow)
+                .foregroundStyle(Color.yellow)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("Neuer PR!")

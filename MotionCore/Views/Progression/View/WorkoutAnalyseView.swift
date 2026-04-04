@@ -88,7 +88,7 @@ struct WorkoutAnalyseView: View {
                         .font(.headline)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
+                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
                 }
             }
             .sheet(item: $selectedExercise) { data in

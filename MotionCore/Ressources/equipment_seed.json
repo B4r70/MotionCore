@@ -1,0 +1,230 @@
+[
+  {
+    "json_agg": [
+      {
+        "id": "30a94b5a-9469-42b9-b3f1-7606949d96c1",
+        "identifier": "barbell",
+        "category": "free_weights",
+        "display_order": 1,
+        "name": "Langhantel",
+        "description": "Standard Langhantel für Grundübungen"
+      },
+      {
+        "id": "4812f3f0-f75f-4fdf-8a51-e24787e0665d",
+        "identifier": "dumbbell",
+        "category": "free_weights",
+        "display_order": 2,
+        "name": "Kurzhantel",
+        "description": "Kurzhanteln für einseitiges Training"
+      },
+      {
+        "id": "b16c592a-ce9f-464c-93f3-03f98772faa9",
+        "identifier": "ez_bar",
+        "category": "free_weights",
+        "display_order": 3,
+        "name": "SZ-Stange",
+        "description": "Gebogene Stange für Armübungen"
+      },
+      {
+        "id": "115dfc0e-f4c7-49ef-928b-f5b52ac5eed7",
+        "identifier": "kettlebell",
+        "category": "free_weights",
+        "display_order": 4,
+        "name": "Kettlebell",
+        "description": "Kugelhantel für dynamische Bewegungen"
+      },
+      {
+        "id": "93983495-fc3c-4c01-9f44-df40ea32fd3d",
+        "identifier": "cable_machine",
+        "category": "cables",
+        "display_order": 10,
+        "name": "Kabelzug",
+        "description": "Kabelzugmaschine"
+      },
+      {
+        "id": "9a6764db-ddcc-402c-a6f5-31ccba67d169",
+        "identifier": "smith_machine",
+        "category": "machines",
+        "display_order": 11,
+        "name": "Smith-Maschine",
+        "description": "Geführte Langhantelmaschine"
+      },
+      {
+        "id": "0cbe880a-f303-4cb6-86e1-3d1477ee687c",
+        "identifier": "leg_press",
+        "category": "machines",
+        "display_order": 12,
+        "name": "Beinpresse",
+        "description": "Beinpress-Maschine"
+      },
+      {
+        "id": "e5c8dc24-464f-4f74-aa36-c414d6417a5e",
+        "identifier": "hack_squat",
+        "category": "machines",
+        "display_order": 13,
+        "name": "Hackenschmidt-Maschine",
+        "description": "Hackenschmidt-Kniebeugenmaschine"
+      },
+      {
+        "id": "41d9efd8-37b5-4b08-bf5f-1465900eb09d",
+        "identifier": "leg_curl",
+        "category": "machines",
+        "display_order": 14,
+        "name": "Beinbeuger",
+        "description": "Beinbeuger-Maschine"
+      },
+      {
+        "id": "80105f08-d9b0-4565-a1b3-f3d4043e6d3e",
+        "identifier": "leg_extension",
+        "category": "machines",
+        "display_order": 15,
+        "name": "Beinstrecker",
+        "description": "Beinstrecker-Maschine"
+      },
+      {
+        "id": "f38ac215-d389-4dcb-866f-6f536ddae61b",
+        "identifier": "chest_press_machine",
+        "category": "machines",
+        "display_order": 16,
+        "name": "Brustpresse",
+        "description": "Brustpress-Maschine"
+      },
+      {
+        "id": "3e494bf0-bbf8-4d92-9dc0-8c085fccc226",
+        "identifier": "pec_deck",
+        "category": "machines",
+        "display_order": 17,
+        "name": "Butterfly-Maschine",
+        "description": "Brustfliegen-Maschine"
+      },
+      {
+        "id": "29d12a6b-da6e-44b0-aab5-f20ae054802d",
+        "identifier": "lat_pulldown",
+        "category": "machines",
+        "display_order": 18,
+        "name": "Latzug",
+        "description": "Latzug-Maschine"
+      },
+      {
+        "id": "40dccf09-3750-4722-8ee7-83e9b1bdc6d0",
+        "identifier": "seated_row",
+        "category": "machines",
+        "display_order": 19,
+        "name": "Rudermaschine",
+        "description": "Sitzende Rudermaschine"
+      },
+      {
+        "id": "b7854f81-6675-4e36-9da6-2c02c711abb9",
+        "identifier": "shoulder_press_machine",
+        "category": "machines",
+        "display_order": 20,
+        "name": "Schulterpresse",
+        "description": "Schulterpress-Maschine"
+      },
+      {
+        "id": "162d984c-23b5-4334-8be5-a1d4d085c578",
+        "identifier": "bench_flat",
+        "category": "other",
+        "display_order": 30,
+        "name": "Flachbank",
+        "description": "Flache Hantelbank"
+      },
+      {
+        "id": "5454e62b-7697-4727-ab8f-0fe41b80d9ec",
+        "identifier": "bench_incline",
+        "category": "other",
+        "display_order": 31,
+        "name": "Schrägbank",
+        "description": "Verstellbare Schrägbank"
+      },
+      {
+        "id": "086000aa-f913-4cf9-b56a-18689d0762a6",
+        "identifier": "bench_decline",
+        "category": "other",
+        "display_order": 32,
+        "name": "Negativbank",
+        "description": "Negative Hantelbank"
+      },
+      {
+        "id": "f52dfe71-5d68-4424-a150-8976720ee070",
+        "identifier": "pull_up_bar",
+        "category": "other",
+        "display_order": 40,
+        "name": "Klimmzugstange",
+        "description": "Stange für Klimmzüge"
+      },
+      {
+        "id": "20f2c5f5-5251-4598-a397-ab6c0bcab81c",
+        "identifier": "dip_bars",
+        "category": "other",
+        "display_order": 41,
+        "name": "Dip-Barren",
+        "description": "Parallele Stangen für Dips"
+      },
+      {
+        "id": "55404a2f-8bbe-495b-85d8-88cd442cdb17",
+        "identifier": "bodyweight",
+        "category": "bodyweight",
+        "display_order": 50,
+        "name": "Körpergewicht",
+        "description": "Keine Ausrüstung erforderlich"
+      },
+      {
+        "id": "6668664b-0f1f-4161-9cc0-06592fc5b696",
+        "identifier": "resistance_band",
+        "category": "bands",
+        "display_order": 60,
+        "name": "Widerstandsband",
+        "description": "Elastisches Widerstandsband"
+      },
+      {
+        "id": "7e4ba77e-0ab9-4392-aeac-e54ba12b7ae0",
+        "identifier": "exercise_ball",
+        "category": "other",
+        "display_order": 61,
+        "name": "Gymnastikball",
+        "description": "Stabilitätsball"
+      },
+      {
+        "id": "e07d8495-2732-457f-8f68-497fbf3facc9",
+        "identifier": "foam_roller",
+        "category": "other",
+        "display_order": 62,
+        "name": "Faszienrolle",
+        "description": "Schaumstoffrolle für Regeneration"
+      },
+      {
+        "id": "b30a5cff-a1d9-4218-b521-4a769827f073",
+        "identifier": "treadmill",
+        "category": "machines",
+        "display_order": 70,
+        "name": "Laufband",
+        "description": "Laufband zum Joggen"
+      },
+      {
+        "id": "07d5b020-2408-4ffd-82b9-3fe10846d395",
+        "identifier": "stationary_bike",
+        "category": "machines",
+        "display_order": 71,
+        "name": "Ergometer",
+        "description": "Standfahrrad"
+      },
+      {
+        "id": "ca8771f3-6ff9-44d2-af57-dde009c77d04",
+        "identifier": "rowing_machine",
+        "category": "machines",
+        "display_order": 72,
+        "name": "Ruderergometer",
+        "description": "Indoor-Rudergerät"
+      },
+      {
+        "id": "5bc1ec32-c1ca-4ed3-be9d-04b1e26ba65d",
+        "identifier": "elliptical",
+        "category": "machines",
+        "display_order": 73,
+        "name": "Crosstrainer",
+        "description": "Ellipsentrainer"
+      }
+    ]
+  }
+]

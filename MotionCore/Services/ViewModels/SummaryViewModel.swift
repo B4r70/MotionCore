@@ -93,7 +93,19 @@ final class SummaryViewModel {
         // Progressions-Analysen (nur wenn Kraft-Sessions vorhanden)
         let progressionEngine = ProgressionCalcEngine()
         if !strength.isEmpty {
+            // Trainierte Übungsnamen aus Sessions extrahieren (einmaliger O(sessions × sets)-Durchlauf)
+            let trainedNames: Set<String> = Set(
+                strength.flatMap { session in
+                    session.safeExerciseSets.flatMap { s -> [String] in
+                        var names: [String] = []
+                        if !s.exerciseNameSnapshot.isEmpty { names.append(s.exerciseNameSnapshot) }
+                        if !s.exerciseName.isEmpty { names.append(s.exerciseName) }
+                        return names
+                    }
+                }
+            )
             self.progressionAnalyses = exercises
+                .filter { trainedNames.contains($0.name) }
                 .filter { $0.progressionStrategy != .manual && $0.category != .bodyweight }
                 .map { progressionEngine.analyze(exercise: $0, sessions: strength) }
         } else {

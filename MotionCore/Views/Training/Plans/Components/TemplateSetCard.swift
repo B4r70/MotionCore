@@ -94,7 +94,7 @@ struct TemplateSetCard<Trailing: View>: View {
                 if isInSuperset {
                     Image(systemName: "link")
                         .font(.caption.bold())
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 3)
                         .background(Color.blue.opacity(0.15), in: Capsule())
@@ -144,13 +144,13 @@ struct TemplateSetCard<Trailing: View>: View {
                     HStack {
                         Text("Aufwärmen")
                             .font(.caption.bold())
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
 
                         Spacer()
 
                         Text(warmupSummary)
                             .font(.caption)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                     }
                     .padding(.vertical, 6)
                     .padding(.horizontal, 10)
@@ -161,13 +161,13 @@ struct TemplateSetCard<Trailing: View>: View {
                 HStack {
                     Text("Arbeitssätze")
                         .font(.caption.bold())
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
 
                     Spacer()
 
                     Text(workingSummary)
                         .font(.caption)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                 }
                 .padding(.vertical, 6)
                 .padding(.horizontal, 10)

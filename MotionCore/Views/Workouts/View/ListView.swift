@@ -208,7 +208,7 @@ struct ListView: View {
             // Header
             HStack {
                 Circle()
-                    .fill(.orange)
+                    .fill(Color.orange)
                     .frame(width: 8, height: 8)
 
                 Text("Laufende Trainings")

@@ -237,7 +237,7 @@ struct SetConfigurationSheet: View {
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
                                     .background(.blue.opacity(0.2))
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(Color.blue)
                                     .clipShape(Capsule())
                             }
                         }
@@ -254,7 +254,7 @@ struct SetConfigurationSheet: View {
                 } label: {
                     Image(systemName: "arrow.right.circle")
                         .font(.title2)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                 }
             }
         }
@@ -277,7 +277,7 @@ struct SetConfigurationSheet: View {
                     Button { decreaseSets(by: 1) } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                     .simultaneousGesture(
                         LongPressGesture(minimumDuration: 0.35)
@@ -295,7 +295,7 @@ struct SetConfigurationSheet: View {
                     Button { increaseSets(by: 1) } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                     .simultaneousGesture(
                         LongPressGesture(minimumDuration: 0.35)
@@ -320,7 +320,7 @@ struct SetConfigurationSheet: View {
                     Button { decreaseReps(by: 1) } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                     .simultaneousGesture(
                         LongPressGesture(minimumDuration: 0.35)
@@ -338,7 +338,7 @@ struct SetConfigurationSheet: View {
                     Button { increaseReps(by: 1) } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                     .simultaneousGesture(
                         LongPressGesture(minimumDuration: 0.35)
@@ -366,7 +366,7 @@ struct SetConfigurationSheet: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Color.orange.opacity(0.2))
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                             .clipShape(Capsule())
                     }
                 }
@@ -375,7 +375,7 @@ struct SetConfigurationSheet: View {
                     Button { decreaseWeight(by: 0.25) } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
                         if pressing { startAutoRepeatWeight(increment: false) }
@@ -386,7 +386,7 @@ struct SetConfigurationSheet: View {
                         HStack(spacing: 6) {
                             Text("2 ×")
                                 .font(.title2)
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(Color.orange)
                             Text(String(format: "%.2f", targetWeight))
                                 .font(.system(size: 48, weight: .bold, design: .rounded))
                         }
@@ -402,7 +402,7 @@ struct SetConfigurationSheet: View {
                     Button { increaseWeight(by: 0.25) } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                     }
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
                         if pressing { startAutoRepeatWeight(increment: true) }
@@ -440,7 +440,7 @@ struct SetConfigurationSheet: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .tint(.blue)
+            .tint(Color.blue)
 
             if includeWarmup {
                 HStack {
@@ -531,7 +531,7 @@ struct SetConfigurationSheet: View {
                 if displayIsUnilateral && targetWeight > 0 {
                     HStack {
                         Label("Gesamtgewicht: \(String(format: "%.1f", targetWeight * 2)) kg", systemImage: "scalemass.fill")
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                         Spacer()
                     }
                 }
@@ -762,7 +762,7 @@ private struct SetPreviewRow: View {
                     HStack(spacing: 2) {
                         Text("2×")
                             .font(.caption)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.orange)
                         Text(String(format: "%.1f kg", weight))
                             .font(.subheadline.bold())
                     }

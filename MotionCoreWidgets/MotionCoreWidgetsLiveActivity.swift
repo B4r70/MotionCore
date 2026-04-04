@@ -75,11 +75,11 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                             if context.state.isPaused {
                                 Text(formatTime(context.state.elapsedAtPause ?? 0))
                                     .font(.title2.bold().monospacedDigit())
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(Color.orange)
                             } else {
                                 Text(context.state.workoutStartDate, style: .timer)
                                     .font(.title2.bold().monospacedDigit())
-                                    .foregroundStyle(.green)
+                                    .foregroundStyle(Color.green)
                             }
                         }
                     }
@@ -90,7 +90,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                             // Fortschritt
                         HStack(spacing: 4) {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.green)
                                 .font(.caption)
                             Text("\(context.state.completedSets)/\(context.state.totalSets) Sätze")
                                 .font(.caption)
@@ -128,19 +128,19 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                 } else if context.state.isPaused {
                         // WORKOUT PAUSIERT (nicht Satz-Pause)
                     Image(systemName: "pause.circle.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                         .font(.body)
                 } else {
                         // AKTIV-MODUS: Icon + Satz-Fortschritt
                     HStack(spacing: 6) {
                         Image(systemName: "figure.strengthtraining.traditional")
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.green)
                             .font(.body)
 
                             // Satz-Fortschritt in Weiß (hebt sich ab)
                         Text("\(context.state.completedSets)/\(context.state.totalSets)")
                             .font(.caption.bold().monospacedDigit())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.white)
                     }
                 }
 
@@ -158,12 +158,12 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         // WORKOUT PAUSIERT
                     Text(formatTime(context.state.elapsedAtPause ?? 0))
                         .font(.caption.bold().monospacedDigit())
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                 } else {
                         // AKTIV-MODUS: Nur Timer in Grün (rechtsbündig)
                     Text(context.state.workoutStartDate, style: .timer)
                         .font(.caption.bold().monospacedDigit())
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                 }
 
             } minimal: {
@@ -175,10 +175,10 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         .foregroundStyle(restTimerColor(for: context))
                 } else if context.state.isPaused {
                     Image(systemName: "pause.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                 } else {
                     Image(systemName: "dumbbell.fill")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                 }
             }
         }
@@ -234,11 +234,11 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         if context.state.isPaused {
                             Text(formatTime(context.state.elapsedAtPause ?? 0))
                                 .font(.title.bold().monospacedDigit())
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(Color.orange)
                         } else {
                             Text(context.state.workoutStartDate, style: .timer)
                                 .font(.title.bold().monospacedDigit())
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.green)
                         }
                     }
                 }
@@ -275,7 +275,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
             HStack {
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.green)
                     Text("\(context.state.completedSets)/\(context.state.totalSets) Sätze")
                         .font(.caption)
                 }

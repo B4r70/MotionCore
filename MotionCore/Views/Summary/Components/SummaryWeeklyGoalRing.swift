@@ -56,7 +56,7 @@ struct SummaryWeeklyGoalRing: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Image(systemName: "target")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                     Text("Wochenziel")
                         .font(.subheadline)
                         .fontWeight(.semibold)

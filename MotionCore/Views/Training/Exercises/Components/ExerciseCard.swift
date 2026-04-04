@@ -34,14 +34,14 @@ struct ExerciseCard: View {
                         if exercise.isFavorite {
                             Image(systemName: "star.fill")
                                 .font(.caption)
-                                .foregroundStyle(.yellow)
+                                .foregroundStyle(Color.yellow)
                         }
 
                         // Unilateral Badge
                         if exercise.isUnilateral {
                             Image(systemName: "hand.raised.fingers.spread.fill")
                                 .font(.caption)
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(Color.orange)
                         }
                             // Video verfügbar Badge
                         if exercise.videoPath != nil {
@@ -103,7 +103,7 @@ struct ExerciseCard: View {
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 4)
                                         .background(.blue.opacity(0.2))
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(Color.blue)
                                         .clipShape(Capsule())
                                 }
 
@@ -137,11 +137,11 @@ struct ExerciseCard: View {
                 HStack(spacing: 6) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
 
                     Text(exercise.cautionNote)
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                         .lineLimit(2)
                 }
                 .padding(8)

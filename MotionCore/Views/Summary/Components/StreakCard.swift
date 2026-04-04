@@ -33,11 +33,11 @@ struct StreakCard: View {
             if let milestone = streakMilestone {
                 HStack(spacing: 6) {
                     Image(systemName: milestone.icon)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                     Text(milestone.text)
                         .font(.caption)
                         .fontWeight(.semibold)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.orange)
                     Spacer()
                 }
                 .padding(.horizontal, 4)

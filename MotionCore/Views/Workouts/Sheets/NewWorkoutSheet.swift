@@ -105,7 +105,7 @@ private struct WorkoutTypeButton: View {
                             Text("Bald")
                                 .font(.caption2)
                                 .fontWeight(.medium)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.white)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(Color.secondary.opacity(0.5), in: Capsule())

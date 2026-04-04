@@ -12,7 +12,7 @@
 //
 import Foundation
 
-struct SupabaseExercise: Decodable, Identifiable {
+struct SupabaseExercise: Codable, Identifiable {
     let id: UUID
 
     let exerciseDbId: String?
@@ -39,4 +39,27 @@ struct SupabaseExercise: Decodable, Identifiable {
     let primaryMuscles: [String]
     let secondaryMuscles: [String]
     let equipment: [String]
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case exerciseDbId   = "exercise_db_id"
+        case category
+        case forceType      = "force_type"
+        case mechanicType   = "mechanic_type"
+        case difficulty
+        case videoPath      = "video_path"
+        case posterPath     = "poster_path"
+        case thumbnailUrl   = "thumbnail_url"
+        case source
+        case isVerified     = "is_verified"
+        case isArchived     = "is_archived"
+        case createdAt      = "created_at"
+        case updatedAt      = "updated_at"
+        case name
+        case instructions
+        case tips
+        case primaryMuscles   = "primary_muscles"
+        case secondaryMuscles = "secondary_muscles"
+        case equipment
+    }
 }

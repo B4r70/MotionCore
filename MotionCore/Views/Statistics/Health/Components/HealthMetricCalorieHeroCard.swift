@@ -34,7 +34,7 @@ struct HealthMetricHeroCard: View {
                         // Expand/Collapse Icon
                         Image(systemName: "chevron.down.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                             .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     }
 
@@ -96,7 +96,7 @@ struct HealthMetricHeroCard: View {
                         HStack {
                             HStack(spacing: 8) {
                                 Image(systemName: "flame.circle.fill")
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(Color.orange)
 
                                 Text("Grundumsatz")
                                     .font(.subheadline)
@@ -110,7 +110,7 @@ struct HealthMetricHeroCard: View {
                         HStack {
                             HStack(spacing: 8) {
                                 Image(systemName: "figure.run.circle.fill")
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(Color.blue)
 
                                 Text("Aktivität")
                                     .font(.subheadline)

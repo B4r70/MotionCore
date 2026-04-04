@@ -1,0 +1,429 @@
+[
+  {
+    "json_agg": [
+      {
+        "id": "a64a7ee2-dbe2-4f4e-a4c2-72cbbfa176a7",
+        "identifier": "chest",
+        "parent_id": null,
+        "hierarchy_level": 1,
+        "display_order": 1,
+        "name": "Brust",
+        "description": "Gesamte Brustmuskulatur"
+      },
+      {
+        "id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "identifier": "back",
+        "parent_id": null,
+        "hierarchy_level": 1,
+        "display_order": 2,
+        "name": "Rücken",
+        "description": "Gesamte Rückenmuskulatur"
+      },
+      {
+        "id": "1149edd5-2e95-4007-a57d-891732db4fb6",
+        "identifier": "shoulders",
+        "parent_id": null,
+        "hierarchy_level": 1,
+        "display_order": 3,
+        "name": "Schultern",
+        "description": "Gesamte Schultermuskulatur"
+      },
+      {
+        "id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "identifier": "arms",
+        "parent_id": null,
+        "hierarchy_level": 1,
+        "display_order": 4,
+        "name": "Arme",
+        "description": "Gesamte Armmuskulatur"
+      },
+      {
+        "id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "identifier": "legs",
+        "parent_id": null,
+        "hierarchy_level": 1,
+        "display_order": 5,
+        "name": "Beine",
+        "description": "Gesamte Beinmuskulatur"
+      },
+      {
+        "id": "c6392023-958e-4b54-9e62-92c3f9e481bd",
+        "identifier": "core",
+        "parent_id": null,
+        "hierarchy_level": 1,
+        "display_order": 6,
+        "name": "Rumpf",
+        "description": "Gesamte Rumpfmuskulatur"
+      },
+      {
+        "id": "9ad3f431-d453-456e-b4d5-eb814b6fe3f4",
+        "identifier": "biceps_long",
+        "parent_id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "hierarchy_level": 2,
+        "display_order": 1,
+        "name": "Bizeps (Langer Kopf)",
+        "description": "Langer Kopf des Bizeps"
+      },
+      {
+        "id": "0c1385a8-f980-4814-8353-96a7d673e2ed",
+        "identifier": "back_lats",
+        "parent_id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "hierarchy_level": 2,
+        "display_order": 1,
+        "name": "Latissimus",
+        "description": "Latissimus dorsi (Breite)"
+      },
+      {
+        "id": "6fca20d6-b1e4-4124-8f5c-64cba974167e",
+        "identifier": "abs_upper",
+        "parent_id": "c6392023-958e-4b54-9e62-92c3f9e481bd",
+        "hierarchy_level": 2,
+        "display_order": 1,
+        "name": "Obere Bauchmuskeln",
+        "description": "Obere Bauchmuskulatur"
+      },
+      {
+        "id": "ec0119f1-ea95-4c50-84f7-78f8198241da",
+        "identifier": "chest_upper",
+        "parent_id": "a64a7ee2-dbe2-4f4e-a4c2-72cbbfa176a7",
+        "hierarchy_level": 2,
+        "display_order": 1,
+        "name": "Obere Brust",
+        "description": "Oberer Teil der Brustmuskulatur"
+      },
+      {
+        "id": "669bb208-1cf7-469c-a95d-adb60862d7db",
+        "identifier": "quads_vastus_lateralis",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 1,
+        "name": "Vastus Lateralis",
+        "description": "Äußerer Oberschenkelmuskel"
+      },
+      {
+        "id": "07c90532-9e4d-467d-a6fa-4f86f26ba87e",
+        "identifier": "shoulders_front",
+        "parent_id": "1149edd5-2e95-4007-a57d-891732db4fb6",
+        "hierarchy_level": 2,
+        "display_order": 1,
+        "name": "Vordere Schulter",
+        "description": "Vorderer Deltamuskel (Anterior)"
+      },
+      {
+        "id": "952bf151-a1bd-4ee0-ba56-e0ca79765867",
+        "identifier": "biceps_short",
+        "parent_id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "hierarchy_level": 2,
+        "display_order": 2,
+        "name": "Bizeps (Kurzer Kopf)",
+        "description": "Kurzer Kopf des Bizeps"
+      },
+      {
+        "id": "4302222c-a3fc-4da8-9169-b73204ad2438",
+        "identifier": "chest_middle",
+        "parent_id": "a64a7ee2-dbe2-4f4e-a4c2-72cbbfa176a7",
+        "hierarchy_level": 2,
+        "display_order": 2,
+        "name": "Mittlere Brust",
+        "description": "Mittlerer Teil der Brustmuskulatur"
+      },
+      {
+        "id": "afbbd81d-fb9a-4827-8591-22597392bda9",
+        "identifier": "back_traps_upper",
+        "parent_id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "hierarchy_level": 2,
+        "display_order": 2,
+        "name": "Oberer Trapezius",
+        "description": "Oberer Kapuzenmuskel"
+      },
+      {
+        "id": "d2f43d81-69b0-4d84-b71d-653e10595077",
+        "identifier": "shoulders_side",
+        "parent_id": "1149edd5-2e95-4007-a57d-891732db4fb6",
+        "hierarchy_level": 2,
+        "display_order": 2,
+        "name": "Seitliche Schulter",
+        "description": "Seitlicher Deltamuskel (Lateral)"
+      },
+      {
+        "id": "f6013522-f6fe-41b3-b64b-d10c156b2fb9",
+        "identifier": "abs_lower",
+        "parent_id": "c6392023-958e-4b54-9e62-92c3f9e481bd",
+        "hierarchy_level": 2,
+        "display_order": 2,
+        "name": "Untere Bauchmuskeln",
+        "description": "Untere Bauchmuskulatur"
+      },
+      {
+        "id": "4519d736-ee56-40e8-9970-c4e4aee7cdfd",
+        "identifier": "quads_vastus_medialis",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 2,
+        "name": "Vastus Medialis",
+        "description": "Innerer Oberschenkelmuskel"
+      },
+      {
+        "id": "84436251-13e8-4c2e-b2f2-362fd374f8a9",
+        "identifier": "shoulders_rear",
+        "parent_id": "1149edd5-2e95-4007-a57d-891732db4fb6",
+        "hierarchy_level": 2,
+        "display_order": 3,
+        "name": "Hintere Schulter",
+        "description": "Hinterer Deltamuskel (Posterior)"
+      },
+      {
+        "id": "f5cbc178-6107-412a-ac0b-2f282abee173",
+        "identifier": "back_traps_middle",
+        "parent_id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "hierarchy_level": 2,
+        "display_order": 3,
+        "name": "Mittlerer Trapezius",
+        "description": "Mittlerer Kapuzenmuskel"
+      },
+      {
+        "id": "6cf0221d-5b62-4730-9a2c-530163d2c0b4",
+        "identifier": "abs_obliques",
+        "parent_id": "c6392023-958e-4b54-9e62-92c3f9e481bd",
+        "hierarchy_level": 2,
+        "display_order": 3,
+        "name": "Seitliche Bauchmuskeln",
+        "description": "Seitliche Bauchmuskulatur"
+      },
+      {
+        "id": "feb24817-c857-493c-9e79-1cc25a9f1a8b",
+        "identifier": "triceps_long",
+        "parent_id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "hierarchy_level": 2,
+        "display_order": 3,
+        "name": "Trizeps (Langer Kopf)",
+        "description": "Langer Kopf des Trizeps"
+      },
+      {
+        "id": "d91f4a9c-fb14-41d4-af14-fde18ce9bda4",
+        "identifier": "chest_lower",
+        "parent_id": "a64a7ee2-dbe2-4f4e-a4c2-72cbbfa176a7",
+        "hierarchy_level": 2,
+        "display_order": 3,
+        "name": "Untere Brust",
+        "description": "Unterer Teil der Brustmuskulatur"
+      },
+      {
+        "id": "dd83c5b9-34cf-42cd-9ce6-b82397cbd250",
+        "identifier": "quads_vastus_intermedius",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 3,
+        "name": "Vastus Intermedius",
+        "description": "Mittlerer Oberschenkelmuskel"
+      },
+      {
+        "id": "31f61249-83fb-45f7-a0ea-635a13408278",
+        "identifier": "chest_inner",
+        "parent_id": "a64a7ee2-dbe2-4f4e-a4c2-72cbbfa176a7",
+        "hierarchy_level": 2,
+        "display_order": 4,
+        "name": "Innere Brust",
+        "description": "Innerer Bereich der Brustmuskulatur"
+      },
+      {
+        "id": "e276a251-d587-4f4a-869d-872b7d8f391d",
+        "identifier": "abs_transverse",
+        "parent_id": "c6392023-958e-4b54-9e62-92c3f9e481bd",
+        "hierarchy_level": 2,
+        "display_order": 4,
+        "name": "Quere Bauchmuskeln",
+        "description": "Tiefe Bauchmuskulatur"
+      },
+      {
+        "id": "93410f64-6d32-4292-a915-109d0e08d2da",
+        "identifier": "quads_rectus_femoris",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 4,
+        "name": "Rectus Femoris",
+        "description": "Gerader Oberschenkelmuskel"
+      },
+      {
+        "id": "0cb71ffe-83cc-4576-9342-b5e8c0e68a34",
+        "identifier": "triceps_lateral",
+        "parent_id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "hierarchy_level": 2,
+        "display_order": 4,
+        "name": "Trizeps (Lateraler Kopf)",
+        "description": "Lateraler Kopf des Trizeps"
+      },
+      {
+        "id": "816ecaa3-a045-4533-b8aa-400dddd4190f",
+        "identifier": "back_traps_lower",
+        "parent_id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "hierarchy_level": 2,
+        "display_order": 4,
+        "name": "Unterer Trapezius",
+        "description": "Unterer Kapuzenmuskel"
+      },
+      {
+        "id": "3be1309f-4599-40ae-8bfc-7a746508c9d9",
+        "identifier": "chest_outer",
+        "parent_id": "a64a7ee2-dbe2-4f4e-a4c2-72cbbfa176a7",
+        "hierarchy_level": 2,
+        "display_order": 5,
+        "name": "Äußere Brust",
+        "description": "Äußerer Bereich der Brustmuskulatur"
+      },
+      {
+        "id": "1bc057de-f843-4fa5-9dbd-db5086a2e7b9",
+        "identifier": "hamstrings_biceps_femoris",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 5,
+        "name": "Beinbizeps",
+        "description": "Äußere hintere Oberschenkelmuskulatur"
+      },
+      {
+        "id": "a7c41541-fd86-4742-8dcb-427bb0d79306",
+        "identifier": "back_rhomboids",
+        "parent_id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "hierarchy_level": 2,
+        "display_order": 5,
+        "name": "Rhomboideus",
+        "description": "Rautenmuskeln"
+      },
+      {
+        "id": "7865a3cb-b8dd-4bed-bc55-70b8fba09037",
+        "identifier": "triceps_medial",
+        "parent_id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "hierarchy_level": 2,
+        "display_order": 5,
+        "name": "Trizeps (Medialer Kopf)",
+        "description": "Medialer Kopf des Trizeps"
+      },
+      {
+        "id": "213e00ff-9611-4299-b9e3-32094e70af66",
+        "identifier": "lower_back",
+        "parent_id": "c6392023-958e-4b54-9e62-92c3f9e481bd",
+        "hierarchy_level": 2,
+        "display_order": 5,
+        "name": "Unterer Rücken",
+        "description": "Untere Rückenmuskulatur"
+      },
+      {
+        "id": "faab8d7d-aed6-4886-83c7-9ad91269ab9d",
+        "identifier": "back_erector_spinae",
+        "parent_id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "hierarchy_level": 2,
+        "display_order": 6,
+        "name": "Rückenstrecker",
+        "description": "Untere Rückenmuskulatur"
+      },
+      {
+        "id": "f7e97433-e5cd-4f24-b254-f427b6b3287f",
+        "identifier": "hamstrings_semitendinosus",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 6,
+        "name": "Semitendinosus",
+        "description": "Innere hintere Oberschenkelmuskulatur"
+      },
+      {
+        "id": "9b3327ed-79af-4b0a-b8d9-864eaf5b79d2",
+        "identifier": "forearms_flexors",
+        "parent_id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "hierarchy_level": 2,
+        "display_order": 6,
+        "name": "Unterarm-Beuger",
+        "description": "Unterarm-Beugemuskulatur"
+      },
+      {
+        "id": "5caa3184-e7f9-4ea3-98a5-844499ea7634",
+        "identifier": "hamstrings_semimembranosus",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 7,
+        "name": "Semimembranosus",
+        "description": "Tiefe innere hintere Oberschenkelmuskulatur"
+      },
+      {
+        "id": "3bae6ffd-9657-4151-bf4f-928df0327e25",
+        "identifier": "back_teres",
+        "parent_id": "0e593e8f-aefa-4502-abdf-b8c304d1fe3a",
+        "hierarchy_level": 2,
+        "display_order": 7,
+        "name": "Teres",
+        "description": "Teres Major und Minor"
+      },
+      {
+        "id": "d8965448-fc91-45cc-b427-377d2ff4245e",
+        "identifier": "forearms_extensors",
+        "parent_id": "1b8af71d-4ce8-4906-add1-831b20c0d042",
+        "hierarchy_level": 2,
+        "display_order": 7,
+        "name": "Unterarm-Strecker",
+        "description": "Unterarm-Streckmuskulatur"
+      },
+      {
+        "id": "326c5ea4-12b7-4cb4-83ff-faff106f59fa",
+        "identifier": "glutes_maximus",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 8,
+        "name": "Gluteus Maximus",
+        "description": "Großer Gesäßmuskel"
+      },
+      {
+        "id": "bc35efd2-7d2d-4f7a-b86a-855407b7e5ba",
+        "identifier": "glutes_medius",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 9,
+        "name": "Gluteus Medius",
+        "description": "Mittlerer Gesäßmuskel"
+      },
+      {
+        "id": "3f09bcca-c56f-49bb-88cc-be5851894b8a",
+        "identifier": "glutes_minimus",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 10,
+        "name": "Gluteus Minimus",
+        "description": "Kleiner Gesäßmuskel"
+      },
+      {
+        "id": "806544e1-3f70-4f39-87f4-3b123c81f084",
+        "identifier": "calves_gastrocnemius",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 11,
+        "name": "Gastrocnemius",
+        "description": "Zwillingswadenmuskel"
+      },
+      {
+        "id": "156d7c08-8e56-4e38-b8b0-7fc39d167b2d",
+        "identifier": "calves_soleus",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 12,
+        "name": "Soleus",
+        "description": "Schollenmuskel"
+      },
+      {
+        "id": "c4c407ba-c479-423b-bdca-d4bff9e44d5e",
+        "identifier": "adductors",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 13,
+        "name": "Adduktoren",
+        "description": "Innere Oberschenkelmuskulatur"
+      },
+      {
+        "id": "49ff30ed-9ad9-4778-9e65-bde4309ca8e2",
+        "identifier": "abductors",
+        "parent_id": "87cde3e5-8001-4d49-b38e-2b345889ef32",
+        "hierarchy_level": 2,
+        "display_order": 14,
+        "name": "Abduktoren",
+        "description": "Äußere Oberschenkelmuskulatur"
+      }
+    ]
+  }
+]

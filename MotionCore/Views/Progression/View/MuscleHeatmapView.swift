@@ -79,7 +79,7 @@ struct MuscleHeatmapView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "figure.strengthtraining.traditional")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
                 Text("Muskelaktivität")
                     .font(.headline)
                 Spacer()
@@ -116,13 +116,13 @@ struct MuscleHeatmapView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
                 Text("Vernachlässigte Muskeln")
                     .font(.headline)
                 Spacer()
                 Text("\(regions.count)")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
             }
 
             VStack(spacing: 8) {
@@ -157,7 +157,7 @@ struct MuscleHeatmapView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color.red)
                 Text("Meist trainiert")
                     .font(.headline)
                 Spacer()
@@ -216,7 +216,7 @@ private struct MuscleDetailSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
+                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
                 }
             }
         }

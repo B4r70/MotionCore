@@ -567,7 +567,7 @@ struct ExercisePrimaryMuscleGroupsSection: View {
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 6)
                                         .background(.blue.opacity(0.2))
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(Color.blue)
                                         .clipShape(Capsule())
                                 }
                             }
@@ -673,7 +673,7 @@ struct ExerciseDetailedPrimaryMusclesSection: View {
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 6)
                                         .background(.blue.opacity(0.2))
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(Color.blue)
                                         .clipShape(Capsule())
                                 }
                             }
@@ -790,7 +790,7 @@ struct ExerciseFavoriteToggle: View {
                     .foregroundStyle(.primary)
             }
         }
-        .tint(.yellow)
+        .tint(Color.yellow)
     }
 }
 
@@ -815,7 +815,7 @@ struct ExerciseMovementPatternSection: View {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: movementPattern.icon)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
 
                     Text(movementPattern.description)
                         .foregroundStyle(.primary)
@@ -850,7 +850,7 @@ struct ExerciseBodyPositionSection: View {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: bodyPosition.icon)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
 
                     Text(bodyPosition.description)
                         .foregroundStyle(.primary)
@@ -884,7 +884,7 @@ struct ExerciseUnilateralToggle: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .tint(.orange)
+        .tint(Color.orange)
     }
 }
 
@@ -946,7 +946,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMin > 1 { repRangeMin -= 1 }
                         } label: {
                             Image(systemName: "minus.circle.fill")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
 
                         Text("\(repRangeMin)")
@@ -957,7 +957,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMin < repRangeMax - 1 { repRangeMin += 1 }
                         } label: {
                             Image(systemName: "plus.circle.fill")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
                     }
                 }
@@ -977,7 +977,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMax > repRangeMin + 1 { repRangeMax -= 1 }
                         } label: {
                             Image(systemName: "minus.circle.fill")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
 
                         Text("\(repRangeMax)")
@@ -988,7 +988,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMax < 50 { repRangeMax += 1 }
                         } label: {
                             Image(systemName: "plus.circle.fill")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
                     }
                 }
@@ -1012,7 +1012,7 @@ struct ExerciseCautionNoteSection: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
 
                 Text("Sicherheitshinweis (optional)")
                     .font(.headline)
@@ -1042,7 +1042,7 @@ struct SetRestTimeSection: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "timer")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
 
                 Text("Pausenzeit")
                     .font(.headline)
@@ -1052,7 +1052,7 @@ struct SetRestTimeSection: View {
 
                 Text(formatTime(restSeconds))
                     .font(.headline.monospacedDigit())
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
             }
 
             // Preset-Buttons
@@ -1085,7 +1085,7 @@ struct SetRestTimeSection: View {
                 } label: {
                     Image(systemName: "minus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                 }
 
                 Spacer()
@@ -1101,7 +1101,7 @@ struct SetRestTimeSection: View {
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.blue)
                 }
             }
         }
@@ -1262,7 +1262,7 @@ struct ExerciseProgressionSection: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 8) {
                 Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                 Text("Progression")
                     .font(.headline)
             }
@@ -1291,7 +1291,7 @@ struct ExerciseProgressionSection: View {
 
                                 if strategy == s {
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(Color.blue)
                                 }
                             }
                             .padding(.horizontal, 12)
@@ -1418,7 +1418,7 @@ struct ExerciseProgressionSection: View {
                             if sessionsRequired > 1 { sessionsRequired -= 1 }
                         } label: {
                             Image(systemName: "minus.circle.fill")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                                 .font(.title3)
                         }
 
@@ -1431,7 +1431,7 @@ struct ExerciseProgressionSection: View {
                             if sessionsRequired < 5 { sessionsRequired += 1 }
                         } label: {
                             Image(systemName: "plus.circle.fill")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                                 .font(.title3)
                         }
 

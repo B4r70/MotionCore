@@ -20,7 +20,7 @@ struct WorkoutCompletedCard: View {
         VStack(spacing: 20) {
             Image(systemName: "trophy.fill")
                 .font(.system(size: 60))
-                .foregroundStyle(.yellow)
+                .foregroundStyle(Color.yellow)
 
             Text("Alle Sätze abgeschlossen!")
                 .font(.title2.bold())
@@ -41,7 +41,7 @@ struct WorkoutCompletedCard: View {
                         Text("Weitere Übung")
                             .font(.headline)
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
                     .background(.blue, in: RoundedRectangle(cornerRadius: 16))
@@ -56,7 +56,7 @@ struct WorkoutCompletedCard: View {
                     Text("Training beenden")
                         .font(.headline)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(.green, in: RoundedRectangle(cornerRadius: 16))

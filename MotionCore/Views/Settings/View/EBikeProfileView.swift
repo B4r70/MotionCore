@@ -184,14 +184,14 @@ struct EBikeProfileView: View {
                         appSettings.eBikePurchaseDate = nil
                         showPurchaseDatePicker = false
                     }
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color.red)
                     .font(.callout)
                 } else {
                     Button("Setzen") {
                         appSettings.eBikePurchaseDate = Date()
                         showPurchaseDatePicker = true
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                     .font(.callout)
                 }
             }
@@ -231,14 +231,14 @@ struct EBikeProfileView: View {
                         appSettings.eBikeLastMaintenanceDate = nil
                         showLastMaintenancePicker = false
                     }
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Color.red)
                     .font(.callout)
                 } else {
                     Button("Setzen") {
                         appSettings.eBikeLastMaintenanceDate = Date()
                         showLastMaintenancePicker = true
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                     .font(.callout)
                 }
             }
@@ -271,11 +271,11 @@ struct EBikeProfileView: View {
     private var maintenanceBanner: some View {
         HStack(spacing: 10) {
             Image(systemName: "wrench.and.screwdriver.fill")
-                .foregroundStyle(.orange)
+                .foregroundStyle(Color.orange)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Wartung empfohlen")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
                 Text("Das Wartungsintervall wurde überschritten.")
                     .font(.caption)
                     .foregroundStyle(.secondary)

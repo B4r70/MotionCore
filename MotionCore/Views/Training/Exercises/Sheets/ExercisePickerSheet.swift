@@ -245,7 +245,7 @@ private struct ExercisePickerRow: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(.blue.opacity(0.2))
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.blue)
                             .clipShape(Capsule())
                     }
                 }

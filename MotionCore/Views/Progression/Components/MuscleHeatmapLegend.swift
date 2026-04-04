@@ -18,7 +18,7 @@ struct MuscleHeatmapLegend: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Image(systemName: "chart.bar.fill")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
                 Text("Trainingsintensität")
                     .font(.headline)
             }

@@ -14,21 +14,29 @@ import SwiftUI
 
 struct ExerciseFilterSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var filterService: SupabaseFilterService
-    
+
     // Filter States
-    @Binding var selectedEquipment: SupabaseEquipment?
-    @Binding var selectedPrimaryMuscle: SupabaseMuscles?
-    @Binding var selectedSubMuscle: SupabaseMuscles?
-    
+    @Binding var selectedEquipment: BundledEquipmentItem?
+    @Binding var selectedPrimaryMuscle: MuscleGroup?
+    @Binding var selectedSubMuscle: DetailedMuscle?
+
+    // Equipment-Daten aus dem Bundle (werden vom Aufrufer durchgereicht)
+    let equipmentItems: [BundledEquipmentItem]
+
+    // Muskelgruppen direkt aus den Enums — kein Parameter nötig
+    // Gefilterte Muskelgruppen: nur jene mit DetailedMuscle-Kindern
+    private let muscleGroups: [MuscleGroup] = MuscleGroup.allCases.filter { group in
+        DetailedMuscle.allCases.contains { $0.parentGroup == group }
+    }
+
     // Local State
-    @State private var expandedMuscleGroup: UUID? = nil
-    
+    @State private var expandedMuscleGroup: MuscleGroup? = nil
+
     var body: some View {
         NavigationStack {
             ZStack {
                 AnimatedBackground(showAnimatedBlob: true)
-                
+
                 ScrollView {
                     VStack(spacing: 20) {
                         activeFiltersCard
@@ -46,7 +54,7 @@ struct ExerciseFilterSheet: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .primaryAction) {
                     Button("Zurücksetzen") {
                         resetFilters()
@@ -56,9 +64,9 @@ struct ExerciseFilterSheet: View {
             }
         }
     }
-    
+
     // MARK: - Active Filters Card
-    
+
     @ViewBuilder
     private var activeFiltersCard: some View {
         if hasActiveFilters {
@@ -66,7 +74,7 @@ struct ExerciseFilterSheet: View {
                 Text("Aktive Filter")
                     .font(.headline)
                     .foregroundStyle(.primary)
-                
+
                 VStack(spacing: 8) {
                     if let equipment = selectedEquipment {
                         HStack(spacing: 6) {
@@ -86,12 +94,12 @@ struct ExerciseFilterSheet: View {
                         .background(.ultraThinMaterial, in: Capsule())
                         .overlay(Capsule().stroke(Color.blue, lineWidth: 1))
                     }
-                    
+
                     if let primary = selectedPrimaryMuscle {
                         HStack(spacing: 6) {
                             Image(systemName: "figure.arms.open")
                                 .font(.caption2)
-                            Text(primary.name)
+                            Text(primary.rawValue)
                                 .font(.caption)
                             Button {
                                 selectedPrimaryMuscle = nil
@@ -106,12 +114,12 @@ struct ExerciseFilterSheet: View {
                         .background(.ultraThinMaterial, in: Capsule())
                         .overlay(Capsule().stroke(Color.green, lineWidth: 1))
                     }
-                    
+
                     if let sub = selectedSubMuscle {
                         HStack(spacing: 6) {
                             Image(systemName: "scope")
                                 .font(.caption2)
-                            Text(sub.name)
+                            Text(sub.displayName)
                                 .font(.caption)
                             Button {
                                 selectedSubMuscle = nil
@@ -130,30 +138,26 @@ struct ExerciseFilterSheet: View {
             .glassCard()
         }
     }
-    
+
     // MARK: - Equipment Section
-    
+
     private var equipmentSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "dumbbell.fill")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.blue)
                 Text("Equipment")
                     .font(.title3.bold())
             }
-            
-            if filterService.isLoading {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .padding()
-            } else if filterService.equipments.isEmpty {
+
+            if equipmentItems.isEmpty {
                 Text("Keine Equipment-Daten verfügbar")
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                     .padding()
             } else {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 12) {
-                    ForEach(filterService.equipments) { equipment in
+                    ForEach(equipmentItems) { equipment in
                         EquipmentButton(
                             equipment: equipment,
                             isSelected: selectedEquipment?.id == equipment.id,
@@ -171,9 +175,9 @@ struct ExerciseFilterSheet: View {
         }
         .glassCard()
     }
-    
+
     // MARK: - Muscle Group Section
-    
+
     private var muscleGroupSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -182,30 +186,27 @@ struct ExerciseFilterSheet: View {
                 Text("Muskelgruppen")
                     .font(.title3.bold())
             }
-            
-            if filterService.isLoading {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .padding()
-            } else if filterService.primaryMuscleGroups.isEmpty {
+
+            if muscleGroups.isEmpty {
                 Text("Keine Muskelgruppen verfügbar")
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                     .padding()
             } else {
                 VStack(spacing: 8) {
-                    ForEach(filterService.muscleGroupHierarchy) { hierarchy in
+                    ForEach(muscleGroups) { group in
                         MuscleGroupRow(
-                            hierarchy: hierarchy,
+                            group: group,
+                            subgroups: DetailedMuscle.allCases.filter { $0.parentGroup == group },
                             selectedPrimary: $selectedPrimaryMuscle,
                             selectedSub: $selectedSubMuscle,
-                            isExpanded: expandedMuscleGroup == hierarchy.id,
+                            isExpanded: expandedMuscleGroup == group,
                             onToggleExpand: {
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                    if expandedMuscleGroup == hierarchy.id {
+                                    if expandedMuscleGroup == group {
                                         expandedMuscleGroup = nil
                                     } else {
-                                        expandedMuscleGroup = hierarchy.id
+                                        expandedMuscleGroup = group
                                     }
                                 }
                             }
@@ -216,13 +217,13 @@ struct ExerciseFilterSheet: View {
         }
         .glassCard()
     }
-    
+
     // MARK: - Helpers
-    
+
     private var hasActiveFilters: Bool {
         selectedEquipment != nil || selectedPrimaryMuscle != nil || selectedSubMuscle != nil
     }
-    
+
     private func resetFilters() {
         selectedEquipment = nil
         selectedPrimaryMuscle = nil
@@ -233,10 +234,10 @@ struct ExerciseFilterSheet: View {
 // MARK: - Equipment Button
 
 private struct EquipmentButton: View {
-    let equipment: SupabaseEquipment
+    let equipment: BundledEquipmentItem
     let isSelected: Bool
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             Text(equipment.name)
@@ -260,16 +261,17 @@ private struct EquipmentButton: View {
 // MARK: - Muscle Group Row (Hierarchisch)
 
 private struct MuscleGroupRow: View {
-    let hierarchy: SupabaseMusclesHierarchy
-    @Binding var selectedPrimary: SupabaseMuscles?
-    @Binding var selectedSub: SupabaseMuscles?
+    let group: MuscleGroup
+    let subgroups: [DetailedMuscle]
+    @Binding var selectedPrimary: MuscleGroup?
+    @Binding var selectedSub: DetailedMuscle?
     let isExpanded: Bool
     let onToggleExpand: () -> Void
-    
+
     private var isPrimarySelected: Bool {
-        selectedPrimary?.id == hierarchy.primary.id
+        selectedPrimary == group
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Primary Group Button
@@ -278,19 +280,19 @@ private struct MuscleGroupRow: View {
                     selectedPrimary = nil
                     selectedSub = nil
                 } else {
-                    selectedPrimary = hierarchy.primary
+                    selectedPrimary = group
                     selectedSub = nil
                 }
             } label: {
                 HStack {
-                    Text(hierarchy.primary.name)
+                    Text(group.rawValue)
                         .font(.subheadline.bold())
                         .foregroundStyle(isPrimarySelected ? .white : .primary)
-                    
+
                     Spacer()
-                    
+
                     // Expand Button (nur wenn Subgroups existieren)
-                    if !hierarchy.subgroups.isEmpty {
+                    if !subgroups.isEmpty {
                         Button {
                             onToggleExpand()
                         } label: {
@@ -299,10 +301,10 @@ private struct MuscleGroupRow: View {
                         }
                         .buttonStyle(.plain)
                     }
-                    
+
                     if isPrimarySelected {
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.white)
                     }
                 }
                 .padding()
@@ -315,19 +317,19 @@ private struct MuscleGroupRow: View {
                         .stroke(isPrimarySelected ? Color.green : Color.white.opacity(0.3), lineWidth: 1)
                 )
             }
-            
+
             // Subgroups (expandable)
-            if isExpanded && !hierarchy.subgroups.isEmpty {
+            if isExpanded && !subgroups.isEmpty {
                 VStack(spacing: 6) {
-                    ForEach(hierarchy.subgroups) { sub in
+                    ForEach(subgroups) { sub in
                         SubgroupButton(
                             subgroup: sub,
-                            isSelected: selectedSub?.id == sub.id,
+                            isSelected: selectedSub == sub,
                             onTap: {
-                                if selectedSub?.id == sub.id {
+                                if selectedSub == sub {
                                     selectedSub = nil
                                 } else {
-                                    selectedPrimary = hierarchy.primary
+                                    selectedPrimary = group
                                     selectedSub = sub
                                 }
                             }
@@ -344,23 +346,23 @@ private struct MuscleGroupRow: View {
 // MARK: - Subgroup Button
 
 private struct SubgroupButton: View {
-    let subgroup: SupabaseMuscles
+    let subgroup: DetailedMuscle
     let isSelected: Bool
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             HStack {
-                Text(subgroup.name)
+                Text(subgroup.displayName)
                     .font(.caption)
                     .foregroundStyle(isSelected ? .white : .secondary)
-                
+
                 Spacer()
-                
+
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.caption)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.white)
                 }
             }
             .padding(.vertical, 8)
@@ -383,7 +385,7 @@ private struct SubgroupButton: View {
     ExerciseFilterSheet(
         selectedEquipment: .constant(nil),
         selectedPrimaryMuscle: .constant(nil),
-        selectedSubMuscle: .constant(nil)
+        selectedSubMuscle: .constant(nil),
+        equipmentItems: BundledEquipmentService.loadAll()
     )
-    .environmentObject(SupabaseFilterService.shared)
 }

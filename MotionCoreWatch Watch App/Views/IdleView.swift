@@ -37,7 +37,7 @@ struct IdleView: View {
             // Streak-Anzeige
             HStack(spacing: 6) {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
                 VStack(alignment: .leading, spacing: 0) {
                     Text("\(streakCount)")
                         .font(.title2.bold())
@@ -61,7 +61,7 @@ struct IdleView: View {
                         .font(.caption.bold())
                 }
                 ProgressView(value: Double(weeklyCount), total: Double(weeklyGoal))
-                    .tint(.blue)
+                    .tint(Color.blue)
             }
 
             Spacer(minLength: 4)

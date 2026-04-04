@@ -66,7 +66,6 @@ struct DataSettingsView: View {
     // MARK: - Computed Properties
     var systemExercises: [Exercise] { allExercises.filter { $0.isSystemExercise } }
     var userExercises: [Exercise] { allExercises.filter { !$0.isSystemExercise } }
-    var supabaseExercises: [Exercise] { allExercises.filter { $0.apiProvider == "supabase" } }
 
     // MARK: - Security Scoped Access Helper (Sandbox fix)
     private func withSecurityScopedAccess<T>(to url: URL, _ work: () throws -> T) rethrows -> T {
@@ -132,12 +131,12 @@ struct DataSettingsView: View {
             // Übungsbibliothek Statistik
             Section {
                 statRow("Eigene Übungen", userExercises.count)
-                statRow("Supabase Übungen", supabaseExercises.count)
+                statRow("System-Übungen (Bundle)", systemExercises.count)
                 statRow("Gesamt", allExercises.count, emphasize: true)
             } header: {
                 Text("Übungsbibliothek")
             } footer: {
-                Text("Übungen aus Supabase können über die Übungsbibliothek importiert werden (Lupen-Symbol).")
+                Text("System-Übungen werden automatisch beim App-Start aus dem Bundle geladen.")
                     .font(.caption)
             }
 

@@ -25,7 +25,7 @@ struct MuscleHeatmapMiniView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "figure.strengthtraining.traditional")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.orange)
                 Text("Trainierte Muskeln")
                     .font(.headline)
                 Spacer()

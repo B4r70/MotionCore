@@ -220,17 +220,13 @@ extension Exercise {
             cautionNote: e.cautionNote ?? "",
             isArchived: e.isArchived ?? false,
 
-            // NEU: API-Felder
+            // API-Felder
             apiID: e.apiID.flatMap { UUID(uuidString: $0) },
             isSystemExercise: e.isSystemExercise ?? false,
             videoPath: e.videoPath,
             posterPath: e.posterPath,
             instructions: e.instructions,
-            localVideoFileName: nil, // Wird nicht exportiert (nur temporär gecacht)
-            apiBodyPart: e.apiBodyPart,
-            apiTarget: e.apiTarget,
-            apiEquipment: e.apiEquipment,
-            apiSecondaryMuscles: e.apiSecondaryMuscles
+            localVideoFileName: nil
         )
     }
 }

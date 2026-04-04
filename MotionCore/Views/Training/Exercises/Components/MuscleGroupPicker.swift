@@ -37,7 +37,7 @@ struct MuscleGroupPicker: View {
                         
                         if selectedMuscles.contains(muscle) {
                             Image(systemName: "checkmark")
-                                .foregroundStyle(.blue)
+                                .foregroundStyle(Color.blue)
                         }
                     }
                 }
@@ -47,7 +47,7 @@ struct MuscleGroupPicker: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(.blue) }
+                Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
             }
         }
     }
