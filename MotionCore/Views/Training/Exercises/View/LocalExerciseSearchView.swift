@@ -47,10 +47,11 @@ struct LocalExerciseSearchView: View {
             // Name-Filter
             let matchesSearch = searchTerm.isEmpty || exercise.name.localizedStandardContains(searchTerm)
 
-            // Equipment-Filter: Vergleich auf equipmentRaw (Supabase snake_case Identifier)
+            // Equipment-Filter: Bundle-Identifier → Enum-Mapping, dann Vergleich auf equipmentRaw
             let matchesEquipment: Bool
             if let eq = selectedEquipment {
-                matchesEquipment = exercise.equipmentRaw == eq.identifier
+                let targetRaw = ExerciseEquipment.fromSupabase(eq.identifier).rawValue
+                matchesEquipment = exercise.equipmentRaw == targetRaw
             } else {
                 matchesEquipment = true
             }

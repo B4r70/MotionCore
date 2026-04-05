@@ -12,6 +12,7 @@
 //
 import SwiftUI
 import AVKit
+import AVFoundation
 import UIKit
 
 struct ExerciseVideoView: View {
@@ -309,6 +310,10 @@ struct ExerciseVideoView: View {
             }
         }
 
+        // Hintergrundmusik (Apple Music) nicht unterbrechen — Video hat keinen Ton
+        try? AVAudioSession.sharedInstance().setCategory(.ambient, options: .mixWithOthers)
+        try? AVAudioSession.sharedInstance().setActive(true)
+
         previewLooper = AVPlayerLooper(player: q, templateItem: item)
         previewPlayer = q
         q.play()
@@ -378,6 +383,10 @@ struct ExerciseVideoView: View {
                 }
             }
         }
+
+        // Hintergrundmusik (Apple Music) nicht unterbrechen — Video hat keinen Ton
+        try? AVAudioSession.sharedInstance().setCategory(.ambient, options: .mixWithOthers)
+        try? AVAudioSession.sharedInstance().setActive(true)
 
         looper = AVPlayerLooper(player: q, templateItem: item)
         player = q

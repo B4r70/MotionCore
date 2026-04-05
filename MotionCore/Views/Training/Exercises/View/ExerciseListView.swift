@@ -65,9 +65,10 @@ struct ExerciseListView: View {
             exercises = exercises.filter { $0.isFavorite }
         }
 
-        // Equipment-Filter: Vergleich auf equipmentRaw (snake_case Identifier)
+        // Equipment-Filter: Bundle-Identifier → Enum-Mapping, dann Vergleich auf equipmentRaw
         if let equipment = selectedEquipment {
-            exercises = exercises.filter { $0.equipmentRaw == equipment.identifier }
+            let targetRaw = ExerciseEquipment.fromSupabase(equipment.identifier).rawValue
+            exercises = exercises.filter { $0.equipmentRaw == targetRaw }
         }
 
         // Muskelgruppen-Filter (zweistufig)
