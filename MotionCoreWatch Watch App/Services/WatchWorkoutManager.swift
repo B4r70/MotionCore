@@ -134,10 +134,21 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     }
 
     /// Verwirft das Workout ohne es in Apple Health zu speichern.
-    func discardWorkout() {
-        workoutSession?.end()
-        workoutBuilder?.discardWorkout()
-        cleanup()
+    func discardWorkout() async {
+        guard let session = workoutSession, let builder = workoutBuilder else { return }
+
+        let endDate = Date()
+        session.end()
+
+        // endCollection abwarten — erst danach ist builder.discardWorkout() gültig
+        do {
+            try await builder.endCollection(at: endDate)
+            builder.discardWorkout()
+        } catch {
+            print("WatchWorkoutManager: Fehler beim Verwerfen des Workouts: \(error.localizedDescription)")
+        }
+
+        await MainActor.run { self.cleanup() }
     }
 
     /// Markiert eine Übungs-Transition — setzt pro-Übung-Tracking zurück.

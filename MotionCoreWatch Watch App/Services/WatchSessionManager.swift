@@ -43,6 +43,14 @@ final class WatchSessionManager: NSObject, ObservableObject {
     /// Lokale verstrichene Sekunden (sekündlich inkrementiert, wird via iPhone-State synchronisiert)
     @Published private(set) var liveElapsedSeconds: TimeInterval = 0
 
+    // MARK: - Published State (Rest-Timer)
+
+    /// Gibt an ob auf dem iPhone gerade ein Rest-Timer läuft
+    @Published private(set) var isResting: Bool = false
+
+    /// Absolutes Enddatum des Rest-Timers (für Date-Anchor-Countdown in der Watch-UI)
+    @Published private(set) var restEndDate: Date?
+
     // MARK: - Private Properties (Heartbeat + lokaler Timer)
 
     private var heartbeatTimer: Timer?
@@ -109,6 +117,17 @@ extension WatchSessionManager: WCSessionDelegate {
             // elapsedTime aus iPhone-Nachricht als Basis für den Live-Timer setzen
             if let elapsed = message[WatchStateKey.elapsedTime] as? TimeInterval {
                 self.liveElapsedSeconds = elapsed
+            }
+
+            // Rest-Timer-State aus iPhone-Nachricht auslesen
+            if let resting = message[WatchStateKey.isResting] as? Bool {
+                self.isResting = resting
+            }
+            if let endInterval = message[WatchStateKey.restEndDate] as? TimeInterval {
+                self.restEndDate = Date(timeIntervalSinceReferenceDate: endInterval)
+            } else if !(message[WatchStateKey.isResting] as? Bool ?? false) {
+                // isResting = false ohne restEndDate → Timer abgelaufen oder nicht aktiv
+                self.restEndDate = nil
             }
 
             // Lokaler Timer je nach Workout-State starten oder stoppen
@@ -228,9 +247,13 @@ extension WatchSessionManager {
 
         // Health-Tracking verwerfen (kein Apple-Health-Eintrag)
         if message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil {
-            workoutManager?.discardWorkout()
+            let manager = workoutManager
             workoutManager = nil
             stopHeartbeatTimer()
+            Task {
+                // discardWorkout ist async — muss endCollection abwarten bevor discard gültig ist
+                await manager?.discardWorkout()
+            }
         }
 
         // Pause

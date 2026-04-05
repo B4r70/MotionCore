@@ -7,6 +7,11 @@
 // Erstellt am . : 04.04.2026                                                       /
 // Beschreibung  : Versions-basierter Seeder für gebündelte Exercise-JSON-Daten     /
 // ---------------------------------------------------------------------------------/
+// Hinweis . . . : Am 05.04.2026 wurde die exercises_seed.json mit zwei Durchgängen /
+//                 Claude Haiku 4.5 und Claude Sonnet 4.6 geprüft. Hierbei wurden   /
+//                 die Felder "primary_muscles" und "secondary_muscles" detailliert /
+//                 mit fest definierten Regeln analysiert und korrigiert.           /
+// ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
@@ -21,7 +26,8 @@ struct BundledExerciseSeeder {
     private static let seedVersionKey = "bundledExerciseSeedVersion"
 
     // Manuelle Versionsnummer — nur erhöhen wenn neue exercises_seed.json eingespielt wird
-    static let currentSeedVersion: Int = 1
+    // Hinweis: Am 05.04.2026 wurden primary/secondary muscles per Haiku 4.5 angereichert und per Sonnet 4.6 QA-geprüft.
+    static let currentSeedVersion: Int = 3
 
     // MARK: - Öffentlicher Einstiegspunkt
 

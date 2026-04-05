@@ -24,6 +24,10 @@ enum WatchStateKey {
     static let exerciseIndex  = "exerciseIndex"
     static let totalExercises = "totalExercises"
     static let elapsedTime    = "elapsedTime"
+    /// Gibt an ob gerade ein Rest-Timer auf dem iPhone läuft
+    static let isResting      = "isResting"
+    /// Absolutes Enddatum des Rest-Timers als TimeInterval (Date.timeIntervalSinceReferenceDate)
+    static let restEndDate    = "restEndDate"
 }
 
 /// Mögliche Werte für workoutState
@@ -46,6 +50,8 @@ enum WatchAction: String {
     case completeSet
     case nextExercise
     case previousExercise
+    /// Überspringt den aktuell laufenden Rest-Timer auf dem iPhone
+    case skipRest
 }
 
 // MARK: - App Group UserDefaults Keys (für Complications)

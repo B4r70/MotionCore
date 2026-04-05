@@ -306,6 +306,15 @@ struct ActiveWorkoutView: View {
             PhoneSessionManager.shared.onAction = { action in
                 handleWatchAction(action)
             }
+                // Sofortiger State-Push wenn Watch-App während laufendem Training geöffnet wird
+            PhoneSessionManager.shared.onWatchBecameReachable = {
+                // Health-Tracking starten falls noch nicht aktiv (z.B. Watch erst nach iPhone-Start geöffnet)
+                if !PhoneSessionManager.shared.isWatchTrackingActive {
+                    PhoneSessionManager.shared.sendStartHealthTracking()
+                    PhoneSessionManager.shared.sendHeartbeatEnabled(true)
+                }
+                sendWatchState()
+            }
             refreshProgressionRecommendations()
 
                 // RestTimerManager Callbacks konfigurieren
@@ -335,6 +344,7 @@ struct ActiveWorkoutView: View {
 
         .onChange(of: restTimerManager.isResting) { _, _ in
             syncLiveActivityStates()
+            sendWatchState()
         }
         .onChange(of: session.completedSets) { _, _ in
             cachedGroupedSets = session.groupedSets
@@ -357,6 +367,15 @@ struct ActiveWorkoutView: View {
             saveCurrentExerciseMetrics(forKey: oldValue)
             PhoneSessionManager.shared.sendExerciseTransition()
         }
+        .onChange(of: sessionManager.isPaused) { _, isPaused in
+            syncLiveActivityStates()
+            sendWatchState()
+            if isPaused {
+                PhoneSessionManager.shared.sendPauseHealthTracking()
+            } else {
+                PhoneSessionManager.shared.sendResumeHealthTracking()
+            }
+        }
 
             // Foreground-Handler für Rest-Timer: berechnet verbleibende Zeit aus restEndDate
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -373,6 +392,7 @@ struct ActiveWorkoutView: View {
             saveResumeState()
                 // Watch-Action-Handler aufräumen
             PhoneSessionManager.shared.onAction = nil
+            PhoneSessionManager.shared.onWatchBecameReachable = nil
             PhoneSessionManager.shared.sendIdleState()
         }
         .alert("Training läuft noch", isPresented: $showCancelAlert) {
@@ -960,7 +980,9 @@ struct ActiveWorkoutView: View {
             totalSets: totalInGroup,
             exerciseIndex: exIdx,
             totalExercises: grouped.count,
-            elapsedTime: TimeInterval(sessionManager.elapsedSeconds)
+            elapsedTime: TimeInterval(sessionManager.elapsedSeconds),
+            isResting: restTimerManager.isResting,
+            restEndDate: restTimerManager.isResting ? restTimerManager.restEndDate : nil
         )
     }
 
@@ -1001,6 +1023,10 @@ struct ActiveWorkoutView: View {
                 if let prevKey = grouped[safe: prevIdx]?.first?.groupKey {
                     selectExercise(key: prevKey)
                 }
+
+            case .skipRest:
+                // Rest-Timer auf dem iPhone überspringen (Watch-Button "Pause überspringen")
+                restTimerManager.skip()
         }
     }
 

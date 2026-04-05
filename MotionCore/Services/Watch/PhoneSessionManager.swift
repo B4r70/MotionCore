@@ -35,11 +35,15 @@ final class PhoneSessionManager: NSObject, ObservableObject {
 
     static let shared = PhoneSessionManager()
 
-    // MARK: - Callback für eingehende Actions
+    // MARK: - Callbacks
 
     /// Wird aufgerufen wenn die Watch eine Action sendet.
     /// Muss vom Main Thread aus gesetzt werden.
     var onAction: ((WatchAction) -> Void)?
+
+    /// Wird aufgerufen wenn die Watch erreichbar wird (sessionReachabilityDidChange → isReachable = true).
+    /// Ermöglicht sofortigen State-Push ohne auf das nächste onChange-Event zu warten.
+    var onWatchBecameReachable: (() -> Void)?
 
     // MARK: - Live Health Data (Watch → iPhone)
 
@@ -69,7 +73,9 @@ final class PhoneSessionManager: NSObject, ObservableObject {
         totalSets: Int,
         exerciseIndex: Int,
         totalExercises: Int,
-        elapsedTime: TimeInterval
+        elapsedTime: TimeInterval,
+        isResting: Bool = false,
+        restEndDate: Date? = nil
     ) {
         guard WCSession.default.activationState == .activated,
               WCSession.default.isReachable else {
@@ -77,15 +83,21 @@ final class PhoneSessionManager: NSObject, ObservableObject {
             return
         }
 
-        let message: [String: Any] = [
+        var message: [String: Any] = [
             WatchStateKey.workoutState:   state.rawValue,
             WatchStateKey.exerciseName:   exerciseName,
             WatchStateKey.setIndex:       setIndex,
             WatchStateKey.totalSets:      totalSets,
             WatchStateKey.exerciseIndex:  exerciseIndex,
             WatchStateKey.totalExercises: totalExercises,
-            WatchStateKey.elapsedTime:    elapsedTime
+            WatchStateKey.elapsedTime:    elapsedTime,
+            WatchStateKey.isResting:      isResting
         ]
+
+        // restEndDate nur mitsenden wenn ein Timer läuft
+        if let restEndDate {
+            message[WatchStateKey.restEndDate] = restEndDate.timeIntervalSinceReferenceDate
+        }
 
         WCSession.default.sendMessage(message, replyHandler: nil) { error in
             print("PhoneSessionManager: Fehler beim Senden: \(error.localizedDescription)")
@@ -264,6 +276,16 @@ extension PhoneSessionManager: WCSessionDelegate {
     func sessionDidDeactivate(_ session: WCSession) {
         // Session nach Deaktivierung neu aktivieren (z.B. Watch-Wechsel)
         WCSession.default.activate()
+    }
+
+    /// Wird aufgerufen wenn sich die Erreichbarkeit der Watch ändert.
+    /// Wenn die Watch erreichbar wird (z.B. App geöffnet), wird der Callback ausgelöst,
+    /// damit ActiveWorkoutView sofort den State pusht.
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        guard session.isReachable else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.onWatchBecameReachable?()
+        }
     }
 
     /// Empfängt Nachrichten von der Watch (Actions + Health-Daten)

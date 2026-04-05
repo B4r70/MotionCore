@@ -33,63 +33,107 @@ struct WatchActiveWorkoutView: View {
                 .foregroundStyle(watchSession.workoutState == .paused ? Color.orange : .secondary)
             }
 
-            // Übungsname + Set-Info
-            Text(watchSession.exerciseName.isEmpty ? "–" : watchSession.exerciseName)
-                .font(.headline)
-                .lineLimit(2)
-                .minimumScaleFactor(0.7)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            Text("Satz \(watchSession.setIndex + 1)/\(watchSession.totalSets)  ·  Übung \(watchSession.exerciseIndex + 1)/\(watchSession.totalExercises)")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            // HR + Kalorien
-            HStack(spacing: 0) {
-                HStack(spacing: 4) {
-                    Image(systemName: "heart.fill")
-                        .foregroundStyle(Color.red)
-                        .font(.caption2)
-                    let hr = watchSession.workoutManager?.currentHeartRate ?? 0
-                    Text(hr > 0 ? "\(Int(hr))" : "–")
-                        .font(.system(.caption, design: .monospaced).bold())
-                    Text("bpm")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                HStack(spacing: 4) {
-                    Image(systemName: "flame.fill")
-                        .foregroundStyle(Color.orange)
-                        .font(.caption2)
-                    let cal = watchSession.workoutManager?.activeCalories ?? 0
-                    Text(cal > 0 ? "\(Int(cal))" : "–")
-                        .font(.system(.caption, design: .monospaced).bold())
-                    Text("kcal")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+            if watchSession.isResting, let endDate = watchSession.restEndDate {
+                // Rest-Timer-Anzeige: Pause-Countdown statt Satz-Info
+                restView(endDate: endDate)
+            } else {
+                // Normale Trainings-Anzeige
+                workoutView
             }
-
-            Spacer(minLength: 2)
-
-            // Satz abschließen (kompakter)
-            Button {
-                watchSession.sendAction(.completeSet)
-            } label: {
-                Label("Satz \(watchSession.setIndex + 1)", systemImage: "checkmark.circle.fill")
-                    .font(.caption.bold())
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-            }
-            .buttonStyle(.bordered)
-            .tint(Color.green)
-            .disabled(watchSession.workoutState == .paused)
         }
         .padding(.horizontal, 4)
+    }
+
+    // MARK: - Sub-Views
+
+    /// Normale Workout-Anzeige (Übungsname, Set-Info, HR/Kalorien, Satz-Button)
+    @ViewBuilder
+    private var workoutView: some View {
+        // Übungsname + Set-Info
+        Text(watchSession.exerciseName.isEmpty ? "–" : watchSession.exerciseName)
+            .font(.headline)
+            .lineLimit(2)
+            .minimumScaleFactor(0.7)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+        Text("Satz \(watchSession.setIndex + 1)/\(watchSession.totalSets)  ·  Übung \(watchSession.exerciseIndex + 1)/\(watchSession.totalExercises)")
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+        // HR + Kalorien
+        HStack(spacing: 0) {
+            HStack(spacing: 4) {
+                Image(systemName: "heart.fill")
+                    .foregroundStyle(Color.red)
+                    .font(.caption2)
+                let hr = watchSession.workoutManager?.currentHeartRate ?? 0
+                Text(hr > 0 ? "\(Int(hr))" : "–")
+                    .font(.system(.caption, design: .monospaced).bold())
+                Text("bpm")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            HStack(spacing: 4) {
+                Image(systemName: "flame.fill")
+                    .foregroundStyle(Color.orange)
+                    .font(.caption2)
+                let cal = watchSession.workoutManager?.activeCalories ?? 0
+                Text(cal > 0 ? "\(Int(cal))" : "–")
+                    .font(.system(.caption, design: .monospaced).bold())
+                Text("kcal")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+
+        Spacer(minLength: 2)
+
+        // Satz abschließen (kompakter)
+        Button {
+            watchSession.sendAction(.completeSet)
+        } label: {
+            Label("Satz \(watchSession.setIndex + 1)", systemImage: "checkmark.circle.fill")
+                .font(.caption.bold())
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+        }
+        .buttonStyle(.bordered)
+        .tint(Color.green)
+        .disabled(watchSession.workoutState == .paused)
+    }
+
+    /// Pause-Anzeige mit Countdown und "Überspringen"-Button
+    @ViewBuilder
+    private func restView(endDate: Date) -> some View {
+        Text("Pause")
+            .font(.headline)
+            .foregroundStyle(Color.orange)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+        // Countdown via Date-Anchor — kein sekündlicher Sync nötig, kein Aufwärtszählen nach Ablauf
+        Text(timerInterval: Date()...endDate, countsDown: true)
+            .font(.system(.title2, design: .monospaced).bold())
+            .foregroundStyle(Color.orange)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .monospacedDigit()
+
+        Spacer(minLength: 2)
+
+        // Pause überspringen
+        Button {
+            watchSession.sendAction(.skipRest)
+        } label: {
+            Label("Überspringen", systemImage: "forward.fill")
+                .font(.caption.bold())
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+        }
+        .buttonStyle(.bordered)
+        .tint(Color.orange)
     }
 
     // MARK: - Formatierung

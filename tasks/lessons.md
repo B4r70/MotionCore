@@ -72,6 +72,24 @@ Do not add generic notes from unrelated projects.
 - Rule: Wrap CalcEngines in `@Observable` ViewModels. Trigger `recalculate()` only via `.task {}` + `.onChange(of:)`. Call expensive operations once and store as `let`, then derive all counts from that result.
 - Applies To: `ProgressionViewModel.swift`, `StatisticsViewModel.swift`, `RecordsViewModel.swift`, `SummaryViewModel.swift`
 
+### Anthropic API Batch-Größe und Token-Limits
+
+- Added: 2026-04-05
+- Trigger: Python-Skripte die viele Datensätze per API verarbeiten
+- Symptom: JSON-Fehler / stille Fehler bei großen Batches; Retries kosten genauso viel wie erfolgreiche Calls
+- Root Cause: `max_tokens=4096` zu klein für 50 Exercises × ~80 Output-Tokens = ~4000 Tokens → JSON wird mitten im Schreiben abgeschnitten
+- Rule: Batch-Größe × erwartete Output-Tokens pro Item muss deutlich unter `max_tokens` liegen. Faustregel: Batch 25 + `max_tokens=8096` für Muskel-Enrichment-Tasks
+- Applies To: `ExerciseEnrich/enrich_exercise_muscles.py`, zukünftige API-Batch-Skripte
+
+### Hybridmodell für LLM-Batch-Verarbeitung
+
+- Added: 2026-04-05
+- Trigger: große Datenmengen per LLM anreichern + auf Korrektheit prüfen
+- Symptom: unnötig hohe Kosten wenn ein starkes Modell für einfache Faktenabfragen genutzt wird
+- Root Cause: Opus/Sonnet für reine Faktenwissen-Aufgaben überdimensioniert
+- Rule: Günstiges Modell (Haiku) für Generierung, stärkeres Modell (Sonnet) für QA. Checkpoint-System immer einbauen damit bei Abbruch nicht von vorne gestartet wird.
+- Applies To: `ExerciseEnrich/`, zukünftige Batch-Anreicherungs-Skripte
+
 ### Dictionary from SwiftData Results — Type Annotation
 
 - Added: 2026-03-19
