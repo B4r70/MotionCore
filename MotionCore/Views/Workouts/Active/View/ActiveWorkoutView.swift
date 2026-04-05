@@ -856,7 +856,7 @@ struct ActiveWorkoutView: View {
         // Finalen Snapshot von Watch holen, danach Session speichern
         Task {
             // Aktuellsten HR/Kalorien-Stand von der Watch anfordern (max. 3s Timeout)
-            await PhoneSessionManager.shared.requestFinalSnapshot()
+            _ = await PhoneSessionManager.shared.requestFinalSnapshot()
 
             // Finale Health-Daten in Session schreiben (nach Snapshot-Update)
             let phone = PhoneSessionManager.shared
@@ -1356,7 +1356,7 @@ struct ActiveWorkoutView: View {
                     hapticGenerator.impactOccurred()
                 },
                 onAdjust: { delta in
-                    _ = restTimerManager.adjust(delta: delta)
+                    restTimerManager.adjust(delta: delta)
                     syncLiveActivityStates()
                 }
             )

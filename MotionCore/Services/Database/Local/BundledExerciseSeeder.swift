@@ -152,15 +152,15 @@ struct BundledExerciseSeeder {
         let decoder = JSONDecoder()
 
         // Mikrosekunden-fähiger Datum-Decoder (z. B. "2026-01-11T13:44:38.729781+00:00")
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         decoder.dateDecodingStrategy = .custom { decoder in
             let container = try decoder.singleValueContainer()
             let str = try container.decode(String.self)
-            if let date = isoFormatter.date(from: str) { return date }
+            let fmt = ISO8601DateFormatter()
+            fmt.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            if let date = fmt.date(from: str) { return date }
             // Fallback ohne Fractional Seconds
-            isoFormatter.formatOptions = [.withInternetDateTime]
-            if let date = isoFormatter.date(from: str) { return date }
+            fmt.formatOptions = [.withInternetDateTime]
+            if let date = fmt.date(from: str) { return date }
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Ungültiges Datum: \(str)")
         }
 

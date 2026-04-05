@@ -72,7 +72,7 @@ struct ProgressionSummaryCard: View {
 
     private var progressionList: some View {
         VStack(spacing: 0) {
-            ForEach(Array(ready.prefix(3).enumerated()), id: \.element.exerciseName) { index, analysis in
+            ForEach(Array(ready.prefix(3).enumerated()), id: \.offset) { index, analysis in
                 ProgressionSummaryRow(analysis: analysis)
 
                 if index < min(ready.count, 3) - 1 {

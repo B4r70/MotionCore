@@ -71,7 +71,7 @@ struct SummaryWeeklyGoalRing: View {
             Spacer()
         }
         .glassCard()
-        .task {
+        .task(id: goal.progressFraction) {
             withAnimation(.easeOut(duration: 0.9).delay(0.1)) {
                 animatedProgress = goal.progressFraction
             }
