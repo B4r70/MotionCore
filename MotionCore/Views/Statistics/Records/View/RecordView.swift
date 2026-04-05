@@ -122,7 +122,7 @@ struct RecordView: View {
                         record: record,
                         metricTitle: "Schwerster Satz",
                         metricIcon: .system("dumbbell.fill"),
-                        metricColor: .orange
+                        metricColor: Color.orange
                     )
                 }
 
@@ -142,7 +142,7 @@ struct RecordView: View {
                         record: record,
                         metricTitle: "Meiste Übungen",
                         metricIcon: .system("figure.strengthtraining.traditional"),
-                        metricColor: .green
+                        metricColor: Color.green
                     )
                 }
 
@@ -152,7 +152,7 @@ struct RecordView: View {
                         record: record,
                         metricTitle: "Höchstes 1RM",
                         metricIcon: .system("trophy.fill"),
-                        metricColor: .yellow
+                        metricColor: Color.yellow
                     )
                 }
             }
@@ -177,7 +177,7 @@ struct RecordView: View {
                         recordValue: String(format: "%.2f km", longestDistance.distance),
                         bestWorkout: longestDistance,
                         metricIcon: .system("arrow.left.and.right"),
-                        metricColor: .green
+                        metricColor: Color.green
                     )
                 }
 
@@ -188,7 +188,7 @@ struct RecordView: View {
                         recordValue: "\(highestCalories.calories) kcal",
                         bestWorkout: highestCalories,
                         metricIcon: .system("flame.fill"),
-                        metricColor: .red
+                        metricColor: Color.red
                     )
                 }
             }

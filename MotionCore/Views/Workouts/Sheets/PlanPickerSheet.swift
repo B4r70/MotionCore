@@ -92,8 +92,8 @@ private struct PlanRow: View {
 
     private var planColor: Color {
         switch plan.planType {
-        case .strength: return .orange
-        case .cardio: return .green
+        case .strength: return Color.orange
+        case .cardio: return Color.green
         case .outdoor: return .blue
         case .mixed: return .purple
         }

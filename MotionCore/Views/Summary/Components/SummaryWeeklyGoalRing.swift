@@ -45,7 +45,7 @@ struct SummaryWeeklyGoalRing: View {
                 VStack(spacing: 1) {
                     Text("\(goal.current)")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
-                        .foregroundStyle(goal.isReached ? .green : .primary)
+                        .foregroundStyle(goal.isReached ? Color.green : .primary)
                     Text("/\(goal.target)")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
@@ -94,7 +94,7 @@ struct SummaryWeeklyGoalRing: View {
     }
 
     private var contextColor: Color {
-        if goal.isReached { return .green }
+        if goal.isReached { return Color.green }
         if goal.isAboveAverage { return .blue }
         return .secondary
     }

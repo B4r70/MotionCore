@@ -29,7 +29,7 @@ struct SummaryRecordsCard: View {
             if let highest = highestCaloriesBurn {
                 SummaryRecordRow(
                     icon: "flame.fill",
-                    iconColor: .orange,
+                    iconColor: Color.orange,
                     title: "Höchster Kalorienverbrauch",
                     value: "\(highest.session.calories) kcal",
                     subtitle: "\(highest.type.description) • \(highest.session.date.formatted(AppFormatters.dateGermanShort))",
@@ -50,7 +50,7 @@ struct SummaryRecordsCard: View {
 
             SummaryRecordRow(
                 icon: "trophy.fill",
-                iconColor: .yellow,
+                iconColor: Color.yellow,
                 title: "Längste Streak",
                 value: "\(longestStreak) Tage",
                 subtitle: "Aufeinanderfolgende Trainingstage",

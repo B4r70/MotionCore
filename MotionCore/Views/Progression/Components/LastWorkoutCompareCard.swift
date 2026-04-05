@@ -41,7 +41,7 @@ struct LastWorkoutCompareCard: View {
             // Vergleichs-Zeile: Gewicht
             compareRow(
                 icon: "scalemass.fill",
-                iconColor: .orange,
+                iconColor: Color.orange,
                 label: "Gewicht",
                 current: weightDisplayText(weight: currentWeight),
                 last: lastSnapshot.map { weightDisplayText(weight: $0.weight) },
@@ -65,7 +65,7 @@ struct LastWorkoutCompareCard: View {
             // Vergleichs-Zeile: Volumen
             compareRow(
                 icon: "chart.bar.fill",
-                iconColor: .green,
+                iconColor: Color.green,
                 label: "Volumen",
                 current: formatVolume(currentVolume),
                 last: lastSnapshot.map { formatVolume($0.totalVolume) },
@@ -86,7 +86,7 @@ struct LastWorkoutCompareCard: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    MiniSparkline(data: oneRMData, color: .yellow)
+                    MiniSparkline(data: oneRMData, color: Color.yellow)
                         .frame(maxWidth: .infinity)
                         .frame(height: 28)
                 }
@@ -202,7 +202,7 @@ struct LastWorkoutCompareCard: View {
 
         Text(text)
             .font(.caption2.bold())
-            .foregroundStyle(delta.positive ? .green : .orange)
+            .foregroundStyle(delta.positive ? Color.green : Color.orange)
             .padding(.horizontal, 6)
             .padding(.vertical, 3)
             .background(

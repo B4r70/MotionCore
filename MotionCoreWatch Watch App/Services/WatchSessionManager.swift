@@ -131,13 +131,20 @@ extension WatchSessionManager: WCSessionDelegate {
                 self.workoutManager = manager
                 Task {
                     let authorized = await manager.requestAuthorization()
-                    if !authorized {
+                    guard authorized else {
+                        // HealthKit verweigert — Self-Healing abbrechen
                         print("WatchSessionManager: HealthKit-Auth verweigert (Self-Healing)")
+                        await MainActor.run { self.workoutManager = nil }
+                        return
                     }
                     do {
                         try await manager.startWorkout()
+                        // Heartbeat erst starten wenn Workout läuft und erste Werte vorliegen
                         try? await Task.sleep(for: .seconds(2))
-                        await MainActor.run { self.sendHeartbeatUpdate() }
+                        await MainActor.run {
+                            self.startHeartbeatTimer()
+                            self.sendHeartbeatUpdate()
+                        }
                     } catch {
                         print("WatchSessionManager: Self-Healing Workout-Start fehlgeschlagen: \(error.localizedDescription)")
                         await MainActor.run {
@@ -146,7 +153,6 @@ extension WatchSessionManager: WCSessionDelegate {
                         }
                     }
                 }
-                self.startHeartbeatTimer()
             }
 
             // liveElapsedSeconds auf 0 zurücksetzen wenn Workout endet

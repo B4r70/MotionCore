@@ -21,7 +21,7 @@ struct WatchActiveWorkoutView: View {
             HStack {
                 Text(formattedTime)
                     .font(.system(.title3, design: .monospaced).bold())
-                    .foregroundStyle(watchSession.workoutState == .paused ? .orange : .primary)
+                    .foregroundStyle(watchSession.workoutState == .paused ? Color.orange : .primary)
                 Spacer()
                 Button {
                     watchSession.sendAction(.pauseResume)
@@ -30,7 +30,7 @@ struct WatchActiveWorkoutView: View {
                         .font(.caption)
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(watchSession.workoutState == .paused ? .orange : .secondary)
+                .foregroundStyle(watchSession.workoutState == .paused ? Color.orange : .secondary)
             }
 
             // Übungsname + Set-Info

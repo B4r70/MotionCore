@@ -149,7 +149,7 @@ struct StatisticView: View {
                 icon: .system("flame.fill"),
                 title: "Gesamt Kalorien",
                 valueView: Text("\(viewModel.totalCaloriesAll)"),
-                color: .orange
+                color: Color.orange
             )
 
             // 3. Gesamt Volumen (Kraft)
@@ -165,7 +165,7 @@ struct StatisticView: View {
                 icon: .system("heart.fill"),
                 title: "⌀ Herzfrequenz",
                 valueView: Text("\(viewModel.averageHeartRateAll) bpm"),
-                color: .red
+                color: Color.red
             )
 
             // 5. Gesamt Sets (Kraft)
@@ -197,7 +197,7 @@ struct StatisticView: View {
                 icon: .system("bolt.fill"),
                 title: "⌀ METs",
                 valueView: Text(String(format: "%.1f", viewModel.averageMETS)),
-                color: .yellow
+                color: Color.yellow
             )
 
             // 9. Gesamt Strecke (Cardio + Outdoor)
@@ -205,7 +205,7 @@ struct StatisticView: View {
                 icon: .system("arrow.left.and.right"),
                 title: "Gesamt Strecke",
                 valueView: Text(String(format: "%.2f km", viewModel.totalDistanceAll)),
-                color: .green
+                color: Color.green
             )
         }
     }
@@ -262,7 +262,7 @@ struct StatisticView: View {
                 valueView: ShowStarRating(
                     starRating: viewModel.averageIntensity,
                     starMaxRating: Intensity.maxRating,
-                    starColor: .orange
+                    starColor: Color.orange
                 ),
                 color: .cyan
             )
@@ -299,7 +299,7 @@ struct StatisticView: View {
                     icon: .system("figure.outdoor.cycle"),
                     title: "Touren",
                     valueView: Text("\(viewModel.outdoorTourCount)"),
-                    color: .green
+                    color: Color.green
                 )
 
                 // Gesamtdistanz
@@ -348,7 +348,7 @@ struct StatisticView: View {
                                     icon: .system("figure.run.circle.fill"),
                                     title: "Aktive Kalorien (heute)",
                                     valueView: Text("\(activeCalories) kcal"),
-                                    color: .orange
+                                    color: Color.orange
                                 )
                             }
 

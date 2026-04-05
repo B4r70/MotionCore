@@ -17,19 +17,19 @@ struct ProgressionExerciseCard: View {
 
     private var trendColor: Color {
         switch analysis.trend {
-        case .improving:    return .green
+        case .improving:    return Color.green
         case .stable:       return .blue
-        case .declining:    return .orange
-        case .volatile:     return .yellow
+        case .declining:    return Color.orange
+        case .volatile:     return Color.yellow
         case .insufficient: return .secondary
         }
     }
 
     private var confidenceColor: Color {
         switch analysis.confidenceLevel {
-        case .high:         return .green
-        case .medium:       return .yellow
-        case .low:          return .orange
+        case .high:         return Color.green
+        case .medium:       return Color.yellow
+        case .low:          return Color.orange
         case .insufficient: return .secondary
         }
     }

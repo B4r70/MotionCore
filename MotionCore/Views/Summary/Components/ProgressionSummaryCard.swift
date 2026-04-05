@@ -102,7 +102,7 @@ private struct ProgressionSummaryRow: View {
 
     var actionColor: Color {
         switch analysis.recommendedAction {
-        case .increaseWeight: return .green
+        case .increaseWeight: return Color.green
         case .increaseReps:   return .blue
         default:              return .secondary
         }

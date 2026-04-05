@@ -206,7 +206,7 @@ struct SetEditSheet: View {
         Button(action: action) {
             Image(systemName: systemName)
                 .font(.title)
-                .foregroundStyle(disabled ? .gray : .blue)
+                .foregroundStyle(disabled ? Color.gray : .blue)
         }
         .disabled(disabled)
     }

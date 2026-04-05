@@ -37,7 +37,7 @@ struct SummaryTrendCard: View {
             // Trend-Zeilen
             TrendRow(
                 icon: "scalemass.fill",
-                iconColor: .orange,
+                iconColor: Color.orange,
                 label: "Volumen",
                 value: Int(volumeTrend.currentValue),
                 suffix: " kg",
@@ -48,7 +48,7 @@ struct SummaryTrendCard: View {
 
             TrendRow(
                 icon: "flame.fill",
-                iconColor: .red,
+                iconColor: Color.red,
                 label: "Kalorien",
                 value: Int(caloriesTrend.currentValue),
                 suffix: " kcal",
@@ -133,8 +133,8 @@ private struct TrendRow: View {
 
     private var trendColor: Color {
         switch comparison.trend {
-        case .up:     return .green
-        case .down:   return .red
+        case .up:     return Color.green
+        case .down:   return Color.red
         case .stable: return .secondary
         }
     }

@@ -30,16 +30,16 @@ struct GlassButtonExamples: View {
             Button {
                 print("Kleiner Button")
             } label: {
-                IconType(icon: .system("heart.fill"), color: .red, size: 16)
-                    .glassButton(size: 44, accentColor: .red)
+                IconType(icon: .system("heart.fill"), color: Color.red, size: 16)
+                    .glassButton(size: 44, accentColor: Color.red)
             }
             
             // BEISPIEL 3: Großer Button
             Button {
                 print("Großer Button")
             } label: {
-                IconType(icon: .system("play.fill"), color: .green, size: 32)
-                    .glassButton(size: 80, accentColor: .green)
+                IconType(icon: .system("play.fill"), color: Color.green, size: 32)
+                    .glassButton(size: 80, accentColor: Color.green)
             }
             
             // BEISPIEL 4: Button mit Asset-Icon
@@ -55,15 +55,15 @@ struct GlassButtonExamples: View {
                 Button {
                     print("Edit")
                 } label: {
-                    IconType(icon: .system("pencil"), color: .orange, size: 18)
-                        .glassButton(size: 50, accentColor: .orange)
+                    IconType(icon: .system("pencil"), color: Color.orange, size: 18)
+                        .glassButton(size: 50, accentColor: Color.orange)
                 }
                 
                 Button {
                     print("Delete")
                 } label: {
-                    IconType(icon: .system("trash"), color: .red, size: 18)
-                        .glassButton(size: 50, accentColor: .red)
+                    IconType(icon: .system("trash"), color: Color.red, size: 18)
+                        .glassButton(size: 50, accentColor: Color.red)
                 }
                 
                 Button {
@@ -120,8 +120,8 @@ struct GlassButtonExamples: View {
      
      HStack(spacing: 16) {
          Button { like() } label: {
-             IconType(icon: .system("heart"), color: .red, size: 16)
-                 .glassFloatingButton(size: 44, accentColor: .red)
+             IconType(icon: .system("heart"), color: Color.red, size: 16)
+                 .glassFloatingButton(size: 44, accentColor: Color.red)
          }
          
          Button { share() } label: {
@@ -130,8 +130,8 @@ struct GlassButtonExamples: View {
          }
          
          Button { bookmark() } label: {
-             IconType(icon: .system("bookmark"), color: .orange, size: 16)
-                 .glassFloatingButton(size: 44, accentColor: .orange)
+             IconType(icon: .system("bookmark"), color: Color.orange, size: 16)
+                 .glassFloatingButton(size: 44, accentColor: Color.orange)
          }
      }
  }

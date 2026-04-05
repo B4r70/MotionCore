@@ -247,9 +247,9 @@ struct HealthMetricSleepHeroCard: View {
             case "kernschlaf", "core":
                 return .indigo
             case "wach", "awake":
-                return .orange
+                return Color.orange
             default:
-                return .gray
+                return Color.gray
         }
     }
 }

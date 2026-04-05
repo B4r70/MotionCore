@@ -68,31 +68,31 @@ struct WorkoutCard: View {
                 StatBubble(
                     icon: .system("arrow.left.and.right"),
                     value: allWorkouts.distanceFormatted,
-                    color: .green
+                    color: Color.green
                 )
                 // Workout-Geschwindigkeit
                 StatBubble(
                     icon: .system("gauge.with.dots.needle.67percent"),
                     value: allWorkouts.averageSpeedFormatted,
-                    color: .orange
+                    color: Color.orange
                 )
                 // Workout-Herzfrequenz (Durchschnitt)
                 StatBubble(
                     icon: .system("heart.fill"),
                     value: allWorkouts.heartRateFormatted,
-                    color: .red
+                    color: Color.red
                 )
                 // Workout-Kalorien
                 StatBubble(
                     icon: .system("flame.fill"),
                     value: allWorkouts.caloriesFormatted,
-                    color: .orange
+                    color: Color.orange
                 )
                 // Workout-METS
                 StatBubble(
                     icon: .system("bolt.fill"),
                     value: allWorkouts.metsFormatted,
-                    color: .yellow
+                    color: Color.yellow
                 )
             }
             .glassDivider(paddingTop: 15, paddingBottom: 2)
@@ -106,7 +106,7 @@ struct WorkoutCard: View {
                 ForEach(0 ..< 5) { index in
                     Image(systemName: index < allWorkouts.intensity.rawValue ? "star.fill" : "star")
                         .font(.caption2)
-                        .foregroundStyle(index < allWorkouts.intensity.rawValue ? allWorkouts.intensity.color : .gray.opacity(0.3))
+                        .foregroundStyle(index < allWorkouts.intensity.rawValue ? allWorkouts.intensity.color : Color.gray.opacity(0.3))
                 }
 
                 Spacer()

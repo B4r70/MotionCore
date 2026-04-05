@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Übungen                                                          /
-// Datei . . . . : ExerciseAdvancedFilterSheet.swift                                /
+// Datei . . . . : ExerciseFilterSheet.swift                                /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 20.01.2026                                                       /
 // Beschreibung  : Erweiterte Filter für Exercise Search (Equipment, MuscleGroups)  /
@@ -19,6 +19,7 @@ struct ExerciseFilterSheet: View {
     @Binding var selectedEquipment: BundledEquipmentItem?
     @Binding var selectedPrimaryMuscle: MuscleGroup?
     @Binding var selectedSubMuscle: DetailedMuscle?
+    @Binding var selectedCategory: ExerciseCategory?
 
     // Equipment-Daten aus dem Bundle (werden vom Aufrufer durchgereicht)
     let equipmentItems: [BundledEquipmentItem]
@@ -40,6 +41,7 @@ struct ExerciseFilterSheet: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         activeFiltersCard
+                        categorySection
                         equipmentSection
                         muscleGroupSection
                     }
@@ -133,10 +135,77 @@ struct ExerciseFilterSheet: View {
                         .background(.ultraThinMaterial, in: Capsule())
                         .overlay(Capsule().stroke(Color.green.opacity(0.6), lineWidth: 1))
                     }
+
+                    if let cat = selectedCategory {
+                        HStack(spacing: 6) {
+                            Image(systemName: "tag.fill")
+                                .font(.caption2)
+                            Text(cat.description)
+                                .font(.caption)
+                            Button {
+                                selectedCategory = nil
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.caption)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(.ultraThinMaterial, in: Capsule())
+                        .overlay(Capsule().stroke(Color.purple, lineWidth: 1))
+                    }
                 }
             }
             .glassCard()
         }
+    }
+
+    // MARK: - Category Section
+
+    private var categorySection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "tag.fill")
+                    .foregroundStyle(Color.purple)
+                Text("Kategorie")
+                    .font(.title3.bold())
+            }
+
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 12) {
+                ForEach(ExerciseCategory.allCases) { category in
+                    let isSelected = selectedCategory == category
+                    Button {
+                        if isSelected {
+                            selectedCategory = nil
+                        } else {
+                            selectedCategory = category
+                        }
+                    } label: {
+                        VStack(spacing: 6) {
+                            Image(systemName: category.icon)
+                                .font(.title3)
+                                .foregroundStyle(isSelected ? .white : .secondary)
+                            Text(category.description)
+                                .font(.caption)
+                                .foregroundStyle(isSelected ? .white : .primary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(isSelected ? Color.purple : Color.clear)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(isSelected ? Color.purple : Color.white.opacity(0.3), lineWidth: 1)
+                        )
+                    }
+                }
+            }
+        }
+        .glassCard()
     }
 
     // MARK: - Equipment Section
@@ -221,13 +290,14 @@ struct ExerciseFilterSheet: View {
     // MARK: - Helpers
 
     private var hasActiveFilters: Bool {
-        selectedEquipment != nil || selectedPrimaryMuscle != nil || selectedSubMuscle != nil
+        selectedEquipment != nil || selectedPrimaryMuscle != nil || selectedSubMuscle != nil || selectedCategory != nil
     }
 
     private func resetFilters() {
         selectedEquipment = nil
         selectedPrimaryMuscle = nil
         selectedSubMuscle = nil
+        selectedCategory = nil
     }
 }
 
@@ -386,6 +456,7 @@ private struct SubgroupButton: View {
         selectedEquipment: .constant(nil),
         selectedPrimaryMuscle: .constant(nil),
         selectedSubMuscle: .constant(nil),
+        selectedCategory: .constant(nil),
         equipmentItems: BundledEquipmentService.loadAll()
     )
 }

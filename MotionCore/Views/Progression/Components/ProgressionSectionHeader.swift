@@ -35,11 +35,11 @@ struct ProgressionSectionHeader: View {
     /// Farbe aus dem bestehenden Trend-Farbsystem
     private var trendColor: Color {
         switch trend {
-        case .improving:    return .green
+        case .improving:    return Color.green
         case .stable:       return .blue
-        case .declining:    return .orange
+        case .declining:    return Color.orange
         case .volatile:     return .blue
-        case .insufficient: return .gray
+        case .insufficient: return Color.gray
         }
     }
 

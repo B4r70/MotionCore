@@ -87,9 +87,9 @@ struct SummaryBestExerciseCard: View {
 
     private var sparklineColor: Color {
         switch analysis.trend {
-        case .improving: return .green
+        case .improving: return Color.green
         case .stable:    return .blue
-        case .declining: return .orange
+        case .declining: return Color.orange
         default:         return .secondary
         }
     }

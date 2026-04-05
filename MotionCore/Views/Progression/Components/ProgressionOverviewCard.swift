@@ -49,7 +49,7 @@ struct ProgressionOverviewCard: View {
                     value: improvingCount,
                     label: "Aufwärts",
                     icon: "arrow.up.right",
-                    color: .green
+                    color: Color.green
                 )
                 Divider().frame(height: 44)
                 overviewColumn(
@@ -63,7 +63,7 @@ struct ProgressionOverviewCard: View {
                     value: decliningCount,
                     label: "Abwärts",
                     icon: "arrow.down.right",
-                    color: .orange
+                    color: Color.orange
                 )
             }
         }

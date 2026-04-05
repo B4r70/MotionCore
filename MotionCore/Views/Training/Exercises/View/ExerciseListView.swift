@@ -20,21 +20,25 @@ struct ExerciseListView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
 
-    // Filter States
-    @State private var selectedCategory: ExerciseCategory? = nil
-    @State private var selectedEquipment: ExerciseEquipment? = nil
-    @State private var selectedMuscleGroup: MuscleGroup? = nil
-    @State private var showFavoritesOnly: Bool = false
-    @State private var searchText: String = ""
-
     // Quellen-Filter
-    @State private var showSystemExercises: Bool = true
-    @State private var showUserExercises: Bool = true
+    @State private var showOnlyFavorites: Bool = false
 
-    // Sheet State
+    // Detail-Filter (Sheet)
+    @State private var selectedEquipment: BundledEquipmentItem? = nil
+    @State private var selectedPrimaryMuscle: MuscleGroup? = nil
+    @State private var selectedSubMuscle: DetailedMuscle? = nil
+    @State private var selectedCategory: ExerciseCategory? = nil
+
+    // Equipment-Daten aus Bundle
+    @State private var equipmentItems: [BundledEquipmentItem] = []
+
+    // Sheet States
+    @State private var showFilterSheet: Bool = false
     @State private var showingAddExercise = false
     @State private var draft = Exercise()
-    @State private var showingAPISearch = false  // *NEU*
+
+    // Suche
+    @State private var searchText: String = ""
 
     // MARK: - Computed Properties
 
@@ -46,43 +50,47 @@ struct ExerciseListView: View {
         allExercises.filter { !$0.isSystemExercise }
     }
 
+    var hasActiveDetailFilters: Bool {
+        selectedEquipment != nil || selectedPrimaryMuscle != nil
+            || selectedSubMuscle != nil || selectedCategory != nil
+    }
+
     // MARK: - Filtered Exercises
 
     var filteredExercises: [Exercise] {
         var exercises = allExercises
 
-        // Quellen-Filter
-        exercises = exercises.filter { exercise in
-            if exercise.isSystemExercise && !showSystemExercises {
-                return false
+        // Favoriten-Filter
+        if showOnlyFavorites {
+            exercises = exercises.filter { $0.isFavorite }
+        }
+
+        // Equipment-Filter: Vergleich auf equipmentRaw (snake_case Identifier)
+        if let equipment = selectedEquipment {
+            exercises = exercises.filter { $0.equipmentRaw == equipment.identifier }
+        }
+
+        // Muskelgruppen-Filter (zweistufig)
+        if let sub = selectedSubMuscle {
+            // Level 2: exakter DetailedMuscle-Match
+            exercises = exercises.filter { $0.detailedPrimaryMusclesRaw.contains(sub.rawValue) }
+        } else if let group = selectedPrimaryMuscle {
+            // Level 1: alle DetailedMuscles dieser Gruppe prüfen
+            let childRawValues = DetailedMuscle.allCases
+                .filter { $0.parentGroup == group }
+                .map { $0.rawValue }
+            exercises = exercises.filter { exercise in
+                if !exercise.detailedPrimaryMusclesRaw.isEmpty {
+                    return exercise.detailedPrimaryMusclesRaw.contains { childRawValues.contains($0) }
+                } else {
+                    return exercise.primaryMusclesRaw.contains(group.rawValue)
+                }
             }
-            if !exercise.isSystemExercise && !showUserExercises {
-                return false
-            }
-            return true
         }
 
         // Kategorie-Filter
-        if let category = selectedCategory {
-            exercises = exercises.filter { $0.category == category }
-        }
-
-        // Equipment-Filter
-        if let equipment = selectedEquipment {
-            exercises = exercises.filter { $0.equipment == equipment }
-        }
-
-        // Muskelgruppen-Filter
-        if let muscle = selectedMuscleGroup {
-            exercises = exercises.filter { exercise in
-                exercise.primaryMuscles.contains(muscle) ||
-                exercise.secondaryMuscles.contains(muscle)
-            }
-        }
-
-        // Favoriten-Filter
-        if showFavoritesOnly {
-            exercises = exercises.filter { $0.isFavorite }
+        if let cat = selectedCategory {
+            exercises = exercises.filter { $0.category == cat }
         }
 
         // Suchtext-Filter
@@ -113,10 +121,16 @@ struct ExerciseListView: View {
                     .padding(.horizontal)
                     .padding(.top, 12)
 
-                // MARK: Filter-Chips
-                filterChips
+                // MARK: FilterBar
+                filterBar
                     .padding(.horizontal)
                     .padding(.top, 12)
+
+                // MARK: Aktive Detail-Filter-Tags
+                if hasActiveDetailFilters {
+                    activeFiltersRow
+                        .padding(.top, 8)
+                }
 
                 // MARK: Übungsliste
                 ScrollView {
@@ -128,9 +142,8 @@ struct ExerciseListView: View {
                                 ExerciseCard(exercise: exercise)
                             }
                             .buttonStyle(.plain)
-                            // *NEU* - Swipe Actions
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                // Löschen-Button (nur für API-Übungen)
+                                // Löschen-Button (nur für System-Übungen)
                                 if exercise.isSystemExercise {
                                     Button(role: .destructive) {
                                         deleteExercise(exercise)
@@ -180,20 +193,6 @@ struct ExerciseListView: View {
         ) {
             showingAddExercise = true
         }
-        // *NEU* - Zweiter FAB für API-Suche
-        .overlay(alignment: .bottomLeading) {
-            Button {
-                showingAPISearch = true
-            } label: {
-                Image(systemName: "magnifyingglass.circle.fill")
-                    .font(.system(size: 50))
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(.white, .blue)
-                    .shadow(color: .blue.opacity(0.4), radius: 8, x: 0, y: 4)
-            }
-            .padding(.leading, 24)
-            .padding(.bottom, 24)
-        }
         .sheet(isPresented: $showingAddExercise) {
             NavigationStack {
                 ExerciseFormView(mode: .add, exercise: draft)
@@ -203,13 +202,17 @@ struct ExerciseListView: View {
                 draft = Exercise()
             }
         }
-        // Sheet für lokale Übungssuche (SwiftData-basiert, kein Supabase-RPC)
-        .sheet(isPresented: $showingAPISearch) {
-            LocalExerciseSearchView { exercise in
-                // Zur Übungsdetail-Ansicht navigieren ist im Sheet-Kontext nicht möglich;
-                // Sheet schließt sich — User findet die Übung jetzt in der Liste
-            }
-            .environmentObject(appSettings)
+        .sheet(isPresented: $showFilterSheet) {
+            ExerciseFilterSheet(
+                selectedEquipment: $selectedEquipment,
+                selectedPrimaryMuscle: $selectedPrimaryMuscle,
+                selectedSubMuscle: $selectedSubMuscle,
+                selectedCategory: $selectedCategory,
+                equipmentItems: equipmentItems
+            )
+        }
+        .task {
+            equipmentItems = BundledEquipmentService.loadAll()
         }
     }
 
@@ -303,124 +306,53 @@ struct ExerciseListView: View {
         )
     }
 
-    private var filterChips: some View {
+    // FilterBar: Toggle-Buttons + Trichter-Button
+    private var filterBar: some View {
+        HStack(spacing: 8) {
+            FilterToggleButton(label: "Favoriten", icon: "heart.fill", isActive: $showOnlyFavorites)
+
+            Spacer()
+
+            Button {
+                showFilterSheet = true
+            } label: {
+                Image(systemName: hasActiveDetailFilters
+                      ? "line.3.horizontal.decrease.circle.fill"
+                      : "line.3.horizontal.decrease.circle")
+                    .foregroundStyle(hasActiveDetailFilters ? Color.blue : Color.secondary)
+                    .font(.title3)
+            }
+        }
+    }
+
+    // Aktive Detail-Filter als entfernbare Capsule-Tags
+    private var activeFiltersRow: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                // Eigene Übungen
-                FilterChip(
-                    title: "Eigene",
-                    icon: .system("person.fill"),
-                    count: userExercises.count,
-                    isSelected: showUserExercises
-                ) {
-                    showUserExercises.toggle()
-                }
-
-                // System-Übungen
-                FilterChip(
-                    title: "System-Übungen",
-                    icon: .system("bookmark.fill"),
-                    count: systemExercises.count,
-                    isSelected: showSystemExercises
-                ) {
-                    showSystemExercises.toggle()
-                }
-
-                // Favoriten
-                FilterChip(
-                    title: "Favoriten",
-                    icon: .system("star.fill"),
-                    count: allExercises.filter { $0.isFavorite }.count,
-                    isSelected: showFavoritesOnly
-                ) {
-                    showFavoritesOnly.toggle()
-                }
-
-                // Kategorien
-                Menu {
-                    Button("Alle Kategorien") {
-                        selectedCategory = nil
-                    }
-
-                    ForEach(ExerciseCategory.allCases) { category in
-                        Button {
-                            selectedCategory = category
-                        } label: {
-                            HStack {
-                                Text(category.description)
-                                Spacer()
-                                if selectedCategory == category {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    }
-                } label: {
-                    FilterChip(
-                        title: selectedCategory?.description ?? "Kategorie",
-                        icon: .system("tag.fill"),
-                        count: selectedCategory != nil ? 1 : 0,
-                        isSelected: selectedCategory != nil
-                    ) {}
-                }
-
-                // Equipment
-                Menu {
-                    Button("Alle Geräte") {
+            HStack(spacing: 6) {
+                if let eq = selectedEquipment {
+                    ActiveFilterTag(label: eq.name) {
                         selectedEquipment = nil
                     }
-
-                    ForEach(ExerciseEquipment.allCases) { equipment in
-                        Button {
-                            selectedEquipment = equipment
-                        } label: {
-                            HStack {
-                                Text(equipment.description)
-                                Spacer()
-                                if selectedEquipment == equipment {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    }
-                } label: {
-                    FilterChip(
-                        title: selectedEquipment?.description ?? "Gerät",
-                        icon: .system("dumbbell.fill"),
-                        count: selectedEquipment != nil ? 1 : 0,
-                        isSelected: selectedEquipment != nil
-                    ) {}
                 }
 
-                // Muskelgruppen
-                Menu {
-                    Button("Alle Muskelgruppen") {
-                        selectedMuscleGroup = nil
+                if let sub = selectedSubMuscle {
+                    ActiveFilterTag(label: sub.displayName) {
+                        selectedSubMuscle = nil
+                        selectedPrimaryMuscle = nil
                     }
+                } else if let group = selectedPrimaryMuscle {
+                    ActiveFilterTag(label: group.rawValue) {
+                        selectedPrimaryMuscle = nil
+                    }
+                }
 
-                    ForEach(MuscleGroup.allCases) { muscle in
-                        Button {
-                            selectedMuscleGroup = muscle
-                        } label: {
-                            HStack {
-                                Text(muscle.description)
-                                Spacer()
-                                if selectedMuscleGroup == muscle {
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
+                if let cat = selectedCategory {
+                    ActiveFilterTag(label: cat.description) {
+                        selectedCategory = nil
                     }
-                } label: {
-                    FilterChip(
-                        title: selectedMuscleGroup?.description ?? "Muskel",
-                        icon: .system("figure.strengthtraining.traditional"),
-                        count: selectedMuscleGroup != nil ? 1 : 0,
-                        isSelected: selectedMuscleGroup != nil
-                    ) {}
                 }
             }
-            .padding(.horizontal, 4)
+            .padding(.horizontal, 16)
         }
     }
 
@@ -466,22 +398,14 @@ struct ExerciseListView: View {
             return "Versuche es mit anderen Filtern"
         }
 
-        if !showUserExercises && !showSystemExercises {
-            return "Aktiviere mindestens einen Quellen-Filter"
-        }
-
-        if !showUserExercises {
-            return "Keine importierten Übungen vorhanden"
-        }
-
-        if !showSystemExercises {
-            return "Keine eigenen Übungen vorhanden"
+        if hasActiveDetailFilters {
+            return "Keine Übungen für die gewählten Filter"
         }
 
         return "Füge deine erste Übung hinzu"
     }
 
-    // MARK: - Actions *NEU*
+    // MARK: - Actions
 
     private func deleteExercise(_ exercise: Exercise) {
         do {
@@ -502,6 +426,62 @@ struct ExerciseListView: View {
     }
 }
 
+// MARK: - FilterToggleButton
+
+private struct FilterToggleButton: View {
+    let label: String
+    let icon: String
+    @Binding var isActive: Bool
+
+    var body: some View {
+        Button {
+            isActive.toggle()
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.caption2)
+                Text(label)
+                    .font(.caption.bold())
+            }
+            .foregroundStyle(isActive ? .white : .secondary)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule()
+                    .fill(isActive ? Color.blue : Color.clear)
+            )
+            .overlay(
+                Capsule()
+                    .stroke(isActive ? Color.blue : Color.secondary.opacity(0.4), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - ActiveFilterTag
+
+private struct ActiveFilterTag: View {
+    let label: String
+    let onRemove: () -> Void
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Text(label)
+                .font(.caption)
+            Button(action: onRemove) {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(.ultraThinMaterial, in: Capsule())
+        .overlay(Capsule().stroke(Color.blue.opacity(0.5), lineWidth: 1))
+    }
+}
+
 // MARK: - Preview
 
 #Preview("Exercise Library") {
@@ -518,4 +498,5 @@ struct ExerciseListView: View {
                 }
             }
     }
+    .modelContainer(PreviewData.sharedContainer)
 }

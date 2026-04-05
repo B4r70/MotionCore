@@ -20,8 +20,8 @@ struct PlanActionsSection: View {
     private var accentColor: Color {
         switch plan.planType {
         case .cardio: return .blue
-        case .strength: return .orange
-        case .outdoor: return .green
+        case .strength: return Color.orange
+        case .outdoor: return Color.green
         case .mixed: return .purple
         }
     }

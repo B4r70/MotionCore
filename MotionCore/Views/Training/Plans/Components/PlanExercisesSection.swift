@@ -144,7 +144,7 @@ struct PlanExercisesSection: View {
                     } label: {
                         Image(systemName: isEditing ? "checkmark.circle.fill" : "arrow.up.arrow.down.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(isEditing ? .green : .blue)
+                            .foregroundStyle(isEditing ? Color.green : .blue)
                             .contentTransition(.symbolEffect(.replace))
                     }
                 }

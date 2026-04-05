@@ -150,15 +150,25 @@ struct ExerciseCard: View {
             }
         }
         .glassCard()
+        .overlay(alignment: .topTrailing) {
+            if !exercise.isSystemExercise {
+                Image(systemName: "person.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.white)
+                    .padding(5)
+                    .background(Color.green.opacity(0.85), in: Circle())
+                    .padding(8)
+            }
+        }
     }
 
     // Trainingstyp-Farbe basierend auf Rep-Range
     private var trainingTypeColor: Color {
         switch exercise.repRangeMax {
-        case 1...3: return .red
-        case 4...6: return .orange
+        case 1...3: return Color.red
+        case 4...6: return Color.orange
         case 7...12: return .blue
-        case 13...20: return .green
+        case 13...20: return Color.green
         default: return .teal
         }
     }

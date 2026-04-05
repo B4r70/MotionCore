@@ -1768,7 +1768,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { decreaseSets() } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(numberOfSets > 1 ? .blue : .gray)
+                            .foregroundStyle(numberOfSets > 1 ? .blue : Color.gray)
                     }
                     .disabled(numberOfSets <= 1)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -1784,7 +1784,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { increaseSets() } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(numberOfSets < 10 ? .blue : .gray)
+                            .foregroundStyle(numberOfSets < 10 ? .blue : Color.gray)
                     }
                     .disabled(numberOfSets >= 10)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -1817,7 +1817,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { decreaseWeight() } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(defaultWeight > 0 ? .blue : .gray)
+                            .foregroundStyle(defaultWeight > 0 ? .blue : Color.gray)
                     }
                     .disabled(defaultWeight <= 0)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -1885,7 +1885,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { decreaseReps() } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(defaultReps > 1 ? .blue : .gray)
+                            .foregroundStyle(defaultReps > 1 ? .blue : Color.gray)
                     }
                     .disabled(defaultReps <= 1)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -1901,7 +1901,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { increaseReps() } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(defaultReps < 50 ? .blue : .gray)
+                            .foregroundStyle(defaultReps < 50 ? .blue : Color.gray)
                     }
                     .disabled(defaultReps >= 50)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in

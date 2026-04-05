@@ -157,7 +157,7 @@ struct StrengthSessionCard: View {
             StatBubble(
                 icon: .system("dumbbell.fill"),
                 value: "\(session.exercisesPerformed)",
-                color: .orange
+                color: Color.orange
             )
 
             // Sätze
@@ -171,14 +171,14 @@ struct StrengthSessionCard: View {
             StatBubble(
                 icon: .system("scalemass.fill"),
                 value: formatVolume(session.totalVolume),
-                color: .green
+                color: Color.green
             )
 
             // Kalorien
             StatBubble(
                 icon: .system("flame.fill"),
                 value: session.calories > 0 ? "\(session.calories)" : "–",
-                color: .red
+                color: Color.red
             )
 
             // Herzfrequenz
@@ -243,7 +243,7 @@ struct StrengthSessionCard: View {
             let completedCount = sets.filter { $0.isCompleted }.count
             Text("\(completedCount)/\(sets.count)")
                 .font(.caption)
-                .foregroundStyle(completedCount == sets.count ? .green : .secondary)
+                .foregroundStyle(completedCount == sets.count ? Color.green : .secondary)
 
             // Checkmark wenn alle erledigt
             if completedCount == sets.count {
@@ -274,7 +274,7 @@ struct StrengthSessionCard: View {
                     .foregroundStyle(
                         index < session.intensity.rawValue
                         ? session.intensity.color
-                        : .gray.opacity(0.3)
+                        : Color.gray.opacity(0.3)
                     )
             }
 

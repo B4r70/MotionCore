@@ -58,7 +58,7 @@ struct HealthMetricProgressCard: View {
             VStack(spacing: 4) {
                 Text(formatValue(currentValue))
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(isOverTarget ? .green : .primary)
+                    .foregroundStyle(isOverTarget ? Color.green : .primary)
 
                 Text(title)
                     .font(.headline)
@@ -79,7 +79,7 @@ struct HealthMetricProgressCard: View {
                             .fill(
                                 LinearGradient(
                                     colors: isOverTarget
-                                    ? [.green, .mint]
+                                    ? [.green, Color.mint]
                                     : [color.opacity(0.7), color],
                                     startPoint: .leading,
                                     endPoint: .trailing
@@ -108,7 +108,7 @@ struct HealthMetricProgressCard: View {
             if showPercentage {
                 Text(String(format: "%.0f%%", percentage * 100))
                     .font(.caption.bold())
-                    .foregroundStyle(isOverTarget ? .green : color)
+                    .foregroundStyle(isOverTarget ? Color.green : color)
             }
         }
         .frame(maxWidth: .infinity)
@@ -138,7 +138,7 @@ struct HealthMetricProgressCard: View {
                 currentValue: 240,
                 targetValue: 2000,
                 unit: "kcal",
-                color: .orange
+                color: Color.orange
             )
 
                 // Schritte
@@ -158,7 +158,7 @@ struct HealthMetricProgressCard: View {
                 currentValue: 12.5,
                 targetValue: 25.0,
                 unit: "km",
-                color: .green
+                color: Color.green
             )
 
                 // Trainingszeit
@@ -179,7 +179,7 @@ struct HealthMetricProgressCard: View {
                 currentValue: 2150,
                 targetValue: 2000,
                 unit: "kcal",
-                color: .orange
+                color: Color.orange
             )
         }
         .padding()

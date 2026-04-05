@@ -43,7 +43,7 @@ struct ActiveWorkoutStatus: View {
                         watchIndicator
 
                         Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
-                            .foregroundStyle(isPaused ? .orange : .blue)
+                            .foregroundStyle(isPaused ? Color.orange : .blue)
                         Text(formattedElapsedTime)
                             .font(.title3.bold().monospacedDigit())
                             .foregroundStyle(.primary)
@@ -99,7 +99,7 @@ struct ActiveWorkoutStatus: View {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(
                             LinearGradient(
-                                colors: [.blue, .green],
+                                colors: [.blue, Color.green],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )

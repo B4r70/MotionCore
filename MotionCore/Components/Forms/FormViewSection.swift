@@ -784,7 +784,7 @@ struct ExerciseFavoriteToggle: View {
         Toggle(isOn: $isFavorite) {
             HStack(spacing: 8) {
                 Image(systemName: isFavorite ? "star.fill" : "star")
-                    .foregroundStyle(isFavorite ? .yellow : .secondary)
+                    .foregroundStyle(isFavorite ? Color.yellow : .secondary)
 
                 Text("Als Favorit markieren")
                     .foregroundStyle(.primary)
@@ -873,7 +873,7 @@ struct ExerciseUnilateralToggle: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     Image(systemName: isUnilateral ? "hand.raised.fingers.spread.fill" : "hands.clap.fill")
-                        .foregroundStyle(isUnilateral ? .orange : .secondary)
+                        .foregroundStyle(isUnilateral ? Color.orange : .secondary)
 
                     Text("Unilaterale Übung")
                         .foregroundStyle(.primary)
@@ -906,10 +906,10 @@ struct ExerciseRepRangeSection: View {
 
     private var trainingTypeColor: Color {
         switch repRangeMax {
-        case 1...3: return .red
-        case 4...6: return .orange
+        case 1...3: return Color.red
+        case 4...6: return Color.orange
         case 7...12: return .blue
-        case 13...20: return .green
+        case 13...20: return Color.green
         default: return .teal
         }
     }
@@ -1137,11 +1137,11 @@ struct SetTargetRIRSection: View {
 
     private var rirColor: Color {
         switch targetRIR {
-            case 0: return .red
-            case 1: return .orange
-            case 2: return .yellow
-            case 3: return .green
-            default: return .blue
+            case 0: return Color.red
+            case 1: return Color.orange
+            case 2: return Color.yellow
+            case 3: return Color.green
+            default: return Color.blue
         }
     }
 
@@ -1194,10 +1194,10 @@ struct SetTargetRIRSection: View {
 
     private func rirColorFor(_ rir: Int) -> Color {
         switch rir {
-        case 0: return .red
-        case 1: return .orange
-        case 2: return .yellow
-        case 3: return .green
+        case 0: return Color.red
+        case 1: return Color.orange
+        case 2: return Color.yellow
+        case 3: return Color.green
         default: return .blue
         }
     }
@@ -1359,7 +1359,7 @@ struct ExerciseProgressionSection: View {
                                     )
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
-                            .foregroundStyle(customStep == step ? .green : .primary)
+                            .foregroundStyle(customStep == step ? Color.green : .primary)
                         }
                     }
 
@@ -1493,10 +1493,10 @@ struct ExerciseProgressionSection: View {
 
     private func rirColorFor(_ rir: Int) -> Color {
         switch rir {
-        case 0: return .red
-        case 1: return .orange
-        case 2: return .yellow
-        case 3: return .green
+        case 0: return Color.red
+        case 1: return Color.orange
+        case 2: return Color.yellow
+        case 3: return Color.green
         default: return .blue
         }
     }

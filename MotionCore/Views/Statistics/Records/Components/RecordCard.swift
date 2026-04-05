@@ -53,7 +53,7 @@ struct RecordCard: View {
                     icon: .system("flame.fill"),
                     label: "Kalorien",
                     value: "\(allWorkouts.calories) kcal",
-                    color: .orange
+                    color: Color.orange
                 )
                 // Dauer des Workouts
                 RecordDetailRow(
@@ -67,7 +67,7 @@ struct RecordCard: View {
                     icon: .system("arrow.left.and.right"),
                     label: "Distanz",
                     value: String(format: "%.2f km", allWorkouts.distance),
-                    color: .green
+                    color: Color.green
                 )
                 // Datum des Workouts
                 RecordDetailRow(

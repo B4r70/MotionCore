@@ -48,7 +48,7 @@ struct StreakCard: View {
             HStack(spacing: 20) {
                 streakItem(
                     icon: "flame.fill",
-                    iconColor: currentStreak > 0 ? .orange : .secondary,
+                    iconColor: currentStreak > 0 ? Color.orange : .secondary,
                     value: "\(currentStreak)",
                     label: "Tage Streak"
                 )
@@ -77,7 +77,7 @@ struct StreakCard: View {
 
                 streakItem(
                     icon: "chart.line.uptrend.xyaxis",
-                    iconColor: .green,
+                    iconColor: Color.green,
                     value: String(format: "%.1f", averagePerWeek),
                     label: "⌀ / Woche"
                 )

@@ -52,8 +52,8 @@ struct WorkoutTypeRow: View {
     private func colorForType(_ type: WorkoutType) -> Color {
         switch type {
         case .cardio: return .blue
-        case .strength: return .orange
-        case .outdoor: return .green
+        case .strength: return Color.orange
+        case .outdoor: return Color.green
         }
     }
 }

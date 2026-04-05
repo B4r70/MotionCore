@@ -66,7 +66,7 @@ struct HealthMetricView: View {
                             icon: .system("figure"),
                             title: "Körpergewicht",
                             valueView: Text(String(format: "%.1f kg", calcHealthMetrics.userBodyWeight ?? 0.0)),
-                            color: .gray
+                            color: Color.gray
                         )
                             // Geschlecht des Benutzers
                         HealthMetricGridCard(
@@ -81,7 +81,7 @@ struct HealthMetricView: View {
                             icon: .system("flame.fill"), // Beispiel-Icon
                             title: "Alter",
                             valueView: Text(String(format: "%d Jahre", appSettings.userAge)),
-                            color: .red // Kann nach Belieben angepasst werden
+                            color: Color.red // Kann nach Belieben angepasst werden
                         )
 
                             // Letzte Herzfrequenz (aus HealthKit)
@@ -91,7 +91,7 @@ struct HealthMetricView: View {
                             valueView: Text(
                                 healthKitManager.latestHeartRate.map { String(format: "%.0f bpm", $0) } ?? "-"
                             ),
-                            color: .red
+                            color: Color.red
                         )
                             // Body-Mass-Index (BMI)
                         HealthMetricGridCard(
@@ -128,7 +128,7 @@ struct HealthMetricView: View {
                         currentValue: Double(healthKitManager.activeBurnedCalories ?? 0),
                         targetValue: Double(appSettings.dailyActiveCalorieGoal),
                         unit: "kcal",
-                        color: .orange,
+                        color: Color.orange,
                         showPercentage: true
                     )
 

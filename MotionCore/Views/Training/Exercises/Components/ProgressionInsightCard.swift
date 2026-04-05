@@ -98,10 +98,10 @@ private struct ConfidenceBadge: View {
 
     var color: Color {
         switch level {
-        case .insufficient: return .gray
-        case .low:          return .orange
-        case .medium:       return .yellow
-        case .high:         return .green
+        case .insufficient: return Color.gray
+        case .low:          return Color.orange
+        case .medium:       return Color.yellow
+        case .high:         return Color.green
         }
     }
 
@@ -127,11 +127,11 @@ private struct RecommendationRow: View {
 
     var accentColor: Color {
         switch action {
-        case .increaseWeight: return .green
+        case .increaseWeight: return Color.green
         case .increaseReps:   return .blue
-        case .considerDeload: return .orange
+        case .considerDeload: return Color.orange
         case .maintain:       return .secondary
-        case .needMoreData:   return .gray
+        case .needMoreData:   return Color.gray
         }
     }
 
@@ -205,11 +205,11 @@ private struct TrendRow: View {
 
     var color: Color {
         switch trend {
-        case .improving:    return .green
+        case .improving:    return Color.green
         case .stable:       return .blue
-        case .declining:    return .orange
-        case .volatile:     return .yellow
-        case .insufficient: return .gray
+        case .declining:    return Color.orange
+        case .volatile:     return Color.yellow
+        case .insufficient: return Color.gray
         }
     }
 

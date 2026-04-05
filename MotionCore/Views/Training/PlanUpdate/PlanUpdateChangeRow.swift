@@ -65,13 +65,13 @@ struct PlanUpdateChangeRow: View {
     private var changeDetailColor: Color {
         switch change.changeType {
         case .weightUpdate(let from, let to):
-            return to > from ? .green : .secondary
+            return to > from ? Color.green : .secondary
         case .setCountUpdate(let from, let to):
-            return to > from ? .green : .secondary
+            return to > from ? Color.green : .secondary
         case .exerciseAdded:
             return .blue
         case .exerciseSkipped:
-            return .orange
+            return Color.orange
         }
     }
 }

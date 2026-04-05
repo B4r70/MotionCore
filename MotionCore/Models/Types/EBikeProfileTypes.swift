@@ -68,11 +68,11 @@ enum BikeCondition: Int, Codable, CaseIterable, Identifiable {
 
     var color: Color {
         switch self {
-        case .excellent:    return .green
-        case .good:         return .blue
-        case .fair:         return .yellow
-        case .needsService: return .orange
-        case .poor:         return .red
+            case .excellent:    return Color.green
+            case .good:         return Color.blue
+            case .fair:         return Color.yellow
+            case .needsService: return Color.orange
+            case .poor:         return Color.red
         }
     }
 }

@@ -89,14 +89,14 @@ struct MiniSparkline: View {
     ]
 
     VStack(spacing: 20) {
-        MiniSparkline(data: mockData, color: .green)
+        MiniSparkline(data: mockData, color: Color.green)
             .frame(width: 80, height: 32)
 
         MiniSparkline(data: mockData, color: .blue)
             .frame(width: 120, height: 24)
 
         // Zu wenig Daten (< 3)
-        MiniSparkline(data: Array(mockData.prefix(2)), color: .orange)
+        MiniSparkline(data: Array(mockData.prefix(2)), color: Color.orange)
             .frame(width: 80, height: 32)
     }
     .padding()

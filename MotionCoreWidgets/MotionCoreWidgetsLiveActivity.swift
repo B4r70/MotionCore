@@ -70,7 +70,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         VStack(spacing: 2) {
                             Text(context.state.isPaused ? "Pausiert" : "Läuft")
                                 .font(.caption2)
-                                .foregroundStyle(context.state.isPaused ? .orange : .green)
+                                .foregroundStyle(context.state.isPaused ? Color.orange : Color.green)
 
                             if context.state.isPaused {
                                 Text(formatTime(context.state.elapsedAtPause ?? 0))
@@ -106,7 +106,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                                 .font(.caption)
                         } else {
                             Image(systemName: context.state.isPaused ? "pause.circle.fill" : "figure.strengthtraining.traditional")
-                                .foregroundStyle(context.state.isPaused ? .orange : .green)
+                                .foregroundStyle(context.state.isPaused ? Color.orange : Color.green)
                                 .font(.caption)
                         }
                     }
@@ -229,7 +229,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                     VStack(spacing: 4) {
                         Text(context.state.isPaused ? "Pausiert" : "Training")
                             .font(.caption)
-                            .foregroundStyle(context.state.isPaused ? .orange : .green)
+                            .foregroundStyle(context.state.isPaused ? Color.orange : Color.green)
 
                         if context.state.isPaused {
                             Text(formatTime(context.state.elapsedAtPause ?? 0))
@@ -261,7 +261,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                                 endPoint: .trailing
                             )
                             : LinearGradient(
-                                colors: [.green, .green.opacity(0.7)],
+                                colors: [.green, Color.green.opacity(0.7)],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -290,7 +290,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                             .font(.caption)
                     } else {
                         Image(systemName: context.state.isPaused ? "pause.circle.fill" : "play.circle.fill")
-                            .foregroundStyle(context.state.isPaused ? .orange : .green)
+                            .foregroundStyle(context.state.isPaused ? Color.orange : Color.green)
                         Text(context.state.isPaused ? "Pausiert" : "Aktiv")
                             .font(.caption)
                     }
@@ -319,20 +319,20 @@ struct MotionCoreWidgetsLiveActivity: Widget {
     private func restTimerColor(for context: ActivityViewContext<WorkoutActivityAttributes>) -> Color {
         guard context.state.isResting,
               let endDate = context.state.restEndDate else {
-            return .orange
+            return Color.orange
         }
 
         let remainingSeconds = endDate.timeIntervalSinceNow
 
         if remainingSeconds <= 10 {
-            return .red
+            return Color.red
         }
 
         if remainingSeconds <= 30 {
-            return .orange
+            return Color.orange
         }
 
-        return .green
+        return Color.green
     }
 
     private func isInFinalCountdown(_ context: ActivityViewContext<WorkoutActivityAttributes>) -> Bool {

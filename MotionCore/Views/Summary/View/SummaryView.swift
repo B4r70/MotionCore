@@ -105,7 +105,7 @@ struct SummaryView: View {
                                 targetValue: viewModel.filteredTotalCalories,
                                 suffix: " kcal"
                             ),
-                            color: .orange
+                            color: Color.orange
                         )
 
                         StatisticGridCard(
@@ -122,7 +122,7 @@ struct SummaryView: View {
                                 targetValue: viewModel.filteredAverageHeartRate,
                                 suffix: " bpm"
                             ),
-                            color: .red
+                            color: Color.red
                         )
                     }
 

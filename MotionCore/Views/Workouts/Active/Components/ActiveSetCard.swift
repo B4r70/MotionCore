@@ -193,7 +193,7 @@ struct ActiveSetCard: View {
                 .foregroundStyle(Color.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(.green, in: RoundedRectangle(cornerRadius: 16))
+                .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
             }
         }
         .glassCard()

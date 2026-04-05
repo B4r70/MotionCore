@@ -58,7 +58,7 @@ struct PlanStatisticsCard: View {
                 value: "\(totalSets)",
                 label: "Sätze",
                 icon: "number.circle.fill",
-                color: .orange
+                color: Color.orange
             )
             
             Divider()
@@ -69,7 +69,7 @@ struct PlanStatisticsCard: View {
                 value: formatVolume(totalVolume),
                 label: "Volumen",
                 icon: "scalemass.fill",
-                color: .green
+                color: Color.green
             )
         }
         .glassCard()
@@ -147,11 +147,11 @@ struct PlanStatisticsDetailCard: View {
                 GridItem(.flexible())
             ], spacing: 12) {
                 detailStatItem(value: "\(totalExercises)", label: "Übungen", icon: "dumbbell.fill", color: .blue)
-                detailStatItem(value: "\(totalSets)", label: "Sätze gesamt", icon: "number.circle.fill", color: .orange)
-                detailStatItem(value: "\(workingSets)", label: "Arbeitssätze", icon: "flame.fill", color: .red)
-                detailStatItem(value: "\(warmupSets)", label: "Aufwärmsätze", icon: "sun.max.fill", color: .yellow)
+                detailStatItem(value: "\(totalSets)", label: "Sätze gesamt", icon: "number.circle.fill", color: Color.orange)
+                detailStatItem(value: "\(workingSets)", label: "Arbeitssätze", icon: "flame.fill", color: Color.red)
+                detailStatItem(value: "\(warmupSets)", label: "Aufwärmsätze", icon: "sun.max.fill", color: Color.yellow)
                 detailStatItem(value: "\(totalReps)", label: "Wiederholungen", icon: "repeat.circle.fill", color: .purple)
-                detailStatItem(value: formatVolume(totalVolume), label: "Volumen (kg)", icon: "scalemass.fill", color: .green)
+                detailStatItem(value: formatVolume(totalVolume), label: "Volumen (kg)", icon: "scalemass.fill", color: Color.green)
             }
         }
         .glassCard()

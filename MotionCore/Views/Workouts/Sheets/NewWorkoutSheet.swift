@@ -43,7 +43,7 @@ struct NewWorkoutSheet: View {
                         icon: "figure.strengthtraining.traditional",
                         title: "Krafttraining",
                         subtitle: "Trainingsplan auswählen",
-                        color: .orange
+                        color: Color.orange
                     ) {
                         onStrengthSelected()
                     }
@@ -52,7 +52,7 @@ struct NewWorkoutSheet: View {
                         icon: "figure.elliptical",
                         title: "Cardio",
                         subtitle: "Ausdauertraining erfassen",
-                        color: .green
+                        color: Color.green
                     ) {
                         onCardioSelected()
                     }

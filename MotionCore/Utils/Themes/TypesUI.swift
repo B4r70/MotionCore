@@ -30,12 +30,12 @@ extension Intensity {
     // Farbe Schwierigkeitsgrad
     var color: Color {
         switch self {
-        case .none: .gray
-        case .veryEasy: .green
-        case .easy: .mint
-        case .medium: .yellow
-        case .hard: .orange
-        case .veryHard: .red
+            case .none: Color.gray
+            case .veryEasy: Color.green
+            case .easy: Color.mint
+            case .medium: Color.yellow
+            case .hard: Color.orange
+            case .veryHard: Color.red
         }
     }
     // Anzahl der maximalen Belastungsintensität
@@ -77,11 +77,11 @@ extension TrainingProgram {
     var tint: Color {
         switch self {
             case .manual: .blue
-            case .fatBurn: .red
+            case .fatBurn: Color.red
             case .cardio: .pink
-            case .hill: .mint
+            case .hill: Color.mint
             case .random: .indigo
-            case .fitTest: .yellow
+            case .fitTest: Color.yellow
         }
     }
 }
@@ -109,7 +109,7 @@ extension CardioDevice {
     var tint: Color {
         switch self {
         case .crosstrainer: .blue
-        case .ergometer: .green
+        case .ergometer: Color.green
         case .none: .secondary
         }
     }

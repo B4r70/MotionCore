@@ -77,7 +77,7 @@ struct OutdoorSessionCard: View {
                 StatBubble(
                     icon: .system("arrow.left.and.right"),
                     value: String(format: "%.1f km", session.distance),
-                    color: .green
+                    color: Color.green
                 )
 
                 // Durchschnittsgeschwindigkeit (nur wenn vorhanden)
@@ -85,7 +85,7 @@ struct OutdoorSessionCard: View {
                     StatBubble(
                         icon: .system("speedometer"),
                         value: String(format: "%.1f km/h", session.averageSpeed),
-                        color: .orange
+                        color: Color.orange
                     )
                 }
 
@@ -94,7 +94,7 @@ struct OutdoorSessionCard: View {
                     StatBubble(
                         icon: .system("mountain.2"),
                         value: "\(Int(session.elevationGain)) m",
-                        color: .mint
+                        color: Color.mint
                     )
                 }
             }
@@ -138,7 +138,7 @@ struct OutdoorSessionCard: View {
                             .foregroundStyle(
                                 index < session.intensity.rawValue
                                 ? session.intensity.color
-                                : .gray.opacity(0.3)
+                                : Color.gray.opacity(0.3)
                             )
                     }
 

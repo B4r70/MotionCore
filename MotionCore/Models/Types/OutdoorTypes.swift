@@ -60,12 +60,12 @@ enum OutdoorActivity: String, Codable, CaseIterable, Identifiable {
         case .cycling:      return .blue
         case .roadBike:     return .purple
         case .mountainBike: return .brown
-        case .eBike:        return .green
-        case .running:      return .orange
-        case .trailRunning: return .red
-        case .hiking:       return .mint
+        case .eBike:        return Color.green
+        case .running:      return Color.orange
+        case .trailRunning: return Color.red
+        case .hiking:       return Color.mint
         case .walking:      return .teal
-        case .other:        return .gray
+        case .other:        return Color.gray
         }
     }
 }

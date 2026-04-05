@@ -43,11 +43,11 @@ struct HealthMetricHeroCard: View {
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
                             Text(calorieBalance.isDeficit ? "+" : "-")
                                 .font(.system(size: 35, weight: .semibold))
-                                .foregroundStyle(calorieBalance.isDeficit ? .green : .red)
+                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
 
                             Text("\(abs(calorieBalance.balance))")
                                 .font(.system(size: 40, weight: .bold, design: .rounded))
-                                .foregroundStyle(calorieBalance.isDeficit ? .green : .red)
+                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
 
                             Text("kcal")
                                 .font(.title3)
@@ -188,7 +188,7 @@ struct HealthMetricHeroCard: View {
 
                             Text("\(Int(calorieBalance.consumedPercentage * 100))%")
                                 .font(.caption2.weight(.semibold))
-                                .foregroundStyle(calorieBalance.consumedPercentage > 1.0 ? .red : .green)
+                                .foregroundStyle(calorieBalance.consumedPercentage > 1.0 ? Color.red : Color.green)
                             Spacer()
 
                             HStack(spacing: 4) {

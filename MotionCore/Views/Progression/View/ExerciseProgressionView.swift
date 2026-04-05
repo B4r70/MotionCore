@@ -93,7 +93,7 @@ struct ExerciseProgressionView: View {
             }
             .padding(.horizontal, 4)
 
-            MiniSparkline(data: volumeData, color: .green, lineWidth: 2.5)
+            MiniSparkline(data: volumeData, color: Color.green, lineWidth: 2.5)
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
                 .padding(.horizontal, 4)

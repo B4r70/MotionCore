@@ -18,8 +18,8 @@ struct PlanInfoCard: View {
     private var accentColor: Color {
         switch plan.planType {
         case .cardio: return .blue
-        case .strength: return .orange
-        case .outdoor: return .green
+        case .strength: return Color.orange
+        case .outdoor: return Color.green
         case .mixed: return .purple
         }
     }
@@ -82,7 +82,7 @@ struct PlanInfoCard: View {
     private var statusBadge: some View {
         HStack(spacing: 6) {
             Image(systemName: plan.isActive ? "checkmark.circle.fill" : "pause.circle.fill")
-                .foregroundStyle(plan.isActive ? .green : .secondary)
+                .foregroundStyle(plan.isActive ? Color.green : .secondary)
             Text(plan.isActive ? "Aktiv" : "Inaktiv")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.primary)

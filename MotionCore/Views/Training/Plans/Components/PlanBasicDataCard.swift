@@ -153,7 +153,7 @@ struct PlanBasicDataCard: View {
         Toggle(isOn: $plan.isActive) {
             HStack(spacing: 8) {
                 Image(systemName: plan.isActive ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(plan.isActive ? .green : .secondary)
+                    .foregroundStyle(plan.isActive ? Color.green : .secondary)
 
                 Text("Plan ist aktiv")
                     .foregroundStyle(.primary)

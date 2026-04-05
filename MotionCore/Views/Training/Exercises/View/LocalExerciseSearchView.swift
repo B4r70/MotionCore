@@ -122,6 +122,7 @@ struct LocalExerciseSearchView: View {
                 selectedEquipment: $selectedEquipment,
                 selectedPrimaryMuscle: $selectedPrimaryMuscle,
                 selectedSubMuscle: $selectedSubMuscle,
+                selectedCategory: .constant(nil),
                 equipmentItems: equipmentItems
             )
         }

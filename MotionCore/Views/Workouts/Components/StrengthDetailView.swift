@@ -208,7 +208,7 @@ struct StrengthDetailView: View {
                     value: "\(session.exercisesPerformed)",
                     label: "Übungen",
                     icon: "dumbbell.fill",
-                    color: .orange
+                    color: Color.orange
                 )
 
                 // Sätze
@@ -224,7 +224,7 @@ struct StrengthDetailView: View {
                     value: formatVolume(session.totalVolume),
                     label: "Volumen",
                     icon: "scalemass.fill",
-                    color: .green
+                    color: Color.green
                 )
 
                 // Wiederholungen
@@ -240,7 +240,7 @@ struct StrengthDetailView: View {
                     value: session.calories > 0 ? "\(session.calories)" : "–",
                     label: "kcal",
                     icon: "flame.fill",
-                    color: .red
+                    color: Color.red
                 )
 
                 // Herzfrequenz
@@ -269,7 +269,7 @@ struct StrengthDetailView: View {
                             .foregroundStyle(
                                 index < session.intensity.rawValue
                                 ? session.intensity.color
-                                : .gray.opacity(0.3)
+                                : Color.gray.opacity(0.3)
                             )
                     }
 
@@ -378,7 +378,7 @@ struct StrengthDetailView: View {
                         // Satz-Nummer
                         Text("Satz \(set.setNumber)")
                             .font(.caption)
-                            .foregroundStyle(set.setKind == .warmup ? .orange : .secondary)
+                            .foregroundStyle(set.setKind == .warmup ? Color.orange : .secondary)
                             .frame(width: 60, alignment: .leading)
 
                         // SetKind Badge
@@ -435,11 +435,11 @@ struct StrengthDetailView: View {
 
     private func rpeColor(_ rpe: Int) -> Color {
         switch rpe {
-        case 1...5: return .green
-        case 6...7: return .yellow
-        case 8...9: return .orange
-        case 10: return .red
-        default: return .gray
+        case 1...5: return Color.green
+        case 6...7: return Color.yellow
+        case 8...9: return Color.orange
+        case 10: return Color.red
+        default: return Color.gray
         }
     }
 

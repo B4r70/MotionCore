@@ -158,6 +158,6 @@ struct CalorieBalance {
 
     // Farbe für die Bilanz-Anzeige
     var statusColor: Color {
-        isDeficit ? .green : .red
+        isDeficit ? Color.green : Color.red
     }
 }

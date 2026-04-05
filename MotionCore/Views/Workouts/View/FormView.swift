@@ -165,8 +165,8 @@ struct FormView: View {
                         dismissKeyboard() 
                         showDeleteAlert = true
                     } label: {
-                        IconType(icon: .system("trash"), color: .red, size: 16)
-                            .glassButton(size: 36, accentColor: .red)
+                        IconType(icon: .system("trash"), color: Color.red, size: 16)
+                            .glassButton(size: 36, accentColor: Color.red)
                     }
                 }
             }

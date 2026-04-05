@@ -170,11 +170,11 @@ struct RestTimerCard: View {
 
     private var progressGradientColors: [Color] {
         if remainingSeconds > 30 {
-            return [.blue, .green]
+            return [.blue, Color.green]
         } else if remainingSeconds > 10 {
-            return [.green, .orange]
+            return [.green, Color.orange]
         } else {
-            return [.orange, .red]
+            return [.orange, Color.red]
         }
     }
 

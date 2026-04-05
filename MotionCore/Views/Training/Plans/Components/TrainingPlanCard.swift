@@ -24,13 +24,13 @@ struct TrainingPlanCard: View {
     }
 
     private var statusColor: Color {
-        progress >= 1.0 ? .green : .orange
+        progress >= 1.0 ? Color.green : Color.orange
     }
 
     private var planAccent: Color {
         switch plan.planType {
-            case .cardio: return .green
-            case .strength: return .red
+            case .cardio: return Color.green
+            case .strength: return Color.red
             default: return .primary
         }
     }
@@ -197,7 +197,7 @@ struct TrainingPlanCard: View {
                     Spacer()
                     HStack(spacing: 6) {
                         Image(systemName: plan.isActive ? "checkmark.circle.fill" : "pause.circle.fill")
-                            .foregroundStyle(plan.isActive ? .green : .secondary)
+                            .foregroundStyle(plan.isActive ? Color.green : .secondary)
                         Text(plan.isActive ? "Aktiv" : "Inaktiv")
                             .foregroundStyle(.primary)
                             .font(.subheadline.weight(.semibold))

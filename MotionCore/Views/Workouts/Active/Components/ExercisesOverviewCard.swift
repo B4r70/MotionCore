@@ -204,7 +204,7 @@ struct ExercisesOverviewCard: View {
                             : "arrow.up.arrow.down.circle.fill"
                     )
                     .font(.title2)
-                    .foregroundStyle(isSortMode ? .green : .blue)
+                    .foregroundStyle(isSortMode ? Color.green : .blue)
                     .contentTransition(.symbolEffect(.replace))
                 }
             }

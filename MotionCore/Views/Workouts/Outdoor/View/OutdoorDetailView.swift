@@ -218,21 +218,21 @@ struct OutdoorDetailView: View {
                 StatBubble(
                     icon: .system("arrow.left.and.right"),
                     value: String(format: "%.1f km", session.distance),
-                    color: .green
+                    color: Color.green
                 )
 
                 // Kalorien
                 StatBubble(
                     icon: .system("flame.fill"),
                     value: "\(session.calories) kcal",
-                    color: .orange
+                    color: Color.orange
                 )
 
                 // Hoehenmeter
                 StatBubble(
                     icon: .system("mountain.2"),
                     value: "\(Int(session.elevationGain)) m",
-                    color: .mint
+                    color: Color.mint
                 )
 
                 // Geschwindigkeit
@@ -247,7 +247,7 @@ struct OutdoorDetailView: View {
                     StatBubble(
                         icon: .system("heart.fill"),
                         value: "\(session.heartRate) bpm",
-                        color: .red
+                        color: Color.red
                     )
                 }
             }
@@ -307,7 +307,7 @@ struct OutdoorDetailView: View {
                                 .foregroundStyle(
                                     index < session.intensity.rawValue
                                     ? session.intensity.color
-                                    : .gray.opacity(0.3)
+                                    : Color.gray.opacity(0.3)
                                 )
                         }
                     }

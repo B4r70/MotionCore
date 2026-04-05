@@ -746,7 +746,7 @@ private struct SetPreviewRow: View {
 
                 Text("Satz \(setNumber)")
                     .font(.subheadline)
-                    .foregroundStyle(setKind == .warmup ? .orange : .primary)
+                    .foregroundStyle(setKind == .warmup ? Color.orange : .primary)
             }
 
             Spacer()
@@ -790,10 +790,10 @@ private struct SetPreviewRow: View {
 
     private var rirColor: Color {
         switch targetRIR {
-        case 0: return .red
-        case 1: return .orange
-        case 2: return .yellow
-        case 3: return .green
+        case 0: return Color.red
+        case 1: return Color.orange
+        case 2: return Color.yellow
+        case 3: return Color.green
         default: return .blue
         }
     }

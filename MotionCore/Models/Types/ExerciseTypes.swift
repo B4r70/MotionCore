@@ -249,11 +249,11 @@ enum SetKind: String, Codable, CaseIterable, Identifiable {
     var color: Color {
         switch self {
             case .work: return .blue
-            case .warmup: return .orange
+            case .warmup: return Color.orange
             case .drop: return .purple
-            case .amrap: return .green
-            case .rest: return .gray
-            case .failure: return .red
+            case .amrap: return Color.green
+            case .rest: return Color.gray
+            case .failure: return Color.red
         }
     }
 }
