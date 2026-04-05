@@ -214,6 +214,22 @@ final class SupabaseFullBackupService: ObservableObject {
             try await uploadSetsIndividually(setDTOs)
             totalSetCount += setDTOs.count
 
+            // Übungsbewertungen hochladen (falls vorhanden)
+            let ratingDTOs = session.safeExerciseRatings.map { r in
+                SupabaseExerciseRatingDTO(
+                    id: r.ratingUUID,
+                    sessionId: session.sessionUUID,
+                    exerciseGroupKey: r.exerciseGroupKey,
+                    exerciseNameSnapshot: r.exerciseNameSnapshot,
+                    rating: r.ratingRaw,
+                    ratedAt: r.ratedAt
+                )
+            }
+
+            if !ratingDTOs.isEmpty {
+                try await client.upsert(endpoint: "exercise_ratings", body: ratingDTOs)
+            }
+
             // Sync-Flags setzen
             session.syncedToSupabase = true
             session.needsSupabaseResync = false
@@ -423,6 +439,12 @@ final class SupabaseFullBackupService: ObservableObject {
         let sets = (try? context.fetch(FetchDescriptor<ExerciseSet>())) ?? []
         totalFixed += deduplicateUUIDs(sets, label: "ExerciseSet") { $0.setUUID } fix: {
             $0.setUUID = UUID()
+        }
+
+        // ExerciseRating.ratingUUID
+        let ratings = (try? context.fetch(FetchDescriptor<ExerciseRating>())) ?? []
+        totalFixed += deduplicateUUIDs(ratings, label: "ExerciseRating") { $0.ratingUUID } fix: {
+            $0.ratingUUID = UUID()
         }
 
         if totalFixed > 0 {

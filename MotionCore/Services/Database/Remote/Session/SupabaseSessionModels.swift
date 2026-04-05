@@ -140,6 +140,26 @@ struct SupabaseExerciseSetDTO: Encodable {
     }
 }
 
+// MARK: - ExerciseRating DTO
+
+struct SupabaseExerciseRatingDTO: Encodable {
+    let id: UUID
+    let sessionId: UUID
+    let exerciseGroupKey: String
+    let exerciseNameSnapshot: String
+    let rating: String
+    let ratedAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case sessionId              = "session_id"
+        case exerciseGroupKey       = "exercise_group_key"
+        case exerciseNameSnapshot   = "exercise_name_snapshot"
+        case rating
+        case ratedAt                = "rated_at"
+    }
+}
+
 // MARK: - CardioSession DTO
 
 struct SupabaseCardioSessionDTO: Encodable {

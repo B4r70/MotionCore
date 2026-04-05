@@ -139,6 +139,11 @@ struct SummaryView: View {
                         )
                     }
 
+                    // 7b. Rating-Insights (auffällige Bewertungsmuster)
+                    if !viewModel.ratingInsights.isEmpty {
+                        SummaryRatingInsightCard(insights: viewModel.ratingInsights)
+                    }
+
                     // 8. Streak-Card
                     if viewModel.totalWorkouts > 0 {
                         StreakCard(

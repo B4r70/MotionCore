@@ -48,6 +48,12 @@ final class StrengthSession {
 
     var safeExerciseMetrics: [ExerciseMetrics] { exerciseMetrics ?? [] }
 
+    // MARK: - Übungsbewertungen (subjektiv, pro Übung)
+    @Relationship(deleteRule: .cascade, inverse: \ExerciseRating.session)
+    var exerciseRatings: [ExerciseRating]? = []
+
+    var safeExerciseRatings: [ExerciseRating] { exerciseRatings ?? [] }
+
     // Referenz zum Trainingsplan (Template)
     @Relationship(deleteRule: .nullify)
     var sourceTrainingPlan: TrainingPlan?

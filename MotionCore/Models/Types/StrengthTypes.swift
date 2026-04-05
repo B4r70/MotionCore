@@ -12,6 +12,34 @@
 //
 import Foundation
 
+// MARK: - Subjektive Qualitätsbewertung pro Übung
+
+enum ExerciseQualityRating: String, Codable, CaseIterable, Identifiable {
+    case poor    = "poor"    // Schlecht — Technik oder Gefühl war nicht gut
+    case neutral = "neutral" // Mittel — Durchschnittliche Ausführung
+    case good    = "good"    // Gut — Sauber, kraftvoll, kontroliert
+
+    var id: Self { self }
+
+    // SF Symbol-Name für jede Bewertungsstufe
+    var icon: String {
+        switch self {
+        case .poor:    return "hand.thumbsdown.fill"
+        case .neutral: return "hand.point.right.fill"
+        case .good:    return "hand.thumbsup.fill"
+        }
+    }
+
+    // Deutsches Kurzlabel
+    var label: String {
+        switch self {
+        case .poor:    return "Schlecht"
+        case .neutral: return "Mittel"
+        case .good:    return "Gut"
+        }
+    }
+}
+
 // MARK: Workout-Typen für Krafttrainings
 
 enum StrengthWorkoutType: String, Codable, CaseIterable, Identifiable {

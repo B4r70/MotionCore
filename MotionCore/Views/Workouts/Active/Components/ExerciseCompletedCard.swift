@@ -14,6 +14,9 @@ import SwiftUI
 
 struct ExerciseCompletedCard: View {
     let exerciseName: String?
+    let exerciseGroupKey: String?
+    let existingRating: ExerciseQualityRating?
+    let onRate: (ExerciseQualityRating) -> Void
     let onNextExercise: () -> Void
 
     var body: some View {
@@ -33,6 +36,21 @@ struct ExerciseCompletedCard: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+
+            // Bewertungskarte — nur anzeigen wenn ein GroupKey vorhanden ist
+            if let name = exerciseName, exerciseGroupKey != nil {
+                ExerciseRatingCard(
+                    exerciseName: name,
+                    existingRating: existingRating,
+                    onRate: onRate,
+                    onSkip: {
+                        // "Überspringen" → direkt zur nächsten Übung
+                        withAnimation(.easeInOut) {
+                            onNextExercise()
+                        }
+                    }
+                )
+            }
 
             Button {
                 withAnimation(.easeInOut) {

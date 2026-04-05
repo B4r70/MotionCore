@@ -279,6 +279,35 @@ struct StrengthDetailView: View {
                         .padding(.leading, 4)
                 }
             }
+
+            // Bewertungs-Verteilung (nur anzeigen wenn mindestens eine Übung bewertet wurde)
+            if !session.safeExerciseRatings.isEmpty {
+                Divider()
+
+                HStack {
+                    Text("Bewertungen")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    Spacer()
+
+                    HStack(spacing: 12) {
+                        ForEach(ExerciseQualityRating.allCases) { rating in
+                            let count = session.safeExerciseRatings.filter { $0.rating == rating }.count
+                            if count > 0 {
+                                HStack(spacing: 4) {
+                                    Image(systemName: rating.icon)
+                                        .font(.caption)
+                                        .foregroundStyle(rating.color)
+                                    Text("\(count)")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(rating.color)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         .glassCard()
     }
@@ -314,12 +343,16 @@ struct StrengthDetailView: View {
 
             ForEach(Array(session.groupedSets.enumerated()), id: \.offset) { index, sets in
                 if let firstSet = sets.first {
+                    // Bewertung für diese Übungsgruppe suchen
+                    let groupRating = session.safeExerciseRatings
+                        .first { $0.exerciseGroupKey == firstSet.groupKey }
                     exerciseDetailCard(
-                        name: firstSet.exerciseName,
+                        name: firstSet.exerciseNameSnapshot.isEmpty ? firstSet.exerciseName : firstSet.exerciseNameSnapshot,
                         mediaAssetName: firstSet.exerciseMediaAssetName,
                         sets: sets,
                         index: index + 1,
-                        exercise: firstSet.exercise
+                        exercise: firstSet.exercise,
+                        rating: groupRating?.rating
                     )
                 }
             }
@@ -327,7 +360,7 @@ struct StrengthDetailView: View {
         .glassCard()
     }
 
-    private func exerciseDetailCard(name: String, mediaAssetName: String, sets: [ExerciseSet], index: Int, exercise: Exercise?) -> some View {
+    private func exerciseDetailCard(name: String, mediaAssetName: String, sets: [ExerciseSet], index: Int, exercise: Exercise?, rating: ExerciseQualityRating?) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack(spacing: 12) {
@@ -345,6 +378,11 @@ struct StrengthDetailView: View {
                 Text(name)
                     .font(.headline)
                     .foregroundStyle(.primary)
+
+                // Bewertungs-Badge (falls vorhanden)
+                if let rating {
+                    ExerciseRatingBadge(rating: rating)
+                }
 
                 Spacer()
 

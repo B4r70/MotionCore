@@ -46,6 +46,19 @@ extension Intensity {
         }
 }
 
+// MARK: ExerciseQualityRating UI-Erweiterungen für die Anzeige im Display
+
+extension ExerciseQualityRating {
+    // Farbe der Bewertungsstufe
+    var color: Color {
+        switch self {
+        case .poor:    return Color.red
+        case .neutral: return Color.orange
+        case .good:    return Color.green
+        }
+    }
+}
+
 // MARK: TrainingProgramm UI-Erweiterungen für die Anzeige im Display
 
 extension TrainingProgram {

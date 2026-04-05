@@ -75,6 +75,9 @@ struct ActiveWorkoutView: View {
         // Workout-Analyse Sheet
     @State private var showAnalyseSheet = false
 
+        // Gecachte Bewertungen pro Übungsgruppen-Schlüssel
+    @State private var cachedExerciseRatings: [String: ExerciseQualityRating] = [:]
+
         // Rest-Timer: ausgelagert in eine Klasse, damit Timer-Closures
         // zuverlässig auf den State zugreifen – auch nach SwiftUI-Redraws.
     @StateObject private var restTimerManager = RestTimerManager()
@@ -563,6 +566,11 @@ struct ActiveWorkoutView: View {
             // ✅ Schritt 3: einmaliger Initial-Sync
         syncLiveActivityStates()
         sendWatchState()
+
+        // Bestehende Übungsbewertungen in den Cache laden (z.B. nach Workout-Wiederherstellung)
+        cachedExerciseRatings = Dictionary(
+            uniqueKeysWithValues: session.safeExerciseRatings.map { ($0.exerciseGroupKey, $0.rating) }
+        )
     }
 
         // Zugriff Exercise-Key prüfen
@@ -575,6 +583,41 @@ struct ActiveWorkoutView: View {
            !groups.contains(where: { $0.first?.groupKey == key }) {
             selectedExerciseKey = nil
         }
+    }
+
+    // MARK: - Übungsbewertung
+
+    /// Erstellt oder aktualisiert eine ExerciseRating für den angegebenen Gruppen-Schlüssel.
+    /// Vorhandene Bewertung derselben Übung wird ersetzt.
+    private func rateExercise(groupKey: String, rating: ExerciseQualityRating) {
+        // Identisches Rating bereits vorhanden → kein unnötiger Write
+        guard cachedExerciseRatings[groupKey] != rating else { return }
+
+        // Name-Snapshot aus den Sets der Übung holen
+        let nameSnapshot = session.safeExerciseSets
+            .first { $0.groupKey == groupKey }
+            .map { $0.exerciseNameSnapshot.isEmpty ? $0.exerciseName : $0.exerciseNameSnapshot }
+            ?? groupKey
+
+        // Vorhandene Bewertung für diese Übung entfernen
+        let existing = session.safeExerciseRatings.filter { $0.exerciseGroupKey == groupKey }
+        for old in existing {
+            context.delete(old)
+        }
+
+        // Neue Bewertung anlegen und in Session eintragen
+        let newRating = ExerciseRating(
+            exerciseGroupKey: groupKey,
+            exerciseNameSnapshot: nameSnapshot,
+            rating: rating,
+            session: session
+        )
+        context.insert(newRating)
+
+        // Cache aktualisieren
+        cachedExerciseRatings[groupKey] = rating
+
+        try? context.save()
     }
 
     /// Synchronisiert Live Activity und ResumeState mit Debounce.
@@ -1402,6 +1445,13 @@ struct ActiveWorkoutView: View {
         } else if isSelectedExerciseComplete, !session.allSetsCompleted {
             ExerciseCompletedCard(
                 exerciseName: selectedExerciseName,
+                exerciseGroupKey: selectedExerciseKey,
+                existingRating: selectedExerciseKey.flatMap { cachedExerciseRatings[$0] },
+                onRate: { rating in
+                    if let key = selectedExerciseKey {
+                        rateExercise(groupKey: key, rating: rating)
+                    }
+                },
                 onNextExercise: { selectedExerciseKey = nil }
             )
         } else {

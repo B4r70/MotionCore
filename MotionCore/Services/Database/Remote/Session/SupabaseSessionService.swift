@@ -99,7 +99,28 @@ final class SupabaseSessionService {
                 try await client.upsert(endpoint: "exercise_sets", body: setDTOs)
             }
 
-            print("✅ StrengthSession \(session.sessionUUID) hochgeladen (\(setDTOs.count) Sets)")
+            // Alte Ratings löschen, neue einfügen (analog zu Sets)
+            try await client.deleteWhere(
+                endpoint: "exercise_ratings",
+                filter: "session_id=eq.\(session.sessionUUID.uuidString)"
+            )
+
+            let ratingDTOs = session.safeExerciseRatings.map { r in
+                SupabaseExerciseRatingDTO(
+                    id: r.ratingUUID,
+                    sessionId: session.sessionUUID,
+                    exerciseGroupKey: r.exerciseGroupKey,
+                    exerciseNameSnapshot: r.exerciseNameSnapshot,
+                    rating: r.ratingRaw,
+                    ratedAt: r.ratedAt
+                )
+            }
+
+            if !ratingDTOs.isEmpty {
+                try await client.upsert(endpoint: "exercise_ratings", body: ratingDTOs)
+            }
+
+            print("✅ StrengthSession \(session.sessionUUID) hochgeladen (\(setDTOs.count) Sets, \(ratingDTOs.count) Ratings)")
             return true
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (StrengthSession): \(error.localizedDescription)")

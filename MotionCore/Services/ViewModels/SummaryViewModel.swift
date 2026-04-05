@@ -57,6 +57,10 @@ final class SummaryViewModel {
     private(set) var bestExerciseAnalysis: ProgressionAnalysis? = nil
     private(set) var bestExerciseTrendPoints: [TrendPoint] = []
 
+    // MARK: - Bewertungs-Insights
+
+    private(set) var ratingInsights: [RatingInsightCalcEngine.ExerciseInsight] = []
+
     // MARK: - Gecachte Werte (timeframe-gefiltert)
 
     private(set) var filteredTotalWorkouts: Int = 0
@@ -149,6 +153,9 @@ final class SummaryViewModel {
 
         // Beste Übung der Woche (höchste Konfidenz)
         recalculateBestExercise(strength: strength, progressionEngine: progressionEngine)
+
+        // Bewertungs-Insights (auffällige Muster aus den letzten Sessions)
+        self.ratingInsights = RatingInsightCalcEngine().analyze(sessions: strength)
 
         // Motivations-Kontext
         let xpEngine = XPCalcEngine(

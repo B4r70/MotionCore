@@ -25,7 +25,7 @@ struct MuscleHeatmapMiniView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "figure.strengthtraining.traditional")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Color.red)
                 Text("Trainierte Muskeln")
                     .font(.headline)
                 Spacer()
@@ -117,7 +117,7 @@ struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
             css = styles
         } else if let regions = trainedRegionIds {
             css = regions.map { regionId in
-                "#\(regionId) path { fill: #F59E0B !important; }"
+                "#\(regionId) path { fill: #EF4444 !important; }"
             }.joined(separator: "\n")
         } else {
             css = ""
@@ -132,10 +132,10 @@ struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: transparent; }
         svg { width: 100%; height: 100%; display: block; }
-        svg path { fill: #374151; }
+        svg path { fill: #374151 !important; }
         #front_borders path, #rear_borders path { fill: none !important; stroke: #666666; stroke-width: 0.8px; }
         @media (prefers-color-scheme: dark) {
-            svg path { fill: #4B5563; }
+            svg path { fill: #4B5563 !important; }
             #front_borders path, #rear_borders path { stroke: #AAAAAA; }
         }
         \(css)
