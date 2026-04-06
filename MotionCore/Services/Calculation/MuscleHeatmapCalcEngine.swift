@@ -27,6 +27,7 @@ struct MuscleHeatmapCalcEngine {
         // 2. Volumen pro SVG-Region aggregieren
         var volumeByRegion: [String: Double] = [:]
         var setsByRegion: [String: Int] = [:]
+        var frequencyByRegion: [String: Set<UUID>] = [:]
         var lastTrainedByRegion: [String: Date] = [:]
         var musclesByRegion: [String: Set<DetailedMuscle>] = [:]
 
@@ -44,31 +45,51 @@ struct MuscleHeatmapCalcEngine {
                     guard let regionId = muscle.svgRegionId else { continue }
                     volumeByRegion[regionId, default: 0] += volume
                     setsByRegion[regionId, default: 0] += 1
+                    frequencyByRegion[regionId, default: []].insert(session.sessionUUID)
                     musclesByRegion[regionId, default: []].insert(muscle)
                     updateLastTrained(&lastTrainedByRegion, regionId: regionId, date: session.date)
                 }
 
-                // Sekundäre Muskeln → reduzierte Gewichtung (30%)
+                // Sekundäre Muskeln → reduzierte Gewichtung (30%); Sets werden bewusst nicht gezählt (vermeidet Inflation)
                 for muscle in secondaryDetailed {
                     guard let regionId = muscle.svgRegionId else { continue }
                     volumeByRegion[regionId, default: 0] += volume * 0.3
+                    frequencyByRegion[regionId, default: []].insert(session.sessionUUID)
                     musclesByRegion[regionId, default: []].insert(muscle)
                     updateLastTrained(&lastTrainedByRegion, regionId: regionId, date: session.date)
                 }
             }
         }
 
-        // 3. Maximales Volumen für relative Intensität
+        // 3. Maxima für Normalisierung
         let maxVolume = volumeByRegion.values.max() ?? 1.0
+        let maxSets = setsByRegion.values.max() ?? 1
+        let maxFrequency = frequencyByRegion.values.map(\.count).max() ?? 1
 
         // 4. MuscleHeatData für alle SVG-Regionen erstellen
         let allSvgRegionIds = Set(DetailedMuscle.allCases.compactMap { $0.svgRegionId })
         var regionData: [String: MuscleHeatData] = [:]
 
+        // Gewichtungskonstanten
+        let weightVolume = 0.40
+        let weightSets = 0.35
+        let weightFrequency = 0.25
+
         for regionId in allSvgRegionIds {
             let volume = volumeByRegion[regionId] ?? 0
             let sets = setsByRegion[regionId] ?? 0
-            let relativeIntensity = maxVolume > 0 ? volume / maxVolume : 0
+            let frequency = frequencyByRegion[regionId]?.count ?? 0
+
+            // Normalisierte Faktoren (0.0–1.0)
+            let normVolume = maxVolume > 0 ? volume / maxVolume : 0
+            let normSets = Double(maxSets) > 0 ? Double(sets) / Double(maxSets) : 0
+            let normFrequency = Double(maxFrequency) > 0 ? Double(frequency) / Double(maxFrequency) : 0
+
+            // Composite Score (gewichtete Summe)
+            let compositeScore = (normVolume * weightVolume)
+                               + (normSets * weightSets)
+                               + (normFrequency * weightFrequency)
+
             let contributing = Array(musclesByRegion[regionId] ?? [])
 
             regionData[regionId] = MuscleHeatData(
@@ -77,8 +98,9 @@ struct MuscleHeatmapCalcEngine {
                 displayName: regionDisplayName(for: regionId),
                 totalVolume: volume,
                 totalSets: sets,
-                relativeIntensity: relativeIntensity,
-                heatLevel: HeatLevel(relativeValue: relativeIntensity),
+                totalFrequency: frequency,
+                relativeIntensity: compositeScore,
+                heatLevel: HeatLevel(relativeValue: compositeScore),
                 lastTrainedDate: lastTrainedByRegion[regionId],
                 contributingMuscles: contributing
             )
@@ -89,7 +111,8 @@ struct MuscleHeatmapCalcEngine {
             analysisDate: Date(),
             regionData: regionData,
             totalVolume: volumeByRegion.values.reduce(0, +),
-            totalSets: setsByRegion.values.reduce(0, +)
+            totalSets: setsByRegion.values.reduce(0, +),
+            totalFrequency: maxFrequency
         )
     }
 

@@ -93,7 +93,8 @@ private struct MuscleTag: View {
         analysisDate: Date(),
         regionData: [:],
         totalVolume: 0,
-        totalSets: 0
+        totalSets: 0,
+        totalFrequency: 0
     )
 
     let mockData: [String: MuscleHeatData] = [
@@ -103,6 +104,7 @@ private struct MuscleTag: View {
             displayName: "Quadrizeps",
             totalVolume: 5000,
             totalSets: 12,
+            totalFrequency: 4,
             relativeIntensity: 1.0,
             heatLevel: .veryHigh,
             lastTrainedDate: Date(),
@@ -114,6 +116,7 @@ private struct MuscleTag: View {
             displayName: "Latissimus",
             totalVolume: 3200,
             totalSets: 8,
+            totalFrequency: 3,
             relativeIntensity: 0.64,
             heatLevel: .high,
             lastTrainedDate: Date(),
@@ -126,7 +129,8 @@ private struct MuscleTag: View {
         analysisDate: Date(),
         regionData: mockData,
         totalVolume: 8200,
-        totalSets: 20
+        totalSets: 20,
+        totalFrequency: 4
     )
 
     VStack(spacing: 16) {

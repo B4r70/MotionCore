@@ -83,7 +83,8 @@ struct MuscleHeatData: Identifiable {
     let displayName: String
     let totalVolume: Double
     let totalSets: Int
-    let relativeIntensity: Double   // 0.0–1.0
+    let totalFrequency: Int         // Anzahl verschiedener Sessions
+    let relativeIntensity: Double   // 0.0–1.0 (Composite Score)
     let heatLevel: HeatLevel
     let lastTrainedDate: Date?
     let contributingMuscles: [DetailedMuscle]
@@ -101,6 +102,10 @@ struct MuscleHeatData: Identifiable {
         }
         return String(format: "%.0f kg", totalVolume)
     }
+
+    var frequencyFormatted: String {
+        totalFrequency == 1 ? "1 Session" : "\(totalFrequency) Sessions"
+    }
 }
 
 // MARK: - MuscleHeatmapAnalysis
@@ -111,18 +116,19 @@ struct MuscleHeatmapAnalysis {
     let regionData: [String: MuscleHeatData]    // Key = svgRegionId
     let totalVolume: Double
     let totalSets: Int
+    let totalFrequency: Int         // Maximale Frequenz über alle Regionen
 
     /// Vernachlässigte Regionen (sortiert: am wenigsten trainierte zuerst)
     var neglectedRegions: [MuscleHeatData] {
         regionData.values
             .filter { $0.isNeglected }
-            .sorted { $0.totalVolume < $1.totalVolume }
+            .sorted { $0.relativeIntensity < $1.relativeIntensity }
     }
 
-    /// Top 5 meisttrainierte Regionen
+    /// Top 5 meisttrainierte Regionen (sortiert nach Composite Score)
     var topRegions: [MuscleHeatData] {
         Array(regionData.values
-            .sorted { $0.totalVolume > $1.totalVolume }
+            .sorted { $0.relativeIntensity > $1.relativeIntensity }
             .prefix(5))
     }
 

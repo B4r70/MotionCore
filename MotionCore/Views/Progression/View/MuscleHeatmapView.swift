@@ -172,7 +172,7 @@ struct MuscleHeatmapView: View {
                         Text(region.displayName)
                             .font(.subheadline)
                         Spacer()
-                        Text(region.volumeFormatted)
+                        Text("\(region.totalSets) Sets · \(region.frequencyFormatted)")
                             .font(.caption.bold())
                             .foregroundStyle(.secondary)
                     }
@@ -197,6 +197,7 @@ private struct MuscleDetailSheet: View {
                 Section {
                     LabeledContent("Volumen", value: data.volumeFormatted)
                     LabeledContent("Sets", value: "\(data.totalSets)")
+                    LabeledContent("Frequenz", value: data.frequencyFormatted)
                     LabeledContent("Intensität", value: data.heatLevel.displayName)
                     if let days = data.daysSinceLastTrained {
                         LabeledContent("Zuletzt trainiert", value: "vor \(days) Tagen")
