@@ -90,6 +90,16 @@ Do not add generic notes from unrelated projects.
 - Rule: Günstiges Modell (Haiku) für Generierung, stärkeres Modell (Sonnet) für QA. Checkpoint-System immer einbauen damit bei Abbruch nicht von vorne gestartet wird.
 - Applies To: `ExerciseEnrich/`, zukünftige Batch-Anreicherungs-Skripte
 
+### .sheet(isPresented:) Race Condition — immer .sheet(item:) verwenden
+
+- Added: 2026-04-06
+- Trigger: `.sheet(isPresented: $bool)` kombiniert mit einem separaten `@State var selectedId` — beide in derselben Tap-Closure gesetzt
+- Symptom: Sheet öffnet sich komplett leer (kein Inhalt sichtbar, kein Titel, keine Liste) — speziell beim ersten Aufruf nach App-Start; nach mehrmaligem Öffnen verschiedener Sheets funktioniert es plötzlich
+- Root Cause: SwiftUI evaluiert den Sheet-Content-Closure manchmal in einem eigenen Render-Pass, bevor der separat gesetzte `selectedId`-State sichtbar ist. Das `if let data = viewModel.analysis?.data(for: selectedId)` schlägt fehl → leeres Sheet. Besonders ausgeprägt beim ersten App-Start, wenn SwiftData noch die View-Hierarchy aufbaut.
+- Rule: **Niemals `.sheet(isPresented:)` + separaten ID-State verwenden.** Stattdessen immer `.sheet(item: $selectedItem) { item in ... }` — item-Binding ist atomar, kein Race möglich.
+- Applies To: alle Sheets in MotionCore die von einer Tap-Aktion auf eine Liste/SVG/Card ausgelöst werden
+- Example: `@State private var selectedRegion: MuscleHeatData?` + `.sheet(item: $selectedRegion) { data in MuscleDetailSheet(data: data, ...) }` statt Bool + String-State
+
 ### Dictionary from SwiftData Results — Type Annotation
 
 - Added: 2026-03-19

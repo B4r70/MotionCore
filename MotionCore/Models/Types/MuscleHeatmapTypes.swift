@@ -108,6 +108,25 @@ struct MuscleHeatData: Identifiable {
     }
 }
 
+// MARK: - MuscleTrainingHistory
+
+struct MuscleTrainingHistoryExercise: Identifiable {
+    let id = UUID()
+    let exerciseName: String
+    let setCount: Int
+    let totalReps: Int
+    let maxWeight: Double
+    let totalVolume: Double
+    let isPrimary: Bool
+}
+
+struct MuscleTrainingHistorySession: Identifiable {
+    let id: UUID                        // = session.sessionUUID
+    let sessionDate: Date
+    let planName: String?
+    let exercises: [MuscleTrainingHistoryExercise]
+}
+
 // MARK: - MuscleHeatmapAnalysis
 
 struct MuscleHeatmapAnalysis {

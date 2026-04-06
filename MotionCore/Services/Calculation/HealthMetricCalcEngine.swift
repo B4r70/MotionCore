@@ -29,7 +29,7 @@ class HealthMetricCalcEngine: ObservableObject {
     // MARK: - Initializer
     init(workouts: [CardioSession], settings: AppSettings) {
         self.allWorkouts = workouts
-            // Werte beim Init kopieren
+        // Werte beim Init kopieren
         self.userBirthdayDate = settings.userBirthdayDate
         self.userAge = settings.userAge
         self.userGender = settings.userGender

@@ -116,6 +116,69 @@ struct MuscleHeatmapCalcEngine {
         )
     }
 
+    // MARK: - Trainingshistorie pro Muskelregion
+
+    func trainingHistory(
+        for svgRegionId: String,
+        sessions: [StrengthSession],
+        timeframe: SummaryTimeframe
+    ) -> [MuscleTrainingHistorySession] {
+        let filtered = filterSessions(sessions, for: timeframe)
+        var result: [MuscleTrainingHistorySession] = []
+
+        for session in filtered {
+            // Sets nach groupKey gruppieren
+            var exerciseGroups: [String: [ExerciseSet]] = [:]
+            for set in session.safeExerciseSets {
+                guard set.isCompleted, set.reps > 0 else { continue }
+                let key = set.groupKey
+                exerciseGroups[key, default: []].append(set)
+            }
+
+            var historyExercises: [MuscleTrainingHistoryExercise] = []
+
+            for (_, sets) in exerciseGroups {
+                guard let firstSet = sets.first else { continue }
+
+                // Prüfen ob dieser Muskel in der Übung vorkommt (primary oder secondary)
+                let primaryMuscles = resolveDetailedMuscles(for: firstSet, type: .primary)
+                let secondaryMuscles = resolveDetailedMuscles(for: firstSet, type: .secondary)
+
+                let isPrimary = primaryMuscles.contains { $0.svgRegionId == svgRegionId }
+                let isSecondary = secondaryMuscles.contains { $0.svgRegionId == svgRegionId }
+
+                guard isPrimary || isSecondary else { continue }
+
+                let totalReps = sets.reduce(0) { $0 + $1.reps }
+                let maxWeight = sets.map { $0.weight }.max() ?? 0
+                let totalVolume = sets.reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
+
+                historyExercises.append(MuscleTrainingHistoryExercise(
+                    exerciseName: firstSet.exerciseNameSnapshot,
+                    setCount: sets.count,
+                    totalReps: totalReps,
+                    maxWeight: maxWeight,
+                    totalVolume: totalVolume,
+                    isPrimary: isPrimary
+                ))
+            }
+
+            guard !historyExercises.isEmpty else { continue }
+
+            // Primäre Übungen zuerst sortieren
+            let sortedExercises = historyExercises.sorted { $0.isPrimary && !$1.isPrimary }
+
+            result.append(MuscleTrainingHistorySession(
+                id: session.sessionUUID,
+                sessionDate: session.date,
+                planName: session.planName,
+                exercises: sortedExercises
+            ))
+        }
+
+        return result.sorted { $0.sessionDate > $1.sessionDate }
+    }
+
     // MARK: - Muscle Resolution (Fallback-Kette)
 
     private enum MuscleType { case primary, secondary }

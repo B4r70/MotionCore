@@ -26,8 +26,7 @@ struct MuscleHeatmapView: View {
     @EnvironmentObject private var appSettings: AppSettings
     @State private var timeframe: SummaryTimeframe = .month
     @State private var viewModel = MuscleHeatmapViewModel()
-    @State private var selectedRegionId: String?
-    @State private var showingDetail = false
+    @State private var selectedRegion: MuscleHeatData?
 
     // MARK: - Body
 
@@ -66,10 +65,8 @@ struct MuscleHeatmapView: View {
         .task { viewModel.recalculate(sessions: sessions, timeframe: timeframe) }
         .onChange(of: sessions) { _, new in viewModel.recalculate(sessions: new, timeframe: timeframe) }
         .onChange(of: timeframe) { _, new in viewModel.recalculate(sessions: sessions, timeframe: new) }
-        .sheet(isPresented: $showingDetail) {
-            if let regionId = selectedRegionId, let data = viewModel.analysis?.data(for: regionId) {
-                MuscleDetailSheet(data: data)
-            }
+        .sheet(item: $selectedRegion) { data in
+            MuscleDetailSheet(data: data, sessions: viewModel.faultedSessions, timeframe: timeframe)
         }
     }
 
@@ -92,8 +89,7 @@ struct MuscleHeatmapView: View {
 
             if let analysis = viewModel.analysis {
                 MuscleHeatmapSVGView(analysis: analysis) { regionId in
-                    selectedRegionId = regionId
-                    showingDetail = true
+                    selectedRegion = viewModel.analysis?.data(for: regionId)
                 }
                 .frame(height: 400)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -190,6 +186,10 @@ private struct MuscleDetailSheet: View {
 
     @Environment(\.dismiss) private var dismiss
     let data: MuscleHeatData
+    let sessions: [StrengthSession]
+    let timeframe: SummaryTimeframe
+
+    @State private var history: [MuscleTrainingHistorySession] = []
 
     var body: some View {
         NavigationStack {
@@ -212,6 +212,51 @@ private struct MuscleDetailSheet: View {
                         }
                     }
                 }
+
+                if !history.isEmpty {
+                    Section("Trainingshistorie") {
+                        ForEach(history) { entry in
+                            VStack(alignment: .leading, spacing: 8) {
+                                // Session-Header
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(entry.sessionDate, style: .date)
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                        if let plan = entry.planName {
+                                            Text(plan)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    Spacer()
+                                    Text(entry.sessionDate, style: .time)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                // Übungen
+                                ForEach(entry.exercises) { exercise in
+                                    HStack(alignment: .top) {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(exercise.exerciseName)
+                                                .font(.caption)
+                                                .foregroundStyle(exercise.isPrimary ? .primary : .secondary)
+                                            Text(exerciseSummary(exercise))
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        Spacer()
+                                        Text(volumeFormatted(exercise.totalVolume))
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
             }
             .navigationTitle(data.displayName)
             .navigationBarTitleDisplayMode(.inline)
@@ -220,7 +265,24 @@ private struct MuscleDetailSheet: View {
                     Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
                 }
             }
+            .task(id: data.svgRegionId) {
+                let engine = MuscleHeatmapCalcEngine()
+                history = engine.trainingHistory(for: data.svgRegionId, sessions: sessions, timeframe: timeframe)
+            }
         }
+    }
+
+    private func exerciseSummary(_ exercise: MuscleTrainingHistoryExercise) -> String {
+        let avgReps = exercise.setCount > 0 ? exercise.totalReps / exercise.setCount : 0
+        let weightStr = exercise.maxWeight > 0 ? " · \(Int(exercise.maxWeight)) kg" : ""
+        return "\(exercise.setCount)×\(avgReps)\(weightStr)"
+    }
+
+    private func volumeFormatted(_ volume: Double) -> String {
+        if volume >= 1000 {
+            return String(format: "%.1fk kg", volume / 1000)
+        }
+        return String(format: "%.0f kg", volume)
     }
 }
 

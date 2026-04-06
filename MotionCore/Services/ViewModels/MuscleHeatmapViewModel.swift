@@ -19,6 +19,7 @@ final class MuscleHeatmapViewModel {
     // MARK: - Gecachte Ergebnisse
 
     private(set) var analysis: MuscleHeatmapAnalysis?
+    private(set) var faultedSessions: [StrengthSession] = []
     private(set) var isCalculating = false
 
     // MARK: - Cache-Keys
@@ -37,6 +38,7 @@ final class MuscleHeatmapViewModel {
 
         isCalculating = true
         analysis = calcEngine.analyze(sessions: sessions, timeframe: timeframe)
+        faultedSessions = sessions          // exerciseSets-Relationships sind jetzt gefaultet
         cachedTimeframe = timeframe
         cachedSessionCount = sessions.count
         isCalculating = false
