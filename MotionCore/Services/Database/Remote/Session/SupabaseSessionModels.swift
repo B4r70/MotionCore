@@ -60,6 +60,8 @@ struct SupabaseStrengthSessionDTO: Encodable {
     let deviceSource: String
     let healthKitWorkoutUUID: UUID?
     let sourceTrainingPlanId: UUID?
+    let sessionQualityScore: Int?
+    let sessionReadinessId: UUID?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -81,6 +83,8 @@ struct SupabaseStrengthSessionDTO: Encodable {
         case deviceSource           = "device_source"
         case healthKitWorkoutUUID   = "healthkit_workout_uuid"
         case sourceTrainingPlanId   = "source_training_plan_id"
+        case sessionQualityScore    = "session_quality_score"
+        case sessionReadinessId     = "session_readiness_id"
     }
 }
 
@@ -111,6 +115,7 @@ struct SupabaseExerciseSetDTO: Encodable {
     let isCompleted: Bool
     let rpe: Int
     let notes: String
+    let isLastSetOfExercise: Bool
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -137,6 +142,7 @@ struct SupabaseExerciseSetDTO: Encodable {
         case isCompleted            = "is_completed"
         case rpe
         case notes
+        case isLastSetOfExercise    = "is_last_set_of_exercise"
     }
 }
 
@@ -207,6 +213,136 @@ struct SupabaseCardioSessionDTO: Encodable {
         case completedAt            = "completed_at"
         case deviceSource           = "device_source"
         case healthKitWorkoutUUID   = "healthkit_workout_uuid"
+    }
+}
+
+// MARK: - Smart-Progression Phase 1 DTOs
+
+struct SupabaseStudioDTO: Encodable {
+    let id: UUID
+    let name: String
+    let isPrimary: Bool
+    let createdAt: Date
+    let updatedAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case isPrimary  = "is_primary"
+        case createdAt  = "created_at"
+        case updatedAt  = "updated_at"
+    }
+}
+
+struct SupabaseStudioEquipmentDTO: Encodable {
+    let id: UUID
+    let studioId: UUID?
+    let name: String
+    let equipmentType: String
+    let startWeight: Double
+    let increment: Double
+    let minWeight: Double
+    let maxWeight: Double?
+    let intermediateIncrements: [Double]
+    let notes: String
+    let createdAt: Date
+    let updatedAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case studioId               = "studio_id"
+        case name
+        case equipmentType          = "equipment_type"
+        case startWeight            = "start_weight"
+        case increment
+        case minWeight              = "min_weight"
+        case maxWeight              = "max_weight"
+        case intermediateIncrements = "intermediate_increments"
+        case notes
+        case createdAt              = "created_at"
+        case updatedAt              = "updated_at"
+    }
+}
+
+struct SupabaseExerciseProgressionStateDTO: Encodable {
+    let id: UUID
+    let exerciseGroupKey: String
+    let workingWeight: Double
+    let previousWorkingWeight: Double?
+    let targetReps: Int
+    let minTargetReps: Int
+    let maxTargetReps: Int
+    let progressionMode: String
+    let lastProgressionDate: Date?
+    let lastRollbackDate: Date?
+    let consecutiveSuccessCount: Int
+    let consecutiveFailCount: Int
+    let isActive: Bool
+    let createdAt: Date
+    let updatedAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case exerciseGroupKey       = "exercise_group_key"
+        case workingWeight          = "working_weight"
+        case previousWorkingWeight  = "previous_working_weight"
+        case targetReps             = "target_reps"
+        case minTargetReps          = "min_target_reps"
+        case maxTargetReps          = "max_target_reps"
+        case progressionMode        = "progression_mode"
+        case lastProgressionDate    = "last_progression_date"
+        case lastRollbackDate       = "last_rollback_date"
+        case consecutiveSuccessCount = "consecutive_success_count"
+        case consecutiveFailCount   = "consecutive_fail_count"
+        case isActive               = "is_active"
+        case createdAt              = "created_at"
+        case updatedAt              = "updated_at"
+    }
+}
+
+struct SupabaseSessionReadinessDTO: Encodable {
+    let id: UUID
+    let sessionUuid: String?
+    let capturedAt: Date
+    let hrvScore: Double?
+    let sleepScore: Double?
+    let restingHRScore: Double?
+    let activityScore: Double?
+    let userEnergyLevel: Int?
+    let userStressLevel: String?
+    let overallScore: Int
+    let isCalibrating: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case sessionUuid        = "session_uuid"
+        case capturedAt         = "captured_at"
+        case hrvScore           = "hrv_score"
+        case sleepScore         = "sleep_score"
+        case restingHRScore     = "resting_hr_score"
+        case activityScore      = "activity_score"
+        case userEnergyLevel    = "user_energy_level"
+        case userStressLevel    = "user_stress_level"
+        case overallScore       = "overall_score"
+        case isCalibrating      = "is_calibrating"
+    }
+}
+
+struct SupabaseHealthBaselineDTO: Encodable {
+    let id: UUID
+    let metricType: String
+    let rollingMean: Double
+    let rollingStdDev: Double
+    let sampleCount: Int
+    let lastUpdated: Date
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case metricType     = "metric_type"
+        case rollingMean    = "rolling_mean"
+        case rollingStdDev  = "rolling_std_dev"
+        case sampleCount    = "sample_count"
+        case lastUpdated    = "last_updated"
     }
 }
 

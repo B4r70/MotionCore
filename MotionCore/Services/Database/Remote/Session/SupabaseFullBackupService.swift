@@ -39,6 +39,11 @@ struct BackupStats: Equatable {
     let trainingPlans: Int
     let exerciseSets: Int
     let templateSets: Int
+    var studios: Int = 0
+    var studioEquipment: Int = 0
+    var progressionStates: Int = 0
+    var readinessEntries: Int = 0
+    var healthBaselines: Int = 0
 }
 
 // MARK: - SupabaseFullBackupService
@@ -77,26 +82,38 @@ final class SupabaseFullBackupService: ObservableObject {
             progress = .running(step: "Trainingspläne", current: 0, total: 1)
             let plansCount = try await uploadAllTrainingPlans(context: context)
 
-            // 2. StrengthSessions inkl. deren ExerciseSets
+            // 2. Studios + Equipment
+            progress = .running(step: "Studios", current: 0, total: 1)
+            let (studioCount, equipmentCount) = try await uploadAllStudios(context: context)
+
+            // 3. Progressions-Zustände
+            progress = .running(step: "Progressions-Zustände", current: 0, total: 1)
+            let progressionCount = try await uploadAllProgressionStates(context: context)
+
+            // 4. Session-Readiness + Health-Baselines
+            progress = .running(step: "Readiness & Baselines", current: 0, total: 1)
+            let (readinessCount, baselineCount) = try await uploadAllReadinessAndBaselines(context: context)
+
+            // 5. StrengthSessions inkl. deren ExerciseSets
             progress = .running(step: "Krafttrainings", current: 0, total: 1)
             let (strengthCount, exerciseSetCount) = try await uploadAllStrengthSessions(context: context)
 
-            // 3. CardioSessions
+            // 6. CardioSessions
             progress = .running(step: "Cardio-Sessions", current: 0, total: 1)
             let cardioCount = try await uploadAllCardioSessions(context: context)
 
-            // 4. OutdoorSessions
+            // 7. OutdoorSessions
             progress = .running(step: "Outdoor-Sessions", current: 0, total: 1)
             let outdoorCount = try await uploadAllOutdoorSessions(context: context)
 
-            // 5. Template-Sets (ExerciseSets ohne Session, mit TrainingPlan)
+            // 8. Template-Sets (ExerciseSets ohne Session, mit TrainingPlan)
             progress = .running(step: "Template-Sets", current: 0, total: 1)
             let templateSetCount = try await uploadAllTemplateSets(context: context)
 
             // Flags persistieren
             try? context.save()
 
-            let stats = BackupStats(
+            var stats = BackupStats(
                 strengthSessions: strengthCount,
                 cardioSessions: cardioCount,
                 outdoorSessions: outdoorCount,
@@ -104,11 +121,16 @@ final class SupabaseFullBackupService: ObservableObject {
                 exerciseSets: exerciseSetCount,
                 templateSets: templateSetCount
             )
+            stats.studios = studioCount
+            stats.studioEquipment = equipmentCount
+            stats.progressionStates = progressionCount
+            stats.readinessEntries = readinessCount
+            stats.healthBaselines = baselineCount
 
             progress = .completed(stats: stats)
             isRunning = false
 
-            print("✅ Full-Backup abgeschlossen: \(strengthCount) Kraft, \(cardioCount) Cardio, \(outdoorCount) Outdoor, \(plansCount) Pläne, \(exerciseSetCount) Sets, \(templateSetCount) Template-Sets")
+            print("✅ Full-Backup abgeschlossen: \(strengthCount) Kraft, \(cardioCount) Cardio, \(outdoorCount) Outdoor, \(plansCount) Pläne, \(exerciseSetCount) Sets, \(templateSetCount) Template-Sets, \(studioCount) Studios, \(equipmentCount) Equipment, \(progressionCount) Progressionen, \(readinessCount) Readiness, \(baselineCount) Baselines")
 
         } catch {
             progress = .failed(error: error.localizedDescription)
@@ -146,6 +168,132 @@ final class SupabaseFullBackupService: ObservableObject {
         return plans.count
     }
 
+    /// Lädt alle Studios inkl. ihres Equipments nach Supabase hoch.
+    private func uploadAllStudios(context: ModelContext) async throws -> (studios: Int, equipment: Int) {
+        let studios = (try? context.fetch(FetchDescriptor<Studio>())) ?? []
+        guard !studios.isEmpty else { return (0, 0) }
+
+        progress = .running(step: "Studios", current: 0, total: studios.count)
+
+        var studioCount = 0
+        var equipmentCount = 0
+
+        for (index, studio) in studios.enumerated() {
+            let dto = SupabaseStudioDTO(
+                id: studio.id,
+                name: studio.name,
+                isPrimary: studio.isPrimary,
+                createdAt: studio.createdAt,
+                updatedAt: Date()
+            )
+            try await client.upsert(endpoint: "studios", body: dto)
+            studioCount += 1
+
+            for eq in studio.safeEquipment {
+                let eqDTO = SupabaseStudioEquipmentDTO(
+                    id: eq.id,
+                    studioId: studio.id,
+                    name: eq.name,
+                    equipmentType: eq.equipmentTypeRaw,
+                    startWeight: eq.startWeight,
+                    increment: eq.increment,
+                    minWeight: eq.minWeight,
+                    maxWeight: eq.maxWeight,
+                    intermediateIncrements: eq.intermediateIncrements,
+                    notes: eq.notes,
+                    createdAt: eq.createdAt,
+                    updatedAt: Date()
+                )
+                try await client.upsert(endpoint: "studio_equipment", body: eqDTO)
+                equipmentCount += 1
+            }
+
+            progress = .running(step: "Studios", current: index + 1, total: studios.count)
+        }
+
+        return (studioCount, equipmentCount)
+    }
+
+    /// Lädt alle ExerciseProgressionStates nach Supabase hoch.
+    private func uploadAllProgressionStates(context: ModelContext) async throws -> Int {
+        let states = (try? context.fetch(FetchDescriptor<ExerciseProgressionState>())) ?? []
+        guard !states.isEmpty else { return 0 }
+
+        progress = .running(step: "Progressions-Zustände", current: 0, total: states.count)
+
+        for (index, state) in states.enumerated() {
+            let dto = SupabaseExerciseProgressionStateDTO(
+                id: state.id,
+                exerciseGroupKey: state.exerciseGroupKey,
+                workingWeight: state.workingWeight,
+                previousWorkingWeight: state.previousWorkingWeight,
+                targetReps: state.targetReps,
+                minTargetReps: state.minTargetReps,
+                maxTargetReps: state.maxTargetReps,
+                progressionMode: state.progressionModeRaw,
+                lastProgressionDate: state.lastProgressionDate,
+                lastRollbackDate: state.lastRollbackDate,
+                consecutiveSuccessCount: state.consecutiveSuccessCount,
+                consecutiveFailCount: state.consecutiveFailCount,
+                isActive: state.isActive,
+                createdAt: state.createdAt,
+                updatedAt: Date()
+            )
+            try await client.upsert(endpoint: "exercise_progression_states", body: dto)
+            progress = .running(step: "Progressions-Zustände", current: index + 1, total: states.count)
+        }
+
+        return states.count
+    }
+
+    /// Lädt alle SessionReadiness-Einträge und HealthBaselines nach Supabase hoch.
+    private func uploadAllReadinessAndBaselines(context: ModelContext) async throws -> (readiness: Int, baselines: Int) {
+        let readiness = (try? context.fetch(FetchDescriptor<SessionReadiness>())) ?? []
+        var rCount = 0
+
+        progress = .running(step: "Readiness", current: 0, total: readiness.count)
+
+        for (index, r) in readiness.enumerated() {
+            let dto = SupabaseSessionReadinessDTO(
+                id: r.id,
+                sessionUuid: r.sessionUUID,
+                capturedAt: r.capturedAt,
+                hrvScore: r.hrvScore,
+                sleepScore: r.sleepScore,
+                restingHRScore: r.restingHRScore,
+                activityScore: r.activityScore,
+                userEnergyLevel: r.userEnergyLevel,
+                userStressLevel: r.userStressLevelRaw,
+                overallScore: r.overallScore,
+                isCalibrating: r.isCalibrating
+            )
+            try await client.upsert(endpoint: "session_readiness", body: dto)
+            rCount += 1
+            progress = .running(step: "Readiness", current: index + 1, total: readiness.count)
+        }
+
+        let baselines = (try? context.fetch(FetchDescriptor<HealthBaseline>())) ?? []
+        var bCount = 0
+
+        progress = .running(step: "Baselines", current: 0, total: baselines.count)
+
+        for (index, b) in baselines.enumerated() {
+            let dto = SupabaseHealthBaselineDTO(
+                id: b.id,
+                metricType: b.metricTypeRaw,
+                rollingMean: b.rollingMean,
+                rollingStdDev: b.rollingStdDev,
+                sampleCount: b.sampleCount,
+                lastUpdated: b.lastUpdated
+            )
+            try await client.upsert(endpoint: "health_baselines", body: dto)
+            bCount += 1
+            progress = .running(step: "Baselines", current: index + 1, total: baselines.count)
+        }
+
+        return (rCount, bCount)
+    }
+
     /// Lädt alle StrengthSessions inkl. ihrer ExerciseSets nach Supabase hoch.
     private func uploadAllStrengthSessions(context: ModelContext) async throws -> (sessions: Int, sets: Int) {
         let sessions = (try? context.fetch(FetchDescriptor<StrengthSession>())) ?? []
@@ -176,7 +324,9 @@ final class SupabaseFullBackupService: ObservableObject {
                 completedAt: session.completedAt,
                 deviceSource: session.deviceSource,
                 healthKitWorkoutUUID: session.healthKitWorkoutUUID,
-                sourceTrainingPlanId: session.sourceTrainingPlan?.planUUID
+                sourceTrainingPlanId: session.sourceTrainingPlan?.planUUID,
+                sessionQualityScore: session.sessionQualityScore,
+                sessionReadinessId: session.sessionReadinessID
             )
 
             try await client.upsert(endpoint: "strength_sessions", body: sessionDTO)
@@ -207,7 +357,8 @@ final class SupabaseFullBackupService: ObservableObject {
                     setKindRaw: set.setKindRaw,
                     isCompleted: set.isCompleted,
                     rpe: set.rpe,
-                    notes: set.notes
+                    notes: set.notes,
+                    isLastSetOfExercise: set.isLastSetOfExercise
                 )
             }
 
@@ -378,7 +529,8 @@ final class SupabaseFullBackupService: ObservableObject {
                 setKindRaw: set.setKindRaw,
                 isCompleted: set.isCompleted,
                 rpe: set.rpe,
-                notes: set.notes
+                notes: set.notes,
+                isLastSetOfExercise: set.isLastSetOfExercise
             )
         }
 
@@ -446,6 +598,26 @@ final class SupabaseFullBackupService: ObservableObject {
         totalFixed += deduplicateUUIDs(ratings, label: "ExerciseRating") { $0.ratingUUID } fix: {
             $0.ratingUUID = UUID()
         }
+
+        // Studio.id
+        let studios = (try? context.fetch(FetchDescriptor<Studio>())) ?? []
+        totalFixed += deduplicateUUIDs(studios, label: "Studio") { $0.id } fix: { $0.id = UUID() }
+
+        // StudioEquipment.id
+        let equipment = (try? context.fetch(FetchDescriptor<StudioEquipment>())) ?? []
+        totalFixed += deduplicateUUIDs(equipment, label: "StudioEquipment") { $0.id } fix: { $0.id = UUID() }
+
+        // ExerciseProgressionState.id
+        let progressionStates = (try? context.fetch(FetchDescriptor<ExerciseProgressionState>())) ?? []
+        totalFixed += deduplicateUUIDs(progressionStates, label: "ExerciseProgressionState") { $0.id } fix: { $0.id = UUID() }
+
+        // SessionReadiness.id
+        let readiness = (try? context.fetch(FetchDescriptor<SessionReadiness>())) ?? []
+        totalFixed += deduplicateUUIDs(readiness, label: "SessionReadiness") { $0.id } fix: { $0.id = UUID() }
+
+        // HealthBaseline.id
+        let baselines = (try? context.fetch(FetchDescriptor<HealthBaseline>())) ?? []
+        totalFixed += deduplicateUUIDs(baselines, label: "HealthBaseline") { $0.id } fix: { $0.id = UUID() }
 
         if totalFixed > 0 {
             try? context.save()

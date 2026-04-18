@@ -52,7 +52,9 @@ final class SupabaseSessionService {
                 completedAt: session.completedAt,
                 deviceSource: session.deviceSource,
                 healthKitWorkoutUUID: session.healthKitWorkoutUUID,
-                sourceTrainingPlanId: session.sourceTrainingPlan?.planUUID
+                sourceTrainingPlanId: session.sourceTrainingPlan?.planUUID,
+                sessionQualityScore: session.sessionQualityScore,
+                sessionReadinessId: session.sessionReadinessID
             )
 
             try await client.upsert(endpoint: "strength_sessions", body: dto)
@@ -91,7 +93,8 @@ final class SupabaseSessionService {
                     setKindRaw: set.setKindRaw,
                     isCompleted: set.isCompleted,
                     rpe: set.rpe,
-                    notes: set.notes
+                    notes: set.notes,
+                    isLastSetOfExercise: set.isLastSetOfExercise
                 )
             }
 

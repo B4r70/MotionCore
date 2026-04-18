@@ -102,153 +102,92 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.17** Feintuning-Chips für Zwischengewichte — committed (e0abe61)
 - [x] **1.18** RIR-Sheet am letzten Satz — committed (0564bd4)
 - [x] **1.19** Quick-Config aus ActiveWorkout — committed (17076be)
-- [x] **1.20** Rollback-Insight-Karte + manueller Rollback
-- [x] **1.21** `SessionQualityCalcEngine` + Integration
-- [ ] 1.22 Supabase-Schema-Erweiterung *(geplant nach Freigabe)*
+- [x] **1.20** Rollback-Insight-Karte + manueller Rollback — committed (c9a6345)
+- [x] **1.21** `SessionQualityCalcEngine` + Integration — committed (2e90207)
+- [x] **1.22** Supabase-Schema-Erweiterung *(finaler Phase-1-Schritt)*
 
 ---
 
-## Aktueller Schritt: 1.20 — Rollback-Insight-Karte + manueller Rollback
+## Aktueller Schritt: 1.22 — Supabase-Schema-Erweiterung (finaler Phase-1-Schritt)
 
 ### Ziel
 
-SummaryView zeigt eine aggregierende Rollback-Insight-Karte (max 3 Übungen), wenn `RollbackDetectionCalcEngine.detect(...)` `shouldSuggestRollback == true` liefert. Pro Übungszeile: 3 Aktionen (Zurück auf X kg / Weiter versuchen / Ich trage selbst ein). Manueller Rollback-Button in `StrengthDetailView` pro Exercise-Block mit Bestätigungsdialog. Writes über neuen `ProgressionRollbackService` (pure static struct).
+Supabase-Schema um alle Phase-1-Datenmodelle erweitern (5 neue Tabellen, 3 erweiterte Tabellen), `SupabaseFullBackupService` um Upload neuer Entitäten ergänzen, `SupabaseSessionModels.swift` um neue DTOs. SQL-Ausführung macht Barto manuell (Pattern wie outdoor_sessions).
 
 ### Files
 
-**NEU (2):**
-- `MotionCore/Services/ProgressionRollbackService.swift` (~90 Z)
-- `MotionCore/Views/Summary/Components/RollbackInsightCard.swift` (~180 Z)
+**NEU (1):**
+- `Documentation/SQL/2026-04-18-smart-progression-phase1.sql` — idempotente Migration (5 CREATE + 3 ALTER + 5 Indizes + 5 Trigger)
 
-**ÄNDERN (3):**
-- `MotionCore/Services/ViewModels/SummaryViewModel.swift` — neuer DTO `RollbackSuggestion`, `rollbackSuggestions`-State, `recalculateRollbackSuggestions(states:strengthSessions:)`
-- `MotionCore/Views/Summary/View/SummaryView.swift` — `@Query ExerciseProgressionState`, Karte zwischen `SummaryTrendCard` und `TimeframePicker`
-- `MotionCore/Views/Workouts/Components/StrengthDetailView.swift` — Manual-Button im Exercise-Block-Header + ConfirmationDialog
+**ÄNDERN (2):**
+- `MotionCore/Services/Database/Remote/Session/SupabaseSessionModels.swift` — 5 neue DTOs + `SupabaseStrengthSessionDTO` +2 Felder + `SupabaseExerciseSetDTO` +1 Feld
+- `MotionCore/Services/Database/Remote/Session/SupabaseFullBackupService.swift` — 3 neue Upload-Methoden + BackupStats +5 Felder + Dedup +5 Models + bestehende Payload-Erweiterungen
 
-### Service-API
+### SQL-Migration (skizziert)
 
-```swift
-struct ProgressionRollbackService {
-    static func applyRollback(state:in:)      // workingWeight = previousWorkingWeight,
-                                              // lastRollbackDate = now,
-                                              // consecutiveFailCount = 0,
-                                              // lastProgressionDate = nil
-    static func dismissSuggestion(state:in:)  // consecutiveFailCount = 0,
-                                              // lastRollbackDate = now (Cooldown)
-    static func switchToAdvanced(state:in:)   // progressionMode = .advanced
-    static func manualRollback(state:in:)     // Guard previousWorkingWeight != nil,
-                                              // identisch zu applyRollback
-}
-```
+**Neue Tabellen (5):** `studios`, `studio_equipment` (FK zu studios), `exercise_progression_states`, `session_readiness`, `health_baselines`
 
-Alle setzen `updatedAt = now` + `try? context.save()`.
+**ALTER (3):**
+- `exercises`: +`studio_equipment_id`, +`custom_target_reps`, +`progression_mode_raw`, +`config_notes`
+- `exercise_sets`: +`is_last_set_of_exercise`
+- `strength_sessions`: +`session_quality_score`, +`session_readiness_id`
 
-### UI-Layout RollbackInsightCard
+**Kein RLS** (MEMORY.md). Alle `IF NOT EXISTS` → idempotent. Legacy-Exercise-Spalten bleiben (historische Daten).
 
-```
-⚠ Rollback vorgeschlagen
-Zwei schwache Sessions nach letzter Progression.
-──────────────────────────
-Bankdrücken            80 → 75 kg
-[Zurück auf 75 kg]
-[Weiter versuchen]  [Ich trage selbst ein]
-──────────────────────────
-Beinpresse           120 → 113 kg
-...
-```
+### Service-Änderungen
 
-- `.glassCard()` mit Warnung-Header (orange)
-- Pro Zeile: Name + Weight-Preview + 3 Buttons (primary borderedProminent, secondary bordered)
-- Max 3 Zeilen, bei >3: "+N weitere Vorschläge…"
-- Wenn `previousWeight == nil`: "Zurück"-Button disabled
+**`SupabaseSessionModels.swift`:**
+- 5 neue DTOs mit vollständigen `CodingKeys` (Snake-Case-Mapping zwingend vollständig)
+- `SupabaseStrengthSessionDTO` +`sessionQualityScore`, +`sessionReadinessId`
+- `SupabaseExerciseSetDTO` +`isLastSetOfExercise`
 
-### SummaryViewModel-Erweiterung
+**`SupabaseFullBackupService.swift`:**
+- 3 neue Upload-Methoden: `uploadAllStudios`, `uploadAllProgressionStates`, `uploadAllReadinessAndBaselines`
+- `BackupStats` +5 Int-Felder
+- Reihenfolge in `runFullBackup`: TrainingPlans → Studios+Equipment → ProgressionStates → Readiness+Baselines → StrengthSessions → Cardio → Outdoor → Templates
+- Payload-Ergänzungen in bestehenden Upload-Methoden (Session + Set DTOs)
+- `deduplicateAllSyncUUIDs` +5 Model-Fetches (Studio, StudioEquipment, ExerciseProgressionState, SessionReadiness, HealthBaseline) — nur `id = UUID()`-Fix
 
-```swift
-struct RollbackSuggestion: Identifiable {
-    let id: PersistentIdentifier
-    let state: ExerciseProgressionState
-    let exerciseName: String
-    let currentWeight: Double
-    let previousWeight: Double?
-    let reasoning: String
-}
+### Mapping-Übersicht (wichtigste)
 
-private(set) var rollbackSuggestions: [RollbackSuggestion] = []
-```
-
-Neue Methode `recalculateRollbackSuggestions(states:strengthSessions:)`:
-- Für jeden aktiven State: die 2 neuesten Sessions mit Sets dieses `groupKey` holen
-- Cooldown: wenn `lastRollbackDate` gesetzt, nur zeigen wenn neueste Session-Date > lastRollbackDate
-- `RollbackDetectionCalcEngine.detect(...)` aufrufen
-- Bei `shouldSuggestRollback`: Suggestion anfügen
-- Array auf max 3 Einträge truncaten
-
-Aufruf in `recalculate(...)` nach `ratingInsights`.
-
-### StrengthDetailView Manual-Button
-
-Im Exercise-Block-Header (neben Edit-Icon):
-```swift
-if let groupKey = sets.first?.groupKey,
-   let state = progressionState(for: groupKey),
-   state.previousWorkingWeight != nil {
-    Button { rollbackCandidate = state } label: {
-        Image(systemName: "arrow.uturn.backward.circle")
-            .font(.title3)
-            .foregroundStyle(.orange)
-    }
-}
-```
-
-ConfirmationDialog:
-- Message: "Aktuell: X kg → Rollback auf Y kg"
-- Destructive: "Zurück auf Y kg"
-- Cancel: "Abbrechen"
-
-### Logik: Wann zeigen / unterdrücken
-
-**Zeigen:** `state.isActive` + ≥2 Sessions mit groupKey + Engine `shouldSuggestRollback` + (`lastRollbackDate == nil` ODER neueste Session-Date > `lastRollbackDate`)
-
-**Unterdrücken:**
-- "Zurück": `lastRollbackDate = now` → Cooldown
-- "Weiter versuchen": `lastRollbackDate = now` (Dismiss-Cooldown, doppelt belegt)
-- "Advanced": `progressionMode = .advanced` → Engine liefert `.noProgression`
-- `consecutiveFailCount = 0` (in Phase 1 wird Counter nie > 0 gesetzt → reiner Anti-Spam via Cooldown)
+| Swift | Supabase |
+|---|---|
+| `studioEquipmentID` | `studio_equipment_id` |
+| `customTargetReps` | `custom_target_reps` |
+| `progressionModeRaw` | `progression_mode_raw` |
+| `configNotes` | `config_notes` |
+| `isLastSetOfExercise` | `is_last_set_of_exercise` |
+| `sessionQualityScore` | `session_quality_score` |
+| `sessionReadinessID` | `session_readiness_id` |
+| `intermediateIncrements` | `intermediate_increments` (double precision[]) |
+| `equipmentTypeRaw` | `equipment_type` |
+| `metricTypeRaw` | `metric_type` |
+| `userStressLevelRaw` | `user_stress_level` |
 
 ### Manuelle Tests
 
-1. Leerer State → keine Karte
-2. Ein Kandidat → 1 Zeile mit 3 Buttons
-3. "Zurück" Tap → workingWeight=previousWorkingWeight, lastRollbackDate=now, lastProgressionDate=nil, Karte weg
-4. "Weiter versuchen" → Cooldown aktiv, Karte weg, kommt nach neuer schlechter Session zurück
-5. "Ich trage selbst ein" → `progressionMode = .advanced`, Karte weg permanent
-6. `previousWorkingWeight == nil` → "Zurück"-Button disabled
-7. StrengthDetail Manual-Button: Tap → Dialog → Bestätigung → workingWeight aktualisiert
-8. >3 Kandidaten → 3 + "+N weitere"
-9. Preview iPhone 15 + SE: kein Button-Overflow
-
-### Build-Check
-
 - [ ] iOS Build grün
-- [ ] watchOS Build grün
-- [ ] Keine neuen Warnings
-- [ ] Previews rendern
+- [ ] SQL im Supabase-Editor manuell ausführen: keine Fehler, 5 neue Tabellen + 7 neue Spalten sichtbar
+- [ ] Backup-Trigger (Settings): Upload läuft durch, Progress-Log zeigt neue Phasen
+- [ ] `studios` + `studio_equipment` gefüllt (mindestens Mein Studio + 5 Default-Geräte)
+- [ ] Nach neuer Session: `strength_sessions.session_quality_score` gesetzt, Sets mit `is_last_set_of_exercise=true` für letzte Work-Sets
+- [ ] `session_readiness` + `health_baselines` bleiben leer (Phase 2) — kein Fehler
 
 ### Risks
 
-1. **Performance Recalc:** bei großer Session-Historie O(N×M) — akzeptabel für <50 States, <500 Sessions
-2. **`lastRollbackDate` doppelbelegt** (Rollback ausgeführt vs. Dismiss) — vertretbar im MVP
-3. **`consecutiveFailCount`-Increment** fehlt in Phase 1 → Anti-Spam läuft über Cooldown, nicht über Counter
+1. **Schema-Drift iPhone ↔ Supabase:** SQL manuell; wenn nicht ausgeführt → PGRST-Fehler bei Upload
+2. **`CodingKeys`-Falle:** Swift ignoriert `convertToSnakeCase` sobald CodingKeys existiert → **alle** Felder listen
+3. **CloudKit-Dedup-Bug bei neuen Models** (MEMORY.md) — Dedup-Erweiterung Pflicht
+4. **Migration-Reihenfolge:** Studios vor StudioEquipment (FK-Beziehung)
+5. **Legacy-Exercise-Spalten bleiben** — kein DROP (historische Daten)
+6. **`intermediate_increments` Array-Typ:** PostgREST-Test nötig (double precision[])
 
-### Offene Produktfragen
+### Scope-Grenze
 
-1. **`lastRollbackDate` als Dismiss-Marker doppelbelegen?** → Vorschlag: **ja**, MVP einfacher
-2. **Max-Anzeige: 3 + "+N weitere" vs. scrollbare Liste?** → Vorschlag: **3 + Hinweis**
-3. **`previousWorkingWeight == nil` in Summary-Karte:** Button disabled oder Zeile verstecken? → Vorschlag: **verstecken** (konsistent zu StrengthDetail)
-4. **`applyRollback` soll `lastProgressionDate` nullen?** → Vorschlag: **ja** (verhindert Re-Detection)
+- SQL-File wird im Repo erstellt, **Ausführung auf Supabase durch Barto manuell**
+- Exercise-Upload nicht im Scope (aktueller SupabaseFullBackupService hat keinen Exercise-Write-Pfad)
 
-🛑 **STOPP 1.20** — Warte auf Entscheidungen zu den 4 Produktfragen + Freigabe.
+🛑 **STOPP 1.22** — Warte auf Freigabe. Ende Phase 1 🎉
 
 ---
 
@@ -277,6 +216,7 @@ ConfirmationDialog:
 - **2026-04-18** — Schritt 1.16 committed (548eb0f). Schritt 1.17 committed (e0abe61). Plan 1.18 erstellt.
 - **2026-04-18** — Schritt 1.18 committed (0564bd4). Plan 1.19 erstellt.
 - **2026-04-18** — Schritt 1.19 committed (17076be). Plan 1.20 erstellt.
+- **2026-04-18** — Schritt 1.20 committed (c9a6345). Schritt 1.21 committed (2e90207). Plan 1.22 erstellt (finaler Phase-1-Schritt).
 - **2026-04-18** — Schritt 1.19 implementiert. ExerciseQuickConfigSheet (141 Zeilen, neu) + 4 neue FormSections in FormViewSection.swift (1414 Zeilen) + Smart-Progression-Sub-Block in ExerciseFormView.swift (218 Zeilen) + ⚙️-Button in ActiveSetCard.swift (276 Zeilen) + @State/Callback/Sheet-Hook in ActiveWorkoutView.swift (2236 Zeilen).
 - **2026-04-18** — Schritt 1.16 implementiert. Resolver + SmartFillViewModel + ExerciseSet.isEngineSuggestion + ActiveWorkoutView-Hooks + ActiveSetCard-Badge/Reasoning-Label.
 - **2026-04-18** — Schritt 1.16 Scope-Korrektur: Produktfragen 2A + 3A (Reasoning-Label entfernt, ExerciseSet.isEngineSuggestion entfernt, Tracking zurück auf In-Memory Dictionary im ViewModel).
@@ -284,3 +224,4 @@ ConfirmationDialog:
 - **2026-04-18** — Schritt 1.18 implementiert. RIRInputSheet + CompactRestTimerView + ActiveWorkoutView-Hooks + Cleanup-Helper.
 - **2026-04-18** — Schritt 1.20 implementiert. ProgressionRollbackService + RollbackInsightCard + SummaryView/SummaryViewModel-Integration + StrengthDetailView Manual-Button.
 - **2026-04-18** — Schritt 1.21 implementiert. SessionQualityCalcEngine.swift (neu, 108 Z), ActiveWorkoutView.swift (Engine-Aufruf nach session.complete()), StrengthDetailView.swift (Statline "Session-Qualität: X/100" in statisticsCard nach Bewertungs-Block).
+- **2026-04-18** — Schritt 1.22 implementiert. SQL-Migration + 5 neue DTOs + 3 neue Upload-Methoden + Dedup erweitert. Phase 1 komplett.
