@@ -131,15 +131,7 @@ struct SummaryView: View {
                         SummaryMuscleHeatmapCard(analysis: heatmap)
                     }
 
-                    // 7. Übung der Woche
-                    if let bestExercise = viewModel.bestExerciseAnalysis {
-                        SummaryBestExerciseCard(
-                            analysis: bestExercise,
-                            trendPoints: viewModel.bestExerciseTrendPoints
-                        )
-                    }
-
-                    // 7b. Rating-Insights (auffällige Bewertungsmuster)
+                    // 7. Rating-Insights (auffällige Bewertungsmuster)
                     if !viewModel.ratingInsights.isEmpty {
                         SummaryRatingInsightCard(insights: viewModel.ratingInsights)
                     }
@@ -184,10 +176,6 @@ struct SummaryView: View {
                         )
                     }
 
-                    // 12. Progressions-Empfehlungen
-                    if !strengthSessions.isEmpty {
-                        ProgressionSummaryCard(analyses: viewModel.progressionAnalyses)
-                    }
                 }
                 .scrollViewContentPadding()
                 .animation(.easeInOut(duration: 0.3), value: showCalendar)

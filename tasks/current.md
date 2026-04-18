@@ -88,9 +88,9 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 - [x] **1.1** Datenmodell: Studio & StudioEquipment
 - [x] **1.2** Datenmodell: `ExerciseProgressionState` + `ProgressionMode`
-- [ ] **1.3** Additive Model-Erweiterungen (Exercise + ExerciseSet + Readiness-Models + StrengthSession) *(aktuell in Planung — bündelt Instruction-Schritte 1.3+1.4+1.5+1.6; siehe Detail-Plan unten)*
-- [ ] 1.7 Cross-Reference-Check vor Legacy-Entfernung *(geplant nach Freigabe)*
-- [ ] 1.8 TrendPoint-Extraktion (bedingt) *(geplant nach Freigabe)*
+- [x] **1.3** Additive Model-Erweiterungen (Exercise + ExerciseSet + Readiness-Models + StrengthSession) — committed (d668e6b)
+- [x] **1.7** Cross-Reference-Check vor Legacy-Entfernung — Report liegt vor (`tasks/domain/2026-04-18-phase1-1.7-cross-reference-check.md`)
+- [ ] ~~1.8 TrendPoint-Extraktion~~ — **n/a, entfällt** (TrendPoint lebt bereits in StatisticCalcEngine.swift)
 - [ ] 1.9 Legacy-UI-Entfernung (Views) *(geplant nach Freigabe)*
 - [ ] 1.10 Legacy-CalcEngines + ViewModel entfernen *(geplant nach Freigabe)*
 - [ ] 1.11 Exercise-Felder entfernen + SetConfigurationSheet-UI bereinigen *(geplant nach Freigabe)*
@@ -108,9 +108,39 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.3 — Additive Model-Erweiterungen (gebündelt 1.3+1.4+1.5+1.6)
+## Aktueller Schritt: 1.9 — Legacy-UI-Entfernung (implementiert, wartet auf Build-Check)
 
-### Ziel
+### Status
+
+Implementierung abgeschlossen. Wartet auf Barto Build-Check (Xcode Cmd+B).
+
+### Kern-Erkenntnisse
+
+- **Gruppe A (reine Löschung):** 17 Files (13 Views/Components + 1 ViewModel + 2 CalcEngines + 1 Types). Mehr als Instruction-Liste — zusätzlich als Legacy identifiziert: `LastWorkoutCompareCard`, `MiniSparkline`, `ProgressionSummaryCard`, `SummaryBestExerciseCard`, `ProgressionInsightCard`, `ProgressionBannerView`, `WorkoutAnalyseView`, `ExerciseProgressionView`.
+- **Gruppe B (Aufräumen):** 8 Files — kritisch: `BaseView` (Tab 4), `SummaryView` + `SummaryViewModel`, `ActiveWorkoutView`, `StrengthDetailView`, `ExerciseFormView`, `SetConfigurationSheet`, `FormViewSection`.
+- **Gruppe C (Typ-Extraktion):** **nicht nötig**. `TrendPoint` lebt bereits in `StatisticCalcEngine.swift`.
+- **Gruppe D (Navigation):** `BaseView.Tab.analyse` + 2 Sheet-Trigger (ActiveWorkoutView, StrengthDetailView).
+- **Gruppe E (Exercise-Felder):** 8 Felder, 6 externe Call-Sites in 3 Files.
+- **Watch-Target:** 0 Treffer — Progression ist iOS-only.
+
+### Empfehlungen für 1.8 – 1.11
+
+- **1.8 — n/a.** Skip: keine Extraktion nötig.
+- **1.9 — Scope erweitert:** zusätzlich zu Views auch direkte Engine-Calls in `ExerciseFormView`, `SummaryViewModel`, `ActiveWorkoutView` mitentfernen. `BaseView.Tab.analyse` aus Enum entfernen. 8 zusätzliche Files gegenüber Instruction-Liste identifiziert.
+- **1.10 — Reihenfolge anpassen:** `ProgressionTypes.swift` **nicht** in 1.10 löschen, sondern in 1.11. Grund: `ProgressionStrategy` lebt in Exercise/Forms/SummaryViewModel:113-Filter → 1.10 würde brechen. 1.10 löscht nur: `ProgressionCalcEngine`, `ProgressionAnalyseCalcEngine`, `ProgressionViewModel`. Zusätzlich Filter + Progressions-Zweig in SummaryViewModel entfernen.
+- **1.11 — Scope:** Exercise-Felder + `ExerciseProgressionSection` + SetConfig-State + ExerciseFormView-Bindings + **`ProgressionTypes.swift` hier löschen**. **Export.swift + SupabaseFullBackupService:** keine Änderung (Instruction-Annahme unzutreffend — die 4 Felder werden dort nicht serialisiert).
+- **Risiko 1.11:** mittel. `SetConfigurationSheet` mit 9 Stellen → Flüchtigkeitsgefahr.
+
+### Offene Produktfragen (nicht blockierend)
+
+- Soll `Views/Progression/` nach 1.9 in `Views/Heatmap/` umbenannt werden (nur Heatmap-Files bleiben dort)?
+- CLAUDE.md-Kommentar zu `BaseView.Tab` nach 1.9 auf 4 Tabs (`summary, workouts, stats, training`) aktualisieren.
+
+🛑 **STOPP 1.7** — Warte auf Barto-Freigabe für Schritt 1.9 (Legacy-UI-Entfernung) inkl. Scope-Anpassungen laut Report.
+
+### (archiviert) Detail-Plan 1.3 — Additive Model-Erweiterungen (gebündelt 1.3+1.4+1.5+1.6)
+
+Vollständig umgesetzt in Commit d668e6b. Für Referenz unten zusammengefasst.
 
 Alle additiven Model-Änderungen aus den Instruction-Schritten 1.3 + 1.4 + 1.5 + 1.6 in einem einzigen Commit: neue Felder auf `Exercise`, `ExerciseSet`, `StrengthSession`, zwei neue SwiftData-Models (`SessionReadiness`, `HealthBaseline`) + Enum `HealthMetricType`, Schema-Registrierung. Keine UI, keine CalcEngine, keine Seeder. Rein additiv — alte Legacy-Felder auf Exercise bleiben bis Schritt 1.11 unverändert.
 
@@ -252,15 +282,18 @@ Alle additiven Model-Änderungen aus den Instruction-Schritten 1.3 + 1.4 + 1.5 +
 
 **Offene Fragen:** keine. Alle Details aus Concept 3.1.4/3.1.5/3.2.1–3.2.3 eindeutig.
 
-🛑 **STOPP 1.3** — Nach erfolgreichem Build-Check und Barto-Sichtung warten auf Freigabe für Schritt 1.7 (Cross-Reference-Check).
+(Plan 1.3 umgesetzt und committed — siehe Fortschritt.)
 
 ---
 
 ## Fortschritt
 
+- **2026-04-18** — Schritt 1.9 implementiert. 13 Legacy-Files gelöscht, 5 Files bereinigt, Views/Progression/ → Views/Heatmap/ umbenannt, CLAUDE.md Tab-Liste auf 4 Einträge reduziert.
 - **2026-04-18** — Plan 1.1 erstellt.
 - **2026-04-18** — Schritt 1.1 implementiert. Dateien: `StudioEquipmentType.swift` (neu), `Studio.swift` (neu), `StudioEquipment.swift` (neu), `MotionCoreApp.swift` (Schema erweitert).
 - **2026-04-18** — Schritt 1.1 committed (5744842). Plan 1.2 erstellt.
 - **2026-04-18** — Schritt 1.2 implementiert. Dateien: `ProgressionMode.swift` (neu), `ExerciseProgressionState.swift` (neu), `MotionCoreApp.swift` (Schema erweitert).
 - **2026-04-18** — Schritt 1.2 committed (28ea5b2). Schritte 1.3+1.4+1.5+1.6 zu neuem Schritt 1.3 gebündelt. Plan erstellt.
 - **2026-04-18** — Schritt 1.3 implementiert. Dateien: HealthMetricType.swift (neu), HealthBaseline.swift (neu), SessionReadiness.swift (neu), Exercise.swift (+4 Felder), ExerciseSet.swift (+1 Feld), StrengthSession.swift (+2 Felder), MotionCoreApp.swift (Schema +2).
+- **2026-04-18** — Schritt 1.3 committed (d668e6b). Bug-Fix (162877e) committed. Schritt 1.7 Cross-Reference-Check durchgeführt, Report unter `tasks/domain/2026-04-18-phase1-1.7-cross-reference-check.md`. 1.8 entfällt (n/a).
+- **2026-04-18** — Heatmap-Rewire: MuscleHeatmapView als 3. Segment in StatsAndRecordsView integriert (Followup zu 1.9).

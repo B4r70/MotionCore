@@ -35,12 +35,6 @@ struct ExerciseFormView: View {
     @Query(sort: \Exercise.name)
     private var allExercises: [Exercise]
 
-    // Progressions-Analyse (nur Edit-Modus) — gecacht, nicht per Render berechnet
-    @Query(sort: \StrengthSession.date, order: .reverse)
-    private var strengthSessions: [StrengthSession]
-
-    @State private var progressionAnalysis: ProgressionAnalysis?
-
     private var isDuplicateName: Bool {
         let trimmed = exercise.name.trimmingCharacters(in: .whitespaces).lowercased()
         guard !trimmed.isEmpty else { return false }
@@ -143,12 +137,6 @@ struct ExerciseFormView: View {
                     .glassCard()
                     .padding(.horizontal)
                     .padding(.top, 16)
-
-                    // MARK: Progressions-Analyse (nur Edit-Modus)
-                    if let analysis = progressionAnalysis {
-                        ProgressionInsightCard(analysis: analysis)
-                            .padding(.horizontal)
-                    }
                 }
                 .padding(.bottom, 80)
             }
@@ -191,10 +179,6 @@ struct ExerciseFormView: View {
                 }
             }
         }
-        .task { recalculateAnalysis() }
-        .onChange(of: strengthSessions) { recalculateAnalysis() }
-        .onChange(of: exercise.progressionStrategy) { recalculateAnalysis() }
-        .onChange(of: exercise.category) { recalculateAnalysis() }
         .alert("Name bereits vergeben", isPresented: $showDuplicateNameAlert) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -211,15 +195,6 @@ struct ExerciseFormView: View {
     }
 
     // MARK: - Hilfsfunktionen
-
-    private func recalculateAnalysis() {
-        guard mode == .edit, exercise.progressionStrategy != .manual,
-              exercise.category != .bodyweight else {
-            progressionAnalysis = nil
-            return
-        }
-        progressionAnalysis = ProgressionCalcEngine().analyze(exercise: exercise, sessions: strengthSessions)
-    }
 
     private func deleteExercise() {
         context.delete(exercise)

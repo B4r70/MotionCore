@@ -68,13 +68,6 @@ struct ActiveWorkoutView: View {
         // Debounce-Task für Live Activity Sync
     @State private var syncDebounceTask: Task<Void, Never>? = nil
 
-        // Progression
-    @State private var dismissedProgressionExercises: Set<String> = []
-    @State private var cachedProgressionRecommendations: [ProgressionRecommendation] = []
-
-        // Workout-Analyse Sheet
-    @State private var showAnalyseSheet = false
-
         // Gecachte Bewertungen pro Übungsgruppen-Schlüssel
     @State private var cachedExerciseRatings: [String: ExerciseQualityRating] = [:]
 
@@ -140,24 +133,6 @@ struct ActiveWorkoutView: View {
             }) ?? 0
         } else {
             cachedCurrentExerciseIndex = 0
-        }
-    }
-
-    private func refreshProgressionRecommendations() {
-        let engine = ProgressionCalcEngine()
-        let exerciseNames = Set(session.safeExerciseSets.map { $0.exerciseName })
-
-        cachedProgressionRecommendations = exerciseNames.compactMap { name in
-            guard !dismissedProgressionExercises.contains(name) else { return nil }
-            let firstSet = session.safeExerciseSets.first { $0.exerciseName == name }
-            let targetRIR = firstSet?.targetRIR ?? 2
-            let step = firstSet?.exercise?.progressionStep ?? 2.5
-            return engine.recommendation(
-                for: name,
-                targetRIR: targetRIR,
-                progressionStep: step,
-                sessions: historicalSessions
-            )
         }
     }
 
@@ -318,8 +293,6 @@ struct ActiveWorkoutView: View {
                 }
                 sendWatchState()
             }
-            refreshProgressionRecommendations()
-
                 // RestTimerManager Callbacks konfigurieren
             restTimerManager.onTimerFinished = {
                 if self.appSettings.enableRestTimerHaptic {
@@ -460,11 +433,6 @@ struct ActiveWorkoutView: View {
                 syncLiveActivityStates()
             }
             .environmentObject(appSettings)
-        }
-            // Progressions-Analyse Sheet
-        .sheet(isPresented: $showAnalyseSheet) {
-            WorkoutAnalyseView(session: session)
-                .environmentObject(appSettings)
         }
     }
 
@@ -1344,25 +1312,6 @@ struct ActiveWorkoutView: View {
         )
     }
 
-    @ViewBuilder
-    private var progressionBanners: some View {
-        if !cachedProgressionRecommendations.isEmpty {
-            VStack(spacing: 8) {
-                ForEach(cachedProgressionRecommendations, id: \.exerciseName) { rec in
-                    ProgressionBannerView(recommendation: rec) {
-                        withAnimation(.easeOut) {
-                            dismissedProgressionExercises.insert(rec.exerciseName)
-                            refreshProgressionRecommendations()
-                        }
-                    }
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                }
-            }
-            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: cachedProgressionRecommendations.count)
-            .transition(.move(edge: .top).combined(with: .opacity))
-        }
-    }
-
     private var scrollContent: some View {
         VStack(spacing: 20) {
             heroCard
@@ -1376,42 +1325,13 @@ struct ActiveWorkoutView: View {
                     activeCalories: phoneSession.liveActiveCalories
                 )
             }
-            progressionBanners
             exercisesOverview
-
-            // Analyse-Button: nur sichtbar wenn historische Daten vorhanden
-            if !historicalSessions.isEmpty {
-                analyseButton
-            }
         }
             // Animiert den Wechsel zwischen ActiveSetCard und RestTimerCard
         .animation(.easeInOut, value: restTimerManager.isResting)
         .padding(.horizontal)
         .padding(.top, 16)
         .padding(.bottom, 100)
-    }
-
-    // MARK: - Analyse-Button
-
-    private var analyseButton: some View {
-        Button {
-            showAnalyseSheet = true
-        } label: {
-            HStack {
-                Image(systemName: "brain.head.profile")
-                    .font(.subheadline)
-                Text("Progressions-Analyse")
-                    .font(.subheadline.weight(.semibold))
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-            }
-            .padding(.vertical, 14)
-            .padding(.horizontal, 16)
-            .background(Color.purple.opacity(0.15))
-            .foregroundStyle(.purple)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-        }
     }
 
     @ViewBuilder

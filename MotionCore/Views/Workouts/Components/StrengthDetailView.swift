@@ -20,19 +20,9 @@ struct StrengthDetailView: View {
 
     @Bindable var session: StrengthSession
 
-    // Historische Sessions für Progressions-Analyse (abgeschlossene Sessions)
-    @Query(filter: #Predicate<StrengthSession> { $0.isCompleted }, sort: \StrengthSession.date, order: .reverse)
-    private var allCompletedSessions: [StrengthSession]
-
     @State private var showDeleteAlert = false
     @State private var showEditSheet = false
-    @State private var showAnalyseSheet = false
     @State private var exerciseToEdit: Exercise? = nil
-
-    // Historische Sessions exklusive der aktuellen Session
-    private var historicalSessions: [StrengthSession] {
-        allCompletedSessions.filter { $0.persistentModelID != session.persistentModelID }
-    }
 
     var body: some View {
         ZStack {
@@ -96,10 +86,6 @@ struct StrengthDetailView: View {
         }
         .sheet(isPresented: $showEditSheet) {
             StrengthEditView(session: session)
-                .environmentObject(appSettings)
-        }
-        .sheet(isPresented: $showAnalyseSheet) {
-            WorkoutAnalyseView(session: session)
                 .environmentObject(appSettings)
         }
         .sheet(item: $exerciseToEdit) { exercise in
@@ -501,27 +487,6 @@ struct StrengthDetailView: View {
 
     private var actionsSection: some View {
         VStack(spacing: 12) {
-
-            // Progressions-Analyse (nur sichtbar wenn historische Daten vorhanden)
-            if !historicalSessions.isEmpty {
-                Button {
-                    showAnalyseSheet = true
-                } label: {
-                    HStack {
-                        Image(systemName: "brain.head.profile")
-                        Text("Progressions-Analyse")
-                            .font(.subheadline.weight(.semibold))
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                    }
-                    .padding(.vertical, 14)
-                    .padding(.horizontal, 14)
-                    .background(Color.purple.opacity(0.15))
-                    .foregroundStyle(.purple)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                }
-            }
 
             // Plan bearbeiten (nur sichtbar wenn Session einem Plan zugeordnet ist)
             if let plan = session.sourceTrainingPlan {

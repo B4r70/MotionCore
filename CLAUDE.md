@@ -2,61 +2,61 @@
 
 ## Language & Communication
 
-- Always respond in German
-- Use English for code and variable names
-- Use German for code comments
-- Keep technical terms, type names, class names, and method names in their original form
+- Respond in German
+- English for code + variable names
+- German for code comments
+- Keep technical terms, type names, class names, method names original
 
 ## Guiding Principles
 
-- Prefer the simplest viable solution
-- Fix the root cause instead of adding workarounds
-- Minimize impact: only change what is actually necessary
-- Respect the existing architecture
-- Do not make silent assumptions on product decisions
+- Simplest viable solution
+- Fix root cause, no workarounds
+- Minimize impact: change only what needed
+- Respect existing architecture
+- No silent assumptions on product decisions
 
 ## Working Mode
 
-- Plan first for all non-trivial tasks
-- For bug fixes, analyze autonomously and resolve the issue
-- Do not ask about technical uncertainty if it can be clarified through analysis
-- Only ask follow-up questions for real product / UX / data model decisions
-- Never mark a task as done without the quality gate
-- After every relevant user correction, check whether `tasks/lessons.md` should be updated
+- Plan first for non-trivial tasks
+- Bug fixes: analyze autonomously, resolve
+- No asking on technical uncertainty if analysis can clarify
+- Follow-up questions only for real product / UX / data model decisions
+- Never mark task done without quality gate
+- After relevant user correction, check if `tasks/lessons.md` needs update
 
 ## Project Context
 
-MotionCore is an iOS fitness app built with SwiftUI, SwiftData, Swift Charts, HealthKit, ActivityKit, and Supabase.
+MotionCore is iOS fitness app: SwiftUI, SwiftData, Swift Charts, HealthKit, ActivityKit, Supabase.
 Deployment target: iOS 17+.
-There is no XCTest suite; verification is done through Xcode build, SwiftUI previews, and the simulator.
+No XCTest suite; verify via Xcode build, SwiftUI previews, simulator.
 
 ## Build & Test
 
-- Build only in Xcode with `Cmd+B`
-- Do not invent CLI build commands
-- Use `PreviewData.sharedContainer` as the `modelContainer` in previews
-- Use `AppSettings.shared` as the `EnvironmentObject` in previews
+- Build only in Xcode via `Cmd+B`
+- No invented CLI build commands
+- Previews use `PreviewData.sharedContainer` as `modelContainer`
+- Previews use `AppSettings.shared` as `EnvironmentObject`
 
 ## Architecture
 
-- Business logic belongs in `Services/Calculation/` as pure, stateless CalcEngines
-- Views render UI and coordinate interaction, but do not contain business logic
-- Always check for existing shared types before creating new ones
-- For detailed Swift coding standards, file size limits, and extraction rules, see `.claude/skills/swift-standards/SKILL.md`
+- Business logic in `Services/Calculation/` as pure, stateless CalcEngines
+- Views render UI + coordinate interaction, no business logic
+- Check existing shared types before creating new ones
+- Swift standards, file size limits, extraction rules: see `.claude/skills/swift-standards/SKILL.md`
 
 ## SwiftData / CloudKit
 
-- Attributes should be optional or have default values
-- Inverse relationships are mandatory
-- Do not change the production schema lightly
-- For risky schema work, prefer local / dev-safe paths
+- Attributes optional or with defaults
+- Inverse relationships mandatory
+- No lightly changing production schema
+- Risky schema work: prefer local / dev-safe paths
 
 ## UI Conventions
 
-- Cards should always use `.glassCard()`
+- Cards use `.glassCard()`
 - Background: `AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)`
 - Empty state: `EmptyState()`
-- Use `scrollViewContentPadding()` instead of duplicating manual horizontal padding
+- Use `scrollViewContentPadding()` instead of manual horizontal padding
 
 ## Important Existing Types
 
@@ -69,7 +69,7 @@ There is no XCTest suite; verification is done through Xcode build, SwiftUI prev
 
 - Prefer `ExerciseSet.exerciseNameSnapshot` over `.exerciseName`
 - `StatsAndRecordsView` only uses `.statistics` and `.records`
-- `BaseView.Tab`: `summary`, `workouts`, `stats`, `analyse`, `training`
+- `BaseView.Tab`: `summary`, `workouts`, `stats`, `training`
 
 ## File System for Work Artifacts
 
@@ -79,7 +79,7 @@ There is no XCTest suite; verification is done through Xcode build, SwiftUI prev
 - Archived plans: `tasks/archive/`
 - Lessons learned: `tasks/lessons.md`
 
-Agents create subdirectories automatically if they do not exist yet.
+Agents auto-create subdirs if missing.
 
 ## Git Conventions
 
