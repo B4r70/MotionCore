@@ -99,7 +99,8 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.14** Neue `ProgressionCalcEngine` — committed (c99b6d4)
 - [x] **1.15** `RollbackDetectionCalcEngine` — committed (d322ad2)
 - [x] **1.16** Smart-Fill im ActiveWorkoutView *(implementiert 2026-04-18)*
-- [ ] 1.17 Feintuning-Button für Zwischengewichte *(geplant nach Freigabe)*
+- [x] **1.17** Feintuning-Chips für Zwischengewichte *(implementiert 2026-04-18)*
+- [ ] 1.18 RIR-Sheet am letzten Satz *(geplant nach Freigabe)*
 - [ ] 1.18 RIR-Sheet am letzten Satz *(geplant nach Freigabe)*
 - [ ] 1.19 Quick-Config aus ActiveWorkout *(geplant nach Freigabe)*
 - [ ] 1.20 Rollback-Insight-Karte + manueller Rollback *(geplant nach Freigabe)*
@@ -270,3 +271,4 @@ final class ActiveWorkoutSmartFillViewModel {
 - **2026-04-18** — Schritt 1.15 committed (d322ad2). Plan 1.16 erstellt.
 - **2026-04-18** — Schritt 1.16 implementiert. Resolver + SmartFillViewModel + ExerciseSet.isEngineSuggestion + ActiveWorkoutView-Hooks + ActiveSetCard-Badge/Reasoning-Label.
 - **2026-04-18** — Schritt 1.16 Scope-Korrektur: Produktfragen 2A + 3A (Reasoning-Label entfernt, ExerciseSet.isEngineSuggestion entfernt, Tracking zurück auf In-Memory Dictionary im ViewModel).
+- **2026-04-18** — Schritt 1.17 implementiert (FineTuneChipsView + SetEditSheet-Einbau).

@@ -21,6 +21,8 @@ struct SetEditSheet: View {
     @Environment(\.modelContext) private var context
     @EnvironmentObject private var appSettings: AppSettings
 
+    @Query private var studioEquipments: [StudioEquipment]
+
     @Bindable var set: ExerciseSet
     @Bindable var session: StrengthSession
 
@@ -141,6 +143,14 @@ struct SetEditSheet: View {
                 Text("Gesamt: \(String(format: "%.2f", weight)) kg (beide Seiten)")
                     .font(.caption).foregroundStyle(.secondary)
             }
+
+            // Feintuning-Chips: nur sichtbar wenn Equipment mit intermediateIncrements verknüpft
+            if let equipment = studioEquipment, !equipment.intermediateIncrements.isEmpty {
+                FineTuneChipsView(increments: equipment.intermediateIncrements) { delta in
+                    adjustWeight(by: delta)
+                }
+                .padding(.top, 4)
+            }
         }
         .glassCard()
     }
@@ -194,6 +204,12 @@ struct SetEditSheet: View {
             Text("für \(set.exerciseName)").font(.caption).foregroundStyle(.secondary)
         }
         .glassCard()
+    }
+
+    // Gibt das verknüpfte StudioEquipment zurück, falls die Übung eines referenziert
+    private var studioEquipment: StudioEquipment? {
+        guard let id = set.exercise?.studioEquipmentID else { return nil }
+        return studioEquipments.first { $0.id == id }
     }
 
     // Wiederverwendbarer Step-Button mit optionalem Disabled-State
