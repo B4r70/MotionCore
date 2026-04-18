@@ -44,7 +44,9 @@ struct MotionCoreApp: App {
         ExerciseMetrics.self,
         ExerciseRating.self,
         Exercise.self,
-        TrainingPlan.self
+        TrainingPlan.self,
+        Studio.self,
+        StudioEquipment.self
     ])
 
     // ✅ CloudKit im Simulator standardmäßig AUS (Widget/LiveActivity kann trotzdem via AppGroup lokal lesen)
