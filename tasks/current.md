@@ -87,11 +87,8 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 > Policy: Jeder Schritt hat einen STOPP-Gate. Kein Schritt startet ohne explizite Freigabe durch Barto. Status unten wird pro Schritt gepflegt.
 
 - [x] **1.1** Datenmodell: Studio & StudioEquipment
-- [ ] **1.2** Datenmodell: `ExerciseProgressionState` + `ProgressionMode` *(aktuell in Planung — siehe Detail-Plan unten)*
-- [ ] 1.3 Exercise-Erweiterung (nur HINZUFÜGEN) *(geplant nach Freigabe)*
-- [ ] 1.4 ExerciseSet-Erweiterung (`isLastSetOfExercise`) *(geplant nach Freigabe)*
-- [ ] 1.5 Neue Datenmodelle: `SessionReadiness` & `HealthBaseline` *(geplant nach Freigabe)*
-- [ ] 1.6 StrengthSession-Erweiterung *(geplant nach Freigabe)*
+- [x] **1.2** Datenmodell: `ExerciseProgressionState` + `ProgressionMode`
+- [ ] **1.3** Additive Model-Erweiterungen (Exercise + ExerciseSet + Readiness-Models + StrengthSession) *(aktuell in Planung — bündelt Instruction-Schritte 1.3+1.4+1.5+1.6; siehe Detail-Plan unten)*
 - [ ] 1.7 Cross-Reference-Check vor Legacy-Entfernung *(geplant nach Freigabe)*
 - [ ] 1.8 TrendPoint-Extraktion (bedingt) *(geplant nach Freigabe)*
 - [ ] 1.9 Legacy-UI-Entfernung (Views) *(geplant nach Freigabe)*
@@ -111,140 +108,151 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.2 — Datenmodell: ExerciseProgressionState + ProgressionMode
+## Aktueller Schritt: 1.3 — Additive Model-Erweiterungen (gebündelt 1.3+1.4+1.5+1.6)
 
 ### Ziel
 
-Ein neues SwiftData-Modell `ExerciseProgressionState` sowie ein separates Enum `ProgressionMode` anlegen und im `ModelContainer`-Schema registrieren. Additiv, ohne UI, ohne Seeder, ohne Services. Keine Relationship zu `Exercise` — Matching erfolgt per `exerciseGroupKey` analog zu `ExerciseRating`.
+Alle additiven Model-Änderungen aus den Instruction-Schritten 1.3 + 1.4 + 1.5 + 1.6 in einem einzigen Commit: neue Felder auf `Exercise`, `ExerciseSet`, `StrengthSession`, zwei neue SwiftData-Models (`SessionReadiness`, `HealthBaseline`) + Enum `HealthMetricType`, Schema-Registrierung. Keine UI, keine CalcEngine, keine Seeder. Rein additiv — alte Legacy-Felder auf Exercise bleiben bis Schritt 1.11 unverändert.
 
 ### Files (erwartet)
 
-- **NEU:** `MotionCore/Models/Core/ProgressionMode.swift`
-- **NEU:** `MotionCore/Models/Core/ExerciseProgressionState.swift`
-- **ÄNDERN:** `MotionCore/App/MotionCoreApp.swift` (Schema-Array erweitern um `ExerciseProgressionState.self`)
+- **NEU:** `MotionCore/Models/Core/HealthMetricType.swift`
+- **NEU:** `MotionCore/Models/Core/HealthBaseline.swift`
+- **NEU:** `MotionCore/Models/Core/SessionReadiness.swift`
+- **ÄNDERN:** `MotionCore/Models/Core/Exercise.swift` — 4 neue stored Properties + 1 computed + Init-Erweiterung
+- **ÄNDERN:** `MotionCore/Models/Core/ExerciseSet.swift` — 1 neues stored Property + Init + Clone-Anpassung
+- **ÄNDERN:** `MotionCore/Models/Core/StrengthSession.swift` — 2 neue stored Properties + Init-Erweiterung
+- **ÄNDERN:** `MotionCore/App/MotionCoreApp.swift` — `SessionReadiness.self`, `HealthBaseline.self` ins Schema
 
-> Verzeichnis: `MotionCore/Models/Core/` (reale Struktur), konsistent mit Studio/StudioEquipment aus 1.1.
+### Cross-References (Vorab-Checks durchgeführt)
 
-### Cross-References (für Löschungen)
+**Naming-Konflikte — alle frei:**
+- `SessionReadiness`, `HealthBaseline`, `HealthMetricType`, `isLastSetOfExercise`: 0 Treffer in `MotionCore/`
+- `Exercise.progressionMode` (neu): kein Typ-Konflikt — `progressionMode` existiert bereits als computed auf `ExerciseProgressionState`, unterschiedlicher Receiver, kein Shadowing. Namespace `ProgressionMode` (Enum aus 1.2) identisch — gewollt.
+- Bestehende `HealthMetric*`-Files (`HealthMetricView`, `HealthMetricCalcEngine`, `HealthMetricCard` etc.) deklarieren kein `HealthMetricType` oder `HealthMetric`-Enum — keine Kollision.
 
-Keine — rein additiver Schritt. Vorab-Checks:
-- `ProgressionMode` in `MotionCore/`: null Treffer. Auch bestehendes `ProgressionCalcEngine.swift` definiert kein `ProgressionMode` — kein Konflikt.
-- `ExerciseProgressionState` in `MotionCore/`: null Treffer.
-- `exerciseGroupKey` als Match-Pattern validiert in `MotionCore/Models/Core/ExerciseRating.swift` (einfacher String-Match, keine Relationship zu Exercise).
+**Init-Call-Site-Analyse:**
+- `Exercise(...)` in 22 Files: neue Parameter mit Defaults → keine Call-Site bricht. Convenience-Inits delegieren an Primary-Init.
+- `ExerciseSet(...)` in 11 Files inkl. `cloneForSession` / `cloneForPlanEditing`: neuer Param mit Default `false` → alle Call-Sites grün. Clone-Methoden werden angepasst, Flag wird **nicht** kopiert.
+- `StrengthSession(...)` in 7 Files: neue Params optional mit `nil`-Default.
 
 ### Detail-Steps
 
-#### 1. `ProgressionMode.swift`
+#### 1.3a — Exercise-Erweiterung (`Exercise.swift`)
 
-- Datei-Header gemäß Projekt-Standard (Template `ExerciseRating.swift`), Abschnitt "Daten-Modell", Beschreibung: "Progressions-Modus für ExerciseProgressionState".
-- Nur `import Foundation`.
-- Enum exakt nach Concept 3.1.3:
-  ```swift
-  enum ProgressionMode: String, Codable, CaseIterable {
-      case smart
-      case advanced
-      case off
+1. Nach bestehendem Progressions-Konfig-MARK-Block neue MARK-Sektion `// MARK: - Smart-Progression (v1.1)` mit folgenden stored Properties:
+   - `var studioEquipmentID: UUID? = nil` — "Soft-Link auf StudioEquipment.id (keine @Relationship)"
+   - `var customTargetReps: Int? = nil` — "Überschreibt repRangeMin/Max als expliziter Ziel-Wert"
+   - `var progressionModeRaw: String = "smart"` — "Rohwert für CloudKit-Kompatibilität"
+   - `var configNotes: String = ""` — "Freitext-Notiz, z.B. Geräte-spezifische Einstellung"
+2. Im Primary-`init` neue Parameter mit Defaults ergänzen (nach `lastProgressionDate`, vor `sortIndex`):
+   - `studioEquipmentID: UUID? = nil`, `customTargetReps: Int? = nil`, `progressionModeRaw: String = "smart"`, `configNotes: String = ""`
+   - Entsprechende Zuweisungen im Init-Body.
+3. Im computed-Extension-Block (nach `progressionStrategy`) neue Sektion `// MARK: - Smart-Progression (v1.1)` + computed:
+   ```swift
+   var progressionMode: ProgressionMode {
+       get { ProgressionMode(rawValue: progressionModeRaw) ?? .smart }
+       set { progressionModeRaw = newValue.rawValue }
+   }
+   ```
+4. **NICHT anfassen:** `progressionStrategyRaw`, `customProgressionStep`, `progressionSessionsRequired`, `minDaysBetweenProgressions`, `lastProgressionDate`, `effectiveProgressionStep`, `baseProgressionStep`, `canRecommendProgression`, Convenience-Inits.
+
+#### 1.3b — ExerciseSet-Erweiterung (`ExerciseSet.swift`)
+
+1. Nach `setKind`-Block (vor `// MARK: - Beziehungen`) neue Sektion `// MARK: - Smart-Progression (v1.1)` + Property:
+   - `var isLastSetOfExercise: Bool = false` — "True = letzter Work-Set der Übung in dieser Session → triggert RIR-Sheet (Schritt 1.18)"
+2. Im Primary-`init` neuer Param `isLastSetOfExercise: Bool = false` am Ende (nach `supersetGroupId`), Body entsprechend erweitern.
+3. **`cloneForSession()`:** Param **NICHT** durchreichen — Default `false` greift. Kommentar: "`isLastSetOfExercise` wird nicht kopiert — neuer Session-Satz ist zunächst nie der letzte".
+4. **`cloneForPlanEditing()`:** dito — Default `false`.
+5. **`convenience init(from exercise:)`:** nicht anpassen — Default greift.
+6. **NICHT anfassen:** `rpe`, `calculatedRIR`, `setKind`-Handling, Snapshots.
+
+#### 1.3c — Neue Readiness-Modelle
+
+**`HealthMetricType.swift`:**
+- Header-Template analog `ProgressionMode.swift`, Beschreibung: "Metrik-Typen für HealthBaseline (HRV, Schlaf, Ruhepuls, Aktivität)"
+- Nur `import Foundation`
+- ```swift
+  enum HealthMetricType: String, Codable, CaseIterable {
+      case hrv
+      case sleep
+      case restingHR
+      case activity
   }
   ```
-- Fälle einzeln auf separaten Zeilen (Pattern konsistent mit `StudioEquipmentType.swift`).
-- Separate Datei analog zum 1.1-Vorgehen bei `StudioEquipmentType`.
 
-#### 2. `ExerciseProgressionState.swift`
+**`HealthBaseline.swift`:**
+- Header analog `ExerciseProgressionState.swift`, Beschreibung: "Rollende Baseline (Mean/StdDev) pro Health-Metrik — Phase 2 befüllt"
+- `import Foundation`, `import SwiftData`
+- `@Model final class HealthBaseline` gemäß Concept 3.1.5: `id`, `metricTypeRaw`, `rollingMean`, `rollingStdDev`, `sampleCount`, `lastUpdated` — alle defaulted
+- Computed `metricType: HealthMetricType` (get/set, Fallback `.hrv`)
+- Init: `init(metricType: HealthMetricType = .hrv) { self.metricTypeRaw = metricType.rawValue }`
+- MARK: Identifikation / Metrik-Typ / Rolling-Statistik / Metadaten / Typisierter Accessor / Initialisierung
+- **Keine `@Relationship`** — standalone
 
-- Datei-Header analog (Erstellt am: 18.04.2026, Beschreibung: "Progressions-State pro Übungsgruppe — Arbeitsgewicht, Ziel-Reps, Rollback-Historie").
-- Header-Hinweis: "Match via exerciseGroupKey (wie ExerciseRating) — keine @Relationship zu Exercise, um Many-to-One-Zwang zu vermeiden".
-- `import Foundation`, `import SwiftData`.
-- `@Model final class ExerciseProgressionState` mit stored Properties exakt nach Concept 3.1.3 (Reihenfolge wie im Concept):
-  - `var id: UUID = UUID()`
-  - `var exerciseGroupKey: String = ""` — Kommentar: "Stabiler Schlüssel der Übungsgruppe (entspricht ExerciseSet.groupKey)"
-  - `var workingWeight: Double = 0.0` — Kommentar: "Aktuelles Arbeitsgewicht, wird bei jeder Progression aktualisiert"
-  - `var targetReps: Int = 10`
-  - `var minTargetReps: Int = 8`
-  - `var maxTargetReps: Int = 12`
-  - `var progressionModeRaw: String = "smart"` — Kommentar: "Rohwert für CloudKit-Kompatibilität (String statt Enum)"
-  - `var lastProgressionDate: Date?`
-  - `var lastRollbackDate: Date?`
-  - `var previousWorkingWeight: Double?` — Kommentar: "Für Rollback-Wiederherstellung gespeichertes vorheriges Arbeitsgewicht"
-  - `var consecutiveSuccessCount: Int = 0`
-  - `var consecutiveFailCount: Int = 0`
-  - `var isActive: Bool = true`
-  - `var createdAt: Date = Date()`
-  - `var updatedAt: Date = Date()`
-- **Keine `@Relationship`** — `exerciseGroupKey`-basiertes Matching.
-- Typisiertes Enum-Accessor:
-  ```swift
-  var progressionMode: ProgressionMode {
-      get { ProgressionMode(rawValue: progressionModeRaw) ?? .smart }
-      set { progressionModeRaw = newValue.rawValue }
-  }
-  ```
-- Init exakt nach Concept:
-  ```swift
-  init(exerciseGroupKey: String = "", workingWeight: Double = 0.0) {
-      self.exerciseGroupKey = exerciseGroupKey
-      self.workingWeight = workingWeight
-  }
-  ```
-- MARK-Struktur analog `ExerciseRating.swift`:
-  - `// MARK: - Identifikation`
-  - `// MARK: - Übungs-Referenz`
-  - `// MARK: - Arbeitsgewicht`
-  - `// MARK: - Ziel-Reps`
-  - `// MARK: - Progressions-Modus`
-  - `// MARK: - Historie`
-  - `// MARK: - Metadaten`
-  - `// MARK: - Typisierter Modus (computed)`
-  - `// MARK: - Initialisierung`
+**`SessionReadiness.swift`:**
+- Header analog, Beschreibung: "Readiness-Snapshot pro Session — Phase 2 befüllt, in Phase 1 ungenutzt"
+- `@Model final class SessionReadiness` gemäß Concept 3.1.4: `id`, `sessionUUID: String?`, `capturedAt`, `hrvScore: Double?`, `sleepScore: Double?`, `restingHRScore: Double?`, `activityScore: Double?`, `userEnergyLevel: Int?`, `userStressLevelRaw: String?`, `overallScore: Int = 50`, `isCalibrating: Bool = false`
+- Init: `init() {}` — Concept-konform leer
+- MARK: Identifikation / Session-Referenz / Metrik-Scores / User-Input / Gesamt-Score / Initialisierung
+- **Keine `@Relationship`** — Matching via `sessionUUID` String in Phase 2
 
-#### 3. `MotionCoreApp.swift` — Schema-Registrierung
+#### 1.3d — StrengthSession-Erweiterung (`StrengthSession.swift`)
 
-- In `private static let appSchema = Schema([...])` `ExerciseProgressionState.self` ergänzen.
-- Position: unmittelbar nach `StudioEquipment.self`:
+1. Nach Sektion "Subjektive Bewertung für ML" neue Sektion `// MARK: - Smart-Progression (v1.1)` + Properties:
+   - `var sessionQualityScore: Int? = nil` — "0–100, berechnet durch SessionQualityCalcEngine (Schritt 1.21)"
+   - `var sessionReadinessID: UUID? = nil` — "Soft-Link auf SessionReadiness.id (Phase 2)"
+2. Im `init` neue Params am Ende vor `workoutType`: `sessionQualityScore: Int? = nil`, `sessionReadinessID: UUID? = nil`. Body erweitern.
+3. **NICHT anfassen:** bestehende Relationships, `complete()`, `start()`, Helpers, Computed-Properties.
+
+#### Schema-Registrierung (`MotionCoreApp.swift`)
+
+- Im `appSchema`-Array nach `ExerciseProgressionState.self`:
   ```swift
   Studio.self,
   StudioEquipment.self,
-  ExerciseProgressionState.self
+  ExerciseProgressionState.self,
+  SessionReadiness.self,
+  HealthBaseline.self
   ```
-- Enum `ProgressionMode` wird **nicht** ins Schema aufgenommen.
-- Kein Seeder, keine Default-Daten. `PreviewModelContainer.swift` unverändert.
-
-#### 4. Build-Validierung
-
-- Xcode `Cmd+B` iOS-Target.
-- watchOS-Build kontroll-grün halten (nicht betroffen).
-- Launch im Simulator: Bestehende Daten intakt. Neue Tabelle leer.
+- `HealthMetricType` **nicht** ins Schema (Enum).
 
 ### Manuelle Tests
 
-1. App starten — kein Migrations-Crash, Home-Screen öffnet normal.
-2. Bestehende Übung öffnen → `ExerciseFormView` ohne Fehler.
-3. Bestehende Session öffnen → `StrengthDetailView` ohne Fehler.
-4. Aktives Training starten + 1 Satz eintragen → speichert wie gehabt.
-5. Console: keine SwiftData-Warnung zu fehlenden Inversen oder unknown types. Speziell: KEIN "Missing inverse" für `ExerciseProgressionState` (keine Relationship deklariert).
-6. (Optional, dev-safe, nicht committen) Debug-Insert:
-   ```swift
-   let state = ExerciseProgressionState(exerciseGroupKey: "bench-press", workingWeight: 60.0)
-   state.progressionMode = .smart
-   context.insert(state); try? context.save()
-   ```
+1. App starten — kein Migrations-Crash, Home-Screen öffnet.
+2. Bestehende Trainingsplan-Ansicht → keine Fehler.
+3. Bestehende Session im Detail öffnen (`StrengthDetailView`) → alle Felder, keine Crashes.
+4. Aktives Training starten + Satz eintragen + speichern → ok.
+5. Satz-Template aus Plan klonen (Session starten) → `isLastSetOfExercise == false` auf allen Clones.
+6. Plan-Satz-Edit-Sheet → ändern → zurück → keine Fehler (`cloneForPlanEditing` intakt).
+7. Console: keine "Missing inverse"-Warnung (weder `SessionReadiness`, `HealthBaseline`, noch `studioEquipmentID`).
+8. Console: keine "unknown type"-Warnung.
+9. `ExerciseRating`-Flow unverändert funktional.
+10. `ProgressionAnalyseView` (Legacy, entfernt erst 1.9) öffnet weiterhin ohne Crash.
 
 ### Build-Check
 
 - [ ] iOS build green
-- [ ] watchOS build green (nicht betroffen, nur Kontrolle)
+- [ ] watchOS build green (nicht direkt betroffen, Kontrolle)
 - [ ] No new warnings
-- [ ] App launches
-- [ ] Bestehende Daten intakt (Sessions, Exercises, Pläne, Studios aus 1.1)
-- [ ] Affected views load without crash
+- [ ] App launches, kein Migrations-Crash
+- [ ] Bestehende Sessions/Pläne/Übungen/Studios intakt
+- [ ] ActiveWorkoutView, StrengthDetailView, TrainingFormView, ExerciseFormView laden
+- [ ] ProgressionAnalyseView (Legacy) lädt weiterhin
 
 ### Risks / Open Questions
 
-- **CloudKit-Dedup-Bug:** `var id: UUID = UUID()`-Default wird einmalig ausgewertet — für 1.2 akzeptabel, da noch keine Records. `deduplicateAllSyncUUIDs()` ggf. in 1.22 erweitern.
-- **Verzeichnis-Pfad:** Instruction-Doc nennt `MotionCore/Models/`; Realität `MotionCore/Models/Core/` — Plan folgt der Realität.
-- **Keine Relationship zu Exercise — bewusst:** Matching via `exerciseGroupKey` analog `ExerciseRating`. Vorteile: kein CloudKit-Inverse-Zwang, Exercise-Umbenennung ohne State-Verlust, Spontan-Übungen ohne persistiertes `Exercise` möglich (Concept §3.4: lazy init beim ersten Set-Abschluss).
-- **Keine Naming-Konflikte:** Grep-Validation bestätigt.
+1. **Größerer Revert-Scope als 1.1/1.2:** 6 geänderte/neue Files in einem Commit, 3 bestehende Models gleichzeitig berührt. Bei Migrations-Fehler: `git revert` des einen Commits als Exit.
+2. **CloudKit-Propagation:** 4 neue Felder auf `Exercise`, 1 auf `ExerciseSet`, 2 auf `StrengthSession` — alle additiv, lightweight. Erster Sync auf Device kann länger dauern.
+3. **Clone-Methoden-Subtle-Bug:** `isLastSetOfExercise` darf nicht durchgereicht werden — explizit im Plan markiert.
+4. **Bestehende Exercises:** `progressionModeRaw = "smart"` als Default heißt, alle alten Übungen verhalten sich ab 1.14 wie Smart-Mode. Concept-konform, gewollt.
+5. **`customTargetReps: Int?`** noch nicht verdrahtet — Feld existiert, Nutzung erst in 1.14/1.16.
+6. **Typ-Inkonsistenz `sessionReadinessID: UUID?` ↔ `SessionReadiness.sessionUUID: String?`** folgt dem Concept. Konvertierung in Phase 2 via `UUID.uuidString`. Nicht in 1.3 korrigieren.
+7. **File-Size:** `Exercise.swift` ~535, `ExerciseSet.swift` ~315, `StrengthSession.swift` ~310 — alle unter 600-Warnschwelle.
 
-🛑 **STOPP 1.2** — Nach erfolgreichem Build-Check und Barto-Sichtung warten auf Freigabe für Schritt 1.3.
+**Offene Fragen:** keine. Alle Details aus Concept 3.1.4/3.1.5/3.2.1–3.2.3 eindeutig.
+
+🛑 **STOPP 1.3** — Nach erfolgreichem Build-Check und Barto-Sichtung warten auf Freigabe für Schritt 1.7 (Cross-Reference-Check).
 
 ---
 
@@ -254,3 +262,5 @@ Keine — rein additiver Schritt. Vorab-Checks:
 - **2026-04-18** — Schritt 1.1 implementiert. Dateien: `StudioEquipmentType.swift` (neu), `Studio.swift` (neu), `StudioEquipment.swift` (neu), `MotionCoreApp.swift` (Schema erweitert).
 - **2026-04-18** — Schritt 1.1 committed (5744842). Plan 1.2 erstellt.
 - **2026-04-18** — Schritt 1.2 implementiert. Dateien: `ProgressionMode.swift` (neu), `ExerciseProgressionState.swift` (neu), `MotionCoreApp.swift` (Schema erweitert).
+- **2026-04-18** — Schritt 1.2 committed (28ea5b2). Schritte 1.3+1.4+1.5+1.6 zu neuem Schritt 1.3 gebündelt. Plan erstellt.
+- **2026-04-18** — Schritt 1.3 implementiert. Dateien: HealthMetricType.swift (neu), HealthBaseline.swift (neu), SessionReadiness.swift (neu), Exercise.swift (+4 Felder), ExerciseSet.swift (+1 Feld), StrengthSession.swift (+2 Felder), MotionCoreApp.swift (Schema +2).

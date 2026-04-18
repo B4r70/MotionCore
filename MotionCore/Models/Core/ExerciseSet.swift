@@ -73,6 +73,11 @@ final class ExerciseSet {
         set { if newValue { setKind = .warmup } else if setKind == .warmup { setKind = .work } }
     }
 
+    // MARK: - Smart-Progression (v1.1)
+
+    /// True = letzter Work-Set der Übung in dieser Session → triggert RIR-Sheet (Schritt 1.18)
+    var isLastSetOfExercise: Bool = false
+
     // MARK: - Beziehungen
     @Relationship(deleteRule: .nullify)
     var session: StrengthSession?
@@ -180,7 +185,8 @@ final class ExerciseSet {
         targetRIR: Int = 2,
         groupId: String = "",
         sortOrder: Int = 0,
-        supersetGroupId: String? = nil
+        supersetGroupId: String? = nil,
+        isLastSetOfExercise: Bool = false
     ) {
         self.exerciseName = exerciseName
         self.exerciseNameSnapshot = exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot
@@ -204,6 +210,7 @@ final class ExerciseSet {
         self.groupId = groupId
         self.sortOrder = sortOrder
         self.supersetGroupId = supersetGroupId
+        self.isLastSetOfExercise = isLastSetOfExercise
     }
 }
 
@@ -236,6 +243,8 @@ extension ExerciseSet {
 
         copy.isUnilateralSnapshot = isUnilateralSnapshot
         copy.supersetGroupId = supersetGroupId
+
+        // isLastSetOfExercise wird nicht kopiert — neuer Session-Satz ist zunächst nie der letzte
 
         // Important: detach relations
         copy.exercise = nil
@@ -288,6 +297,8 @@ extension ExerciseSet {
         // Relationship: Exercise darf mit rüber (optional, aber praktisch)
         copy.exercise = self.exercise
         copy.supersetGroupId = supersetGroupId
+
+        // isLastSetOfExercise wird nicht kopiert — neuer Session-Satz ist zunächst nie der letzte
 
         // Ownership: Session kommt später via session.addSet(...)
         copy.session = nil

@@ -34,6 +34,20 @@ final class Exercise {
     var minDaysBetweenProgressions: Int = 7             // Cooldown zwischen Steigerungen
     var lastProgressionDate: Date? = nil                // Datum der letzten Gewichtssteigerung
 
+    // MARK: - Smart-Progression (v1.1)
+
+    /// Soft-Link auf StudioEquipment.id (keine @Relationship, um CloudKit-Inverse-Zwang zu vermeiden)
+    var studioEquipmentID: UUID? = nil
+
+    /// Überschreibt repRangeMin/Max als expliziter Ziel-Wert (optional)
+    var customTargetReps: Int? = nil
+
+    /// Rohwert für CloudKit-Kompatibilität (String statt Enum)
+    var progressionModeRaw: String = "smart"
+
+    /// Freitext-Notiz, z.B. Geräte-spezifische Einstellung
+    var configNotes: String = ""
+
     var sortIndex: Int = 0
     var cautionNote: String = ""
     var isArchived: Bool = false
@@ -91,6 +105,10 @@ final class Exercise {
         customProgressionStep: Double? = nil,
         minDaysBetweenProgressions: Int = 7,
         lastProgressionDate: Date? = nil,
+        studioEquipmentID: UUID? = nil,
+        customTargetReps: Int? = nil,
+        progressionModeRaw: String = "smart",
+        configNotes: String = "",
         sortIndex: Int = 0,
         cautionNote: String = "",
         isArchived: Bool = false,
@@ -126,6 +144,10 @@ final class Exercise {
         self.customProgressionStep = customProgressionStep
         self.minDaysBetweenProgressions = minDaysBetweenProgressions
         self.lastProgressionDate = lastProgressionDate
+        self.studioEquipmentID = studioEquipmentID
+        self.customTargetReps = customTargetReps
+        self.progressionModeRaw = progressionModeRaw
+        self.configNotes = configNotes
         self.sortIndex = sortIndex
         self.cautionNote = cautionNote
         self.isArchived = isArchived
@@ -263,6 +285,14 @@ extension Exercise {
     var progressionStrategy: ProgressionStrategy {
         get { ProgressionStrategy(rawValue: progressionStrategyRaw) ?? .double }
         set { progressionStrategyRaw = newValue.rawValue }
+    }
+
+    // MARK: - Smart-Progression (v1.1)
+
+    /// Typisierter Zugriff auf den Progressions-Modus (Smart/Advanced/Off)
+    var progressionMode: ProgressionMode {
+        get { ProgressionMode(rawValue: progressionModeRaw) ?? .smart }
+        set { progressionModeRaw = newValue.rawValue }
     }
 
     /// Automatischer Schritt basierend auf Kategorie/Equipment (ohne Custom-Override)

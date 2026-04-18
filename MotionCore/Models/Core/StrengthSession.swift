@@ -75,6 +75,14 @@ final class StrengthSession {
     var perceivedExertion: Int? // RPE 1-10 (Rate of Perceived Exertion)
     var energyLevelBefore: Int? // Energielevel vor Training (1-5)
 
+    // MARK: - Smart-Progression (v1.1)
+
+    /// 0–100, berechnet durch SessionQualityCalcEngine (Schritt 1.21)
+    var sessionQualityScore: Int? = nil
+
+    /// Soft-Link auf SessionReadiness.id (Phase 2)
+    var sessionReadinessID: UUID? = nil
+
     // MARK: - HealthKit-Integration (NEU)
 
     var healthKitWorkoutUUID: UUID? // Verknüpfung zur HKWorkout
@@ -207,6 +215,8 @@ final class StrengthSession {
         energyLevelBefore: Int? = nil,
         healthKitWorkoutUUID: UUID? = nil,
         deviceSource: String = "manual",
+        sessionQualityScore: Int? = nil,
+        sessionReadinessID: UUID? = nil,
         workoutType: StrengthWorkoutType = .fullBody,
         intensity: Intensity = .none
     ) {
@@ -225,6 +235,8 @@ final class StrengthSession {
         self.energyLevelBefore = energyLevelBefore
         self.healthKitWorkoutUUID = healthKitWorkoutUUID
         self.deviceSource = deviceSource
+        self.sessionQualityScore = sessionQualityScore
+        self.sessionReadinessID = sessionReadinessID
         self.workoutTypeRaw = workoutType.rawValue
         self.intensityRaw = intensity.rawValue
     }
