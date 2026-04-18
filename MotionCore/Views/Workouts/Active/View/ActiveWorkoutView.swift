@@ -86,6 +86,9 @@ struct ActiveWorkoutView: View {
     // Health-Alert bei Workout-Abbruch wenn Watch-Tracking aktiv
     @State private var showCancelHealthAlert = false
 
+        // Smart-Progression: letzter Work-Set einer Übung — triggert RIR-Sheet
+    @State private var rirSheetSet: ExerciseSet? = nil
+
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionHaptic = UINotificationFeedbackGenerator()
     private let completionHapticMedium = UIImpactFeedbackGenerator(style: .medium)
@@ -360,6 +363,14 @@ struct ActiveWorkoutView: View {
                 PhoneSessionManager.shared.sendResumeHealthTracking()
             }
         }
+        // Smart-Progression: Flag-Hygiene nach Add-Set / Delete-Set (via SetEditSheet)
+        // SetEditSheet hat keinen direkten Callback — onChange auf Satz-Count ist robuster Fallback
+        .onChange(of: session.safeExerciseSets.count) { _, _ in
+            let groupKeys = Set(session.safeExerciseSets.map { $0.groupKey })
+            for key in groupKeys {
+                cleanupLastSetFlag(for: key)
+            }
+        }
 
             // Foreground-Handler für Rest-Timer: berechnet verbleibende Zeit aus restEndDate
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -432,6 +443,27 @@ struct ActiveWorkoutView: View {
         .sheet(item: $selectedSetForEdit) { set in
             SetEditSheet(set: set, session: session)
                 .environmentObject(appSettings)
+        }
+        .sheet(item: $rirSheetSet) { set in
+            RIRInputSheet(
+                restTimerManager: restTimerManager,
+                targetSeconds: set.restSeconds,
+                onAdjustRest: { delta in
+                    restTimerManager.adjust(delta: delta)
+                },
+                onSelectRIR: { rir in
+                    // rir 0..3 → rpe = 10 - rir; rir == 4 ("4+") → rpe = 6 (RIR ≥ 4)
+                    if rir == 4 {
+                        set.rpe = 6
+                    } else {
+                        set.rpe = 10 - rir
+                    }
+                    Task { @MainActor in try? context.save() }
+                },
+                onSkip: {
+                    // rpe bleibt 0 — ProgressionCalcEngine.hasRIRData behandelt rpe == 0 als "unbekannt"
+                }
+            )
         }
         .onChange(of: selectedSetForEdit) { _, newSet in
             // Smart-Fill: User öffnet SetEditSheet → Suggestion als bestätigt markieren
@@ -762,6 +794,11 @@ struct ActiveWorkoutView: View {
         // Cache sofort aktualisieren, damit nachfolgende Berechnungen aktuell sind
         cachedGroupedSets = session.groupedSets
 
+        // Smart-Progression: Flag fuer letzten Work-Set setzen (NACH Cache-Update, NACH isCompleted = true)
+        if isLastWorkSet(of: set) {
+            set.isLastSetOfExercise = true
+        }
+
         // context.save() asynchron — blockiert den Main Thread nicht
         Task { @MainActor in
             try? context.save()
@@ -815,13 +852,12 @@ struct ActiveWorkoutView: View {
             return
         }
 
-        // Normales Handling (kein Superset): Rest-Timer starten falls weitere Sätze übrig
-        let remainingSetsForExercise = session.safeExerciseSets.filter {
-            $0.groupKey == set.groupKey && !$0.isCompleted
-        }
+        // Normales Handling (kein Superset): Rest-Timer immer starten (auch am letzten Satz, Variante C)
+        restTimerManager.start(seconds: set.restSeconds)
 
-        if !remainingSetsForExercise.isEmpty {
-            restTimerManager.start(seconds: set.restSeconds)
+        // Smart-Progression: RIR-Sheet nur beim letzten Work-Set einer Nicht-Superset-Übung
+        if set.isLastSetOfExercise {
+            rirSheetSet = set
         }
     }
 
@@ -898,6 +934,36 @@ struct ActiveWorkoutView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Smart-Progression Helpers
+
+    /// Ermittelt, ob der gegebene Set der letzte Work-Set seiner Uebung ist.
+    /// Aufruf NACH set.isCompleted = true — dann sind alle Work-Sets abgeschlossen wenn true.
+    private func isLastWorkSet(of set: ExerciseSet) -> Bool {
+        guard set.setKind == .work else { return false }
+        let workSets = session.safeExerciseSets.filter {
+            $0.groupKey == set.groupKey && $0.setKind == .work
+        }
+        return workSets.allSatisfy { $0.isCompleted }
+    }
+
+    /// Flag-Hygiene fuer isLastSetOfExercise: genau ein Set einer Uebung
+    /// traegt das Flag, und nur wenn alle Work-Sets completed sind.
+    /// Aufruf nach Add-Set / Delete-Set.
+    private func cleanupLastSetFlag(for groupKey: String) {
+        let workSets = session.safeExerciseSets
+            .filter { $0.groupKey == groupKey && $0.setKind == .work }
+            .sorted { $0.setNumber < $1.setNumber }
+        // Alle Flags zuruecksetzen
+        for s in workSets where s.isLastSetOfExercise {
+            s.isLastSetOfExercise = false
+        }
+        // Letzten Work-Set flaggen, aber nur wenn alle abgeschlossen
+        if workSets.allSatisfy({ $0.isCompleted }), let last = workSets.last {
+            last.isLastSetOfExercise = true
+        }
+        Task { @MainActor in try? context.save() }
     }
 
     private func finishWorkout() {

@@ -98,10 +98,9 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.13** Medikamenten-Schalter in Settings — committed (148bda8)
 - [x] **1.14** Neue `ProgressionCalcEngine` — committed (c99b6d4)
 - [x] **1.15** `RollbackDetectionCalcEngine` — committed (d322ad2)
-- [x] **1.16** Smart-Fill im ActiveWorkoutView *(implementiert 2026-04-18)*
-- [x] **1.17** Feintuning-Chips für Zwischengewichte *(implementiert 2026-04-18)*
-- [ ] 1.18 RIR-Sheet am letzten Satz *(geplant nach Freigabe)*
-- [ ] 1.18 RIR-Sheet am letzten Satz *(geplant nach Freigabe)*
+- [x] **1.16** Smart-Fill im ActiveWorkoutView — committed (548eb0f)
+- [x] **1.17** Feintuning-Chips für Zwischengewichte — committed (e0abe61)
+- [x] **1.18** RIR-Sheet am letzten Satz *(implementiert 2026-04-18)*
 - [ ] 1.19 Quick-Config aus ActiveWorkout *(geplant nach Freigabe)*
 - [ ] 1.20 Rollback-Insight-Karte + manueller Rollback *(geplant nach Freigabe)*
 - [ ] 1.21 `SessionQualityCalcEngine` + Integration *(geplant nach Freigabe)*
@@ -109,141 +108,125 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.16 — Smart-Fill im ActiveWorkoutView
+## Aktueller Schritt: 1.18 — RIR-Sheet am letzten Satz
 
 ### Ziel
 
-Beim Öffnen einer Übung im aktiven Training werden die noch offenen Work-Sets mit Engine-Empfehlungen (Gewicht + Reps) vorbefüllt. Lazy-Erstellung von `ExerciseProgressionState` beim ersten abgeschlossenen Work-Set einer Übung. Erster UI-Konsument von `ProgressionCalcEngine` + `EquipmentWeightRounding`.
-
-### Kritische Erkenntnis
-
-`ActiveSetCard` zeigt Gewicht/Reps als **read-only Text**, nicht als TextField. Editing läuft über `SetEditSheet`. "Placeholder" bedeutet hier: Prefill **schreibt** direkt auf `set.weight`/`set.reps` der uncompleted Work-Sets — solange noch nicht vom User überschrieben (Heuristik).
+Beim Abschließen des letzten Work-Sets einer Übung öffnet sich ein kompaktes Sheet: kompakter RestTimer oben (~60% Höhe) + einzeilige RIR-Buttons `0 1 2 3 4+` (je ~48pt, gleich breit) + Skip-Link. Tap → `set.rpe = 10 - rir` (4+ → `rpe = 6`). Skip → `rpe` bleibt 0. Setzt `isLastSetOfExercise = true` auf dem Set. Zeitlich getrennt von `ExerciseRatingCard` (kommt danach im `ExerciseCompletedCard`).
 
 ### Files
 
 **NEU (2):**
-- `MotionCore/Services/Calculation/ExerciseProgressionStateResolver.swift` — `fetch` + `createIfMissing` für `ExerciseProgressionState` per `exerciseGroupKey`
-- `MotionCore/Views/Workouts/Active/ViewModel/ActiveWorkoutSmartFillViewModel.swift` — `@Observable`, Engine-Aufruf, Cache, Prefill, Lazy-State-Trigger
+- `MotionCore/Views/Workouts/Active/Components/RIRInputSheet.swift` (~150 Zeilen)
+- `MotionCore/Views/Workouts/Active/Components/CompactRestTimerView.swift` (~80 Zeilen, eigene View statt `isCompact`-Parameter)
 
 **ÄNDERN (1):**
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — minimalinvasiv ~30 Zeilen:
-  - `@Query var studioEquipments: [StudioEquipment]`
-  - `@State var smartFill: ActiveWorkoutSmartFillViewModel?`
-  - Hook in `setupSession()` (ViewModel init + erster Prefill)
-  - Hook in `.onChange(of: selectedExerciseKey)` (Prefill bei Übungswechsel)
-  - Hook in `completeSet(_:)` (recordSetCompletion + Re-Prefill)
-  - Hook in `.onChange(of: selectedSetForEdit)` (markUserConfirmed)
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` (~50 Zeilen):
+  - `@State rirSheetSet: ExerciseSet?`
+  - In `completeSet(_:)` nach `isCompleted = true`: `isLastWorkSet(of:)` prüfen → Flag setzen
+  - Am Ende `completeSet(_:)` (Nicht-Superset-Pfad): `rirSheetSet = set` bei `isLastSetOfExercise`
+  - `.sheet(item: $rirSheetSet) { ... }` mit `.presentationDetents([.fraction(0.45)])`
+  - Optional Cleanup-Helper bei Add-Set/Delete-Set (Produktfrage)
 
-### Architektur-Entscheidungen
+### Compact-RestTimer: eigene View statt Parameter
 
-1. **ViewModel statt View:** Engine-Aufruf + FetchDescriptor gehören NICHT in View (CLAUDE.md). Neue `@Observable` ViewModel-Klasse.
-2. **Kein Split von ActiveWorkoutView in 1.16:** Datei ist bei ~1806 Zeilen, 1.16 fügt ~30 Zeilen hinzu, verschlimmert nichts. Split zwangsläufig in 1.18/1.19 — dort ganzheitlich.
-3. **Cache:** `[exerciseGroupKey: Output]` im ViewModel. Invalidierung bei `completeSet` → nächster Prefill aktiviert "folge-vorherigem-Satz"-Pfad der Engine.
-4. **Lazy-State-Creation:** Triggerpunkt `completeSet`, NICHT `openExercise` (Concept 3.4: "lazy beim ersten Set-Abschluss, `workingWeight = aktuelles Set-Gewicht`").
-5. **Rollback-Placeholder in 1.16:** Engine liefert bereits `previousWorkingWeight` bei `.rollbackSuggested`. Prefill schreibt transparent — keine UI-Karte (kommt 1.20).
+Begründung: `RestTimerCard` hat Ring 210pt + Next-Set-Block + Superset-Block + Adjust-Buttons + Skip-Button — alles auf Standalone-Card ausgelegt. Eine `isCompact`-Variante würde fast jede Subview conditional machen. 15 Zeilen Formatter-Duplikation sind akzeptabel.
+
+### Erkennung-Letzter-Satz
+
+```swift
+private func isLastWorkSet(of set: ExerciseSet) -> Bool {
+    guard set.setKind == .work else { return false }
+    let workSets = session.safeExerciseSets.filter {
+        $0.groupKey == set.groupKey && $0.setKind == .work
+    }
+    return workSets.allSatisfy { $0.isCompleted }
+}
+```
+
+Warmup-Sätze zählen nicht. Check erfolgt NACH `set.isCompleted = true`, daher "alle completed" stabil.
+
+### Timer-Verhalten
+
+**Variante C (gewählt):** `restTimerManager.start(seconds:)` läuft **immer**, auch beim letzten Set. Hero-Card zeigt großen Timer im Hintergrund. RIR-Sheet zeigt zusätzlich kompakten Timer. Sheet-Dismiss → großer Timer bleibt sichtbar. Keine Race, kein Logik-Eingriff.
 
 ### Detail-Steps
 
-#### 1.16.1 — `ExerciseProgressionStateResolver.swift`
+**CompactRestTimerView:** Ring ~130pt (62% von 210), Zeit-Text 44pt monospace, kleine ±15s-Buttons. Kein `.glassCard()` (Sheet selbst ist Glas).
 
+**RIRInputSheet:**
 ```swift
-enum ExerciseProgressionStateResolver {
-    static func fetch(in context: ModelContext, exerciseGroupKey: String) -> ExerciseProgressionState?
-    static func createIfMissing(in context: ModelContext, exerciseGroupKey: String, workingWeight: Double, exercise: Exercise) -> ExerciseProgressionState
-}
-```
-- `fetch`: `FetchDescriptor<ExerciseProgressionState>` mit `#Predicate { $0.exerciseGroupKey == key }`, `fetchLimit: 1`
-- `createIfMissing`: Falls nil → neuer State mit `workingWeight`, `targetReps = exercise.customTargetReps ?? max(1, (repRangeMin + repRangeMax) / 2)` (Fallback 10 wenn beide 0), `minTargetReps = repRangeMin > 0 ? repRangeMin : 8`, `maxTargetReps = repRangeMax > 0 ? repRangeMax : 12`, `progressionModeRaw = exercise.progressionModeRaw`. `context.insert + save()`.
-
-#### 1.16.2 — `ActiveWorkoutSmartFillViewModel.swift`
-
-```swift
-@MainActor @Observable
-final class ActiveWorkoutSmartFillViewModel {
-    private(set) var cachedOutputs: [String: ProgressionCalcEngine.Output] = [:]
-    private(set) var isSuggestionActive: [String: Bool] = [:]  // Key: setUUID.uuidString
-    private let context: ModelContext
-
-    init(context: ModelContext)
-
-    func prefillSuggestion(exerciseGroupKey: String, exercise: Exercise?, session: StrengthSession,
-                          lastCompletedSession: StrengthSession?, equipmentByID: [UUID: StudioEquipment])
-
-    func recordSetCompletion(completedSet: ExerciseSet, exercise: Exercise?)
-
-    func isSuggestion(for set: ExerciseSet) -> Bool
-
-    func markUserConfirmed(set: ExerciseSet)
+struct RIRInputSheet: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var restTimerManager: RestTimerManager
+    let targetSeconds: Int
+    let onAdjustRest: (Int) -> Void
+    let onSelectRIR: (Int) -> Void   // 0..4, 4 = "4+"
+    let onSkip: () -> Void
+    // CompactRestTimerView + "Wie viele Reps wären noch drin gewesen?" + 5 gleich breite Buttons + "Überspringen"
+    // .presentationDetents([.fraction(0.45)]) + .presentationDragIndicator(.visible)
 }
 ```
 
-**`prefillSuggestion`:** idempotent (guard auf cache), resolve progressionState via Resolver.fetch → falls nil: keine Suggestion (Edge Case "neue Übung"). Engine.Input aufbauen mit `readinessModifier = 1.0`, `exerciseFallbackStep = exercise.progressionStep`, `currentSessionPreviousSets` gefiltert auf groupKey. Engine call. Output cachen. Prefill-Durchlauf: uncompleted Work-Sets mit `set.weight == 0 && set.reps <= 1` oder `isSuggestionActive[setUUID] == true` → `set.weight = output.suggestedWeight`, `set.reps = output.suggestedReps`, Flag true setzen.
+Button-Row: `HStack(spacing: 8)`, jeder Button `frame(maxWidth: .infinity, minHeight: 48)`.
 
-**`recordSetCompletion`:** Cache-Entry für groupKey löschen, `isSuggestionActive[setUUID] = false`, Lazy-State-Creation via `Resolver.createIfMissing(workingWeight: completedSet.weight, exercise: exercise)`.
+Tap-Mapping: `rir in 0..3` → `rpe = 10 - rir`. `rir == 4` → `rpe = 6`.
 
-**`markUserConfirmed`:** Flag `isSuggestionActive[setUUID] = false`.
+**ActiveWorkoutView-Hooks:**
+```swift
+// Vor PR-Check in completeSet(_:):
+if isLastWorkSet(of: set) {
+    set.isLastSetOfExercise = true
+}
 
-#### 1.16.3 — `ActiveWorkoutView.swift` — Änderungen
+// Am Ende completeSet(_:), nur Nicht-Superset:
+if set.supersetGroupId == nil && set.isLastSetOfExercise {
+    rirSheetSet = set
+}
+```
 
-- `@Query var studioEquipments: [StudioEquipment]` (bei bestehenden Query-Deklarationen ~Zeile 27)
-- `@State var smartFill: ActiveWorkoutSmartFillViewModel?` (bei anderen `@State` ~Zeile 76)
-- Helper: `equipmentByID`, `lastCompletedSession(for:)`, `resolveExercise(for:)`, `prefillSmartSuggestionsIfNeeded()`
-- In `setupSession()`: `if smartFill == nil { smartFill = ActiveWorkoutSmartFillViewModel(context: context) }` + `prefillSmartSuggestionsIfNeeded()`
-- `.onChange(of: selectedExerciseKey)` → `prefillSmartSuggestionsIfNeeded()`
-- In `completeSet(_:)` (vor PR-Check): `smartFill?.recordSetCompletion(completedSet: set, exercise: resolveExercise(for: set.groupKey))` + `prefillSmartSuggestionsIfNeeded()`
-- `.onChange(of: selectedSetForEdit)` → `if let newSet { smartFill?.markUserConfirmed(set: newSet) }`
+### Edge-Cases (Produktfragen offen)
 
-### Lazy-State-Creation-Pattern
-
-| Zeitpunkt | Aktion |
+| Fall | Vorschlag |
 |---|---|
-| Öffnen (neue Übung) | `fetch` → nil → kein State, keine Suggestion |
-| Satz 1 completed | `createIfMissing` → State mit `workingWeight = set1.weight` |
-| Öffnen Satz 2 (gleiche Session) | Engine Pfad 1 (`currentSessionSetIndex > 0`) → Prefill mit `set1.weight` |
-| Nächste Session | Engine normaler Entscheidungsbaum mit `lastSessionSets` |
-
-**Wichtig:** `workingWeight` wird in 1.16 nur **erstellt**, nicht aktualisiert. Updates bei Progression → 1.20/1.21.
-
-### Placeholder-Semantik
-
-- Prefill überschreibt nur bei `set.weight == 0 && set.reps <= 1` ODER `isSuggestionActive[setUUID] == true` (zuvor eigene Suggestion)
-- User-Overrides via SetEditSheet → `markUserConfirmed` → Flag false → nächster Prefill respektiert
-- Keine sichtbare UI-Änderung in 1.16 an `ActiveSetCard` (nur Datenbefüllung)
-- Flicker-Prävention: synchroner Prefill vor nächstem Render, keine async State-Changes
+| Add-Set nach RIR | Alter Satz behält `rpe` + Flag → false; neuer Satz bekommt Flag `true` beim Abschluss (Cleanup-Helper) |
+| Delete-Set | Vorheriger completed Work-Set bekommt Flag `true`, wenn alle noch completed |
+| Swipe-Dismiss | wie Skip: `rpe` bleibt 0 |
+| Superset | Kein RIR-Sheet in Phase 1 (`supersetGroupId == nil`-Gate) |
 
 ### Manuelle Tests
 
-1. **Neue Übung ohne Historie:** 0kg-Template → keine Befüllung, User trägt ein. Satz abschließen → State angelegt.
-2. **Übung mit Progression-Kandidat:** vorige Session alle Reps erreicht + rpe=9 → Prefill `+increment` Gewicht, Reasoning `.increaseWeight`.
-3. **Satz 1 → Satz 2:** Satz 1 60kg completed → Cache invalidiert → Satz 2 zeigt 60kg (Pfad 1, `.holdWeight`).
-4. **User-Override:** Vorschlag 60kg → Anpassen → 62.5kg → bleibt erhalten.
-5. **Rollback-Szenario:** vorige Session reps<min, lastProgDate=5d → Prefill `previousWorkingWeight`.
-6. **Kein Equipment:** `studioEquipmentID = nil` → Fallback auf `progressionStep`.
-7. **Equipment (7kg Beinpresse):** 70kg + increase → 77kg.
-8. **Übung-Wechsel:** A→B→A, Cache-Hit, keine Re-Writes.
+1. 3-Sätze-Übung: Satz 1/2 normaler Timer. Satz 3 → Sheet öffnet mit Timer oben + 5 Buttons.
+2. Tap 0 → `rpe=10`. Tap 3 → `rpe=7`. Tap 4+ → `rpe=6`. Skip → `rpe=0`.
+3. Swipe-Dismiss → wie Skip.
+4. iPhone SE + iPhone 15: 5 Buttons einzeilig, Sheet ≈45%.
+5. Nach Sheet-Dismiss → weitere Übung startbar, `ExerciseRatingCard` zeitlich getrennt funktional.
+6. Superset-Übung letzter Satz → **kein** Sheet.
+7. Warmup-Satz als letzter → nicht als "letzter Work-Set" gezählt.
+8. Add-Set nach RIR → Flag-Hygiene stimmt.
 
 ### Build-Check
 
 - [ ] iOS Build grün
-- [ ] watchOS Build grün (Kontrolle)
+- [ ] watchOS Build grün
 - [ ] Keine neuen Warnings
-- [ ] Training aus Plan starten, Übungen durchspielen
+- [ ] Preview RIRInputSheet rendert
+- [ ] 3-Sätze-Training: Sheet triggert korrekt
 
 ### Risks
 
-- **File-Size ActiveWorkoutView (1806 Zeilen):** 1.16 fügt ~30 Zeilen hinzu, Split verschoben auf 1.18/1.19
-- **Template-Default-Heuristik:** `weight == 0 && reps <= 1` — bei bewussten 0kg-Bodyweight-Templates harmlos (Engine liefert auch 0)
-- **`isSuggestionActive`-Non-Persistence** nach App-Kill: nächster Prefill würde erneut befüllen, aber Heuristik schützt User-Werte
-- **SwiftData `@Query<StudioEquipment>` in View:** muss mit leerem Studio-Context klarkommen (fresh install ohne Seed)
-- **Race Prefill vs. save():** Prefill schreibt Model synchron, save() async — in RAM sofort sichtbar, kein Problem
+1. **File-Size ActiveWorkoutView (2161 Zeilen):** weit über 800-Hartlimit. 1.18 fügt ~50 Zeilen hinzu. Split spätestens vor 1.19 zwingend — **separater Refactor-Schritt** empfohlen.
+2. **Timer-Doppelanzeige:** großer Timer hinter Sheet + Compact im Sheet. Mit Backdrop-Blur harmlos, testen.
+3. **Skip-Semantik:** `rpe = 0` hat `calculatedRIR = 10` (fälschlich "10 Reps übrig"). `ProgressionCalcEngine.hasRIRData` (seit 1.14) behandelt `rpe == 0` bereits als "unbekannt" → kompatibel.
+4. **Cleanup-Helper:** Ohne Implementierung bleibt Flag stale bei Add/Delete-Set — UX-relevant für spätere Aggregationen.
 
 ### Offene Produktfragen
 
-1. **Visuelles "Vorschlag"-Badge** auf ActiveSetCard (solange Suggestion aktiv)? → Vorschlag: **NEIN in 1.16** (nur Datenbefüllung), als Follow-up falls UX es fordert.
-2. **Reasoning als secondary Label** (z.B. "Steigerung empfohlen", "Rollback empfohlen")? → Vorschlag: **NEIN in 1.16** — Rollback-Karte kommt prominent in 1.20.
-3. **Prefill bei Session-Resume nach App-Kill:** Heuristik ausreichend oder `isSuggestionActive` persistieren? → Vorschlag: **Heuristik ausreichend** (User-Werte sind `weight>0 || reps>1` und werden nicht überschrieben).
+1. **Cleanup-Helper für Add-Set/Delete-Set in 1.18 mitnehmen?** (~20 Zeilen + 2 Call-Sites). → Vorschlag: **ja**, Flag-Hygiene stimmt.
+2. **Split ActiveWorkoutView vor 1.19 oder später?** → Vorschlag: **separater Refactor-Schritt** (z.B. 1.18.5) nach 1.18.
+3. **Skip-Semantik `rpe = 0`:** bleibt. ProgressionCalcEngine handhabt bereits korrekt. → Bestätigen?
 
-🛑 **STOPP 1.16** — Warte auf Freigabe + Entscheidungen zu den 3 Produktfragen.
+🛑 **STOPP 1.18** — Warte auf Entscheidungen zu den 3 Produktfragen + Freigabe.
 
 ---
 
@@ -269,6 +252,8 @@ final class ActiveWorkoutSmartFillViewModel {
 - **2026-04-18** — Schritt 1.14 implementiert. ProgressionCalcEngine + ProgressionTypes + EquipmentWeightRounding (3 neue Files).
 - **2026-04-18** — Schritt 1.14 committed (c99b6d4). Schritt 1.15 implementiert.
 - **2026-04-18** — Schritt 1.15 committed (d322ad2). Plan 1.16 erstellt.
+- **2026-04-18** — Schritt 1.16 committed (548eb0f). Schritt 1.17 committed (e0abe61). Plan 1.18 erstellt.
 - **2026-04-18** — Schritt 1.16 implementiert. Resolver + SmartFillViewModel + ExerciseSet.isEngineSuggestion + ActiveWorkoutView-Hooks + ActiveSetCard-Badge/Reasoning-Label.
 - **2026-04-18** — Schritt 1.16 Scope-Korrektur: Produktfragen 2A + 3A (Reasoning-Label entfernt, ExerciseSet.isEngineSuggestion entfernt, Tracking zurück auf In-Memory Dictionary im ViewModel).
 - **2026-04-18** — Schritt 1.17 implementiert (FineTuneChipsView + SetEditSheet-Einbau).
+- **2026-04-18** — Schritt 1.18 implementiert. RIRInputSheet + CompactRestTimerView + ActiveWorkoutView-Hooks + Cleanup-Helper.
