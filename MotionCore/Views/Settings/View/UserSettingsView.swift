@@ -136,6 +136,19 @@ struct UserSettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
+            Section {
+                Toggle(isOn: $appSettings.takesCardioMedication) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Kreislaufwirksame Medikamente")
+                        Text("Passt die Analyse deiner Tagesform an, z.B. bei Betablockern.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("Gesundheit")
+            }
         }
         .navigationTitle("Benutzerspezifische Werte")
         .navigationBarTitleDisplayMode(.inline)

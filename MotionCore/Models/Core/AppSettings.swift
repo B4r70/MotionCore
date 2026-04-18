@@ -280,6 +280,15 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // MARK: - Tagesform / Medikation
+
+    // Nutzer nimmt kreislaufwirksame Medikamente (z.B. Betablocker) — modifiziert Readiness-Berechnung ab Phase 2
+    @Published var takesCardioMedication: Bool {
+        didSet {
+            UserDefaults.standard.set(takesCardioMedication, forKey: "health.takesCardioMedication")
+        }
+    }
+
         // Im init():
 
     // MARK: - Init
@@ -383,6 +392,9 @@ class AppSettings: ObservableObject {
         eBikeMaintenanceIntervalKm = defaults.object(forKey: "ebike.maintenanceIntervalKm") as? Double ?? 1000.0
         eBikeLastMaintenanceDate = defaults.object(forKey: "ebike.lastMaintenanceDate") as? Date
         eBikeNotes = defaults.string(forKey: "ebike.notes") ?? ""
+
+        // Tagesform: Kreislaufwirksame Medikamente (Default: false)
+        takesCardioMedication = defaults.bool(forKey: "health.takesCardioMedication")
     }
 }
 

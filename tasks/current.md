@@ -95,7 +95,7 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.10** Legacy-CalcEngines + ViewModel entfernen — committed (bf14fee)
 - [x] **1.11** Exercise-Felder entfernen + SetConfigSheet-UI + ProgressionTypes.swift löschen — committed (c3629c8)
 - [x] **1.12** Studio-Setup + Default-Seeder *(implementiert 2026-04-18)*
-- [ ] 1.13 Medikamenten-Schalter in Settings *(geplant nach Freigabe)*
+- [x] **1.13** Medikamenten-Schalter in Settings *(implementiert 2026-04-18)*
 - [ ] 1.14 Neue `ProgressionCalcEngine` *(geplant nach Freigabe)*
 - [ ] 1.15 `RollbackDetectionCalcEngine` *(geplant nach Freigabe)*
 - [ ] 1.16 Smart-Fill im ActiveWorkoutView *(geplant nach Freigabe)*
@@ -257,3 +257,4 @@ Keine — Concept v1 schreibt Single-Studio-UI explizit vor.
 - **2026-04-18** — Schritt 1.10 implementiert. 3 Legacy-Files gelöscht, SummaryViewModel bereinigt.
 - **2026-04-18** — Schritt 1.11 implementiert. 4 Stored Properties (progressionSessionsRequired, progressionStrategyRaw, customProgressionStep, minDaysBetweenProgressions) + 4 Computed Properties (progressionStrategy, baseProgressionStep, effectiveProgressionStep, canRecommendProgression) aus Exercise.swift entfernt. ExerciseProgressionSection (256 Zeilen) aus FormViewSection.swift gelöscht. 9 Stellen in SetConfigurationSheet.swift bereinigt (4 State-Inits, 4 @State-Declarations, If-Else-Block vereinfacht, 4 Save-Zuweisungen entfernt). 11-Zeilen-Block aus ExerciseFormView.swift entfernt. ProgressionTypes.swift per git rm gelöscht. Finale Grepping: alle Legacy-Typen 0 Treffer.
 - **2026-04-18** — Schritt 1.12 implementiert. DefaultStudioSeeder + StudioSetupView + StudioEquipmentEditSheet + StudioEquipmentRow + MainSettings-Link + Seeder-Hook.
+- **2026-04-18** — Schritt 1.13 implementiert. AppSettings.takesCardioMedication + Toggle in UserSettingsView.
