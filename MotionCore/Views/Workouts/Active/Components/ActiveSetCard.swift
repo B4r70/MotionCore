@@ -22,6 +22,8 @@ struct ActiveSetCard: View {
     let supersetCurrentIndex: Int
     let supersetCurrentRound: Int
     let supersetTotalRounds: Int
+        // 2b. Smart-Fill (optional, Default-Werte für bestehende Call-Sites)
+    var isEngineSuggestion: Bool = false
         // 3. Bindings
     @Binding var selectedSetForEdit: ExerciseSet?
         // 4. Actions
@@ -60,9 +62,21 @@ struct ActiveSetCard: View {
                         .font(.title2.bold())
                         .foregroundStyle(.primary)
 
-                    Text("Satz \(set.setNumber) von \(setsForCurrentExercise)")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: 6) {
+                        Text("Satz \(set.setNumber) von \(setsForCurrentExercise)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+
+                        // B1: Vorschlag-Badge (sichtbar solange isEngineSuggestion == true)
+                        if isEngineSuggestion {
+                            Text("Vorschlag")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(.secondary.opacity(0.15), in: Capsule())
+                        }
+                    }
                 }
 
                 Spacer()
@@ -247,3 +261,4 @@ struct ActiveSetCard: View {
         return !instructions.isEmpty || !description.isEmpty
     }
 }
+

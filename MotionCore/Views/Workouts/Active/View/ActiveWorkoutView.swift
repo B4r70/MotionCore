@@ -26,6 +26,8 @@ struct ActiveWorkoutView: View {
     @Query(filter: #Predicate<StrengthSession> { $0.isCompleted }, sort: \StrengthSession.date, order: .reverse)
     private var allSessions: [StrengthSession]
 
+    @Query private var studioEquipments: [StudioEquipment]
+
         // MARK: - Local timers (UI only)
 
     @State private var localTimer: Timer?
@@ -67,6 +69,9 @@ struct ActiveWorkoutView: View {
 
         // Debounce-Task für Live Activity Sync
     @State private var syncDebounceTask: Task<Void, Never>? = nil
+
+        // Smart-Fill ViewModel: Engine-Aufrufe + Prefill für aktive Übungen
+    @State private var smartFill: ActiveWorkoutSmartFillViewModel?
 
         // Gecachte Bewertungen pro Übungsgruppen-Schlüssel
     @State private var cachedExerciseRatings: [String: ExerciseQualityRating] = [:]
@@ -342,6 +347,9 @@ struct ActiveWorkoutView: View {
             // ExerciseMetrics für vorherige Übung speichern (F2), dann Transition senden
             saveCurrentExerciseMetrics(forKey: oldValue)
             PhoneSessionManager.shared.sendExerciseTransition()
+
+            // Smart-Fill: Prefill für neue Übung anstoßen
+            prefillSmartSuggestionsIfNeeded()
         }
         .onChange(of: sessionManager.isPaused) { _, isPaused in
             syncLiveActivityStates()
@@ -424,6 +432,10 @@ struct ActiveWorkoutView: View {
         .sheet(item: $selectedSetForEdit) { set in
             SetEditSheet(set: set, session: session)
                 .environmentObject(appSettings)
+        }
+        .onChange(of: selectedSetForEdit) { _, newSet in
+            // Smart-Fill: User öffnet SetEditSheet → Suggestion als bestätigt markieren
+            if let newSet { smartFill?.markUserConfirmed(set: newSet) }
         }
             // Sheet zum Hinzufügen einer Übung während des Trainings
         .sheet(isPresented: $showAddExerciseSheet) {
@@ -539,6 +551,12 @@ struct ActiveWorkoutView: View {
         cachedExerciseRatings = Dictionary(
             uniqueKeysWithValues: session.safeExerciseRatings.map { ($0.exerciseGroupKey, $0.rating) }
         )
+
+        // Smart-Fill ViewModel initialisieren und ersten Prefill anstoßen
+        if smartFill == nil {
+            smartFill = ActiveWorkoutSmartFillViewModel(context: context)
+        }
+        prefillSmartSuggestionsIfNeeded()
     }
 
         // Zugriff Exercise-Key prüfen
@@ -748,6 +766,13 @@ struct ActiveWorkoutView: View {
         Task { @MainActor in
             try? context.save()
         }
+
+        // Smart-Fill: Satz-Abschluss registrieren + Folge-Satz prefüllen
+        smartFill?.recordSetCompletion(
+            completedSet: set,
+            exercise: resolveExercise(for: set.groupKey)
+        )
+        prefillSmartSuggestionsIfNeeded()
 
         // PR-Prüfung asynchron — blockiert den Main Thread nicht
         let setID = set.persistentModelID
@@ -1230,6 +1255,38 @@ struct ActiveWorkoutView: View {
         SessionResumeStore.save(state)
     }
 
+    // MARK: - Smart-Fill Helpers
+
+    /// Equipment-Lookup-Dictionary für alle Studio-Geräte (lazy computed)
+    private var equipmentByID: [UUID: StudioEquipment] {
+        Dictionary(uniqueKeysWithValues: studioEquipments.map { ($0.id, $0) })
+    }
+
+    /// Letzte abgeschlossene Session die Sätze für diesen groupKey enthält
+    private func lastCompletedSession(for groupKey: String) -> StrengthSession? {
+        // historicalSessions = allSessions ohne aktuelle Session (bereits gefiltert)
+        historicalSessions.first { s in
+            s.safeExerciseSets.contains { $0.groupKey == groupKey }
+        }
+    }
+
+    /// Exercise-Objekt für einen groupKey aus der aktuellen Session holen
+    private func resolveExercise(for groupKey: String) -> Exercise? {
+        session.safeExerciseSets.first(where: { $0.groupKey == groupKey })?.exercise
+    }
+
+    /// Delegiert Prefill an das SmartFillViewModel wenn eine Übung ausgewählt ist
+    private func prefillSmartSuggestionsIfNeeded() {
+        guard let smartFill, let currentKey = selectedExerciseKey else { return }
+        smartFill.prefillSuggestion(
+            exerciseGroupKey: currentKey,
+            exercise: resolveExercise(for: currentKey),
+            session: session,
+            lastCompletedSession: lastCompletedSession(for: currentKey),
+            equipmentByID: equipmentByID
+        )
+    }
+
     private func ensureSingleLiveActivityForCurrentSession() async -> Bool {
         let mySessionID = session.sessionUUID.uuidString
 
@@ -1364,6 +1421,7 @@ struct ActiveWorkoutView: View {
                 supersetCurrentIndex: ctx?.currentIndex ?? 0,
                 supersetCurrentRound: ctx?.currentRound ?? 1,
                 supersetTotalRounds: ctx?.totalRounds ?? 1,
+                isEngineSuggestion: smartFill?.isSuggestionActive(for: activeSet) ?? false,
                 selectedSetForEdit: $selectedSetForEdit,
                 onComplete: completeSet
             )

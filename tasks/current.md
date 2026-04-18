@@ -96,9 +96,9 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.11** Exercise-Felder entfernen + SetConfigSheet-UI + ProgressionTypes.swift löschen — committed (c3629c8)
 - [x] **1.12** Studio-Setup + Default-Seeder — committed (428e801)
 - [x] **1.13** Medikamenten-Schalter in Settings — committed (148bda8)
-- [x] **1.14** Neue `ProgressionCalcEngine` *(implementiert 2026-04-18)*
-- [x] **1.15** `RollbackDetectionCalcEngine` *(implementiert 2026-04-18)*
-- [ ] 1.16 Smart-Fill im ActiveWorkoutView *(geplant nach Freigabe)*
+- [x] **1.14** Neue `ProgressionCalcEngine` — committed (c99b6d4)
+- [x] **1.15** `RollbackDetectionCalcEngine` — committed (d322ad2)
+- [x] **1.16** Smart-Fill im ActiveWorkoutView *(implementiert 2026-04-18)*
 - [ ] 1.17 Feintuning-Button für Zwischengewichte *(geplant nach Freigabe)*
 - [ ] 1.18 RIR-Sheet am letzten Satz *(geplant nach Freigabe)*
 - [ ] 1.19 Quick-Config aus ActiveWorkout *(geplant nach Freigabe)*
@@ -108,108 +108,141 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.14 — Neue ProgressionCalcEngine
+## Aktueller Schritt: 1.16 — Smart-Fill im ActiveWorkoutView
 
 ### Ziel
 
-Pure, stateless `ProgressionCalcEngine` (Input → Output) gemäß Concept 4.1 aufbauen, inkl. Typen-Datei und Equipment-aware Rounding-Helper. Keine SwiftUI-Imports, keine State-Mutation, deterministisch.
+Beim Öffnen einer Übung im aktiven Training werden die noch offenen Work-Sets mit Engine-Empfehlungen (Gewicht + Reps) vorbefüllt. Lazy-Erstellung von `ExerciseProgressionState` beim ersten abgeschlossenen Work-Set einer Übung. Erster UI-Konsument von `ProgressionCalcEngine` + `EquipmentWeightRounding`.
 
-### Files (erwartet)
+### Kritische Erkenntnis
 
-**NEU (3):**
-- `MotionCore/Services/Calculation/ProgressionCalcEngine.swift` — Pure Engine mit `Input`, `Output`, `static func calculate(input:)`
-- `MotionCore/Services/Calculation/ProgressionTypes.swift` — `ProgressionReasoning`-Enum
-- `MotionCore/Services/EquipmentWeightRounding.swift` — Equipment-aware Rounding-Helper (wiederverwendbar für 1.17)
+`ActiveSetCard` zeigt Gewicht/Reps als **read-only Text**, nicht als TextField. Editing läuft über `SetEditSheet`. "Placeholder" bedeutet hier: Prefill **schreibt** direkt auf `set.weight`/`set.reps` der uncompleted Work-Sets — solange noch nicht vom User überschrieben (Heuristik).
 
-### Cross-References (bestehende Typen)
+### Files
 
-- `ExerciseProgressionState` (workingWeight, previousWorkingWeight, targetReps, minTargetReps, maxTargetReps, progressionMode, lastProgressionDate)
-- `ProgressionMode` (.smart/.advanced/.off)
-- `ExerciseSet` (weight, reps, rpe, calculatedRIR, isLastSetOfExercise, isCompleted, setKindRaw, sortOrder)
-- `StudioEquipment` (startWeight, increment, minWeight, maxWeight, intermediateIncrements)
+**NEU (2):**
+- `MotionCore/Services/Calculation/ExerciseProgressionStateResolver.swift` — `fetch` + `createIfMissing` für `ExerciseProgressionState` per `exerciseGroupKey`
+- `MotionCore/Views/Workouts/Active/ViewModel/ActiveWorkoutSmartFillViewModel.swift` — `@Observable`, Engine-Aufruf, Cache, Prefill, Lazy-State-Trigger
 
-Pfad-Konflikt-Check: Legacy-Files `ProgressionCalcEngine.swift` und `ProgressionTypes.swift` in 1.10/1.11 gelöscht. Kein Konflikt.
+**ÄNDERN (1):**
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — minimalinvasiv ~30 Zeilen:
+  - `@Query var studioEquipments: [StudioEquipment]`
+  - `@State var smartFill: ActiveWorkoutSmartFillViewModel?`
+  - Hook in `setupSession()` (ViewModel init + erster Prefill)
+  - Hook in `.onChange(of: selectedExerciseKey)` (Prefill bei Übungswechsel)
+  - Hook in `completeSet(_:)` (recordSetCompletion + Re-Prefill)
+  - Hook in `.onChange(of: selectedSetForEdit)` (markUserConfirmed)
+
+### Architektur-Entscheidungen
+
+1. **ViewModel statt View:** Engine-Aufruf + FetchDescriptor gehören NICHT in View (CLAUDE.md). Neue `@Observable` ViewModel-Klasse.
+2. **Kein Split von ActiveWorkoutView in 1.16:** Datei ist bei ~1806 Zeilen, 1.16 fügt ~30 Zeilen hinzu, verschlimmert nichts. Split zwangsläufig in 1.18/1.19 — dort ganzheitlich.
+3. **Cache:** `[exerciseGroupKey: Output]` im ViewModel. Invalidierung bei `completeSet` → nächster Prefill aktiviert "folge-vorherigem-Satz"-Pfad der Engine.
+4. **Lazy-State-Creation:** Triggerpunkt `completeSet`, NICHT `openExercise` (Concept 3.4: "lazy beim ersten Set-Abschluss, `workingWeight = aktuelles Set-Gewicht`").
+5. **Rollback-Placeholder in 1.16:** Engine liefert bereits `previousWorkingWeight` bei `.rollbackSuggested`. Prefill schreibt transparent — keine UI-Karte (kommt 1.20).
 
 ### Detail-Steps
 
-#### 1.14.1 — ProgressionTypes.swift
+#### 1.16.1 — `ExerciseProgressionStateResolver.swift`
+
 ```swift
-enum ProgressionReasoning: String, Codable {
-    case holdWeight, increaseWeight, bigIncrease
-    case rollbackSuggested, firstSession, readinessReduced, noProgression
+enum ExerciseProgressionStateResolver {
+    static func fetch(in context: ModelContext, exerciseGroupKey: String) -> ExerciseProgressionState?
+    static func createIfMissing(in context: ModelContext, exerciseGroupKey: String, workingWeight: Double, exercise: Exercise) -> ExerciseProgressionState
 }
 ```
-Top-Level, String-RawValue für Debug/Supabase. Keine weiteren Typen hier (Input/Output bleiben engine-lokal).
+- `fetch`: `FetchDescriptor<ExerciseProgressionState>` mit `#Predicate { $0.exerciseGroupKey == key }`, `fetchLimit: 1`
+- `createIfMissing`: Falls nil → neuer State mit `workingWeight`, `targetReps = exercise.customTargetReps ?? max(1, (repRangeMin + repRangeMax) / 2)` (Fallback 10 wenn beide 0), `minTargetReps = repRangeMin > 0 ? repRangeMin : 8`, `maxTargetReps = repRangeMax > 0 ? repRangeMax : 12`, `progressionModeRaw = exercise.progressionModeRaw`. `context.insert + save()`.
 
-#### 1.14.2 — EquipmentWeightRounding.swift
+#### 1.16.2 — `ActiveWorkoutSmartFillViewModel.swift`
+
 ```swift
-enum EquipmentWeightRounding {
-    static func roundToValidWeight(_ weight: Double, equipment: StudioEquipment?, fallbackStep: Double) -> Double
+@MainActor @Observable
+final class ActiveWorkoutSmartFillViewModel {
+    private(set) var cachedOutputs: [String: ProgressionCalcEngine.Output] = [:]
+    private(set) var isSuggestionActive: [String: Bool] = [:]  // Key: setUUID.uuidString
+    private let context: ModelContext
+
+    init(context: ModelContext)
+
+    func prefillSuggestion(exerciseGroupKey: String, exercise: Exercise?, session: StrengthSession,
+                          lastCompletedSession: StrengthSession?, equipmentByID: [UUID: StudioEquipment])
+
+    func recordSetCompletion(completedSet: ExerciseSet, exercise: Exercise?)
+
+    func isSuggestion(for set: ExerciseSet) -> Bool
+
+    func markUserConfirmed(set: ExerciseSet)
 }
 ```
-- `equipment == nil`: auf Vielfache von `fallbackStep` (Guard: > 0, sonst 2.5)
-- `equipment != nil`: `steps = ((weight - startWeight) / increment).rounded()`, `candidate = startWeight + steps * increment`, dann `max(minWeight)` und optional `min(maxWeight)`
-- `intermediateIncrements` werden **nicht** verwendet (reserviert für 1.17)
-- Div-by-Zero-Guard: `step = max(increment, 0.0001)`
 
-#### 1.14.3 — ProgressionCalcEngine.swift
+**`prefillSuggestion`:** idempotent (guard auf cache), resolve progressionState via Resolver.fetch → falls nil: keine Suggestion (Edge Case "neue Übung"). Engine.Input aufbauen mit `readinessModifier = 1.0`, `exerciseFallbackStep = exercise.progressionStep`, `currentSessionPreviousSets` gefiltert auf groupKey. Engine call. Output cachen. Prefill-Durchlauf: uncompleted Work-Sets mit `set.weight == 0 && set.reps <= 1` oder `isSuggestionActive[setUUID] == true` → `set.weight = output.suggestedWeight`, `set.reps = output.suggestedReps`, Flag true setzen.
 
-Struct mit `Input`/`Output` gemäß Concept 4.1. Entscheidungsbaum in dieser Reihenfolge:
+**`recordSetCompletion`:** Cache-Entry für groupKey löschen, `isSuggestionActive[setUUID] = false`, Lazy-State-Creation via `Resolver.createIfMissing(workingWeight: completedSet.weight, exercise: exercise)`.
 
-1. **`currentSessionSetIndex > 0 && !currentSessionPreviousSets.isEmpty`** → `.holdWeight`: Gewicht = letzter abgeschlossener Work-Set der aktuellen Session, Reps = `progressionState.targetReps`
-2. **`lastSessionSets.isEmpty`** → `.firstSession`: Gewicht = `workingWeight`, Reps = `targetReps`
-3. **Modus `.off` oder `.advanced`** → `.noProgression`: unverändert aus `progressionState`
-4. **`readinessModifier < 0.9`** → `.readinessReduced`: `roundToValidWeight(workingWeight × modifier, ..., floor)`, Reps unverändert
-5. **Letzte-Session-Analyse** (nur `isCompleted && setKindRaw == "work"` nach `sortOrder`):
-   - `lastSet = workSets.first { $0.isLastSetOfExercise } ?? workSets.last` (Fallback für Legacy-Sessions)
-   - `allHitTarget = workSets.allSatisfy { reps ≥ targetReps }`
-   - `lastRIR = lastSet?.calculatedRIR ?? 0`
-   - **5a** `allHitTarget && lastRIR ≤ 1` → `.increaseWeight` (+1×increment, gerundet), `isProgressionStep = true`
-   - **5b** `allHitTarget && lastRIR ≥ 3` → `.bigIncrease` (+2×increment), `isProgressionStep = true`
-   - **5c** `repsBelowMin && lastRIR == 0 && !recentProgression` → `.holdWeight`
-   - **5d** `repsBelowMin && recentProgression` → `.rollbackSuggested`, Gewicht = `previousWorkingWeight ?? workingWeight` (gerundet), `isRollbackCandidate = true`
-   - `recentProgression = lastProgressionDate < 14 Tage alt` (Engine-Proxy; finale Session-Prüfung in 1.15)
-6. **Fallback** → `.holdWeight`
+**`markUserConfirmed`:** Flag `isSuggestionActive[setUUID] = false`.
 
-Reihenfolge 5a → 5b → 5d → 5c: Progressions-Zweig zuerst, dann Rollback vor Hold.
+#### 1.16.3 — `ActiveWorkoutView.swift` — Änderungen
 
-**Kommentar-Block am Ende** mit allen 8 Testszenarien.
+- `@Query var studioEquipments: [StudioEquipment]` (bei bestehenden Query-Deklarationen ~Zeile 27)
+- `@State var smartFill: ActiveWorkoutSmartFillViewModel?` (bei anderen `@State` ~Zeile 76)
+- Helper: `equipmentByID`, `lastCompletedSession(for:)`, `resolveExercise(for:)`, `prefillSmartSuggestionsIfNeeded()`
+- In `setupSession()`: `if smartFill == nil { smartFill = ActiveWorkoutSmartFillViewModel(context: context) }` + `prefillSmartSuggestionsIfNeeded()`
+- `.onChange(of: selectedExerciseKey)` → `prefillSmartSuggestionsIfNeeded()`
+- In `completeSet(_:)` (vor PR-Check): `smartFill?.recordSetCompletion(completedSet: set, exercise: resolveExercise(for: set.groupKey))` + `prefillSmartSuggestionsIfNeeded()`
+- `.onChange(of: selectedSetForEdit)` → `if let newSet { smartFill?.markUserConfirmed(set: newSet) }`
 
-### Manuelle Tests (8 Szenarien)
+### Lazy-State-Creation-Pattern
 
-1. Empty history → `.firstSession`
-2. Modus `.off` → `.noProgression`
-3. Alle Sätze ≥ target, lastSet rpe=9 → `.increaseWeight`
-4. Alle Sätze ≥ target, lastSet rpe=6 → `.bigIncrease`
-5. Reps < min, lastSet rpe=10, lastProgressionDate > 14d → `.holdWeight`
-6. Reps < min, lastProgressionDate = heute-5d → `.rollbackSuggested` mit `previousWorkingWeight`
-7. readinessModifier=0.85 → `.readinessReduced`, Gewicht floor-gerundet
-8. currentSessionSetIndex=1, prev=60kg → Gewicht 60kg, `.holdWeight`
+| Zeitpunkt | Aktion |
+|---|---|
+| Öffnen (neue Übung) | `fetch` → nil → kein State, keine Suggestion |
+| Satz 1 completed | `createIfMissing` → State mit `workingWeight = set1.weight` |
+| Öffnen Satz 2 (gleiche Session) | Engine Pfad 1 (`currentSessionSetIndex > 0`) → Prefill mit `set1.weight` |
+| Nächste Session | Engine normaler Entscheidungsbaum mit `lastSessionSets` |
+
+**Wichtig:** `workingWeight` wird in 1.16 nur **erstellt**, nicht aktualisiert. Updates bei Progression → 1.20/1.21.
+
+### Placeholder-Semantik
+
+- Prefill überschreibt nur bei `set.weight == 0 && set.reps <= 1` ODER `isSuggestionActive[setUUID] == true` (zuvor eigene Suggestion)
+- User-Overrides via SetEditSheet → `markUserConfirmed` → Flag false → nächster Prefill respektiert
+- Keine sichtbare UI-Änderung in 1.16 an `ActiveSetCard` (nur Datenbefüllung)
+- Flicker-Prävention: synchroner Prefill vor nächstem Render, keine async State-Changes
+
+### Manuelle Tests
+
+1. **Neue Übung ohne Historie:** 0kg-Template → keine Befüllung, User trägt ein. Satz abschließen → State angelegt.
+2. **Übung mit Progression-Kandidat:** vorige Session alle Reps erreicht + rpe=9 → Prefill `+increment` Gewicht, Reasoning `.increaseWeight`.
+3. **Satz 1 → Satz 2:** Satz 1 60kg completed → Cache invalidiert → Satz 2 zeigt 60kg (Pfad 1, `.holdWeight`).
+4. **User-Override:** Vorschlag 60kg → Anpassen → 62.5kg → bleibt erhalten.
+5. **Rollback-Szenario:** vorige Session reps<min, lastProgDate=5d → Prefill `previousWorkingWeight`.
+6. **Kein Equipment:** `studioEquipmentID = nil` → Fallback auf `progressionStep`.
+7. **Equipment (7kg Beinpresse):** 70kg + increase → 77kg.
+8. **Übung-Wechsel:** A→B→A, Cache-Hit, keine Re-Writes.
 
 ### Build-Check
 
 - [ ] iOS Build grün
-- [ ] watchOS Build grün (Kontrolle — Engine iOS-only, Models shared)
+- [ ] watchOS Build grün (Kontrolle)
 - [ ] Keine neuen Warnings
-- [ ] App startet (Engine noch nicht aufgerufen)
+- [ ] Training aus Plan starten, Übungen durchspielen
 
-### Risks / Edge Cases
+### Risks
 
-- **RIR/rpe-Verwechslung:** IMMER `calculatedRIR` nutzen, nicht `rpe`. `rpe == 0` bei leerem Default wäre sonst fälschlich "RIR 10"
-- **RIR 2 (mittel) + alle Reps erreicht** → fällt in Fallback `.holdWeight`, Concept-konform, Inline-Kommentar für Reviewer
-- **`lastProgressionDate`-Proxy** (< 14 Tage) — Engine kennt keine Session-Zahl; finale Prüfung in 1.15
-- **`isLastSetOfExercise`-Fallback** für Legacy-Sessions vor 1.4: auf `workSets.last` zurück
-- **Equipment-Div-by-Zero:** `increment = 0` → Guard `max(increment, 0.0001)`
-- **`startWeight > weight`:** Rounder liefert `max(candidate, minWeight)` — nicht negativ
-- **Nur-Warmup-Sätze in aktueller Session:** currentSessionPreviousSets ohne Work-Set → Pfad 1 feuert nicht (prüfe `filter { isCompleted && setKindRaw == "work" }.isEmpty`)
-- **`targetReps`-Trennung:** Engine nutzt nur `progressionState.targetReps`. Caller in 1.16 berechnet effektive Target aus `customTargetReps ?? repRangeMin/Max`. Engine bleibt pure.
-- **Determinismus:** Keine Date-Reads in Engine außer `recentProgression`-Check (Parameter `Date.now` in Aufrufer übergeben? → nein, Engine liest `Date()` lokal, Dokumentation im Kommentar)
+- **File-Size ActiveWorkoutView (1806 Zeilen):** 1.16 fügt ~30 Zeilen hinzu, Split verschoben auf 1.18/1.19
+- **Template-Default-Heuristik:** `weight == 0 && reps <= 1` — bei bewussten 0kg-Bodyweight-Templates harmlos (Engine liefert auch 0)
+- **`isSuggestionActive`-Non-Persistence** nach App-Kill: nächster Prefill würde erneut befüllen, aber Heuristik schützt User-Werte
+- **SwiftData `@Query<StudioEquipment>` in View:** muss mit leerem Studio-Context klarkommen (fresh install ohne Seed)
+- **Race Prefill vs. save():** Prefill schreibt Model synchron, save() async — in RAM sofort sichtbar, kein Problem
 
-### Offene Produktfrage
+### Offene Produktfragen
 
-- **Rounding-Richtung bei `.readinessReduced`:** `.rounded()` (nearest) kann in Edge-Cases auf > `workingWeight` aufrunden (60 × 0.9 = 54 → nearest 55). **Vorschlag: `.floor` (abrunden)** — semantisch passt "nimm es leichter". Bestätigung erbeten.
+1. **Visuelles "Vorschlag"-Badge** auf ActiveSetCard (solange Suggestion aktiv)? → Vorschlag: **NEIN in 1.16** (nur Datenbefüllung), als Follow-up falls UX es fordert.
+2. **Reasoning als secondary Label** (z.B. "Steigerung empfohlen", "Rollback empfohlen")? → Vorschlag: **NEIN in 1.16** — Rollback-Karte kommt prominent in 1.20.
+3. **Prefill bei Session-Resume nach App-Kill:** Heuristik ausreichend oder `isSuggestionActive` persistieren? → Vorschlag: **Heuristik ausreichend** (User-Werte sind `weight>0 || reps>1` und werden nicht überschrieben).
 
-🛑 **STOPP 1.14** — Warte auf Freigabe + Entscheidung zur Rounding-Richtung.
+🛑 **STOPP 1.16** — Warte auf Freigabe + Entscheidungen zu den 3 Produktfragen.
 
 ---
 
@@ -234,3 +267,6 @@ Reihenfolge 5a → 5b → 5d → 5c: Progressions-Zweig zuerst, dann Rollback vo
 - **2026-04-18** — Schritt 1.13 implementiert. AppSettings.takesCardioMedication + Toggle in UserSettingsView.
 - **2026-04-18** — Schritt 1.14 implementiert. ProgressionCalcEngine + ProgressionTypes + EquipmentWeightRounding (3 neue Files).
 - **2026-04-18** — Schritt 1.14 committed (c99b6d4). Schritt 1.15 implementiert.
+- **2026-04-18** — Schritt 1.15 committed (d322ad2). Plan 1.16 erstellt.
+- **2026-04-18** — Schritt 1.16 implementiert. Resolver + SmartFillViewModel + ExerciseSet.isEngineSuggestion + ActiveWorkoutView-Hooks + ActiveSetCard-Badge/Reasoning-Label.
+- **2026-04-18** — Schritt 1.16 Scope-Korrektur: Produktfragen 2A + 3A (Reasoning-Label entfernt, ExerciseSet.isEngineSuggestion entfernt, Tracking zurück auf In-Memory Dictionary im ViewModel).
