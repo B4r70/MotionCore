@@ -910,6 +910,11 @@ struct ActiveWorkoutView: View {
     private func finishWorkout() {
         let finalSeconds = sessionManager.endSession()
 
+        // Nicht abgeschlossene Sets verwerfen — sonst erscheinen sie faelschlich als trainiert
+        for set in session.safeExerciseSets.filter({ !$0.isCompleted }) {
+            context.delete(set)
+        }
+
         session.complete()
         session.duration = finalSeconds / 60
 
