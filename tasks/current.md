@@ -94,9 +94,9 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.9** Legacy-UI-Entfernung (Views) — committed (726fce1) + Heatmap-Rewire (8c0f0db)
 - [x] **1.10** Legacy-CalcEngines + ViewModel entfernen — committed (bf14fee)
 - [x] **1.11** Exercise-Felder entfernen + SetConfigSheet-UI + ProgressionTypes.swift löschen — committed (c3629c8)
-- [x] **1.12** Studio-Setup + Default-Seeder *(implementiert 2026-04-18)*
-- [x] **1.13** Medikamenten-Schalter in Settings *(implementiert 2026-04-18)*
-- [ ] 1.14 Neue `ProgressionCalcEngine` *(geplant nach Freigabe)*
+- [x] **1.12** Studio-Setup + Default-Seeder — committed (428e801)
+- [x] **1.13** Medikamenten-Schalter in Settings — committed (148bda8)
+- [x] **1.14** Neue `ProgressionCalcEngine` *(implementiert 2026-04-18)*
 - [ ] 1.15 `RollbackDetectionCalcEngine` *(geplant nach Freigabe)*
 - [ ] 1.16 Smart-Fill im ActiveWorkoutView *(geplant nach Freigabe)*
 - [ ] 1.17 Feintuning-Button für Zwischengewichte *(geplant nach Freigabe)*
@@ -108,135 +108,108 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.12 — Studio-Setup + Default-Seeder
+## Aktueller Schritt: 1.14 — Neue ProgressionCalcEngine
 
 ### Ziel
 
-Studio-Konfigurations-UI im Settings-Bereich + idempotenter Default-Seeder für "Mein Studio" beim ersten App-Start. User kann StudioEquipment-Profile anlegen, editieren, löschen. Datenmodell existiert seit 1.1.
+Pure, stateless `ProgressionCalcEngine` (Input → Output) gemäß Concept 4.1 aufbauen, inkl. Typen-Datei und Equipment-aware Rounding-Helper. Keine SwiftUI-Imports, keine State-Mutation, deterministisch.
 
-### Files
+### Files (erwartet)
 
-**NEU (4):**
-- `MotionCore/Services/DefaultStudioSeeder.swift`
-- `MotionCore/Views/Settings/View/StudioSetupView.swift`
-- `MotionCore/Views/Settings/Components/StudioEquipmentEditSheet.swift`
-- `MotionCore/Views/Settings/Components/StudioEquipmentRow.swift`
+**NEU (3):**
+- `MotionCore/Services/Calculation/ProgressionCalcEngine.swift` — Pure Engine mit `Input`, `Output`, `static func calculate(input:)`
+- `MotionCore/Services/Calculation/ProgressionTypes.swift` — `ProgressionReasoning`-Enum
+- `MotionCore/Services/EquipmentWeightRounding.swift` — Equipment-aware Rounding-Helper (wiederverwendbar für 1.17)
 
-**ÄNDERN (2):**
-- `MotionCore/Views/Settings/View/MainSettingsView.swift` — NavigationLink "Studio einrichten" in Section "Allgemeine Einstellungen"
-- `MotionCore/App/MotionCoreApp.swift` — Seeder-Call im existierenden `.task`-Block (nach `ExerciseSeeder.seedMissing`)
+### Cross-References (bestehende Typen)
 
-### Patterns (Vorlagen)
+- `ExerciseProgressionState` (workingWeight, previousWorkingWeight, targetReps, minTargetReps, maxTargetReps, progressionMode, lastProgressionDate)
+- `ProgressionMode` (.smart/.advanced/.off)
+- `ExerciseSet` (weight, reps, rpe, calculatedRIR, isLastSetOfExercise, isCompleted, setKindRaw, sortOrder)
+- `StudioEquipment` (startWeight, increment, minWeight, maxWeight, intermediateIncrements)
 
-- Seeder-Hook: `MotionCoreApp.swift:122–128` (bestehende `.task`-Sequenz)
-- Settings-View-Struktur: `EBikeProfileView.swift` (`List { Section { ... } }`)
-- Decimal-Input: `DecimalTextField.swift` (DE/US-Locale-kompatibel)
-- Sheet-Pattern: immer `.sheet(item:)` (Lessons)
-- Idempotenz: Query-basiert auf `Studio.isPrimary == true` (robuster als UserDefaults bei CloudKit-Restore)
+Pfad-Konflikt-Check: Legacy-Files `ProgressionCalcEngine.swift` und `ProgressionTypes.swift` in 1.10/1.11 gelöscht. Kein Konflikt.
 
 ### Detail-Steps
 
-#### 1.12.1 — `DefaultStudioSeeder.swift`
-
-- `struct DefaultStudioSeeder` mit `static func seedIfNeeded(context: ModelContext)`
-- Idempotenz-Check: `FetchDescriptor<Studio>` mit `#Predicate { $0.isPrimary == true }` → early return bei ≥1 Treffer
-- Bei 0 Treffern: `Studio(name: "Mein Studio", isPrimary: true)` + 5 `StudioEquipment` mit `equipment.studio = studio` (Inverse setzen)
-- `try? context.save()`
-- Default-Geräte gemäß Concept 3.1.2:
-  - Kabelzug — cable, start 1.25, incr 2.5, intermediate [0.625, 1.25]
-  - Kurzhanteln — dumbbell, start 2.0, incr 2.0, intermediate [], max 24.0
-  - Beinpresse — machine, start 0.0, incr 7.0, intermediate [3.5]
-  - Brustpresse — machine, start 0.0, incr 7.0, intermediate [3.5]
-  - Latzugmaschine — machine, start 0.0, incr 7.0, intermediate [3.5]
-
-#### 1.12.2 — `StudioEquipmentRow.swift`
-
-- Props: `let equipment: StudioEquipment`
-- `HStack`: Type-Icon (SF-Symbol) + `VStack { name, weightRange }` + Badge "Feintuning" bei vorhandenen Intermediates
-- Icon-Mapping (`StudioEquipmentType`-Extension):
-  - `.machine` → "gear", `.cable` → "arrow.up.and.down", `.dumbbell` → "dumbbell.fill", `.barbell` → "figure.strengthtraining.traditional", `.bodyweight` → "figure.stand", `.other` → "questionmark.circle"
-- displayName-Extension: "Maschine" / "Kabelzug" / "Kurzhantel" / "Langhantel" / "Körpergewicht" / "Sonstiges"
-
-#### 1.12.3 — `StudioEquipmentEditSheet.swift`
-
-- Props: `let studio: Studio`, `let existing: StudioEquipment?` (nil = Add), `@Environment(\.modelContext)`, `@Environment(\.dismiss)`
-- Lokale `@State`-Kopien aller Felder (Cancel-Safe)
-- `maxWeight: Double?` via `hasMaxWeight: Bool` + `maxWeightValue: Double`
-- Layout `NavigationStack { Form { ... } }`:
-  - Section "Basis": Name (TextField), Typ (Picker)
-  - Section "Gewicht": start/increment/min (DecimalTextField), Toggle+Field für max
-  - Section "Zwischengewichte": dynamische Liste via `ForEach(..enumerated())` mit Swipe-Delete, Footer-Button "hinzufügen" (default 0.625)
-  - Section "Notiz": TextEditor
-- Toolbar: Cancel + Speichern
-- Validierung: Name nicht leer, Increment > 0, StartWeight ≥ 0, MaxWeight > StartWeight (wenn gesetzt). Fehler via Alert-State
-- Save: existing=nil → Insert + `equipment.studio = studio`; sonst Felder überschreiben; `try? context.save()`
-
-#### 1.12.4 — `StudioSetupView.swift`
-
-- `@Environment(\.modelContext)`, `@EnvironmentObject private var appSettings: AppSettings`
-- `@Query(filter: #Predicate<Studio> { $0.isPrimary == true })`
-- `@State private var editingEquipment: StudioEquipment?` (Sheet-Item)
-- `@State private var addSheetStudio: Studio?` (Sheet-Item für Add)
-- `@State private var equipmentPendingDelete: StudioEquipment?` (Alert-Item)
-- `ZStack`: `AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)` + `List`
-- Pro Equipment: `Button { editingEquipment = eq } label: { StudioEquipmentRow(equipment: eq) }.glassCard()`
-- `.onDelete` am ForEach → `equipmentPendingDelete = eq`
-- `.alert(item: $equipmentPendingDelete)` für Delete-Confirm
-- Toolbar Trailing: "+" → `addSheetStudio = primaryStudio`
-- Fallback EmptyState wenn keine Equipment
-- `.sheet(item: $editingEquipment)` + `.sheet(item: $addSheetStudio)` — item-basiert, kein isPresented-Pattern
-- `.navigationTitle("Studio einrichten")`, `.navigationBarTitleDisplayMode(.inline)`
-
-#### 1.12.5 — `MainSettingsView.swift`
-
-In Section "Allgemeine Einstellungen" nach dem E-Bike-Profil-Link:
+#### 1.14.1 — ProgressionTypes.swift
 ```swift
-NavigationLink { StudioSetupView() } label: {
-    Label("Studio einrichten", systemImage: "dumbbell.fill")
+enum ProgressionReasoning: String, Codable {
+    case holdWeight, increaseWeight, bigIncrease
+    case rollbackSuggested, firstSession, readinessReduced, noProgression
 }
 ```
+Top-Level, String-RawValue für Debug/Supabase. Keine weiteren Typen hier (Input/Output bleiben engine-lokal).
 
-#### 1.12.6 — `MotionCoreApp.swift`
-
-Im bestehenden `.task` nach `ExerciseSeeder.seedMissing(context: context)` anhängen:
+#### 1.14.2 — EquipmentWeightRounding.swift
 ```swift
-DefaultStudioSeeder.seedIfNeeded(context: context)
+enum EquipmentWeightRounding {
+    static func roundToValidWeight(_ weight: Double, equipment: StudioEquipment?, fallbackStep: Double) -> Double
+}
 ```
+- `equipment == nil`: auf Vielfache von `fallbackStep` (Guard: > 0, sonst 2.5)
+- `equipment != nil`: `steps = ((weight - startWeight) / increment).rounded()`, `candidate = startWeight + steps * increment`, dann `max(minWeight)` und optional `min(maxWeight)`
+- `intermediateIncrements` werden **nicht** verwendet (reserviert für 1.17)
+- Div-by-Zero-Guard: `step = max(increment, 0.0001)`
 
-### Manuelle Tests
+#### 1.14.3 — ProgressionCalcEngine.swift
 
-**Seeder-Idempotenz:**
-- Frische Installation → 5 Geräte in "Mein Studio"
-- App-Restart → keine Duplikate
-- Alle Geräte löschen → App-Restart → Seeder läuft nicht erneut (Studio noch da)
+Struct mit `Input`/`Output` gemäß Concept 4.1. Entscheidungsbaum in dieser Reihenfolge:
 
-**Setup-Flow:** Add-Sheet → Validierung → Row erscheint. Zwischengewichte add/delete.
+1. **`currentSessionSetIndex > 0 && !currentSessionPreviousSets.isEmpty`** → `.holdWeight`: Gewicht = letzter abgeschlossener Work-Set der aktuellen Session, Reps = `progressionState.targetReps`
+2. **`lastSessionSets.isEmpty`** → `.firstSession`: Gewicht = `workingWeight`, Reps = `targetReps`
+3. **Modus `.off` oder `.advanced`** → `.noProgression`: unverändert aus `progressionState`
+4. **`readinessModifier < 0.9`** → `.readinessReduced`: `roundToValidWeight(workingWeight × modifier, ..., floor)`, Reps unverändert
+5. **Letzte-Session-Analyse** (nur `isCompleted && setKindRaw == "work"` nach `sortOrder`):
+   - `lastSet = workSets.first { $0.isLastSetOfExercise } ?? workSets.last` (Fallback für Legacy-Sessions)
+   - `allHitTarget = workSets.allSatisfy { reps ≥ targetReps }`
+   - `lastRIR = lastSet?.calculatedRIR ?? 0`
+   - **5a** `allHitTarget && lastRIR ≤ 1` → `.increaseWeight` (+1×increment, gerundet), `isProgressionStep = true`
+   - **5b** `allHitTarget && lastRIR ≥ 3` → `.bigIncrease` (+2×increment), `isProgressionStep = true`
+   - **5c** `repsBelowMin && lastRIR == 0 && !recentProgression` → `.holdWeight`
+   - **5d** `repsBelowMin && recentProgression` → `.rollbackSuggested`, Gewicht = `previousWorkingWeight ?? workingWeight` (gerundet), `isRollbackCandidate = true`
+   - `recentProgression = lastProgressionDate < 14 Tage alt` (Engine-Proxy; finale Session-Prüfung in 1.15)
+6. **Fallback** → `.holdWeight`
 
-**Edit-Flow:** Tap → Sheet mit vorbefüllten Werten → Speichern aktualisiert Row.
+Reihenfolge 5a → 5b → 5d → 5c: Progressions-Zweig zuerst, dann Rollback vor Hold.
 
-**Delete-Flow:** Swipe → Confirm → Löschen.
+**Kommentar-Block am Ende** mit allen 8 Testszenarien.
 
-**Decimal-Input:** `,` und `.` beide akzeptiert.
+### Manuelle Tests (8 Szenarien)
+
+1. Empty history → `.firstSession`
+2. Modus `.off` → `.noProgression`
+3. Alle Sätze ≥ target, lastSet rpe=9 → `.increaseWeight`
+4. Alle Sätze ≥ target, lastSet rpe=6 → `.bigIncrease`
+5. Reps < min, lastSet rpe=10, lastProgressionDate > 14d → `.holdWeight`
+6. Reps < min, lastProgressionDate = heute-5d → `.rollbackSuggested` mit `previousWorkingWeight`
+7. readinessModifier=0.85 → `.readinessReduced`, Gewicht floor-gerundet
+8. currentSessionSetIndex=1, prev=60kg → Gewicht 60kg, `.holdWeight`
 
 ### Build-Check
 
 - [ ] iOS Build grün
-- [ ] watchOS Build grün (Kontrolle)
+- [ ] watchOS Build grün (Kontrolle — Engine iOS-only, Models shared)
 - [ ] Keine neuen Warnings
-- [ ] App startet ohne Migrations-Fehler
-- [ ] Previews für StudioSetupView + EditSheet funktionieren
+- [ ] App startet (Engine noch nicht aufgerufen)
 
-### Risks
+### Risks / Edge Cases
 
-- **CloudKit-Sync + Seeder:** Paralleler First-Launch auf 2 Devices → 2 Primary-Studios möglich. Akzeptiert (manueller Cleanup in UI möglich, keine Watch-Sync-Pflicht).
-- **Dynamic-List Focus-Reset bei Mitte-Insert:** durch Append-Only-Pattern mitigiert.
-- **Decimal-Input:** `DecimalTextField` bewährt (EBikeProfileView).
+- **RIR/rpe-Verwechslung:** IMMER `calculatedRIR` nutzen, nicht `rpe`. `rpe == 0` bei leerem Default wäre sonst fälschlich "RIR 10"
+- **RIR 2 (mittel) + alle Reps erreicht** → fällt in Fallback `.holdWeight`, Concept-konform, Inline-Kommentar für Reviewer
+- **`lastProgressionDate`-Proxy** (< 14 Tage) — Engine kennt keine Session-Zahl; finale Prüfung in 1.15
+- **`isLastSetOfExercise`-Fallback** für Legacy-Sessions vor 1.4: auf `workSets.last` zurück
+- **Equipment-Div-by-Zero:** `increment = 0` → Guard `max(increment, 0.0001)`
+- **`startWeight > weight`:** Rounder liefert `max(candidate, minWeight)` — nicht negativ
+- **Nur-Warmup-Sätze in aktueller Session:** currentSessionPreviousSets ohne Work-Set → Pfad 1 feuert nicht (prüfe `filter { isCompleted && setKindRaw == "work" }.isEmpty`)
+- **`targetReps`-Trennung:** Engine nutzt nur `progressionState.targetReps`. Caller in 1.16 berechnet effektive Target aus `customTargetReps ?? repRangeMin/Max`. Engine bleibt pure.
+- **Determinismus:** Keine Date-Reads in Engine außer `recentProgression`-Check (Parameter `Date.now` in Aufrufer übergeben? → nein, Engine liest `Date()` lokal, Dokumentation im Kommentar)
 
-### Offene Fragen
+### Offene Produktfrage
 
-Keine — Concept v1 schreibt Single-Studio-UI explizit vor.
+- **Rounding-Richtung bei `.readinessReduced`:** `.rounded()` (nearest) kann in Edge-Cases auf > `workingWeight` aufrunden (60 × 0.9 = 54 → nearest 55). **Vorschlag: `.floor` (abrunden)** — semantisch passt "nimm es leichter". Bestätigung erbeten.
 
-🛑 **STOPP 1.12** — Warte auf Freigabe für Developer-Start.
+🛑 **STOPP 1.14** — Warte auf Freigabe + Entscheidung zur Rounding-Richtung.
 
 ---
 
@@ -254,7 +227,9 @@ Keine — Concept v1 schreibt Single-Studio-UI explizit vor.
 - **2026-04-18** — Schritt 1.9 committed (726fce1). Heatmap-Rewire committed (8c0f0db). Plan 1.10 erstellt.
 - **2026-04-18** — Schritt 1.10 committed (bf14fee). Plan 1.11 erstellt.
 - **2026-04-18** — Schritt 1.11 committed (c3629c8). Legacy-Progression komplett entfernt. Plan 1.12 erstellt.
+- **2026-04-18** — Schritt 1.12 committed (428e801). Schritt 1.13 committed (148bda8). Plan 1.14 erstellt.
 - **2026-04-18** — Schritt 1.10 implementiert. 3 Legacy-Files gelöscht, SummaryViewModel bereinigt.
 - **2026-04-18** — Schritt 1.11 implementiert. 4 Stored Properties (progressionSessionsRequired, progressionStrategyRaw, customProgressionStep, minDaysBetweenProgressions) + 4 Computed Properties (progressionStrategy, baseProgressionStep, effectiveProgressionStep, canRecommendProgression) aus Exercise.swift entfernt. ExerciseProgressionSection (256 Zeilen) aus FormViewSection.swift gelöscht. 9 Stellen in SetConfigurationSheet.swift bereinigt (4 State-Inits, 4 @State-Declarations, If-Else-Block vereinfacht, 4 Save-Zuweisungen entfernt). 11-Zeilen-Block aus ExerciseFormView.swift entfernt. ProgressionTypes.swift per git rm gelöscht. Finale Grepping: alle Legacy-Typen 0 Treffer.
 - **2026-04-18** — Schritt 1.12 implementiert. DefaultStudioSeeder + StudioSetupView + StudioEquipmentEditSheet + StudioEquipmentRow + MainSettings-Link + Seeder-Hook.
 - **2026-04-18** — Schritt 1.13 implementiert. AppSettings.takesCardioMedication + Toggle in UserSettingsView.
+- **2026-04-18** — Schritt 1.14 implementiert. ProgressionCalcEngine + ProgressionTypes + EquipmentWeightRounding (3 neue Files).
