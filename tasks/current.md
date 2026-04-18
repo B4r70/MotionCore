@@ -86,8 +86,8 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 > Policy: Jeder Schritt hat einen STOPP-Gate. Kein Schritt startet ohne explizite Freigabe durch Barto. Status unten wird pro Schritt gepflegt.
 
-- [ ] **1.1** Datenmodell: Studio & StudioEquipment *(aktuell in Planung — siehe Detail-Plan unten)*
-- [ ] 1.2 Datenmodell: `ExerciseProgressionState` + `ProgressionMode` *(geplant nach Freigabe)*
+- [x] **1.1** Datenmodell: Studio & StudioEquipment
+- [ ] **1.2** Datenmodell: `ExerciseProgressionState` + `ProgressionMode` *(aktuell in Planung — siehe Detail-Plan unten)*
 - [ ] 1.3 Exercise-Erweiterung (nur HINZUFÜGEN) *(geplant nach Freigabe)*
 - [ ] 1.4 ExerciseSet-Erweiterung (`isLastSetOfExercise`) *(geplant nach Freigabe)*
 - [ ] 1.5 Neue Datenmodelle: `SessionReadiness` & `HealthBaseline` *(geplant nach Freigabe)*
@@ -111,98 +111,122 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.1 — Datenmodell: Studio & StudioEquipment
+## Aktueller Schritt: 1.2 — Datenmodell: ExerciseProgressionState + ProgressionMode
 
 ### Ziel
 
-Zwei neue SwiftData-Modelle (`Studio`, `StudioEquipment`) plus ein Enum (`StudioEquipmentType`) anlegen und im `ModelContainer`-Schema registrieren. Additiv, ohne UI, ohne Seeder, ohne Services.
+Ein neues SwiftData-Modell `ExerciseProgressionState` sowie ein separates Enum `ProgressionMode` anlegen und im `ModelContainer`-Schema registrieren. Additiv, ohne UI, ohne Seeder, ohne Services. Keine Relationship zu `Exercise` — Matching erfolgt per `exerciseGroupKey` analog zu `ExerciseRating`.
 
 ### Files (erwartet)
 
-- **NEU:** `MotionCore/Models/Core/Studio.swift`
-- **NEU:** `MotionCore/Models/Core/StudioEquipment.swift`
-- **NEU:** `MotionCore/Models/Core/StudioEquipmentType.swift`
-- **ÄNDERN:** `MotionCore/App/MotionCoreApp.swift` (Schema-Array erweitern)
+- **NEU:** `MotionCore/Models/Core/ProgressionMode.swift`
+- **NEU:** `MotionCore/Models/Core/ExerciseProgressionState.swift`
+- **ÄNDERN:** `MotionCore/App/MotionCoreApp.swift` (Schema-Array erweitern um `ExerciseProgressionState.self`)
 
-> Verzeichnis: Die bestehenden Models liegen unter `MotionCore/Models/Core/`, nicht direkt unter `MotionCore/Models/`. Abweichung vom Instruction-Text ist bewusst (konsistent zur existierenden Struktur). Xcode 16 `PBXFileSystemSynchronizedRootGroup` nimmt neue Files automatisch ins Target `MotionCore` — keine manuelle Target-Zuordnung nötig.
+> Verzeichnis: `MotionCore/Models/Core/` (reale Struktur), konsistent mit Studio/StudioEquipment aus 1.1.
 
 ### Cross-References (für Löschungen)
 
-Keine — additiver Schritt. Grep auf `Studio`, `StudioEquipment`, `StudioEquipmentType` ergab keine Treffer in `MotionCore/` (außer in Concept/Instruction-Docs). Naming-Konflikt mit `ExerciseEquipment` (in `MotionCore/Models/Types/ExerciseTypes.swift:53`) wird durch bewusste Namenswahl `StudioEquipmentType` vermieden.
+Keine — rein additiver Schritt. Vorab-Checks:
+- `ProgressionMode` in `MotionCore/`: null Treffer. Auch bestehendes `ProgressionCalcEngine.swift` definiert kein `ProgressionMode` — kein Konflikt.
+- `ExerciseProgressionState` in `MotionCore/`: null Treffer.
+- `exerciseGroupKey` als Match-Pattern validiert in `MotionCore/Models/Core/ExerciseRating.swift` (einfacher String-Match, keine Relationship zu Exercise).
 
 ### Detail-Steps
 
-#### 1. `StudioEquipmentType.swift`
+#### 1. `ProgressionMode.swift`
 
-- Datei-Header gemäß Projekt-Standard (vgl. `ExerciseRating.swift`), Abschnitt "Daten-Modell", Beschreibung: "Gerätetyp-Enum für StudioEquipment".
-- `import Foundation` (kein SwiftData nötig).
-- `enum StudioEquipmentType: String, Codable, CaseIterable { case machine, cable, dumbbell, barbell, bodyweight, other }` — Reihenfolge und Fälle exakt aus Concept 3.1.2.
-- Bewusst **separate Datei** statt in eine der Model-Dateien, konsistent zum Concept-Layout und leicht auffindbar.
+- Datei-Header gemäß Projekt-Standard (Template `ExerciseRating.swift`), Abschnitt "Daten-Modell", Beschreibung: "Progressions-Modus für ExerciseProgressionState".
+- Nur `import Foundation`.
+- Enum exakt nach Concept 3.1.3:
+  ```swift
+  enum ProgressionMode: String, Codable, CaseIterable {
+      case smart
+      case advanced
+      case off
+  }
+  ```
+- Fälle einzeln auf separaten Zeilen (Pattern konsistent mit `StudioEquipmentType.swift`).
+- Separate Datei analog zum 1.1-Vorgehen bei `StudioEquipmentType`.
 
-#### 2. `Studio.swift`
+#### 2. `ExerciseProgressionState.swift`
 
-- Datei-Header analog (Erstellt am: 18.04.2026, Beschreibung: "Studio-Definition (Equipment-Profil-Container)").
+- Datei-Header analog (Erstellt am: 18.04.2026, Beschreibung: "Progressions-State pro Übungsgruppe — Arbeitsgewicht, Ziel-Reps, Rollback-Historie").
+- Header-Hinweis: "Match via exerciseGroupKey (wie ExerciseRating) — keine @Relationship zu Exercise, um Many-to-One-Zwang zu vermeiden".
 - `import Foundation`, `import SwiftData`.
-- `@Model final class Studio` mit stored Properties:
+- `@Model final class ExerciseProgressionState` mit stored Properties exakt nach Concept 3.1.3 (Reihenfolge wie im Concept):
   - `var id: UUID = UUID()`
-  - `var name: String = ""`
-  - `var isPrimary: Bool = false`
+  - `var exerciseGroupKey: String = ""` — Kommentar: "Stabiler Schlüssel der Übungsgruppe (entspricht ExerciseSet.groupKey)"
+  - `var workingWeight: Double = 0.0` — Kommentar: "Aktuelles Arbeitsgewicht, wird bei jeder Progression aktualisiert"
+  - `var targetReps: Int = 10`
+  - `var minTargetReps: Int = 8`
+  - `var maxTargetReps: Int = 12`
+  - `var progressionModeRaw: String = "smart"` — Kommentar: "Rohwert für CloudKit-Kompatibilität (String statt Enum)"
+  - `var lastProgressionDate: Date?`
+  - `var lastRollbackDate: Date?`
+  - `var previousWorkingWeight: Double?` — Kommentar: "Für Rollback-Wiederherstellung gespeichertes vorheriges Arbeitsgewicht"
+  - `var consecutiveSuccessCount: Int = 0`
+  - `var consecutiveFailCount: Int = 0`
+  - `var isActive: Bool = true`
   - `var createdAt: Date = Date()`
-- Relationship:
-  - `@Relationship(deleteRule: .cascade, inverse: \StudioEquipment.studio) var equipment: [StudioEquipment]? = []`
-- Safe Accessor am Dateiende in separatem `extension`-Block:
-  - `var safeEquipment: [StudioEquipment] { equipment ?? [] }`
-- Init exakt wie im Concept:
-  - `init(name: String = "", isPrimary: Bool = false)` — setzt `name` und `isPrimary`, alles andere über Defaults.
-- Deutsche Kommentare für nicht-offensichtliche Felder (`isPrimary` → "Aktuell genutztes Studio (Multi-Studio-vorbereitet, UI zeigt nur eins)").
-
-#### 3. `StudioEquipment.swift`
-
-- Datei-Header analog (Beschreibung: "Konkretes Studio-Gerät mit Gewichtsprofil und Sprüngen").
-- `import Foundation`, `import SwiftData`.
-- `@Model final class StudioEquipment` mit stored Properties exakt nach Concept 3.1.2:
-  - `var id: UUID = UUID()`
-  - `var name: String = ""`
-  - `var equipmentTypeRaw: String = "machine"`
-  - `var startWeight: Double = 0.0`
-  - `var increment: Double = 2.5`
-  - `var minWeight: Double = 0.0`
-  - `var maxWeight: Double? = nil`
-  - `var intermediateIncrements: [Double] = []`
-  - `var notes: String = ""`
-  - `var createdAt: Date = Date()`
-- Rückbeziehung (Kind-Seite, ohne `inverse`):
-  - `var studio: Studio?`
+  - `var updatedAt: Date = Date()`
+- **Keine `@Relationship`** — `exerciseGroupKey`-basiertes Matching.
 - Typisiertes Enum-Accessor:
-  - `var equipmentType: StudioEquipmentType { get { StudioEquipmentType(rawValue: equipmentTypeRaw) ?? .machine } set { equipmentTypeRaw = newValue.rawValue } }`
-- Init exakt wie im Concept:
-  - `init(name: String = "", equipmentType: StudioEquipmentType = .machine, startWeight: Double = 0.0, increment: Double = 2.5, intermediateIncrements: [Double] = [])` — setzt diese Felder; `minWeight = startWeight`.
-- Hinweis-Kommentar über `intermediateIncrements`: "Zwischengewichte via Feintuning-Chips; standardmäßig leer".
-- **Keine `@Attribute(.transformable)` notwendig**: `[Double] = []` wird — analog zu `Exercise.primaryMusclesRaw: [String] = []` — von SwiftData/CloudKit inline gespeichert.
+  ```swift
+  var progressionMode: ProgressionMode {
+      get { ProgressionMode(rawValue: progressionModeRaw) ?? .smart }
+      set { progressionModeRaw = newValue.rawValue }
+  }
+  ```
+- Init exakt nach Concept:
+  ```swift
+  init(exerciseGroupKey: String = "", workingWeight: Double = 0.0) {
+      self.exerciseGroupKey = exerciseGroupKey
+      self.workingWeight = workingWeight
+  }
+  ```
+- MARK-Struktur analog `ExerciseRating.swift`:
+  - `// MARK: - Identifikation`
+  - `// MARK: - Übungs-Referenz`
+  - `// MARK: - Arbeitsgewicht`
+  - `// MARK: - Ziel-Reps`
+  - `// MARK: - Progressions-Modus`
+  - `// MARK: - Historie`
+  - `// MARK: - Metadaten`
+  - `// MARK: - Typisierter Modus (computed)`
+  - `// MARK: - Initialisierung`
 
-#### 4. `MotionCoreApp.swift` — Schema-Registrierung
+#### 3. `MotionCoreApp.swift` — Schema-Registrierung
 
-- In `private static let appSchema = Schema([...])` (Zeilen 39–48) die beiden neuen Models ergänzen:
-  - `Studio.self`
-  - `StudioEquipment.self`
-- Enum `StudioEquipmentType` wird **nicht** ins Schema aufgenommen (SwiftData-Schemata nehmen nur `@Model`-Typen).
-- Keine weiteren Änderungen im Container-Setup, kein Seeder-Call in dieser Stufe.
-- `PreviewModelContainer.swift` bleibt unverändert (registriert nur `CardioSession.self`; neue Models sind in Previews irrelevant, solange keine Preview sie nutzt).
+- In `private static let appSchema = Schema([...])` `ExerciseProgressionState.self` ergänzen.
+- Position: unmittelbar nach `StudioEquipment.self`:
+  ```swift
+  Studio.self,
+  StudioEquipment.self,
+  ExerciseProgressionState.self
+  ```
+- Enum `ProgressionMode` wird **nicht** ins Schema aufgenommen.
+- Kein Seeder, keine Default-Daten. `PreviewModelContainer.swift` unverändert.
 
-#### 5. Build-Validierung
+#### 4. Build-Validierung
 
-- Xcode `Cmd+B` auf iOS-Target.
-- Watch-Target-Build nicht betroffen (keine Änderungen an Watch-Dateien).
-- Launch im Simulator: Bestehende Daten (Sessions, Exercises, Pläne) müssen vollständig erhalten bleiben. Neue Tabellen im lokalen Store sind leer — erwartetes Verhalten.
+- Xcode `Cmd+B` iOS-Target.
+- watchOS-Build kontroll-grün halten (nicht betroffen).
+- Launch im Simulator: Bestehende Daten intakt. Neue Tabelle leer.
 
 ### Manuelle Tests
 
-1. App starten (Simulator) — kein Migrations-Crash, Home-Screen öffnet normal.
-2. Bestehende Übung öffnen → `ExerciseFormView` lädt ohne Fehler.
-3. Bestehende Session öffnen → `StrengthDetailView` lädt ohne Fehler.
+1. App starten — kein Migrations-Crash, Home-Screen öffnet normal.
+2. Bestehende Übung öffnen → `ExerciseFormView` ohne Fehler.
+3. Bestehende Session öffnen → `StrengthDetailView` ohne Fehler.
 4. Aktives Training starten + 1 Satz eintragen → speichert wie gehabt.
-5. Xcode-Console: keine SwiftData-Warnung zu fehlenden Inversen oder unknown types.
-6. (Optional, dev-safe) Debug-Insert via temporärer Test-View: `Studio(name: "Mein Studio", isPrimary: true)` + `StudioEquipment(name: "Kabelzug", equipmentType: .cable, startWeight: 1.25, increment: 2.5, intermediateIncrements: [0.625, 1.25])` — sollte fehlerfrei persistieren. Diese Testaktion **nicht committen**.
+5. Console: keine SwiftData-Warnung zu fehlenden Inversen oder unknown types. Speziell: KEIN "Missing inverse" für `ExerciseProgressionState` (keine Relationship deklariert).
+6. (Optional, dev-safe, nicht committen) Debug-Insert:
+   ```swift
+   let state = ExerciseProgressionState(exerciseGroupKey: "bench-press", workingWeight: 60.0)
+   state.progressionMode = .smart
+   context.insert(state); try? context.save()
+   ```
 
 ### Build-Check
 
@@ -210,16 +234,17 @@ Keine — additiver Schritt. Grep auf `Studio`, `StudioEquipment`, `StudioEquipm
 - [ ] watchOS build green (nicht betroffen, nur Kontrolle)
 - [ ] No new warnings
 - [ ] App launches
-- [ ] Bestehende Daten intakt (Sessions, Exercises, Pläne)
-- [ ] Affected views load without crash (Summary, ActiveWorkout, StrengthDetail, ExerciseList)
+- [ ] Bestehende Daten intakt (Sessions, Exercises, Pläne, Studios aus 1.1)
+- [ ] Affected views load without crash
 
 ### Risks / Open Questions
 
-- **Risiko CloudKit-Dedup-Bug:** `var id: UUID = UUID()` wird bei Schema-Migration nur einmal ausgewertet. Für `Studio`/`StudioEquipment` in 1.1 akzeptabel, da noch keine Records existieren; `deduplicateAllSyncUUIDs()` wird im Sync-Schritt 1.22 ggf. erweitert.
-- **Verzeichnis-Pfad:** Instruction-Doc nennt `MotionCore/Models/`; tatsächliche Struktur ist `MotionCore/Models/Core/`. Dieser Plan folgt der realen Struktur (konsistent mit `Exercise.swift`, `ExerciseRating.swift`, `TrainingPlan.swift`).
-- **Offene Frage — keine.** `[Double]` ist laut bestehender `[String]`-Nutzung in `Exercise` unbedenklich mit SwiftData+CloudKit. Falls der Dev-Build wider Erwarten einen Fehler wirft, Fallback: `@Attribute(.externalStorage)` prüfen — aber erst bei tatsächlichem Symptom, nicht präventiv.
+- **CloudKit-Dedup-Bug:** `var id: UUID = UUID()`-Default wird einmalig ausgewertet — für 1.2 akzeptabel, da noch keine Records. `deduplicateAllSyncUUIDs()` ggf. in 1.22 erweitern.
+- **Verzeichnis-Pfad:** Instruction-Doc nennt `MotionCore/Models/`; Realität `MotionCore/Models/Core/` — Plan folgt der Realität.
+- **Keine Relationship zu Exercise — bewusst:** Matching via `exerciseGroupKey` analog `ExerciseRating`. Vorteile: kein CloudKit-Inverse-Zwang, Exercise-Umbenennung ohne State-Verlust, Spontan-Übungen ohne persistiertes `Exercise` möglich (Concept §3.4: lazy init beim ersten Set-Abschluss).
+- **Keine Naming-Konflikte:** Grep-Validation bestätigt.
 
-🛑 **STOPP 1.1** — Nach erfolgreichem Build-Check und Barto-Sichtung warten auf Freigabe für Schritt 1.2.
+🛑 **STOPP 1.2** — Nach erfolgreichem Build-Check und Barto-Sichtung warten auf Freigabe für Schritt 1.3.
 
 ---
 
@@ -227,3 +252,5 @@ Keine — additiver Schritt. Grep auf `Studio`, `StudioEquipment`, `StudioEquipm
 
 - **2026-04-18** — Plan 1.1 erstellt.
 - **2026-04-18** — Schritt 1.1 implementiert. Dateien: `StudioEquipmentType.swift` (neu), `Studio.swift` (neu), `StudioEquipment.swift` (neu), `MotionCoreApp.swift` (Schema erweitert).
+- **2026-04-18** — Schritt 1.1 committed (5744842). Plan 1.2 erstellt.
+- **2026-04-18** — Schritt 1.2 implementiert. Dateien: `ProgressionMode.swift` (neu), `ExerciseProgressionState.swift` (neu), `MotionCoreApp.swift` (Schema erweitert).
