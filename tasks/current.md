@@ -103,7 +103,7 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.18** RIR-Sheet am letzten Satz — committed (0564bd4)
 - [x] **1.19** Quick-Config aus ActiveWorkout — committed (17076be)
 - [x] **1.20** Rollback-Insight-Karte + manueller Rollback
-- [ ] 1.21 `SessionQualityCalcEngine` + Integration *(geplant nach Freigabe)*
+- [x] **1.21** `SessionQualityCalcEngine` + Integration
 - [ ] 1.22 Supabase-Schema-Erweiterung *(geplant nach Freigabe)*
 
 ---
@@ -283,3 +283,4 @@ ConfirmationDialog:
 - **2026-04-18** — Schritt 1.17 implementiert (FineTuneChipsView + SetEditSheet-Einbau).
 - **2026-04-18** — Schritt 1.18 implementiert. RIRInputSheet + CompactRestTimerView + ActiveWorkoutView-Hooks + Cleanup-Helper.
 - **2026-04-18** — Schritt 1.20 implementiert. ProgressionRollbackService + RollbackInsightCard + SummaryView/SummaryViewModel-Integration + StrengthDetailView Manual-Button.
+- **2026-04-18** — Schritt 1.21 implementiert. SessionQualityCalcEngine.swift (neu, 108 Z), ActiveWorkoutView.swift (Engine-Aufruf nach session.complete()), StrengthDetailView.swift (Statline "Session-Qualität: X/100" in statisticsCard nach Bewertungs-Block).

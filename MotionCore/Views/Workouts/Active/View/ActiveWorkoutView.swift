@@ -983,6 +983,15 @@ struct ActiveWorkoutView: View {
         session.complete()
         session.duration = finalSeconds / 60
 
+        // Session-Qualitaetsscore berechnen
+        let qualityInput = SessionQualityCalcEngine.Input(
+            session: session,
+            allSets: session.safeExerciseSets,
+            readiness: nil  // Phase 1: noch keine Readiness verdrahtet
+        )
+        let qualityOutput = SessionQualityCalcEngine.calculate(input: qualityInput)
+        session.sessionQualityScore = qualityOutput.score
+
         // Health-Daten der letzten Übung speichern
         saveCurrentExerciseMetrics(forKey: selectedExerciseKey)
 

@@ -321,6 +321,20 @@ struct StrengthDetailView: View {
                     }
                 }
             }
+
+            // Session-Qualitaetsscore (nur anzeigen wenn berechnet)
+            if let score = session.sessionQualityScore {
+                Divider()
+
+                HStack(spacing: 6) {
+                    Image(systemName: "chart.bar.doc.horizontal")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text("Session-Qualität: \(score)/100")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
         .glassCard()
     }
