@@ -94,6 +94,13 @@ struct SupabaseFullBackupSection: View {
                 .padding(.vertical, 4)
             }
         }
+        .onAppear {
+            // Stuck-State-Guard: wenn progress .running zeigt aber kein Task laeuft
+            // (z.B. App-Kill mid-backup, Crash, Background-Kill) → zurueck auf idle.
+            if case .running = service.progress, !service.isRunning {
+                service.progress = .idle
+            }
+        }
     }
 
     // MARK: - Hilfsansichten
