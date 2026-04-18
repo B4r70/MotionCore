@@ -91,8 +91,8 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.3** Additive Model-Erweiterungen (Exercise + ExerciseSet + Readiness-Models + StrengthSession) — committed (d668e6b)
 - [x] **1.7** Cross-Reference-Check vor Legacy-Entfernung — Report liegt vor (`tasks/domain/2026-04-18-phase1-1.7-cross-reference-check.md`)
 - [ ] ~~1.8 TrendPoint-Extraktion~~ — **n/a, entfällt** (TrendPoint lebt bereits in StatisticCalcEngine.swift)
-- [ ] 1.9 Legacy-UI-Entfernung (Views) *(geplant nach Freigabe)*
-- [ ] 1.10 Legacy-CalcEngines + ViewModel entfernen *(geplant nach Freigabe)*
+- [x] **1.9** Legacy-UI-Entfernung (Views) — committed (726fce1) + Heatmap-Rewire (8c0f0db)
+- [x] **1.10** Legacy-CalcEngines + ViewModel entfernen *(implementiert 2026-04-18)*
 - [ ] 1.11 Exercise-Felder entfernen + SetConfigurationSheet-UI bereinigen *(geplant nach Freigabe)*
 - [ ] 1.12 Studio-Setup + Default-Seeder *(geplant nach Freigabe)*
 - [ ] 1.13 Medikamenten-Schalter in Settings *(geplant nach Freigabe)*
@@ -108,181 +108,92 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.9 — Legacy-UI-Entfernung (implementiert, wartet auf Build-Check)
+## Aktueller Schritt: 1.10 — Legacy-CalcEngines + ViewModel entfernen
 
-### Status
+### Ziel
 
-Implementierung abgeschlossen. Wartet auf Barto Build-Check (Xcode Cmd+B).
+3 veraltete Progression-Files löschen und `SummaryViewModel` bereinigen. Mit diesem Schritt ist das komplette Legacy-ViewModel/Engine-System entfernt. `ProgressionTypes.swift` bleibt bewusst bestehen — `ProgressionStrategy` wird in Exercise/SetConfigurationSheet/FormViewSection/ExerciseFormView noch aktiv genutzt und fällt erst in 1.11.
 
-### Kern-Erkenntnisse
+### Files
 
-- **Gruppe A (reine Löschung):** 17 Files (13 Views/Components + 1 ViewModel + 2 CalcEngines + 1 Types). Mehr als Instruction-Liste — zusätzlich als Legacy identifiziert: `LastWorkoutCompareCard`, `MiniSparkline`, `ProgressionSummaryCard`, `SummaryBestExerciseCard`, `ProgressionInsightCard`, `ProgressionBannerView`, `WorkoutAnalyseView`, `ExerciseProgressionView`.
-- **Gruppe B (Aufräumen):** 8 Files — kritisch: `BaseView` (Tab 4), `SummaryView` + `SummaryViewModel`, `ActiveWorkoutView`, `StrengthDetailView`, `ExerciseFormView`, `SetConfigurationSheet`, `FormViewSection`.
-- **Gruppe C (Typ-Extraktion):** **nicht nötig**. `TrendPoint` lebt bereits in `StatisticCalcEngine.swift`.
-- **Gruppe D (Navigation):** `BaseView.Tab.analyse` + 2 Sheet-Trigger (ActiveWorkoutView, StrengthDetailView).
-- **Gruppe E (Exercise-Felder):** 8 Felder, 6 externe Call-Sites in 3 Files.
-- **Watch-Target:** 0 Treffer — Progression ist iOS-only.
+**Löschen (3):**
+- `MotionCore/Services/Calculation/ProgressionCalcEngine.swift`
+- `MotionCore/Services/Calculation/ProgressionAnalyseCalcEngine.swift`
+- `MotionCore/Services/ViewModels/ProgressionViewModel.swift`
 
-### Empfehlungen für 1.8 – 1.11
+**Bereinigen (1):**
+- `MotionCore/Services/ViewModels/SummaryViewModel.swift`
 
-- **1.8 — n/a.** Skip: keine Extraktion nötig.
-- **1.9 — Scope erweitert:** zusätzlich zu Views auch direkte Engine-Calls in `ExerciseFormView`, `SummaryViewModel`, `ActiveWorkoutView` mitentfernen. `BaseView.Tab.analyse` aus Enum entfernen. 8 zusätzliche Files gegenüber Instruction-Liste identifiziert.
-- **1.10 — Reihenfolge anpassen:** `ProgressionTypes.swift` **nicht** in 1.10 löschen, sondern in 1.11. Grund: `ProgressionStrategy` lebt in Exercise/Forms/SummaryViewModel:113-Filter → 1.10 würde brechen. 1.10 löscht nur: `ProgressionCalcEngine`, `ProgressionAnalyseCalcEngine`, `ProgressionViewModel`. Zusätzlich Filter + Progressions-Zweig in SummaryViewModel entfernen.
-- **1.11 — Scope:** Exercise-Felder + `ExerciseProgressionSection` + SetConfig-State + ExerciseFormView-Bindings + **`ProgressionTypes.swift` hier löschen**. **Export.swift + SupabaseFullBackupService:** keine Änderung (Instruction-Annahme unzutreffend — die 4 Felder werden dort nicht serialisiert).
-- **Risiko 1.11:** mittel. `SetConfigurationSheet` mit 9 Stellen → Flüchtigkeitsgefahr.
+**NICHT anfassen:**
+- `MotionCore/Models/Types/ProgressionTypes.swift` (erst 1.11)
 
-### Offene Produktfragen (nicht blockierend)
+### Cross-Reference-Grep (Vorab-Check)
 
-- Soll `Views/Progression/` nach 1.9 in `Views/Heatmap/` umbenannt werden (nur Heatmap-Files bleiben dort)?
-- CLAUDE.md-Kommentar zu `BaseView.Tab` nach 1.9 auf 4 Tabs (`summary, workouts, stats, training`) aktualisieren.
+- `ProgressionCalcEngine` extern: nur `SummaryViewModel.swift:98, 267`
+- `ProgressionAnalyseCalcEngine` extern: 0
+- `ProgressionViewModel` extern: 0
+- `ProgressionAnalysis` extern: nur `SummaryViewModel.swift:29, 57` + Definition in `ProgressionTypes.swift:213`
+- `ProgressionRecommendation` extern: 0 (wurde bereits in 1.9 aus ActiveWorkoutView entfernt)
+- `progressionAnalyses`, `bestExerciseAnalysis`, `bestExerciseTrendPoints`, `recalculateBestExercise`: nur in `SummaryViewModel.swift` — 0 externe Leser
+- `SessionSnapshot`, `ProgressionConfidence`, `TrainingLevel`, `PerformanceTrend`, `ProgressionAction`: nach 1.10 nur noch in `ProgressionTypes.swift` (dead code bis 1.11)
 
-🛑 **STOPP 1.7** — Warte auf Barto-Freigabe für Schritt 1.9 (Legacy-UI-Entfernung) inkl. Scope-Anpassungen laut Report.
-
-### (archiviert) Detail-Plan 1.3 — Additive Model-Erweiterungen (gebündelt 1.3+1.4+1.5+1.6)
-
-Vollständig umgesetzt in Commit d668e6b. Für Referenz unten zusammengefasst.
-
-Alle additiven Model-Änderungen aus den Instruction-Schritten 1.3 + 1.4 + 1.5 + 1.6 in einem einzigen Commit: neue Felder auf `Exercise`, `ExerciseSet`, `StrengthSession`, zwei neue SwiftData-Models (`SessionReadiness`, `HealthBaseline`) + Enum `HealthMetricType`, Schema-Registrierung. Keine UI, keine CalcEngine, keine Seeder. Rein additiv — alte Legacy-Felder auf Exercise bleiben bis Schritt 1.11 unverändert.
-
-### Files (erwartet)
-
-- **NEU:** `MotionCore/Models/Core/HealthMetricType.swift`
-- **NEU:** `MotionCore/Models/Core/HealthBaseline.swift`
-- **NEU:** `MotionCore/Models/Core/SessionReadiness.swift`
-- **ÄNDERN:** `MotionCore/Models/Core/Exercise.swift` — 4 neue stored Properties + 1 computed + Init-Erweiterung
-- **ÄNDERN:** `MotionCore/Models/Core/ExerciseSet.swift` — 1 neues stored Property + Init + Clone-Anpassung
-- **ÄNDERN:** `MotionCore/Models/Core/StrengthSession.swift` — 2 neue stored Properties + Init-Erweiterung
-- **ÄNDERN:** `MotionCore/App/MotionCoreApp.swift` — `SessionReadiness.self`, `HealthBaseline.self` ins Schema
-
-### Cross-References (Vorab-Checks durchgeführt)
-
-**Naming-Konflikte — alle frei:**
-- `SessionReadiness`, `HealthBaseline`, `HealthMetricType`, `isLastSetOfExercise`: 0 Treffer in `MotionCore/`
-- `Exercise.progressionMode` (neu): kein Typ-Konflikt — `progressionMode` existiert bereits als computed auf `ExerciseProgressionState`, unterschiedlicher Receiver, kein Shadowing. Namespace `ProgressionMode` (Enum aus 1.2) identisch — gewollt.
-- Bestehende `HealthMetric*`-Files (`HealthMetricView`, `HealthMetricCalcEngine`, `HealthMetricCard` etc.) deklarieren kein `HealthMetricType` oder `HealthMetric`-Enum — keine Kollision.
-
-**Init-Call-Site-Analyse:**
-- `Exercise(...)` in 22 Files: neue Parameter mit Defaults → keine Call-Site bricht. Convenience-Inits delegieren an Primary-Init.
-- `ExerciseSet(...)` in 11 Files inkl. `cloneForSession` / `cloneForPlanEditing`: neuer Param mit Default `false` → alle Call-Sites grün. Clone-Methoden werden angepasst, Flag wird **nicht** kopiert.
-- `StrengthSession(...)` in 7 Files: neue Params optional mit `nil`-Default.
+**Abweichung vom 1.7-Report:** keine.
 
 ### Detail-Steps
 
-#### 1.3a — Exercise-Erweiterung (`Exercise.swift`)
+#### 1.10a — `SummaryViewModel.swift` bereinigen
 
-1. Nach bestehendem Progressions-Konfig-MARK-Block neue MARK-Sektion `// MARK: - Smart-Progression (v1.1)` mit folgenden stored Properties:
-   - `var studioEquipmentID: UUID? = nil` — "Soft-Link auf StudioEquipment.id (keine @Relationship)"
-   - `var customTargetReps: Int? = nil` — "Überschreibt repRangeMin/Max als expliziter Ziel-Wert"
-   - `var progressionModeRaw: String = "smart"` — "Rohwert für CloudKit-Kompatibilität"
-   - `var configNotes: String = ""` — "Freitext-Notiz, z.B. Geräte-spezifische Einstellung"
-2. Im Primary-`init` neue Parameter mit Defaults ergänzen (nach `lastProgressionDate`, vor `sortIndex`):
-   - `studioEquipmentID: UUID? = nil`, `customTargetReps: Int? = nil`, `progressionModeRaw: String = "smart"`, `configNotes: String = ""`
-   - Entsprechende Zuweisungen im Init-Body.
-3. Im computed-Extension-Block (nach `progressionStrategy`) neue Sektion `// MARK: - Smart-Progression (v1.1)` + computed:
-   ```swift
-   var progressionMode: ProgressionMode {
-       get { ProgressionMode(rawValue: progressionModeRaw) ?? .smart }
-       set { progressionModeRaw = newValue.rawValue }
-   }
-   ```
-4. **NICHT anfassen:** `progressionStrategyRaw`, `customProgressionStep`, `progressionSessionsRequired`, `minDaysBetweenProgressions`, `lastProgressionDate`, `effectiveProgressionStep`, `baseProgressionStep`, `canRecommendProgression`, Convenience-Inits.
+- Zeile 29 löschen: `private(set) var progressionAnalyses: [ProgressionAnalysis] = []`
+- Zeile 57 löschen: `private(set) var bestExerciseAnalysis: ProgressionAnalysis? = nil`
+- Zeile 58 löschen: `private(set) var bestExerciseTrendPoints: [TrendPoint] = []`
+- Zeilen 97–117 komplett entfernen (Progressions-Zweig in `recalculate(...)` inkl. `ProgressionCalcEngine()`-Instanziierung und Filter `progressionStrategy != .manual`)
+- Zeile 155 löschen: Aufruf `recalculateBestExercise(strength:progressionEngine:)`
+- Zeilen 260–293 komplett entfernen (`private func recalculateBestExercise(...)`)
+- Post-Cleanup-Grep: `Progression` sollte 0 Treffer in der Datei haben. `TrendPoint` ebenfalls 0 (Typ bleibt im Projekt, nur Usage hier weg).
 
-#### 1.3b — ExerciseSet-Erweiterung (`ExerciseSet.swift`)
+#### 1.10b — Legacy-Files löschen
 
-1. Nach `setKind`-Block (vor `// MARK: - Beziehungen`) neue Sektion `// MARK: - Smart-Progression (v1.1)` + Property:
-   - `var isLastSetOfExercise: Bool = false` — "True = letzter Work-Set der Übung in dieser Session → triggert RIR-Sheet (Schritt 1.18)"
-2. Im Primary-`init` neuer Param `isLastSetOfExercise: Bool = false` am Ende (nach `supersetGroupId`), Body entsprechend erweitern.
-3. **`cloneForSession()`:** Param **NICHT** durchreichen — Default `false` greift. Kommentar: "`isLastSetOfExercise` wird nicht kopiert — neuer Session-Satz ist zunächst nie der letzte".
-4. **`cloneForPlanEditing()`:** dito — Default `false`.
-5. **`convenience init(from exercise:)`:** nicht anpassen — Default greift.
-6. **NICHT anfassen:** `rpe`, `calculatedRIR`, `setKind`-Handling, Snapshots.
+```bash
+git rm MotionCore/Services/Calculation/ProgressionCalcEngine.swift
+git rm MotionCore/Services/Calculation/ProgressionAnalyseCalcEngine.swift
+git rm MotionCore/Services/ViewModels/ProgressionViewModel.swift
+```
 
-#### 1.3c — Neue Readiness-Modelle
+Xcode 16 PBXFileSystemSynchronizedRootGroup — keine `project.pbxproj`-Anpassung nötig.
 
-**`HealthMetricType.swift`:**
-- Header-Template analog `ProgressionMode.swift`, Beschreibung: "Metrik-Typen für HealthBaseline (HRV, Schlaf, Ruhepuls, Aktivität)"
-- Nur `import Foundation`
-- ```swift
-  enum HealthMetricType: String, Codable, CaseIterable {
-      case hrv
-      case sleep
-      case restingHR
-      case activity
-  }
-  ```
+#### 1.10c — Post-Delete-Verifikation
 
-**`HealthBaseline.swift`:**
-- Header analog `ExerciseProgressionState.swift`, Beschreibung: "Rollende Baseline (Mean/StdDev) pro Health-Metrik — Phase 2 befüllt"
-- `import Foundation`, `import SwiftData`
-- `@Model final class HealthBaseline` gemäß Concept 3.1.5: `id`, `metricTypeRaw`, `rollingMean`, `rollingStdDev`, `sampleCount`, `lastUpdated` — alle defaulted
-- Computed `metricType: HealthMetricType` (get/set, Fallback `.hrv`)
-- Init: `init(metricType: HealthMetricType = .hrv) { self.metricTypeRaw = metricType.rawValue }`
-- MARK: Identifikation / Metrik-Typ / Rolling-Statistik / Metadaten / Typisierter Accessor / Initialisierung
-- **Keine `@Relationship`** — standalone
-
-**`SessionReadiness.swift`:**
-- Header analog, Beschreibung: "Readiness-Snapshot pro Session — Phase 2 befüllt, in Phase 1 ungenutzt"
-- `@Model final class SessionReadiness` gemäß Concept 3.1.4: `id`, `sessionUUID: String?`, `capturedAt`, `hrvScore: Double?`, `sleepScore: Double?`, `restingHRScore: Double?`, `activityScore: Double?`, `userEnergyLevel: Int?`, `userStressLevelRaw: String?`, `overallScore: Int = 50`, `isCalibrating: Bool = false`
-- Init: `init() {}` — Concept-konform leer
-- MARK: Identifikation / Session-Referenz / Metrik-Scores / User-Input / Gesamt-Score / Initialisierung
-- **Keine `@Relationship`** — Matching via `sessionUUID` String in Phase 2
-
-#### 1.3d — StrengthSession-Erweiterung (`StrengthSession.swift`)
-
-1. Nach Sektion "Subjektive Bewertung für ML" neue Sektion `// MARK: - Smart-Progression (v1.1)` + Properties:
-   - `var sessionQualityScore: Int? = nil` — "0–100, berechnet durch SessionQualityCalcEngine (Schritt 1.21)"
-   - `var sessionReadinessID: UUID? = nil` — "Soft-Link auf SessionReadiness.id (Phase 2)"
-2. Im `init` neue Params am Ende vor `workoutType`: `sessionQualityScore: Int? = nil`, `sessionReadinessID: UUID? = nil`. Body erweitern.
-3. **NICHT anfassen:** bestehende Relationships, `complete()`, `start()`, Helpers, Computed-Properties.
-
-#### Schema-Registrierung (`MotionCoreApp.swift`)
-
-- Im `appSchema`-Array nach `ExerciseProgressionState.self`:
-  ```swift
-  Studio.self,
-  StudioEquipment.self,
-  ExerciseProgressionState.self,
-  SessionReadiness.self,
-  HealthBaseline.self
-  ```
-- `HealthMetricType` **nicht** ins Schema (Enum).
+Greps erwarten 0 Treffer (außer Type-Definitionen in `ProgressionTypes.swift`):
+- `ProgressionCalcEngine`, `ProgressionAnalyseCalcEngine`, `ProgressionViewModel`: 0
+- `ProgressionRecommendation`: 0
+- `progressionAnalyses`, `bestExerciseAnalysis`, `bestExerciseTrendPoints`, `recalculateBestExercise`: 0
+- `ProgressionAnalysis`: 1 Treffer (Definition in `ProgressionTypes.swift`)
 
 ### Manuelle Tests
 
-1. App starten — kein Migrations-Crash, Home-Screen öffnet.
-2. Bestehende Trainingsplan-Ansicht → keine Fehler.
-3. Bestehende Session im Detail öffnen (`StrengthDetailView`) → alle Felder, keine Crashes.
-4. Aktives Training starten + Satz eintragen + speichern → ok.
-5. Satz-Template aus Plan klonen (Session starten) → `isLastSetOfExercise == false` auf allen Clones.
-6. Plan-Satz-Edit-Sheet → ändern → zurück → keine Fehler (`cloneForPlanEditing` intakt).
-7. Console: keine "Missing inverse"-Warnung (weder `SessionReadiness`, `HealthBaseline`, noch `studioEquipmentID`).
-8. Console: keine "unknown type"-Warnung.
-9. `ExerciseRating`-Flow unverändert funktional.
-10. `ProgressionAnalyseView` (Legacy, entfernt erst 1.9) öffnet weiterhin ohne Crash.
+1. App starten — kein Crash, kein Migrations-Fehler (reine Code-Löschung, kein Schema-Touch).
+2. Summary-Tab öffnen — alle Karten rendern, keine Lücke durch fehlendes `bestExerciseAnalysis`.
+3. Timeframe-Wechsel (Woche/Monat/Jahr/All) — `recalculateFiltered` unverändert.
+4. StatsAndRecords: Statistiken + Rekorde + Heatmap funktional.
+5. Active-Workout: Satz eintragen + speichern.
+6. StrengthDetailView: lädt, keine Banner-Referenz.
+7. ExerciseFormView: `ExerciseProgressionSection` noch sichtbar (bleibt bis 1.11).
 
 ### Build-Check
 
 - [ ] iOS build green
-- [ ] watchOS build green (nicht direkt betroffen, Kontrolle)
-- [ ] No new warnings
-- [ ] App launches, kein Migrations-Crash
-- [ ] Bestehende Sessions/Pläne/Übungen/Studios intakt
-- [ ] ActiveWorkoutView, StrengthDetailView, TrainingFormView, ExerciseFormView laden
-- [ ] ProgressionAnalyseView (Legacy) lädt weiterhin
+- [ ] watchOS build green (Kontrolle)
+- [ ] Keine neuen Warnings
+- [ ] App launcht
 
-### Risks / Open Questions
+### Risks
 
-1. **Größerer Revert-Scope als 1.1/1.2:** 6 geänderte/neue Files in einem Commit, 3 bestehende Models gleichzeitig berührt. Bei Migrations-Fehler: `git revert` des einen Commits als Exit.
-2. **CloudKit-Propagation:** 4 neue Felder auf `Exercise`, 1 auf `ExerciseSet`, 2 auf `StrengthSession` — alle additiv, lightweight. Erster Sync auf Device kann länger dauern.
-3. **Clone-Methoden-Subtle-Bug:** `isLastSetOfExercise` darf nicht durchgereicht werden — explizit im Plan markiert.
-4. **Bestehende Exercises:** `progressionModeRaw = "smart"` als Default heißt, alle alten Übungen verhalten sich ab 1.14 wie Smart-Mode. Concept-konform, gewollt.
-5. **`customTargetReps: Int?`** noch nicht verdrahtet — Feld existiert, Nutzung erst in 1.14/1.16.
-6. **Typ-Inkonsistenz `sessionReadinessID: UUID?` ↔ `SessionReadiness.sessionUUID: String?`** folgt dem Concept. Konvertierung in Phase 2 via `UUID.uuidString`. Nicht in 1.3 korrigieren.
-7. **File-Size:** `Exercise.swift` ~535, `ExerciseSet.swift` ~315, `StrengthSession.swift` ~310 — alle unter 600-Warnschwelle.
+- **Build-Grün-Risiko niedrig.** Einzige externe Konsumenten (`SummaryViewModel`-Zweig) werden in 1.10a proaktiv bereinigt. Alle UI-Konsumenten wurden in 1.9 entfernt.
+- **`ProgressionTypes.swift` wird dead code** — gewollt, Löschung in 1.11.
+- **CloudKit / SwiftData:** keine Schema-Änderung.
+- **Watch-Target:** unberührt.
 
-**Offene Fragen:** keine. Alle Details aus Concept 3.1.4/3.1.5/3.2.1–3.2.3 eindeutig.
-
-(Plan 1.3 umgesetzt und committed — siehe Fortschritt.)
+🛑 **STOPP 1.10** — Warte auf Freigabe für Developer-Start.
 
 ---
 
@@ -297,3 +208,5 @@ Alle additiven Model-Änderungen aus den Instruction-Schritten 1.3 + 1.4 + 1.5 +
 - **2026-04-18** — Schritt 1.3 implementiert. Dateien: HealthMetricType.swift (neu), HealthBaseline.swift (neu), SessionReadiness.swift (neu), Exercise.swift (+4 Felder), ExerciseSet.swift (+1 Feld), StrengthSession.swift (+2 Felder), MotionCoreApp.swift (Schema +2).
 - **2026-04-18** — Schritt 1.3 committed (d668e6b). Bug-Fix (162877e) committed. Schritt 1.7 Cross-Reference-Check durchgeführt, Report unter `tasks/domain/2026-04-18-phase1-1.7-cross-reference-check.md`. 1.8 entfällt (n/a).
 - **2026-04-18** — Heatmap-Rewire: MuscleHeatmapView als 3. Segment in StatsAndRecordsView integriert (Followup zu 1.9).
+- **2026-04-18** — Schritt 1.9 committed (726fce1). Heatmap-Rewire committed (8c0f0db). Plan 1.10 erstellt.
+- **2026-04-18** — Schritt 1.10 implementiert. 3 Legacy-Files gelöscht, SummaryViewModel bereinigt.

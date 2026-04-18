@@ -26,9 +26,6 @@ struct SummaryView: View {
     @Query(sort: \OutdoorSession.date, order: .reverse)
     private var outdoorSessions: [OutdoorSession]
 
-    @Query(sort: \Exercise.name)
-    private var exercises: [Exercise]
-
     // MARK: - Environment
 
     @EnvironmentObject private var appSettings: AppSettings
@@ -191,7 +188,6 @@ struct SummaryView: View {
                 cardio: cardioSessions,
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
-                exercises: exercises,
                 timeframe: selectedTimeframe,
                 weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
@@ -202,7 +198,6 @@ struct SummaryView: View {
                 cardio: new,
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
-                exercises: exercises,
                 timeframe: selectedTimeframe,
                 weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
@@ -212,7 +207,6 @@ struct SummaryView: View {
                 cardio: cardioSessions,
                 strength: new,
                 outdoor: outdoorSessions,
-                exercises: exercises,
                 timeframe: selectedTimeframe,
                 weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
@@ -222,17 +216,6 @@ struct SummaryView: View {
                 cardio: cardioSessions,
                 strength: strengthSessions,
                 outdoor: new,
-                exercises: exercises,
-                timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
-            )
-        }
-        .onChange(of: exercises) { _, new in
-            viewModel.recalculate(
-                cardio: cardioSessions,
-                strength: strengthSessions,
-                outdoor: outdoorSessions,
-                exercises: new,
                 timeframe: selectedTimeframe,
                 weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
@@ -251,7 +234,6 @@ struct SummaryView: View {
                 cardio: cardioSessions,
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
-                exercises: exercises,
                 timeframe: selectedTimeframe,
                 weeklyGoalTarget: appSettings.weeklyWorkoutGoal
             )
