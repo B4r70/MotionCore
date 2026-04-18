@@ -101,86 +101,132 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.16** Smart-Fill im ActiveWorkoutView — committed (548eb0f)
 - [x] **1.17** Feintuning-Chips für Zwischengewichte — committed (e0abe61)
 - [x] **1.18** RIR-Sheet am letzten Satz — committed (0564bd4)
-- [x] **1.19** Quick-Config aus ActiveWorkout *(implementiert 2026-04-18)*
-- [ ] 1.20 Rollback-Insight-Karte + manueller Rollback *(geplant nach Freigabe)*
+- [x] **1.19** Quick-Config aus ActiveWorkout — committed (17076be)
+- [x] **1.20** Rollback-Insight-Karte + manueller Rollback
 - [ ] 1.21 `SessionQualityCalcEngine` + Integration *(geplant nach Freigabe)*
 - [ ] 1.22 Supabase-Schema-Erweiterung *(geplant nach Freigabe)*
 
 ---
 
-## Aktueller Schritt: 1.19 — Quick-Config aus ActiveWorkout + ExerciseFormView-Integration
+## Aktueller Schritt: 1.20 — Rollback-Insight-Karte + manueller Rollback
 
 ### Ziel
 
-Im aktiven Training ein ⚙️-Icon am Übungskopf → Quick-Config-Sheet mit Übungsname, aktuellem Studio-Gerät (oder "—"), Ziel-Reps, Progression-Mode, Notiz. Button "Zur Übung bearbeiten" pushed auf `ExerciseFormView`. Dort neue Smart-Progression-v1.1-Felder (studioEquipmentID, customTargetReps, progressionMode, configNotes) UI-seitig integriert.
+SummaryView zeigt eine aggregierende Rollback-Insight-Karte (max 3 Übungen), wenn `RollbackDetectionCalcEngine.detect(...)` `shouldSuggestRollback == true` liefert. Pro Übungszeile: 3 Aktionen (Zurück auf X kg / Weiter versuchen / Ich trage selbst ein). Manueller Rollback-Button in `StrengthDetailView` pro Exercise-Block mit Bestätigungsdialog. Writes über neuen `ProgressionRollbackService` (pure static struct).
 
 ### Files
 
-**NEU (1):**
-- `MotionCore/Views/Workouts/Active/Components/ExerciseQuickConfigSheet.swift` (~180 Zeilen)
+**NEU (2):**
+- `MotionCore/Services/ProgressionRollbackService.swift` (~90 Z)
+- `MotionCore/Views/Summary/Components/RollbackInsightCard.swift` (~180 Z)
 
-**ÄNDERN (4):**
-- `MotionCore/Components/Forms/FormViewSection.swift` — 4 neue Sections (`ExerciseStudioEquipmentSection`, `ExerciseCustomTargetRepsSection`, `ExerciseProgressionModeSection`, `ExerciseConfigNotesSection`)
-- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — Sub-Block "Smart Progression" zwischen `ExerciseRepRangeSection` und `ExerciseCautionNoteSection`
-- `MotionCore/Views/Workouts/Active/Components/ActiveSetCard.swift` — ⚙️-Button neben `figure.run.square.stack`, optionale `onOpenQuickConfig`-Closure
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `@State quickConfigExercise: Exercise?` + Callback-Binding + `.sheet(item:)` (~15 Zeilen)
+**ÄNDERN (3):**
+- `MotionCore/Services/ViewModels/SummaryViewModel.swift` — neuer DTO `RollbackSuggestion`, `rollbackSuggestions`-State, `recalculateRollbackSuggestions(states:strengthSessions:)`
+- `MotionCore/Views/Summary/View/SummaryView.swift` — `@Query ExerciseProgressionState`, Karte zwischen `SummaryTrendCard` und `TimeframePicker`
+- `MotionCore/Views/Workouts/Components/StrengthDetailView.swift` — Manual-Button im Exercise-Block-Header + ConfirmationDialog
 
-### Navigation-Flow
+### Service-API
 
-1. ⚙️-Tap in `ActiveSetCard` → `quickConfigExercise = resolvedExercise` → Sheet öffnet
-2. Sheet zeigt Übersichts-Card (read-only) + NavigationLink "Zur Übung bearbeiten"
-3. Push → `ExerciseFormView(mode: .edit, exercise: ..., showDeleteButton: false)` im Sheet-internen NavigationStack
-4. Save-Toolbar → `try? context.save()` + `dismiss()` → zurück auf Quick-Config-Übersicht (aktualisierte Werte)
-5. "Fertig" / Swipe-Down → zurück ins aktive Training, nächster Prefill nutzt neue Werte
+```swift
+struct ProgressionRollbackService {
+    static func applyRollback(state:in:)      // workingWeight = previousWorkingWeight,
+                                              // lastRollbackDate = now,
+                                              // consecutiveFailCount = 0,
+                                              // lastProgressionDate = nil
+    static func dismissSuggestion(state:in:)  // consecutiveFailCount = 0,
+                                              // lastRollbackDate = now (Cooldown)
+    static func switchToAdvanced(state:in:)   // progressionMode = .advanced
+    static func manualRollback(state:in:)     // Guard previousWorkingWeight != nil,
+                                              // identisch zu applyRollback
+}
+```
 
-### Sheet-Layout
+Alle setzen `updatedAt = now` + `try? context.save()`.
 
-- `NavigationStack { ScrollView { VStack { glassCard Übersicht + NavigationLink-Button } } }`
-- Card-Zeilen: Übungsname (title3 bold), Studio-Gerät / Ziel-Reps / Modus / Notiz
-- `.presentationDetents([.medium, .large])` + `.presentationDragIndicator(.visible)`
-- Background `AnimatedBackground(showAnimatedBlob:)`
-- Toolbar: "Fertig" (cancellationAction)
-- `@Query` für `StudioEquipment`-Name-Lookup
-- Computed-Helper: `equipmentName`, `repRangeDisplay`, `modeLabel`
+### UI-Layout RollbackInsightCard
 
-### ExerciseFormView-Section-Position
+```
+⚠ Rollback vorgeschlagen
+Zwei schwache Sessions nach letzter Progression.
+──────────────────────────
+Bankdrücken            80 → 75 kg
+[Zurück auf 75 kg]
+[Weiter versuchen]  [Ich trage selbst ein]
+──────────────────────────
+Beinpresse           120 → 113 kg
+...
+```
 
-Zwischen Zeile 112 (`ExerciseRepRangeSection`) und Zeile 115 (`ExerciseCautionNoteSection`). Header "Smart Progression" als `Text(...).font(.headline)`. Reihenfolge: Studio-Gerät → Ziel-Reps → Modus → Notiz.
+- `.glassCard()` mit Warnung-Header (orange)
+- Pro Zeile: Name + Weight-Preview + 3 Buttons (primary borderedProminent, secondary bordered)
+- Max 3 Zeilen, bei >3: "+N weitere Vorschläge…"
+- Wenn `previousWeight == nil`: "Zurück"-Button disabled
 
-### ⚙️-Icon-Platzierung (ActiveSetCard)
+### SummaryViewModel-Erweiterung
 
-Neuer trailing Button **rechts neben** Anleitungs-Icon. SF-Symbol `gearshape`, gleicher Circle-glass-Hintergrund, Farbe `.secondary`. Nur sichtbar wenn `onOpenQuickConfig != nil`.
+```swift
+struct RollbackSuggestion: Identifiable {
+    let id: PersistentIdentifier
+    let state: ExerciseProgressionState
+    let exerciseName: String
+    let currentWeight: Double
+    let previousWeight: Double?
+    let reasoning: String
+}
 
-### Picker-Binding-Details
+private(set) var rollbackSuggestions: [RollbackSuggestion] = []
+```
 
-- `studioEquipmentID: Binding<UUID?>` — `.tag(UUID?.none)` für "Kein Gerät" + `.tag(Optional(eq.id))` pro Equipment
-- `customTargetReps: Binding<Int?>` — Toggle + Stepper (Toggle on = Default 8, off = nil)
-- `progressionMode` — manuelles `Binding(get:set:)` (computed, kein Stored-Property)
-- `configNotes` — TextField `axis: .vertical`, 2..4 Zeilen
+Neue Methode `recalculateRollbackSuggestions(states:strengthSessions:)`:
+- Für jeden aktiven State: die 2 neuesten Sessions mit Sets dieses `groupKey` holen
+- Cooldown: wenn `lastRollbackDate` gesetzt, nur zeigen wenn neueste Session-Date > lastRollbackDate
+- `RollbackDetectionCalcEngine.detect(...)` aufrufen
+- Bei `shouldSuggestRollback`: Suggestion anfügen
+- Array auf max 3 Einträge truncaten
 
-### Cross-References
+Aufruf in `recalculate(...)` nach `ratingInsights`.
 
-- `Exercise` Smart-Progression-v1.1 Felder aus 1.3
-- `@Query StudioEquipment` Pattern identisch zu `SetEditSheet:24` (1.17)
-- Sheet-Edit-Pattern aus `StrengthDetailView:91-96`: `.sheet(item:) { NavigationStack { ExerciseFormView(mode: .edit, showDeleteButton: false) } }`
+### StrengthDetailView Manual-Button
+
+Im Exercise-Block-Header (neben Edit-Icon):
+```swift
+if let groupKey = sets.first?.groupKey,
+   let state = progressionState(for: groupKey),
+   state.previousWorkingWeight != nil {
+    Button { rollbackCandidate = state } label: {
+        Image(systemName: "arrow.uturn.backward.circle")
+            .font(.title3)
+            .foregroundStyle(.orange)
+    }
+}
+```
+
+ConfirmationDialog:
+- Message: "Aktuell: X kg → Rollback auf Y kg"
+- Destructive: "Zurück auf Y kg"
+- Cancel: "Abbrechen"
+
+### Logik: Wann zeigen / unterdrücken
+
+**Zeigen:** `state.isActive` + ≥2 Sessions mit groupKey + Engine `shouldSuggestRollback` + (`lastRollbackDate == nil` ODER neueste Session-Date > `lastRollbackDate`)
+
+**Unterdrücken:**
+- "Zurück": `lastRollbackDate = now` → Cooldown
+- "Weiter versuchen": `lastRollbackDate = now` (Dismiss-Cooldown, doppelt belegt)
+- "Advanced": `progressionMode = .advanced` → Engine liefert `.noProgression`
+- `consecutiveFailCount = 0` (in Phase 1 wird Counter nie > 0 gesetzt → reiner Anti-Spam via Cooldown)
 
 ### Manuelle Tests
 
-1. ⚙️-Icon sichtbar + tappbar
-2. Sheet öffnet mit richtigem Exercise
-3. "—" wenn `studioEquipmentID` nil, sonst Equipment-Name
-4. Ziel-Reps: `customTargetReps` wenn gesetzt, sonst `"min-max"`
-5. Modus-Label: Smart/Advanced/Aus
-6. Notiz-Block nur wenn != leer
-7. "Zur Übung bearbeiten" pushed korrekt
-8. Neue 4 Sections in ExerciseFormView nach Rep-Range sichtbar
-9. Equipment-Picker listet "Kein Gerät" + alle StudioEquipment
-10. Auswahl persistiert nach Sheet-Close/Open
-11. `customTargetReps`-Toggle off → nil, on → Stepper 1..30
-12. Progression-Mode schreibt `progressionModeRaw`
-13. `configNotes` mehrzeilig
-14. Delete-Button versteckt
-15. Edit zurück → Quick-Config spiegelt neue Werte → Fertig → nächster Prefill nutzt neuen Equipment-Weight
+1. Leerer State → keine Karte
+2. Ein Kandidat → 1 Zeile mit 3 Buttons
+3. "Zurück" Tap → workingWeight=previousWorkingWeight, lastRollbackDate=now, lastProgressionDate=nil, Karte weg
+4. "Weiter versuchen" → Cooldown aktiv, Karte weg, kommt nach neuer schlechter Session zurück
+5. "Ich trage selbst ein" → `progressionMode = .advanced`, Karte weg permanent
+6. `previousWorkingWeight == nil` → "Zurück"-Button disabled
+7. StrengthDetail Manual-Button: Tap → Dialog → Bestätigung → workingWeight aktualisiert
+8. >3 Kandidaten → 3 + "+N weitere"
+9. Preview iPhone 15 + SE: kein Button-Overflow
 
 ### Build-Check
 
@@ -191,18 +237,18 @@ Neuer trailing Button **rechts neben** Anleitungs-Icon. SF-Symbol `gearshape`, g
 
 ### Risks
 
-1. **ActiveWorkoutView bei 2227 Zeilen** — +15 Zeilen ok, Split bleibt separater Refactor nach 1.19
-2. **Optional-UUID-Picker-Tag**: `.tag(UUID?.none)` + `.tag(Optional(id))` zwingend
-3. **`progressionMode`-Binding**: Computed → `Binding(get:set:)` manuell
-4. **Leerer StudioEquipment-Store**: Picker zeigt nur "Kein Gerät", UX akzeptabel
+1. **Performance Recalc:** bei großer Session-Historie O(N×M) — akzeptabel für <50 States, <500 Sessions
+2. **`lastRollbackDate` doppelbelegt** (Rollback ausgeführt vs. Dismiss) — vertretbar im MVP
+3. **`consecutiveFailCount`-Increment** fehlt in Phase 1 → Anti-Spam läuft über Cooldown, nicht über Counter
 
 ### Offene Produktfragen
 
-1. Notiz-Block mit "Notiz hinzufügen"-Shortcut bei leerer Notiz? → **Vorschlag: nein**, Edit-Navigation reicht
-2. Inline-Link zu `StudioSetupView` wenn Equipment-Store leer? → **Vorschlag: nein in 1.19**
-3. ⚙️-Button auch im RestTimer/nextSet-Block? → **Vorschlag: nein**, ein Entry-Point pro Übung
+1. **`lastRollbackDate` als Dismiss-Marker doppelbelegen?** → Vorschlag: **ja**, MVP einfacher
+2. **Max-Anzeige: 3 + "+N weitere" vs. scrollbare Liste?** → Vorschlag: **3 + Hinweis**
+3. **`previousWorkingWeight == nil` in Summary-Karte:** Button disabled oder Zeile verstecken? → Vorschlag: **verstecken** (konsistent zu StrengthDetail)
+4. **`applyRollback` soll `lastProgressionDate` nullen?** → Vorschlag: **ja** (verhindert Re-Detection)
 
-🛑 **STOPP 1.19** — Warte auf Entscheidungen zu den 3 Produktfragen + Freigabe.
+🛑 **STOPP 1.20** — Warte auf Entscheidungen zu den 4 Produktfragen + Freigabe.
 
 ---
 
@@ -230,8 +276,10 @@ Neuer trailing Button **rechts neben** Anleitungs-Icon. SF-Symbol `gearshape`, g
 - **2026-04-18** — Schritt 1.15 committed (d322ad2). Plan 1.16 erstellt.
 - **2026-04-18** — Schritt 1.16 committed (548eb0f). Schritt 1.17 committed (e0abe61). Plan 1.18 erstellt.
 - **2026-04-18** — Schritt 1.18 committed (0564bd4). Plan 1.19 erstellt.
+- **2026-04-18** — Schritt 1.19 committed (17076be). Plan 1.20 erstellt.
 - **2026-04-18** — Schritt 1.19 implementiert. ExerciseQuickConfigSheet (141 Zeilen, neu) + 4 neue FormSections in FormViewSection.swift (1414 Zeilen) + Smart-Progression-Sub-Block in ExerciseFormView.swift (218 Zeilen) + ⚙️-Button in ActiveSetCard.swift (276 Zeilen) + @State/Callback/Sheet-Hook in ActiveWorkoutView.swift (2236 Zeilen).
 - **2026-04-18** — Schritt 1.16 implementiert. Resolver + SmartFillViewModel + ExerciseSet.isEngineSuggestion + ActiveWorkoutView-Hooks + ActiveSetCard-Badge/Reasoning-Label.
 - **2026-04-18** — Schritt 1.16 Scope-Korrektur: Produktfragen 2A + 3A (Reasoning-Label entfernt, ExerciseSet.isEngineSuggestion entfernt, Tracking zurück auf In-Memory Dictionary im ViewModel).
 - **2026-04-18** — Schritt 1.17 implementiert (FineTuneChipsView + SetEditSheet-Einbau).
 - **2026-04-18** — Schritt 1.18 implementiert. RIRInputSheet + CompactRestTimerView + ActiveWorkoutView-Hooks + Cleanup-Helper.
+- **2026-04-18** — Schritt 1.20 implementiert. ProgressionRollbackService + RollbackInsightCard + SummaryView/SummaryViewModel-Integration + StrengthDetailView Manual-Button.

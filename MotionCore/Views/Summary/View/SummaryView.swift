@@ -26,8 +26,12 @@ struct SummaryView: View {
     @Query(sort: \OutdoorSession.date, order: .reverse)
     private var outdoorSessions: [OutdoorSession]
 
+    @Query(sort: \ExerciseProgressionState.updatedAt, order: .reverse)
+    private var progressionStates: [ExerciseProgressionState]
+
     // MARK: - Environment
 
+    @Environment(\.modelContext) private var context
     @EnvironmentObject private var appSettings: AppSettings
 
     // MARK: - State
@@ -82,6 +86,22 @@ struct SummaryView: View {
                         caloriesTrend: viewModel.caloriesTrend,
                         durationTrend: viewModel.durationTrend
                     )
+
+                    // 3b. Rollback-Insight-Karte (nur bei aktiven Vorschlägen)
+                    if !viewModel.rollbackSuggestions.isEmpty {
+                        RollbackInsightCard(
+                            suggestions: viewModel.rollbackSuggestions,
+                            onRollback: { state in
+                                ProgressionRollbackService.applyRollback(state: state, in: context)
+                            },
+                            onContinue: { state in
+                                ProgressionRollbackService.dismissSuggestion(state: state, in: context)
+                            },
+                            onSwitchToAdvanced: { state in
+                                ProgressionRollbackService.switchToAdvanced(state: state, in: context)
+                            }
+                        )
+                    }
 
                     // 4. TimeframePicker
                     TimeframePicker(selection: $selectedTimeframe)
@@ -189,7 +209,8 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
                 timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
+                progressionStates: progressionStates
             )
             refreshCalendarData()
         }
@@ -199,7 +220,8 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
                 timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
+                progressionStates: progressionStates
             )
         }
         .onChange(of: strengthSessions) { _, new in
@@ -208,7 +230,8 @@ struct SummaryView: View {
                 strength: new,
                 outdoor: outdoorSessions,
                 timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
+                progressionStates: progressionStates
             )
         }
         .onChange(of: outdoorSessions) { _, new in
@@ -217,7 +240,18 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: new,
                 timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
+                progressionStates: progressionStates
+            )
+        }
+        .onChange(of: progressionStates) { _, _ in
+            viewModel.recalculate(
+                cardio: cardioSessions,
+                strength: strengthSessions,
+                outdoor: outdoorSessions,
+                timeframe: selectedTimeframe,
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
+                progressionStates: progressionStates
             )
         }
         .onChange(of: selectedTimeframe) { _, new in
@@ -235,7 +269,8 @@ struct SummaryView: View {
                 strength: strengthSessions,
                 outdoor: outdoorSessions,
                 timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal
+                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
+                progressionStates: progressionStates
             )
         }
         .onChange(of: displayedMonth) { _, _ in

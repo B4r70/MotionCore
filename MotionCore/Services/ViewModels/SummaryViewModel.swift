@@ -13,6 +13,7 @@
 //
 import Foundation
 import Observation
+import SwiftData
 
 @Observable
 final class SummaryViewModel {
@@ -58,6 +59,19 @@ final class SummaryViewModel {
 
     private(set) var ratingInsights: [RatingInsightCalcEngine.ExerciseInsight] = []
 
+    // MARK: - Rollback-Vorschläge
+
+    struct RollbackSuggestion: Identifiable {
+        let id: PersistentIdentifier
+        let state: ExerciseProgressionState
+        let exerciseName: String
+        let currentWeight: Double
+        let previousWeight: Double?
+        let reasoning: String
+    }
+
+    private(set) var rollbackSuggestions: [RollbackSuggestion] = []
+
     // MARK: - Gecachte Werte (timeframe-gefiltert)
 
     private(set) var filteredTotalWorkouts: Int = 0
@@ -77,7 +91,8 @@ final class SummaryViewModel {
         strength: [StrengthSession],
         outdoor: [OutdoorSession],
         timeframe: SummaryTimeframe,
-        weeklyGoalTarget: Int = 4
+        weeklyGoalTarget: Int = 4,
+        progressionStates: [ExerciseProgressionState] = []
     ) {
         let engine = SummaryCalcEngine(cardio: cardio, strength: strength, outdoor: outdoor)
 
@@ -127,6 +142,9 @@ final class SummaryViewModel {
 
         // Bewertungs-Insights (auffällige Muster aus den letzten Sessions)
         self.ratingInsights = RatingInsightCalcEngine().analyze(sessions: strength)
+
+        // Rollback-Vorschläge (aktive States + Engine-Check)
+        recalculateRollbackSuggestions(states: progressionStates, strengthSessions: strength)
 
         // Motivations-Kontext
         let xpEngine = XPCalcEngine(
@@ -231,6 +249,64 @@ final class SummaryViewModel {
         let totalXP = xpEngine.calculateTotalXP()
         self.xpLevel = xpEngine.calculateLevel(totalXP: totalXP)
         self.recentXPGains = xpEngine.recentXPGains()
+    }
+
+    private func recalculateRollbackSuggestions(
+        states: [ExerciseProgressionState],
+        strengthSessions: [StrengthSession]
+    ) {
+        var result: [RollbackSuggestion] = []
+
+        for state in states where state.isActive {
+            // Guard: previousWorkingWeight muss existieren (Zeile wird sonst versteckt)
+            guard state.previousWorkingWeight != nil else { continue }
+
+            let groupKey = state.exerciseGroupKey
+
+            // Letzte 2 abgeschlossene Sessions mit Sets dieses groupKey (neueste zuerst)
+            let relevantSessionSets = strengthSessions
+                .filter { $0.isCompleted }
+                .sorted { $0.date > $1.date }
+                .compactMap { session -> [ExerciseSet]? in
+                    let sets = session.safeExerciseSets.filter { $0.groupKey == groupKey }
+                    return sets.isEmpty ? nil : sets
+                }
+            let last2 = Array(relevantSessionSets.prefix(2))
+            guard last2.count >= 2 else { continue }
+
+            // Cooldown-Check: Karte nur zeigen wenn neueste Session nach lastRollbackDate liegt
+            if let lastRollback = state.lastRollbackDate {
+                let newestSessionDate = strengthSessions
+                    .filter { $0.isCompleted && $0.safeExerciseSets.contains { $0.groupKey == groupKey } }
+                    .map { $0.date }
+                    .max()
+                if let date = newestSessionDate, date <= lastRollback {
+                    continue
+                }
+            }
+
+            // Engine konsultieren
+            let output = RollbackDetectionCalcEngine.detect(
+                input: .init(progressionState: state, last2Sessions: last2)
+            )
+            guard output.shouldSuggestRollback else { continue }
+
+            // Übungsname aus neuester Session
+            let name = last2.first?.first?.exerciseNameSnapshot.isEmpty == false
+                ? last2.first!.first!.exerciseNameSnapshot
+                : groupKey
+
+            result.append(RollbackSuggestion(
+                id: state.persistentModelID,
+                state: state,
+                exerciseName: name,
+                currentWeight: state.workingWeight,
+                previousWeight: output.previousWeight,
+                reasoning: output.reasoning
+            ))
+        }
+
+        rollbackSuggestions = result
     }
 
 }

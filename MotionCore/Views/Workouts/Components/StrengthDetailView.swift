@@ -20,9 +20,12 @@ struct StrengthDetailView: View {
 
     @Bindable var session: StrengthSession
 
+    @Query private var progressionStates: [ExerciseProgressionState]
+
     @State private var showDeleteAlert = false
     @State private var showEditSheet = false
     @State private var exerciseToEdit: Exercise? = nil
+    @State private var rollbackCandidate: ExerciseProgressionState? = nil
 
     var body: some View {
         ZStack {
@@ -93,6 +96,30 @@ struct StrengthDetailView: View {
                 ExerciseFormView(mode: .edit, exercise: exercise, showDeleteButton: false)
                     .environmentObject(appSettings)
             }
+        }
+        .confirmationDialog(
+            "Arbeitsgewicht zurücksetzen?",
+            isPresented: Binding(
+                get: { rollbackCandidate != nil },
+                set: { if !$0 { rollbackCandidate = nil } }
+            ),
+            titleVisibility: .visible,
+            presenting: rollbackCandidate
+        ) { state in
+            Button(
+                "Zurück auf \(formatWeight(state.previousWorkingWeight ?? 0)) kg",
+                role: .destructive
+            ) {
+                ProgressionRollbackService.manualRollback(state: state, in: context)
+                rollbackCandidate = nil
+            }
+            Button("Abbrechen", role: .cancel) {
+                rollbackCandidate = nil
+            }
+        } message: { state in
+            Text(
+                "Aktuell: \(formatWeight(state.workingWeight)) kg → Rollback auf \(formatWeight(state.previousWorkingWeight ?? 0)) kg"
+            )
         }
     }
 
@@ -383,6 +410,20 @@ struct StrengthDetailView: View {
                         .foregroundStyle(Color.green)
                 }
 
+                // Rollback-Button (nur wenn vorheriges Arbeitsgewicht bekannt)
+                if let groupKey = sets.first?.groupKey,
+                   let state = progressionState(for: groupKey),
+                   state.previousWorkingWeight != nil {
+                    Button {
+                        rollbackCandidate = state
+                    } label: {
+                        Image(systemName: "arrow.uturn.backward.circle")
+                            .font(.title3)
+                            .foregroundStyle(.orange)
+                    }
+                    .accessibilityLabel("Arbeitsgewicht zurücksetzen")
+                }
+
                 // Übung bearbeiten (nur wenn Exercise-Referenz vorhanden)
                 if let exercise {
                     Button {
@@ -533,6 +574,18 @@ struct StrengthDetailView: View {
     }
 
     // MARK: - Hilfsfunktionen
+
+    /// Progressions-State für einen gegebenen groupKey suchen
+    private func progressionState(for groupKey: String) -> ExerciseProgressionState? {
+        progressionStates.first { $0.exerciseGroupKey == groupKey }
+    }
+
+    private func formatWeight(_ w: Double) -> String {
+        if w == w.rounded() {
+            return String(format: "%.0f", w)
+        }
+        return String(format: "%.1f", w)
+    }
 
     private func formatDuration(_ minutes: Int) -> String {
         if minutes < 60 {
