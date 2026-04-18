@@ -61,11 +61,6 @@ struct SetConfigurationSheet: View {
             warmupSets: &_warmupSets
         )
 
-        // Progressionseinstellungen aus Exercise laden
-        _exerciseProgressionStrategy = State(initialValue: exercise.progressionStrategy)
-        _exerciseSessionsRequired    = State(initialValue: exercise.progressionSessionsRequired)
-        _exerciseMinDays             = State(initialValue: exercise.minDaysBetweenProgressions)
-        _exerciseCustomStep          = State(initialValue: exercise.customProgressionStep)
         // targetRIR: falls keine initialSets vorhanden, exercise.targetRIR als Default
         if initialSets == nil || initialSets!.isEmpty {
             _targetRIR = State(initialValue: exercise.targetRIR)
@@ -114,12 +109,6 @@ struct SetConfigurationSheet: View {
     @State private var restSeconds: Int = 90
     @State private var targetRIR: Int = 2
     @State private var workSetKind: SetKind = .work
-
-    // Progressionseinstellungen (nur Init A, direkt auf Exercise gespiegelt)
-    @State private var exerciseProgressionStrategy: ProgressionStrategy = .double
-    @State private var exerciseSessionsRequired: Int = 2
-    @State private var exerciseMinDays: Int = 7
-    @State private var exerciseCustomStep: Double? = nil
 
     @State private var incrementTimer: Timer?
 
@@ -463,20 +452,7 @@ struct SetConfigurationSheet: View {
 
             GlassDivider.compact
 
-            // Mit Exercise + nicht Bodyweight: volle Progressions-Sektion (inkl. RIR)
-            // Ohne Exercise oder Bodyweight: nur einfacher RIR-Picker
-            if let ex = exercise, ex.category != .bodyweight {
-                ExerciseProgressionSection(
-                    strategy: $exerciseProgressionStrategy,
-                    targetRIR: $targetRIR,
-                    sessionsRequired: $exerciseSessionsRequired,
-                    minDaysBetween: $exerciseMinDays,
-                    customStep: $exerciseCustomStep,
-                    baseStep: ex.baseProgressionStep
-                )
-            } else {
-                SetTargetRIRSection(targetRIR: $targetRIR)
-            }
+            SetTargetRIRSection(targetRIR: $targetRIR)
         }
         .glassCard()
     }
@@ -634,13 +610,9 @@ struct SetConfigurationSheet: View {
             setNumber += 1
         }
 
-        // Progressionseinstellungen zurück auf Exercise schreiben
+        // targetRIR auf Exercise schreiben
         if let ex = exercise {
-            ex.progressionStrategy            = exerciseProgressionStrategy
-            ex.targetRIR                      = targetRIR
-            ex.progressionSessionsRequired    = exerciseSessionsRequired
-            ex.minDaysBetweenProgressions     = exerciseMinDays
-            ex.customProgressionStep          = exerciseCustomStep
+            ex.targetRIR = targetRIR
         }
 
         onSave(sets)

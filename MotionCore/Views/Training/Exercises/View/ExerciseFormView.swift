@@ -111,18 +111,6 @@ struct ExerciseFormView: View {
                             repRangeMax: $exercise.repRangeMax
                         )
 
-                        // MARK: Progression
-                        if exercise.category != .bodyweight {
-                            ExerciseProgressionSection(
-                                strategy: $exercise.progressionStrategy,
-                                targetRIR: $exercise.targetRIR,
-                                sessionsRequired: $exercise.progressionSessionsRequired,
-                                minDaysBetween: $exercise.minDaysBetweenProgressions,
-                                customStep: $exercise.customProgressionStep,
-                                baseStep: exercise.baseProgressionStep
-                            )
-                        }
-
                         // MARK: Sicherheitshinweis
                         ExerciseCautionNoteSection(cautionNote: $exercise.cautionNote)
 
