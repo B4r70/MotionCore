@@ -111,6 +111,23 @@ struct ExerciseFormView: View {
                             repRangeMax: $exercise.repRangeMax
                         )
 
+                        // MARK: - Smart Progression (v1.1)
+
+                        Text("Smart Progression")
+                            .font(.headline)
+                            .padding(.top, 8)
+
+                        ExerciseStudioEquipmentSection(studioEquipmentID: $exercise.studioEquipmentID)
+
+                        ExerciseCustomTargetRepsSection(customTargetReps: $exercise.customTargetReps)
+
+                        ExerciseProgressionModeSection(mode: Binding(
+                            get: { exercise.progressionMode },
+                            set: { exercise.progressionMode = $0 }
+                        ))
+
+                        ExerciseConfigNotesSection(configNotes: $exercise.configNotes)
+
                         // MARK: Sicherheitshinweis
                         ExerciseCautionNoteSection(cautionNote: $exercise.cautionNote)
 

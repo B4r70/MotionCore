@@ -22,7 +22,8 @@ struct ActiveSetCard: View {
     let supersetCurrentIndex: Int
     let supersetCurrentRound: Int
     let supersetTotalRounds: Int
-        // 2b. Smart-Fill (optional, Default-Werte für bestehende Call-Sites)
+        // 2b. Optionale Callbacks (Default: nil für bestehende Call-Sites)
+    var onOpenQuickConfig: (() -> Void)? = nil
     var isEngineSuggestion: Bool = false
         // 3. Bindings
     @Binding var selectedSetForEdit: ExerciseSet?
@@ -80,6 +81,17 @@ struct ActiveSetCard: View {
                 }
 
                 Spacer()
+                // Quick-Config aufrufen (Icon) — nur wenn Closure gesetzt
+                if let onOpenQuickConfig {
+                    Button(action: onOpenQuickConfig) {
+                        Image(systemName: "gearshape")
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 32, height: 32)
+                            .background(.ultraThinMaterial, in: Circle())
+                    }
+                    .buttonStyle(.plain)
+                }
                 // Übungsanleitung aufrufen (Icon)
                 Button {
                     showInstructionsSheet = true

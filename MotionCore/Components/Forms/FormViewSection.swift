@@ -10,6 +10,7 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
+import SwiftData
 import SwiftUI
 
 // MARK: - Gemeinsame Sections (für beide Forms)
@@ -1241,6 +1242,160 @@ struct SetKindSelectionSection: View {
                     .foregroundStyle(setKind == kind ? kind.color : .primary)
                 }
             }
+        }
+    }
+}
+
+// MARK: - Smart Progression Sections (v1.1)
+
+// MARK: Exercise Studio Equipment Section
+struct ExerciseStudioEquipmentSection: View {
+    @Binding var studioEquipmentID: UUID?
+    @Query(sort: \StudioEquipment.name) private var equipments: [StudioEquipment]
+
+    private var selectedName: String {
+        guard let id = studioEquipmentID,
+              let eq = equipments.first(where: { $0.id == id }) else {
+            return "Kein Gerät"
+        }
+        return eq.name
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Studio-Gerät")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Menu {
+                Picker("Studio-Gerät", selection: $studioEquipmentID) {
+                    Text("Kein Gerät").tag(UUID?.none)
+                    ForEach(equipments) { eq in
+                        Text(eq.name).tag(Optional(eq.id))
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(selectedName)
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.secondary.opacity(0.08))
+                )
+            }
+        }
+    }
+}
+
+// MARK: Exercise Custom Target Reps Section
+struct ExerciseCustomTargetRepsSection: View {
+    @Binding var customTargetReps: Int?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Toggle(isOn: Binding(
+                get: { customTargetReps != nil },
+                set: { isOn in
+                    if isOn, customTargetReps == nil {
+                        customTargetReps = 8
+                    } else if !isOn {
+                        customTargetReps = nil
+                    }
+                }
+            )) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Ziel-Reps überschreiben")
+                    Text("Ersetzt den Rep-Range für Smart Progression")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            if let current = customTargetReps {
+                Stepper(value: Binding(
+                    get: { current },
+                    set: { customTargetReps = max(1, min(30, $0)) }
+                ), in: 1...30) {
+                    HStack {
+                        Text("Ziel-Reps")
+                        Spacer()
+                        Text("\(current)")
+                            .monospacedDigit()
+                            .foregroundStyle(.primary)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: Exercise Progression Mode Section
+struct ExerciseProgressionModeSection: View {
+    @Binding var mode: ProgressionMode
+
+    private func label(for m: ProgressionMode) -> String {
+        switch m {
+        case .smart: return "Smart"
+        case .advanced: return "Advanced"
+        case .off: return "Aus"
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Progressionsmodus")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Menu {
+                Picker("Modus", selection: $mode) {
+                    ForEach(ProgressionMode.allCases, id: \.self) { m in
+                        Text(label(for: m)).tag(m)
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(label(for: mode))
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.secondary.opacity(0.08))
+                )
+            }
+        }
+    }
+}
+
+// MARK: Exercise Config Notes Section
+struct ExerciseConfigNotesSection: View {
+    @Binding var configNotes: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Notiz")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            TextField("z.B. Sitzhöhe 4, Fußhalter mitte", text: $configNotes, axis: .vertical)
+                .lineLimit(2...4)
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.secondary.opacity(0.08))
+                )
         }
     }
 }

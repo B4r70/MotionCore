@@ -100,133 +100,109 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.15** `RollbackDetectionCalcEngine` — committed (d322ad2)
 - [x] **1.16** Smart-Fill im ActiveWorkoutView — committed (548eb0f)
 - [x] **1.17** Feintuning-Chips für Zwischengewichte — committed (e0abe61)
-- [x] **1.18** RIR-Sheet am letzten Satz *(implementiert 2026-04-18)*
-- [ ] 1.19 Quick-Config aus ActiveWorkout *(geplant nach Freigabe)*
+- [x] **1.18** RIR-Sheet am letzten Satz — committed (0564bd4)
+- [x] **1.19** Quick-Config aus ActiveWorkout *(implementiert 2026-04-18)*
 - [ ] 1.20 Rollback-Insight-Karte + manueller Rollback *(geplant nach Freigabe)*
 - [ ] 1.21 `SessionQualityCalcEngine` + Integration *(geplant nach Freigabe)*
 - [ ] 1.22 Supabase-Schema-Erweiterung *(geplant nach Freigabe)*
 
 ---
 
-## Aktueller Schritt: 1.18 — RIR-Sheet am letzten Satz
+## Aktueller Schritt: 1.19 — Quick-Config aus ActiveWorkout + ExerciseFormView-Integration
 
 ### Ziel
 
-Beim Abschließen des letzten Work-Sets einer Übung öffnet sich ein kompaktes Sheet: kompakter RestTimer oben (~60% Höhe) + einzeilige RIR-Buttons `0 1 2 3 4+` (je ~48pt, gleich breit) + Skip-Link. Tap → `set.rpe = 10 - rir` (4+ → `rpe = 6`). Skip → `rpe` bleibt 0. Setzt `isLastSetOfExercise = true` auf dem Set. Zeitlich getrennt von `ExerciseRatingCard` (kommt danach im `ExerciseCompletedCard`).
+Im aktiven Training ein ⚙️-Icon am Übungskopf → Quick-Config-Sheet mit Übungsname, aktuellem Studio-Gerät (oder "—"), Ziel-Reps, Progression-Mode, Notiz. Button "Zur Übung bearbeiten" pushed auf `ExerciseFormView`. Dort neue Smart-Progression-v1.1-Felder (studioEquipmentID, customTargetReps, progressionMode, configNotes) UI-seitig integriert.
 
 ### Files
 
-**NEU (2):**
-- `MotionCore/Views/Workouts/Active/Components/RIRInputSheet.swift` (~150 Zeilen)
-- `MotionCore/Views/Workouts/Active/Components/CompactRestTimerView.swift` (~80 Zeilen, eigene View statt `isCompact`-Parameter)
+**NEU (1):**
+- `MotionCore/Views/Workouts/Active/Components/ExerciseQuickConfigSheet.swift` (~180 Zeilen)
 
-**ÄNDERN (1):**
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` (~50 Zeilen):
-  - `@State rirSheetSet: ExerciseSet?`
-  - In `completeSet(_:)` nach `isCompleted = true`: `isLastWorkSet(of:)` prüfen → Flag setzen
-  - Am Ende `completeSet(_:)` (Nicht-Superset-Pfad): `rirSheetSet = set` bei `isLastSetOfExercise`
-  - `.sheet(item: $rirSheetSet) { ... }` mit `.presentationDetents([.fraction(0.45)])`
-  - Optional Cleanup-Helper bei Add-Set/Delete-Set (Produktfrage)
+**ÄNDERN (4):**
+- `MotionCore/Components/Forms/FormViewSection.swift` — 4 neue Sections (`ExerciseStudioEquipmentSection`, `ExerciseCustomTargetRepsSection`, `ExerciseProgressionModeSection`, `ExerciseConfigNotesSection`)
+- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — Sub-Block "Smart Progression" zwischen `ExerciseRepRangeSection` und `ExerciseCautionNoteSection`
+- `MotionCore/Views/Workouts/Active/Components/ActiveSetCard.swift` — ⚙️-Button neben `figure.run.square.stack`, optionale `onOpenQuickConfig`-Closure
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `@State quickConfigExercise: Exercise?` + Callback-Binding + `.sheet(item:)` (~15 Zeilen)
 
-### Compact-RestTimer: eigene View statt Parameter
+### Navigation-Flow
 
-Begründung: `RestTimerCard` hat Ring 210pt + Next-Set-Block + Superset-Block + Adjust-Buttons + Skip-Button — alles auf Standalone-Card ausgelegt. Eine `isCompact`-Variante würde fast jede Subview conditional machen. 15 Zeilen Formatter-Duplikation sind akzeptabel.
+1. ⚙️-Tap in `ActiveSetCard` → `quickConfigExercise = resolvedExercise` → Sheet öffnet
+2. Sheet zeigt Übersichts-Card (read-only) + NavigationLink "Zur Übung bearbeiten"
+3. Push → `ExerciseFormView(mode: .edit, exercise: ..., showDeleteButton: false)` im Sheet-internen NavigationStack
+4. Save-Toolbar → `try? context.save()` + `dismiss()` → zurück auf Quick-Config-Übersicht (aktualisierte Werte)
+5. "Fertig" / Swipe-Down → zurück ins aktive Training, nächster Prefill nutzt neue Werte
 
-### Erkennung-Letzter-Satz
+### Sheet-Layout
 
-```swift
-private func isLastWorkSet(of set: ExerciseSet) -> Bool {
-    guard set.setKind == .work else { return false }
-    let workSets = session.safeExerciseSets.filter {
-        $0.groupKey == set.groupKey && $0.setKind == .work
-    }
-    return workSets.allSatisfy { $0.isCompleted }
-}
-```
+- `NavigationStack { ScrollView { VStack { glassCard Übersicht + NavigationLink-Button } } }`
+- Card-Zeilen: Übungsname (title3 bold), Studio-Gerät / Ziel-Reps / Modus / Notiz
+- `.presentationDetents([.medium, .large])` + `.presentationDragIndicator(.visible)`
+- Background `AnimatedBackground(showAnimatedBlob:)`
+- Toolbar: "Fertig" (cancellationAction)
+- `@Query` für `StudioEquipment`-Name-Lookup
+- Computed-Helper: `equipmentName`, `repRangeDisplay`, `modeLabel`
 
-Warmup-Sätze zählen nicht. Check erfolgt NACH `set.isCompleted = true`, daher "alle completed" stabil.
+### ExerciseFormView-Section-Position
 
-### Timer-Verhalten
+Zwischen Zeile 112 (`ExerciseRepRangeSection`) und Zeile 115 (`ExerciseCautionNoteSection`). Header "Smart Progression" als `Text(...).font(.headline)`. Reihenfolge: Studio-Gerät → Ziel-Reps → Modus → Notiz.
 
-**Variante C (gewählt):** `restTimerManager.start(seconds:)` läuft **immer**, auch beim letzten Set. Hero-Card zeigt großen Timer im Hintergrund. RIR-Sheet zeigt zusätzlich kompakten Timer. Sheet-Dismiss → großer Timer bleibt sichtbar. Keine Race, kein Logik-Eingriff.
+### ⚙️-Icon-Platzierung (ActiveSetCard)
 
-### Detail-Steps
+Neuer trailing Button **rechts neben** Anleitungs-Icon. SF-Symbol `gearshape`, gleicher Circle-glass-Hintergrund, Farbe `.secondary`. Nur sichtbar wenn `onOpenQuickConfig != nil`.
 
-**CompactRestTimerView:** Ring ~130pt (62% von 210), Zeit-Text 44pt monospace, kleine ±15s-Buttons. Kein `.glassCard()` (Sheet selbst ist Glas).
+### Picker-Binding-Details
 
-**RIRInputSheet:**
-```swift
-struct RIRInputSheet: View {
-    @Environment(\.dismiss) var dismiss
-    @ObservedObject var restTimerManager: RestTimerManager
-    let targetSeconds: Int
-    let onAdjustRest: (Int) -> Void
-    let onSelectRIR: (Int) -> Void   // 0..4, 4 = "4+"
-    let onSkip: () -> Void
-    // CompactRestTimerView + "Wie viele Reps wären noch drin gewesen?" + 5 gleich breite Buttons + "Überspringen"
-    // .presentationDetents([.fraction(0.45)]) + .presentationDragIndicator(.visible)
-}
-```
+- `studioEquipmentID: Binding<UUID?>` — `.tag(UUID?.none)` für "Kein Gerät" + `.tag(Optional(eq.id))` pro Equipment
+- `customTargetReps: Binding<Int?>` — Toggle + Stepper (Toggle on = Default 8, off = nil)
+- `progressionMode` — manuelles `Binding(get:set:)` (computed, kein Stored-Property)
+- `configNotes` — TextField `axis: .vertical`, 2..4 Zeilen
 
-Button-Row: `HStack(spacing: 8)`, jeder Button `frame(maxWidth: .infinity, minHeight: 48)`.
+### Cross-References
 
-Tap-Mapping: `rir in 0..3` → `rpe = 10 - rir`. `rir == 4` → `rpe = 6`.
-
-**ActiveWorkoutView-Hooks:**
-```swift
-// Vor PR-Check in completeSet(_:):
-if isLastWorkSet(of: set) {
-    set.isLastSetOfExercise = true
-}
-
-// Am Ende completeSet(_:), nur Nicht-Superset:
-if set.supersetGroupId == nil && set.isLastSetOfExercise {
-    rirSheetSet = set
-}
-```
-
-### Edge-Cases (Produktfragen offen)
-
-| Fall | Vorschlag |
-|---|---|
-| Add-Set nach RIR | Alter Satz behält `rpe` + Flag → false; neuer Satz bekommt Flag `true` beim Abschluss (Cleanup-Helper) |
-| Delete-Set | Vorheriger completed Work-Set bekommt Flag `true`, wenn alle noch completed |
-| Swipe-Dismiss | wie Skip: `rpe` bleibt 0 |
-| Superset | Kein RIR-Sheet in Phase 1 (`supersetGroupId == nil`-Gate) |
+- `Exercise` Smart-Progression-v1.1 Felder aus 1.3
+- `@Query StudioEquipment` Pattern identisch zu `SetEditSheet:24` (1.17)
+- Sheet-Edit-Pattern aus `StrengthDetailView:91-96`: `.sheet(item:) { NavigationStack { ExerciseFormView(mode: .edit, showDeleteButton: false) } }`
 
 ### Manuelle Tests
 
-1. 3-Sätze-Übung: Satz 1/2 normaler Timer. Satz 3 → Sheet öffnet mit Timer oben + 5 Buttons.
-2. Tap 0 → `rpe=10`. Tap 3 → `rpe=7`. Tap 4+ → `rpe=6`. Skip → `rpe=0`.
-3. Swipe-Dismiss → wie Skip.
-4. iPhone SE + iPhone 15: 5 Buttons einzeilig, Sheet ≈45%.
-5. Nach Sheet-Dismiss → weitere Übung startbar, `ExerciseRatingCard` zeitlich getrennt funktional.
-6. Superset-Übung letzter Satz → **kein** Sheet.
-7. Warmup-Satz als letzter → nicht als "letzter Work-Set" gezählt.
-8. Add-Set nach RIR → Flag-Hygiene stimmt.
+1. ⚙️-Icon sichtbar + tappbar
+2. Sheet öffnet mit richtigem Exercise
+3. "—" wenn `studioEquipmentID` nil, sonst Equipment-Name
+4. Ziel-Reps: `customTargetReps` wenn gesetzt, sonst `"min-max"`
+5. Modus-Label: Smart/Advanced/Aus
+6. Notiz-Block nur wenn != leer
+7. "Zur Übung bearbeiten" pushed korrekt
+8. Neue 4 Sections in ExerciseFormView nach Rep-Range sichtbar
+9. Equipment-Picker listet "Kein Gerät" + alle StudioEquipment
+10. Auswahl persistiert nach Sheet-Close/Open
+11. `customTargetReps`-Toggle off → nil, on → Stepper 1..30
+12. Progression-Mode schreibt `progressionModeRaw`
+13. `configNotes` mehrzeilig
+14. Delete-Button versteckt
+15. Edit zurück → Quick-Config spiegelt neue Werte → Fertig → nächster Prefill nutzt neuen Equipment-Weight
 
 ### Build-Check
 
 - [ ] iOS Build grün
 - [ ] watchOS Build grün
 - [ ] Keine neuen Warnings
-- [ ] Preview RIRInputSheet rendert
-- [ ] 3-Sätze-Training: Sheet triggert korrekt
+- [ ] Previews rendern
 
 ### Risks
 
-1. **File-Size ActiveWorkoutView (2161 Zeilen):** weit über 800-Hartlimit. 1.18 fügt ~50 Zeilen hinzu. Split spätestens vor 1.19 zwingend — **separater Refactor-Schritt** empfohlen.
-2. **Timer-Doppelanzeige:** großer Timer hinter Sheet + Compact im Sheet. Mit Backdrop-Blur harmlos, testen.
-3. **Skip-Semantik:** `rpe = 0` hat `calculatedRIR = 10` (fälschlich "10 Reps übrig"). `ProgressionCalcEngine.hasRIRData` (seit 1.14) behandelt `rpe == 0` bereits als "unbekannt" → kompatibel.
-4. **Cleanup-Helper:** Ohne Implementierung bleibt Flag stale bei Add/Delete-Set — UX-relevant für spätere Aggregationen.
+1. **ActiveWorkoutView bei 2227 Zeilen** — +15 Zeilen ok, Split bleibt separater Refactor nach 1.19
+2. **Optional-UUID-Picker-Tag**: `.tag(UUID?.none)` + `.tag(Optional(id))` zwingend
+3. **`progressionMode`-Binding**: Computed → `Binding(get:set:)` manuell
+4. **Leerer StudioEquipment-Store**: Picker zeigt nur "Kein Gerät", UX akzeptabel
 
 ### Offene Produktfragen
 
-1. **Cleanup-Helper für Add-Set/Delete-Set in 1.18 mitnehmen?** (~20 Zeilen + 2 Call-Sites). → Vorschlag: **ja**, Flag-Hygiene stimmt.
-2. **Split ActiveWorkoutView vor 1.19 oder später?** → Vorschlag: **separater Refactor-Schritt** (z.B. 1.18.5) nach 1.18.
-3. **Skip-Semantik `rpe = 0`:** bleibt. ProgressionCalcEngine handhabt bereits korrekt. → Bestätigen?
+1. Notiz-Block mit "Notiz hinzufügen"-Shortcut bei leerer Notiz? → **Vorschlag: nein**, Edit-Navigation reicht
+2. Inline-Link zu `StudioSetupView` wenn Equipment-Store leer? → **Vorschlag: nein in 1.19**
+3. ⚙️-Button auch im RestTimer/nextSet-Block? → **Vorschlag: nein**, ein Entry-Point pro Übung
 
-🛑 **STOPP 1.18** — Warte auf Entscheidungen zu den 3 Produktfragen + Freigabe.
+🛑 **STOPP 1.19** — Warte auf Entscheidungen zu den 3 Produktfragen + Freigabe.
 
 ---
 
@@ -253,6 +229,8 @@ if set.supersetGroupId == nil && set.isLastSetOfExercise {
 - **2026-04-18** — Schritt 1.14 committed (c99b6d4). Schritt 1.15 implementiert.
 - **2026-04-18** — Schritt 1.15 committed (d322ad2). Plan 1.16 erstellt.
 - **2026-04-18** — Schritt 1.16 committed (548eb0f). Schritt 1.17 committed (e0abe61). Plan 1.18 erstellt.
+- **2026-04-18** — Schritt 1.18 committed (0564bd4). Plan 1.19 erstellt.
+- **2026-04-18** — Schritt 1.19 implementiert. ExerciseQuickConfigSheet (141 Zeilen, neu) + 4 neue FormSections in FormViewSection.swift (1414 Zeilen) + Smart-Progression-Sub-Block in ExerciseFormView.swift (218 Zeilen) + ⚙️-Button in ActiveSetCard.swift (276 Zeilen) + @State/Callback/Sheet-Hook in ActiveWorkoutView.swift (2236 Zeilen).
 - **2026-04-18** — Schritt 1.16 implementiert. Resolver + SmartFillViewModel + ExerciseSet.isEngineSuggestion + ActiveWorkoutView-Hooks + ActiveSetCard-Badge/Reasoning-Label.
 - **2026-04-18** — Schritt 1.16 Scope-Korrektur: Produktfragen 2A + 3A (Reasoning-Label entfernt, ExerciseSet.isEngineSuggestion entfernt, Tracking zurück auf In-Memory Dictionary im ViewModel).
 - **2026-04-18** — Schritt 1.17 implementiert (FineTuneChipsView + SetEditSheet-Einbau).

@@ -88,6 +88,8 @@ struct ActiveWorkoutView: View {
 
         // Smart-Progression: letzter Work-Set einer Übung — triggert RIR-Sheet
     @State private var rirSheetSet: ExerciseSet? = nil
+        // Quick-Config: geöffnete Übung für das Konfigurations-Sheet
+    @State private var quickConfigExercise: Exercise? = nil
 
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionHaptic = UINotificationFeedbackGenerator()
@@ -464,6 +466,10 @@ struct ActiveWorkoutView: View {
                     // rpe bleibt 0 — ProgressionCalcEngine.hasRIRData behandelt rpe == 0 als "unbekannt"
                 }
             )
+        }
+        .sheet(item: $quickConfigExercise) { exercise in
+            ExerciseQuickConfigSheet(exercise: exercise)
+                .environmentObject(appSettings)
         }
         .onChange(of: selectedSetForEdit) { _, newSet in
             // Smart-Fill: User öffnet SetEditSheet → Suggestion als bestätigt markieren
@@ -1487,6 +1493,9 @@ struct ActiveWorkoutView: View {
                 supersetCurrentIndex: ctx?.currentIndex ?? 0,
                 supersetCurrentRound: ctx?.currentRound ?? 1,
                 supersetTotalRounds: ctx?.totalRounds ?? 1,
+                onOpenQuickConfig: {
+                    quickConfigExercise = resolveExercise(for: activeSet.groupKey)
+                },
                 isEngineSuggestion: smartFill?.isSuggestionActive(for: activeSet) ?? false,
                 selectedSetForEdit: $selectedSetForEdit,
                 onComplete: completeSet
