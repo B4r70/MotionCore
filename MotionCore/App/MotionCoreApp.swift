@@ -125,6 +125,8 @@ struct MotionCoreApp: App {
                     await BundledExerciseSeeder.seedIfNeeded(context: context)
                     // 2. Handgepflegte Übungen nur ergänzen wenn noch nicht vorhanden (Name-basiert)
                     ExerciseSeeder.seedMissing(context: context)
+                    // 3. Primary-Studio + Default-Geräte anlegen (idempotent, nur beim ersten Start)
+                    DefaultStudioSeeder.seedIfNeeded(context: context)
                 }
                 .alert("Aktive Session gefunden", isPresented: $showSessionRestoreAlert) {
                     Button("Fortsetzen") { restoreSession() }

@@ -93,8 +93,8 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [ ] ~~1.8 TrendPoint-Extraktion~~ — **n/a, entfällt** (TrendPoint lebt bereits in StatisticCalcEngine.swift)
 - [x] **1.9** Legacy-UI-Entfernung (Views) — committed (726fce1) + Heatmap-Rewire (8c0f0db)
 - [x] **1.10** Legacy-CalcEngines + ViewModel entfernen — committed (bf14fee)
-- [ ] **1.11** Exercise-Felder entfernen + SetConfigSheet-UI + ProgressionTypes.swift löschen *(implementiert, warte auf Build-Check)*
-- [ ] 1.12 Studio-Setup + Default-Seeder *(geplant nach Freigabe)*
+- [x] **1.11** Exercise-Felder entfernen + SetConfigSheet-UI + ProgressionTypes.swift löschen — committed (c3629c8)
+- [x] **1.12** Studio-Setup + Default-Seeder *(implementiert 2026-04-18)*
 - [ ] 1.13 Medikamenten-Schalter in Settings *(geplant nach Freigabe)*
 - [ ] 1.14 Neue `ProgressionCalcEngine` *(geplant nach Freigabe)*
 - [ ] 1.15 `RollbackDetectionCalcEngine` *(geplant nach Freigabe)*
@@ -108,115 +108,135 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 
 ---
 
-## Aktueller Schritt: 1.11 — Exercise-Felder entfernen + SetConfigSheet + ProgressionTypes.swift löschen
+## Aktueller Schritt: 1.12 — Studio-Setup + Default-Seeder
 
 ### Ziel
 
-Letzter Legacy-Entfernungs-Schritt: 4 Stored Properties + 4 Computed Properties aus `Exercise.swift` entfernen, zugehörige UI-Section `ExerciseProgressionSection` aus `FormViewSection.swift` löschen, alle Bindings/States in `SetConfigurationSheet.swift` und `ExerciseFormView.swift` bereinigen, abschließend `ProgressionTypes.swift` löschen. Damit ist das gesamte Legacy-Progression-System entfernt.
+Studio-Konfigurations-UI im Settings-Bereich + idempotenter Default-Seeder für "Mein Studio" beim ersten App-Start. User kann StudioEquipment-Profile anlegen, editieren, löschen. Datenmodell existiert seit 1.1.
 
 ### Files
 
-**ÄNDERN (4):**
-- `MotionCore/Models/Core/Exercise.swift` — 4 Stored + 4 Computed Properties + Init-Params raus
-- `MotionCore/Views/Training/Plans/Components/SetConfigurationSheet.swift` — 9 Stellen bereinigen
-- `MotionCore/Components/Forms/FormViewSection.swift` — `ExerciseProgressionSection` komplett löschen (Zeilen 1248–1503)
-- `MotionCore/Views/Training/Exercises/View/ExerciseFormView.swift` — 11-Zeilen-Block (Zeilen 114–124) löschen
+**NEU (4):**
+- `MotionCore/Services/DefaultStudioSeeder.swift`
+- `MotionCore/Views/Settings/View/StudioSetupView.swift`
+- `MotionCore/Views/Settings/Components/StudioEquipmentEditSheet.swift`
+- `MotionCore/Views/Settings/Components/StudioEquipmentRow.swift`
 
-**LÖSCHEN (1):**
-- `MotionCore/Models/Types/ProgressionTypes.swift`
+**ÄNDERN (2):**
+- `MotionCore/Views/Settings/View/MainSettingsView.swift` — NavigationLink "Studio einrichten" in Section "Allgemeine Einstellungen"
+- `MotionCore/App/MotionCoreApp.swift` — Seeder-Call im existierenden `.task`-Block (nach `ExerciseSeeder.seedMissing`)
 
-**NICHT anfassen:**
-- `BundledExerciseSeeder.swift:327` — Kommentar nennt nur behaltene Felder. Keine Änderung nötig.
-- `Export.swift` + `SupabaseFullBackupService.swift` — 0 Treffer, keine Änderung.
-- `MotionCoreApp.swift` — klassisches `Schema([...])`, kein `VersionedSchema`, kein Migrations-Code nötig.
+### Patterns (Vorlagen)
 
-### Abweichungen vom 1.7-Report (bestätigt)
+- Seeder-Hook: `MotionCoreApp.swift:122–128` (bestehende `.task`-Sequenz)
+- Settings-View-Struktur: `EBikeProfileView.swift` (`List { Section { ... } }`)
+- Decimal-Input: `DecimalTextField.swift` (DE/US-Locale-kompatibel)
+- Sheet-Pattern: immer `.sheet(item:)` (Lessons)
+- Idempotenz: Query-basiert auf `Studio.isPrimary == true` (robuster als UserDefaults bei CloudKit-Restore)
 
-- `ExerciseFormView` ist nach 1.9/1.10 deutlich schlanker. Report-Zeilen `38–42, 147–149, 196, 216, 221` wurden bereits bereinigt. Jetzt nur noch ein 11-Zeilen-Block (114–124).
-- `BundledExerciseSeeder`: Report-Annahme "Kommentar aktualisieren" trifft nicht zu — Kommentar nennt nur behaltene Felder.
-- `Export.swift` + `SupabaseFullBackupService.swift`: Report-Annahme bestätigt, keine Änderung.
+### Detail-Steps
 
-### Detail-Steps (Empfohlene Reihenfolge: D → C → B → A → E)
+#### 1.12.1 — `DefaultStudioSeeder.swift`
 
-#### 1.11.D — `ExerciseFormView.swift`
+- `struct DefaultStudioSeeder` mit `static func seedIfNeeded(context: ModelContext)`
+- Idempotenz-Check: `FetchDescriptor<Studio>` mit `#Predicate { $0.isPrimary == true }` → early return bei ≥1 Treffer
+- Bei 0 Treffern: `Studio(name: "Mein Studio", isPrimary: true)` + 5 `StudioEquipment` mit `equipment.studio = studio` (Inverse setzen)
+- `try? context.save()`
+- Default-Geräte gemäß Concept 3.1.2:
+  - Kabelzug — cable, start 1.25, incr 2.5, intermediate [0.625, 1.25]
+  - Kurzhanteln — dumbbell, start 2.0, incr 2.0, intermediate [], max 24.0
+  - Beinpresse — machine, start 0.0, incr 7.0, intermediate [3.5]
+  - Brustpresse — machine, start 0.0, incr 7.0, intermediate [3.5]
+  - Latzugmaschine — machine, start 0.0, incr 7.0, intermediate [3.5]
 
-Zeilen 114–124 (11 Zeilen) entfernen:
+#### 1.12.2 — `StudioEquipmentRow.swift`
+
+- Props: `let equipment: StudioEquipment`
+- `HStack`: Type-Icon (SF-Symbol) + `VStack { name, weightRange }` + Badge "Feintuning" bei vorhandenen Intermediates
+- Icon-Mapping (`StudioEquipmentType`-Extension):
+  - `.machine` → "gear", `.cable` → "arrow.up.and.down", `.dumbbell` → "dumbbell.fill", `.barbell` → "figure.strengthtraining.traditional", `.bodyweight` → "figure.stand", `.other` → "questionmark.circle"
+- displayName-Extension: "Maschine" / "Kabelzug" / "Kurzhantel" / "Langhantel" / "Körpergewicht" / "Sonstiges"
+
+#### 1.12.3 — `StudioEquipmentEditSheet.swift`
+
+- Props: `let studio: Studio`, `let existing: StudioEquipment?` (nil = Add), `@Environment(\.modelContext)`, `@Environment(\.dismiss)`
+- Lokale `@State`-Kopien aller Felder (Cancel-Safe)
+- `maxWeight: Double?` via `hasMaxWeight: Bool` + `maxWeightValue: Double`
+- Layout `NavigationStack { Form { ... } }`:
+  - Section "Basis": Name (TextField), Typ (Picker)
+  - Section "Gewicht": start/increment/min (DecimalTextField), Toggle+Field für max
+  - Section "Zwischengewichte": dynamische Liste via `ForEach(..enumerated())` mit Swipe-Delete, Footer-Button "hinzufügen" (default 0.625)
+  - Section "Notiz": TextEditor
+- Toolbar: Cancel + Speichern
+- Validierung: Name nicht leer, Increment > 0, StartWeight ≥ 0, MaxWeight > StartWeight (wenn gesetzt). Fehler via Alert-State
+- Save: existing=nil → Insert + `equipment.studio = studio`; sonst Felder überschreiben; `try? context.save()`
+
+#### 1.12.4 — `StudioSetupView.swift`
+
+- `@Environment(\.modelContext)`, `@EnvironmentObject private var appSettings: AppSettings`
+- `@Query(filter: #Predicate<Studio> { $0.isPrimary == true })`
+- `@State private var editingEquipment: StudioEquipment?` (Sheet-Item)
+- `@State private var addSheetStudio: Studio?` (Sheet-Item für Add)
+- `@State private var equipmentPendingDelete: StudioEquipment?` (Alert-Item)
+- `ZStack`: `AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)` + `List`
+- Pro Equipment: `Button { editingEquipment = eq } label: { StudioEquipmentRow(equipment: eq) }.glassCard()`
+- `.onDelete` am ForEach → `equipmentPendingDelete = eq`
+- `.alert(item: $equipmentPendingDelete)` für Delete-Confirm
+- Toolbar Trailing: "+" → `addSheetStudio = primaryStudio`
+- Fallback EmptyState wenn keine Equipment
+- `.sheet(item: $editingEquipment)` + `.sheet(item: $addSheetStudio)` — item-basiert, kein isPresented-Pattern
+- `.navigationTitle("Studio einrichten")`, `.navigationBarTitleDisplayMode(.inline)`
+
+#### 1.12.5 — `MainSettingsView.swift`
+
+In Section "Allgemeine Einstellungen" nach dem E-Bike-Profil-Link:
 ```swift
-// MARK: Progression
-if exercise.category != .bodyweight {
-    ExerciseProgressionSection(
-        strategy: $exercise.progressionStrategy,
-        targetRIR: $exercise.targetRIR,
-        sessionsRequired: $exercise.progressionSessionsRequired,
-        minDaysBetween: $exercise.minDaysBetweenProgressions,
-        customStep: $exercise.customProgressionStep,
-        baseStep: exercise.baseProgressionStep
-    )
+NavigationLink { StudioSetupView() } label: {
+    Label("Studio einrichten", systemImage: "dumbbell.fill")
 }
 ```
 
-Hinweis: `$exercise.targetRIR` verschwindet aus Form-View. Wert bleibt via Default `2` für neue Exercises; Setzen pro Set weiterhin in `SetConfigurationSheet`.
+#### 1.12.6 — `MotionCoreApp.swift`
 
-#### 1.11.C — `SetConfigurationSheet.swift` (9 Stellen)
-
-1. Init A Body (Zeilen 64–68): 4 `_exercise...`-State-Init + Kommentar entfernen
-2. State-Declarations (Zeilen 118–122): 4 `@State`-Variablen + Kommentar entfernen
-3. Section-Aufruf (Zeilen 466–479): If-Else-Block vereinfachen auf nur `SetTargetRIRSection(targetRIR: $targetRIR)` für alle Übungen
-4. Save-Zuweisungen (Zeilen 639–643): 4 Zuweisungen entfernen, **`ex.targetRIR = targetRIR` BLEIBT**
-
-#### 1.11.B — `FormViewSection.swift`
-
-Zeilen 1248–1503 komplett löschen: `// MARK: - Exercise Progression Section` + `struct ExerciseProgressionSection: View { ... }` + private Helpers (`formatStep`, `rirLabel`, `rirColor`, `rirColorFor`).
-
-#### 1.11.A — `Exercise.swift`
-
-**Stored Properties raus** (Zeilen 31–34):
-- `progressionSessionsRequired`, `progressionStrategyRaw`, `customProgressionStep`, `minDaysBetweenProgressions`
-
-**Primary-Init Params raus** (Zeilen 103–106) + Init-Body-Zuweisungen (Zeilen 142–145)
-
-**Computed Properties raus** (in `extension Exercise`):
-- `progressionStrategy` (Zeilen 283–288 inkl. MARK)
-- `baseProgressionStep` (Zeilen 298–306)
-- `effectiveProgressionStep` (Zeilen 308–311)
-- `canRecommendProgression` (Zeilen 313–318)
-
-**BEHALTEN:** `progressionStep`, `targetRIR`, `lastProgressionDate`, `repRangeMin/Max`, Smart-Progression-Felder aus 1.3.
-
-Convenience-Inits (Zeilen 354 + 413) bleiben — delegieren an Primary-Init, Defaults greifen automatisch.
-
-#### 1.11.E — `ProgressionTypes.swift` löschen
-
-```bash
-git rm MotionCore/Models/Types/ProgressionTypes.swift
+Im bestehenden `.task` nach `ExerciseSeeder.seedMissing(context: context)` anhängen:
+```swift
+DefaultStudioSeeder.seedIfNeeded(context: context)
 ```
-
-Nach A–D sind alle darin definierten Typen (`ProgressionStrategy`, `ProgressionConfidence`, `TrainingLevel`, `PerformanceTrend`, `ProgressionAction`, `ProgressionAnalysis`, `SessionSnapshot`) nicht mehr referenziert.
 
 ### Manuelle Tests
 
-1. App starten — kein Migrations-Fehler. Bestehende Exercises öffnen.
-2. ExerciseFormView (Add + Edit) — Progression-Sektion fehlt, andere Sektionen vollständig. Speichern funktioniert.
-3. SetConfigurationSheet (Plan → Übung) — nur RIR-Picker sichtbar. Speichern, Sätze werden erzeugt, `targetRIR` auf Sets + `ex.targetRIR` geschrieben.
-4. Bestehendes Training starten — läuft normal.
-5. Summary / StrengthDetails / Heatmap — rendern unverändert.
+**Seeder-Idempotenz:**
+- Frische Installation → 5 Geräte in "Mein Studio"
+- App-Restart → keine Duplikate
+- Alle Geräte löschen → App-Restart → Seeder läuft nicht erneut (Studio noch da)
+
+**Setup-Flow:** Add-Sheet → Validierung → Row erscheint. Zwischengewichte add/delete.
+
+**Edit-Flow:** Tap → Sheet mit vorbefüllten Werten → Speichern aktualisiert Row.
+
+**Delete-Flow:** Swipe → Confirm → Löschen.
+
+**Decimal-Input:** `,` und `.` beide akzeptiert.
 
 ### Build-Check
 
-- [ ] iOS build green
-- [ ] watchOS build green (Kontrolle)
+- [ ] iOS Build grün
+- [ ] watchOS Build grün (Kontrolle)
 - [ ] Keine neuen Warnings
-- [ ] App launcht, kein Migrations-Crash
-- [ ] Bestehende Exercises/Sessions öffnen ohne Crash
+- [ ] App startet ohne Migrations-Fehler
+- [ ] Previews für StudioSetupView + EditSheet funktionieren
 
 ### Risks
 
-- **Lightweight Migration:** 4 Feld-Entfernungen auf aktivem CloudKit-Schema. SwiftData/CloudKit ignoriert entfernte Properties — bestehende Daten bleiben (die 4 Werte gehen verloren, unkritisch).
-- **UX-Schrumpfung:** SetConfigSheet verliert 4 Einstellungs-Felder. Gewollt (Concept 3.2) — Ersatz kommt in 1.19 (Quick-Config).
-- **ExerciseFormView verliert `targetRIR`-Binding.** Wert bleibt per Default 2; wird pro Set gesetzt.
-- **`ProgressionStrategy`-Strings in CloudKit:** Werden beim nächsten Sync ignoriert. Kein Risiko.
+- **CloudKit-Sync + Seeder:** Paralleler First-Launch auf 2 Devices → 2 Primary-Studios möglich. Akzeptiert (manueller Cleanup in UI möglich, keine Watch-Sync-Pflicht).
+- **Dynamic-List Focus-Reset bei Mitte-Insert:** durch Append-Only-Pattern mitigiert.
+- **Decimal-Input:** `DecimalTextField` bewährt (EBikeProfileView).
 
-🛑 **STOPP 1.11** — Warte auf Freigabe für Developer-Start.
+### Offene Fragen
+
+Keine — Concept v1 schreibt Single-Studio-UI explizit vor.
+
+🛑 **STOPP 1.12** — Warte auf Freigabe für Developer-Start.
 
 ---
 
@@ -233,5 +253,7 @@ Nach A–D sind alle darin definierten Typen (`ProgressionStrategy`, `Progressio
 - **2026-04-18** — Heatmap-Rewire: MuscleHeatmapView als 3. Segment in StatsAndRecordsView integriert (Followup zu 1.9).
 - **2026-04-18** — Schritt 1.9 committed (726fce1). Heatmap-Rewire committed (8c0f0db). Plan 1.10 erstellt.
 - **2026-04-18** — Schritt 1.10 committed (bf14fee). Plan 1.11 erstellt.
+- **2026-04-18** — Schritt 1.11 committed (c3629c8). Legacy-Progression komplett entfernt. Plan 1.12 erstellt.
 - **2026-04-18** — Schritt 1.10 implementiert. 3 Legacy-Files gelöscht, SummaryViewModel bereinigt.
 - **2026-04-18** — Schritt 1.11 implementiert. 4 Stored Properties (progressionSessionsRequired, progressionStrategyRaw, customProgressionStep, minDaysBetweenProgressions) + 4 Computed Properties (progressionStrategy, baseProgressionStep, effectiveProgressionStep, canRecommendProgression) aus Exercise.swift entfernt. ExerciseProgressionSection (256 Zeilen) aus FormViewSection.swift gelöscht. 9 Stellen in SetConfigurationSheet.swift bereinigt (4 State-Inits, 4 @State-Declarations, If-Else-Block vereinfacht, 4 Save-Zuweisungen entfernt). 11-Zeilen-Block aus ExerciseFormView.swift entfernt. ProgressionTypes.swift per git rm gelöscht. Finale Grepping: alle Legacy-Typen 0 Treffer.
+- **2026-04-18** — Schritt 1.12 implementiert. DefaultStudioSeeder + StudioSetupView + StudioEquipmentEditSheet + StudioEquipmentRow + MainSettings-Link + Seeder-Hook.

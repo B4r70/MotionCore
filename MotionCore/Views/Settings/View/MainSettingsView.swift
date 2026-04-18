@@ -50,6 +50,12 @@ struct MainSettingsView: View {
                 }
 
                 NavigationLink {
+                    StudioSetupView()
+                } label: {
+                    Label("Studio einrichten", systemImage: "dumbbell.fill")
+                }
+
+                NavigationLink {
                     DisplaySettingsView()
                 } label: {
                     Label("Displayeinstellungen", systemImage: "display")
