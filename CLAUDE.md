@@ -68,7 +68,7 @@ No XCTest suite; verify via Xcode build, SwiftUI previews, simulator.
 ## MotionCore-Specific Rules
 
 - Prefer `ExerciseSet.exerciseNameSnapshot` over `.exerciseName`
-- `StatsAndRecordsView` only uses `.statistics` and `.records`
+- `StatsAndRecordsView` uses `.statistics`, `.records` and `.heatmap`
 - `BaseView.Tab`: `summary`, `workouts`, `stats`, `training`
 
 ## File System for Work Artifacts
