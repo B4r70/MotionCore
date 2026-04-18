@@ -97,7 +97,7 @@ Einführung eines neuen Smart-Progression-Systems, eines Readiness-Signals und e
 - [x] **1.12** Studio-Setup + Default-Seeder — committed (428e801)
 - [x] **1.13** Medikamenten-Schalter in Settings — committed (148bda8)
 - [x] **1.14** Neue `ProgressionCalcEngine` *(implementiert 2026-04-18)*
-- [ ] 1.15 `RollbackDetectionCalcEngine` *(geplant nach Freigabe)*
+- [x] **1.15** `RollbackDetectionCalcEngine` *(implementiert 2026-04-18)*
 - [ ] 1.16 Smart-Fill im ActiveWorkoutView *(geplant nach Freigabe)*
 - [ ] 1.17 Feintuning-Button für Zwischengewichte *(geplant nach Freigabe)*
 - [ ] 1.18 RIR-Sheet am letzten Satz *(geplant nach Freigabe)*
@@ -233,3 +233,4 @@ Reihenfolge 5a → 5b → 5d → 5c: Progressions-Zweig zuerst, dann Rollback vo
 - **2026-04-18** — Schritt 1.12 implementiert. DefaultStudioSeeder + StudioSetupView + StudioEquipmentEditSheet + StudioEquipmentRow + MainSettings-Link + Seeder-Hook.
 - **2026-04-18** — Schritt 1.13 implementiert. AppSettings.takesCardioMedication + Toggle in UserSettingsView.
 - **2026-04-18** — Schritt 1.14 implementiert. ProgressionCalcEngine + ProgressionTypes + EquipmentWeightRounding (3 neue Files).
+- **2026-04-18** — Schritt 1.14 committed (c99b6d4). Schritt 1.15 implementiert.
