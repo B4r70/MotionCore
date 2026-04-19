@@ -16,6 +16,7 @@ import SwiftUI
 struct ExercisesOverviewCard: View {
     let groupedSets: [[ExerciseSet]]
     let currentExerciseIndex: Int
+    let selectedExerciseKey: String?
     let prSetIDs: Set<PersistentIdentifier>
 
     let onAddExercise: () -> Void
@@ -25,6 +26,9 @@ struct ExercisesOverviewCard: View {
 
     // Sortiermodus-State
     @State private var isSortMode: Bool = false
+
+    // Expand-State für Accordion-Verhalten
+    @State private var expandedExerciseKey: String? = nil
 
     // Drag & Drop State
     @State private var draggingIndex: Int? = nil
@@ -83,7 +87,18 @@ struct ExercisesOverviewCard: View {
                                 hasSupersetBelow: isSupersetConnectedBelow(at: index),
                                 hasPR: hasPR(in: sets),
                                 isSortMode: isSortMode,
-                                isSupersetMember: isSupersetMember(at: index)
+                                isSupersetMember: isSupersetMember(at: index),
+                                isExpanded: expandedExerciseKey == sets.first?.groupKey,
+                                onToggleExpand: {
+                                    guard let key = sets.first?.groupKey else { return }
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        expandedExerciseKey = (expandedExerciseKey == key) ? nil : key
+                                    }
+                                },
+                                onSelectAsActive: {
+                                    guard let key = sets.first?.groupKey else { return }
+                                    onSelectExercise(key)
+                                }
                             )
                             // Höhe messen für Drag-Berechnung
                             .background(
@@ -109,11 +124,6 @@ struct ExercisesOverviewCard: View {
                                         dragHandleView(index: index)
                                     }
                                 }
-                            }
-                            // Tap zum Navigieren (nur außerhalb des Sortiermodus)
-                            .onTapGesture {
-                                guard !isSortMode else { return }
-                                onSelectExercise(firstSet.groupKey)
                             }
                             // LongPress zum Löschen (nur außerhalb des Sortiermodus)
                             .onLongPressGesture(minimumDuration: 0.5) {
@@ -144,7 +154,10 @@ struct ExercisesOverviewCard: View {
                         hasSupersetBelow: false,
                         hasPR: hasPR(in: sets),
                         isSortMode: true,
-                        isSupersetMember: false
+                        isSupersetMember: false,
+                        isExpanded: false,
+                        onToggleExpand: {},
+                        onSelectAsActive: {}
                     )
                     .overlay(alignment: .trailing) {
                         Image(systemName: "line.3.horizontal")
@@ -161,11 +174,25 @@ struct ExercisesOverviewCard: View {
             }
         }
         .glassCard()
+        .onAppear {
+            if expandedExerciseKey == nil {
+                expandedExerciseKey = selectedExerciseKey
+            }
+        }
+        .onChange(of: selectedExerciseKey) { _, newValue in
+            withAnimation(.easeInOut(duration: 0.25)) {
+                expandedExerciseKey = newValue
+            }
+        }
         .onChange(of: isSortMode) { _, newValue in
             if !newValue {
                 draggingIndex = nil
                 dragOffset = .zero
                 lastTargetIndex = nil
+            } else {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    expandedExerciseKey = nil
+                }
             }
         }
     }
@@ -325,6 +352,64 @@ private struct RowOffsetModifier: ViewModifier {
     }
 }
 
+// MARK: - Exercise Overview Expanded Detail
+
+private struct ExerciseOverviewExpandedDetail: View {
+    let sets: [ExerciseSet]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Divider()
+                .background(Color.primary.opacity(0.05))
+                .padding(.bottom, 8)
+
+            if sets.isEmpty {
+                Text("Keine Sätze konfiguriert")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
+            } else {
+                VStack(spacing: 6) {
+                    ForEach(sets, id: \.persistentModelID) { set in
+                        setDetailRow(set: set)
+                    }
+                }
+            }
+        }
+    }
+
+    private func setDetailRow(set: ExerciseSet) -> some View {
+        HStack {
+            Text("Satz \(set.setNumber)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Text(formatSetValue(set))
+                .font(.caption)
+                .foregroundStyle(set.isCompleted ? .primary : .secondary)
+                .opacity(set.isCompleted ? 1.0 : 0.5)
+
+            Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle.dashed")
+                .font(.caption)
+                .foregroundStyle(set.isCompleted ? Color.green : Color.secondary.opacity(0.5))
+                .padding(.leading, 4)
+        }
+    }
+
+    private func formatSetValue(_ set: ExerciseSet) -> String {
+        let weightStr: String
+        if set.weight == set.weight.rounded() {
+            weightStr = String(format: "%.0f", set.weight)
+        } else {
+            weightStr = String(format: "%.1f", set.weight)
+        }
+        return "\(weightStr) kg × \(set.reps) Wdh."
+    }
+}
+
 // MARK: - Safe Array Access
 
 private extension Array {
@@ -346,6 +431,9 @@ private struct ExerciseOverviewRow: View {
     let hasPR: Bool
     let isSortMode: Bool
     let isSupersetMember: Bool
+    let isExpanded: Bool
+    let onToggleExpand: () -> Void
+    let onSelectAsActive: () -> Void
 
     private var completedCount: Int { sets.filter { $0.isCompleted }.count }
     private var isAllCompleted: Bool { completedCount == sets.count }
@@ -379,6 +467,10 @@ private struct ExerciseOverviewRow: View {
             VStack(spacing: 8) {
                 topLine
                 dotsLine
+                if isExpanded {
+                    ExerciseOverviewExpandedDetail(sets: sets)
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                }
             }
             .padding(12)
             // Rechts Platz für Drag-Handle lassen im Sortiermodus
@@ -388,6 +480,10 @@ private struct ExerciseOverviewRow: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(backgroundColor)
+                .onTapGesture {
+                    guard !isSortMode else { return }
+                    onToggleExpand()
+                }
         )
         .contentShape(Rectangle())
         .animation(.easeInOut(duration: 0.15), value: isPressed)
@@ -415,6 +511,26 @@ private struct ExerciseOverviewRow: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+
+                if !isCurrentExercise && !isSortMode {
+                    Button {
+                        onSelectAsActive()
+                    } label: {
+                        Image(systemName: "play.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(.blue)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.leading, 4)
+                }
+
+                Image(systemName: "chevron.down")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                    .animation(.easeInOut(duration: 0.2), value: isExpanded)
+                    .opacity(isSortMode ? 0 : 1)
+                    .padding(.leading, 4)
             }
         }
     }

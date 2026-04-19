@@ -1436,6 +1436,7 @@ struct ActiveWorkoutView: View {
         ExercisesOverviewCard(
             groupedSets: cachedGroupedSets,
             currentExerciseIndex: cachedCurrentExerciseIndex,
+            selectedExerciseKey: selectedExerciseKey,
             prSetIDs: prSetIDs,
             onAddExercise: { showAddExerciseSheet = true },
             onSelectExercise: { key in
