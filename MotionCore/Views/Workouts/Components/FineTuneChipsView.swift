@@ -5,7 +5,7 @@
 // Datei . . . . : FineTuneChipsView.swift                                          /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 18.04.2026                                                       /
-// Beschreibung  : Feintuning-Chips fuer Zwischengewichte bei StudioEquipment mit  /
+// Beschreibung  : Feintuning-Chips fuer Zwischengewichte bei StudioEquipment mit   /
 //                 intermediateIncrements — +/- Capsules zur feinkoernigen Anpassung/
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /

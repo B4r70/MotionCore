@@ -41,9 +41,6 @@ struct MuscleHeatmapView: View {
                     // SVG-Heatmap Card
                     heatmapCard
 
-                    // Legende
-                    MuscleHeatmapLegend()
-
                     // Vernachlässigte Muskeln
                     if let analysis = viewModel.analysis, !analysis.neglectedRegions.isEmpty {
                         neglectedMusclesCard(regions: analysis.neglectedRegions)
@@ -93,6 +90,10 @@ struct MuscleHeatmapView: View {
                 }
                 .frame(height: 400)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                // Legende direkt unter der Heatmap
+                MuscleHeatmapLegend()
+                    .padding(.top, 4)
             } else {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(.ultraThinMaterial)

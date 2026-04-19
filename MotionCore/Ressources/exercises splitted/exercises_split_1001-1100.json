@@ -1,0 +1,2775 @@
+[
+  {
+    "id": "57833533-e0a6-479a-8390-dbf5e32345b0",
+    "exercise_db_id": "0631",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "57833533-e0a6-479a-8390-dbf5e32345b0.jpg",
+    "video_path": "57833533-e0a6-479a-8390-dbf5e32345b0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:04.354885+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Muscle-Up",
+    "instructions": "Hänge an einer Klimmzugstange mit den Handflächen von dir weg und deinen Armen vollständig ausgestreckt.\nSpanne deinen Rumpf an und ziehe deinen Körper zur Stange hoch, wobei du mit deiner Brust führst.\nWährend du die Spitze der Bewegung erreichst, wechsle deinen Griff so, dass deine Handflächen zu dir zeigen.\nZiehe dich weiter nach oben, bis deine Brust über der Stange ist und deine Arme vollständig gebeugt sind.\nKehre die Bewegung um, indem du dich langsam in die Ausgangsposition senkst.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Muscle-Up ist eine anspruchsvolle Körpergewichts-Übung, die einen Klimmzug mit einem Dip verbindet und erhebliche Oberkörperkraft, Koordination und explosive Kraft erfordert. Er beansprucht primär den Latissimus, mit sekundärer Beteiligung von Bizeps, Trizeps, Schultern und Brust.",
+    "primary_muscles": [
+      "back_lats",
+      "chest_upper",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "5eb0ac0f-4bda-49ca-9678-ae632bd25cec",
+    "exercise_db_id": "1401",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5eb0ac0f-4bda-49ca-9678-ae632bd25cec.jpg",
+    "video_path": "5eb0ac0f-4bda-49ca-9678-ae632bd25cec.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:05.860223+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Muscle-Up an der Stange",
+    "instructions": "Hänge dich an eine vertikale Stange, Handflächen zeigen von dir weg, Arme vollständig gestreckt.\nSpanne deinen Core an und ziehe deinen Körper zur Stange, führe mit deiner Brust.\nWährend du dich hochziehst, lehne dich leicht zurück und führe deine Ellbogen zu deinen Seiten.\nZiehe weiter, bis deine Brust die Stange berührt und deine Ellbogen vollständig gebeugt sind.\nHalte die Position kurz, senke dich dann kontrolliert zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Muscle-Up an der Stange ist eine anspruchsvolle Körpergewichtsübung, die einen Klimmzug mit einem Dip kombiniert. Sie erfordert große Oberkörperkraft, Koordination und gute Technik und trainiert hauptsächlich den breiten Rückenmuskel mit sekundärem Fokus auf Bizeps, Trizeps und Unterarme.",
+    "primary_muscles": [
+      "back_lats",
+      "chest_upper",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "a56c016f-b8ff-45a5-948c-f5ff6a9cf3c1",
+    "exercise_db_id": "1366",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "a56c016f-b8ff-45a5-948c-f5ff6a9cf3c1.jpg",
+    "video_path": "a56c016f-b8ff-45a5-948c-f5ff6a9cf3c1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:42:47.042813+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Nach-oben-schauender Hund",
+    "instructions": "Liege mit deinem Gesicht nach unten auf dem Boden, mit ausgestreckten Beinen hinter dir.\nPlatziere deine Hände neben deinen unteren Rippen auf dem Boden, Finger zeigen nach vorne.\nDrücke deine Hände fest in den Boden und strecke deine Arme, um deinen Oberkörper und deine Oberschenkel vom Boden zu heben.\nRolle deine Schultern zurück und nach unten, öffne deine Brust und richte deinen Blick zur Decke.\nHalte diese Position für einige Atemzüge, dann senke deinen Körper langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Eine Yoga-Pose, die die Wirbelsäule, Brust und Schultern dehnt und gleichzeitig die Arme und den Rücken stärkt. Sie wird häufig verwendet, um die Mobilität der Wirbelsäule und die Körperhaltung zu verbessern.",
+    "primary_muscles": [
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "3ac974b4-9263-4f0c-a8eb-b283912e1dfe",
+    "exercise_db_id": "1403",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "3ac974b4-9263-4f0c-a8eb-b283912e1dfe.jpg",
+    "video_path": "3ac974b4-9263-4f0c-a8eb-b283912e1dfe.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:08.833376+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Nacken-Seitendehnung",
+    "instructions": "Stehe oder sitze aufrecht hin, deine Schultern sind entspannt.\nNeige deinen Kopf zur Seite und bringe dein Ohr Richtung Schulter.\nHalte die Dehnung für 15–30 Sekunden.\nWiederhole auf der anderen Seite.\nFühre 2–4 Sätze auf jeder Seite durch.",
+    "tips": "Eine sanfte Dehnung der Nackenmuskulatur, die hauptsächlich den Schulterheber (Schulterblattheber) trainiert. Sie wird ausgeführt, indem du den Kopf zur Seite neigst, während du stehst oder sitzt.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "0ca0a972-c36e-4448-b355-98df27b243c1",
+    "exercise_db_id": "0788",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0ca0a972-c36e-4448-b355-98df27b243c1.jpg",
+    "video_path": "0ca0a972-c36e-4448-b355-98df27b243c1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:54.883208+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Nackenpresse",
+    "instructions": "Stehen Sie mit schulterbreit auseinander stehenden Füßen und halten Sie die Langhantel hinter Ihrem Nacken mit Obergriff.\nHalten Sie Ihren Rücken gerade und Ihren Core angespannt.\nDrücken Sie die Langhantel über Kopf, indem Sie Ihre Arme ausstrecken und Ihre Ellbogen vollständig strecken.\nPausieren Sie kurz oben und senken Sie die Langhantel dann langsam zurück in die Ausgangsposition.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "shoulders_side",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "bb0d749d-5327-44c4-b716-8e79259a6b61",
+    "exercise_db_id": "0747",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "bb0d749d-5327-44c4-b716-8e79259a6b61.jpg",
+    "video_path": "bb0d749d-5327-44c4-b716-8e79259a6b61.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:28.24716+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Nackenschulterdrücken an der Smith-Maschine",
+    "instructions": "Stelle die Sitzhöhe der Smith-Maschine so ein, dass die Stange auf Schulterhöhe ist.\nStelle dich mit schulterbreit auseinanderstehenden Füßen auf und beuge deine Knie leicht.\nFasse die Stange mit Obergriff, etwas breiter als schulterbreit.\nHebe die Stange aus dem Rack und tritt zurück, während du eine stabile Position beibehältst.\nSenke die Stange bis zum Nacken ab und halte deine Ellbogen nach vorne gerichtet.\nDrücke die Stange über den Kopf, bis deine Arme vollständig gestreckt sind.\nHalte kurz oben an, senke die Stange dann langsam zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Schulterübung an der Smith-Maschine, die primär die Deltamuskeln trainiert und sekundär Trizeps und oberen Rücken beansprucht. Die Bewegung erfordert gute Schultermobilität und Stabilität.",
+    "primary_muscles": [
+      "shoulders_side",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "fbda67d5-aded-4ee5-b449-eb7c58aed639",
+    "exercise_db_id": "0634",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "fbda67d5-aded-4ee5-b449-eb7c58aed639.jpg",
+    "video_path": "fbda67d5-aded-4ee5-b449-eb7c58aed639.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:10.051549+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Negative Crunch",
+    "instructions": "Liege flach auf deinem Rücken mit gebeugten Knien und flachen Füßen auf dem Boden.\nPlatziere deine Hände hinter deinem Kopf mit Ellbogen nach außen.\nSpanne deine Bauchmuskeln an und hebe deinen Oberkörper langsam vom Boden ab, bis dein Oberkörper in einem 45-Grad-Winkel ist.\nHalte kurz oben an und senke deinen Oberkörper dann langsam zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Negative Crunch fokussiert auf die exzentrische (Absenkung-)Phase, um Rumpfkraft und Kontrolle zu erhöhen.",
+    "primary_muscles": [
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "7f779991-23d9-4756-b527-d2eb66f1f2f6",
+    "exercise_db_id": "1365",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7f779991-23d9-4756-b527-d2eb66f1f2f6.jpg",
+    "video_path": "7f779991-23d9-4756-b527-d2eb66f1f2f6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:42:45.737411+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Oberer Rücken Dehnung",
+    "instructions": "Stelle dich aufrecht mit schulterbreit auseinander stehenden Füßen hin.\nStrecke deine Arme gerade vor dir aus, parallel zum Boden.\nVerschränke deine Finger und drehe deine Handflächen vom Körper weg.\nHebe deine Arme langsam über deinen Kopf, halte sie gestreckt und parallel zueinander.\nWährend du deine Arme hebst, presse deine Schulterblätter zusammen.\nHalte die Dehnung für 15-30 Sekunden und wiederhole dann.",
+    "tips": null,
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "1cbcb3fb-f1f1-43ef-bafe-699655e156e8",
+    "exercise_db_id": "1713",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1cbcb3fb-f1f1-43ef-bafe-699655e156e8.jpg",
+    "video_path": "1cbcb3fb-f1f1-43ef-bafe-699655e156e8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:17.294001+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Oberschenkel-Streckmuskel-Dehnübung in Bauchlage",
+    "instructions": "Liege mit dem Gesicht nach unten auf dem Boden mit ausgestreckten Beinen.\nBeuge dein linkes Knie und greife mit deiner linken Hand nach hinten, um deinen linken Fuß oder Knöchel zu fassen.\nZiehe deinen linken Fuß sanft zu deinen Gesäßmuskeln hin und spüre eine Dehnung in deinem linken Oberschenkel.\nHalte die Dehnung 20-30 Sekunden, dann loslassen.\nWiederhole mit deinem rechten Bein.",
+    "tips": null,
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "04f80e10-7944-48e6-bf80-53240fdf6fef",
+    "exercise_db_id": "1512",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "04f80e10-7944-48e6-bf80-53240fdf6fef.jpg",
+    "video_path": "04f80e10-7944-48e6-bf80-53240fdf6fef.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:44:46.732024+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Oberschenkel-Stretchposition",
+    "instructions": "Beginne auf allen Vieren mit deinen Händen direkt unter deinen Schultern und deinen Knien direkt unter deinen Hüften.\nStrecke ein Bein gerade nach hinten, halte dein Knie gebeugt und deinen Fuß angespannt.\nSenke deine Hüften langsam zum Boden, während du eine Dehnung in deinen Oberschenkeln spürst.\nHalte diese Position 20-30 Sekunden.\nWechsle die Beine und wiederhole die Dehnung auf der anderen Seite.",
+    "tips": null,
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "3c2ce9c6-5dfe-44f9-a277-6be56832b121",
+    "exercise_db_id": "1576",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "3c2ce9c6-5dfe-44f9-a277-6be56832b121.jpg",
+    "video_path": "3c2ce9c6-5dfe-44f9-a277-6be56832b121.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:44.812033+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Oberschenkelrückseite-Dehnung im Liegen",
+    "instructions": "Liegen Sie flach auf Ihrem Rücken mit ausgestreckten Beinen.\nBeugen Sie ein Knie und ziehen Sie es zu Ihrer Brust, halten Sie es an Ihrem Oberschenkel oder Schienbein.\nStrecken Sie Ihr Bein so weit wie möglich, während Sie es angehoben halten.\nHalten Sie die Dehnung 20-30 Sekunden.\nWiederholen Sie das Ganze mit dem anderen Bein.",
+    "tips": "Die Oberschenkelrückseite-Dehnung im Liegen ist eine Flexibilitätsübung, die die Beinbeuger und das Gesäß dehnt. Sie liegen auf dem Rücken, ziehen ein Knie zur Brust und strecken dann das Bein, um die Hamstring-Muskulatur zu dehnen.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "8e0275f4-05fc-467d-ada8-86db390fe110",
+    "exercise_db_id": "1548",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "8e0275f4-05fc-467d-ada8-86db390fe110.jpg",
+    "video_path": "8e0275f4-05fc-467d-ada8-86db390fe110.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:50.811017+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Oberschenkelstrecke auf dem Stuhl",
+    "instructions": "Sitze auf der Vorderkante eines Stuhls mit geradem Rücken und flachen Füßen auf dem Boden.\nStrecke ein Bein gerade nach vorne, halte deine Ferse auf dem Boden.\nBeuge dich leicht nach vorne und spüre die Dehnung in deinem Quadrizeps.\nHalte diese Position 20-30 Sekunden.\nWechsle das Bein und wiederhole die Dehnung.",
+    "tips": null,
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "c78b072d-7376-4672-b456-3ed65574b593",
+    "exercise_db_id": "0636",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c78b072d-7376-4672-b456-3ed65574b593.jpg",
+    "video_path": "c78b072d-7376-4672-b456-3ed65574b593.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:13.912363+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Olympiastange Hammer-Curl",
+    "instructions": "Stelle dich aufrecht hin mit schulterbreit auseinander stehenden Füßen und halte eine Olympiastange mit Obergriff.\nLasse die Stange mit ausgestreckten Armen vor deinen Oberschenkeln hängen, mit Handflächen zum Körper zeigend.\nHalte deine Oberarme stabil, atme aus und curle die Hantel durch Kontraktion deines Bizeps nach oben.\nHebe die Stange bis zu vollständiger Bizeps-Kontraktion auf Schulterhöhe.\nHalte die kontrahierte Position kurz an und spanne deinen Bizeps.\nAtme ein und senke die Stange langsam zur Ausgangsposition ab.\nWiederhol die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Olympiastange Hammer-Curl ist eine Kraftübung für Bizepse und Unterarme, die mit neutralem Griff ausgeführt wird und dabei sowohl den Bizeps als auch den Armbeuger beansprucht.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors",
+      "biceps_short"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "46dc6f37-bd1a-4a3e-b1d7-8bdf97c99908",
+    "exercise_db_id": "0641",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "46dc6f37-bd1a-4a3e-b1d7-8bdf97c99908.jpg",
+    "video_path": "46dc6f37-bd1a-4a3e-b1d7-8bdf97c99908.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:27.776602+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Otis-Up",
+    "instructions": "Liege flach auf deinem Rücken mit gebeugten Knien und Füßen flach auf dem Boden.\nPlatziere deine Hände hinter deinem Kopf mit den Ellbogen nach außen zeigend.\nSpanne deine Bauchmuskeln an und hebe deinen Oberkörper langsam vom Boden ab, rolle nach vorne, bis dein Oberkörper einen 45-Grad-Winkel bildet.\nHalte einen Moment an der Spitze, dann senke deinen Oberkörper langsam zur Ausgangsposition ab.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Otis-Up ist eine gewichtete Bauchübung, die die Bauchmuskeln trainiert, mit sekundärer Betonung auf Hüftbeuger und unteren Rücken.",
+    "primary_muscles": [
+      "abs_upper"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "ccb33453-f18d-4e6f-bb0e-e24fff1e82c3",
+    "exercise_db_id": "0979",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "ccb33453-f18d-4e6f-bb0e-e24fff1e82c3.jpg",
+    "video_path": "ccb33453-f18d-4e6f-bb0e-e24fff1e82c3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:04.428399+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Pallof Press mit Widerstandsband",
+    "instructions": "Befestige das Widerstandsband an einem stabilen Ankerpunkt in Taillenhöhe.\nStelle dich senkrecht zum Ankerpunkt mit schulterbreit auseinander stehenden Füßen hin.\nFasse den Bandgriff mit beiden Händen und trete vom Ankerpunkt weg, um Spannung im Band aufzubauen.\nBringe deine Hände zu deiner Brust, halte deine Ellbogen gebeugt und nah bei deinem Körper.\nSpanne deinen Rumpf an und behalte eine stabile Körperhaltung.\nStrecke deine Arme gerade nach vorne aus und drücke das Band weg von deinem Körper.\nHalte die gestreckte Position einige Sekunden, konzentriere dich auf die Aufrechterhaltung der Spannung in deinem Rumpf.\nBringe deine Hände langsam zurück zu deiner Brust und widerstehe dabei dem Zug des Bands.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_obliques",
+      "abs_transverse"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "f267dfee-175f-45c0-9f14-047bc300a179",
+    "exercise_db_id": "1296",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f267dfee-175f-45c0-9f14-047bc300a179.jpg",
+    "video_path": "f267dfee-175f-45c0-9f14-047bc300a179.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:57.878026+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Pike Push-up auf Stabilitätsball",
+    "instructions": "Starte in einer Push-up-Position mit Händen auf dem Boden und Schienbeinen auf dem Stabilitätsball.\nSpanne deinen Rumpf an und hebe deine Hüften zur Decke, rolle den Ball zu deinen Händen.\nHalte deine Beine gerade und deinen Körper in Pike-Position, bildeeine umgekehrte V-Form.\nBeuge deine Ellbogen und senke deinen Oberkörper zum Boden, halte deinen Kopf in einer Linie mit deinen Händen.\nDrücke mit deinen Händen und strecke deine Arme, um in die Ausgangsposition zurückzukehren.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Pike Push-up auf dem Stabilitätsball ist eine anspruchsvolle Oberkörper- und Rumpfübung, die eine Pike-Bewegung mit einem Push-up kombiniert und mit Schienbeinen auf dem Ball ausgeführt wird. Die Übung trainiert die Brustmuskulatur und beansprucht Schultern, Trizeps und Rumpfmuskulatur für Stabilität und Kraft.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_side",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "5164023f-6160-4621-a24a-ddfd36ec7e97",
+    "exercise_db_id": "3662",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5164023f-6160-4621-a24a-ddfd36ec7e97.jpg",
+    "video_path": "5164023f-6160-4621-a24a-ddfd36ec7e97.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:35.857545+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Pike-zu-Cobra Liegestütz",
+    "instructions": "Beginne in einer Liegestützposition mit den Händen etwas breiter als schulterbreit auseinander und den Füßen zusammen.\nSpanne deinen Rumpf an und hebe deine Hüften zur Decke, um eine umgekehrte V-Form mit deinem Körper zu bilden.\nSenke deinen Oberkörper zum Boden, indem du deine Ellbogen beugst und sie nah bei deinem Körper hältst.\nWährend du dich nach unten bewegst, verlagere dein Gewicht nach vorne und gehe in die Cobra-Position über, indem du deine Arme streckst und deine Brust nach oben hebst.\nKehre die Bewegung um, indem du deine Ellbogen beugst und deine Brust wieder zum Boden senkst.\nDrücke dich mit deinen Händen ab, um zur umgekehrten V-Position zurückzukehren.\nSetze die Bewegung fort, indem du deine Hüften wieder zum Boden senkst und zur Ausgangsposition zurückkehrst.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Pike-zu-Cobra Liegestütz ist eine dynamische Körpergewichtsübung, die Elemente aus dem Liegestütz, der Pike und der Cobra-Position kombiniert. Sie trainiert primär die Gesäßmuskulatur und beansprucht zusätzlich den Rumpf, die Schultern und die Trizeps. Die Bewegung erfordert Übergänge zwischen der umgekehrten V-Position (Pike) und der Cobra-Position und verlangt Kraft, Flexibilität und Koordination.",
+    "primary_muscles": [
+      "chest_middle",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "90fb92ba-8662-41a7-bfa1-88c4223985b8",
+    "exercise_db_id": "1759",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "90fb92ba-8662-41a7-bfa1-88c4223985b8.jpg",
+    "video_path": "90fb92ba-8662-41a7-bfa1-88c4223985b8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:56.296726+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Pistolen-Kniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen auf und strecke deine Arme vor dir aus.\nHebe deinen rechten Fuß vom Boden ab und strecke ihn nach vorne.\nSenke deinen Körper langsam, indem du dein linkes Knie beugst und deine Hüften nach hinten schiebst.\nHalte deine Brust oben und deinen Rücken gerade, während du dich abwärtsbewegst.\nSenke dich ab, bis dein linker Oberschenkel parallel zum Boden ist oder so weit, wie es für dich angenehm ist.\nMache eine kurze Pause am tiefsten Punkt, drücke dich dann über deine linke Ferse zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsele das Bein.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "quads_vastus_medialis"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "0d81958b-3579-475c-b5e4-96b6bb2c744c",
+    "exercise_db_id": "0464",
+    "category": "strength",
+    "force_type": "static",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0d81958b-3579-475c-b5e4-96b6bb2c744c.jpg",
+    "video_path": "0d81958b-3579-475c-b5e4-96b6bb2c744c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:22:55.630818+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Plank mit Rotation",
+    "instructions": "Starten Sie in einer hohen Plank-Position mit Ihren Händen direkt unter Ihren Schultern und Ihrem Körper in einer geraden Linie von Kopf bis Fuß.\nSpannen Sie Ihren Core und Ihre Gesäßmuskeln an, um eine stabile Position beizubehalten.\nRotieren Sie Ihren Oberkörper nach rechts, heben Sie Ihren rechten Arm an und strecken Sie ihn zur Decke.\nHalten Sie Ihre Hüften und Beine stabil während Sie drehen.\nHalten Sie kurz an und kehren Sie dann zur Ausgangsposition zurück.\nWiederholen Sie die Drehung auf der linken Seite.\nWechseln Sie weiterhin zwischen den Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_obliques",
+      "abs_transverse"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "2256c644-edb0-4251-86ca-25a6cce9c486",
+    "exercise_db_id": "0648",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2256c644-edb0-4251-86ca-25a6cce9c486.jpg",
+    "video_path": "2256c644-edb0-4251-86ca-25a6cce9c486.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:44.483157+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Power Clean",
+    "instructions": "Beginne mit der Langhantel auf dem Boden vor dir, mit schulterbreit auseinander stehenden Füßen.\nBeuge dich herab und greife die Langhantel mit Obergriff, etwas breiter als schulterbreit.\nHalte deinen Rücken gerade und deine Brust oben, während du die Langhantel vom Boden abhebst und deine Hüften und Knie streckst.\nWenn die Langhantel deine Mitte Oberschenkel erreicht, ziehe sie explosiv nach oben, während du deine Schultern zuckst und deine Ellbogen hoch und zu den Seiten ziehst.\nWenn die Langhantel ihren höchsten Punkt erreicht, gehe schnell unter ihr in die Hocke, rotiere deine Ellbogen herum und fange die Langhantel auf deinen Schultern in einer vorderen Kniebeugenposition auf.\nStehe auf mit der Langhantel und strecke deine Hüften und Knie vollständig.\nSenke die Langhantel zurück in die Ausgangsposition, während du das Gewicht kontrolliert bewegst.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Power Clean ist eine komplexe Bewegung aus dem Olympischen Gewichtheben, bei der eine Langhantel vom Boden zu den Schultern in einer explosiven Bewegung gehoben wird. Sie zielt auf Beinbeuger, Gesäßmuskeln, Quadrizeps und Waden ab und erfordert erhebliche Kraft, Koordination und Technik.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris",
+      "calves_gastrocnemius",
+      "back_traps_upper",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "5997d674-4b8d-4f72-9beb-aa60bde4eae5",
+    "exercise_db_id": "3665",
+    "category": "strength",
+    "force_type": "static",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5997d674-4b8d-4f72-9beb-aa60bde4eae5.jpg",
+    "video_path": "5997d674-4b8d-4f72-9beb-aa60bde4eae5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:45.960271+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Power-Planken-Wechsel",
+    "instructions": "Starte in einer hohen Plankenposition mit den Händen direkt unter deinen Schultern und deinem Körper in einer geraden Linie von Kopf bis Fuß.\nSpanne deine Rumpfmuskulatur an und drücke deine Gesäßmuskeln zusammen, um eine stabile Position zu halten.\nSenke deinen Körper nacheinander auf deine Unterarme ab und halte dabei eine gerade Linie von Kopf bis Fuß.\nHalte diese Position für die gewünschte Zeit, während Rumpf und Gesäßmuskeln angespannt bleiben.\nUm zur Ausgangsposition zurückzukehren, drücke dich über deine Unterarme und hebe deinen Körper zurück in die hohe Plankenposition.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Power-Planken-Wechsel ist eine dynamische Rumpfübung, bei der du zwischen hoher Planke und Unterarm-Planke wechselst und dabei Rumpfstabilität, Schulterstärke und Koordination forderst.",
+    "primary_muscles": [
+      "abs_transverse",
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "bd8b29ec-acd5-4a12-97c8-6a5e4ff83cfb",
+    "exercise_db_id": "1614",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "bd8b29ec-acd5-4a12-97c8-6a5e4ff83cfb.jpg",
+    "video_path": "bd8b29ec-acd5-4a12-97c8-6a5e4ff83cfb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:26:39.489956+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Preacher Curl Maschine v. 2",
+    "instructions": "Stellen Sie die Sitzhöhe ein und positionieren Sie sich am Gerät mit Ihren Oberarmen auf dem Polster und Ihrer Brust an der Stütze.\nGreifen Sie die Griffe mit unterem Griff, etwas breiter als schulterbreit auseinander.\nHalten Sie Ihre Oberarme stationär und atmen Sie aus, während Sie die Griffe zu Ihren Schultern curlen und Ihre Bizepse anspannen.\nPausieren Sie kurz oben in der Bewegung und drücken Sie Ihre Bizepse zusammen.\nAtmen Sie ein und senken Sie die Griffe langsam zur Ausgangsposition zurück, strecken Sie Ihre Arme vollständig aus.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "bb3701e1-0ff0-4b34-8f94-c3e617c821f1",
+    "exercise_db_id": "3638",
+    "category": "cardio",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "bb3701e1-0ff0-4b34-8f94-c3e617c821f1.jpg",
+    "video_path": "bb3701e1-0ff0-4b34-8f94-c3e617c821f1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:55.659729+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Push-up mit Kniehub",
+    "instructions": "Beginne in einer Liegestützposition mit schulterbreit auseinanderstehenden Händen und deinem Körper in einer geraden Linie.\nSenke deine Brust Richtung Boden, indem du deine Ellbogen beugst und deinen Körper gerade hältst.\nDrücke durch deine Hände und strecke deine Arme, um zur Ausgangsposition zurückzukehren.\nBringe schnell ein Knie zur Brust, wechsle dann schnell und bringe das andere Knie zur Brust.\nWechsle die Knie so schnell wie möglich ab, während du gute Ausführung beibehältst.\nFortfahren für die gewünschte Dauer oder Anzahl von Wiederholungen.",
+    "tips": "Diese Übung kombiniert einen Liegestütz mit einer Laufbewegung, bei der die Knie abwechselnd in Plank-Position zur Brust gebracht werden. Die Bewegung erhöht die Herzfrequenz und fordert Oberkörperkraft sowie kardiovaskuläre Ausdauer.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "26d43cb8-a6fe-48f1-ba78-3ce3d08ec4d9",
+    "exercise_db_id": "3145",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "26d43cb8-a6fe-48f1-ba78-3ce3d08ec4d9.jpg",
+    "video_path": "26d43cb8-a6fe-48f1-ba78-3ce3d08ec4d9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:12.03875+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Push-up Plus",
+    "instructions": "Starte in einer hohen Plank-Position mit Händen etwas breiter als schulterbreit auseinander und deinem Körper in einer geraden Linie von Kopf bis Fersen.\nSenke deinen Körper zum Boden, indem du deine Ellbogen beugst und nah an deinem Körper hältst.\nSobald deine Brust knapp über dem Boden ist, drücke dich mit deinen Händen hoch und strecke deine Arme.\nBei der obersten Position protrahiere deine Schulterblätter, indem du deinen oberen Rücken zur Decke schiebst.\nMache eine kurze Pause, dann kehre die Bewegung um, indem du deine Schulterblätter retraheierst und deinen Körper zur Ausgangsposition senkst.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Push-up Plus ist eine Variation des Standard Push-ups, die an der obersten Position eine zusätzliche Bewegung durch die Protraktion der Schulterblätter hinzufügt, was den vorderen Sägemuskel weiter aktiviert und die Schulterstabilität verbessert.",
+    "primary_muscles": [
+      "chest_middle",
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "0be8f9ec-3ab9-4f83-b59a-9f7243015601",
+    "exercise_db_id": "3637",
+    "category": "cardio",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0be8f9ec-3ab9-4f83-b59a-9f7243015601.jpg",
+    "video_path": "0be8f9ec-3ab9-4f83-b59a-9f7243015601.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:43:46.724533+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rad-Rollen",
+    "instructions": "Starten Sie in einer Plank-Position mit den Händen auf dem Rad und geradem Körper.\nSpannen Sie Ihren Core an und beginnen Sie, das Rad nach vorne zu rollen, indem Sie Ihre Arme ausstrecken.\nRollen Sie weiter, bis Ihr Körper vollständig ausgestreckt ist und Ihre Arme über dem Kopf sind.\nKehren Sie die Bewegung um, indem Sie das Rad mit Hilfe von Core und Armen zurück zu Ihrem Körper ziehen.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "51743e2b-6716-4f41-ae22-15f59eee0038",
+    "exercise_db_id": "2459",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "51743e2b-6716-4f41-ae22-15f59eee0038.jpg",
+    "video_path": "51743e2b-6716-4f41-ae22-15f59eee0038.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:42:27.204997+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Reifenwurf",
+    "instructions": "Stelle dich schulterbreit vor dem Reifen auf.\nBeuge deine Knie und senke dich in eine Kniebeugeposition ab.\nGreife mit beiden Händen die untere Kante des Reifens, Finger zeigen zu dir.\nSpanne deine Gesäß- und Beinmuskulatur an und treibe explosiv durch deine Beine, um den Reifen vom Boden zu heben.\nWährend der Reifen kippt, nutze deine Oberkörperkraft, um ihn zu führen und die Kontrolle zu bewahren.\nSobald der Reifen vollständig umgekippt ist, tritt schnell zurück und nimm wieder deine Ausgangsposition ein.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Reifenwurf ist eine explosiv ausgeführte Ganzkörperübung, die primär die Gesäßmuskulatur trainiert, mit bedeutsamer Beteiligung von Beinbeuger, Quadrizeps und Core. Die Übung erfordert Kraft, Koordination und saubere Technik für sichere Ausführung.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "shoulders_front",
+      "triceps_long",
+      "lower_back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "41107a0b-4dd2-48cb-98e4-9b24918b9669",
+    "exercise_db_id": "0872",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "41107a0b-4dd2-48cb-98e4-9b24918b9669.jpg",
+    "video_path": "41107a0b-4dd2-48cb-98e4-9b24918b9669.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:35.976711+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Reverse Crunch",
+    "instructions": "Liege flach auf deinem Rücken, die Arme an deinen Seiten ausgestreckt.\nBeuge deine Knie und hebe deine Füße vom Boden ab, so dass deine Oberschenkel senkrecht zum Boden stehen.\nSpanne deine Bauchmuskeln an und curl deine Hüfte vom Boden ab, indem du deine Knie zu deiner Brust bringst.\nMache eine kurze Pause oben, senke deine Hüfte dann langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Reverse Crunch ist eine Körpergewichtsübung, die die Bauchmuskeln, besonders die unteren Bauchmuskeln, trainiert, indem die Hüfte vom Boden angehoben und die Knie zur Brust gebracht werden.",
+    "primary_muscles": [
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "abs_upper"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "0e32dd22-87d3-44c6-af80-5c64128c190f",
+    "exercise_db_id": "1423",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "0e32dd22-87d3-44c6-af80-5c64128c190f.jpg",
+    "video_path": "0e32dd22-87d3-44c6-af80-5c64128c190f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:43.175654+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Reverse Hyperextension auf flacher Bank",
+    "instructions": "Lege dich mit dem Gesicht nach unten auf eine flache Bank, deine Hüften an der Kante und deine Beine hängend ab.\nHalte dich an der Bank fest, um Stabilität zu gewährleisten.\nHebe deine Beine bei gestreckten Knien so hoch wie möglich zur Decke.\nSpanne deine Gesäßmuskeln oben an.\nSenke deine Beine langsam in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Konzentriere dich auf die Kontraktion der Gesäßmuskeln oben und kontrolliere die Bewegung während des gesamten Satzes.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "03e3ee5e-d465-456c-b95c-04f952e08377",
+    "exercise_db_id": "0675",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "03e3ee5e-d465-456c-b95c-04f952e08377.jpg",
+    "video_path": "03e3ee5e-d465-456c-b95c-04f952e08377.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:41.809395+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Reverse Hyperextension auf Stabilitätsball",
+    "instructions": "Lege dich mit dem Bauch auf einen Stabilitätsball, sodass deine Hüfte auf dem Ball ruht und deine Beine gestreckt hinter dir sind.\nPlatziere deine Hände auf dem Boden vor dir zur Stabilisierung.\nSpanne deine Gesäßmuskeln und Oberschenkelrückseiten an und hebe deine Beine so hoch wie möglich zur Decke.\nHalte einen Moment in der obersten Position, dann senke deine Beine kontrolliert in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Die Reverse Hyperextension auf dem Stabilitätsball trainiert primär das Gesäß mit sekundärem Fokus auf die Oberschenkelrückseiten und den unteren Rücken. Durch die Verwendung des Stabilitätsballs ist ein hohes Maß an Balance und Rumpfstabilität erforderlich, was diese Variante anspruchsvoller macht als die Bodenversion.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "28c2188b-1b71-4637-bd6c-121889ec8052",
+    "exercise_db_id": "1616",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "28c2188b-1b71-4637-bd6c-121889ec8052.jpg",
+    "video_path": "28c2188b-1b71-4637-bd6c-121889ec8052.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:26:43.666001+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Reverse-Griff Prediger-Curl am Hebel",
+    "instructions": "Stelle die Sitzhöhe ein und positioniere dich am Hebelgerät.\nFasse die Griffe mit einem Untergriff, Handflächen nach oben.\nLege deine Oberarme auf dem Prediger-Polster ab und stelle sicher, dass deine Ellbogen vollständig gestreckt sind.\nHalte deine Oberarme stillstehend, atme aus und beuge die Griffe zu deinen Schultern.\nHalte einen Moment in der obersten Position und drücke deinen Bizeps zusammen.\nAtme ein und senke die Griffe langsam zur Ausgangsposition ab, strecke deine Ellbogen vollständig aus.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Reverse-Griff Prediger-Curl am Hebel ist eine Isolationsübung, die den Bizeps trainiert und am Hebelgerät mit Untergriff ausgeführt wird. Das Prediger-Polster stabilisiert die Oberarme und minimiert Schwungeinsatz.",
+    "primary_muscles": [
+      "biceps_short",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "d237a191-b8bc-43c2-9c82-c52f21cb9cd2",
+    "exercise_db_id": "0677",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d237a191-b8bc-43c2-9c82-c52f21cb9cd2.jpg",
+    "video_path": "d237a191-b8bc-43c2-9c82-c52f21cb9cd2.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:46.051481+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Ringe Dips",
+    "instructions": "Hänge dich an den Ringen mit vollständig ausgestreckten Armen auf und halte deinen Körper gerade.\nSenke deinen Körper durch das Beugen der Ellbogen, bis deine Schultern unter deinen Ellbogen sind.\nDrücke dich durch das Strecken deiner Arme zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Ringe Dips sind eine anspruchsvolle Übung mit Körpergewicht an Turnringen, die primär die Trizeps trainieren, mit erheblicher Beteiligung von Brust und Schultern. Die Instabilität der Ringe erfordert beträchtliche Kraft, Balance und Koordination.",
+    "primary_muscles": [
+      "chest_lower",
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "99d1c51e-80a6-4f9c-bfd7-ad69ee58f041",
+    "exercise_db_id": "2571",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "99d1c51e-80a6-4f9c-bfd7-ad69ee58f041.jpg",
+    "video_path": "99d1c51e-80a6-4f9c-bfd7-ad69ee58f041.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:47.391907+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rocking Frog Stretch",
+    "instructions": "Beginne kniend auf dem Boden mit deinen Knien hüftbreit auseinander.\nPlatziere deine Hände auf dem Boden vor dir zur Unterstützung.\nLehn dich langsam nach vorne und verlagere dein Gewicht auf deine Hände und strecke deine Beine hinter dir aus.\nHalte deinen Rücken gerade und engagiere dein Gesäß, während du deine Hüften nach hinten und oben zur Decke drückst.\nHalte diese Position einige Sekunden und spüre eine Dehnung in deinen Gesäußmuskeln.\nKehre langsam zur Ausgangsposition zurück, indem du deine Knie beugst und deine Hüften absenk.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Rocking Frog Stretch ist eine Körpergewicht-Übung, die die Gesäußmuskeln anspricht und zusätzlich Beinbeuger und Quadrizepse dehnt. Du kniest, lehnst dich nach vorne und rockst deine Hüften nach hinten.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "adae204a-8197-4b2f-9d30-958102333d9a",
+    "exercise_db_id": "2204",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "adae204a-8197-4b2f-9d30-958102333d9a.jpg",
+    "video_path": "adae204a-8197-4b2f-9d30-958102333d9a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:51.566348+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Roller Body Saw",
+    "instructions": "Beginnen Sie in einer Plankposition mit Ihren Unterarmen auf der Rolle und Ihrem Körper in einer geraden Linie.\nSpannen Sie Ihren Core an und rollen Sie die Rolle langsam nach vorne, wobei Sie Ihren Körper so weit wie möglich verlängern, während Sie die Kontrolle behalten.\nMachen Sie eine kurze Pause am weitesten Punkt, dann rollen Sie die Rolle langsam zurück in Ihre Ausgangsposition.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Roller Body Saw ist eine anspruchsvolle Core-Übung, bei der Sie eine Rolle verwenden, um Ihren Körper zu verlängern und zu verkürzen, während Sie eine Plankposition halten. Diese Bewegung zielt auf die Bauchmuskulatur ab und beansprucht auch die Schultern, Trizeps und die allgemeine Core-Stabilität.",
+    "primary_muscles": [
+      "abs_lower",
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "abs_transverse",
+      "shoulders_front",
+      "triceps_long"
+    ],
+    "equipment": [
+      "foam_roller"
+    ]
+  },
+  {
+    "id": "05354a0f-440a-4b36-b84a-ce54ac96b39a",
+    "exercise_db_id": "2206",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "05354a0f-440a-4b36-b84a-ce54ac96b39a.jpg",
+    "video_path": "05354a0f-440a-4b36-b84a-ce54ac96b39a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:55.727857+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Roller Reverse Crunch",
+    "instructions": "Lege dich flach auf deinen Rücken mit ausgestreckten Armen über deinem Kopf und gestreckten Beinen vor dir.\nPositioniere die Rolle zwischen deinen Füßen und halte sie mit deinen Zehen.\nSpanne deine Bauchmuskeln an, hebe deine Beine vom Boden ab und rolle deine Knie zu deiner Brust, während du die Rolle zu deinem Körper rollst.\nHalte kurz inne, senke deine Beine dann langsam zurück in die Ausgangsposition und rolle die Rolle weg von deinem Körper.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "abs_upper"
+    ],
+    "equipment": [
+      "foam_roller"
+    ]
+  },
+  {
+    "id": "6f213ce9-40bc-4e58-860d-b91fdcc714f1",
+    "exercise_db_id": "2207",
+    "category": "stretching",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6f213ce9-40bc-4e58-860d-b91fdcc714f1.jpg",
+    "video_path": "6f213ce9-40bc-4e58-860d-b91fdcc714f1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:59.739853+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Roller-Lat-Seitendehnung",
+    "instructions": "Stelle dich schulterbreit hin und halte die Rolle mit beiden Händen vor deinem Körper.\nBeuge deine Knie leicht und neige dich nach vorne, während du deinen Rücken gerade hältst.\nStrecke deine Arme nach vorne und rolle die Rolle in Richtung deiner Füße, sodass du eine Dehnung in deinen Latissimus spürst.\nHalte diese Dehnung für einige Sekunden und rolle die Rolle dann kontrolliert zurück zur Ausgangsposition.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Dehnungsübung zielt auf den Breiter Rückenmuskel ab und nutzt die Rolle, um die Dehnung zu vertiefen. Sie spricht auch die Schultern und Trizepse an.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "foam_roller"
+    ]
+  },
+  {
+    "id": "b3c1d6a1-79a9-4605-8439-d09601881eb8",
+    "exercise_db_id": "2209",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "b3c1d6a1-79a9-4605-8439-d09601881eb8.jpg",
+    "video_path": "b3c1d6a1-79a9-4605-8439-d09601881eb8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:58.361485+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Roller-Schulterheben sitzend einbeinig",
+    "instructions": "Sitze auf einer ebenen Fläche mit ausgestreckten Beinen vor dir.\nHalte die Rolle mit beiden Händen, Handflächen nach unten, und platziere sie auf deinen Oberschenkeln.\nLehne dich leicht zurück und spanne deine Core-Muskeln an.\nHebe die Rolle auf Schulterhöhe mit gestreckten Armen an.\nSenke die Rolle langsam zurück auf deine Oberschenkel.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung targeting die Brustmuskeln, während sie auch die Deltamuskeln und den Trizeps engagiert. Sie beinhaltet das Sitzen mit ausgestreckten Beinen, das Halten einer Rolle und eine kontrollierte Schulterbeugungs-Bewegung.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "foam_roller"
+    ]
+  },
+  {
+    "id": "b626ceb1-d033-426d-8637-03e651e70b1b",
+    "exercise_db_id": "1405",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "b626ceb1-d033-426d-8637-03e651e70b1b.jpg",
+    "video_path": "b626ceb1-d033-426d-8637-03e651e70b1b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:38.824101+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rücken- und Brustdehnung",
+    "instructions": "Stehe aufrecht mit den Füßen schulterbreit auseinander.\nStrecke deine Arme gerade vor dir aus, parallel zum Boden.\nKreuze deine Arme vor deinem Körper, mit dem rechten Arm über dem linken.\nVerschränke deine Finger und drehe deine Handflächen vom Körper weg.\nHebe deine Arme langsam nach oben und vom Körper weg und spüre eine Dehnung im Rücken und in der Brust.\nHalte die Dehnung 15-30 Sekunden lang und lass dann los.\nWiederhole auf der anderen Seite.",
+    "tips": "Die Rücken- und Brustdehnung ist eine Körpergewichtsübung zum Dehnen des Latissimus, der Schultern und der Brust. Sie werden die Dehnung über den oberen Rücken und die Brust spüren.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "5f6c5bc6-d12a-439d-b4a7-0c2d41b50e60",
+    "exercise_db_id": "2208",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5f6c5bc6-d12a-439d-b4a7-0c2d41b50e60.jpg",
+    "video_path": "5f6c5bc6-d12a-439d-b4a7-0c2d41b50e60.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:50.158616+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rücken-Stretch mit Rolle",
+    "instructions": "Sitze auf dem Boden mit ausgestreckten Beinen vor dir.\nPlatziere die Rolle senkrecht zu deinem Körper, direkt unter deinen Gesäßmuskeln.\nRolle deinen Körper langsam nach hinten und lasse die Rolle über deinen Rücken gleiten.\nRolle weiter, bis die Rolle deinen oberen Rücken erreicht.\nHalte die Position kurz, rolle dann kontrolliert zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Mobilitätsübung, die mit einer Faszienrolle die Wirbelsäule mobilisiert und dehnt mit zusätzlichen Vorteilen für die Oberschenkelrückseite und das Gesäß. Sie wird durchgeführt, indem der Rücken von der unteren zur oberen Wirbelsäule über die Rolle gerollt wird.",
+    "primary_muscles": [
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "foam_roller"
+    ]
+  },
+  {
+    "id": "f7bb0571-3bf9-45e3-88da-404484280176",
+    "exercise_db_id": "1363",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "f7bb0571-3bf9-45e3-88da-404484280176.jpg",
+    "video_path": "f7bb0571-3bf9-45e3-88da-404484280176.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:40.278769+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecke",
+    "instructions": "Setze dich auf den Boden mit ausgestreckten Beinen vor dir.\nPlatziere deine Hände auf dem Boden hinter dir, Finger zeigen zu deinem Körper.\nSpanne deinen Core an und lehne dich langsam zurück, halte deinen Rücken gerade.\nLehne dich weiter zurück, bis du eine Dehnung in deinem Rücken spürst.\nHalte die Dehnung für einige Sekunden, dann kehre langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Rückenstrecke mobilisiert die Wirbelsäule und dehnt sanft die Oberschenkelrückseite und das Gesäß.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "db9c6a8d-4d78-417c-899b-739bd1e8cebd",
+    "exercise_db_id": "0489",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "db9c6a8d-4d78-417c-899b-739bd1e8cebd.jpg",
+    "video_path": "db9c6a8d-4d78-417c-899b-739bd1e8cebd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:38.307195+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecker",
+    "instructions": "Stelle das Rückenstrecker-Gerät so ein, dass deine Oberschenkel auf dem Polster aufliegen und deine Füße gesichert sind.\nKreuze deine Arme über der Brust oder lege deine Hände hinter deinen Kopf.\nSenke deinen Oberkörper zum Boden, während du deinen Rücken gerade hältst.\nMache eine kurze Pause am unteren Punkt, dann hebe deinen Oberkörper wieder nach oben, bis er in einer Linie mit deinen Beinen ist.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Rückenstrecker ist eine Körpergewicht-Übung, die die Rückenstreckermuskulatur und den unteren Rücken trainiert, mit sekundärer Betonung auf Gesäß und Oberschenkelrückseite. Die Übung wird auf einem spezialisierten Gerät ausgeführt und beinhaltet das Senken und Heben des Oberkörpers bei geradem Rücken.",
+    "primary_muscles": [
+      "back_erector_spinae",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "d4586ad6-671a-4b7f-beee-ad1867b4e30b",
+    "exercise_db_id": "0488",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d4586ad6-671a-4b7f-beee-ad1867b4e30b.jpg",
+    "video_path": "d4586ad6-671a-4b7f-beee-ad1867b4e30b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:39.690991+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecker (auf Bank)",
+    "instructions": "Stelle die Hyperextension-Bank so ein, dass deine Hüften komfortabel auf dem Polster ruhen und deine Füße gesichert sind.\nKreuze deine Arme über deiner Brust oder platziere deine Hände hinter deinem Kopf.\nSenke deinen Oberkörper langsam zum Boden ab, während du deinen Rücken gerade hältst.\nHalte kurz inne und hebe deinen Oberkörper dann an, bis er in einer Linie mit deinen Beinen ist.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Rückenstrecker ist eine Körpergewichtsübung, die den unteren Rücken und die Rückenstreckmuskeln trainiert, während Gesäß und Oberschenkelrückseiten sekundär beansprucht werden. Die Übung wird an einer speziellen Bank durchgeführt und erfordert einen geraden Rücken.",
+    "primary_muscles": [
+      "back_erector_spinae",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "d5852f46-01b2-4a10-a1cc-83a91eddd642",
+    "exercise_db_id": "0573",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d5852f46-01b2-4a10-a1cc-83a91eddd642.jpg",
+    "video_path": "d5852f46-01b2-4a10-a1cc-83a91eddd642.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:50.899025+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecker am Gerät",
+    "instructions": "Stelle das Gerät so ein, dass es deiner Körpergröße und deinem Bewegungsumfang entspricht.\nSetze dich auf das Gerät mit deinem Rücken gegen das Polster und deinen gesicherten Füßen.\nGreife die Griffe oder Griffstangen.\nSpanne deinen Core an und lehne dich langsam nach vorne, wobei dein Rücken sich leicht rundet.\nMache eine kurze Pause in der unteren Position und spüre die Dehnung in deinem unteren Rücken.\nNutze deine Rückenmuskeln, um deinen Oberkörper langsam zurück zur Ausgangsposition zu heben.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Gerätübung, die primär die Muskeln des unteren Rückens (Rückenstrecker) anspricht, mit sekundärer Betonung auf Gesäß und Oberschenkelbeuger.",
+    "primary_muscles": [
+      "back_erector_spinae",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "27545785-88c8-4697-99c3-179047ba039f",
+    "exercise_db_id": "1314",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "27545785-88c8-4697-99c3-179047ba039f.jpg",
+    "video_path": "27545785-88c8-4697-99c3-179047ba039f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:35.72044+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecker auf Gymnastikball",
+    "instructions": "Platziere den Gymnastikball auf dem Boden und lege dich mit dem Bauch darauf, wobei deine Hüften auf dem Ball ruhen und deine Füße gegen eine Wand oder eine andere stabile Fläche drücken.\nPositioniere deine Hände hinter deinem Kopf oder verschränkt über deiner Brust.\nSpanne deine Rumpfmuskulatur an und hebe deinen Oberkörper langsam vom Ball ab, indem du deinen Rücken streckst, bis dein Körper eine gerade Linie von Kopf bis Fersen bildet.\nHalte einen Moment oben an und senke deinen Oberkörper dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Rückenstrecker auf dem Gymnastikball ist eine Körpergewichtsübung, die die Rückenstreckermuskulatur trainiert und den unteren Rücken stärkt. Auch Gesäß und Oberschenkelrückseite werden als Nebenmuskeln aktiviert. Der Einsatz eines Gymnastikballs erfordert intensive Rumpfstabilisation und Gleichgewicht, was es anspruchsvoller macht als eine Standard-Rückenstrecker-Übung.",
+    "primary_muscles": [
+      "back_erector_spinae",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "c6c8d98d-3e68-4df1-b5c6-060f44efebab",
+    "exercise_db_id": "1335",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c6c8d98d-3e68-4df1-b5c6-060f44efebab.jpg",
+    "video_path": "c6c8d98d-3e68-4df1-b5c6-060f44efebab.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:39.782015+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecker auf Stabilitätsball",
+    "instructions": "Lege den Stabilitätsball auf den Boden und lege dich mit dem Gesicht nach unten darauf, deine Hüften ruhen auf dem Ball und deine Füße lehnen an einer Wand zur Stabilität.\nPositioniere deine Hände hinter deinem Kopf oder verschränke sie über deiner Brust.\nSpanne deinen Core an und hebe deinen Oberkörper langsam vom Ball ab, indem du deinen Rücken streckst, bis dein Körper eine gerade Linie von deinem Kopf bis zu deinen Fersen bildet.\nMache eine kurze Pause oben und senke deinen Oberkörper dann langsam zurück in die Ausgangsposition.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_erector_spinae",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "1215a764-15d4-4b94-8ed0-bebec9c4a0b5",
+    "exercise_db_id": "0835",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1215a764-15d4-4b94-8ed0-bebec9c4a0b5.jpg",
+    "video_path": "1215a764-15d4-4b94-8ed0-bebec9c4a0b5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:43:11.794331+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecker mit Gewicht (auf Stabilisierungsball)",
+    "instructions": "Positioniere dich mit dem Bauch auf einem Stabilisierungsball, wobei deine Hüften auf dem Ball aufliegen und deine Füße an einer Wand angelehnt sind.\nPlatziere deine Hände hinter deinem Kopf oder kreuze sie über deiner Brust.\nSpanne deinen Core an und hebe deinen Oberkörper langsam vom Ball ab, indem du deinen Rücken streckst, bis dein Körper eine gerade Linie bildet.\nMache eine kurze Pause oben und senke deinen Oberkörper dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_erector_spinae",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "fdf46dbf-3fb8-4355-80f4-63aa96fd2b64",
+    "exercise_db_id": "1336",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "fdf46dbf-3fb8-4355-80f4-63aa96fd2b64.jpg",
+    "video_path": "fdf46dbf-3fb8-4355-80f4-63aa96fd2b64.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:41.248604+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstrecker mit Rotation am Gymnastikball",
+    "instructions": "Beginne mit dem Bauch auf dem Gymnastikball, wobei deine Hüften auf dem Ball ruhen und deine Füße fest auf dem Boden stehen.\nLege deine Hände hinter deinen Kopf oder kreuze sie über deiner Brust.\nSpanne deinen Rumpf an und hebe deinen Oberkörper langsam vom Ball ab, wobei du deinen Rücken streckst, bis dein Körper eine gerade Linie von Kopf bis Fersen bildet.\nHalte kurz in der oberen Position an, drehe dann deinen Oberkörper langsam zur einen Seite, während deine Hüften und Beine stabil bleiben.\nKehre zur Mittellinie zurück und wiederhole die Drehung zur anderen Seite.\nSenke deinen Oberkörper zurück in die Ausgangsposition und wiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Rückenstrecker mit Rotation am Gymnastikball ist eine Bewegung, die die Rückenstreckmuskeln trainiert, indem der Rücken im Liegen auf einem Gymnastikball gestreckt wird, gefolgt von einer Rotationskomponente, um die schrägen Bauchmuskeln zu aktivieren und die Rumpfstabilität zu verbessern.",
+    "primary_muscles": [
+      "back_erector_spinae",
+      "abs_obliques",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "e35c11f4-f5d5-4a52-b8a1-4312007d00d5",
+    "exercise_db_id": "1334",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e35c11f4-f5d5-4a52-b8a1-4312007d00d5.jpg",
+    "video_path": "e35c11f4-f5d5-4a52-b8a1-4312007d00d5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:38.367906+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückenstreckung am Gymnastikball mit Händen hinter dem Kopf",
+    "instructions": "Platziere den Gymnastikball auf dem Boden und lege dich mit dem Bauch darauf, wobei deine Hüfte auf dem Ball ruht.\nPositioniere deine Füße gegen eine Wand oder eine andere stabile Oberfläche zur Unterstützung.\nKreuze deine Arme hinter deinem Kopf, wobei deine Hände die Rückseite deines Kopfes berühren.\nSpanne deinen Rumpf an und hebe deinen Oberkörper langsam vom Ball ab, indem du deinen Rücken streckst, bis dein Körper eine gerade Linie von deinem Kopf bis zu deiner Hüfte bildet.\nHalte einen Moment oben an und senke deinen Oberkörper dann langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert die Rückenstrecker und wird auf einem Gymnastikball in Bauchlage ausgeführt, mit Händen hinter dem Kopf für erhöhte Schwierigkeit. Sie aktiviert auch das Gesäß und die Oberschenkelbeuger als sekundäre Muskulatur.",
+    "primary_muscles": [
+      "back_erector_spinae",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "6a498fa2-d845-4d75-9069-307ad8b85c2b",
+    "exercise_db_id": "1687",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6a498fa2-d845-4d75-9069-307ad8b85c2b.jpg",
+    "video_path": "6a498fa2-d845-4d75-9069-307ad8b85c2b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:38.744493+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückwärtiger Ausfallschritt mit Überkopfreach",
+    "instructions": "Stelle dich hüftbreit hin und halte deine Arme neben deinem Körper.\nMache einen Schritt nach hinten mit deinem rechten Fuß, landen auf dem Vorderfuß.\nBeuge dein linkes Knie und senke deinen Körper in eine Ausfallschritt-Position.\nWährend du in den Ausfallschritt gehst, erreiche gleichzeitig deine Arme nach oben über deinen Kopf.\nMache eine kurze Pause in der tiefsten Position des Ausfallschritts und kehre dann in die Ausgangsposition zurück, indem du durch deine linke Ferse drückst und deinen rechten Fuß nach vorne bringst.\nWiederhole die Bewegung auf der anderen Seite, mit einem Schritt nach hinten mit deinem linken Fuß und beuge dein rechtes Knie.\nWechsle die Seiten für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Der rückwärtige Ausfallschritt mit Überkopfreach ist eine dynamische Übung, die die Bauchmuskulatur trainiert und gleichzeitig Gesäß, Beinbizeps, Oberschenkelmuskulatur und Schultern beansprucht. Die Bewegung fördert Rumpfstabilität, Beinkraft und Schultermobilität.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "9297df04-f8ab-41db-a9ac-631905be94a1",
+    "exercise_db_id": "0668",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "9297df04-f8ab-41db-a9ac-631905be94a1.jpg",
+    "video_path": "9297df04-f8ab-41db-a9ac-631905be94a1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:20.452814+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückwärts-Brücke",
+    "instructions": "Liege auf deinem Rücken mit flachen Füßen auf dem Boden und gebeugten Knien.\nLege deine Arme an deine Seiten mit Handflächen nach unten.\nSpanne deine Gesäßmuskeln und Beinbeuger an und hebe deine Hüften vom Boden, bis dein Körper eine gerade Linie von den Knien zu den Schultern bildet.\nHalte diese Position für einige Sekunden, senke dann deine Hüften langsam zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Halte deine Hüften oben stabil und vermeide es, in den Nacken zu schauen. Drücke aktiv durch die Fersen.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "538e8230-ee69-4fd8-81d1-5f76e470b89a",
+    "exercise_db_id": "1473",
+    "category": "plyometric",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "538e8230-ee69-4fd8-81d1-5f76e470b89a.jpg",
+    "video_path": "538e8230-ee69-4fd8-81d1-5f76e470b89a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:39.992369+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rückwärtssprung",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin.\nBeuge deine Knie leicht und springe rückwärts, indem du dich mit beiden Füßen abdrückst.\nLande sanft auf den Fußballen, beuge deine Knie, um den Aufprall zu dämpfen.\nWiederhole dies für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Rückwärtssprung ist eine plyometrische Übung, die die Quadrizepse trainiert und gleichzeitig die Beinbeuger, Gesäßmuskulatur und Waden beansprucht. Sie erfordert Koordination, Balance und explosive Kraft.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "calves_gastrocnemius",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "4f1a2e3b-46b9-489a-8497-e95d70cdaa8e",
+    "exercise_db_id": "1361",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4f1a2e3b-46b9-489a-8497-e95d70cdaa8e.jpg",
+    "video_path": "4f1a2e3b-46b9-489a-8497-e95d70cdaa8e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:07.668942+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rudern im Smith-Gerät mit Untergriff",
+    "instructions": "Stelle das Smith-Gerät so ein, dass die Stange auf Hüfthöhe ist.\nStehe mit schulterbreit auseinander stehenden Füßen vor der Stange.\nBeuge deine Knie leicht und neige deinen Oberkörper nach vorne, halte deinen Rücken gerade.\nFasse die Stange mit Untergriff, die Hände schulterbreit auseinander.\nZiehe die Stange zu deiner unteren Brust, drücke deine Schulterblätter zusammen.\nMache eine kurze Pause oben, senke die Stange dann langsam in die Ausgangsposition zurück.\nWiederhol die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Rudern im Smith-Gerät mit Untergriff ist eine Compound-Übung für den oberen Rücken. Sie wird mit Untergriff ausgeführt und trainiert vorrangig den oberen Rücken, die Bizepse und Unterarme.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "62720ed0-35b1-44f8-b0d0-0bf3c8a83b7e",
+    "exercise_db_id": "3144",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "62720ed0-35b1-44f8-b0d0-0bf3c8a83b7e.jpg",
+    "video_path": "62720ed0-35b1-44f8-b0d0-0bf3c8a83b7e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:34.548588+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rudern sitzend mit Widerstandsband",
+    "instructions": "Sitze auf dem Boden mit ausgestreckten Beinen und schlinge das Widerstandsband um deine Füße.\nHalte die Enden des Widerstandsbands in deinen Händen, Handflächen zueinander.\nHalte deinen Rücken gerade und lehne dich leicht zurück, während du deinen Core anspannst.\nZiehe das Widerstandsband in Richtung Brust und drücke deine Schulterbläter zusammen.\nMache eine kurze Pause oben und lass die Spannung dann kontrolliert nach, um in die Ausgangsposition zurückzukehren.\nWiederholt die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Rudern sitzend mit Widerstandsband trainiert die obere Rückenmuskulatur und wird sitzend auf dem Boden mit einem um die Füße geschlungenen Widerstandsband ausgeführt. Die Übung betont Schulterblattzurückziehen und obere Rückenkraft.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "69a42375-0a00-4fe8-bfd6-c7cd5f1f435f",
+    "exercise_db_id": "0085",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "69a42375-0a00-4fe8-bfd6-c7cd5f1f435f.jpg",
+    "video_path": "69a42375-0a00-4fe8-bfd6-c7cd5f1f435f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:01.949048+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Rumänisches Kreuzheben",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und schaue geradeaus.\nGreife die Langhantel mit Obergriff, die Hände etwas breiter als schulterbreit auseinander.\nNeige dich nach vorne in den Hüften, halte deinen Rücken gerade und beuge deine Knie leicht an.\nSenke die Langhantel in Richtung Boden, während du sie nah am Körper hältst.\nSpüre die Dehnung in deinen Beinbizeps während du die Langhantel senkst.\nSobald du eine Dehnung in deinen Beinbizeps spürst, drücke deine Hüften nach vorne und richte dich auf.\nSpanne deine Gesäßmuskeln in der obersten Position an.\nSenke die Langhantel zurück in die Ausgangsposition und wiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das rumänische Kreuzheben trainiert die Gesäßmuskeln mit sekundärem Fokus auf die Beinbizeps und den unteren Rücken. Es wird durch ein Hüfthinge mit geradem Rücken ausgeführt.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_semimembranosus",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b87cd280-41b0-42c0-b2ea-5566a1c5f9fe",
+    "exercise_db_id": "0687",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b87cd280-41b0-42c0-b2ea-5566a1c5f9fe.jpg",
+    "video_path": "b87cd280-41b0-42c0-b2ea-5566a1c5f9fe.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:07.01603+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Russian Twist",
+    "instructions": "Sitze auf dem Boden mit gebeugten Knien und flachen Füßen auf dem Boden.\nLehne dich leicht nach hinten, während du deinen Rücken gerade und deinen Core angespannt hältst.\nHalte deine Hände zusammen vor deiner Brust oder halte ein Gewicht, falls gewünscht.\nHebe deine Füße vom Boden ab und balanciere auf deinen Sitzknochen.\nDrehe deinen Oberkörper nach rechts und bringe deine Hände oder das Gewicht zur rechten Seite deines Körpers.\nHalte einen Moment inne, drehe dann deinen Oberkörper nach links und bringe deine Hände oder das Gewicht zur linken Seite deines Körpers.\nWechsle die Seiten für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Der Russian Twist ist eine Core-Übung, die die Bauchmuskulatur und die schrägen Bauchmuskeln trainiert. Die Übung beinhaltet eine Drehung des Oberkörpers von Seite zu Seite, während man auf den Sitzknochen balanciert, oft mit gehobenen Füßen.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_transverse",
+      "abs_upper"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "c03ce81e-724c-4693-8495-38afdbfe51a0",
+    "exercise_db_id": "0014",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "c03ce81e-724c-4693-8495-38afdbfe51a0.jpg",
+    "video_path": "c03ce81e-724c-4693-8495-38afdbfe51a0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:13.087835+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Russische Drehungen mit Medizinball",
+    "instructions": "Setze dich auf den Boden mit gebeugten Knien und flachen Füßen.\nHalte den Medizinball mit beiden Händen vor deiner Brust.\nLehn dich leicht zurück, spanne deine Bauchmuskeln an und halte deinen Rücken gerade.\nDrehe deinen Oberkörper langsam nach rechts und führe den Medizinball zur rechten Seite deines Körpers.\nMache eine kurze Pause und drehe deinen Oberkörper dann nach links, führe den Medizinball zur linken Seite.\nWechsle abwechselnd die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Russische Drehungen mit Medizinball sind eine Kernübung, die die Bauchmuskulatur und besonders die schrägen Bauchmuskeln sowie den unteren Rücken trainiert. Der Medizinball bietet zusätzlichen Widerstand und hilft beim Aufbau von Rumpfkraft und Stabilität.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_transverse",
+      "abs_upper"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "abaf1332-63f3-4822-a737-e29483285bbf",
+    "exercise_db_id": "3011",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "abaf1332-63f3-4822-a737-e29483285bbf.jpg",
+    "video_path": "abaf1332-63f3-4822-a737-e29483285bbf.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:53.303027+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Scapula-Push-Up auf schräger Bank",
+    "instructions": "Stelle eine Schrägbank in einem 45-Grad-Winkel auf.\nPlatziere deine Hände auf der Bank, etwas breiter als schulterbreit auseinander.\nPositioniere deine Füße auf dem Boden, hüftbreit auseinander.\nSenke deine Brust zur Bank, halte deine Ellbogen eingezogen.\nWährend du dich senkst, ziehe deine Schulterblätter zusammen und drücke deine Scapulae zusammen.\nDrücke durch deine Handflächen, um deine Arme zu strecken und zur Ausgangsposition zurückzukehren.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Scapula-Push-Up auf schräger Bank ist eine Körpergewichtsübung auf einer schrägen Bank, die primär den vorderen Sägemuskel trainiert. Sie beansprucht auch Trizeps und Schultern und verbessert die Schulterstabilität.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "chest_outer"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "8738e7d4-81cf-493e-99e2-a697474cc397",
+    "exercise_db_id": "2202",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "8738e7d4-81cf-493e-99e2-a697474cc397.jpg",
+    "video_path": "8738e7d4-81cf-493e-99e2-a697474cc397.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:54.306611+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schaumstoff-Rolle Hüftdehnung",
+    "instructions": "Beginne sitzend auf dem Boden mit ausgestreckten Beinen vor dir.\nPlatziere die Rolle unter deinen Gesäßmuskeln, kurz über den Knien.\nLehn dich zurück und platziere deine Hände auf dem Boden hinter dir zur Unterstützung.\nSpanne deine Gesäßmuskeln an und rolle die Rolle langsam nach vorne, beuge deine Knie und führe sie zu deiner Brust.\nHalte oben kurz an und spüre eine Dehnung in deinen Gesäßmuskeln.\nRolle die Rolle langsam zur Ausgangslage zurück, strecke deine Beine.\nWiederhole die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Dies ist eine Flexibilitäts- und Mobilitätsübung für Gesäßmuskeln, Oberschenkelrückseite und Oberschenkelvorderseite. Eine Schaumstoff-Rolle hilft, Verspannungen zu lösen und den Bewegungsumfang in der Hüfte zu verbessern.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "foam_roller"
+    ]
+  },
+  {
+    "id": "19028a76-9ab6-4c43-beb1-86dc028fae4f",
+    "exercise_db_id": "3219",
+    "category": "cardio",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "19028a76-9ab6-4c43-beb1-86dc028fae4f.jpg",
+    "video_path": "19028a76-9ab6-4c43-beb1-86dc028fae4f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:12.241487+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Scherenssprünge",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin.\nSpringe vom Boden ab und kreuze dabei gleichzeitig dein rechtes Bein vor dem linken.\nBeim Landen wechsle schnell die Beine und kreuze dein linkes Bein vor dem rechten.\nWechsle die Beine weiterhin ab und springe so schnell wie möglich.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius",
+      "adductors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "8ac0753a-c796-4faa-adbf-ce7efa9a1edb",
+    "exercise_db_id": "0805",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8ac0753a-c796-4faa-adbf-ce7efa9a1edb.jpg",
+    "video_path": "8ac0753a-c796-4faa-adbf-ce7efa9a1edb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:42:16.331441+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schlingentrainer-Bauchausfall",
+    "instructions": "Befestige den Schlingentrainer an einem hohen Ankerpunkt und stelle die Riemen auf Hüfthöhe ein.\nStelle dich mit Blick weg vom Ankerpunkt auf und halte die Griffe mit ausgestreckten Armen vor dir.\nLehne dich in der Hüfte nach vorne, halte deinen Körper gerade und deine Rumpfmuskulatur angespannt.\nSenke deinen Körper soweit ab, wie du es kontrollieren kannst, während du die Spannung in deinen Bauchmuskeln beibehältst.\nMache eine kurze Pause unten an, hebe dann deinen Körper langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_lower",
+      "abs_transverse"
+    ],
+    "secondary_muscles": [
+      "abs_upper"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "f7f51a30-acf1-4d41-a4a4-f39f3cfbd38b",
+    "exercise_db_id": "0743",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f7f51a30-acf1-4d41-a4a4-f39f3cfbd38b.jpg",
+    "video_path": "f7f51a30-acf1-4d41-a4a4-f39f3cfbd38b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:20.051519+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schlitten Hack Squat",
+    "instructions": "Stelle das Schlitten-Gerät auf eine für deine Körpergröße angenehme Position ein.\nStelle dich mit schulterbreiten Füßen auf die Plattform, die Zehen leicht nach außen gerichtet.\nHalte die Griffe oder Stangen für Stabilität.\nSenke deinen Körper ab, indem du deine Knie und Hüften beugst, halte deinen Rücken gerade und deine Brust oben.\nSenke dich weiter ab, bis deine Oberschenkel parallel zum Boden oder leicht darunter sind.\nHalte kurz, dann drücke durch deine Fersen, um deinen Körper zurück in die Ausgangsposition zu heben.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Schlitten Hack Squat trainiert primär das Gesäß mit sekundärem Fokus auf Quadrizeps, Beinbeuger und Waden.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis",
+      "quads_vastus_medialis"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "leg_press"
+    ]
+  },
+  {
+    "id": "352f7611-cef2-4aff-bb21-7e1aaf20fe9c",
+    "exercise_db_id": "2334",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "352f7611-cef2-4aff-bb21-7e1aaf20fe9c.jpg",
+    "video_path": "352f7611-cef2-4aff-bb21-7e1aaf20fe9c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:21.488262+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schlitten-Wadenpressen",
+    "instructions": "Stelle das Schlittengerät auf ein angenehmes Gewicht ein.\nSetze dich auf das Schlittengerät mit dem Rücken gegen das Polster und deine Füße auf der Plattform.\nPlatziere deine Zehen und Fußballen am Rand der Plattform, wobei deine Fersen überhängen.\ndrücke die Plattform von dir weg, indem du deine Fußgelenke streckst und deine Knie leicht gebeugt hältst.\nFahre fort, bis deine Waden vollständig angespannt sind.\nHalte die Spannung kurz, dann senke die Plattform langsam in die Ausgangsposition zurück.\nWiederhole das Ganze für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Schlitten-Wadenpresse ist eine gerätegestützte Übung zum Trainieren der Waden, bei der eine gewichtete Plattform durch das Drücken mit den Fußballen bewegt wird.",
+    "primary_muscles": [
+      "calves_gastrocnemius",
+      "calves_soleus"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "leg_press"
+    ]
+  },
+  {
+    "id": "b7182963-86e1-4da6-b5d6-828a91fa4f07",
+    "exercise_db_id": "1494",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "b7182963-86e1-4da6-b5d6-828a91fa4f07.jpg",
+    "video_path": "b7182963-86e1-4da6-b5d6-828a91fa4f07.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:05.284281+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schmetterlings-Dehnung",
+    "instructions": "Setze dich auf den Boden mit ausgestreckten Beinen vor dir hin.\nBeuge deine Knie und bringe die Fußsohlen zusammen, sodass deine Knie zu den Seiten hin ausfallen.\nHalte deine Knöchel oder Füße mit den Händen fest.\nSitze aufrecht und verlängere deine Wirbelsäule.\nDrücke deine Knie sanft in Richtung Boden, du solltest eine Dehnung in der Innenseite deiner Oberschenkel spüren.\nHalte diese Position für einige Atemzüge.\nZum Lösen bringst du deine Knie langsam wieder nach oben und streckst deine Beine aus.",
+    "tips": "Die Schmetterlings-Dehnung ist eine sitzende Dehnungsübung, die die Adduktoren und die Innenseiten der Oberschenkel trainiert. Sie wird häufig verwendet, um die Flexibilität und Mobilität in den Hüften und der Leistengegend zu verbessern.",
+    "primary_muscles": [
+      "adductors"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "a74cafa2-28ae-4e3d-9135-5ffc44e729a1",
+    "exercise_db_id": "3552",
+    "category": "cardio",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "a74cafa2-28ae-4e3d-9135-5ffc44e729a1.jpg",
+    "video_path": "a74cafa2-28ae-4e3d-9135-5ffc44e729a1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:17.676267+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schnelle Füße v. 2",
+    "instructions": "Stellen Sie sich mit schulterbreit auseinander stehenden Füßen hin und lassen Sie Ihre Arme neben Ihnen hängen.\nBeginnen Sie damit, Ihre Füße schnell nach oben und unten zu bewegen, als würden Sie auf der Stelle laufen.\nHalten Sie Ihre Bewegungen schnell und leicht, konzentrieren Sie sich darauf, auf den Fußballen zu bleiben.\nFahren Sie für die gewünschte Dauer oder Anzahl von Wiederholungen fort.",
+    "tips": "Schnelle Füße v. 2 ist eine Körpergewicht-Übung, die schnelle Auf- und Abbewegungen der Füße an Ort und Stelle beinhaltet und sich auf Geschwindigkeit und Beweglichkeit konzentriert. Sie trainiert primär die Oberschenkelvorderseite und beansprucht gleichzeitig die Waden und die Oberschenkelrückseite.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "calves_gastrocnemius",
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "33e9e8b9-ca20-477c-a092-bfe19306e4dd",
+    "exercise_db_id": "0491",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "33e9e8b9-ca20-477c-a092-bfe19306e4dd.jpg",
+    "video_path": "33e9e8b9-ca20-477c-a092-bfe19306e4dd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:46.499668+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schrägbank Beinheben (Beine gestreckt)",
+    "instructions": "Liege auf einer Schrägbank mit dem Rücken flach gegen die Bank und gestreckten Beinen vor dir.\nPlatziere deine Hände an den Seiten der Bank zur Unterstützung.\nSpanne deine Bauchmuskeln an und hebe deine Beine von der Bank, hebe sie so hoch wie möglich, während sie gerade bleiben.\nMache eine kurze Pause oben, senke dann deine Beine langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schrägbank Beinheben mit gestreckten Beinen ist eine Bauchmuskelübung auf der Schrägbank. Sie trainiert die Bauchmuskeln und aktiviert auch die Hüftbeuger. Die Bewegung erfolgt mit gestreckten Beinen und erfordert Kontrolle in der Kernmuskulatur.",
+    "primary_muscles": [
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris",
+      "abs_upper"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "1d0ab8c2-31cd-4116-941c-806524cc55e4",
+    "exercise_db_id": "0495",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1d0ab8c2-31cd-4116-941c-806524cc55e4.jpg",
+    "video_path": "1d0ab8c2-31cd-4116-941c-806524cc55e4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:54.616007+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schrägbank-Crunch mit Rotation",
+    "instructions": "Stelle eine Schrägbank in einem 45-Grad-Winkel auf.\nLiege auf der Bank mit deinen Füßen unter den Fußpolstern fixiert.\nPlatziere deine Hände hinter deinem Kopf oder über deiner Brust.\nSpanne deine Bauchmuskeln an und hebe deinen Oberkörper von der Bank, rollend nach vorne.\nWährend du nach oben rollst, drehe deinen Oberkörper zur einen Seite, indem du deinen Ellbogen zum gegenüberliegenden Knie bringst.\nMache eine kurze Pause oben, dann senke deinen Oberkörper langsam zur Ausgangsposition.\nWiederhole die Bewegung und drehe dieses Mal zu der anderen Seite.\nWechsle weiterhin die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_upper",
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "623f657a-de4a-4fef-8737-cdf68a216abc",
+    "exercise_db_id": "0759",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "623f657a-de4a-4fef-8737-cdf68a216abc.jpg",
+    "video_path": "623f657a-de4a-4fef-8737-cdf68a216abc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:49.656091+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schrägbank-Schulterheben an der Smith-Maschine",
+    "instructions": "Stelle die Smith-Maschine auf eine Schrägposition ein.\nStelle dich mit schulterbreiten Füßen zur Maschine.\nFasse die Langhantel mit Obergriff, etwas breiter als Schulterbeit.\nHalte deinen Rücken gerade und spanne deinen Core an.\nHebe die Langhantel in Richtung Decke, führe die Bewegung mit deinen Ellbogen.\nMache eine kurze Pause oben und senke die Langhantel dann kontrolliert in die Ausgangsposition.\nWiederholt die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Schrägbank-Schulterheben an der Smith-Maschine trainiert den Vorderer Sägemuskel und wird an der Smith-Maschine ausgeführt. Die Bewegung hebt die Langhantel nach oben, während du aufrecht stehst, und fokussiert auf die Schulter- und obere Brustmuskulatur.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "8eabadcc-dafb-4a72-858a-abc2b8b26fb4",
+    "exercise_db_id": "1752",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8eabadcc-dafb-4a72-858a-abc2b8b26fb4.jpg",
+    "video_path": "8eabadcc-dafb-4a72-858a-abc2b8b26fb4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:56.672881+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schrägbank-Trizeps-Streckung an der Smith Machine",
+    "instructions": "Stelle die Bank der Smith-Maschine so ein, dass die Stange auf Schulterhöhe ist.\nSetze dich auf die Bank, dein Rücken lehnt an der Rückenlehne und deine Füße stehen flach auf dem Boden.\nFasse die Stange mit Obergriff, etwas breiter als schulterbreit.\nStrecke deine Arme vollständig, hebe die Stange aus der Halterung und halte sie direkt über deiner Brust.\nSenke die Stange langsam in Richtung Stirn ab, halte deine Ellbogen nah am Kopf.\nMache eine kurze Pause unten an, drücke die Stange dann zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "61d53986-2615-4ad5-8414-a4ee51e600a0",
+    "exercise_db_id": "0753",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "61d53986-2615-4ad5-8414-a4ee51e600a0.jpg",
+    "video_path": "61d53986-2615-4ad5-8414-a4ee51e600a0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:38.232273+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schrägbankdrücken an der Smith-Maschine",
+    "instructions": "Stelle die Schrägbank auf den gewünschten Winkel ein.\nLege dich auf die Bank und befestige deine Füße unter den Fußpolstern.\nFasse die Langhantel mit Obergriff, etwas breiter als Schulterbeit.\nNimm die Langhantel aus der Halterung und senke sie kontrolliert in Richtung Brust, während du deine Ellbogen nah am Körper hältst.\nMache eine kurze Pause unten und drücke die Langhantel dann zurück in die Ausgangsposition.\nWiederholt die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Schrägbankdrücken an der Smith-Maschine ist eine Brustübung, die primär die Brustmuskulatur beansprucht, sekundär aber auch Trizeps und Schultern trainiert. Die Smith-Maschine bietet eine geführte Bewegung, die sicherer und stabiler ist als freies Schrägbankdrücken.",
+    "primary_muscles": [
+      "chest_lower",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "44ec0efe-fe31-4855-93a1-012f04e327af",
+    "exercise_db_id": "0757",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "44ec0efe-fe31-4855-93a1-012f04e327af.jpg",
+    "video_path": "44ec0efe-fe31-4855-93a1-012f04e327af.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:46.731421+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schrägbankdrücken an der Smith-Maschine",
+    "instructions": "Stelle die Bank auf eine Neigung von 30-45 Grad ein.\nSetze dich auf die Bank, dein Rücken liegt flach an der Rückenlehne und deine Füße stehen fest auf dem Boden.\nGreife die Langhantel mit einem Obergriff, etwas breiter als Schulterbrei.\nNehme die Langhantel aus der Halterung und senke sie langsam in Richtung obere Brust, während deine Ellbogen leicht nach innen zeigen.\nMache eine kurze Pause unten und drücke die Langhantel dann zurück in die Ausgangsposition, bis deine Arme vollständig gestreckt sind.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schrägbankdrücken an der Smith-Maschine ist eine Brustübung, die den oberen Brustmuskel primär beansprucht und sekundär Schultern und Trizeps trainiert. Die Smith-Maschine bietet Stabilität und macht die Übung zugänglich für Anfänger, erfordert aber dennoch korrekte Ausführung und Kontrolle.",
+    "primary_muscles": [
+      "chest_upper",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "chest_middle"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "08a09f34-6207-4471-aaa1-ef2955581ad1",
+    "exercise_db_id": "0742",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "08a09f34-6207-4471-aaa1-ef2955581ad1.jpg",
+    "video_path": "08a09f34-6207-4471-aaa1-ef2955581ad1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:40:18.60623+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schrägbrett-Wadenheben",
+    "instructions": "Stellen Sie das Gerät auf ein angenehmes Gewicht ein und positionieren Sie sich mit den Zehen auf der Plattform und den Fersen überhängend.\nGreifen Sie zur Stabilisierung an den Griffen oder Seiten des Geräts.\nSpannen Sie Ihre Waden an und heben Sie die Fersen so hoch wie möglich gegen den Widerstand des Geräts.\nHalten Sie kurz oben inne und senken Sie die Fersen dann langsam zur Ausgangsposition ab.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schrägbrett-Wadenheben ist eine Widerstandsübung am Gerät, die die Wadenmuskeln gezielt anspricht. Die Bewegung besteht darin, die Fersen zu heben und zu senken, während die Zehen auf der Plattform bleiben.",
+    "primary_muscles": [
+      "calves_gastrocnemius",
+      "calves_soleus"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "leg_press"
+    ]
+  },
+  {
+    "id": "71d91e99-c076-4c7a-b1c3-90dfe2ac3db8",
+    "exercise_db_id": "0635",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "71d91e99-c076-4c7a-b1c3-90dfe2ac3db8.jpg",
+    "video_path": "71d91e99-c076-4c7a-b1c3-90dfe2ac3db8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:12.67803+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schräge Crunches",
+    "instructions": "Lege dich auf den Rücken mit angewinkelten Knien und flach auf dem Boden stehenden Füßen.\nLege deine Hände hinter deinen Kopf oder kreuze sie über deiner Brust.\nSpanne deine Bauchmuskeln an und hebe deine Schulterblattvorne vom Boden ab, während du deinen Oberkörper zur Seite drehst.\nMache eine kurze Pause und senke deine Schulterblattvorne dann wieder zum Boden.\nWiederhole auf der anderen Seite und wechsle die Seiten bei jeder Wiederholung ab.",
+    "tips": "Schräge Crunches am Boden trainieren die Bauchmuskulatur, besonders die schrägen Bauchmuskeln, durch eine Drehbewegung beim Crunch. Die Übung wird im Liegen mit Körpergewicht durchgeführt und ist für die meisten Fitnessstufen geeignet.",
+    "primary_muscles": [
+      "abs_obliques",
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "e2a2f932-7c40-4182-9f20-0b951877c999",
+    "exercise_db_id": "1495",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "e2a2f932-7c40-4182-9f20-0b951877c999.jpg",
+    "video_path": "e2a2f932-7c40-4182-9f20-0b951877c999.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:11.35427+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schräges Crunches",
+    "instructions": "Lege dich auf deinen Rücken mit gebeugten Knien und flachen Füßen auf dem Boden.\nPlatziere deine Hände hinter deinem Kopf oder kreuze sie über deine Brust.\nSpanne deine Bauchmuskulatur an und hebe deine Schulterblattkanten vom Boden ab, während du deinen Oberkörper zu einer Seite rotierst.\nHalte kurz an und senke deine Schulterblattkanten zurück in die Ausgangsposition.\nWiederhole auf der anderen Seite.\nWechsle weiter zwischen den Seiten ab für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das schräge Crunches ist eine Übung mit Körpergewicht, die primär die Bauchmuskulatur mit Fokus auf die schrägen Bauchmuskeln trainiert. Die rotierende Crunches-Bewegung aktiviert die seitliche Rumpfmuskulatur.",
+    "primary_muscles": [
+      "abs_obliques",
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "9771f4c2-3c54-41e9-8013-42696bee8b33",
+    "exercise_db_id": "0699",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9771f4c2-3c54-41e9-8013-42696bee8b33.jpg",
+    "video_path": "9771f4c2-3c54-41e9-8013-42696bee8b33.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:33.220332+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulter-Tap Liegestütz",
+    "instructions": "Starten Sie in einer hohen Plank-Position mit den Händen etwas breiter als schulterbreit auseinander und dem Körper in einer geraden Linie von Kopf bis Fersen.\nSenken Sie Ihren Körper durch Ellbogenbeugung zum Boden ab, wobei die Ellbogen nah am Körper bleiben.\nDrücken Sie sich zurück nach oben und heben Sie Ihre rechte Hand vom Boden, um Ihre linke Schulter zu berühren.\nPlatzieren Sie Ihre rechte Hand zurück auf dem Boden und wiederholen Sie den Liegestütz, diesmal heben Sie Ihre linke Hand an und berühren Ihre rechte Schulter.\nWechseln Sie abwechselnd zwischen den Schulter-Taps bei jeder Liegestütz-Wiederholung.\nBehalten Sie einen stabilen Core bei und vermeiden Sie excessive Hüftrotation während der gesamten Übung.\nWiederholen Sie für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Schulter-Tap Liegestütz ist eine Körpergewicht-Übung, die einen klassischen Liegestütz mit abwechselnden Schulter-Taps an der Spitze jeder Wiederholung kombiniert. Diese Bewegung fordert Brust, Trizeps und Core heraus und erfordert gleichzeitig Balance und Koordination, um den Körper während der Schulter-Taps stabil zu halten.",
+    "primary_muscles": [
+      "chest_middle",
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "shoulders_front",
+      "abs_transverse"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "354bf09b-064c-40dd-885b-efbb002be8e6",
+    "exercise_db_id": "0688",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "354bf09b-064c-40dd-885b-efbb002be8e6.jpg",
+    "video_path": "354bf09b-064c-40dd-885b-efbb002be8e6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:10.884797+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterblatt-Klimmzug",
+    "instructions": "Hänge dich an einer Klimmzugstange auf, die Handflächen zeigen nach vorne und deine Arme sind vollständig gestreckt.\nZiehe deine Schulterblätter zusammen, indem du sie nach unten und hinten retrahierst.\nSpanne deine Rückenmuskeln an und ziehe deinen Körper zur Stange hoch, wobei du dich auf das Zusammendrücken deiner Schulterblätter konzentrierst.\nHalte kurz oben an, dann senke deinen Körper langsam in die Ausgangsposition zurück.\nWiederhole das Ganze für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Schulterblatt-Klimmzug ist eine Körpergewichtsübung, die den Kapuzenmuskel trainiert und die Kontrolle und Stabilität der Schulterblätter verbessert. Die Übung wird an einer Klimmzugstange durchgeführt, indem die Schulterblätter retrahiert werden, ohne die Ellbogen zu beugen.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "biceps_long"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "bd6639d6-af9c-4fd6-8c25-e17726fbe8a0",
+    "exercise_db_id": "3021",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "bd6639d6-af9c-4fd6-8c25-e17726fbe8a0.jpg",
+    "video_path": "bd6639d6-af9c-4fd6-8c25-e17726fbe8a0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:09.568728+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterblatt-Liegestütz",
+    "instructions": "Beginne in einer hohen Plank-Position mit Händen direkt unter den Schultern und geradem Körper.\nSenke deine Brust Richtung Boden, halte deine Ellbogen nah am Körper.\nWährend du absenkst, presse deine Schulterblätter zusammen und schiebe deine Brust nach vorne.\nHalte kurz am unteren Punkt an, drücke dich dann zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Körpergewichtsübung, die den vorderen Sägemuskel trainiert und die Schulterblattstabilität und Mobilität verbessert. Sie wird in hoher Plank-Position durchgeführt mit Fokus auf die Bewegung der Schulterblätter statt der Ellbogen.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "chest_outer",
+      "back_teres"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "65e82d68-4596-446f-ae43-07a6fab55467",
+    "exercise_db_id": "3012",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "65e82d68-4596-446f-ae43-07a6fab55467.jpg",
+    "video_path": "65e82d68-4596-446f-ae43-07a6fab55467.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:08.32025+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterblatthebe",
+    "instructions": "Beginne mit schulterbreit auseinander stehenden Füßen und ausgestreckten Armen vor dir.\nBeuge deine Knie leicht und neige dich in der Hüfte nach vorne, halte deinen Rücken gerade.\nSenke deinen Körper, indem du deine Ellbogen beugst und deine Schulterblattknochen zusammenziehst, als würdest du einen Bleistift zwischen ihnen zusammendrücken.\nHalte kurz am tiefsten Punkt und drücke dich dann über deine Hände nach oben, um deine Ellbogen zu strecken und zur Ausgangsposition zurückzukehren.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Schulterblatthebe ist eine Übung mit Körpergewicht, die den oberen Rücken und die Trapezmuskulatur durch Schulterblattzusammenzug und -depression beansprucht. Diese Bewegung verbessert die Schulterstabilität und Kraft.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "back_teres"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "2a6ef776-60dc-4f76-8ccd-d028451d84f1",
+    "exercise_db_id": "0603",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "2a6ef776-60dc-4f76-8ccd-d028451d84f1.jpg",
+    "video_path": "2a6ef776-60dc-4f76-8ccd-d028451d84f1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:27:12.925194+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken am Gerät",
+    "instructions": "Stelle die Sitzhöhe ein und positioniere dich auf dem Gerät mit dem Rücken gegen die Rückenlehne.\nGriffe die Griffe mit einem Übergriff und positioniere deine Hände auf Schulterhöhe.\nDrücke die Griffe nach oben, bis deine Arme vollständig gestreckt sind, sperre deine Ellbogen aber nicht.\nHalte kurz inne, dann senke die Griffe langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Gerät bietet eine geführte Bewegung für Sicherheit und Stabilität bei dieser Deltamuskel-fokussierten Übung.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "073ced10-e22c-48d0-bf61-1ec991e94adc",
+    "exercise_db_id": "0219",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "073ced10-e22c-48d0-bf61-1ec991e94adc.jpg",
+    "video_path": "073ced10-e22c-48d0-bf61-1ec991e94adc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:43.195216+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken am Kabelzug",
+    "instructions": "Stelle den Kabelzug so ein, dass die Griffe auf Schulterhöhe sind.\nStehe mit dem Rücken zur Maschine, Füße schulterbreit auseinander.\nFasse die Griffe mit Obergriff an und bringe sie auf Schulterhöhe, Ellbogen gebeugt und nach außen gerichtet.\nDrücke die Griffe nach oben, bis deine Arme vollständig über deinem Kopf gestreckt sind.\nHalte einen Moment oben inne, dann senke die Griffe langsam zurück auf Schulterhöhe.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schulterdrücken am Kabelzug ist eine zusammengesetzte Übung, die die Deltamuskulatur mit Hilfe eines Kabelzugs beansprucht. Die Bewegung besteht darin, Griffe von Schulterhöhe nach oben zu drücken und aktiviert Schultern, Trizeps und oberen Rücken.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "6632d235-a933-41e3-a57d-bdbec37d6775",
+    "exercise_db_id": "0766",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6632d235-a933-41e3-a57d-bdbec37d6775.jpg",
+    "video_path": "6632d235-a933-41e3-a57d-bdbec37d6775.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:14.904211+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken an der Smith-Maschine",
+    "instructions": "Stelle die Sitzhöhe ein und positioniere dich an der Smith-Maschine mit schulterbreit auseinander stehenden Füßen.\nFasse die Stange mit Obergriff, leicht breiter als schulterbreit.\nHebe die Stange aus der Halterung und positioniere sie auf Schulterhöhe, mit gebeugten Ellbogen und nach vorne gerichteten Handflächen.\nDrücke die Stange nach oben, bis deine Arme vollständig gestreckt sind.\nMache eine kurze Pause oben, senke die Stange dann langsam auf Schulterhöhe ab.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schulterdrücken an der Smith-Maschine ist eine Compound-Übung, die die Deltamuskeln der Schultern trainiert. Die Maschine bietet Stabilität und ermöglicht es dir, dich auf Druckkraft und Muskelaufbau zu konzentrieren.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "e372eb1a-c267-44be-a73f-82c78947dec6",
+    "exercise_db_id": "0765",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "e372eb1a-c267-44be-a73f-82c78947dec6.jpg",
+    "video_path": "e372eb1a-c267-44be-a73f-82c78947dec6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:11.95277+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken an der Smith-Maschine (sitzend)",
+    "instructions": "Stelle die Sitzhöhe so ein, dass sich die Griffe auf Schulterhöhe befinden.\nSetze dich auf die Maschine, lehne deinen Rücken gegen die Rückenlehne und stelle deine Füße flach auf den Boden.\nFasse die Griffe mit einem Übergriff und hebe sie aus den Stützen, strecke deine Arme vollständig aus.\nSenke die Griffe langsam bis auf Schulterhöhe ab, wobei deine Ellbogen leicht gebeugt bleiben.\nDrücke die Griffe nach oben über deinen Kopf, bis deine Arme vollständig gestreckt sind.\nHalte die Position kurz an der Spitze der Bewegung und senke die Griffe dann langsam zurück auf Schulterhöhe.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schulterdrücken an der Smith-Maschine ist eine maschinengestützte Übung, die die Deltamuskulatur der Schultern trainiert. Die Maschine bietet Stabilität und Sicherheit, was sie ideal für den Aufbau von Schulterkraft mit reduziertem Verletzungsrisiko macht. Die Bewegung beansprucht auch den Trizeps und oberen Rücken als sekundäre Muskelgruppen.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "fec1128c-e794-4a77-8df7-fb8c6c2b3160",
+    "exercise_db_id": "0772",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "fec1128c-e794-4a77-8df7-fb8c6c2b3160.jpg",
+    "video_path": "fec1128c-e794-4a77-8df7-fb8c6c2b3160.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:23.672482+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken hinter dem Kopf an der Smith-Maschine",
+    "instructions": "Stelle die Sitzhöhe der Smith-Maschine so ein, dass die Stange auf Schulterhöhe ist.\nStehe mit schulterbreit auseinanderstehenden Füßen und leicht gebeugten Knien.\nGreifen Sie die Stange mit Obergriff, etwas breiter als schulterbreit.\nHeben Sie die Stange aus dem Ständer und treten Sie zurück, während Sie eine stabile Position beibehalten.\nPositionieren Sie die Stange hinter Ihrem Kopf, ruhend auf den oberen Trapeziusmuskeln.\nHalten Sie Ihren Core angespannt und die Brust während der gesamten Übung angehoben.\nDrücken Sie die Stange nach oben, indem Sie Ihre Arme vollständig strecken.\nMachen Sie eine kurze Pause oben, senken Sie die Stange dann langsam in die Ausgangsposition zurück.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "shoulders_side",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "6770263b-ae48-4ebf-b234-2be0d8f2e1c0",
+    "exercise_db_id": "1438",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6770263b-ae48-4ebf-b234-2be0d8f2e1c0.jpg",
+    "video_path": "6770263b-ae48-4ebf-b234-2be0d8f2e1c0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:08.165214+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken mit Kettlebells sitzend (beidarmig)",
+    "instructions": "Sitze auf einer Bank mit geradem Rücken und flachen Füßen auf dem Boden.\nHalte eine Kettlebell in jeder Hand auf Schulterhöhe mit nach vorne gerichteten Handflächen.\nDrücke die Kettlebells nach oben, bis deine Arme vollständig gestreckt sind.\nMache eine kurze Pause oben, senke die Kettlebells dann langsam auf Schulterhöhe ab.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schulterdrücken mit Kettlebells sitzend trainiert die Deltamuskeln mit sekundärer Betonung auf Trizeps und oberen Rücken. Die Kettlebells erfordern zusätzliche Stabilisierungsarbeit.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "e9f19891-676a-4abe-80a1-280fab1c6c77",
+    "exercise_db_id": "0997",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "e9f19891-676a-4abe-80a1-280fab1c6c77.jpg",
+    "video_path": "e9f19891-676a-4abe-80a1-280fab1c6c77.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:28.250389+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken mit Widerstandsband",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und platziere das Band unter deinen Füßen.\nHalte das Band mit den Handflächen nach vorne zeigend und hebe deine Hände auf Schulterhöhe, die Ellbogen gebeugt.\nDrücke das Band über deinen Kopf, strecke deine Arme vollständig.\nMache eine kurze Pause oben, senke dann das Band langsam zur Schulterhöhe ab.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Widerstandsübung, die die Deltamuskeln trainiert und gleichzeitig Trizeps und oberen Rücken aktiviert. Das Band bietet progressive Spannung während der Überkopfbewegung.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "e44fe1ee-7191-4ee9-910f-256af4aa32e6",
+    "exercise_db_id": "3122",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "e44fe1ee-7191-4ee9-910f-256af4aa32e6.jpg",
+    "video_path": "e44fe1ee-7191-4ee9-910f-256af4aa32e6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:33.009638+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterdrücken mit Widerstandsband (sitzend)",
+    "instructions": "Setze dich auf einen Stuhl oder eine Bank mit geradem Rücken und flach auf dem Boden stehenden Füßen.\nHalte das Widerstandsband mit beiden Händen, Handflächen zeigen nach vorne, und bringe es auf Schulterhöhe.\nDrücke das Band nach oben über deinen Kopf, strecke deine Arme vollständig aus.\nHalte die Position kurz an der Spitze an, senke das Band dann langsam zurück auf Schulterhöhe.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schulterdrücken mit Widerstandsband ist eine sitzend ausgeführte Überkopfdrück-Übung, die die Deltamuskulatur trainiert. Der Trizeps und der obere Rücken werden als sekundäre Muskelgruppen beansprucht. Diese Übung ist für den Aufbau von Schulterkraft und -stabilität geeignet und ist für die meisten Fitnessstufen zugänglich, da die kontrollierte Bewegung und die Unterstützung durch die sitzende Position für eine sichere Ausführung sorgen.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "7b1747e3-ebc1-4ac3-a569-8a2a29fe1f60",
+    "exercise_db_id": "0767",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7b1747e3-ebc1-4ac3-a569-8a2a29fe1f60.jpg",
+    "video_path": "7b1747e3-ebc1-4ac3-a569-8a2a29fe1f60.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:16.380861+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterheben (Smith-Gerät)",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen und leicht gebeugten Knien hin.\nFasse die Langhantel mit Obergriff, Hände etwas breiter als schulterbreit.\nHalte deine Arme gerade und deine Schultern entspannt.\nHebe deine Schultern in Richtung deiner Ohren und presse deine Schultermuskeln oben zusammen.\nHalte einen Moment, dann senke deine Schultern langsam wieder in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Schulterheben an der Smith-Maschine trainiert die Schultermuskeln. Die Übung beinhaltet das Heben der Schultern in Richtung der Ohren während du eine Langhantel hältst und die Schultermuskeln oben zusammenpresst.",
+    "primary_muscles": [
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "f7a90fe6-fcad-4605-a32c-2602961eac8c",
+    "exercise_db_id": "3699",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f7a90fe6-fcad-4605-a32c-2602961eac8c.jpg",
+    "video_path": "f7a90fe6-fcad-4605-a32c-2602961eac8c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:31.795719+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterklopfen",
+    "instructions": "Starte in einer hohen Plank-Position mit deinen Händen direkt unter deinen Schultern, dein Körper in einer geraden Linie.\nSpanne deinen Core an und hebe deine rechte Hand vom Boden, um deine linke Schulter zu berühren.\nSetze deine rechte Hand zurück auf den Boden und wiederhole mit deiner linken Hand auf der rechten Schulter.\nWechsle kontinuierlich die Schulterklopfen ab, während du deine Hüfte und deinen Oberkörper stabil hältst.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Schulterklopfen trainieren die Bauchmuskeln und erfordern gute Core-Stabilität sowie Koordination.",
+    "primary_muscles": [
+      "abs_transverse",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "cb4571d5-524f-440f-8362-fa88ddd74f13",
+    "exercise_db_id": "1018",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "cb4571d5-524f-440f-8362-fa88ddd74f13.jpg",
+    "video_path": "cb4571d5-524f-440f-8362-fa88ddd74f13.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:29.845149+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schulterzucken mit Widerstandsband",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und platziere das Widerstandsband unter deinen Füßen. Halte die Enden mit deinen Händen.\nHalte deine Arme gerade und entspannt, das Band hängt vor deinen Oberschenkeln.\nSpanne deine Kapuzenmuskel an, indem du deine Schultern nach oben zuckst und das Band so hoch wie möglich hebst.\nHalte die Kontraktion kurz an und senke deine Schultern anschließend langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "795929a1-f2cd-4598-ae41-92bd9e97c764",
+    "exercise_db_id": "3433",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "795929a1-f2cd-4598-ae41-92bd9e97c764.jpg",
+    "video_path": "795929a1-f2cd-4598-ae41-92bd9e97c764.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:42:23.037281+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Schwimmer-Kicks v. 2",
+    "instructions": "Liege mit dem Gesicht nach unten auf einer Matte mit ausgestreckten Armen über deinem Kopf.\nSpanne deinen Rumpf an und hebe deine Brust und Beine gleichzeitig vom Boden ab.\nBewege deine Beine in einer flatternden Bewegung auf und ab, als würdest du schwimmen.\nFortsetzen für die gewünschte Anzahl an Wiederholungen.\nSenke deine Brust und Beine wieder in die Ausgangsposition.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus",
+      "lower_back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "0f775a01-a151-4fae-841b-9dd139f547b9",
+    "exercise_db_id": "1724",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0f775a01-a151-4fae-841b-9dd139f547b9.jpg",
+    "video_path": "0f775a01-a151-4fae-841b-9dd139f547b9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:18.15206+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seil-Überkopf-Trizepsdrücken",
+    "instructions": "Befestigen Sie ein Seil an einer hohen Kabelrolle und stellen Sie das Gewicht entsprechend ein.\nStellen Sie sich mit schulterbreit auseinander stehenden Füßen mit dem Gesicht zur Maschine entfernt hin.\nGreifen Sie das Seil mit beiden Händen, Handflächen nach unten, und bringen Sie Ihre Hände über Ihren Kopf.\nHalten Sie Ihre Oberarme nah am Kopf und senkrecht zum Boden.\nSenken Sie das Seil langsam hinter Ihren Kopf ab, indem Sie Ihre Ellbogen beugen.\nMachen Sie eine kurze Pause und strecken Sie dann Ihre Arme zurück zur Ausgangsposition.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Seil-Überkopf-Trizepsdrücken ist eine isolierende Übung, die die Trizepse mit Hilfe einer Kabelmaschine und Seilaufsatz trainiert. Sie konzentriert sich auf die Trizepsentwicklung und beansprucht auch die Schultern zur Stabilisierung.",
+    "primary_muscles": [
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "c8e1df72-83bb-4af3-baa2-bdea4b5fdc40",
+    "exercise_db_id": "0680",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c8e1df72-83bb-4af3-baa2-bdea4b5fdc40.jpg",
+    "video_path": "c8e1df72-83bb-4af3-baa2-bdea4b5fdc40.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:01.166289+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seilklettern",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen vor dem Seil hin.\nFasse das Seil mit beiden Händen, Handflächen zu dir gerichtet.\nBeuge deine Knie leicht und spanne deinen Core an.\nBeginne dich hochzuziehen, indem du alternierend mit den Händen das Seil nach oben greifst.\nNutze deine Beine, um dich nach oben zu unterstützen.\nKlettere weiter, bis du die gewünschte Höhe oder die Oberseite des Seils erreichst.\nZum Absteigen kehre die Handbewegung um und kontrolliere deinen Abstieg.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Seilklettern ist eine anspruchsvolle Übung für den oberen Körper, die den oberen Rücken, die Unterarme, die Bizeps und die Schultern trainiert. Es erfordert erhebliche Griffstärke, Koordination und Core-Stabilität.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "biceps_short",
+      "forearms_flexors",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "f1ecd1dc-9e67-4d6a-bf58-a14ad5d9dd2a",
+    "exercise_db_id": "0609",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "f1ecd1dc-9e67-4d6a-bf58-a14ad5d9dd2a.jpg",
+    "video_path": "f1ecd1dc-9e67-4d6a-bf58-a14ad5d9dd2a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:36:30.124461+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seilrudern (oben)",
+    "instructions": "Befestige das Seil an einem hohen Ankerpunkt.\nStelle dich mit schulterbreit auseinander stehenden Füßen mit dem Gesicht weg vom Ankerpunkt.\nFasse das Seil mit Obergriff an, Handflächen zeigen nach unten.\nLehne dich leicht nach vorne, halte deinen Rücken gerade und die Rumpfmuskulatur angespannt.\nZiehe das Seil zu deinem Körper, drücke deine Schulterblätter zusammen.\nHalte einen Moment in der Spitzenposition an, dann löse die Spannung langsam und kehre in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Seilrudern trainiert den oberen Rücken mit einem Seil an einem hohen Ankerpunkt. Es wird ausgeführt, indem das Seil zum Körper gezogen wird, während die Schulterblätter zusammengedrückt werden. Dies beansprucht den oberen Rücken, die Schultern, Bizeps und Unterarme.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "9deb22b6-c093-48d6-b4bd-6381bf090af1",
+    "exercise_db_id": "2612",
+    "category": "cardio",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "9deb22b6-c093-48d6-b4bd-6381bf090af1.jpg",
+    "video_path": "9deb22b6-c093-48d6-b4bd-6381bf090af1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:17.764351+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seilspringen",
+    "instructions": "Halte die Griffe des Springseils mit deinen Händen, Handflächen zeigen nach innen.\nStehe mit schulterbreit auseinander stehenden Füßen und leicht gebeugten Knien.\nSchwinge das Seil über deinem Kopf und springe darüber, wenn es auf deine Füße zukommt.\nLande sanft auf deinen Fußballen und wiederhole den Sprung, wenn das Seil erneut herumschwenkt.\nSpringe für die gewünschte Dauer oder Anzahl von Wiederholungen weiter.",
+    "tips": "Seilspringen ist eine kardiovaskuläre Übung mit kontinuierlichen Sprüngen über ein schwenkendes Seil. Sie trainiert primär das Herz-Kreislauf-System und aktiviert sekundär die Waden, Quadrizeps, Oberschenkelrückseiten und Gesäßmuskeln.",
+    "primary_muscles": [],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "2e3ef6e3-18e7-4f67-a46f-8571ccdad153",
+    "exercise_db_id": "1769",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "2e3ef6e3-18e7-4f67-a46f-8571ccdad153.jpg",
+    "video_path": "2e3ef6e3-18e7-4f67-a46f-8571ccdad153.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:44.054023+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seitenlage-Bizeps-Curl mit Körpergewicht",
+    "instructions": "Lege dich auf deine Seite mit ausgestreckten Beinen und deinem Kopf gestützt auf deinen Arm.\nHalte deinen Oberarm an deiner Seite und beuge deinen Ellbogen, um deinen Unterarm in Richtung Schulter zu heben.\nHalte oben kurz inne und senke deinen Unterarm anschließend langsam zurück in die Ausgangsposition.\nWiederhole die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Dies ist eine Bizeps-fokussierte Übung in Seitenlage, die nur dein Körpergewicht als Widerstand nutzt. Sie trainiert primär die Bizepse und sekundär die Unterarme.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "a9e5e4fc-d5dc-427c-9553-c005d070b6a0",
+    "exercise_db_id": "3667",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "a9e5e4fc-d5dc-427c-9553-c005d070b6a0.jpg",
+    "video_path": "a9e5e4fc-d5dc-427c-9553-c005d070b6a0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:41.338502+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seitenliegende Hüftadduktion",
+    "instructions": "Liege auf deiner Seite mit gestreckten und übereinander gestapelten Beinen.\nPlatziere deinen unteren Arm unter deinem Kopf zur Unterstützung.\nSpanne deine Adduktoren an und hebe dein oberes Bein so hoch wie möglich, ohne deine Hüfte zu rotieren oder nach hinten zu lehnen.\nHalte oben kurz inne, senke dein Bein dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Die seitenliegende Hüftadduktion ist eine Körpergewicht-Übung, die die Adduktoren trainiert und in Seitenlage mit Beinhebung durchgeführt wird.",
+    "primary_muscles": [
+      "glutes_medius",
+      "abductors"
+    ],
+    "secondary_muscles": [
+      "glutes_minimus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "1795060e-d4fd-4087-9a69-2661b364b887",
+    "exercise_db_id": "0006",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1795060e-d4fd-4087-9a69-2661b364b887.jpg",
+    "video_path": "1795060e-d4fd-4087-9a69-2661b364b887.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:44:49.848903+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seitliche Bauchmuskelberührungen",
+    "instructions": "Lege dich flach auf den Rücken, die Knie gebeugt und die Füße flach auf dem Boden.\nStrecke deine Arme seitlich aus, parallel zum Boden.\nSpanne deine Bauchmuskulatur an, hebe deine Schultern vom Boden ab und greife mit der rechten Hand zu deiner rechten Ferse.\nKehre in die Ausgangsposition zurück und wiederhole die Bewegung auf der linken Seite, indem du deine linke Hand zu deiner linken Ferse führst.\nWechsle weiterhin die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Effektive Übung mit Körpergewicht zur Aktivierung der Bauchmuskulatur, insbesondere der schrägen Bauchmuskeln (Obliquen). Der Fokus liegt auf der Kernstabilität während der gesamten Bewegung.",
+    "primary_muscles": [
+      "abs_upper",
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "ccd09da1-adb3-4dfb-9825-3f77ef3c7a51",
+    "exercise_db_id": "1358",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "ccd09da1-adb3-4dfb-9825-3f77ef3c7a51.jpg",
+    "video_path": "ccd09da1-adb3-4dfb-9825-3f77ef3c7a51.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:39.984248+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seitliche Bodenstreckung",
+    "instructions": "Liege auf deiner Seite mit ausgestreckten Beinen und dem unteren Arm gerade nach oben gestreckt.\nBeuge dein oberes Knie und platziere deinen Fuß vor deinem unteren Bein auf dem Boden.\nStrecke deinen oberen Arm über deinen Kopf und fasse etwas Stabiles, wie eine Wand oder ein Möbelstück.\nHebe dein unteres Bein langsam vom Boden ab, halte es gerade, bis du eine Streckung an deiner Seite spürst.\nHalte die Streckung 20-30 Sekunden, dann senke dein Bein langsam ab.\nWiederhole die Übung auf der anderen Seite.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "bd8f4782-7973-450f-b176-8e73c71c37aa",
+    "exercise_db_id": "0221",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "bd8f4782-7973-450f-b176-8e73c71c37aa.jpg",
+    "video_path": "bd8f4782-7973-450f-b176-8e73c71c37aa.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:47.479786+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seitliche Crunches am Kabelzug (BOSU Ball)",
+    "instructions": "Stehen Sie mit schulterbreit auseinander stehenden Füßen und halten Sie einen Kabelgriff in einer Hand.\nPlatzieren Sie Ihre andere Hand auf Ihrer Hüfte.\nSpannen Sie Ihren Core an und beugen Sie sich langsam zur Seite Richtung der Hand, die das Kabel hält, halten Sie Ihren Rücken gerade.\nPausieren Sie kurz am unteren Ende der Bewegung, dann kehren Sie langsam zur Ausgangsposition zurück.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen, dann wechseln Sie die Seiten.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_obliques",
+      "abs_upper"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "969431ea-444d-4394-b2ef-a50793fad220",
+    "exercise_db_id": "0794",
+    "category": "stretching",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "969431ea-444d-4394-b2ef-a50793fad220.jpg",
+    "video_path": "969431ea-444d-4394-b2ef-a50793fad220.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:42:01.790327+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "seitliche Dehnung im Stehen",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und beuge deine Knie leicht.\nStrecke deine Arme gerade zu den Seiten aus, parallel zum Boden.\nNeige deinen Oberkörper langsam zur Seite und spüre eine Dehnung in deiner Seitenseite und deinen Latissimus.\nHalte die Dehnung für 15-30 Sekunden.\nKehre zur Ausgangsposition zurück und wiederhole auf der anderen Seite.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Die seitliche Dehnung im Stehen ist eine Körpergewichtsübung, die die Latissimus dehnt und die Seitenseite des Oberkörpers streckt. Sie beteiligt auch Schultern und schräge Bauchmuskeln. Die Bewegung wird ausgeführt, indem man schulterbreit steht, die Arme ausstreckt und sich zu jeder Seite neigt.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "550760b7-4985-4249-a4ab-d1e8e644b870",
+    "exercise_db_id": "0721",
+    "category": "stretching",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "550760b7-4985-4249-a4ab-d1e8e644b870.jpg",
+    "video_path": "550760b7-4985-4249-a4ab-d1e8e644b870.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:46.889136+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seitliche Handgelenk-Dehnübung",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und strecke deine Arme vor deinem Körper aus.\nStrecke deinen rechten Arm zur Seite aus, parallel zum Boden, mit der Handfläche nach unten.\nGreife mit deiner linken Hand deine rechte Hand und ziehe sie sanft zu deinem Körper hin, während du eine Dehnung in deinem rechten Unterarm spürst.\nHalte die Dehnung 15-30 Sekunden lang und lasse dann los.\nWiederhole die Übung auf der anderen Seite.",
+    "tips": "Die seitliche Handgelenk-Dehnübung ist eine Körpergewichtsübung, die die Unterarme trainiert und hilft, die Flexibilität und Mobilität in Handgelenken und Händen zu verbessern. Sie wird durchgeführt, indem man einen Arm zur Seite streckt und die Hand sanft mit der anderen Hand zum Körper zieht, wodurch eine Dehnung im Unterarm entsteht.",
+    "primary_muscles": [
+      "forearms_extensors",
+      "forearms_flexors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "e891106b-dd1d-4885-b010-fb89e92b1b40",
+    "exercise_db_id": "0710",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "e891106b-dd1d-4885-b010-fb89e92b1b40.jpg",
+    "video_path": "e891106b-dd1d-4885-b010-fb89e92b1b40.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:38.697646+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Seitliche Hüftabduktion",
+    "instructions": "Stelle dich aufrecht hin, die Füße schulterbreit auseinander, und platziere deine Hände auf deinen Hüften.\nVerlagere dein Gewicht auf ein Bein und hebe das andere Bein zur Seite, halte es gestreckt.\nHalte diese Position kurz an, senke dein Bein dann kontrolliert zurück in die Ausgangsposition.\nWiederhole auf der anderen Seite.\nWechsle die Seiten für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Die seitliche Hüftabduktion ist eine Körpergewichtsübung, die die Hüftabduktoren trainiert und die äußere Oberschenkelmuskulatur und Hüfte stärkt. Sie beansprucht auch das Gesäß und die Oberschenkelvorderseite als Nebenmuskulatur. Diese Bewegung wird häufig zum Kräftigen, zur Mobilitätsverbesserung und zu Rehabilitationszwecken eingesetzt.",
+    "primary_muscles": [
+      "abductors",
+      "glutes_medius"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  }
+]

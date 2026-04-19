@@ -1,0 +1,2865 @@
+[
+  {
+    "id": "e69861ee-85e2-4bbb-b450-3327fc79a10c",
+    "exercise_db_id": "0188",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e69861ee-85e2-4bbb-b450-3327fc79a10c.jpg",
+    "video_path": "e69861ee-85e2-4bbb-b450-3327fc79a10c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:15.069844+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Mittlerer Flug",
+    "instructions": "Befestige Kabel an beiden Seiten einer Kabelzugmaschine auf Brusthöhe.\nStehe in der Mitte der Maschine mit einem Fuß leicht nach vorne positioniert.\nGreife die Griffe mit Obergriff und strecke deine Arme zur Seite.\nHalte eine leichte Beugung in deinen Ellbogen und bewahre eine leichte Vorwärtsneigung.\nSpanne deine Brustmuskulatur an und führe deine Arme in einer sweependen Bewegung nach vorne.\nMache eine kurze Pause in der Mitte und führe deine Arme dann langsam zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Mittlerer Flug ist eine Isolationsübung für die Brustmuskulatur mit Kabelzugmaschine. Sie betont die Brustentwicklung und beansprucht die Deltamuskeln und Trizepse als sekundäre Muskulatur.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "40dc2cda-301b-484d-8de2-cb151017b655",
+    "exercise_db_id": "0206",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "40dc2cda-301b-484d-8de2-cb151017b655.jpg",
+    "video_path": "40dc2cda-301b-484d-8de2-cb151017b655.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:02.424394+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Reverse Curl",
+    "instructions": "Befestige eine gerade Stange an einem unteren Kabelzug-Gerät.\nStehe mit schulterbreit auseinander stehenden Füßen vor dem Gerät, die Knie leicht gebeugt.\nFasse die Stange mit unterem Griff, die Hände schulterbreit auseinander.\nHalte deine Ellbogen nah am Körper und lass deine Oberarme während der gesamten Übung stillstehen.\nAtme aus und curl die Stange nach oben zu deinen Schultern, dabei kontrahieren sich deine Bizepse.\nMache eine kurze Pause oben und spanne deine Bizepse an.\nAtme ein und senke die Stange langsam zurück in die Ausgangsposition, wobei deine Arme vollständig gestreckt sind.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kabelzug-Reverse Curl ist eine Isolationsübung für die Bizepse und Unterarme am Kabelzug-Gerät. Durch den umgekehrten Griff wird besonders der Armbeuger und die Oberarmspeichenmuskel beansprucht.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "b329c2fb-2524-45e7-aefe-fc9afa641444",
+    "exercise_db_id": "0240",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b329c2fb-2524-45e7-aefe-fc9afa641444.jpg",
+    "video_path": "b329c2fb-2524-45e7-aefe-fc9afa641444.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:21.557915+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Reverse Fly in Bauchlage",
+    "instructions": "Befestige einen D-Griff an einem tiefen Kabelzug und lege dich mit dem Gesicht nach unten auf eine flache Bank.\nFasse den D-Griff mit beiden Händen, Handflächen nach unten, und strecke deine Arme gerade nach vorne aus.\nHalte deine Arme gestreckt und hebe sie zu den Seiten, bis sie parallel zum Boden sind.\nMache eine kurze Pause oben, senke deine Arme dann langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Reverse Fly in Bauchlage ist eine Isolationsübung, die die hinteren Deltamuskeln targeting, und wird in Bauchlage auf einer Bank mit einem Kabelzug ausgeführt. Die Übung betont Schulterkraft und Stabilität, mit sekundärer Aktivierung des Kapuzenmuskel und der Rhomboiden.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "b3b56571-fdd1-45af-9f13-e89cf72472a8",
+    "exercise_db_id": "0154",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b3b56571-fdd1-45af-9f13-e89cf72472a8.jpg",
+    "video_path": "b3b56571-fdd1-45af-9f13-e89cf72472a8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:19.578174+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Reverse Fly überkreuzt",
+    "instructions": "Befestige einen D-Griff an jedem tiefen Kabelzug und stelle dich in der Mitte des Kabelzug-Geräts auf.\nFasse die Griffe mit Proniergriff (Handflächen nach unten) und mache einen Schritt nach vorne, positioniere deine Füße in Schulterbereite.\nBeuge deine Knie leicht und lehne dich in der Hüfte nach vorne, halte deinen Rücken gerade und deine Bauchmuskeln angespannt.\nHalte deine Arme zu den Seiten gestreckt und leicht in den Ellbogen gebeugt, atme aus und drücke deine Schulterblätter zusammen, während du die Kabel in einer Reverse-Fly-Bewegung zurück und oben ziehst.\nMache eine kurze Pause am Punkt der maximalen Kontraktion, atme ein und kehre langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Reverse Fly überkreuzt ist eine Isolationsübung, die die hinteren Deltamuskeln targeting, mit sekundärem Fokus auf die Rhomboiden und den Kapuzenmuskel. Sie wird mit einem Kabelzug-Gerät ausgeführt und erfordert gute Körperhaltung, Kontrolle und Koordination.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "1cb327ae-2aca-4bac-80d5-53a3d111ac6c",
+    "exercise_db_id": "0873",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1cb327ae-2aca-4bac-80d5-53a3d111ac6c.jpg",
+    "video_path": "1cb327ae-2aca-4bac-80d5-53a3d111ac6c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:01.11467+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Reverse-Crunch",
+    "instructions": "Befestige einen Kabelzug an einer tiefen Rolle und liege auf einer Matte rücklings hin.\nHalte das Kabel mit beiden Händen und strecke deine Arme gerade zur Decke.\nBeuge deine Knie und hebe deine Beine an, bring deine Oberschenkel Richtung Brust.\nHalte deinen Oberkörper stabil und krümme dein Becken nach oben zur Brust, während du deine Hüften von der Matte abhebst.\nMache eine kurze Pause oben, dann senke deine Hüften langsam zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_lower"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "dbef6ef9-e69a-48c4-8552-dc492f76a4c0",
+    "exercise_db_id": "0209",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "dbef6ef9-e69a-48c4-8552-dc492f76a4c0.jpg",
+    "video_path": "dbef6ef9-e69a-48c4-8552-dc492f76a4c0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:06.747374+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Reverse-Curl an der Prediger-Bank",
+    "instructions": "Stelle das Kabelzuggerät so ein, dass die Prediger-Bank auf Brusthöhe ist.\nSetze dich auf die Prediger-Bank und platziere deine Oberarme auf dem Polster mit den Handflächen nach unten und vollständig ausgestreckten Ellbogen.\nGreife die Kabelgriffe mit unterem Griff, schulterbreit auseinander.\nHalte deine Oberarme stabil und curl die Griffe mit einer Ausatmung zu deinen Schultern, während du deine Bizepse anspannst.\nHalte einen Moment oben inne und spanne deine Bizepse an.\nSenke die Griffe mit einer Einatmung langsam in die Ausgangsposition zurück, wobei du deine Ellbogen vollständig ausstreckst.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Reverse-Curl an der Prediger-Bank ist eine Isolationsübung für den Bizeps am Kabelzuggerät mit Prediger-Bank. Durch den umgekehrten Griff wird besondere Betonung auf den Armbeuger und die Unterarmmuskulatur gelegt.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "a37d29b8-b488-4ff3-97bc-40e48157fa28",
+    "exercise_db_id": "1413",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "a37d29b8-b488-4ff3-97bc-40e48157fa28.jpg",
+    "video_path": "a37d29b8-b488-4ff3-97bc-40e48157fa28.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:05.340199+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Reverse-Curl einarmig",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen vor einem Kabelzug hin.\nGreife den Kabelgriff mit Untergriff, Handfläche nach unten.\nHalte deinen Ellbogen nah bei deiner Seite und hebe deinen Unterarm langsam zu deiner Schulter.\nHalte die Position einen Moment oben an, senke dann deinen Unterarm kontrolliert zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Isolationsübung mit dem Kabelzug, die Bizeps und Unterarme trainiert, mit Fokus auf die Unterarmmuskulatur durch den Reverse-Griff.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7375142c-4653-40cf-9050-e11a2bc23080",
+    "exercise_db_id": "0243",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7375142c-4653-40cf-9050-e11a2bc23080.jpg",
+    "video_path": "7375142c-4653-40cf-9050-e11a2bc23080.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:28.491458+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rotation",
+    "instructions": "Stelle dich schulterbreit vor die Kabelzugmaschine.\nHalte den Griff mit beiden Händen vor deiner Brust, die Arme leicht gebeugt.\nSpanne deinen Core an und drehe deinen Oberkörper nach rechts, während du das Kabel über deinen Körper ziehst.\nPause kurz am Ende der Bewegung und spüre die Kontraktion in deinen Bauchmuskeln und schrägen Bauchmuskeln.\nKehre langsam zur Ausgangsposition zurück, während du den Zug des Kabels kontrollierst.\nWiederhole die Bewegung zur linken Seite.\nWechsle abwechselnd die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kabelzug-Rotation ist eine Übung für die Bauchmuskulatur, besonders die schrägen Bauchmuskeln, und trägt zum Aufbau von Rumpfstabilität und -kraft bei.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "01e32b5b-1573-4d3d-be34-083dd1a263c6",
+    "exercise_db_id": "0230",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "01e32b5b-1573-4d3d-be34-083dd1a263c6.jpg",
+    "video_path": "01e32b5b-1573-4d3d-be34-083dd1a263c6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:03.681832+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rotation",
+    "instructions": "Stelle dich dem Kabelzuggerät zugewandt mit hüftbreit auseinander stehenden Füßen hin.\nFasse den Griff des Kabelzugs mit beiden Händen auf Hüfthöhe.\nSpanne deinen Core an und halte deinen Rücken gerade während der gesamten Übung.\nHebe bei gestreckten Armen den Griff ausatmend nach oben zur gegenüberliegenden Schulter, drehe dabei deinen Oberkörper.\nPause einen Moment oben, senke dann einatmend den Griff kontrolliert zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Die Kabelzug-Rotation ist eine Übung für die Bauchmuskulatur, besonders die schrägen Bauchmuskuln und den unteren Rücken, indem du mit einem Kabelzuggerät eine rotative Hebbewegung ausführst.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "f2eaf305-b7a6-49ab-97b1-169f97432272",
+    "exercise_db_id": "0211",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f2eaf305-b7a6-49ab-97b1-169f97432272.jpg",
+    "video_path": "f2eaf305-b7a6-49ab-97b1-169f97432272.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:25.094643+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rotationen auf Stabilitätsball",
+    "instructions": "Setzen Sie sich auf einen Stabilitätsball mit flachen Füßen auf dem Boden und um 90 Grad gebogenen Knien.\nHalten Sie den Griff des Kabelzugs mit beiden Händen und strecken Sie Ihre Arme geradeaus vor sich aus.\nLehnen Sie sich leicht zurück, während Sie Ihren Rücken gerade halten und Ihren Kern angespannt.\nDrehen Sie Ihren Oberkörper nach rechts und führen Sie den Griff zu Ihrer rechten Hüfte.\nMachen Sie eine kurze Pause und drehen Sie dann Ihren Oberkörper nach links, wobei Sie den Griff zu Ihrer linken Hüfte führen.\nWechseln Sie abwechselnd hin und her für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Kabelzug-Rotationen auf dem Stabilitätsball sind eine Kernübung, die Bauch, Schräge Bauchmuskulatur und unteren Rücken trainiert. Der Stabilitätsball erhöht die erforderliche Balance und Koordination, während der Kabelzug Widerstand für Kraftentwicklung bietet.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "edc0bd2d-a603-4a3c-a79f-1afdfe2e509a",
+    "exercise_db_id": "1322",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "edc0bd2d-a603-4a3c-a79f-1afdfe2e509a.jpg",
+    "video_path": "edc0bd2d-a603-4a3c-a79f-1afdfe2e509a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:15.334492+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rudern auf der Schrägbank",
+    "instructions": "Stelle eine Schrägbank in einem Winkel von 45 Grad ein und befestige einen Kabelzug an der unteren Rolle.\nBefestige einen Seilgriff am Kabelzug und setze dich auf die Schrägbank, wobei du zur Maschine schaust.\nFasse den Seilgriff mit Obergriff und lehne dich nach vorne, während du deinen Rücken gerade hältst.\nStrecke deine Arme vollständig aus und ziehe das Seil in Richtung deiner oberen Brust, während du deine Ellbogen nah am Körper hältst.\nDrücke deine Schulterblätter am Ende der Bewegung zusammen.\nLasse die Spannung langsam nach und kehre in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Rudern auf der Schrägbank zielt auf den oberen Rücken ab und nutzt einen Kabelzug sowie eine Schrägbank. Es erfordert, das Seil in Richtung der oberen Brust zu ziehen, während du auf der Schrägbank sitzt, wobei der Fokus auf der Schulterblattretraktilität und der Aktivierung des oberen Rückens liegt.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "59230c4f-1528-4388-8b13-d3e0a2243a9e",
+    "exercise_db_id": "0246",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "59230c4f-1528-4388-8b13-d3e0a2243a9e.jpg",
+    "video_path": "59230c4f-1528-4388-8b13-d3e0a2243a9e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:39.256338+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rudern aufrecht",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen, leicht gebeugten Knien, und halte den Kabelgriff mit Obergriff.\nHalte deinen Rücken gerade und spanne deine Rumpfmuskulatur an.\nZiehe den Kabelgriff gerade nach oben zur Höhe des Kinns, führe die Bewegung mit den Ellbogen.\nMache eine kurze Pause oben und drücke deine Schulterbläter zusammen.\nSenke den Kabelgriff langsam zurück in die Ausgangsposition.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Rudern aufrecht trainiert primär die Schultermuskeln, mit Schwerpunkt auf Kapuzenmuskel und Bizeps. Die Bewegung zieht den Griff nach oben zum Kinn und beansprucht die Schultermuskulatur.",
+    "primary_muscles": [
+      "shoulders_side",
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "11a5be22-9e1c-42d4-8dd8-c59dc72ba61b",
+    "exercise_db_id": "0159",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "11a5be22-9e1c-42d4-8dd8-c59dc72ba61b.jpg",
+    "video_path": "11a5be22-9e1c-42d4-8dd8-c59dc72ba61b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:29.193032+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rudern breit, sitzend geneigt",
+    "instructions": "Sitze auf der geneigten Bank und schaue zur Kabelzugmaschine hin, während deine Füße fest auf den Fußstützen aufliegen.\nGreife den Kabelgriff mit breitem Obergriff an, Handflächen nach unten.\nLehn dich leicht zurück, halte deine Wirbelsäule gerade und deinen Core angespannt.\nZiehe das Kabel in Richtung deiner unteren Brust und presse deine Schulterblätter zusammen.\nMache eine kurze Pause am höchsten Punkt der Bewegung und führe das Kabel dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7b01eb94-a45f-4ec9-934a-49576acddbf4",
+    "exercise_db_id": "1324",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7b01eb94-a45f-4ec9-934a-49576acddbf4.jpg",
+    "video_path": "7b01eb94-a45f-4ec9-934a-49576acddbf4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:37.903778+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rudern oben",
+    "instructions": "Befestige eine gerade Stange an einer Kabelmaschine in Brusthöhe.\nStelle dich mit schulterbreit auseinander stehenden Füßen der Maschine gegenüber.\nFasse die Stange mit Obergriff, Hände etwas breiter als schulterbreit.\nHalte deinen Rücken gerade und spanne deinen Rumpf an.\nZiehe die Stange in Richtung deiner oberen Brust und presse deine Schulterklingen zusammen.\nHalte einen Moment auf dem Höhepunkt der Bewegung.\nLasse die Stange langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Rudern oben ist eine Compound-Übung für den oberen Rücken, die mit einer Kabelmaschine und gerader Stange durchgeführt wird. Sie beansprucht oberen Rücken, Bizeps und Schultern.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "9ac4a675-c076-47d9-96fa-29bc2c91f210",
+    "exercise_db_id": "0239",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "9ac4a675-c076-47d9-96fa-29bc2c91f210.jpg",
+    "video_path": "9ac4a675-c076-47d9-96fa-29bc2c91f210.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:20.084935+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rudern sitzend",
+    "instructions": "Setze dich auf die Rudermaschine mit flachen Füßen auf den Fußstützen und leicht angewinkelten Knien.\nGreife die Kabelgriffe mit Oberhandgriff, Handflächen nach unten.\nHalte deinen Rücken gerade und lehne dich leicht von der Hüfte nach vorne.\nZiehe die Kabelgriffe zu deinem Körper, drücke deine Schulterblätter zusammen.\nMache eine kurze Pause am höchsten Punkt und lass die Griffe dann langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Eine Kraftübung für den oberen Rücken am Kabelzug. Trainiert den oberen Rücken, Bizeps, Unterarme und Schultern.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "84beec86-4ab4-49ee-ae72-17d48e4cca61",
+    "exercise_db_id": "0213",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "84beec86-4ab4-49ee-ae72-17d48e4cca61.jpg",
+    "video_path": "84beec86-4ab4-49ee-ae72-17d48e4cca61.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:30.428915+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rudern sitzend (V-Griff)",
+    "instructions": "Setze dich auf die Kabelzugmaschine mit flachen Füßen auf dem Boden und leicht gebeugten Knien.\nFasse die V-Griff-Aufsatz mit Obergriff, Handflächen zueinander zeigend, Hände schulterbreit auseinander.\nHalte deinen Rücken gerade und lehne dich leicht aus der Hüfte nach vorne.\nZiehe die V-Griff zu deinem Torso, indem du deine Schulterblätter zurückziehst und deine Rückenmuskeln zusammenziehst.\nMache eine kurze Pause am Höchstpunkt der Kontraktion, dann lasse die Spannung langsam nach und kehre in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Kabelzug-Rudern sitzend ist eine Komplexübung, die den großen Rückenmuskel trainiert und auch Bizeps, Rhomboide und hintere Schultermuskeln beansprucht, um Rückenkraft und Muskeldefinition zu entwickeln.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "9ef05eab-b3ef-46a7-a3d4-4fc903130b8a",
+    "exercise_db_id": "0233",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9ef05eab-b3ef-46a7-a3d4-4fc903130b8a.jpg",
+    "video_path": "9ef05eab-b3ef-46a7-a3d4-4fc903130b8a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:09.049912+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Rudern stehend hintere Schultern (mit Seil)",
+    "instructions": "Stelle dich zur Kabelmaschine hin, Füße schulterbreit auseinander.\nHalte das Kabelzug-Attachment mit beiden Händen, Handflächen zueinander zeigend, und trete zurück, um Spannung im Kabel zu erzeugen.\nHalte deinen Rücken gerade und deinen Rumpf angespannt.\nZiehe das Kabel zu deinem Körper, während du deine Schulterblätter zusammenpresst.\nHalte eine kurze Pause am oberen Punkt der Bewegung, dann lasse das Kabel langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Rudern stehend hintere Schultern mit Seil trainiert die hinteren Deltamuskeln und obere Rückenmuskulatur mithilfe einer Kabelmaschine und Seil-Attachment. Es erfordert gute Ausführung, um die Schultern und den oberen Rücken effektiv zu aktivieren und gleichzeitig Rumpfstabilität zu bewahren.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "d0ce1971-863d-4448-85a8-92e6f276dcbd",
+    "exercise_db_id": "0171",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d0ce1971-863d-4448-85a8-92e6f276dcbd.jpg",
+    "video_path": "d0ce1971-863d-4448-85a8-92e6f276dcbd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:46.928761+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Schrägbank-Fliegende",
+    "instructions": "Stelle den Kabelzug auf niedrige Position ein und befestige die Griffe.\nSetze dich auf eine Schrägbank mit deinem Rücken gegen das Polster und deinen Füßen flach auf dem Boden.\nFasse die Griffe mit Obergriff und strecke deine Arme gerade vor dir aus.\nHalte eine leichte Beugung in deinen Ellbogen und öffne deine Arme in einer kontrollierten Bewegung zu den Seiten.\nMache eine kurze Pause in der vollständig geöffneten Position und kehre langsam zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "60be5bbb-ca27-4538-8c25-57e6cfa84bff",
+    "exercise_db_id": "1261",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "60be5bbb-ca27-4538-8c25-57e6cfa84bff.jpg",
+    "video_path": "60be5bbb-ca27-4538-8c25-57e6cfa84bff.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:27.849547+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Schrägbankdrücken",
+    "instructions": "Stelle den Kabelzug auf Schrägbank ein.\nSitze auf der Schrägbank und schaue zum Kabelzug.\nFasse die Griffe mit Obergriff und positioniere sie auf Brusthöhe.\nHalte deine Füße flach auf dem Boden und deinen Rücken fest gegen die Bank.\nAtme aus und drücke die Griffe weg von deinem Körper, wobei du deine Arme vollständig streckst.\nMache eine kurze Pause am Ende der Bewegung und drücke deine Brustmuskulatur zusammen.\nAtme ein und führe die Griffe langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Brustübung am Kabelzug mit Schrägbank. Sie trainiert den unteren Bereich der Brustmuskulatur und beansprucht auch den Trizeps und die Schultern. Die Bewegung bietet konstante Spannung über den gesamten Bewegungsumfang.",
+    "primary_muscles": [
+      "chest_upper",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "0f235d2e-80fb-484a-a931-4ceef65aae7d",
+    "exercise_db_id": "1266",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0f235d2e-80fb-484a-a931-4ceef65aae7d.jpg",
+    "video_path": "0f235d2e-80fb-484a-a931-4ceef65aae7d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:24.75594+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Schrägbankdrücken einarmig auf Gymnastikball",
+    "instructions": "Sitze auf einem Gymnastikball mit flachen Füßen auf dem Boden und deinem Rücken gegen eine Schrägbank gelehnt.\nHalte einen Kabelzug-Griff in einer Hand und positioniere deinen Arm in einem 90-Grad-Winkel mit gebeugtem Ellbogen.\nDrücke den Kabelzug-Griff nach vorne und oben, strecke deinen Arm vollständig.\nMache eine kurze Pause oben, senke dann den Kabelzug-Griff langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsle zum anderen Arm.",
+    "tips": "Das Kabelzug-Schrägbankdrücken einarmig auf Gymnastikball ist eine einseitige Brustübung auf instabiler Oberfläche, die primär die Brustmuskulatur trainiert und sekundär Schultern und Trizepse beansprucht. Die Verwendung des Gymnastikballs erhöht die Anforderung an Balance und Rumpfstabilität.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "62eb3b7d-d673-4f58-b7c1-af6382d82d38",
+    "exercise_db_id": "1318",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "62eb3b7d-d673-4f58-b7c1-af6382d82d38.jpg",
+    "video_path": "62eb3b7d-d673-4f58-b7c1-af6382d82d38.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:45.483652+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Schrägbankrudern",
+    "instructions": "Stelle eine Schrägbank in einem 45-Grad-Winkel ein und befestige einen Kabelgriff am unteren Seilzug.\nSetze dich auf die Bank, blicke auf die Kabelzugmaschine und stelle deine Füße flach auf den Boden mit leicht gebeugten Knien.\nFasse den Kabelgriff mit Übergriff und strecke deine Arme vollständig nach vorne.\nLehne dich von den Hüften nach vorne, während du deinen Rücken gerade und deinen Core angespannt hältst.\nZiehe den Kabelgriff zu deiner Brust, indem du deine Schulterblätter zusammenziehst und deine Ellbogen beugst.\nDrücke deine Rückenmuskeln oben zusammen und senke deine Arme dann langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Schrägbankrudern ist eine Kraftübung, die den oberen Rücken trainiert und mit einer Kabelzugmaschine und einer Schrägbank durchgeführt wird. Die Bizeps und hinteren Deltamuskeln werden als sekundäre Muskelgruppen beansprucht.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "cd89001d-b0bd-44b5-99cc-33419b71db88",
+    "exercise_db_id": "0216",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "cd89001d-b0bd-44b5-99cc-33419b71db88.jpg",
+    "video_path": "cd89001d-b0bd-44b5-99cc-33419b71db88.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:38.932208+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Schulter-Innenrotation im Sitzen",
+    "instructions": "Sitze auf einer Bank oder einem Stuhl vor der Kabelzugmaschine mit flachen Füßen auf dem Boden.\nHalte den Kabelgriff mit ausgestrecktem Arm gerade nach vorne, parallel zum Boden.\nHalte deinen Ellbogen leicht gebeugt und deine Schulterblätter nach hinten und unten gezogen.\nRotiere deinen Arm langsam nach innen und bringe den Kabelgriff in Richtung Körpermitte.\nMache eine kurze Pause am Ende der Bewegung, dann kehre langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle den Arm.",
+    "tips": "Die Kabelzug-Schulter-Innenrotation im Sitzen ist eine Isolationsübung, die die Deltamuskeln und die Rotatorenmanschette trainiert. Sie wird sitzend am Kabelzuggerät durchgeführt, das Widerstand für die innere Schulterrotation bietet.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "chest_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "89bf9f78-e4fe-4b52-9500-914a4c9535d4",
+    "exercise_db_id": "0220",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "89bf9f78-e4fe-4b52-9500-914a4c9535d4.jpg",
+    "video_path": "89bf9f78-e4fe-4b52-9500-914a4c9535d4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:44.849142+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Schulterzucken",
+    "instructions": "Stelle dich der Kabelmaschine zugewandt hin, deine Füße schulterbreit auseinander.\nGreife die Griffe der Kabel mit Oberhandgriff und lass deine Arme nach vorne hängen.\nBei gestreckten Armen zucke deine Schultern in Richtung deiner Ohren nach oben.\nHalte die Kontraktion einen Moment an und senke deine Schultern dann langsam zurück zur Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Schulterzucken ist eine Isolationsübung für die Kapuzenmuskel-Muskulatur mit einer Kabelmaschine. Die Bewegung beinhaltet das Hochziehen der Schultern, während die Arme gestreckt bleiben, mit Fokus auf die Kontraktion der Kapuzenmuskel.",
+    "primary_muscles": [
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "e6047403-46d2-40ad-b779-783dbdc6e7e7",
+    "exercise_db_id": "1640",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e6047403-46d2-40ad-b779-783dbdc6e7e7.jpg",
+    "video_path": "e6047403-46d2-40ad-b779-783dbdc6e7e7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:22.115143+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seil-Einarm-Prediger-Curl",
+    "instructions": "Befestige einen Seilgriff an einer tiefen Kabelzugmaschine.\nStehe der Maschine zugewandt, die Füße schulterbreit auseinander.\nGreife den Seilgriff mit Untergriff, Handflächen nach oben.\nPositioniere deinen Oberarm gegen die Prediger-Auflage und halte deinen Ellbogen leicht gebeugt.\nHalte deinen Rücken gerade und deinen Rumpf während der gesamten Übung angespannt.\nCurle den Seilgriff langsam in Richtung deiner Schulter, während du deinen Oberarm stabil hältst.\nSpanne deine Bizepse oben kurz an und senke den Seilgriff dann langsam zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Das Kabelzug-Seil-Einarm-Prediger-Curl ist eine Isolationsübung für den Bizeps mit Kabelzugmaschine und Seilaufsatz. Der Hammer-Griff und die Prediger-Unterstützung betonen besonders den Armbeuger und die Unterarmmuskulatur.",
+    "primary_muscles": [
+      "biceps_short",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "e4922c6f-f9a6-4e12-8f7b-95c61c9cfdd9",
+    "exercise_db_id": "1639",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e4922c6f-f9a6-4e12-8f7b-95c61c9cfdd9.jpg",
+    "video_path": "e4922c6f-f9a6-4e12-8f7b-95c61c9cfdd9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:16.776488+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seil-Hammer-Preacher-Curl",
+    "instructions": "Befestige ein Seilaufsatz an einem unteren Kabelzug.\nStelle dich mit schulterbreit auseinanderstehenden Füßen zur Maschine.\nFasse das Seil mit neutralem Griff (Handflächen zueinander).\nPositioniere deine Oberarme gegen das Preacher-Bench-Polster, die Ellbogen leicht gebeugt.\nHalte deine Oberarme stabil und atme aus, während du das Seil durch Anspannung der Bizepse zu den Schultern führst.\nHalte die kontrahierte Position kurz und spüre die Bizepsanspannung.\nAtme ein und senke das Seil langsam zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "e692285e-460d-45ab-9ee0-f2b80136fab7",
+    "exercise_db_id": "1725",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e692285e-460d-45ab-9ee0-f2b80136fab7.jpg",
+    "video_path": "e692285e-460d-45ab-9ee0-f2b80136fab7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:19.455822+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seil-Schrägbank-Trizepsstreckung",
+    "instructions": "Befestige ein Seil an einer hohen Kabelzugmaschine und stelle die Schrägbank auf einen komfortablen Winkel ein.\nStehe der Kabelzugmaschine zugewandt, die Füße schulterbreit auseinander.\nGreife das Seil mit Obergriff und strecke deine Arme senkrecht nach oben.\nHalte deine Ellbogen nah an deinem Kopf und deine Oberarme während der gesamten Übung stabil.\nSenke das Seil hinter deinen Kopf, indem du deine Ellbogen beugst, bis deine Unterarme deine Bizepse berühren.\nMache eine kurze Pause und strecke deine Arme dann zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Seil-Schrägbank-Trizepsstreckung ist eine Isolationsübung für die Trizepse auf einer Schrägbank mit Seilaufsatz. Sie betont die Trizepsentwicklung und beansprucht die Schultern als sekundäre Muskulatur.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "531f297e-b314-46be-8fd3-ab691509e10c",
+    "exercise_db_id": "1320",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "531f297e-b314-46be-8fd3-ab691509e10c.jpg",
+    "video_path": "531f297e-b314-46be-8fd3-ab691509e10c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:12.381011+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seilrudern sitzend",
+    "instructions": "Sitze auf der Rudermaschine mit flachen Füßen auf den Fußstützen und leicht gebeugten Knien.\nGreife die Kabelseile mit Obergriff, Handflächen zueinander gewandt.\nLehn dich leicht zurück, halte deinen Rücken gerade und deinen Core angespannt.\nZiehe die Kabelseile zu deiner Brust und drücke deine Schulterblätter zusammen.\nHalte einen Moment auf dem Höhepunkt der Bewegung, dann gib die Spannung langsam ab und kehre in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Kabelzug-Seilrudern sitzend ist eine Kraftübung für den oberen Rücken auf einer Kabelmaschine mit Seil-Attachments. Sie beansprucht auch Bizepse und Unterarme als sekundäre Muskulatur.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "45c7531b-6709-4c6a-8cfe-004098b1f963",
+    "exercise_db_id": "1323",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "45c7531b-6709-4c6a-8cfe-004098b1f963.jpg",
+    "video_path": "45c7531b-6709-4c6a-8cfe-004098b1f963.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:23.492122+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seilrudern sitzend",
+    "instructions": "Setze dich auf die Rudermaschine, stelle deine Füße flach auf die Fußstützen und beuge deine Knie leicht.\nFasse die Kabelseile mit einem Übergriff, die Handflächen zeigen zueinander.\nHalte deinen Rücken gerade und lehne dich leicht nach vorne, während du einen leichten Bend in deinen Ellbogen beibehältst.\nZiehe die Kabelseile zu deinem Körper, indem du deine Schulterblätter zusammendrückst.\nHalte einen Moment in der höchsten Position, löse dann langsam die Spannung und kehre zur Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Seilrudern sitzend ist eine Kraftübung, die den oberen Rücken trainiert und den Bizeps sowie die Unterarme sekundär beansprucht.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "016369d4-cb5b-49b2-bba2-746ec7207ec8",
+    "exercise_db_id": "1321",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "016369d4-cb5b-49b2-bba2-746ec7207ec8.jpg",
+    "video_path": "016369d4-cb5b-49b2-bba2-746ec7207ec8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:13.905678+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seilrudern sitzend erhöht",
+    "instructions": "Sitze auf einem erhöhten Sitz vor der Kabelzugmaschine.\nGreife die Seilgriffe mit Übergriff, Handflächen zueinander gewandt.\nHalte deinen Rücken gerade und lehne dich leicht zurück, während du einen leichten Beugewinkel in den Knien beibehältst.\nZiehe das Kabel zu deinem Körper, indem du deine Schulterblätter zurückziehst und deine Rückenmuskeln anspannst.\nHalte einen Moment in der vollständig kontrahierten Position inne.\nLasse die Spannung langsam nach und strecke deine Arme wieder in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Eine Kraftübung zum Trainieren des oberen Rückens, ausgeführt auf einem erhöhten Sitz mit Kabelzug und Seilgriffen. Die Übung betont die Schulterblatt-Retraktion und Rückenmuskulatur-Aktivierung, beansprucht aber auch Bizeps und Unterarme.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "a42ee9a4-3534-4f1e-9c71-33bb026a0075",
+    "exercise_db_id": "0222",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "a42ee9a4-3534-4f1e-9c71-33bb026a0075.jpg",
+    "video_path": "a42ee9a4-3534-4f1e-9c71-33bb026a0075.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:46.198655+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seitbeugen",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und greife den Kabelzug-Griff mit einer Hand.\nHalte deinen Rücken gerade und spanne deinen Core an.\nBeuge dich langsam zur Seite auf der Hüfte, wobei du den Kabelzug-Griff zu deinem Knie senkst.\nMache eine kurze Pause und kehre dann in die Ausgangsposition zurück.\nWiederhole auf der anderen Seite.\nWechsle die Seiten für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Eine Isolationsübung, die die schrägen Bauchmuskeln und den geraden Bauchmuskel trainiert. Du beugst dich dabei aufrecht gegen den Widerstand eines Kabelzugs zur Seite.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_transverse"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "d13c490b-7590-4763-a186-26dfe44793f8",
+    "exercise_db_id": "0192",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d13c490b-7590-4763-a186-26dfe44793f8.jpg",
+    "video_path": "d13c490b-7590-4763-a186-26dfe44793f8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:27.256771+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seitenheben (einarmig)",
+    "instructions": "Stelle dich mit schulterbreitem Fußabstand auf und schaue zur Kabelmaschine.\nHalte den Kabelgriff mit einer Hand, Handfläche nach unten, und stehe weit genug entfernt von der Maschine, sodass der Kabelzug unter Spannung steht.\nHebe deinen Arm gestreckt zur Seite, bis er parallel zum Boden ist.\nMache eine kurze Pause oben und senke deinen Arm langsam zur Ausgangsposition ab.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite.",
+    "tips": null,
+    "primary_muscles": [
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "183b7da5-2e70-42b4-be2f-77c7d9993b50",
+    "exercise_db_id": "0177",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "183b7da5-2e70-42b4-be2f-77c7d9993b50.jpg",
+    "video_path": "183b7da5-2e70-42b4-be2f-77c7d9993b50.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:00.797952+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seitenzug mit Seil",
+    "instructions": "Befestige eine Seilaufsatz am Kabelzug in hoher Position.\nStelle dich zum Gerät gewandt mit hüftbreit auseinanderstehenden Füßen auf.\nFasse das Seil mit Überhandgriff, die Handflächen einander zugewandt.\nHalte deinen Rücken gerade und lehne dich leicht nach hinten.\nZiehe das Seil zu deinen Seiten hinunter und drücke deine Schulterblätter zusammen.\nHalte kurz in der unteren Position an.\nLasse die Spannung langsam nach und führe das Seil kontrolliert in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Kraftübung mit Kabelzug, die primär den breiten Rückenmuskel (Latissimus) beansprucht. Bizeps und Unterarme sind sekundär aktiviert. Der Fokus liegt auf Schulterblattzusammenführung und stabilisierter Körperhaltung.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "4f6bcabe-fc97-4c89-8b78-e0bd33871f2c",
+    "exercise_db_id": "0215",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4f6bcabe-fc97-4c89-8b78-e0bd33871f2c.jpg",
+    "video_path": "4f6bcabe-fc97-4c89-8b78-e0bd33871f2c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:36.043966+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seitheben im Sitzen hinten",
+    "instructions": "Sitze auf einer Bank vor dem Kabelzug-Gerät, Füße flach auf dem Boden.\nFasse die Kabelgriffe mit Obergriff und strecke deine Arme gerade nach vorne.\nHalte deine Arme gestreckt und hebe sie seitlich, bis sie parallel zum Boden sind.\nMache eine kurze Pause oben, senke deine Arme dann langsam zurück in die Ausgangsposition.\nWiederhol die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Seitheben im Sitzen hinten ist eine Isolationsübung für die hinteren Deltamuskeln mit Schwerpunkt auf dem Kapuzenmuskel und den Rhomboiden. Die Übung wird sitzend am Kabelzug-Gerät ausgeführt und hebt die Arme seitlich bis zur Schulterhöhe.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "54e7fff7-1cbf-431c-8409-93e8428f728d",
+    "exercise_db_id": "0223",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "54e7fff7-1cbf-431c-8409-93e8428f728d.jpg",
+    "video_path": "54e7fff7-1cbf-431c-8409-93e8428f728d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:48.763999+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Seitliche Bauchbeuge",
+    "instructions": "Befestige einen Kabelgriff an einer tiefen Rolle und stelle dich seitlich zur Maschine.\nErgreife den Griff mit der Hand, die weiter weg von der Maschine ist, und lege deine andere Hand auf deine Hüfte.\nHalte deine Füße schulterbreit auseinander und deine Knie leicht gebeugt.\nBeuge dich mit angespanntem Bauch seitlich in der Taille, indem du deinen Ellbogen in Richtung deiner Hüfte bringst.\nMache eine kurze Pause am unteren Punkt und kehre dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite.",
+    "tips": "Die Kabelzug-Seitliche Bauchbeuge ist eine Isolationsübung, die die Bauchmuskulatur, besonders die seitlichen Bauchmuskeln, trainiert und den Kabelzug als Widerstand nutzt. Die Übung besteht darin, sich seitlich in der Taille zu beugen, um die Rumpfmuskulatur zu aktivieren.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_transverse"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "db260aea-a960-4275-9b9f-cd761b6d7b4c",
+    "exercise_db_id": "1641",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "db260aea-a960-4275-9b9f-cd761b6d7b4c.jpg",
+    "video_path": "db260aea-a960-4275-9b9f-cd761b6d7b4c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:29.0742+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Sitz-Curl",
+    "instructions": "Sitze an einem Kabelzug-Gerät mit flachen Füßen und geradem Rücken.\nFasse den Kabelgriff mit unterem Griff, Handflächen nach oben, Arme vollständig ausgestreckt.\nHalte deine Oberarme stabil, atme aus und curle den Griff zu deinen Schultern, wobei du deine Bizeps anspannst.\nHalte kurz oben an und drücke deine Bizeps zusammen.\nAtme ein und senke den Griff langsam zur Ausgangsposition mit vollständig ausgestreckten Armen.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Sitz-Curl ist eine Isolationsübung für die Bizeps, ausgeführt am Kabelzug im Sitzen. Sie betont kontrollierte Bewegungen und konstante Spannung auf dem Bizeps über den gesamten Bewegungsumfang.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "55d91952-d6e8-4ef1-80fe-5940ec16c654",
+    "exercise_db_id": "0225",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "55d91952-d6e8-4ef1-80fe-5940ec16c654.jpg",
+    "video_path": "55d91952-d6e8-4ef1-80fe-5940ec16c654.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:55.557045+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Stehender Crossover-Reverse-Flye",
+    "instructions": "Befestige einen D-Griff an jeder Seite der Kabelzugmaschine in Schulterhöhe.\nStelle dich in die Mitte der Kabelzugmaschine mit schulterbreit auseinander stehenden Füßen.\nErgreife die Griffe mit Übergriff und strecke deine Arme zur Seite aus, Handflächen nach vorne gerichtet.\nBehalte eine leichte Biegung in deinen Ellbogen und einen geraden Rücken während der gesamten Übung bei.\nSpanne deine Schultermuskeln an und drücke deine Schulterblätter zusammen, während du die Griffe in Richtung der Vorderseite deines Körpers ziehst.\nMache eine kurze Pause am Höhepunkt der Bewegung und kehre dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Stehender Crossover-Reverse-Flye ist eine Schulterübung, die die Deltamuskeln trainiert, mit sekundärer Betonung auf den Kapuzenmuskel, Rhomboiden und hinteren Deltamuskeln. Die Übung wird mit einer Kabelzugmaschine ausgeführt und erfordert Koordination, Balance und Kontrolle für eine korrekte Ausführung.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "32ae7c86-7b4f-4e15-a7c1-1ec749c1ab5d",
+    "exercise_db_id": "2405",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "32ae7c86-7b4f-4e15-a7c1-1ec749c1ab5d.jpg",
+    "video_path": "32ae7c86-7b4f-4e15-a7c1-1ec749c1ab5d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:25.720651+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizeps-Drücken (V-Stange mit Arm-Blaster)",
+    "instructions": "Befestige eine V-Stangen-Aufsatz am Kabelzug in der höchsten Position.\nStelle dich mit schulterbreit auseinander stehenden Füßen vor dem Gerät auf.\nFasse die V-Stange mit Obergriff, Handflächen zeigen nach unten, Hände schulterbreit auseinander.\nHalte deine Ellbogen eng an den Seiten und deine Oberarme während der gesamten Übung stabil.\nSpanne die Trizeps an und atme aus, während du die V-Stange drückst, bis deine Arme vollständig gestreckt sind.\nMache eine kurze Pause unten und spanne deine Trizeps intensiv an.\nAtme ein und führe die V-Stange kontrolliert zurück in die Ausgangsposition.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Trizeps-Drücken mit V-Stange und Arm-Blaster ist eine Isolationsübung für den Trizeps, bei der der Arm-Blaster die Oberarme stabilisiert und die Trizepsaktivation maximiert.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "5e23c382-a89e-4b5b-9b34-46f887d4397c",
+    "exercise_db_id": "1723",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5e23c382-a89e-4b5b-9b34-46f887d4397c.jpg",
+    "video_path": "5e23c382-a89e-4b5b-9b34-46f887d4397c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:36.052043+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizeps-Drücken einarmig",
+    "instructions": "Stehe zum Kabelzuggerät gewandt mit einem geraden Griffaufsatz auf Brusthöhe.\nFasse den Griff mit Oberhandgriff und tritt zurück, um Spannung im Kabel zu schaffen.\nPositioniere deine Füße schulterbreit auseinander und beuge die Knie leicht.\nHalte deinen Rücken gerade und deinen Core angespannt während der gesamten Übung.\nBeginne mit vollständig ausgestrecktem Arm senkrecht zum Boden.\nHalte deinen Oberarm stabil und drücke den Griff nach unten, bis dein Arm vollständig gestreckt ist.\nMache eine kurze Pause und führe dann langsam zur Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen und wechsle dann den Arm.",
+    "tips": "Das Kabelzug-Trizeps-Drücken einarmig ist eine Isolationsübung für die Trizeps am Kabelzuggerät. Sie hilft beim Aufbau von Trizepskraft und Definition und beansprucht die Unterarme als Nebenmuskulatur.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "de81e617-83ad-4ee6-8010-108a4f1ea1d6",
+    "exercise_db_id": "1727",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "de81e617-83ad-4ee6-8010-108a4f1ea1d6.jpg",
+    "video_path": "de81e617-83ad-4ee6-8010-108a4f1ea1d6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:10.567741+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizeps-Extension einarmig",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen von der Kabelzugmaschine abgewandt hin.\nFasse den Griff mit einem Untergriff und strecke deinen Arm über deinen Kopf, wobei du den Ellbogen nah am Kopf hältst.\nHalte deinen Oberarm statisch und senke den Griff langsam hinter deinen Kopf ab, indem du deinen Ellbogen beugst.\nMache eine kurze Pause unten und strecke dann deinen Arm zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen und wechsle dann den Arm.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "a2814b44-1d0c-4e9e-bfd8-baf8af029648",
+    "exercise_db_id": "0204",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "a2814b44-1d0c-4e9e-bfd8-baf8af029648.jpg",
+    "video_path": "a2814b44-1d0c-4e9e-bfd8-baf8af029648.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:58.315128+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizeps-Kickback",
+    "instructions": "Befestige einen Griff an einem Kabelzug mit niedriger Rolle und stelle dich mit dem Rücken zur Maschine.\nGreife den Griff mit Obergriff und strecke deine Arme gerade nach vorne.\nHalte deine Ellbogen stabil und ziehe den Griff zu deinem Körper zurück, indem du deine Trizeps anspannst.\nSenke den Griff kontrolliert zurück zur Ausgangsposition und wiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Isolationsübung für die Trizeps mit dem Kabelzug, die auch Schultern und Rücken als sekundäre Muskelgruppen aktiviert und Kontrolle sowie korrekte Ausführung erfordert.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "18930deb-9a65-4c47-9f4b-fedfab9b7ee2",
+    "exercise_db_id": "0860",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "18930deb-9a65-4c47-9f4b-fedfab9b7ee2.jpg",
+    "video_path": "18930deb-9a65-4c47-9f4b-fedfab9b7ee2.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:53.895469+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizeps-Streckung",
+    "instructions": "Stelle dich zum Kabelzug-Gerät gewandt hin, die Füße hüftbreit auseinander.\nFasse den Griff mit der rechten Hand und trete zurück, um Spannung im Kabel aufzubauen.\nBeuge die Knie leicht und beuge dich nach vorne in den Hüften, halte deinen Rücken gerade.\nHalte deinen Oberarm dicht am Körper und deinen Ellbogen im 90-Grad-Winkel.\nStrecke deinen Unterarm nach hinten und strecke deinen Arm vollständig aus.\nHalte kurz an, dann kehre langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Isolationsübung am Kabelzug für den Trizeps. Die Übung zielt auf die Armstreckung gegen Widerstand ab. Sekundär werden die Schultern aktiviert.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "a88ab33a-d1b8-48f6-9c36-d83293f93a40",
+    "exercise_db_id": "0194",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "a88ab33a-d1b8-48f6-9c36-d83293f93a40.jpg",
+    "video_path": "a88ab33a-d1b8-48f6-9c36-d83293f93a40.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:40.182816+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizeps-Überkopfstreckung (Seil)",
+    "instructions": "Befestige ein Seil am Kabelzug in hoher Position.\nStelle dich mit schulterbreit auseinander stehenden Füßen mit dem Rücken zur Maschine hin.\nGreife das Seil mit beiden Händen, Handflächen zueinander gewandt, und bringe deine Hände über deinen Kopf.\nHalte deine Oberarme nah am Kopf und richte deine Ellbogen nach vorne.\nSenke das Seil langsam hinter deinen Kopf ab, indem du die Ellbogen beugst.\nHalte kurz inne, strecke deine Arme dann wieder nach oben in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kabelzug-Trizeps-Überkopfstreckung mit Seil ist eine Isolationsübung, die die Trizeps gezielt trainiert. Die Überkopfposition betont die Trizeps-Aktivierung zusätzlich, während die Schultern stabilisierend beansprucht werden.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "c1fb5ef9-8769-4175-8b6b-c10bdc8dfc6f",
+    "exercise_db_id": "0241",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "c1fb5ef9-8769-4175-8b6b-c10bdc8dfc6f.jpg",
+    "video_path": "c1fb5ef9-8769-4175-8b6b-c10bdc8dfc6f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:24.284774+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizepsdrücken (V-Griff)",
+    "instructions": "Befestige den V-Griff am Kabelzug auf der höchsten Einstellung.\nStelle dich mit schulterbreiten Füßen zum Kabelzug.\nGreife den V-Griff mit Obergriff (Handflächen nach unten) schulterbreit.\nHalte deine Ellbogen dicht an deinem Körper und die Oberarme während der gesamten Bewegung ruhig.\nSpanne deine Trizepse an und atme aus, während du den V-Griff nach unten drückst bis deine Arme vollständig gestreckt sind.\nHalte kurz unten an und spanne deinen Trizeps maximal an.\nAtme ein und führe den V-Griff langsam wieder in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "f14cae60-ce91-4418-8b16-4985e58ccc58",
+    "exercise_db_id": "1726",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f14cae60-ce91-4418-8b16-4985e58ccc58.jpg",
+    "video_path": "f14cae60-ce91-4418-8b16-4985e58ccc58.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:20.811803+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizepsstreckung liegend",
+    "instructions": "Befestige ein Seil an einer Kabelzugmaschine und stelle sie auf die niedrigste Position.\nLege dich auf dem Boden auf den Rücken, mit deinem Kopf in Richtung der Kabelzugmaschine.\nHalte das Seil mit beiden Händen, Handflächen zueinander, und strecke deine Arme gerade nach oben zur Decke.\nHalte deine Oberarme ruhig und senke das Seil langsam in Richtung deiner Stirn, indem du deine Ellbogen beugst.\nMache eine kurze Pause, strecke deine Arme dann zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kabelzug-Trizepsstreckung liegend ist eine Isolationsübung für den Trizeps, die mit einer Kabelzugmaschine am Boden liegend durchgeführt wird. Sie erfordert eine ordnungsgemäße Ausführung, um Belastungen von Ellbogen und Schultern zu vermeiden.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "b4e6040d-7da8-4456-b9a3-3f4e2d515687",
+    "exercise_db_id": "0231",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b4e6040d-7da8-4456-b9a3-3f4e2d515687.jpg",
+    "video_path": "b4e6040d-7da8-4456-b9a3-3f4e2d515687.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:04.999218+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Trizepsstreckung stehend (einarmig)",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und schaue zur Kabelzugmaschine.\nHalte den Griff mit deiner rechten Hand, Handfläche zeigt nach unten, und positioniere deinen Arm so, dass er vollständig gestreckt und parallel zum Boden ist.\nHalte deinen Ellbogen stationär und nah bei deinem Körper.\nBeuge deinen Ellbogen langsam und senke den Griff in Richtung deines Hinterkopfes.\nHalte einen Moment am unteren Punkt inne und strecke deinen Arm zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen und führe die Übung dann mit deinem linken Arm durch.",
+    "tips": "Die Kabelzug-Trizepsstreckung stehend (einarmig) ist eine Isolationsübung, die den Trizeps mit einer Kabelzugmaschine trainiert. Sie wird stehend und einarmig ausgeführt und erfordert kontrollierte Bewegungen, um den Trizeps effektiv zu beanspruchen und die Schulter zu minimieren.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "9d057a04-4db7-4dff-8df9-d77ab847332e",
+    "exercise_db_id": "1636",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9d057a04-4db7-4dff-8df9-d77ab847332e.jpg",
+    "video_path": "9d057a04-4db7-4dff-8df9-d77ab847332e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:37.473266+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Überkopf-Curl",
+    "instructions": "Befestige einen geraden Griff an einer hohen Seilzugrolle.\nStehe mit schulterbreit auseinander stehenden Füßen zur Maschine gewandt.\nFasse den Griff mit Untergriff, die Hände schulterbreit auseinander.\nHalte deine Ellbogen nah an deinen Seiten und deine Oberarme stabil.\nBeugle den Griff mit Ausatmen nach unten Richtung deiner Stirn, halte deine Oberarme stabil.\nMache eine kurze Pause am tiefsten Punkt und spanne deinen Bizeps an.\nMit Einatmen senke den Griff langsam in die Ausgangsposition zurück, strecke deine Arme vollständig.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Überkopf-Curl ist eine Isolationsübung, die den Bizeps trainiert und dabei eine hohe Seilzugrolle nutzt. Sekundär werden der Unterarm und die Schultern aktiviert.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "74ed28e6-efa8-4dc7-9e65-ab42b162f0f3",
+    "exercise_db_id": "1637",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "74ed28e6-efa8-4dc7-9e65-ab42b162f0f3.jpg",
+    "video_path": "74ed28e6-efa8-4dc7-9e65-ab42b162f0f3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:38.785598+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Überkopfcurl auf Gymnastikball",
+    "instructions": "Setze dich auf einen Gymnastikball und halte den Kabelzuggriff mit Untergriff.\nStrecke deine Arme vollständig über deinen Kopf, wobei deine Ellbogen nah an deinen Ohren bleiben.\nBeugle langsam das Kabel zu deiner Stirn hin, wobei deine Oberarme stabil bleiben.\nPause kurz am Ende der Bewegung, dann kehre langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Überkopfcurl auf Gymnastikball ist eine Bizeps-Übung, die auch die Unterarme und Schultern beansprucht. Der Gymnastikball erfordert zusätzliche Rumpfstabilität und Koordination.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "109cc2a8-036e-4436-b496-5454fd78f9a3",
+    "exercise_db_id": "1376",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "109cc2a8-036e-4436-b496-5454fd78f9a3.jpg",
+    "video_path": "109cc2a8-036e-4436-b496-5454fd78f9a3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:06.365161+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Wadenheben einbeinig",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen vor die Kabelzugmaschine.\nHalte dich an der Maschine fest.\nHebe ein Bein vom Boden ab und balanciere auf dem anderen Bein.\nHebe deine Ferse langsam vom Boden ab und drücke dich auf die Zehenspitzen hoch.\nMache eine kurze Pause oben und senke deine Ferse dann langsam wieder in die Ausgangsposition ab.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen und wechsle dann das Bein.",
+    "tips": null,
+    "primary_muscles": [
+      "calves_gastrocnemius"
+    ],
+    "secondary_muscles": [
+      "calves_soleus"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "5c28ac1f-cc3a-479b-bc1a-5d3e9b5d25cf",
+    "exercise_db_id": "0522",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5c28ac1f-cc3a-479b-bc1a-5d3e9b5d25cf.jpg",
+    "video_path": "5c28ac1f-cc3a-479b-bc1a-5d3e9b5d25cf.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:29.10632+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell abwechselndes Rudern",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen, Knie leicht gebeugt, und halte eine Kettlebell in jeder Hand, die Handflächen zum Körper gewandt.\nBeuge dich in der Hüfte nach vorne, halte deinen Rücken gerade und deinen Rumpf angespannt.\nZiehe eine Kettlebell zur Brust, halte deinen Ellbogen nah am Körper und drücke deine Schulterblätter zusammen.\nSenke die Kettlebell zur Ausgangsposition ab und wiederhole mit dem anderen Arm.\nWechsle abwechselnd die Arme für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kettlebell abwechselnde Rudern ist eine Verbundübung, die den oberen Rücken trainiert, indem man abwechselnd mit Kettlebells rudert und dabei eine gebeugte Position beibehält.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "be571e0b-8aa0-4119-9d96-f8f82517c2b3",
+    "exercise_db_id": "0518",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "be571e0b-8aa0-4119-9d96-f8f82517c2b3.jpg",
+    "video_path": "be571e0b-8aa0-4119-9d96-f8f82517c2b3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:23.54818+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Alternating Hang Clean",
+    "instructions": "Stelle dich schulterbreit hin und halte je eine Kettlebell in jeder Hand mit Obergriff.\nBeuge deine Knie leicht und neige deinen Oberkörper nach vorne, während du den Rücken gerade und die Brust oben hältst.\nLasse die Kettlebells mit vollständig ausgestreckten Armen vor deinem Körper hängen.\nFühre in einer fließenden Bewegung eine explosive Hüftstreckung durch, zucke mit den Schultern und ziehe die Kettlebells zu deinen Schultern hoch.\nAls die Kettlebells Schulterhöhe erreichen, drehe deine Handgelenke und fange die Kettlebells in der Rack-Position, mit den Handflächen nach innen gerichtet und den Kettlebells auf der Außenseite deiner Unterarme.\nSenke die Kettlebells zurück in die Ausgangsposition und wiederhole die Bewegung mit dem anderen Arm.\nWechsle die Arme für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Die Kettlebell Alternating Hang Clean ist eine dynamische Übung, die primär die Unterarme trainiert, mit großer Beteiligung der Schultern, des Trapezmuskels und der Rumpfmuskulatur. Sie erfordert Koordination, explosive Kraft und korrekte Technik für einen sicheren Übergang der Kettlebell von der Hang- zur Rack-Position.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "02742b62-b74b-4087-8cbf-a9f824bc454b",
+    "exercise_db_id": "0520",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "02742b62-b74b-4087-8cbf-a9f824bc454b.jpg",
+    "video_path": "02742b62-b74b-4087-8cbf-a9f824bc454b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:24.842149+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Alternating Press",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und halte eine Kettlebell in jeder Hand auf Schulterhöhe.\nDrücke eine Kettlebell nach oben über deinen Kopf, wobei du deinen Arm vollständig streckst.\nSenke die Kettlebell wieder auf Schulterhöhe ab.\nWiederhol die Bewegung mit dem anderen Arm.\nWechsle abwechselnd zwischen den Armen für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Kettlebell Alternating Press ist eine Schulterübung, bei der du abwechselnd eine Kettlebell nach oben drückst. Diese Bewegung beansprucht vor allem die Deltamuskeln und aktiviert zusätzlich die Trizeps und den Rumpf für Stabilität.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "9dea5095-dbba-4854-9dc8-640e323a0cd9",
+    "exercise_db_id": "0523",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9dea5095-dbba-4854-9dc8-640e323a0cd9.jpg",
+    "video_path": "9dea5095-dbba-4854-9dc8-640e323a0cd9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:30.865239+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Arnold Press",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Kettlebell in jeder Hand auf Schulterhöhe, wobei deine Handflächen zu dir zeigen.\nSpanne deinen Rumpf an und drücke die Kettlebells nach oben, während du deine Handflächen nach vorne rotierst und deine Arme streckst.\nHalte eine kurze Pause oben und senke die Kettlebells dann kontrolliert in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kettlebell Arnold Press ist eine Schulterübung mit Rotation der Handgelenke, die die Deltamuskeln zielt und Trizeps sowie oberen Rücken aktiviert. Die rotative Bewegung und die Instabilität der Kettlebells erfordern gute Koordination und Kontrolle.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_medial",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "ab225f09-16ef-4b09-9713-8a4807835b65",
+    "exercise_db_id": "0524",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ab225f09-16ef-4b09-9713-8a4807835b65.jpg",
+    "video_path": "ab225f09-16ef-4b09-9713-8a4807835b65.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:32.519262+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Bend Press",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und halte eine Kettlebell in deiner rechten Hand.\nBeuge deine Knie leicht und drücke die Kettlebell mit deinem rechten Arm nach oben, halte den Ellbogen gestreckt.\nRotiere deinen Oberkörper nach links und verlagere dein Gewicht auf deinen linken Fuß.\nBeuge dein linkes Knie und senke deinen Oberkörper zum Boden ab, halte deinen rechten Arm über deinem Kopf gestreckt.\nWährend du dich absenkst, behalte die Kettlebell im Blick und halte deine Brust aufrecht.\nSobald deine linke Hand den Boden berührt, drücke dich über deinen linken Fuß nach oben und strecke dein linkes Bein.\nDrücke deine Hüfte nach vorne und nutze dein Rumpf sowie deinen rechten Arm, um die Kettlebell zurück in die Ausgangsposition zu drücken.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Der Kettlebell Bend Press ist eine komplexe Bewegung, die primär die Bauchmuskulatur trainiert und zusätzlich Schultern, Trizeps und schräge Bauchmuskeln beansprucht. Sie erfordert Kraft, Koordination und Beweglichkeit für eine sichere und effektive Ausführung.",
+    "primary_muscles": [
+      "abs_obliques",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "lower_back"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "164909d9-1ceb-4aaf-a824-fb4f47d6cb3f",
+    "exercise_db_id": "0525",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "164909d9-1ceb-4aaf-a824-fb4f47d6cb3f.jpg",
+    "video_path": "164909d9-1ceb-4aaf-a824-fb4f47d6cb3f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:34.121396+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Bottoms-Up Clean aus der Hanghaltung",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und halte eine Kettlebell in einer Hand mit Obergriff.\nBeuge deine Knie leicht und neige deinen Oberkörper nach vorne auf den Hüften, halte deinen Rücken gerade und die Brust oben.\nLasse die Kettlebell zwischen deinen Beinen hängen, mit vollständig ausgestrecktem Arm.\nBewege die Kettlebell in einer flüssigen Bewegung explosiv nach oben zu deiner Schulter, während du deine Hüften und Knie ausstreckst.\nWenn die Kettlebell Schulterhöhe erreicht, drehe dein Handgelenk so, dass die Unterseite der Kettlebell nach oben zeigt.\nFange die Kettlebell auf Schulterhöhe mit gebogenem Ellbogen und Handfläche nach oben ab.\nSenke die Kettlebell in die Ausgangsposition zurück, indem du die Bewegung umkehrst.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "380b98e1-b8a4-4106-9491-57240a7f00ab",
+    "exercise_db_id": "0552",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "380b98e1-b8a4-4106-9491-57240a7f00ab.jpg",
+    "video_path": "380b98e1-b8a4-4106-9491-57240a7f00ab.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:17.207023+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Clean mit beiden Armen",
+    "instructions": "Stelle dich schulterbreit hin und halte eine Kettlebell mit beiden Händen vor deinen Oberschenkeln, Handflächen zu dir hin.\nBeuge deine Knie leicht und kippe in der Hüfte, senke die Kettlebell Richtung Boden.\nStrecke deine Hüfte und Knie explosiv und nutze das Momentum, um die Kettlebell zu deinen Schultern hochzuziehen.\nWenn die Kettlebell Schulterhöhe erreicht, drehe deine Handgelenke und fange die Kettlebell in der Rack-Position auf, mit eingewickelten Ellbogen und der Kettlebell auf dem hinteren Unterarm.\nSenke die Kettlebell zurück in die Ausgangsposition und wiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kettlebell Clean mit beiden Armen ist eine dynamische Bewegung, die hauptsächlich die Deltamuskeln trainiert und zugleich Kapuzenmuskel und Unterarme beansprucht. Die Übung erfordert Koordination, explosive Kraft und korrekte Technik für den sicheren Übergang von der Ausgangsposition in die Rack-Position.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "1af83188-a54b-4ccd-9a6b-1dcb6a42f422",
+    "exercise_db_id": "0527",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1af83188-a54b-4ccd-9a6b-1dcb6a42f422.jpg",
+    "video_path": "1af83188-a54b-4ccd-9a6b-1dcb6a42f422.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:37.018035+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Double Jerk",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und halte in jeder Hand eine Kettlebell auf Schulterhöhe.\nBeuge deine Knie leicht an und spanne deinen Rumpf an.\nDrücke die Kettlebells über deinen Kopf, strecke deine Arme vollständig.\nBeuge deine Knie und senke dich schnell in eine teilweise Kniebeuge ab.\nStrecke deine Hüfte und Knie explosiv aus und treibe die Kettlebells nach oben.\nSichere die Kettlebells oben mit leicht gebeugten Knien ab.\nRichte dich auf und kehre zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "704b5f5b-71cb-4d3e-8546-9c70b44ad5c9",
+    "exercise_db_id": "0529",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "704b5f5b-71cb-4d3e-8546-9c70b44ad5c9.jpg",
+    "video_path": "704b5f5b-71cb-4d3e-8546-9c70b44ad5c9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:39.778303+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Double Snatch",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und halte eine Kettlebell in jeder Hand auf Armlänge vor deinen Oberschenkeln.\nBeuge deine Knie leicht und neige deine Hüfte nach vorne, während du deinen Rücken flach und deine Brust oben hältst.\nIn einer explosiven Bewegung streckst du deine Hüfte, Knie und Knöchel und ziehst die Kettlebells gleichzeitig zu deinen Schultern hoch.\nWenn die Kettlebells Schulterhöhe erreichen, drehe deine Handgelenke und drücke die Kettlebells über deinen Kopf, während du deine Arme vollständig streckst.\nSenke die Kettlebells zurück in die Ausgangsposition und wiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kettlebell Double Snatch ist eine dynamische Ganzkörperübung, die die Schultern (Deltamuskeln) trainiert und auch Kapuzenmuskel, Unterarme und Core beansprucht. Die Übung erfordert explosive Kraft, Koordination und korrekte Technik.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "shoulders_front",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "0a767fbc-b3b4-4b64-82c4-7bbd7ab71c45",
+    "exercise_db_id": "1298",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0a767fbc-b3b4-4b64-82c4-7bbd7ab71c45.jpg",
+    "video_path": "0a767fbc-b3b4-4b64-82c4-7bbd7ab71c45.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:52.962383+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Einarm-Bodendrücken",
+    "instructions": "Lege dich flach auf den Rücken, Knie gebeugt, Füße flach auf dem Boden.\nHalte die Kettlebell in einer Hand mit der Handfläche zu deinen Füßen hin, den Arm gestreckt zur Decke.\nSenke die Kettlebell langsam zur Brust ab, indem du deinen Ellbogen beugst und deinen Oberarm nah am Körper hältst.\nHalte eine Sekunde an, wenn die Kettlebell knapp über der Brust ist, dann drücke sie zurück in die Ausgangsposition.\nWiederhole die gewünschte Anzahl von Wiederholungen und wechsle dann zur anderen Seite.",
+    "tips": "Diese unilaterale Brustübung trainiert primär die Brust und sekundär Trizeps und Schultern, erfordert aber große Stabilität und Kontrolle.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "7807d90a-4787-4684-b48d-522dca376ade",
+    "exercise_db_id": "0538",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7807d90a-4787-4684-b48d-522dca376ade.jpg",
+    "video_path": "7807d90a-4787-4684-b48d-522dca376ade.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:54.392012+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Einarm-Stoß",
+    "instructions": "Stelle dich mit schulterbreitem Stand auf und halte eine Kettlebell in einer Hand auf Schulterhöhe.\nBeuge deine Knie leicht und spanne deinen Rumpf an.\nDrücke die Kettlebell in einer geraden Linie über deinen Kopf und strecke deinen Arm vollständig aus.\nWährend du die Kettlebell hochdrückst, beuge deine Knie gleichzeitig leicht und streck sie schnell, um Momentum zu erzeugen.\nWenn die Kettlebell ihren höchsten Punkt erreicht, tauche schnell darunter durch, indem du Knie und Hüfte beugst.\nFange die Kettlebell mit leicht gebeugten Knien und Hüften und vollständig ausgestrecktem Arm auf.\nRichte deinen Körper auf, strecke Knie und Hüfte vollständig, und stabilisiere die Kettlebell über deinem Kopf.\nSenke die Kettlebell in die Ausgangsposition zurück, indem du Knie und Hüfte beugst, und wiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kettlebell Einarm-Stoß ist eine dynamische Überkopfdrück-Bewegung, bei der Beine und Hüfte helfen, die Kettlebell mit einem Arm nach oben zu bewegen. Sie erfordert Koordination, Timing und Kraft, besonders in den Schultern, Trizeps und im Rumpf.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "c9f80e77-31df-4903-a1ab-138c96ac322e",
+    "exercise_db_id": "0540",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c9f80e77-31df-4903-a1ab-138c96ac322e.jpg",
+    "video_path": "c9f80e77-31df-4903-a1ab-138c96ac322e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:57.46784+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell einarmiges Push-Press",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und halte eine Kettlebell in einer Hand auf Schulterhöhe.\nBeuge deine Knie leicht und spanne deinen Core an.\nDrücke die Kettlebell nach oben, indem du deinen Arm vollständig ausstreckst und deine Beine voll ausdehnst.\nSenke die Kettlebell zur Ausgangsposition ab, indem du deine Knie beugst und die Kettlebell zur Schulter zurückbringst.\nWiederhol die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Das einarmige Kettlebell Push-Press ist eine Compound-Übung, die die Schultermuskeln trainiert und auch Trizeps und Core aktiviert. Eine leichte Beinstreckung unterstützt die Bewegung.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "4ae17434-0851-4c7f-aa36-959445f2b464",
+    "exercise_db_id": "0532",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4ae17434-0851-4c7f-aa36-959445f2b464.jpg",
+    "video_path": "4ae17434-0851-4c7f-aa36-959445f2b464.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:44.042438+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Figure 8",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und halte eine Kettlebell in einer Hand.\nBeuge deine Knie leicht und neige deinen Oberkörper nach vorne an den Hüften, während du deinen Rücken gerade hältst.\nFühre die Kettlebell zwischen deinen Beinen hindurch und wechsle die Hand, wenn sie die Rückseite deiner Beine erreicht.\nWährend die Kettlebell nach vorne kommt, gib sie zur anderen Hand zwischen deinen Beinen.\nFühre die Kettlebell weiterhin in einer Figure-8-Bewegung zwischen deinen Beinen hindurch.\nHalte ein konstantes Tempo und spanne deinen Core während der gesamten Übung an.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kettlebell Figure 8 ist eine dynamische Core-Übung, die das Führen einer Kettlebell in einer Figure-8-Bewegung zwischen den Beinen beinhaltet und die Abs, Schultern und Unterarme trainiert, während sie Koordination und Stabilität herausfordert.",
+    "primary_muscles": [
+      "abs_obliques",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "6a48ab2b-159b-486f-b510-c02e302235b9",
+    "exercise_db_id": "0535",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6a48ab2b-159b-486f-b510-c02e302235b9.jpg",
+    "video_path": "6a48ab2b-159b-486f-b510-c02e302235b9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:48.507162+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Hang Clean",
+    "instructions": "Stelle dich schulterbreit hin und halte eine Kettlebell vor deinen Oberschenkeln.\nBeuge deine Knie leicht an und neige dich nach vorne in den Hüften, während du deinen Rücken gerade hältst.\nSenke die Kettlebell in Richtung Boden, lass sie zwischen deinen Beinen schwingen.\nExtendiere deine Hüften und Knie explosiv und nutze den Schwung, um die Kettlebell bis zur Schulterhöhe zu schwingen.\nWenn die Kettlebell die Schulterhöhe erreicht, drehe deine Handgelenke und fange die Kettlebell in der Rack-Position, mit deinem Ellbogen eingezogen und der Kettlebell auf deinem Unterarm ruhend.\nSenke die Kettlebell zurück in die Ausgangsposition zwischen deinen Beinen und wiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kettlebell Hang Clean ist eine explosive Übung, die die Beinbizeps trainiert und zusätzlich Gesäß, Oberschenkelmuskulatur und Waden beansprucht. Die Übung erfordert explosive Hüftstreckung, Koordination und korrekte Technik.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "04a0ae70-bc34-47f2-b0d5-12254f498730",
+    "exercise_db_id": "0526",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "04a0ae70-bc34-47f2-b0d5-12254f498730.jpg",
+    "video_path": "04a0ae70-bc34-47f2-b0d5-12254f498730.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:35.646371+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell High Pull",
+    "instructions": "Stelle dich aufrecht hin, die Füße schulterbreit auseinander, und halte eine Kettlebell in jeder Hand mit Oberhandgriff.\nBeuge deine Knie leicht und lehne dich an den Hüften nach vorne, während du deinen Rücken gerade und die Brust oben hältst.\nLasse die Kettlebells gerade nach unten vor deinem Körper hängen.\nFühre in einer fließenden Bewegung eine explosive Hüft- und Kniestreckung durch, während du deine Schultern zuckst.\nZiehe die Kettlebells nach oben zu deinen Schultern, halte deine Ellbogen hoch und nach außen.\nFange die Kettlebells in Schulterhöhe mit den Handflächen zueinander und den Ellbogen nach vorne zeigend auf.\nSenke die Kettlebells zurück in die Ausgangsposition und wiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_traps_upper",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "biceps_long",
+      "shoulders_side"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "7d623001-8d65-4a4e-a772-c71b479eba84",
+    "exercise_db_id": "0537",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7d623001-8d65-4a4e-a772-c71b479eba84.jpg",
+    "video_path": "7d623001-8d65-4a4e-a772-c71b479eba84.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:51.417632+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell One-Arm Clean and Jerk",
+    "instructions": "Stelle dich hüftbreit hin und halte eine Kettlebell in einer Hand mit Obergriff.\nBeuge deine Knie leicht und neige dich in den Hüften, während die Kettlebell zwischen deinen Beinen abgesenkt wird.\nStrecke deine Hüften, Knie und Knöchel explosiv aus und nutze den Schwung, um die Kettlebell bis zur Schulterhöhe zu bewegen.\nSobald die Kettlebell Schulterhöhe erreicht, rotiere dein Handgelenk und drücke deine Hand explosiv nach oben, bis der Arm vollständig gestreckt ist.\nSenke die Kettlebell kontrolliert zurück in die Ausgangsposition und wiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese dynamische Compound-Bewegung erfordert Koordination und explosive Kraft. Achte auf saubere Technik, um Verletzungen zu vermeiden und maximale Effektivität zu erreichen.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "shoulders_front",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "d5b8d5c4-4832-4d72-9499-3cc54e52a145",
+    "exercise_db_id": "0545",
+    "category": "plyometric",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d5b8d5c4-4832-4d72-9499-3cc54e52a145.jpg",
+    "video_path": "d5b8d5c4-4832-4d72-9499-3cc54e52a145.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:05.177885+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Plyo Push-up",
+    "instructions": "Begeben Sie sich in eine hohe Plankenposition mit den Händen auf den Kettlebells, schulterbreit auseinander.\nSenken Sie Ihre Brust zum Boden, wobei Sie Ihre Ellbogen nah am Körper halten.\nDrücken Sie explosiv durch Ihre Hände, heben Sie Ihre Hände von den Kettlebells ab und strecken Sie Ihre Arme vollständig.\nLanden Sie sanft zurück auf den Kettlebells und senken Sie Ihre Brust sofort wieder für die nächste Wiederholung.\nWiederholen Sie für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kettlebell Plyo Push-up ist eine explosive Push-up-Variation mit Händen auf Kettlebells, die Brust, Trizeps, Schultern und Rumpf trainiert und erhebliche Oberkörperkraft, Stabilität und explosive Kraft erfordert.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "e1908c07-5596-45a4-beea-9b3633f1124f",
+    "exercise_db_id": "1345",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e1908c07-5596-45a4-beea-9b3633f1124f.jpg",
+    "video_path": "e1908c07-5596-45a4-beea-9b3633f1124f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:20.395028+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Rudern beidarmig",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, die Knie leicht gebeugt, und halte eine Kettlebell in jeder Hand mit den Handflächen zu deinem Körper zeigend.\nBeuge dich an der Hüfte vor, während du deinen Rücken gerade hältst und deinen Core anspannst.\nZiehe die Kettlebells zu deiner Brust hoch, während du deine Schulterblätter zusammendrückst.\nHalte einen Moment oben an, senke dann die Kettlebells kontrolliert zurück in die Ausgangsposition.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kettlebell Rudern beidarmig ist eine zusammengesetzte Übung, die den oberen Rücken anspricht und wird durchgeführt, indem zwei Kettlebells zur Brust gezogen werden, während man eine nach vorne geneigte Position beibehält.",
+    "primary_muscles": [
+      "back_lats",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "dbb01583-74ba-4933-adcc-179b7c71ad41",
+    "exercise_db_id": "0548",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "dbb01583-74ba-4933-adcc-179b7c71ad41.jpg",
+    "video_path": "dbb01583-74ba-4933-adcc-179b7c71ad41.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:11.336265+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Sumo High Pull",
+    "instructions": "Stelle dich mit breiter als schulterbreit auseinander stehenden Füßen auf, die Zehen zeigen nach außen.\nHalte eine Kettlebell mit beiden Händen vor deinem Körper, Arme nach unten gestreckt.\nBeuge deine Knie und senke deine Hüften in eine Kniebeugenposition, während du deinen Rücken gerade hältst.\nDrücke durch deine Fersen und strecke deine Hüften und Knie explosiv aus, während du die Kettlebell zu deinem Kinn hochziehst.\nWährend du die Kettlebell hochziehst, halte deine Ellbogen hoch und weit auseinander und presse deine Schulterblätter zusammen.\nSenke die Kettlebell zurück in die Ausgangsposition und wiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kettlebell Sumo High Pull ist eine Compound-Übung, die die Kapuzenmuskel trainiert und gleichzeitig die Schultern, das Gesäß und die Oberschenkelrückseite beansprucht. Die Übung kombiniert eine breite Kniebeugenposition mit einem explosiven Zug der Kettlebell bis zur Kinnhöhe.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "quads_rectus_femoris"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "9be09ac5-4d3d-43cb-b85e-39af3bae89fc",
+    "exercise_db_id": "0549",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9be09ac5-4d3d-43cb-b85e-39af3bae89fc.jpg",
+    "video_path": "9be09ac5-4d3d-43cb-b85e-39af3bae89fc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:12.894383+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Swing",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, die Zehen zeigen leicht nach außen.\nHalte die Kettlebell mit beiden Händen vor deinem Körper, die Arme sind gestreckt.\nBeuge deine Knie leicht und kippe dein Becken nach vorne, indem du deinen Po nach hinten schiebst.\nSchwinge die Kettlebell zwischen deinen Beinen nach hinten, halte deine Arme gerade und den Rücken flach.\nBeschleunigte deine Hüfte nach vorne und schwinge die Kettlebell bis auf Schulterhöhe, nutze dabei die Kraft aus der Hüftbewegung.\nLasse die Kettlebell zwischen deinen Beinen nach unten schwingen und wiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kettlebell Swing ist eine dynamische Übung, die das Gesäß trainiert und auch die Oberschenkelrückseite und den Rumpf aktiviert. Sie kombiniert eine Schwungbewegung mit Hüftantrieb und Dynamik.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "b00e7a34-6da7-48f0-88f5-b169938dd5ca",
+    "exercise_db_id": "0550",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b00e7a34-6da7-48f0-88f5-b169938dd5ca.jpg",
+    "video_path": "b00e7a34-6da7-48f0-88f5-b169938dd5ca.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:14.337736+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Thruster",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf und halte eine Kettlebell mit beiden Händen vor deiner Brust, die Handflächen zeigen sich gegenseitig an.\nSenke dich in eine Kniebeugen-Position ab, indem du deine Knie beugst und deine Hüfte nach hinten schiebst. Halte dabei deine Brust oben und deinen Rücken gerade.\nAm tiefsten Punkt der Kniebeuge drückst du dich explosiv über deine Fersen nach oben und presst gleichzeitig die Kettlebell über deinen Kopf.\nStrecke deine Arme oben vollständig aus und verlängere deine Ellbogen vollständig.\nSenke die Kettlebell zurück in die Ausgangsposition, indem du die Bewegung umkehrst, deine Ellbogen beugst und das Gewicht zurück zu deiner Brust führst.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kettlebell Thruster ist eine zusammengesetzte Übung, die eine Kniebeuge mit einem Überkopfdrücken kombiniert und die Schultern beansprucht, während auch die Oberschenkelmuskulatur, das Gesäß und die Rumpfmuskulatur aktiviert werden. Die Übung erfordert Koordination, Kraft und etwas Erfahrung im Umgang mit Kettlebells.",
+    "primary_muscles": [
+      "shoulders_front",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris",
+      "triceps_long"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "6e617ddc-b952-4441-a3e9-f56a1e9f9920",
+    "exercise_db_id": "0551",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6e617ddc-b952-4441-a3e9-f56a1e9f9920.jpg",
+    "video_path": "6e617ddc-b952-4441-a3e9-f56a1e9f9920.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:15.742903+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Turkish Get-Up",
+    "instructions": "Lege dich auf den Rücken, die Beine ausgestreckt, und halte die Kettlebell mit der rechten Hand vollständig über deiner Schulter ausgestreckt.\nBeuge dein rechtes Knie und stelle deinen rechten Fuß flach auf den Boden, während dein linkes Bein ausgestreckt bleibt.\nDrücke dich durch deinen rechten Fuß ab und hebe deine Hüften vom Boden ab, sodass du in eine Brückenposition kommst.\nSchiebe dein linkes Bein unter deinen Körper, beuge dein linkes Knie und stelle deinen linken Fuß flach auf den Boden.\nRotiere deinen Oberkörper nach links und stütze dich mit deiner linken Hand auf dem Boden ab.\nDrücke dich durch deinen rechten Fuß und deine linke Hand ab und hebe deinen Oberkörper an, bis du in einer Knieposition bist.\nStehe aus dieser Position auf und halte die Kettlebell die ganze Zeit über deinem Kopf ausgestreckt.\nFühre die Bewegung in umgekehrter Reihenfolge zurück zur Ausgangsposition aus.\nWiederhole die Übung auf der anderen Seite mit der Kettlebell in der linken Hand.",
+    "tips": "Das Kettlebell Turkish Get-Up ist eine komplexe Ganzkörperübung, die eine hohe Koordination, Balance und Mobilität erfordert. Sie trainiert intensiv die Gesäßmuskulatur, Quadrizeps, Oberschenkelrückseite und den Core.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "6a55de73-b174-4820-8ee2-ea9306b24209",
+    "exercise_db_id": "0554",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6a55de73-b174-4820-8ee2-ea9306b24209.jpg",
+    "video_path": "6a55de73-b174-4820-8ee2-ea9306b24209.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:21.892972+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Windmill",
+    "instructions": "Stelle dich schulterbreit hin und halte eine Kettlebell in deiner rechten Hand über dem Kopf.\nDrehe deinen linken Fuß etwa 45 Grad nach außen und halte deinen rechten Fuß nach vorne gerichtet.\nBeuge deinen Oberkörper zur linken Seite, während du deinen rechten Arm über dem Kopf gestreckt hältst und deine Augen auf die Kettlebell fokussierst.\nSenke deinen Oberkörper so weit wie möglich ab, während du deinen rechten Arm gerade hältst und deinen linken Arm zur Seite ausstreckst.\nMache eine kurze Pause und kehre dann durch die Kraft in deinem rechten Fuß und Engagement der schrägen Bauchmuskulatur in die Ausgangsposition zurück.\nWiederhole die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite.",
+    "tips": "Der Kettlebell Windmill ist eine Compound-Übung, die die gerade und schräge Bauchmuskulatur trainiert und gleichzeitig die Schultern beansprucht sowie die Kernstabilität und Mobilität verbessert. Er erfordert, eine Kettlebell über dem Kopf zu halten und sich in der Taille zu beugen, was Kraft, Balance und Koordination verlangt.",
+    "primary_muscles": [
+      "abs_obliques",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "7c4ce718-a717-4c1b-a67f-bd1c52c7fbb9",
+    "exercise_db_id": "0547",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7c4ce718-a717-4c1b-a67f-bd1c52c7fbb9.jpg",
+    "video_path": "7c4ce718-a717-4c1b-a67f-bd1c52c7fbb9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:09.85165+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell Wippe Press",
+    "instructions": "Stehe mit deinen Füßen schulterbreit auseinander und halte eine Kettlebell in jeder Hand auf Schulterhöhe.\nDrücke eine Kettlebell nach oben über deinen Kopf, während du die andere Kettlebell auf Schulterhöhe hältst.\nSenke die gedrückte Kettlebell zurück auf Schulterhöhe, während du gleichzeitig die andere Kettlebell nach oben drückst.\nFahre mit der wechselweisen Drückbewegung fort, um eine wippenartige Bewegung zu erzeugen.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kettlebell Wippe Press ist eine Schulterübung, bei der Kettlebells abwechselnd über Kopf gedrückt werden und sowohl Kraft als auch Koordination herausfordert.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "254f5c02-2c38-48a6-b6c5-512b8ff6886c",
+    "exercise_db_id": "0536",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "254f5c02-2c38-48a6-b6c5-512b8ff6886c.jpg",
+    "video_path": "254f5c02-2c38-48a6-b6c5-512b8ff6886c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:50.016628+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Ausfallschritt mit Durchgang",
+    "instructions": "Stelle dich schulterbreit auseinander hin und halte eine Kettlebell vor deiner Brust mit beiden Händen.\nMache einen Schritt nach vorne mit deinem rechten Fuß und senke deinen Körper in die Ausfallschrittposition.\nWährend du ausfallschrittest, führe die Kettlebell unter deinem rechten Oberschenkel hindurch und gib sie deiner linken Hand.\nDrücke dich mit deinem rechten Fuß ab, um zur Ausgangsposition zurückzukehren, während du die Kettlebell gleichzeitig zurück zur rechten Hand gibst.\nWiederhole den Ausfallschritt auf der anderen Seite und führe die Kettlebell unter deinem linken Oberschenkel hindurch.\nWechsle weiterhin zwischen Ausfallschritten ab und gib die Kettlebell zwischen den Händen für die gewünschte Anzahl von Wiederholungen hin und her.",
+    "tips": "Der Kettlebell-Ausfallschritt mit Durchgang ist eine dynamische Unterkörperübung, die einen traditionellen Ausfallschritt mit einer Kettlebell-Übergabe unter dem vorderen Oberschenkel verbindet und Gleichgewicht, Koordination und Kraft herausfordert.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "83f29169-8c77-47c8-b289-4e7ef9bc5496",
+    "exercise_db_id": "0528",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "83f29169-8c77-47c8-b289-4e7ef9bc5496.jpg",
+    "video_path": "83f29169-8c77-47c8-b289-4e7ef9bc5496.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:38.376692+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Doppel-Stoß",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und halte eine Kettlebell in jeder Hand auf Schulterhöhe.\nBeuge deine Knie leicht und spanne deinen Core an.\nInitiiere die Bewegung durch eine explosive Streckung deiner Hüfte, Knie und Knöchel, um die Kettlebells über Kopf zu drücken.\nWenn die Kettlebells oben ankommen, drücke sie vollständig über Kopf und strecke deine Arme aus.\nSenke die Kettlebells zurück in die Ausgangsposition, indem du deine Ellbogen beugst und sie auf Schulterhöhe bringst.\nWiederhole dies für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Kettlebell-Doppel-Stoß ist eine Komplexübung, die die Schultern trainiert und explosive Kraft aus dem unteren Körper nutzt, um zwei Kettlebells über Kopf zu bewegen. Sie erfordert Koordination, Kraft und korrekte Technik.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "8f4e5452-4fd7-4d5d-86b5-b8b85f8c6f98",
+    "exercise_db_id": "0533",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8f4e5452-4fd7-4d5d-86b5-b8b85f8c6f98.jpg",
+    "video_path": "8f4e5452-4fd7-4d5d-86b5-b8b85f8c6f98.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:45.475306+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Frontkniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, Zehen leicht nach außen gedreht.\nHalte die Kettlebell mit beiden Händen vor deiner Brust, nah am Körper.\nSpanne deinen Core an und halte deine Brust aufrecht, während du deine Hüfte nach hinten und unten senkst, als würdest du dich auf einen Stuhl setzen.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden sind, oder so tief wie angenehm möglich.\nDrücke dich über deine Fersen nach oben, spanne deine Gesäßmuskeln oben an.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "c2867abd-d118-41fb-837a-68d0b6903ff1",
+    "exercise_db_id": "0534",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "c2867abd-d118-41fb-837a-68d0b6903ff1.jpg",
+    "video_path": "c2867abd-d118-41fb-837a-68d0b6903ff1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:46.940405+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Kniebeuge (Goblet-Variante)",
+    "instructions": "Stehe mit schulterbreiten Füßen und halte eine Kettlebell nah an deiner Brust mit beiden Händen.\nHalte deine Brust aufrecht und spanne deinen Core an, senke deinen Körper dann in eine Kniebeugen-Position durch Beugen der Knie und Hüfte.\nSenke dich weiter bis deine Oberschenkel parallel zum Boden sind oder so tief wie möglich für dich komfortabel.\nHalte kurz am tiefsten Punkt an, dann drücke dich über deine Fersen wieder in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "25619ee0-28ca-4e72-b669-c3075eb23dfc",
+    "exercise_db_id": "0544",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "25619ee0-28ca-4e72-b669-c3075eb23dfc.jpg",
+    "video_path": "25619ee0-28ca-4e72-b669-c3075eb23dfc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:03.593872+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Pistolen-Kniebeuge",
+    "instructions": "Stelle dich schulterbreit auseinander hin und halte eine Kettlebell vor deiner Brust mit beiden Händen.\nHebe deinen linken Fuß vom Boden ab und strecke ihn nach vorne, halte ihn parallel zum Boden.\nSenke deinen Körper langsam in eine Kniebeuge, halte deinen rechten Fuß flach auf dem Boden und dein linkes Bein ausgestreckt.\nMache eine kurze Pause unten an der Kniebeuge, dann drücke dich über deinen rechten Fersen zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen, dann wechsle die Beine.",
+    "tips": "Die Kettlebell-Pistolen-Kniebeuge ist eine anspruchsvolle einbeinige Kniebeugevariante, die Gesäßmuskeln, Quadrizeps, Oberschenkelrückseite und Waden trainiert. Sie erfordert erhebliche Kraft, Gleichgewicht und Mobilität sowie Erfahrung mit Pistolen-Kniebeugen und Kettlebell-Handling.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_medius",
+      "adductors",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "b8cac1d3-930a-4d67-ac9b-3a9c11c50384",
+    "exercise_db_id": "0542",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b8cac1d3-930a-4d67-ac9b-3a9c11c50384.jpg",
+    "video_path": "b8cac1d3-930a-4d67-ac9b-3a9c11c50384.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:00.522974+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Reißen einarmig",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und halte eine Kettlebell in einer Hand zwischen deinen Beinen.\nBeuge deine Knie leicht und schwinge die Kettlebell nach vorne, indem du deine Hüften beschleunigst.\nStrecke deine Hüften und Knie explosiv, nutze den Schwung und swing die Kettlebell zu deiner Schulter.\nWenn die Kettlebell die Schulterhöhe erreicht, drehe deine Hand und drücke sie direkt über deinen Kopf, strecke deinen Arm vollständig aus.\nSenke die Kettlebell zwischen deine Beine ab und wiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kettlebell-Reißen einarmig ist eine dynamische Ganzkörperübung, die die Schultern trainiert und auch Kapuzenmuskel, Unterarme und Core beansprucht. Sie erfordert explosive Kraft, Koordination und korrekte Technik für sichere und effektive Ausführung.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "back_erector_spinae",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "back_lats",
+      "forearms_flexors",
+      "quads_rectus_femoris"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "adf6c7ad-711f-4e94-96a7-b9ab0161c419",
+    "exercise_db_id": "0521",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "adf6c7ad-711f-4e94-96a7-b9ab0161c419.jpg",
+    "video_path": "adf6c7ad-711f-4e94-96a7-b9ab0161c419.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:27.605091+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Renegade-Rudern alternierend",
+    "instructions": "Beginnen Sie in einer hohen Plankposition mit Ihren Händen auf den Kettlebells und Ihren Füßen hüftbreit auseinander.\nSpannen Sie Ihren Core an und halten Sie Ihren Körper in einer geraden Linie von Kopf zu Fersen.\nZiehen Sie eine Kettlebell zu Ihrer Brust, wobei Sie Ihren Ellbogen nah am Körper halten.\nSenken Sie die Kettlebell zurück in die Ausgangsposition und wiederholen Sie mit dem anderen Arm.\nWechseln Sie weiter die Arme für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kettlebell-Renegade-Rudern alternierend ist eine Compound-Übung, die den oberen Rücken zielt, während sie auch Core und Schultern beansprucht. Es erfordert das Halten einer Plankposition beim Ausführen von alternierenden Ruderungen mit Kettlebells und fordert sowohl Kraft als auch Stabilität heraus.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "af55567c-4d01-4831-9cf5-f0aa49c48504",
+    "exercise_db_id": "0541",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "af55567c-4d01-4831-9cf5-f0aa49c48504.jpg",
+    "video_path": "af55567c-4d01-4831-9cf5-f0aa49c48504.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:59.055181+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Rudern einarmig",
+    "instructions": "Stehen Sie mit Ihren Füßen schulterweit auseinander, halten Sie eine Kettlebell in einer Hand mit Übergriff.\nBeugen Sie Ihre Knie leicht und lehnen Sie sich an den Hüften vor, halten Sie Ihren Rücken gerade und Ihren Core angespannt.\nZiehen Sie die Kettlebell zu Ihrer Brust, halten Sie Ihren Ellbogen nah am Körper und drücken Sie Ihre Schulterblätter zusammen.\nMachen Sie eine kurze Pause oben, dann senken Sie die Kettlebell langsam zurück in die Ausgangsposition.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen, dann wechseln Sie die Seite und wiederholen Sie mit dem anderen Arm.",
+    "tips": "Das Kettlebell-Rudern einarmig ist eine unilaterale Zugübung, die den oberen Rücken zielt, mit sekundärem Fokus auf Bizeps und Unterarme. Es erfordert das Halten einer stabilen Hüft-Hinge-Position beim Rudern der Kettlebell mit einem Arm und fördert Kraft und Muskelentwicklung im oberen Rücken sowie verbesserte Core-Stabilität.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "14065a29-b413-40f0-828c-6bd443cc197f",
+    "exercise_db_id": "0553",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "14065a29-b413-40f0-828c-6bd443cc197f.jpg",
+    "video_path": "14065a29-b413-40f0-828c-6bd443cc197f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:18.735485+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Schulterdrücken",
+    "instructions": "Stelle dich mit hüftbreit auseinander stehenden Füßen hin und halte eine Kettlebell in jeder Hand auf Schulterhöhe mit nach vorne gerichteten Handflächen.\nSpanne deinen Rumpf an und drücke die Kettlebells über deinen Kopf, wobei du deine Arme vollständig ausstreckst.\nHalte einen Moment inne, dann senke die Kettlebells langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "triceps_lateral"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "5d221d83-3b35-4803-aa4d-ee2030cca854",
+    "exercise_db_id": "0543",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5d221d83-3b35-4803-aa4d-ee2030cca854.jpg",
+    "video_path": "5d221d83-3b35-4803-aa4d-ee2030cca854.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:02.064597+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Schulterdrücken",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Kettlebell in einer Hand.\nBeuge deine Knie leicht und neige deinen Oberkörper nach vorne, während du deinen Rücken gerade hältst.\nHebe die Kettlebell auf Schulterhöhe, während du deinen Ellbogen nah am Körper hältst.\nStrecke deinen Arm vollständig nach oben aus und presse die Kettlebell über deinen Kopf.\nSenke die Kettlebell wieder auf Schulterhöhe und kehre zur Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Wiederholungszahl und wechsle dann die Seite.",
+    "tips": "Diese Übung trainiert die Schultermuskulatur und erfordert Kraft sowie Stabilität beim Überkopfdrücken.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "triceps_lateral"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "e3ba4294-1500-4565-b2c6-32e7f4f51c8f",
+    "exercise_db_id": "0546",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e3ba4294-1500-4565-b2c6-32e7f4f51c8f.jpg",
+    "video_path": "e3ba4294-1500-4565-b2c6-32e7f4f51c8f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:06.705769+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Schulterdrücken (sitzend)",
+    "instructions": "Setze dich auf eine Bank mit geradem Rücken und flach auf dem Boden stehenden Füßen.\nHalte je eine Kettlebell in jeder Hand auf Schulterhöhe, Handflächen zeigen nach vorne.\nDrücke die Kettlebells nach oben über deinen Kopf, strecke deine Arme vollständig aus.\nSenke die Kettlebells zurück auf Schulterhöhe.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kettlebell-Schulterdrücken ist eine sitzend ausgeführte Schulterübung, bei der Kettlebells nach oben gedrückt werden, um die Deltamuskulatur zu trainieren. Der Trizeps und die Core-Muskulatur werden sekundär beansprucht.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "37f682ad-d0b8-40fa-a9fe-a1a2c20b2f5d",
+    "exercise_db_id": "0530",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "37f682ad-d0b8-40fa-a9fe-a1a2c20b2f5d.jpg",
+    "video_path": "37f682ad-d0b8-40fa-a9fe-a1a2c20b2f5d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:41.205956+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Windmühle",
+    "instructions": "Stelle dich schulterbreit hin und halte eine Kettlebell in deiner rechten Hand.\nStrecke deinen rechten Arm nach oben, den Blick auf die Kettlebell gerichtet.\nDrehe deinen linken Fuß 45 Grad nach links und deinen rechten Fuß 90 Grad nach rechts.\nBeuge dich in der Hüfte nach links, während du deinen rechten Arm nach oben gestreckt hältst.\nSenke die Kettlebell Richtung Boden, indem du dich deinem linken Fuß entgegen lehnst.\nMache eine kurze Pause, dann aktiviere deinen Core und drücke dich über deinen rechten Fuß zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Die Kettlebell-Windmühle ist eine dynamische Übung, die hauptsächlich die Bauchmuskeln trainiert und zugleich die Schultern und die Oberschenkelrückseite beansprucht. Sie erfordert Kernkraft, Schulterstabilität und Flexibilität in der Oberschenkelrückseite.",
+    "primary_muscles": [
+      "abs_obliques",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors",
+      "glutes_medius",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "dd00ceca-52cc-47e1-9180-a3854293f22f",
+    "exercise_db_id": "0517",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "dd00ceca-52cc-47e1-9180-a3854293f22f.jpg",
+    "video_path": "dd00ceca-52cc-47e1-9180-a3854293f22f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:22.284806+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kettlebell-Windmühle (fortgeschritten)",
+    "instructions": "Stelle dich mit breiter als schulterbreit auseinander stehenden Füßen hin, die Zehen zeigen leicht nach außen.\nHalte eine Kettlebell in deiner rechten Hand mit ausgestrecktem Arm über deinem Kopf und der Handfläche nach vorne.\nDrehe deinen linken Fuß leicht nach rechts und verlagere dein Gewicht auf dein linkes Bein.\nBeuge dein linkes Knie und hinge in der Hüfte ab, senke deinen Oberkörper zur linken Seite.\nHalte deinen rechten Arm über deinem Kopf ausgestreckt und behalte die Kettlebell im Blick.\nWährend du deinen Oberkörper absenkst, strecke dein rechtes Bein und drehe deinen rechten Fuß leicht.\nSenke deinen Oberkörper ab, bis du eine Dehnung in deiner linken Kniesehne spürst und dein rechter Arm zum Boden zeigt.\nHalte einen Moment inne, spanne dann deinen Core an und drücke dich über dein linkes Bein in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Die Kettlebell-Windmühle (fortgeschritten) ist eine anspruchtsvolle Übung, die die Bauchmuskulatur und schrägen Bauchmuskeln trainiert und gleichzeitig die Schultern beansprucht. Sie erfordert Balance, Koordination und Kraft, besonders im Core und in den Schultern, da du eine Kettlebell über dem Kopf hältst und dich in der Hüfte nach unten absenkst.",
+    "primary_muscles": [
+      "abs_obliques",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors",
+      "glutes_medius",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "624167da-2fe4-454b-af2a-09195b71b4ae",
+    "exercise_db_id": "0558",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "624167da-2fe4-454b-af2a-09195b71b4ae.jpg",
+    "video_path": "624167da-2fe4-454b-af2a-09195b71b4ae.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:24.698926+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kipping Muscle Up",
+    "instructions": "Hänge an einer Klimmzugstange mit Obergriff, die Hände etwas breiter als schulterbeit.\nSpanne deinen Core an und nutze eine Schwungbewegung, um Momentum zu erzeugen.\nWährend du nach vorne schwingst, ziehe deine Brust in Richtung Stange und nutze Latissimus und Bizeps für die initialen Bewegung.\nFühre die Aufwärtsbewegung fort, bis deine Brust die Stange erreicht, dann gehe in eine Dip-Position über, indem du auf der Stange nach unten drückst und deine Arme streckst.\nSenke dich zurück in die Ausgangsposition, indem du deine Arme beugst und die Bewegung kontrolliert ausführst.\nWiederholt die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kipping Muscle Up ist eine dynamische Körpergewicht-Übung, die einen Klimmzug mit einem Dip kombiniert und Momentum nutzt, um die Transition von unten zu oben durchzuführen. Die Bewegung beansprucht primär den Latissimus und erfordert erhebliche Oberkörperkraft, Koordination und Explosivität.",
+    "primary_muscles": [
+      "back_lats",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "chest_upper",
+      "back_rhomboids",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "52a4f653-1422-4eb5-a9c6-c4197bcd76ff",
+    "exercise_db_id": "0140",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "52a4f653-1422-4eb5-a9c6-c4197bcd76ff.jpg",
+    "video_path": "52a4f653-1422-4eb5-a9c6-c4197bcd76ff.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:37.410102+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug",
+    "instructions": "Hänge an einer Klimmzugstange mit den Handflächen von dir weg und schulterbreit auseinander.\nSpanne deinen Core an und ziehe dich nach oben, indem du deine Ellbogen beugst und deine Brust zur Stange bringst.\nHalte einen Moment in der oberen Position, dann senke dich langsam wieder in die Ausgangsposition ab.\nWiederhole dies für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Klimmzug ist eine Körpergewicht-Übung, die primär die Bizepse trainiert und sekundär die Unterarme und Schultern beansprucht. Die Bewegung mit Obergriff konzentriert sich auf die Ellbogenbeugung zur maximalen Bizeps-Aktivierung.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "72746b3f-3427-4edb-bad5-76540251f9ed",
+    "exercise_db_id": "0678",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "72746b3f-3427-4edb-bad5-76540251f9ed.jpg",
+    "video_path": "72746b3f-3427-4edb-bad5-76540251f9ed.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:48.690245+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug",
+    "instructions": "Stelle dich vor eine Klimmzugstange mit schulterbreit auseinander stehenden Füßen.\nFasse die Stange mit Obergriff, etwas breiter als Schulterbrett.\nHänge mit vollständig ausgestreckten Armen und geradem Körper an der Stange.\nSpanne deine Rückenmuskeln an und ziehe deinen Körper zur Stange hoch, führe die Bewegung mit der Brust an.\nHalte einen Moment oben inne, senke dann deinen Körper langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug ist eine Körpergewicht-Übung, die hauptsächlich den breiten Rückenmuskel trainiert, mit sekundärem Fokus auf Bizeps und Unterarme. Die Übung erfordert erhebliche Oberkörperkraft und Koordination.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "2fe229cb-05ba-43dc-a6fe-12b38c4c6414",
+    "exercise_db_id": "0670",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2fe229cb-05ba-43dc-a6fe-12b38c4c6414.jpg",
+    "video_path": "2fe229cb-05ba-43dc-a6fe-12b38c4c6414.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:23.235743+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug",
+    "instructions": "Fasse die Klimmzugstange mit einem Obergriff, etwas breiter als schulterbreit auseinander.\nHänge mit vollständig ausgestreckten Armen an der Stange, dein Körper ist gerade.\nSpanne deine Rückenmuskeln an und ziehe deinen Körper zur Stange hoch, halte deine Ellbogen nah am Körper.\nZiehe weiter, bis dein Kinn über der Stange ist.\nHalte kurz oben an, senke dann langsam deinen Körper in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug ist eine Körpergewicht-Übung, die den großen Rückenmuskel (Latissimus) trainiert und auch Bizeps und Unterarme beansprucht. Die Übung fokussiert auf Rückenkraft und Kontrolle.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "5a8f9ed8-1ca5-4057-9f11-592941c14117",
+    "exercise_db_id": "0652",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5a8f9ed8-1ca5-4057-9f11-592941c14117.jpg",
+    "video_path": "5a8f9ed8-1ca5-4057-9f11-592941c14117.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:52.834158+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug",
+    "instructions": "Hänge an einer Klimmzugstange, Handflächen zeigen von dir weg, Arme vollständig ausgestreckt.\nSpanne deinen Rumpf an und drücke deine Schulterblätter zusammen.\nZiehe deinen Körper zur Stange, indem du deine Ellbogen beugst und deine Brust zur Stange bringst.\nMache eine Pause oben, dann senke deinen Körper kontrolliert zur Ausgangsposition ab.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "4c1f01df-d086-4c95-8fcb-670b01948d93",
+    "exercise_db_id": "0253",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4c1f01df-d086-4c95-8fcb-670b01948d93.jpg",
+    "video_path": "4c1f01df-d086-4c95-8fcb-670b01948d93.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:02.063031+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug (enger paralleler Griff)",
+    "instructions": "Hänge an einer Klimmzugstange mit engem, parallelem Griff, wobei deine Handflächen zu dir zeigen.\nSpanne deine Rückenmuskeln an und ziehe deinen Körper zur Stange hoch, während du deine Ellbogen nah am Körper hältst.\nZiehe weiter, bis dein Kinn über der Stange ist.\nHalte einen Moment in der oberen Position, senke deinen Körper dann langsam zur Ausgangsposition ab.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Klimmzüge mit engem parallelem Griff sind eine Körpergewicht-Übung, die den oberen Rücken mit signifikanter Beteiligung der Bizepse und Unterarme trainiert. Diese Bewegung erfordert Kraft im oberen Rücken und den Armen.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "f23deb0c-44cf-4b6b-8330-5a18e384678d",
+    "exercise_db_id": "0651",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f23deb0c-44cf-4b6b-8330-5a18e384678d.jpg",
+    "video_path": "f23deb0c-44cf-4b6b-8330-5a18e384678d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:50.152499+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug (neutraler Griff)",
+    "instructions": "Hänge an einer Klimmzugstange mit neutralem Griff (Handflächen zueinander) und vollständig ausgestreckten Armen.\nSpanne deinen Rumpf an und drücke deine Schulterblätter zusammen.\nZiehe deinen Körper zur Stange hoch, indem du deine Ellbogen beugst und diese zu deinen Hüften treibst.\nZiehe weiter, bis dein Kinn über der Stange ist.\nHalte einen Moment in der oberen Position an, dann senke deinen Körper kontrolliert zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug mit neutralem Griff ist eine Körpergewicht-Übung, die den Breiter Rückenmuskel (Latissimus) trainiert und auch Bizeps und Unterarme beansprucht. Er wird ausgeführt, indem man an einer Klimmzugstange mit zueinander zeigenden Handflächen hängt, das Kinn über die Stange zieht und kontrolliert zurückkehrt.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "2baef46d-7849-41a7-b1f0-0a4972865d57",
+    "exercise_db_id": "1326",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2baef46d-7849-41a7-b1f0-0a4972865d57.jpg",
+    "video_path": "2baef46d-7849-41a7-b1f0-0a4972865d57.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:00.6451+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug (Untergriff)",
+    "instructions": "Hänge an einer Klimmzugstange mit den Handflächen zu dir zeigend und den Händen schulterbreit auseinander.\nSpanne deinen Core an und ziehe deinen Körper zur Stange hoch, führe mit der Brust.\nZiehe weiter, bis dein Kinn über der Stange ist.\nMache eine kurze Pause oben, dann senke deinen Körper langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug mit Untergriff ist eine Körpergewichtsübung, die den großen Rückenmuskel (Latissimus) anspricht und auch die Bizeps und Unterarme trainiert. Die Bewegung beinhaltet das Hochziehen deines Körpers an einer Stange mit Untergriff, bis dein Kinn über die Stange geht.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "b3631c5b-f5a1-473d-a5b2-613fb744d0c3",
+    "exercise_db_id": "1429",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b3631c5b-f5a1-473d-a5b2-613fb744d0c3.jpg",
+    "video_path": "b3631c5b-f5a1-473d-a5b2-613fb744d0c3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:43:48.076649+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug breiter Griff",
+    "instructions": "Hänge an einer Klimmzugstange mit Handflächen zu dir weg und Händen breiter als Schulterbereite.\nSpanne deinen Core an und drücke deine Schulterblätter zusammen.\nZiehe deinen Körper zur Stange hoch, bis dein Kinn über der Stange ist.\nSenke deinen Körper kontrolliert zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug mit breitem Griff ist eine Körpergewicht-Übung, die den Breiter Rückenmuskel (Latissimus) targeting, mit signifikanter Beteiligung der Bizeps und Unterarme. Sie erfordert das Hängen an einer Klimmzugstange mit breiterem Griff als Schulterbereite, das Ziehen des Kinns über die Stange und das kontrollierte Zurücklowern.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "68093c47-07fa-4e10-a483-1b905e3edfc9",
+    "exercise_db_id": "1367",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "68093c47-07fa-4e10-a483-1b905e3edfc9.jpg",
+    "video_path": "68093c47-07fa-4e10-a483-1b905e3edfc9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:43:49.543046+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug breiter Griff",
+    "instructions": "Greife die Klimmzugstange mit breitem Obergriff, die Hände etwas breiter als schulterbreit auseinander.\nHänge mit vollständig ausgestreckten Armen von der Stange und halte deinen Körper gerade.\nSpanne deine Rückenmuskeln an und ziehe deinen Körper zur Stange hoch, wobei du mit der Brust führst.\nZiehe weiter, bis dein Kinn über der Stange ist.\nHalte einen Moment oben an, senke dann deinen Körper langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert vor allem den Breiter Rückenmuskel, die Bizepse und Unterarme.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "1cefe10d-d3f6-40f8-aeec-7d753f4888f6",
+    "exercise_db_id": "0627",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1cefe10d-d3f6-40f8-aeec-7d753f4888f6.jpg",
+    "video_path": "1cefe10d-d3f6-40f8-aeec-7d753f4888f6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:36:57.661175+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug mit gemischtem Griff",
+    "instructions": "Greife eine Klimmzugstange mit Untergriff (Handflächen zeigen zu dir), deine Hände sind etwas breiter als Schulterbereite.\nHänge an der Stange mit vollständig ausgestreckten Armen und mit den Füßen vom Boden ab.\nSpanne deine Rückenmuskeln an und ziehe deinen Körper zur Stange hoch, initiiere mit deiner Brust.\nZiehe weiter bis dein Kinn über der Stange ist.\nMache eine kurze Pause oben, dann senke deinen Körper kontrolliert zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "997ff1b4-3a89-46c1-bcdb-e40e2517d6e9",
+    "exercise_db_id": "0572",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "997ff1b4-3a89-46c1-bcdb-e40e2517d6e9.jpg",
+    "video_path": "997ff1b4-3a89-46c1-bcdb-e40e2517d6e9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:49.408893+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug mit Hebel-Unterstützung",
+    "instructions": "Stelle das Hebel-Gerät auf dein gewünschtes Widerstandsniveau ein.\nStelle dich auf die Fußplattform und greife die Griffe mit Obergriff, etwas breiter als schulterbreit auseinander.\nHänge mit vollständig ausgestreckten Armen, halte deinen Körper gerade.\nEngagiere deine Rückenmuskeln und ziehe deinen Körper zu den Griffen nach oben, führe mit deiner Brust.\nZiehe weiter, bis dein Kinn über den Griffen ist.\nPause kurz oben, dann senke deinen Körper langsam zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug mit Hebel-Unterstützung ist eine gerätegestützte Übung, die hilft, Klimmzüge mit Unterstützung zu absolvieren und Kraft in Latissimus, Bizepsen und Unterarmen aufzubauen. Ideal für alle, die noch keine ungestützten Klimmzüge schaffen.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "smith_machine"
+    ]
+  },
+  {
+    "id": "89440904-595c-49a7-a0a2-aed924739287",
+    "exercise_db_id": "0674",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "89440904-595c-49a7-a0a2-aed924739287.jpg",
+    "video_path": "89440904-595c-49a7-a0a2-aed924739287.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:40.423733+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug mit Unterhandgriff",
+    "instructions": "Greife die Klimmzugstange mit Unterhandgriff, die Hände schulterbreit auseinander.\nHänge an der Stange mit vollständig gestreckten Armen und geradem Körper.\nSpanne deine Rückenmuskeln an und ziehe deinen Körper in Richtung der Stange, mit der Brust voran.\nZiehe weiter, bis dein Kinn über der Stange ist.\nMache eine kurze Pause oben und senke deinen Körper dann langsam zurück zur Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug mit Unterhandgriff ist eine Körpergewicht-Übung, die den Latissimus trainiert und den Körper an einer Stange mit Unterhandgriff nach oben zieht. Sie beansprucht zusätzlich den Bizeps und die Unterarme.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "76528039-58b7-4dd2-bd2f-b9eb2ab41d88",
+    "exercise_db_id": "1763",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "76528039-58b7-4dd2-bd2f-b9eb2ab41d88.jpg",
+    "video_path": "76528039-58b7-4dd2-bd2f-b9eb2ab41d88.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:30.377353+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzug schulterbreit",
+    "instructions": "Greifen Sie die Klimmzugstange mit schulterbreitem Griff, Handflächen von Ihnen weg.\nHängen Sie frei mit vollständig ausgestreckten Armen.\nSpannen Sie Ihre Rückenmuskeln an und ziehen Sie Ihren Körper nach oben zur Stange, bis Ihr Kinn über der Stange ist.\nHalten Sie kurz inne, dann senken Sie Ihren Körper langsam zur Ausgangsposition.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Klimmzug schulterbreit ist eine Körpergewicht-Übung, die den Latissimus trainiert und auch Bizeps und Unterarme beansprucht. Sie erfordert, dass Sie Ihren Körper mit schulterbreitem Obergriff zu einer Stange hochziehen.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "52a47f2e-cd2f-445c-a728-7ca629d83b7b",
+    "exercise_db_id": "0139",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "52a47f2e-cd2f-445c-a728-7ca629d83b7b.jpg",
+    "video_path": "52a47f2e-cd2f-445c-a728-7ca629d83b7b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:36.097286+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Klimmzüge enger Griff Bizeps",
+    "instructions": "Hänge an einer Klimmzugstange, Handflächen zeigen zu dir, Hände schulterbreit auseinander.\nSpanne deine Core an und ziehe dich zur Stange hoch, konzentriere dich darauf, deine Bizeps zum Heben deines Körpers zu nutzen.\nPause kurz oben, dann senke dich langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Klimmzüge enger Griff Bizeps sind eine Körpergewicht-Übung, die primär die Bizeps trainiert, mit sekundärem Fokus auf Unterarme und Schultern. Die Bewegung erfordert beträchtliche Oberkörperkraft und Koordination.",
+    "primary_muscles": [
+      "back_lats",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  }
+]

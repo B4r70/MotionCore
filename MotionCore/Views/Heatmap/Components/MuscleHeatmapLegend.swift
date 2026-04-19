@@ -20,16 +20,18 @@ struct MuscleHeatmapLegend: View {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(Color.orange)
                 Text("Trainingsintensität")
-                    .font(.headline)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
             }
 
-            HStack(spacing: 6) {
+            // Trainingsintensitätsskala in blau
+            HStack(spacing: 8) {
                 Text("Wenig")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
                 HStack(spacing: 3) {
-                    ForEach(HeatLevel.allCases, id: \.rawValue) { level in
+                    ForEach(HeatLevel.allCases.filter { $0 != .none }, id: \.rawValue) { level in
                         RoundedRectangle(cornerRadius: 3)
                             .fill(level.color)
                             .frame(height: 14)
@@ -41,7 +43,5 @@ struct MuscleHeatmapLegend: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding()
-        .glassCard()
     }
 }

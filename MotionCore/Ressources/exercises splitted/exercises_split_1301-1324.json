@@ -1,0 +1,676 @@
+[
+  {
+    "id": "6e16147c-64b0-4fcc-af35-1716face93cf",
+    "exercise_db_id": "0984",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6e16147c-64b0-4fcc-af35-1716face93cf.jpg",
+    "video_path": "6e16147c-64b0-4fcc-af35-1716face93cf.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:09.928147+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Hüftinnenrotation liegend",
+    "instructions": "Liegen Sie auf Ihrem Rücken mit gestreckten Beinen und einem Widerstandsband um Ihre Füße geschlungen.\nBeugen Sie Ihre Knie und bringen Sie sie zur Brust, während Sie Ihre Füße zusammen halten.\nRotieren Sie Ihre Knie langsam nach außen, weg voneinander, während Sie Ihre Füße zusammen halten.\nMachen Sie eine kurze Pause am Ende der Rotation, dann kehren Sie langsam zur Ausgangsposition zurück.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_medius",
+      "glutes_minimus"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "355d7511-1879-402b-8951-c3229dc0426d",
+    "exercise_db_id": "1003",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "355d7511-1879-402b-8951-c3229dc0426d.jpg",
+    "video_path": "355d7511-1879-402b-8951-c3229dc0426d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:38.13947+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Kniebeuge-Rudern",
+    "instructions": "Befestige das Band an einem stabilen Anker auf Hüfthöhe.\nStelle dich mit schulterbreit auseinanderstehenden Füßen vor dem Ankerpunkt auf.\nHalte die Griffe des Bandes mit den Handflächen zueinander zeigend und ausgestreckten Armen vor dir.\nBeuge deine Knie und senke dich in eine Kniebeugenposition ab, wobei du deinen Rücken gerade und deine Brust oben hältst.\nZiehe aus der Kniebeugenposition das Band zu deinem Körper hin und drücke deine Schulterblätter zusammen.\nHalte kurz oben an, dann löse die Spannung langsam und kehre in die Ausgangsposition zurück.\nWiederhole das Ganze für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Widerstandsband-Kniebeuge-Rudern ist eine Compound-Übung, die die Gesäßmuskeln trainiert und gleichzeitig die Oberschenkelbeuger, Quadrizeps und den Rücken beansprucht. Sie kombiniert eine Kniebeuge mit einer Ruderbewegung und ist effektiv für die Kraft von Ober- und Unterkörper.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "b6e90232-582f-4a38-a8a3-57c9c068cfda",
+    "exercise_db_id": "1009",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "b6e90232-582f-4a38-a8a3-57c9c068cfda.jpg",
+    "video_path": "b6e90232-582f-4a38-a8a3-57c9c068cfda.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:45.064036+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Kreuzheben",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und platziere das Band um deine Knöchel.\nHalte das Band mit beiden Händen vor deinen Oberschenkeln, die Handflächen zeigen zu deinem Körper.\nHalte deinen Rücken gerade und spanne deinen Rumpf an. Neige dich an den Hüften nach vorne und senke deinen Oberkörper langsam in Richtung Boden.\nWährend du dich nach unten bewegst, drücke deine Hüften nach hinten und erlaube deinen Knien, leicht zu beugen.\nSenke das Band in Richtung Boden, du solltest eine Dehnung in den Oberschenkeln spüren.\nHalte einen Moment in der untersten Position, dann spanne deine Gesäßmuskeln und Oberschenkel an, um deinen Oberkörper zurück in die Ausgangsposition zu heben.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Widerstandsband-Kreuzheben ist eine Übung für die untere Körperhälfte, die die Gesäßmuskeln trainiert und sekundär die Oberschenkel und den unteren Rücken beansprucht. Mit einem Widerstandsband wird Spannung während der gesamten Bewegung aufrechterhalten, wobei der Fokus auf der Hüftbeugung und der Aktivierung der hinteren Muskelkette liegt.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "adductors"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "36b6c89e-f9b3-4712-a1b7-a81771158910",
+    "exercise_db_id": "1023",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "36b6c89e-f9b3-4712-a1b7-a81771158910.jpg",
+    "video_path": "36b6c89e-f9b3-4712-a1b7-a81771158910.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:46.526952+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Kreuzheben mit gestreckten Beinen",
+    "instructions": "Stelle dich mit hüftbreit auseinanderstehenden Füßen auf und lege das Widerstandsband um deine Oberschenkel.\nHalte das Band mit beiden Händen vor deinen Oberschenkeln, wobei deine Handflächen zu deinem Körper zeigen.\nHalte deinen Rücken gerade und deine Knie leicht gebeugt, während du dich in der Hüfte nach vorne neigst und das Band in Richtung Boden führst.\nSpüre die Dehnung in deinen Oberschenkeln, während du das Band senkst.\nSpanne deine Gesäßmuskeln und Oberschenkelmuskulatur an und hebe deinen Körper zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert primär Gesäß und Oberschenkelrückseite mit sekundärer Beteiligung des unteren Rückens. Sie erfordert einen geraden Rücken und eine Hüftkippung und konzentriert sich auf die Kraft der hinteren Muskelkette.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "adductors"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "dec0ca56-8ca5-4057-8095-535f73941e40",
+    "exercise_db_id": "1010",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "dec0ca56-8ca5-4057-8095-535f73941e40.jpg",
+    "video_path": "dec0ca56-8ca5-4057-8095-535f73941e40.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:47.89035+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Kreuzheben mit gestreckten Beinen",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und platziere das Widerstandsband unter deinen Füßen.\nFasse das Band mit beiden Händen, Handflächen zum Körper, und halte deine Arme gestreckt.\nSpanne deinen Bauch an und halte eine leichte Kniebeugung.\nNeige dich langsam von der Hüfte nach vorne, halte deinen Rücken gerade und deine Brust aufrecht.\nSenke das Band Richtung Boden, während du deine Beine gestreckt hältst.\nMache eine kurze Pause unten, drücke dann deine Gesäß- und Oberschenkelrückseite zusammen und kehre zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "adductors"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "aee0e404-8c72-42b5-bd74-c04e6eab4fe3",
+    "exercise_db_id": "0983",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "aee0e404-8c72-42b5-bd74-c04e6eab4fe3.jpg",
+    "video_path": "aee0e404-8c72-42b5-bd74-c04e6eab4fe3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:07.166692+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Latzug einarmig kniend",
+    "instructions": "Befestigen Sie das Band an einem stabilen Ankerpunkt über Ihrem Kopf.\nKnien Sie hin und halten Sie das Band mit einer Hand, Handfläche nach unten.\nStrecken Sie Ihren Arm vollständig über den Kopf, wobei Sie Ihren Ellbogen leicht gebeugt halten.\nBeanspruchen Sie Ihre Latmuskulatur und ziehen Sie das Band nach unten zu Ihrer Seite, wobei Sie Ihren Ellbogen zum Brustkorb bringen.\nMachen Sie eine kurze Pause unten, dann geben Sie langsam die Spannung frei und kehren Sie in die Ausgangsposition zurück.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen, dann wechseln Sie die Seite.",
+    "tips": "Der Widerstandsband-Latzug einarmig kniend ist eine Widerstandsband-Übung, die den Breiter Rückenmuskel (Latissimus) zielt und auch Bizeps und Rhomboide beansprucht. Sie beinhaltet das Knien und Ziehen eines Widerstandsbands von oben bis zur Seite mit Fokus auf kontrollierte Bewegung und Muskelaktivierung.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "0cc307ae-1bd6-4cf5-bd2d-393d232840c7",
+    "exercise_db_id": "0974",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "0cc307ae-1bd6-4cf5-bd2d-393d232840c7.jpg",
+    "video_path": "0cc307ae-1bd6-4cf5-bd2d-393d232840c7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:52.645059+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Latzug enger Griff",
+    "instructions": "Befestigen Sie das Band an einem hohen Ankerpunkt, wie einer Klimmzugstange oder einem stabilen Balken.\nStehen Sie mit Blick zum Ankerpunkt und greifen Sie das Band mit Untergriff, Hände schulterbreit auseinander.\nTreten Sie zurück, um Spannung im Band zu erzeugen, wobei Sie Ihre Füße hüftbreit auseinander halten.\nSpannen Sie Ihren Core an und halten Sie Ihren Rücken gerade, während Sie das Band zu Ihrer Brust ziehen und Ihre Schulterblätter zusammendrücken.\nPausieren Sie kurz am unteren Punkt der Bewegung und lassen Sie das Band dann langsam zurück in die Ausgangsposition.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "6072065a-fbee-45c9-afb1-9271674adbd3",
+    "exercise_db_id": "3116",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6072065a-fbee-45c9-afb1-9271674adbd3.jpg",
+    "video_path": "6072065a-fbee-45c9-afb1-9271674adbd3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:58.23935+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Latzug mit Untergriff",
+    "instructions": "Befestige das Widerstandsband an einem stabilen Befestigungspunkt über deinem Kopf.\nStehe zum Befestigungspunkt gewandt mit schulterbreit auseinanderstehenden Füßen.\nFasse das Band mit Untergriff und die Hände etwas breiter als schulterbreit auseinander.\nTritt einen Schritt zurück, um Spannung im Band zu erzeugen und deine Arme vollständig gestreckt zu halten.\nSpanne deinen Rumpf an und drücke deine Schulterbätter zusammen.\nZiehe das Band in Richtung deiner Brust und führe die Bewegung mit den Ellbogen.\nMache eine kurze Pause am tiefsten Punkt und spüre die Kontraktion in deinen Rückenmuskeln.\nGib die Spannung langsam nach und kehre in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dieses Widerstandsband-Training beansprucht den breiten Rückenmuskel sowie die Bizepse, Rhomboide und hinteren Deltamuskeln. Die Bewegung ähnelt dem klassischen Latzug, verwendet aber ein Widerstandsband.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "70b8bf78-ec10-4742-ad4f-16da1cad345e",
+    "exercise_db_id": "0975",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "70b8bf78-ec10-4742-ad4f-16da1cad345e.jpg",
+    "video_path": "70b8bf78-ec10-4742-ad4f-16da1cad345e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:51:54.110723+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Liegestütz mit engem Griff",
+    "instructions": "Lege ein Widerstandsband um deine Oberarme, knapp über den Ellbogen.\nNimm eine Liegestütz-Position ein mit Händen direkt unter deinen Schultern und deinem Körper in einer geraden Linie von Kopf bis Fersen.\nBeuge deine Ellbogen und senke deine Brust zum Boden, halte deine Ellbogen nah bei deinem Körper.\nDrücke durch deine Handflächen, um deine Arme zu strecken und in die Ausgangsposition zurückzukehren.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Widerstandsband-Liegestütz mit engem Griff ist eine Variation des klassischen Liegestützes, die ein Widerstandsband nutzt, um die Spannung zu erhöhen und die Trizeps effektiver zu trainieren. Der enge Handabstand betont die Trizeps, während das Band zusätzlichen Widerstand während der gesamten Bewegung bietet.",
+    "primary_muscles": [
+      "chest_middle",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "2cbdeef3-3706-47fc-a4ad-bb70cbb2be3f",
+    "exercise_db_id": "1022",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "2cbdeef3-3706-47fc-a4ad-bb70cbb2be3f.jpg",
+    "video_path": "2cbdeef3-3706-47fc-a4ad-bb70cbb2be3f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:40.785836+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Seitheben im Stehen",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und platziere das Widerstandsband unter deinen Füßen.\nHalte die Band-Griffe mit Handflächen zueinander und ausgestreckten Armen vor dir.\nBeuge deine Knie leicht und lehne dich aus der Hüfte nach vorne, halte dabei deinen Rücken gerade.\nZiehe das Band in Richtung deiner Brust und drücke deine Schulterblätter zusammen.\nMache eine kurze Pause oben an, lasse die Spannung dann langsam nach und kehre zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert primär die hinteren Schultermuskeln und sekundär den Kapuzenmuskel, die Rhomboiden und die Bizeps. Sie verwendet ein Widerstandsband und besteht darin, das Band zur Brust zu ziehen, während man sich aus der Hüfte beugt und die Schulterblätter zusammenpresst.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "8a4b2353-f47f-4a63-b3c4-de627562bc0e",
+    "exercise_db_id": "0981",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8a4b2353-f47f-4a63-b3c4-de627562bc0e.jpg",
+    "video_path": "8a4b2353-f47f-4a63-b3c4-de627562bc0e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:05.817591+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Sit-up",
+    "instructions": "Lege dich flach auf deinen Rücken mit gestreckten Beinen und Armen über deinem Kopf, während du das Widerstandsband hältst.\nSpanne deine Bauchmuskeln an und hebe gleichzeitig deine Beine und deinen Oberkörper an, während du deine Hände zu deinen Füßen führst.\nMache eine kurze Pause oben an, senke dann deine Beine und deinen Oberkörper langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_upper",
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "6010f0b8-d103-41e3-9c2f-35e024c297fc",
+    "exercise_db_id": "0992",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6010f0b8-d103-41e3-9c2f-35e024c297fc.jpg",
+    "video_path": "6010f0b8-d103-41e3-9c2f-35e024c297fc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:21.453863+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Sit-Up",
+    "instructions": "Befestige das Widerstandsband sicher an einem stabilen Ankerpunkt.\nLiege flach auf dem Rücken, Knie gebeugt, Füße flach auf dem Boden.\nHalte das Band mit beiden Händen und strecke deine Arme gerade zur Decke.\nSpanne deine Bauchmuskulatur an und hebe deinen Oberkörper langsam vom Boden ab, rolle nach vorne, bis dein Oberkörper einen Winkel von etwa 45 Grad aufweist.\nHalte die Position kurz, senke deinen Oberkörper dann kontrolliert zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Bauchmuskelübung, die mit Widerstand des Bandes die Beanspruchung der Kernmuskulatur erhöht. Schultern und Brust fungieren als Stabilisatoren während der Bewegung.",
+    "primary_muscles": [
+      "abs_upper",
+      "abs_lower"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "b8d780ad-5cdd-48a2-bc8b-9058afe85214",
+    "exercise_db_id": "0985",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b8d780ad-5cdd-48a2-bc8b-9058afe85214.jpg",
+    "video_path": "b8d780ad-5cdd-48a2-bc8b-9058afe85214.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:08.594857+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Twist im Kniesitz",
+    "instructions": "Befestige das Widerstandsband an einem stabilen Ankerpunkt auf Taillenhöhe.\nKnie dich hin, sodass du vom Ankerpunkt wegschaust, und halte das Band mit beiden Händen, die Ellbogen angewinkelt und nah am Körper.\nSpanne deine Bauchmuskulatur an und drehe deinen Oberkörper langsam zur einen Seite, wobei deine Hände zur gegenüberliegenden Hüfte gehen.\nHalte kurz an, dann kehre langsam zur Ausgangsposition zurück.\nWiederhole auf der anderen Seite.\nWechsle weiterhin die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Widerstandsband-Twist im Kniesitz ist eine Bauchübung, die die geraden und schrägen Bauchmuskeln trainiert. Sie wird kniend mit Widerstandsband-Spannung ausgeführt und aktiviert intensiv die Kernmuskulatur.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_transverse"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "825cdb79-e076-4adb-aac4-d64b7dbab6e3",
+    "exercise_db_id": "1012",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "825cdb79-e076-4adb-aac4-d64b7dbab6e3.jpg",
+    "video_path": "825cdb79-e076-4adb-aac4-d64b7dbab6e3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:49.290008+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Widerstandsband-Verdrehter-Überkopfdrücken",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und platziere das Band unter deine Füße.\nHalte die Bandgriffe auf Schulterhöhe mit den Handflächen nach vorne gedreht.\nSpanne deinen Rumpf an und drücke das Band nach oben über deinem Kopf, die Arme vollständig gestreckt.\nWährend du drückst, drehe deinen Oberkörper zu einer Seite, halte deine Hüften stabil.\nMache eine kurze Pause oben und kehre dann in die Ausgangsposition zurück.\nWiederhole das Drücken und die Drehung auf der anderen Seite.\nFahre fort, zwischen den Seiten zu wechseln für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Widerstandsband-Verdrehter-Überkopfdrücken ist eine dynamische Schulterübung, die ein Überkopfdrücken mit einer Oberkörperdrehung kombiniert und dabei die Deltamuskeln, Trizeps und oberen Rücken beansprucht, während gleichzeitig Rumpfstabilität und Koordination gefordert werden.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "abs_obliques"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "ec3fbc17-0249-4e5a-9c84-087f8fc3aee2",
+    "exercise_db_id": "0858",
+    "category": "cardio",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ec3fbc17-0249-4e5a-9c84-087f8fc3aee2.jpg",
+    "video_path": "ec3fbc17-0249-4e5a-9c84-087f8fc3aee2.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:43:53.817956+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Windsprints",
+    "instructions": "Finde einen freien Platz oder eine Laufbahn für die Übung.\nStelle dich mit schulterbreit auseinander stehenden Füßen hin.\nBeginne so schnell wie möglich zu laufen, pumpe deine Arme und tritt mit erhobenen Knien.\nSprinten über eine bestimmte Distanz oder Zeitdauer.\nRuhe dich aus und wiederhhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Windsprints sind hochintensive Laufsprints über kurze Distanzen oder Zeiträume, fokussiert auf explosive Geschwindigkeit und kardiovaskuläre Ausdauer. Sie trainieren primär die Bauchmuskulatur zur Stabilisierung, während Quadrizeps, Beinbeuger und Waden ebenfalls beansprucht werden.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "d1bfb1da-928f-49ed-9e02-09f39ce1f23a",
+    "exercise_db_id": "2329",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d1bfb1da-928f-49ed-9e02-09f39ce1f23a.jpg",
+    "video_path": "d1bfb1da-928f-49ed-9e02-09f39ce1f23a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:41.623096+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Wirbelsäulen-Twist",
+    "instructions": "Sitze auf dem Boden mit ausgestreckten Beinen vor dir.\nBeuge deine Knie und stelle deine Füße flach auf dem Boden auf, hüftbreit auseinander.\nPlatziere deine Hände hinter deinem Kopf mit Ellbogen nach außen weisend.\nSpanne deine Bauchmuskeln an und drehe deinen Oberkörper langsam nach rechts, wobei du deinen rechten Ellbogen zu deinem linken Knie bringst.\nMache eine kurze Pause am Ende der Drehung, dann kehre langsam zur Ausgangsposition zurück.\nWiederhole die Drehung zur linken Seite, wobei du deinen linken Ellbogen zu deinem rechten Knie bringst.\nWechsle weiterhin die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Wirbelsäulen-Twist ist eine Körpergewicht-Übung, die die Bauchmuskeln, schrägen Bauchmuskeln und den unteren Rücken trainiert. Sie verbessert die Kernkraft und Mobilität.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "74168038-fd88-4cf0-8ded-2131368c30c6",
+    "exercise_db_id": "1604",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "74168038-fd88-4cf0-8ded-2131368c30c6.jpg",
+    "video_path": "74168038-fd88-4cf0-8ded-2131368c30c6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:43:55.26681+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "World's Greatest Stretch",
+    "instructions": "Starte in einer Ausfallschrittposition mit dem rechten Fuß vorne und dem linken Fuß hinten.\nPlatziere deine Hände auf dem Boden auf beiden Seiten deines rechten Fußes.\nSenke dein linkes Knie zum Boden und strecke dein rechtes Bein, wobei dein rechter Fuß flach auf dem Boden bleibt.\nDrehe deinen Oberkörper nach rechts und strecke deinen rechten Arm zur Decke.\nHalte diese Position einige Sekunden, dann kehre zur Ausgangsposition zurück.\nWechsle die Seite und wiederhole die Dehnung mit dem linken Fuß vorne.",
+    "tips": "Der World's Greatest Stretch ist eine dynamische Bewegung, die die Oberschenkelbeuger dehnt und gleichzeitig Gesäß, Oberschenkel und Waden trainiert. Diese Übung ist hervorragend zur Verbesserung der Flexibilität und Mobilität.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "adductors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "d3440ec1-1e58-4fea-9abc-4c71a36831b7",
+    "exercise_db_id": "0994",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d3440ec1-1e58-4fea-9abc-4c71a36831b7.jpg",
+    "video_path": "d3440ec1-1e58-4fea-9abc-4c71a36831b7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:24.245676+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Wrist Curl Reverse am Band",
+    "instructions": "Setze dich auf eine Bank oder einen Stuhl mit flachen Füßen auf dem Boden.\nHalte das Widerstandsband mit einem Obergriff, Handflächen nach unten, und wickle es um deine Finger.\nLege deine Unterarme auf deinen Oberschenkeln auf, mit deinen Handgelenken über der Kante hängend.\nKrümme deine Handgelenke langsam aufwärts und spanne deine Unterarme an.\nHalte oben kurz inne, senke deine Handgelenke dann langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Wrist Curl Reverse am Band ist eine Isolationsübung, die die Unterarme trainiert, speziell die Wrist-Extensoren, mit Hilfe eines Widerstandsbands. Es wird sitzend durchgeführt, mit Unterarmen auf den Oberschenkeln und Handgelenken, die gegen den Widerstand des Bands aufwärts krümmen.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [],
+    "equipment": []
+  },
+  {
+    "id": "b8fc0d20-1ab5-4e19-9a30-403557f30081",
+    "exercise_db_id": "3231",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "b8fc0d20-1ab5-4e19-9a30-403557f30081.jpg",
+    "video_path": "b8fc0d20-1ab5-4e19-9a30-403557f30081.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:42:44.280887+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Zehenspitzen-Berührung",
+    "instructions": "Stelle dich mit schulterbreiten Füßen hin und strecke deine Arme zu den Seiten aus.\nBeuge dich nach vorne an der Taille, halte deinen Rücken gerade und deine Knie leicht gebeugt.\nReiche mit beiden Händen nach unten zu deinen Zehen, halte die Beine gerade.\nHalte kurz an der unteren Position, dann kehre langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Zehenspitzen-Berührung ist eine Körpergewicht-Übung, die hauptsächlich die Wirbelsäule trainiert, mit sekundärer Betonung auf den Oberschenkelrückseiten und Gesäßmuskeln. Sie fördert Flexibilität und Mobilität in der hinteren Kette.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "654d9f64-8d77-4f0e-8ec1-bcca8083d3ac",
+    "exercise_db_id": "3212",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "654d9f64-8d77-4f0e-8ec1-bcca8083d3ac.jpg",
+    "video_path": "654d9f64-8d77-4f0e-8ec1-bcca8083d3ac.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:22.315774+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Zehenspitzen-Dehnung",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und lasse deine Arme neben deinen Körper hängen.\nBeuge dich nach vorne in der Hüfte, halte deinen Rücken gerade und beuge deine Knie leicht.\nReiche mit deinen Händen zu deinen Zehen, wobei du deine Beine so gerade wie möglich hältst.\nHalte kurz am tiefsten Punkt und kehre dann langsam in die Ausgangsposition zurück.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Zehenspitzen-Dehnung ist eine Übung mit Körpergewicht, die primär die Gesäßmuskulatur beansprucht und sekundär die hintere Oberschenkelmuskulatur sowie die Waden dehnt. Die Bewegung zielt auf die komplette hintere Muskelkette ab.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "7ea7301c-1063-43c0-8cfd-f189f171715f",
+    "exercise_db_id": "3214",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7ea7301c-1063-43c0-8cfd-f189f171715f.jpg",
+    "video_path": "7ea7301c-1063-43c0-8cfd-f189f171715f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:50:58.667815+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Zehentipp wechselnd mit ausgebreiteten Armen",
+    "instructions": "Stelle dich hüftbreit hin und strecke deine Arme zu den Seiten aus.\nBei gestreckten Beinen beugst du dich in der Taille nach vorne und berührst mit deiner rechten Hand deine Zehen.\nWährend du dich nach unten beugst, hebe gleichzeitig dein linkes Bein gerade nach hinten, während du das Gleichgewicht hältst.\nRückkehr zur Ausgangsposition und wiederhole die Bewegung mit der linken Hand Richtung Zehen und das rechte Bein nach oben.\nWechsle weiterhin die Seiten für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "66ef7d8a-65d2-4c1a-aeec-ba96362f0feb",
+    "exercise_db_id": "3215",
+    "category": "stretching",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "66ef7d8a-65d2-4c1a-aeec-ba96362f0feb.jpg",
+    "video_path": "66ef7d8a-65d2-4c1a-aeec-ba96362f0feb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:19.465095+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Zehentouches mit verschränkten Händen (Zirkelbewegung)",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und Armen, die zu den Seiten ausgestreckt sind.\nBeuge dich nach vorne in der Hüfte, halte deinen Rücken gerade und beuge deine Knie leicht.\nReiche mit deinen Händen nach unten und verschränke sie hinter deinen Beinen.\nHebe deine Hände langsam über deinen Kopf in einer Zirkelbewegung, während du deine Beine gerade hältst.\nSetze die Zirkelbewegung fort, bis deine Hände deine Zehen berühren.\nKehre die Bewegung um und bringe deine Hände zurück zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert die Gesäßmuskulatur und dehnt den unteren Körper, während sie Beweglichkeit und Koordination verbessert.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "eb3a9e1f-4838-46e2-8f58-5003153071c6",
+    "exercise_db_id": "0127",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "eb3a9e1f-4838-46e2-8f58-5003153071c6.jpg",
+    "video_path": "eb3a9e1f-4838-46e2-8f58-5003153071c6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:20.825348+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Zercher-Kniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf, deine Zehen zeigen leicht nach außen.\nHalte die Langhantel in deinen Ellbogenbeugen, deine Hände greifen die Stange zur Stabilität.\nSpanne deinen Core an, hebe deine Brust und senke deine Hüften zurück und ab in die Kniebeugen-Position.\nHalte deine Knie in einer Linie mit deinen Zehen und dein Gewicht auf den Fersen.\nHalte kurz unten an, drücke dich dann über deine Fersen wieder in die Ausgangsposition.\nWiederhhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Zercher-Kniebeuge ist eine Unterübung, bei der die Langhantel in den Ellbogenbeugen gehalten wird und die Gesäßmuskeln, Quadrizeps, Beinbeuger, Waden und Core trainiert. Sie erfordert erhebliche Core-Stabilität, Oberkörperkraft und richtige Kniebeugen-Technik.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "25c4e3af-2e48-4779-9f12-01f2683b71cf",
+    "exercise_db_id": "0439",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "25c4e3af-2e48-4779-9f12-01f2683b71cf.jpg",
+    "video_path": "25c4e3af-2e48-4779-9f12-01f2683b71cf.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:24.851886+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Zottman-Curl",
+    "instructions": "Stelle dich aufrecht hin und halte eine Kurzhantel in jeder Hand, Handflächen zeigen zu deinem Körper.\nHalte deine Ellbogen nah am Torso und drehe deine Handflächen nach vorne.\nCurle die Kurzhanteln bis zu deinen Schultern, während deine Oberarme stillbleiben.\nAm höchsten Punkt der Bewegung drehe deine Handgelenke, sodass deine Handflächen von deinem Körper weg zeigen.\nSenke die Kurzhanteln langsam zurück in die Ausgangsposition, drehe dabei deine Handflächen wieder zum Körper.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Zottman-Curl ist eine Bizepsübung, die einen Standard-Curl mit einem umgekehrten Curl kombiniert und dabei Bizeps und Unterarme trainiert. Die Handgelenkdrehung am höchsten Punkt ermöglicht ein effektives Training beider Muskelgruppen.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_extensors",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  }
+]

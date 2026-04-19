@@ -1,0 +1,2865 @@
+[
+  {
+    "id": "7a7d2a42-6cda-4112-bafe-e7e5179b0ee5",
+    "exercise_db_id": "3419",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7a7d2a42-6cda-4112-bafe-e7e5179b0ee5.jpg",
+    "video_path": "7a7d2a42-6cda-4112-bafe-e7e5179b0ee5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:36.394885+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "L-Sitz am Boden",
+    "instructions": "Setze dich auf den Boden mit ausgestreckten Beinen vor dir.\nPlatziere deine Hände auf dem Boden neben deinen Hüften, Finger zeigen nach vorn.\nSpanne deinen Core an und hebe deine Beine vom Boden ab, halte sie gerade.\nVersuche, deine Beine parallel zum Boden zu halten und bilde mit deinem Körper ein \"L\".\nHalte diese Position so lange wie möglich.\nSenke deine Beine kontrolliert in die Ausgangsposition ab.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris",
+      "triceps_long"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "7a6c2dac-2b3d-4d85-9fc1-2f16f41b01ea",
+    "exercise_db_id": "0562",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7a6c2dac-2b3d-4d85-9fc1-2f16f41b01ea.jpg",
+    "video_path": "7a6c2dac-2b3d-4d85-9fc1-2f16f41b01ea.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:37.642544+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Landmine Rotation",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf und halte die Langhantel mit beiden Händen vor deiner Brust.\nBeuge deine Knie leicht und rotiere deinen Oberkörper nach rechts, während du die Langhantel nach unten zu deiner rechten Hüfte schwingst.\nSobald du den tiefsten Punkt erreichst, kehrst du die Bewegung schnell um und rotierst deinen Oberkörper nach links, während du die Langhantel nach oben und über deinen Körper zu deiner linken Schulter schwingst.\nSetze diese Drehbewegung fort und wechsle die Seiten für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_transverse",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "6918fade-d087-4388-80b3-899721bdc3fd",
+    "exercise_db_id": "3237",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6918fade-d087-4388-80b3-899721bdc3fd.jpg",
+    "video_path": "6918fade-d087-4388-80b3-899721bdc3fd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:39.009227+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Landmine seitliches Heben",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und leicht gebeugten Knien.\nHalte die Langhantel mit Obergriff, die auf deinen vorderen Schultern ruht.\nHalte deinen Rumpf angespannt und deinen Rücken gerade, hebe die Langhantel nach oben und zur Seite, bis sie Schulterhöhe erreicht.\nHalte einen Moment oben an, senke dann die Langhantel langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Schulterübung zielt auf die Deltamuskeln ab und beansprucht auch Kapuzenmuskel und oberen Rücken, um Schulterstabilität und -kraft zu fördern.",
+    "primary_muscles": [
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "shoulders_front"
+    ],
+    "equipment": []
+  },
+  {
+    "id": "4b4adfcf-9157-4149-b0e2-e0f1600dbd4e",
+    "exercise_db_id": "0122",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4b4adfcf-9157-4149-b0e2-e0f1600dbd4e.jpg",
+    "video_path": "4b4adfcf-9157-4149-b0e2-e0f1600dbd4e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:11.805451+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Bankdrücken breiter Griff",
+    "instructions": "Lege dich flach auf eine Bank, deine Füße flach auf dem Boden und dein Rücken gegen die Bank gepresst.\nFasse die Langhantel mit breitem Griff, leicht breiter als schulterbreit auseinander.\nHebe die Langhantel aus dem Rack und halte sie direkt über deiner Brust mit vollständig gestreckten Armen.\nSenke die Langhantel langsam zu deiner Brust ab, wobei deine Ellbogen leicht nach außen zeigen.\nMache eine kurze Pause, wenn die Langhantel deine Brust berührt, dann drücke sie zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Bankdrücken mit breitem Griff ist eine zusammengesetzte Kraftübung, die die Brustmuskulatur trainiert, mit sekundärer Betonung auf Schultern und Trizeps. Es erfordert eine Langhantel und eine Bank und beinhaltet das Senken der Langhantel zu der Brust mit breitem Griff, bevor es wieder nach oben gedrückt wird.",
+    "primary_muscles": [
+      "chest_middle",
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "7a608b59-85e6-4267-af34-f7f2c67d3a46",
+    "exercise_db_id": "0028",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7a608b59-85e6-4267-af34-f7f2c67d3a46.jpg",
+    "video_path": "7a608b59-85e6-4267-af34-f7f2c67d3a46.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:09.780652+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Clean & Press",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf und positioniere die Langhantel vor dir auf dem Boden.\nBeuge deine Knie und neige dich nach vorn, um die Langhantel mit Obergriff zu greifen, die Hände leicht breiter als schulterbreit.\nDrücke dich über deine Fersen ab und strecke deine Hüfte und Knie, um die Langhantel vom Boden zu heben und dabei nah an deinem Körper zu halten.\nSobald die Langhantel deine Oberschenkel erreicht, streckst du explosiv deine Hüfte, zuckst mit den Schultern und ziehst die Langhantel explosiv zu deiner Brust.\nWenn die Langhantel Schulterhöhe erreicht, stellst du dich schnell darunter und fängst sie auf Schulterhöhe, mit Ellbogen nach vorn und Handflächen nach oben.\nVon dieser Position drückst du die Langhantel nach oben über deinen Kopf, indem du deine Arme streckst.\nSenke die Langhantel kontrolliert in die Ausgangsposition zurück und wiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "back_traps_upper",
+      "triceps_long",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "26553691-70a6-41a1-a870-9bc884ee54e4",
+    "exercise_db_id": "0106",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "26553691-70a6-41a1-a870-9bc884ee54e4.jpg",
+    "video_path": "26553691-70a6-41a1-a870-9bc884ee54e4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:42.538619+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Curl enger Griff stehend",
+    "instructions": "Stehe aufrecht mit schulterbreit auseinanderstehenden Füßen und halte eine Langhantel mit Untergriff, die Hände eng zusammen.\nHalte deine Ellbogen nah am Oberkörper und deine Oberarme während der gesamten Bewegung stabil.\nAtme aus, während du die Stange curlen lässt und deine Bizepse anspannst. Hebe die Stange weiter an, bis deine Bizepse vollständig angespannt sind und die Stange auf Schulterhöhe ist.\nHalte die angespannte Position kurz an und spanne deine Bizepse kräftig an.\nAtme ein und senke die Langhantel langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel Curl mit engem Griff ist eine Kraftübung, die den Bizeps trainiert und auch die Unterarme beansprucht. Die Bewegung mit engem Griff betont besonders den inneren Teil des Bizeps.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "80a18fc5-1f6f-488b-9c17-c9eda54fb642",
+    "exercise_db_id": "0034",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "80a18fc5-1f6f-488b-9c17-c9eda54fb642.jpg",
+    "video_path": "80a18fc5-1f6f-488b-9c17-c9eda54fb642.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:18.27689+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Decline Pullover (Arme gebeugt)",
+    "instructions": "Lege dich auf eine Decline-Bank mit deinem Kopf tiefer als deine Hüften und sichere deine Füße ab.\nHalte eine Langhantel mit Übergriff (Handflächen zeigen weg von dir) und strecke deine Arme senkrecht über deiner Brust aus.\nSenke die Langhantel kontrolliert hinter deinen Kopf ab, während du deine Arme leicht gebeugt hältst.\nMache eine kurze Pause und hebe die Langhantel dann zurück in die Ausgangsposition, indem du deine Latissimus-Muskulatur anspannst.\nWiederhhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine zusammengesetzte Übung, die primär auf den Latissimus abzielt und auf der Decline-Bank durchgeführt wird. Sie beansprucht auch Trizeps und Brust sekundär. Die Bewegung erfordert gute Kontrolle und Kraft, um die Langhantel sicher über deinem Kopf zu senken und zu heben.",
+    "primary_muscles": [
+      "back_lats",
+      "chest_lower"
+    ],
+    "secondary_muscles": [
+      "triceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "98de4c34-8343-4d28-ba00-8c642a11aa4e",
+    "exercise_db_id": "1255",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "98de4c34-8343-4d28-ba00-8c642a11aa4e.jpg",
+    "video_path": "98de4c34-8343-4d28-ba00-8c642a11aa4e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:21.001291+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Decline-Pullover",
+    "instructions": "Legen Sie sich auf eine Decline-Bank mit dem Kopf tiefer als die Hüften und gesicherten Füßen.\nHalten Sie die Langhantel mit proniertem Griff (Handflächen zeigen von Ihnen weg) und die Hände etwas breiter als schulterbreit auseinander.\nStrecken Sie Ihre Arme über der Brust aus, wobei Sie einen leichten Ellbogenbeugewinkel bewahren.\nSenken Sie die Langhantel in einer Bogenbewegung hinter Ihren Kopf, während Sie eine Dehnung in Brust und Schultern spüren.\nMachen Sie eine kurze Pause, dann bringen Sie die Langhantel durch umgekehrte Bewegung zurück zur Ausgangsposition.\nWiederholen Sie für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Decline-Pullover ist eine Brustübung auf der Decline-Bank, die primär die Brustmuskulatur trainiert und sekundär Trizeps und Schultern beansprucht. Die Übung beinhaltet eine Bogenbewegung der Langhantel hinter den Kopf und erfordert Kontrolle und Stabilität.",
+    "primary_muscles": [
+      "back_lats",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "5b0dbad1-aa1e-482a-ad56-3259a3fd8597",
+    "exercise_db_id": "0094",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5b0dbad1-aa1e-482a-ad56-3259a3fd8597.jpg",
+    "video_path": "5b0dbad1-aa1e-482a-ad56-3259a3fd8597.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:16.244696+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Drehsitz",
+    "instructions": "Sitze auf einer Flachbank mit flachen Füßen auf dem Boden und gebeugten Knien.\nHalte eine Langhantel mit beiden Händen vor deiner Brust, die Ellbogen leicht gebeugt.\nSpanne deinen Rumpf an und drehe deinen Oberkörper langsam zur einen Seite, halte deinen Rücken gerade.\nHalte einen Moment am Ende der Drehung, dann drehe dich langsam zur Ausgangsposition zurück.\nWiederhol die Drehung zur anderen Seite.\nWechsle abwechselnd die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Drehsitz trainiert die Bauchmuskulatur, besonders die schrägen Bauchmuskeln und den unteren Rücken, durch Drehbewegungen des Oberkörpers im Sitzen.",
+    "primary_muscles": [
+      "abs_obliques",
+      "abs_transverse"
+    ],
+    "secondary_muscles": [
+      "abs_upper"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "f050df2e-7422-4cc2-bddc-c5a7fe3b4d3a",
+    "exercise_db_id": "0066",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f050df2e-7422-4cc2-bddc-c5a7fe3b4d3a.jpg",
+    "video_path": "f050df2e-7422-4cc2-bddc-c5a7fe3b4d3a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:19.261593+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel einarmiges Seiten-Kreuzheben",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Langhantel in einer Hand mit Überhandgriff.\nHalte deinen Rücken gerade und deine Bauchmuskulatur angespannt.\nBeuge dich in der Hüfte und senke die Langhantel zur Außenseite deines Beines, wobei dein Arm gerade und deine Brust oben bleibt.\nSenke die Langhantel so weit wie möglich, während du eine gute Ausführung beibehältst.\nPausiere kurz, dann kehre langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl an Wiederholungen, dann wechsle die Seite.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "hamstrings_semitendinosus",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "803d132f-b455-48f3-8e35-b8710e048f95",
+    "exercise_db_id": "0039",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "803d132f-b455-48f3-8e35-b8710e048f95.jpg",
+    "video_path": "803d132f-b455-48f3-8e35-b8710e048f95.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:27.999232+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Front-Kniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, deine Zehen zeigen leicht nach außen.\nHalte die Langhantel vor deiner Brust mit schulterbreit auseinander stehenden Händen, deine Ellbogen zeigen nach vorne.\nSpanne deine Körpermitte an und halte deine Brust oben, während du deinen Körper in eine Kniebeuge senkst, drücke deine Hüfte zurück und beuge deine Knie.\nSenke ab, bis deine Oberschenkel parallel zum Boden sind, oder so tief, wie du es komfortabel kannst.\nMache eine kurze Pause unten und drücke dich dann durch deine Fersen zurück zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "quads_vastus_lateralis",
+      "quads_vastus_medialis",
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "d9b1d9dc-e004-423b-97fb-30d0c4b8a8d8",
+    "exercise_db_id": "0107",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d9b1d9dc-e004-423b-97fb-30d0c4b8a8d8.jpg",
+    "video_path": "d9b1d9dc-e004-423b-97fb-30d0c4b8a8d8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:46.950431+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Frontheben bis Überkopf",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und halte eine Langhantel vor deinen Oberschenkeln mit Obergriff.\nHalte deinen Rücken gerade und spanne deinen Rumpf an.\nHebe die Langhantel langsam vor dir nach oben, halte deine Arme gerade und deine Handflächen nach unten.\nHebe weiter, bis die Langhantel leicht über Schulterhöhe ist.\nHalte kurz oben inne, dann senke die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Schulterübung, die die Deltamuskeln trainiert, mit sekundärem Schwerpunkt auf Trizeps und oberen Rücken. Sie beinhaltet das Heben einer Langhantel von Oberschenkelhöhe bis über den Kopf im Stehen und erfordert Kontrolle und Schulterkraft.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "shoulders_side"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c7771982-129f-44bb-924b-d0f35b8abe46",
+    "exercise_db_id": "3562",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c7771982-129f-44bb-924b-d0f35b8abe46.jpg",
+    "video_path": "c7771982-129f-44bb-924b-d0f35b8abe46.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:41.151761+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Glute Bridge beidbenig auf Bank",
+    "instructions": "Sitze am Rand einer Bank mit dem Oberkörper gegen die Rückenlehne und flachen Füßen auf dem Boden, hüftbreit auseinander.\nPlatziere eine Langhantel über deinen Hüften und halte sie sicher mit beiden Händen.\nSpanne deine Gesäßmuskeln und Rumpfmuskulatur an und drücke durch deine Fersen, um deine Hüften von der Bank zu heben und eine gerade Linie von Knien zu Schultern zu bilden.\nMache eine kurze Pause oben und spanne dabei deine Gesäßmuskeln.\nSenke deine Hüften langsam zurück zur Ausgangsposition.\nWiederhol die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel Glute Bridge beidbenig auf Bank ist eine zusammengesetzte Übung für die untere Körperhälfte, die primär die Gesäßmuskeln beansprucht und dabei auch die Beinbeuger und den Rumpf aktiviert.",
+    "primary_muscles": [
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c90ba043-8d39-4958-8d7f-937ffe0f793d",
+    "exercise_db_id": "0044",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c90ba043-8d39-4958-8d7f-937ffe0f793d.jpg",
+    "video_path": "c90ba043-8d39-4958-8d7f-937ffe0f793d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:42.537697+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Good Morning",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und lege die Langhantel auf deinem oberen Rücken ab.\nHalte deinen Rücken gerade und spanne deinen Core an. Beuge dich in der Hüfte nach vorne und schiebe dein Gesäß nach hinten, als würdest du versuchen, mit deinen Gesäßmuskulatur eine Wand hinter dir zu berühren.\nSenke deinen Oberkörper ab, bis er parallel zum Boden ist. Du solltest eine Dehnung in deinen Oberschenkelmuskeln spüren.\nHalte kurz inne, dann kehre zur Ausgangsposition zurück, indem du deine Gesäßmuskulatur anspannst und deine Hüfte nach vorne schiebst.\nWiederhol die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Good Morning ist eine Compound-Übung, die Oberschenkelmuskeln und unteren Rücken trainiert. Sie erfordert eine gute Ausführung und Core-Stabilität für sicheres Training.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "hamstrings_semitendinosus"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "33a04b26-3218-448b-a2bc-3c17ecfe3e0d",
+    "exercise_db_id": "0115",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "33a04b26-3218-448b-a2bc-3c17ecfe3e0d.jpg",
+    "video_path": "33a04b26-3218-448b-a2bc-3c17ecfe3e0d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:01.513036+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Good Morning (steife Beine)",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und leicht gebeugten Knien.\nHalte die Langhantel über deinem oberen Rücken, sie ruht auf deinen Trapezmuskeln.\nBehalte einen geraden Rücken und beuge dich in den Hüften nach vorne, schiebe dein Gesäß nach hinten.\nSenke deinen Oberkörper ab, bis er parallel zum Boden ist, spüre eine Dehnung in deinen Oberschenkeln.\nSpanne deine Gesäßmuskeln und hinteren Oberschenkel an, um in die Ausgangsposition zurückzukehren.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel Good Morning ist eine komplexe Übung für Gesäß, Oberschenkelrückseite und unteren Rücken. Sie trainiert die Kettenkette der Rückseite durch eine Hüftbeugung mit der Langhantel und verbessert Kraft sowie Beweglichkeit.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "hamstrings_semitendinosus"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "d1b8b73f-5548-4cd6-a437-4cbbfddc2b4a",
+    "exercise_db_id": "0126",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d1b8b73f-5548-4cd6-a437-4cbbfddc2b4a.jpg",
+    "video_path": "d1b8b73f-5548-4cd6-a437-4cbbfddc2b4a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:18.075726+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Handgelenk-Curl",
+    "instructions": "Sitze auf einer Bank mit flach aufgestellten Füßen und deine Unterarme auf deine Oberschenkel gestützt, eine Langhantel mit Untergriff haltend.\nLasse die Langhantel zu deinen Fingerspitzen rollen, während du deine Handgelenke gerade hältst.\nCurle die Langhantel langsam nach oben zu deinen Unterarmen, indem du deine Handgelenke beugst.\nMache eine kurze Pause oben, dann senke die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel Handgelenk-Curl ist eine Isolationsübung für die Unterarmmuskulatur, besonders die Handgelenks-Flexoren. Sie wird im Sitzen mit auf den Oberschenkeln aufgestützten Unterarmen ausgeführt.",
+    "primary_muscles": [
+      "forearms_flexors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "dabbc6f5-4686-4d84-a6b7-fedd599e96f1",
+    "exercise_db_id": "0104",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "dabbc6f5-4686-4d84-a6b7-fedd599e96f1.jpg",
+    "video_path": "dabbc6f5-4686-4d84-a6b7-fedd599e96f1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:38.103428+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Handgelenk-Curl stehend",
+    "instructions": "Stehe aufrecht mit schulterbreitem Fuß auseinander und halte eine Langhantel mit Obergriff.\nLege die Langhantel auf dem Handrücken ab, Handflächen nach unten und Finger zeigen zu deinem Körper.\nHalte deine Oberarme ruhig, atme aus und curl deine Handgelenke so weit wie möglich nach oben.\nHalte die kontrahierte Position kurz an und atme ein, während du die Langhantel langsam zurück in die Ausgangsposition senkst.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel Handgelenk-Curl stehend ist eine Isolationsübung, die die Unterarme zielt, speziell die Handgelenk-Strecker. Die Übung beinhaltet das Curl der Langhantel nach oben, indem nur die Handgelenke bewegt werden, während du stehst.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "6b319fca-ec46-454c-bdd5-07eca4b6c091",
+    "exercise_db_id": "1411",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6b319fca-ec46-454c-bdd5-07eca4b6c091.jpg",
+    "video_path": "6b319fca-ec46-454c-bdd5-07eca4b6c091.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:25.633109+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Handgelenk-Streckung",
+    "instructions": "Sitze auf einer Bank mit flachen Füßen auf dem Boden und deinen Unterarmen auf deinen Oberschenkeln, Handflächen nach unten.\nHalte die Langhantel mit Überhand-Griff, Hände schulterbreit auseinander.\nSenke die Langhantel Richtung Boden ab, indem du deine Handgelenke beugst und deine Unterarme stationär hältst.\nMache eine kurze Pause am unteren Punkt und hebe die Langhantel dann langsam wieder an, indem du deine Handgelenke streckst.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel Handgelenk-Streckung ist eine Isolationsübung, die die Unterarme, speziell die Handgelenksstrecker trainiert. Sie wird sitzend auf einer Bank ausgeführt, wobei die Unterarme auf den Oberschenkeln oder einer Bank ruhen und die Langhantel nur mit den Handgelenken angehoben wird.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "db9fd30a-13d2-46fe-bf9b-45b01e76e119",
+    "exercise_db_id": "0075",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "db9fd30a-13d2-46fe-bf9b-45b01e76e119.jpg",
+    "video_path": "db9fd30a-13d2-46fe-bf9b-45b01e76e119.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:39.695439+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel hintere Schultern heben",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Langhantel mit Obergriff, Handflächen zeigen nach unten.\nBeuge deine Knie leicht und neige dich nach vorne an den Hüften, während du deinen Rücken gerade hältst.\nHebe die Langhantel zu den Seiten, halte deine Arme gerade, bis sie parallel zum Boden sind.\nMache eine kurze Pause oben, dann senke die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel hintere Schultern heben ist eine Isolationsübung zur Aktivierung der hinteren Deltamuskeln, mit sekundärer Betonung auf Kapuzenmuskel und Rhomboiden. Die Bewegung erfolgt durch eine Hüftbeuge und das Heben einer Langhantel zu den Seiten mit Fokus auf die Schulterbewegung.",
+    "primary_muscles": [
+      "shoulders_rear",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "27b25b3f-d0f2-4588-89a9-a3d80a3ee04f",
+    "exercise_db_id": "0043",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "27b25b3f-d0f2-4588-89a9-a3d80a3ee04f.jpg",
+    "video_path": "27b25b3f-d0f2-4588-89a9-a3d80a3ee04f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:33.744463+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Kniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen auf, Zehen leicht nach außen gedreht.\nHalte die Langhantel über deinen oberen Rücken, aufgelegt auf deinen Trapezmuskeln oder hinteren Deltamuskeln.\nSpanne deinen Rumpf an und halte deine Brust oben, während du deinen Körper nach unten bewegst.\nBeuge deine Knie und Hüften und schiebe deine Hüften zurück und nach unten, als würdest du dich in einen Stuhl setzen.\nSenke dich so weit ab, bis deine Oberschenkel parallel zum Boden oder leicht darunter sind.\nHalte deine Knie in Linie mit deinen Zehen und dein Gewicht in deinen Fersen.\nDrücke durch deine Fersen, um wieder aufzustehen und streck deine Hüften und Knie.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel Kniebeuge ist eine zusammengesetzte Übung für den unteren Körper, die das Gesäß trainiert und auch Quadrizeps, Oberschenkelrückseiten, Waden und Rumpf beansprucht. Sie erfordert Kraft, Balance und korrekte Technik mit der Langhantel im oberen Rücken.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "ca7428f5-afce-4b2c-b4a4-9fb56ef93c24",
+    "exercise_db_id": "1462",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ca7428f5-afce-4b2c-b4a4-9fb56ef93c24.jpg",
+    "video_path": "ca7428f5-afce-4b2c-b4a4-9fb56ef93c24.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:36.73573+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Kniebeuge vollständig (seitliche Perspektive)",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin, Zehen leicht nach außen gedreht.\nHalte die Langhantel über deinem oberen Rücken, auf deinen Kapuzenmuskel oder hinteren Deltamuskeln.\nSpanne deinen Core an und halte deine Brust oben, während du dich nach unten bewegst.\nBeuge deine Knie und Hüfte, schiebe deine Hüfte nach hinten und unten, als würdest du dich auf einen Stuhl setzen.\nSenke deinen Körper ab, bis deine Oberschenkel parallel zum Boden oder leicht darunter sind.\nHalte deine Knie ausgerichtet mit deinen Zehen und dein Gewicht auf deinen Fersen.\nDrücke durch deine Fersen, um wieder aufzustehen, und strecke deine Hüfte und Knie.\nWiederhol die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel Kniebeuge ist eine Compound-Übung für den unteren Körper, die Gesäßmuskulatur, Quadrizeps und Oberschenkelmuskeln trainiert, während auch Waden und Core für Stabilität aktiviert werden.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "8096c70f-e62e-4e2d-a3ed-22115ebcf6c7",
+    "exercise_db_id": "2414",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8096c70f-e62e-4e2d-a3ed-22115ebcf6c7.jpg",
+    "video_path": "8096c70f-e62e-4e2d-a3ed-22115ebcf6c7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:45.598659+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Konzentrations-Curl",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Langhantel mit einer Hand, Handfläche nach oben.\nStütze deine andere Hand auf deinem Oberschenkel zur Stabilisierung ab.\nHalte deinen Oberarm statisch und curle das Gewicht ausatmend nach oben Richtung Schulter.\nMache eine kurze Pause oben und spanne deine Bizepse an.\nAtme ein und senke das Gewicht langsam zurück in die Ausgangsposition.\nWiederhhole die gewünschte Anzahl von Wiederholungen und wechsle dann den Arm.",
+    "tips": "Diese Isolationsübung zielt isoliert auf den Bizeps ab und erfordert eine strenge Ausführung mit bewusstem Muskelkontraktionsfokus.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "5c6e288e-ca9b-4b08-bc21-37c9b383486e",
+    "exercise_db_id": "0089",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5c6e288e-ca9b-4b08-bc21-37c9b383486e.jpg",
+    "video_path": "5c6e288e-ca9b-4b08-bc21-37c9b383486e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:10.549794+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Konzentrations-Curl (sitzend, enger Griff)",
+    "instructions": "Sitze auf einer Bank mit flachen Füßen und halte eine Langhantel mit Untergriff, Hände schulterbreit auseinander.\nLehne deine Oberarme gegen deine inneren Oberschenkel ab, knapp über den Knien, und lasse die Langhantel nach vorne hängen.\nHalte deine Oberarme stationär, atme aus und hebe die Langhantel zu deinen Schultern, während du deinen Bizeps kontrahierst.\nHalte die kontrahierte Position kurz an, atme ein und senke die Langhantel langsam in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine isolierte Bizepsübung mit Fokus auf strikte Ausführung, wobei die Oberarme gegen die Oberschenkel gestützt werden für maximale Kontraktion.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "7be8c093-5a92-422d-92ae-1062791dfc8e",
+    "exercise_db_id": "0060",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7be8c093-5a92-422d-92ae-1062791dfc8e.jpg",
+    "video_path": "7be8c093-5a92-422d-92ae-1062791dfc8e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:13.741769+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Liegender Trizeps-Strecker",
+    "instructions": "Lege dich flach auf eine Bank, mit den Füßen flach auf dem Boden und deinem Kopf am Ende der Bank.\nHalte die Langhantel mit einem Übergriff, Hände schulterbreit auseinander, und strecke deine Arme gerade über deiner Brust.\nHalte deine Oberarme stillstehend und senke die Langhantel langsam in Richtung deiner Stirn, indem du deine Ellbogen beugst.\nMache eine kurze Pause, wenn die Langhantel knapp über deiner Stirn ist, strecke dann deine Arme zurück in die Ausgangsposition.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel Liegende Trizeps-Strecker, auch als Schädel-Zertrümmerer bekannt, ist eine Kraftübung, die den Trizeps trainiert. Sie wird auf einer Bank liegend ausgeführt, erfordert Kontrolle und korrekte Form, um Verletzungen zu vermeiden.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "33d2c0ac-bdc0-45cc-a76f-82e31ad4d8a1",
+    "exercise_db_id": "0037",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "33d2c0ac-bdc0-45cc-a76f-82e31ad4d8a1.jpg",
+    "video_path": "33d2c0ac-bdc0-45cc-a76f-82e31ad4d8a1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:23.712703+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Negativbank Pullover (breiter Griff)",
+    "instructions": "Liege auf einer Negativbank mit dem Kopf tiefer als die Hüfte und gesicherten Füßen.\nHalte die Langhantel mit breitem Griff und strecke die Arme gerade über der Brust.\nSenke die Langhantel in kontrollierter Weise hinter deinen Kopf ab, halte deine Arme gerade.\nMache eine kurze Pause, hebe dann die Langhantel zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel Negativbank Pullover ist eine komplexe Übung auf der Negativbank, die vor allem den Latissimus trainiert und sekundär Trizeps sowie Brust aktiviert. Sie erfordert eine Langhantel und wird mit geraden Armen hinter dem Kopf ausgeführt.",
+    "primary_muscles": [
+      "back_lats",
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "triceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "beac4750-762a-4442-ae33-1f6719a15db9",
+    "exercise_db_id": "0033",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "beac4750-762a-4442-ae33-1f6719a15db9.jpg",
+    "video_path": "beac4750-762a-4442-ae33-1f6719a15db9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:16.866928+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Negativbankdrücken",
+    "instructions": "Lege dich auf eine Negativbank, deine Füße gesichert und dein Kopf tiefer als deine Hüften.\nGreife die Langhantel mit Obergriff etwas breiter als schulterbreit.\nNimm die Langhantel aus der Halterung und senke sie langsam zu deiner Brust, während du deine Ellbogen nah am Körper hältst.\nHalte kurz an der unteren Position an, drücke dann die Langhantel zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Negativbankdrücken ist eine Verbundübung, die den unteren Teil der Brustmuskulatur trainiert. Sie wird auf einer Negativbank ausgeführt und erfordert, die Langhantel aus einer geneigten Position nach oben zu drücken, wobei Brust, Trizeps und Schultern beansprucht werden.",
+    "primary_muscles": [
+      "chest_lower",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "triceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "1556c351-4893-4010-80d4-c64833bf2b3f",
+    "exercise_db_id": "3017",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1556c351-4893-4010-80d4-c64833bf2b3f.jpg",
+    "video_path": "1556c351-4893-4010-80d4-c64833bf2b3f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:28.387097+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Pendlay Rudern",
+    "instructions": "Stelle dich mit hüftbreit auseinander stehenden Füßen und leicht gebeugten Knien hin.\nBeuge dich nach vorne aus der Hüfte, halte deinen Rücken gerade und deine Brust oben.\nGriffe die Langhantel mit Obergriff, etwas breiter als schulterweit auseinander.\nZiehe die Langhantel zu deinem oberen Bauch, wobei du deine Schulterblätter zusammen drückst.\nSenke die Langhantel wieder in die Ausgangsposition ab.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "biceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "f7481a92-f4f4-4677-841e-04e68c4748ac",
+    "exercise_db_id": "1751",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f7481a92-f4f4-4677-841e-04e68c4748ac.jpg",
+    "video_path": "f7481a92-f4f4-4677-841e-04e68c4748ac.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:29.850909+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Pin Press",
+    "instructions": "Stelle eine Langhantel in einem Power-Rack auf Brusthöhe auf.\nStehe vor der Langhantel und positioniere dich darunter, die Füße schulterbreit auseinander.\nFasse die Langhantel mit Obergriff, etwas breiter als schulterbreit.\nHebe die Langhantel aus dem Rack und halte sie direkt über deiner Brust mit vollständig ausgestreckten Armen.\nSenke die Langhantel zur Brust, halte deine Ellbogen nah am Körper.\nHalte kurz, wenn die Langhantel deine Brust berührt.\nDrücke die Langhantel zurück in die Ausgangsposition mit vollständig ausgestreckten Armen.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel Pin Press betont Lockout-Kraft und entwickelt gezielt die Trizeps-Muskulatur.",
+    "primary_muscles": [
+      "chest_middle",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "6f01f5d0-0c09-44f3-bb9d-bac3972bfa28",
+    "exercise_db_id": "0079",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6f01f5d0-0c09-44f3-bb9d-bac3972bfa28.jpg",
+    "video_path": "6f01f5d0-0c09-44f3-bb9d-bac3972bfa28.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:45.315037+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Reverse Handgelenk-Curl",
+    "instructions": "Setze dich auf eine Bank, stelle deine Füße flach auf den Boden und beuge deine Knie.\nHalte eine Langhantel mit Oberhandgriff, Handflächen nach unten, schulterbreit auseinander.\nLege deine Unterarme auf deine Oberschenkel, sodass deine Handgelenke über die Kante hängen.\nHalte deine Unterarme stabil und hebe deine Handgelenke nach oben, so weit wie möglich.\nHalte diese Position kurz und senke die Langhantel dann kontrolliert zurück zur Ausgangsposition.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel Reverse Handgelenk-Curl ist eine Isolationsübung für die Unterarme, speziell für die Streckmuskeln. Sie wird sitzend ausgeführt mit den Unterarmen auf den Oberschenkeln.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "3086f4ec-469f-48f5-b266-dad9098c2b38",
+    "exercise_db_id": "2187",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "3086f4ec-469f-48f5-b266-dad9098c2b38.jpg",
+    "video_path": "3086f4ec-469f-48f5-b266-dad9098c2b38.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:46.694577+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Reverse-Bankdrücken mit engem Griff",
+    "instructions": "Liege flach auf einer Bank mit flachen Füßen auf dem Boden und deinem Rücken gegen die Bank gedrückt.\nFasse die Langhantel mit Reverse-Griff, Hände schulterbreit auseinander.\nHebe die Langhantel aus dem Rack und halte sie direkt über deiner Brust mit vollständig ausgestreckten Armen.\nSenke die Langhantel langsam in Richtung deiner Brust, halte deine Ellbogen nah am Körper.\nHalte kurz an, wenn die Langhantel knapp über deiner Brust ist.\nDrücke die Langhantel zurück in die Ausgangsposition, strecke deine Arme vollständig aus.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Reverse-Bankdrücken mit engem Griff ist eine Compound-Übung, die die Trizeps trainiert, mit sekundärer Betonung auf Brust und Schultern. Die Übung wird auf einer Bank ausgeführt und der Reverse-Griff (Untergriff) verlagert den Fokus stärker auf die Trizeps als beim klassischen Bankdrücken.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [
+      "chest_lower"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "1471b518-02f6-432e-867d-b93b2f576813",
+    "exercise_db_id": "1257",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1471b518-02f6-432e-867d-b93b2f576813.jpg",
+    "video_path": "1471b518-02f6-432e-867d-b93b2f576813.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:52.431735+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Reverse-Grip Schrägbankdrücken",
+    "instructions": "Stelle die Schrägbank in einem Winkel von 45 Grad ein.\nLege dich auf die Bank mit flachen Füßen auf dem Boden.\nGriffe die Langhantel im Untergriff, die Hände etwas breiter als schulterweit auseinander.\nNimm die Langhantel aus der Halterung und senke sie langsam zu deiner Brust, wobei du deine Ellbogen einziehst.\nHalte einen Moment inne, wenn die Stange deine Brust berührt.\nDrücke die Langhantel wieder in die Ausgangsposition, wobei du deine Arme vollständig ausstreckst.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "shoulders_front",
+      "triceps_long",
+      "biceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "d9471c65-9071-410e-a77d-fef31a52ef76",
+    "exercise_db_id": "0084",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d9471c65-9071-410e-a77d-fef31a52ef76.jpg",
+    "video_path": "d9471c65-9071-410e-a77d-fef31a52ef76.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:59.224547+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Rollout",
+    "instructions": "Kniele auf dem Boden und halte eine Langhantel mit beiden Händen schulterbreit auseinander.\nRolle die Langhantel nach vorne, während du deine Arme ausstreckst und deine Rumpfmuskulatur angespannt hältst.\nRolle weiter nach vorne, bis dein Körper vollständig ausgestreckt ist und deine Arme über deinem Kopf sind.\nHalte kurz inne, dann rolle die Langhantel langsam zurück zu deinen Knien, behalte die Kontrolle.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine fortgeschrittene Rumpfübung, die die Bauchmuskulatur trainiert und auch den unteren Rücken beansprucht. Sie erfordert erhebliche Rumpfkraft, Stabilität und Kontrolle.",
+    "primary_muscles": [
+      "abs_transverse",
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "0422f175-cfac-4c2a-be2f-6f7f59f505ff",
+    "exercise_db_id": "1719",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0422f175-cfac-4c2a-be2f-6f7f59f505ff.jpg",
+    "video_path": "0422f175-cfac-4c2a-be2f-6f7f59f505ff.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:49.729+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Schrägbankdrücken enger Griff",
+    "instructions": "Stelle eine Schrägbank in einem Winkel von 45 Grad ein.\nLege dich auf die Bank mit flachen Füßen auf dem Boden.\nFasse die Langhantel mit engem Griff, leicht enger als schulterbreit.\nNimm die Langhantel aus der Ablage und senke sie kontrolliert zum Brustkorb, während du deine Ellbogen nah am Körper hältst.\nHalte einen Moment, wenn die Langhantel deine Brust berührt.\nDrücke die Langhantel zurück in die Ausgangsposition und strecke deine Arme vollständig aus.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Langhantel Schrägbankdrücken mit engem Griff ist eine zusammengesetzte Oberkörperübung, die primär die Trizepse trainiert und sekundär Brust und Schultern beansprucht. Der enge Griff auf der Schrägbank maximiert die Trizeps-Aktivierung.",
+    "primary_muscles": [
+      "triceps_long",
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "57a76fcb-885b-4471-96f3-7b15e62326fd",
+    "exercise_db_id": "0105",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "57a76fcb-885b-4471-96f3-7b15e62326fd.jpg",
+    "video_path": "57a76fcb-885b-4471-96f3-7b15e62326fd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:39.535598+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Schulterdrücken im Stehen",
+    "instructions": "Stelle dich hüftbreit hin und halte die Langhantel vor deinen Schultern mit einem Obergriff.\nDrücke die Langhantel über deinem Kopf nach oben, wobei du deine Arme vollständig streckst.\nSenke die Langhantel kontrolliert zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Schulterdrücken im Stehen ist eine Schulterübung, die die Deltamuskeln beansprucht und zudem Trizeps und oberen Rücken trainiert. Sie erfordert Kraft, Koordination und Schultermobilität.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "7f700106-9446-4ab2-a3db-f53fa81a3b98",
+    "exercise_db_id": "0097",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7f700106-9446-4ab2-a3db-f53fa81a3b98.jpg",
+    "video_path": "7f700106-9446-4ab2-a3db-f53fa81a3b98.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:21.609536+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Seiten-Split-Kniebeuge",
+    "instructions": "Stelle dich mit Füßen breiter als schulterbreit auf, die Zehen zeigen leicht nach außen.\nHalte die Langhantel über deinem oberen Rücken, aufgelegt auf deinen Schultern.\nMache einen großen Schritt zur Seite mit deinem rechten Fuß, während dein linker Fuß bleibt.\nBeuge dein rechtes Knie und senke deinen Körper in eine Kniebeuge ab, halte deine Brust oben und deinen Rücken gerade.\nDrücke durch deine rechte Ferse, um zur Ausgangsposition zurückzukehren.\nWiederhole auf der anderen Seite, trete mit deinem linken Fuß zur Seite.\nAlterniere die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel Seiten-Split-Kniebeuge ist eine Übung für den unteren Körper, die die Quadrizeps trainiert und auch Gesäß, Beinbeuger und Waden beansprucht. Sie erfordert Kraft, Balance und Koordination.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "adductors",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "5c4ac2b5-ca59-4ae9-99b5-7b99a165efb8",
+    "exercise_db_id": "0090",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5c4ac2b5-ca59-4ae9-99b5-7b99a165efb8.jpg",
+    "video_path": "5c4ac2b5-ca59-4ae9-99b5-7b99a165efb8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:11.932721+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Sitzhinge",
+    "instructions": "Sitze auf einer Bank mit flachen Füßen auf dem Boden, eine Langhantel ruht auf deinem oberen Rücken.\nHalte deinen Rücken gerade und deine Brust aufrecht.\nBeuge dich langsam in der Hüfte nach vorne und senke deinen Oberkörper Richtung Boden.\nHalte einen Moment am unteren Punkt, dann drücke dich durch deine Fersen wieder zur Ausgangsposition auf.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Sitzhinge ist eine Kraftübung, die primär die Gesäßmuskeln trainiert, mit sekundärem Fokus auf die Oberschenkelbeuger und den unteren Rücken. Es beinhaltet das Sitzen auf einer Bank mit Langhantel auf dem oberen Rücken und eine Beugung in der Hüfte.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "lower_back"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "96ef5951-4a42-43fd-a6d8-2b34fb17efbe",
+    "exercise_db_id": "0099",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "96ef5951-4a42-43fd-a6d8-2b34fb17efbe.jpg",
+    "video_path": "96ef5951-4a42-43fd-a6d8-2b34fb17efbe.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:24.631965+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Split-Kniebeuge einbeinig",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Langhantel über deinem oberen Rücken.\nMache einen großen Schritt nach vorne mit einem Bein und halte deinen Oberkörper aufrecht.\nSenke deinen Körper, indem du dein vorderes Knie und deine Hüfte beugst, während dein hinteres Bein gerade bleibt.\nSenke dich weiter, bis dein vorderer Oberschenkel parallel zum Boden ist.\nPause kurz, dann drücke dich durch deine vordere Ferse, um zur Ausgangsposition zurückzukehren.\nWiederhole für die gewünschte Anzahl an Wiederholungen und wechsle dann die Beine.",
+    "tips": "Die Langhantel Split-Kniebeuge einbeinig ist eine Unterkörperübung, die die Quadrizeps zielt und auch Gesäßmuskeln, Beinbeuger und Waden einbezieht. Sie erfordert Balance, Koordination und Kraft, da du eine Kniebeuge mit einem Bein nach vorne und einer Langhantel über deinem oberen Rücken ausführst.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "2e00d4dc-dda3-45c0-be14-5f43edebb398",
+    "exercise_db_id": "0053",
+    "category": "plyometric",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2e00d4dc-dda3-45c0-be14-5f43edebb398.jpg",
+    "video_path": "2e00d4dc-dda3-45c0-be14-5f43edebb398.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:58.007348+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Sprung Kniebeuge",
+    "instructions": "Stehe mit schulterbreitem Abstand, die Langhantel über deinem oberen Rücken.\nSenke deinen Körper in eine Kniebeuge, indem du deine Knie beugst und deine Hüften zurückdrückst.\nSobald du unten angekommen bist, explodiere nach oben, indem du vom Boden abspringst.\nStrecke beim Sprung deine Hüften, Knie und Fußgelenke, drücke durch deine Zehen.\nLande sanft zurück in die Kniebeuge-Position und wiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Die Langhantel Sprung Kniebeuge ist eine dynamische Unterkörper-Übung, die die klassische Kniebeuge mit einem explosiven Sprung kombiniert, während man eine Langhantel über dem oberen Rücken hält. Sie trainiert Gesäß und Oberschenkel, Beinbeuger und Waden. Es ist eine plyometrische Bewegung, die Kraft, Stärke und Sprungkraft in den Beinen entwickelt.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "fcb52b2f-112c-444f-b0ce-dbebd6f543b5",
+    "exercise_db_id": "0112",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "fcb52b2f-112c-444f-b0ce-dbebd6f543b5.jpg",
+    "video_path": "fcb52b2f-112c-444f-b0ce-dbebd6f543b5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:54.335585+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Standing Twist",
+    "instructions": "Stelle dich aufrecht hin, die Füße schulterbreit auseinander, und halte die Langhantel vor deiner Brust mit beiden Händen, Handflächen nach unten.\nSpanne deinen Core an und halte deinen Rücken während der gesamten Übung gerade.\nDrehe deinen Oberkörper langsam nach rechts, indem du über deine Füße und Hüften pivotierst, während der Unterkörper stabil bleibt.\nMache eine kurze Pause am Ende der Drehung, dann kehre kontrolliert zur Ausgangsposition zurück.\nWiederhole die Drehung zur linken Seite.\nFahre mit alternierenden Drehungen für die gewünschte Anzahl von Wiederholungen fort.",
+    "tips": "Diese Übung trainiert die Bauchmuskulatur, besonders die schrägen Bauchmuskeln und den unteren Rücken, durch Rumpfrotation mit Langhantel. Sie verbessert die Corestrabilität und die Rotationskraft.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "abs_transverse"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "91f279c3-5066-4dc9-a00f-1ee853ed51ab",
+    "exercise_db_id": "0056",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "91f279c3-5066-4dc9-a00f-1ee853ed51ab.jpg",
+    "video_path": "91f279c3-5066-4dc9-a00f-1ee853ed51ab.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:06.867868+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Trizeps-Überkopfstrecker enger Griff",
+    "instructions": "Liege flach auf einer Bank mit flachen Füßen auf dem Boden und deinem Kopf am Ende der Bank.\nFasse die Langhantel mit engem Griff, Hände schulterbreit auseinander, Handflächen nach oben.\nStrecke deine Arme vollständig, hebe die Langhantel über deine Brust.\nHalte deine Oberarme stabil, senke die Langhantel langsam in Richtung Stirn, indem du deine Ellbogen beugst.\nMache eine kurze Pause unten an, strecke dann deine Arme zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel Trizeps-Überkopfstrecker mit engem Griff ist eine Kraftübung, die die Trizeps trainiert und wird auf einer Bank liegend mit einer Langhantel und engem Griff ausgeführt. Er trägt besonders zum Trizeps-Aufbau bei und beansprucht die Schultern als Sekundärmuskulatur.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "61506055-ded2-4ffe-bda4-1487d2b5ccc4",
+    "exercise_db_id": "0120",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "61506055-ded2-4ffe-bda4-1487d2b5ccc4.jpg",
+    "video_path": "61506055-ded2-4ffe-bda4-1487d2b5ccc4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:07.206859+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Upright Row",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und halte eine Langhantel mit Übergriff, Hände leicht breiter als schulterbreit.\nLasse die Langhantel vor deinen Oberschenkeln mit vollständig gestreckten Armen hängen.\nHalte deinen Rücken gerade und deinen Rumpf angespannt, hebe die Langhantel beim Ausatmen gerade nach oben in Richtung Kinn, führe dabei mit den Ellbogen.\nHalte kurz inne, senke dann beim Einatmen die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel Upright Row ist eine Compound-Übung, die primär die Deltamuskeln trainiert und auch die Kapuzenmuskel und Bizepse arbeiten lässt.",
+    "primary_muscles": [
+      "shoulders_side",
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "681acfb9-3c0c-45fd-8623-cc0e245cd68a",
+    "exercise_db_id": "0088",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "681acfb9-3c0c-45fd-8623-cc0e245cd68a.jpg",
+    "video_path": "681acfb9-3c0c-45fd-8623-cc0e245cd68a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:06.503329+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel Wadenheben sitzend",
+    "instructions": "Setze dich auf eine Bank, die Füße flach auf dem Boden, und lege eine Langhantel auf deinen Oberschenkeln ab.\nPlatziere die Fußballen auf einer erhöhten Plattform, wie einem Block oder einer Stufe.\nPositioniere die Langhantel über deinen Oberschenkeln und halte sie fest mit deinen Händen.\nHalte deinen Rücken gerade und dein Rumpfmuskulatur angespannt, hebe deine Fersen vom Boden ab, indem du deine Knöchel streckst.\nHalte einen Moment oben an, senke dann deine Fersen langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung zielt hauptsächlich auf die Wadenmuskeln ab und beansprucht sekundär die Oberschenkelbeuger und Quadrizepse.",
+    "primary_muscles": [
+      "calves_soleus"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c30616b1-b80b-46b4-b5ed-d50d1e076b9e",
+    "exercise_db_id": "0121",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c30616b1-b80b-46b4-b5ed-d50d1e076b9e.jpg",
+    "video_path": "c30616b1-b80b-46b4-b5ed-d50d1e076b9e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:10.330973+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Aufrechtes Rudern",
+    "instructions": "Stelle dich hüftbreit hin und halte eine Langhantel mit Obergriff, die Hände etwas breiter als schulterbreit auseinander.\nLasse die Langhantel mit vollständig ausgestreckten Armen vor deinen Oberschenkeln hängen.\nSpanne deinen Rumpf an, halte den Rücken gerade und hebe die Langhantel beim Ausatmen gerade nach oben bis zum Kinn, führe die Bewegung mit den Ellbogen an.\nHalte die Spitzenposition kurz, senke die Langhantel dann beim Einatmen kontrolliert zurück zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Aufrechte Rudern ist eine Komplexübung, die primär die Deltamuskeln trainiert und sekundär die Trapezmuskeln und Bizepse beansprucht.",
+    "primary_muscles": [
+      "shoulders_side",
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "8a7fb761-7b06-4c7d-a8bb-562ffc95b736",
+    "exercise_db_id": "2810",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8a7fb761-7b06-4c7d-a8bb-562ffc95b736.jpg",
+    "video_path": "8a7fb761-7b06-4c7d-a8bb-562ffc95b736.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:31.890778+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Ausfallschritt",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf und halte eine Langhantel quer über deinem oberen Rücken.\nMache einen großen Schritt nach vorne mit deinem rechten Fuß und halte deinen Oberkörper aufrecht.\nSenke deinen Körper, indem du deine Knie und Hüften beugst, bis dein rechter Oberschenkel parallel zum Boden ist.\nMache eine kurze Pause und drücke dann durch deine rechte Ferse, um in die Ausgangsposition zurückzukehren.\nWiederhole mit deinem linken Bein nach vorne für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b7bd4350-8761-4500-9829-328b1c430c16",
+    "exercise_db_id": "0054",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b7bd4350-8761-4500-9829-328b1c430c16.jpg",
+    "video_path": "b7bd4350-8761-4500-9829-328b1c430c16.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:02.631012+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Ausfallschritt",
+    "instructions": "Beginne im aufrechten Stand mit schulterbreit auseinander stehenden Füßen und einer Langhantel auf deinem oberen Rücken.\nMache einen Schritt nach vorne mit deinem rechten Fuß und halte deinen Oberkörper aufrecht.\nSenke deinen Körper ab, indem du dein rechtes Knie beugst, bis dein Oberschenkel parallel zum Boden ist.\nDrücke dich über deinen rechten Absatz ab, um zur Ausgangsposition zurückzukehren.\nWiederhole mit deinem linken Bein und wechsle die Beine für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Der Langhantel-Ausfallschritt ist eine zusammengesetzte Unterkörperübung, die die Gesäßmuskeln, Quadrizeps, Oberschenkelbeuger und Waden trainiert. Sie erfordert einen Ausfallschritt nach vorne mit der Langhantel auf dem oberen Rücken.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "62b5845a-67f0-4bce-9895-324bee351394",
+    "exercise_db_id": "0078",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "62b5845a-67f0-4bce-9895-324bee351394.jpg",
+    "video_path": "62b5845a-67f0-4bce-9895-324bee351394.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:42.543136+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Ausfallschritt rückwärts",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und lege eine Langhantel auf deinem oberen Rücken ab.\nMache einen Schritt nach hinten mit deinem rechten Fuß und landen auf dem Fußballen.\nBeuge beide Knie, um deinen Körper abzusenken, bis dein linker Oberschenkel parallel zum Boden ist.\nDrücke durch deine linke Ferse, um in die Ausgangsposition zurückzukehren.\nWiederhole die Bewegung mit dem anderen Bein.",
+    "tips": "Der Langhantel-Ausfallschritt rückwärts ist eine zusammengesetzte Übung für den unteren Körper, die vor allem die Gesäßmuskulatur trainiert und sekundär die Quadrizeps, Oberschenkelrückseite und Waden beansprucht. Die Übung erfordert Balance, Koordination und Kraft.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "03947e06-4921-467f-a531-2dc3985b50a3",
+    "exercise_db_id": "0077",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "03947e06-4921-467f-a531-2dc3985b50a3.jpg",
+    "video_path": "03947e06-4921-467f-a531-2dc3985b50a3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:43.922949+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Ausfallschritt rückwärts V2",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und halte eine Langhantel über deinem oberen Rücken.\nMache einen Schritt rückwärts mit deinem rechten Fuß und lande auf dem Vorderfuß.\nBeuge beide Knie, bis dein linker Oberschenkel parallel zum Boden ist.\nDrücke dich durch deine linke Ferse ab, um in die Ausgangsposition zurückzukehren.\nWiederhol die Bewegung mit dem anderen Bein.",
+    "tips": "Der Langhantel-Ausfallschritt rückwärts V2 ist eine Unterkörperübung, die die Gesäßmuskeln beansprucht und auch die Oberschenkelvorderseiten, Oberschenkelrückseiten und Waden aktiviert. Die Übung beinhaltet einen Schritt rückwärts in eine Ausfallschrittposition während du eine Langhantel über deinem oberen Rücken hältst und dann zur Ausgangsposition zurückkehrst.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b339c00b-760a-4d57-9f6b-f7823fe0599e",
+    "exercise_db_id": "0083",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b339c00b-760a-4d57-9f6b-f7823fe0599e.jpg",
+    "video_path": "b339c00b-760a-4d57-9f6b-f7823fe0599e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:00.507108+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Ausroller von der Bank",
+    "instructions": "Beginne im Kniesitz auf dem Boden mit einer Langhantel auf einer Bank vor dir.\nFasse die Langhantel mit Obergriff, leicht breiter als Schulterbereite.\nHalte deinen Core angespannt und deinen Rücken gerade, rolle die Langhantel langsam nach vorne und strecke deine Arme vor dir aus.\nRolle die Langhantel weiter nach vorne, bis dein Körper vollständig gestreckt ist und deine Arme über deinem Kopf sind.\nMache eine kurze Pause in der vollständig gestreckten Position, rolle die Langhantel dann langsam zurück zu deinem Körper in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Ausroller von der Bank ist eine fortgeschrittene Core-Übung, die die Bauchmuskeln targeting, mit sekundärem Fokus auf Schultern und Trizeps. Sie erfordert erhebliche Core-Kraft, Stabilität und Kontrolle für sichere und effektive Ausführung.",
+    "primary_muscles": [
+      "abs_transverse",
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "5f89206c-388c-4099-a218-d98d6f29df6d",
+    "exercise_db_id": "0026",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5f89206c-388c-4099-a218-d98d6f29df6d.jpg",
+    "video_path": "5f89206c-388c-4099-a218-d98d6f29df6d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:03.828028+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Bankkniebeugen-Squat",
+    "instructions": "Stelle die Langhantel auf einem Squat-Rack auf Brusthöhe auf.\nStelle dich mit dem Rücken zum Rack, Füße schulterbreit auseinander.\nBeuge deine Knie und senke deinen Körper in eine Kniebeugenposition, halte deinen Rücken gerade und die Brust aufrecht.\nGreife die Langhantel mit Obergriff, etwas breiter als schulterbreit.\nHebe die Langhantel aus dem Rack und trete zurück, stelle sicher, dass deine Füße noch schulterbreit auseinander stehen.\nSenke deinen Körper in eine Kniebeugen-Position, halte deine Knie in einer Linie mit deinen Zehen.\nHalte die Position unten kurz, drücke dich dann durch die Fersen zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine zusammengesetzte Übung für die untere Körperhälfte, die hauptsächlich die Oberschenkelvorderseite trainiert und auch Gesäß, hintere Oberschenkelmuskulatur und Waden beansprucht. Sie erfordert gute Technik und Kraft.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b7a8ab13-1107-483b-b445-a00b350d30f9",
+    "exercise_db_id": "0103",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b7a8ab13-1107-483b-b445-a00b350d30f9.jpg",
+    "video_path": "b7a8ab13-1107-483b-b445-a00b350d30f9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:36.794746+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Bauchroller stehend",
+    "instructions": "Stehe aufrecht mit schulterbreit auseinander stehenden Füßen und halte die Langhantel mit beiden Händen vor deinen Oberschenkeln.\nSpanne deinen Core an und rolle die Langhantel langsam zum Boden, während du deinen Rücken gerade hältst und deine Arme gestreckt bleiben.\nRolle die Langhantel weiter nach vorne, bis dein Körper vollständig gestreckt ist und deine Hände direkt über deinem Kopf sind.\nHalte einen Moment inne, rolle dann die Langhantel langsam zu deinen Oberschenkeln zurück und behalte die Kontrolle bei, während du deinen Core angespannt hältst.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Bauchroller stehend ist eine fortgeschrittene Core-Übung, die die Bauchmuskulatur trainiert und sekundär die Schultern und den unteren Rücken beansprucht. Sie erfordert erhebliche Core-Stabilität und Kontrolle.",
+    "primary_muscles": [
+      "abs_transverse",
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "back_lats"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "6060299d-d5a0-4a01-98be-976ceef4c956",
+    "exercise_db_id": "2800",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6060299d-d5a0-4a01-98be-976ceef4c956.jpg",
+    "video_path": "6060299d-d5a0-4a01-98be-976ceef4c956.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:27.44923+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Beinhebeübung im Sitzen",
+    "instructions": "Setze dich auf eine Bank mit geradem Rücken und halte eine Langhantel über deinen Oberschenkeln.\nPlatziere deine Hände an den Seiten der Bank zur Unterstützung.\nHebe bei gestrecktem Bein ein Bein so hoch wie möglich und halte es parallel zum Boden.\nSenke das Bein wieder ab und wiederhole die Bewegung mit dem anderen Bein.\nWechsle abwechselnd die Beine für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert primär die Bauchmuskulatur, während die Hüftbeuger und der Quadrizeps ebenfalls aktiviert werden.",
+    "primary_muscles": [
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b8a40cfc-cd47-4209-98c7-0aed6ee112c3",
+    "exercise_db_id": "1629",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "b8a40cfc-cd47-4209-98c7-0aed6ee112c3.jpg",
+    "video_path": "b8a40cfc-cd47-4209-98c7-0aed6ee112c3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:55.700462+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Bizeps-Curl breiter Griff",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und halte eine Langhantel mit Unterhandgriff, die Hände breiter als schulterbreit auseinander.\nHalte deinen Rücken gerade und deine Ellbogen nah an deinem Oberkörper.\nAtme aus und hebe die Langhantel zu deinen Schultern auf, während du deine Oberarme still hältst.\nHalte einen Moment in der oberen Position inne und spanne dabei deinen Bizeps an.\nAtme ein und senke die Langhantel langsam zur Ausgangsposition ab, strecke deine Arme vollständig aus.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Bizeps-Curl breiter Griff ist eine Kraftübung, die den Bizeps trainiert und sekundär die Unterarme beansprucht. Der breite Griff kann die äußere Portion des Bizeps besonders betonen.",
+    "primary_muscles": [
+      "biceps_short",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "20fc58cb-0720-4fcc-8de9-4950d55ae880",
+    "exercise_db_id": "2407",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "20fc58cb-0720-4fcc-8de9-4950d55ae880.jpg",
+    "video_path": "20fc58cb-0720-4fcc-8de9-4950d55ae880.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:08.335304+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Bizeps-Curl mit Armblaster",
+    "instructions": "Stelle dich aufrecht mit schulterbreit auseinanderstehenden Füßen hin und halte eine Langhantel mit Unterhandgriff, die Handflächen zeigen nach oben.\nLege deine Oberarme gegen den Armblaster und halte deine Ellbogen nah bei deinem Körper.\nHalte deine Oberarme stillstehend, atme aus und curle das Gewicht nach oben, während du deinen Bizeps anspannst.\nHebe die Langhantel weiter nach oben, bis dein Bizeps vollständig kontrahiert ist und die Stange auf Schulterhöhe ist.\nHalte die angespannte Position kurz und drücke deinen Bizeps zusätzlich.\nAtme ein und senke die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Bizeps-Curl mit Armblaster ist eine Isolationsübung für den Bizeps, die durch die Verhinderung von Ellbogenbewegungen saubere Ausführung erzwingt. Der Armblaster unterstützt die richtige Ausführung und macht die Übung effektiver für gezieltes Bizeps-Training.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c747cf47-42b9-4bf1-becb-705151dcc8ca",
+    "exercise_db_id": "0031",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "c747cf47-42b9-4bf1-becb-705151dcc8ca.jpg",
+    "video_path": "c747cf47-42b9-4bf1-becb-705151dcc8ca.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:14.118714+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Curl",
+    "instructions": "Stelle dich aufrecht hin mit schulterbreit auseinander stehenden Füßen und halte eine Langhantel mit Untergriff, Handflächen nach vorn.\nHalte deine Ellbogen nah am Oberkörper und atme aus, während du die Hantel durch Kontraktion deines Bizeps aufwärts bewegst.\nHebe die Stange bis zu vollständiger Bizeps-Kontraktion auf Schulterhöhe.\nHalte die kontrahierte Position kurz an und spanne deinen Bizeps.\nAtme ein und senke die Hantel langsam zur Ausgangsposition ab.\nWiederhol die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Curl ist eine klassische Grundübung für die Bizepse, die durch das Hochziehen der Hantel von den Oberschenkeln bis zur Schulterhöhe ausgeführt wird, wobei die Ellbogen nah am Oberkörper bleiben.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "484111a0-1906-420d-bd6a-01d940db13fd",
+    "exercise_db_id": "0023",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "484111a0-1906-420d-bd6a-01d940db13fd.jpg",
+    "video_path": "484111a0-1906-420d-bd6a-01d940db13fd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:59.334202+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Curl alternierend",
+    "instructions": "Stelle dich aufrecht mit schulterbreit auseinander stehenden Füßen hin und halte eine Langhantel in jeder Hand mit den Handflächen nach vorne.\nHalte deine Oberarme ruhig und atme aus, während du die Gewichte hochziehst und deine Bizeps anspannst.\nHebe die Langhanteln weiter an, bis deine Bizeps vollständig kontrahiert sind und die Langhanteln auf Schulterhöhe sind.\nHalte die kontrahierte Position kurz, während du deine Bizeps anspannst.\nAtme ein und senke die Langhanteln langsam zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen und wechsle dabei die Arme ab.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c14c4aa4-6fd2-4247-b4bc-1f158d243c88",
+    "exercise_db_id": "0072",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c14c4aa4-6fd2-4247-b4bc-1f158d243c88.jpg",
+    "video_path": "c14c4aa4-6fd2-4247-b4bc-1f158d243c88.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:33.938056+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Curl auf Schrägbank (Bauchlage)",
+    "instructions": "Stelle die Schrägbank auf etwa 45 Grad ein.\nLege dich mit der Brust und dem Bauch auf die Bank.\nHalte die Langhantel mit Untergriff schulterbreit.\nStrecke deine Arme vollständig aus, sodass die Langhantel zur Boden zeigt.\nHalte deine Oberarme ruhig und atme aus, während du die Langhantel nach oben curlt und deine Bizepse anspannst.\nHebe die Langhantel weiter bis zu einer vollständigen Kontraktion und bringe sie auf Schulterhöhe.\nHalte die Spitzenposition kurz und spanne deinen Bizeps maximal an.\nAtme ein und senke die Langhantel langsam wieder in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung isoliert den Bizeps optimal und verhindert durch die Bauchlage auf der Schrägbank jede Form von Schwung oder Momentum. Der Fokus liegt vollständig auf dem Bizeps, der Unterarm wird sekundär beansprucht.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "7448f8ed-cad8-4452-bddc-28770d68aed4",
+    "exercise_db_id": "0113",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7448f8ed-cad8-4452-bddc-28770d68aed4.jpg",
+    "video_path": "7448f8ed-cad8-4452-bddc-28770d68aed4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:58.575822+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Curl breiter Griff",
+    "instructions": "Stelle dich aufrecht hin, die Füße schulterbreit auseinander, und halte die Langhantel mit Obergriff, die Hände breiter als schulterbreit.\nLasse die Langhantel in Armlänge vor deinen Oberschenkeln hängen, die Handflächen zeigen von deinem Körper weg.\nHalte deine Oberarme stabil und hebe die Langhantel durch Anspannung deiner Bizeps nach oben.\nHebe die Langhantel weiter, bis deine Bizeps vollständig kontrahiert sind und die Langhantel auf Schulterhöhe ist.\nHalte die kontrahierte Position kurz und spüre die Anspannung in deinen Bizeps.\nSenke die Langhantel langsam zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Curl mit breitem Griff ist eine Bizeps-Übung mit breiterem Griff als schulterbreit, die den äußeren Teil des Bizeps besonders beansprucht und auch die Unterarme und Schultern einbezieht.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "889a0cbb-a328-469f-bca7-96ceaa70c556",
+    "exercise_db_id": "0110",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "889a0cbb-a328-469f-bca7-96ceaa70c556.jpg",
+    "video_path": "889a0cbb-a328-469f-bca7-96ceaa70c556.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:51.49355+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Curl stehend mit Unterhandgriff",
+    "instructions": "Stelle dich aufrecht hin, deine Füße schulterbreit auseinander, und halte eine Langhantel mit Unterhandgriff, die Handflächen nach oben.\nHalte deine Ellbogen nah am Torso und deine Oberarme bewegungslos.\nAtem aus und curle das Gewicht durch Anspannung deines Bizeps, bringend die Langhantel so nah wie möglich an deine Schultern.\nHalte die kontrahierte Position kurz an und spanne deinen Bizeps an.\nAtme ein und senke die Langhantel langsam zurück zur Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Curl stehend mit Unterhandgriff ist eine Übung, die Bizeps und Unterarme trainiert. Sie wird ausgeführt, indem man eine Langhantel mit Unterhandgriff hält, das Gewicht nach oben curlt, während die Ellbogen am Torso bleiben, und es dann wieder nach unten senkt.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "ee593cb9-a51a-400b-8a0b-02fcfd89ff90",
+    "exercise_db_id": "0036",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ee593cb9-a51a-400b-8a0b-02fcfd89ff90.jpg",
+    "video_path": "ee593cb9-a51a-400b-8a0b-02fcfd89ff90.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:22.342736+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Decline-Bankdrücken mit breitem Griff",
+    "instructions": "Lege dich auf eine Decline-Bank mit gesicherten Füßen und deinem Kopf tiefer als deine Hüften.\nFasse die Langhantel mit breitem Griff, etwas breiter als schulterbreit auseinander.\nSenke die Langhantel zu deiner Brust ab, während du deine Ellbogen zur Seite hältst.\nStoße die Langhantel wieder in die Ausgangsposition zurück und strecke deine Arme vollständig aus.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Decline-Bankdrücken mit breitem Griff ist eine zusammengesetzte Brustübung, die auf einer Decline-Bank mit breitem Griff ausgeführt wird. Sie zielt auf den unteren Teil der Brustmuskulatur ab und beansprucht auch den Trizeps und die Schultern.",
+    "primary_muscles": [
+      "chest_lower",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_medial",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "2f75fc7a-2f38-4140-8eb4-f4043dd87aaf",
+    "exercise_db_id": "0035",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2f75fc7a-2f38-4140-8eb4-f4043dd87aaf.jpg",
+    "video_path": "2f75fc7a-2f38-4140-8eb4-f4043dd87aaf.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:19.642613+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Decline-Schädeldrücken mit engem Griff",
+    "instructions": "Liege auf einer Decline-Bank mit deinem Kopf tiefer als deine Füße und halte eine Langhantel mit engem Griff.\nSenke die Langhantel zu deiner Stirn, indem du deine Ellbogen beugst und deine Oberarme ruhig hältst.\nHalte einen Moment an, strecke deine Arme dann, um die Langhantel zurück zur Ausgangsposition zu drücken.\nWiederholt für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Decline-Schädeldrücken mit engem Griff ist eine zusammengesetzte Übung, die die Trizeps auf einer Decline-Bank mit engem Griff trainiert. Sie kombiniert Elemente eines engen Griffdrucks und eines Schädeldrückers und fordert sowohl Trizeps-Kraft als auch Stabilität.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "0c49bed3-2e23-4edf-a870-8b7c79629782",
+    "exercise_db_id": "0038",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0c49bed3-2e23-4edf-a870-8b7c79629782.jpg",
+    "video_path": "0c49bed3-2e23-4edf-a870-8b7c79629782.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:25.121956+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Drag-Curl",
+    "instructions": "Stehen Sie mit schulterbreit auseinander stehenden Füßen und halten Sie eine Langhantel mit Untergriff, Handflächen nach oben.\nLassen Sie die Langhantel in Armlänge vor Ihren Oberschenkeln hängen.\nHalten Sie Ihre Oberarme stillstehend und curlen Sie die Langhantel zu Ihrer Brust, indem Sie Ihre Bizeps anspannen.\nPausieren Sie kurz oben und senken Sie die Langhantel dann langsam zurück in die Ausgangsposition.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "e5dbb0d6-38ac-4824-ba17-268e81550e6e",
+    "exercise_db_id": "0065",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e5dbb0d6-38ac-4824-ba17-268e81550e6e.jpg",
+    "video_path": "e5dbb0d6-38ac-4824-ba17-268e81550e6e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:17.967026+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Einarm-Bodendruck",
+    "instructions": "Lege dich flach auf den Rücken auf dem Boden, die Knie gebeugt und die Füße flach auf dem Boden.\nHalte die Langhantel mit einer Hand, Handfläche nach oben, und strecke deinen Arm senkrecht über deine Brust.\nSenke die Langhantel langsam in Richtung deiner Brust, wobei du deinen Ellbogen nah an deinem Körper hältst.\nMache eine kurze Pause unten, drücke die Langhantel dann zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Das Langhantel-Einarm-Bodendruck ist eine unilaterale Drückbewegung, die hauptsächlich die Trizepse trainiert und gleichzeitig Brust und Schultern beansprucht. Die einseitige Stabilisierung erhöht die Anforderungen an die Rumpfstabilität und Koordination.",
+    "primary_muscles": [
+      "chest_middle",
+      "chest_inner"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "8ba2a28d-3cc8-4421-9a24-0e96830b92c3",
+    "exercise_db_id": "0064",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8ba2a28d-3cc8-4421-9a24-0e96830b92c3.jpg",
+    "video_path": "8ba2a28d-3cc8-4421-9a24-0e96830b92c3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:16.54615+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Einarm-Rudern (gebeugt)",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, Knie leicht gebeugt, und halte eine Langhantel mit einer Hand im Obergriff.\nBeuge dich nach vorne an den Hüften, halte deinen Rücken gerade und deinen Kopf in neutraler Position.\nZiehe die Langhantel nach oben zu deiner Brust, halte deinen Ellbogen nah bei deinem Körper und drücke deine Schulterblätter zusammen.\nSenke die Langhantel kontrolliert zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, wechsle dann den Arm.",
+    "tips": "Das Langhantel-Einarm-Rudern ist eine einseitige Kraftübung, die den oberen Rücken trainiert und Gleichgewicht, Koordination und Rumpfstabilität erfordert.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle",
+      "back_teres"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "0d80be10-a5f8-49d4-bed4-768983ddc0ef",
+    "exercise_db_id": "0030",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0d80be10-a5f8-49d4-bed4-768983ddc0ef.jpg",
+    "video_path": "0d80be10-a5f8-49d4-bed4-768983ddc0ef.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:12.795855+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Enges-Griff-Bankdrücken",
+    "instructions": "Liegen Sie flach auf einer Bank, Füße flach auf dem Boden und Rücken gegen die Bank gedrückt.\nGreifen Sie die Langhantel mit engem Griff, etwas enger als schulterbreit auseinander.\nNehmen Sie die Langhantel aus der Halterung und senken Sie sie langsam zu Ihrer Brust, wobei Sie Ihre Ellbogen nah bei Ihrem Körper halten.\nPausieren Sie kurz, wenn die Langhantel Ihre Brust berührt.\nDrücken Sie die Langhantel zurück in die Ausgangsposition und strecken Sie Ihre Arme vollständig.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial",
+      "chest_inner",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "2fed53f2-b328-4e83-b1ea-e51196ba4912",
+    "exercise_db_id": "0041",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "2fed53f2-b328-4e83-b1ea-e51196ba4912.jpg",
+    "video_path": "2fed53f2-b328-4e83-b1ea-e51196ba4912.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:29.42996+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Frontheben",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Langhantel vor deinen Oberschenkeln mit Obergriff.\nHalte deine Arme gerade und hebe die Langhantel nach vorne und oben bis zur Schulterhöhe.\nHalte kurz oben an, senke dann langsam die Langhantel in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Frontheben ist eine Schulterübung, die den Deltamuskel trainiert, indem die Langhantel mit geraden Armen von den Oberschenkeln bis zur Schulterhöhe gehoben wird.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "e80643cb-870a-440d-afd4-943fa719a3e5",
+    "exercise_db_id": "0040",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e80643cb-870a-440d-afd4-943fa719a3e5.jpg",
+    "video_path": "e80643cb-870a-440d-afd4-943fa719a3e5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:30.994263+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Frontheben und Pullover",
+    "instructions": "Stelle dich aufrecht hin, die Füße schulterbreit auseinander, und halte die Langhantel mit Obergriff (Handflächen nach unten).\nHalte deine Arme gestreckt und hebe die Langhantel vor deinem Körper bis auf Schulterhöhe.\nHalte diese Position kurz an, senke die Langhantel dann kontrolliert zurück in die Ausgangsposition.\nSenke die Langhantel danach über deinen Kopf nach hinten, wobei du deine Arme gestreckt hältst.\nHalte kurz in dieser Position an, hebe die Langhantel dann zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Frontheben und Pullover ist eine Compound-Übung, die hauptsächlich die Brustmuskulatur mit sekundärer Betonung auf Schultern und Trizeps trainiert. Sie erfordert Kraft, Koordination und gute Schultermobilität.",
+    "primary_muscles": [
+      "shoulders_front",
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "chest_upper",
+      "triceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "e8e69605-9ce5-4e44-8822-a1296cf9c0e8",
+    "exercise_db_id": "0024",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e8e69605-9ce5-4e44-8822-a1296cf9c0e8.jpg",
+    "video_path": "e8e69605-9ce5-4e44-8822-a1296cf9c0e8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:00.807247+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Frontkniebeuge",
+    "instructions": "Stelle dich aufrecht hin, die Füße schulterbreit auseinander, und positioniere die Langhantel auf deiner oberen Brust, direkt unterhalb des Schlüsselbeins.\nHalte die Langhantel mit Obergriff, deine Ellbogen hoch und deine Oberarme parallel zum Boden.\nSenke deinen Körper in die Kniebeugeposition ab, indem du deine Knie und Hüften beugst, während du deinen Rücken gerade und deine Brust aufrecht hältst.\nHalte kurz in der unteren Position, drücke dich dann durch deine Fersen ab und kehre in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel-Frontkniebeuge ist eine Compound-Übung für den Unterkörper, die hauptsächlich die Oberschenkelvorderseite mit sekundärer Betonung auf Oberschenkelrückseite, Gesäß und Waden trainiert. Sie erfordert gute Rumpfstabilität, Balance und Mobilitätsqualität.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "quads_vastus_medialis",
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "25257d95-e97e-49f7-81f8-e7a8ec73adc5",
+    "exercise_db_id": "0042",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "25257d95-e97e-49f7-81f8-e7a8ec73adc5.jpg",
+    "video_path": "25257d95-e97e-49f7-81f8-e7a8ec73adc5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:32.382002+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Frontkniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, die Zehen leicht nach außen gedreht.\nHalte die Langhantel vor deinen Schultern, sie ruht auf deinem Schlüsselbein und deinen Schultern.\nSpanne deinen Core an und halte deine Brust aufrecht, während du deinen Körper in die Kniebeuge senkst und deine Hüfte zurückschiebst.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden sind oder so weit, wie es dir angenehm ist.\nMache eine kurze Pause unten an, drücke dich dann über deine Fersen zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel-Frontkniebeuge ist eine komplexe Unterkörperübung, die Gesäßmuskeln, Quadrizeps und Oberschenkelrückseite trainiert und gleichzeitig den Core für Stabilität beansprucht. Die Langhantel wird vor den Schultern gehalten und erfordert gute Mobilität und Rumpfstabilität für die richtige Körperposition.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "quads_vastus_medialis",
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "8fe03755-6a2b-4b20-9b67-2d473f9d8580",
+    "exercise_db_id": "0029",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8fe03755-6a2b-4b20-9b67-2d473f9d8580.jpg",
+    "video_path": "8fe03755-6a2b-4b20-9b67-2d473f9d8580.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:11.39058+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Frontkniebeuge mit Clean-Griff",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und die Langhantel ruht auf deiner oberen Brust, deine Ellbogen zeigen nach vorne.\nSenke deinen Körper, indem du deine Knie beugst und deine Hüfte nach hinten drückst, als würdest du dich auf einen Stuhl setzen.\nHalte deine Brust aufrecht und deinen Rücken gerade, während du dich absenkt, stelle sicher, dass deine Knie nicht über deine Zehen hinausgehen.\nSenke dich weiter ab, bis deine Oberschenkel parallel zum Boden sind, oder so tief wie angenehm möglich.\nMache eine kurze Pause unten an, drücke dich dann über deine Fersen nach oben, strecke deine Hüfte und Knie.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "quads_vastus_medialis",
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c33f4f50-e4e1-4d30-9c64-7f91f009b74c",
+    "exercise_db_id": "1409",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c33f4f50-e4e1-4d30-9c64-7f91f009b74c.jpg",
+    "video_path": "c33f4f50-e4e1-4d30-9c64-7f91f009b74c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:39.730099+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Gesäßbrücke",
+    "instructions": "Lege dich flach auf den Rücken auf den Boden, Knie gebeugt und Füße flach auf dem Boden.\nLege eine Langhantel über deine Hüften und halte sie sicher mit beiden Händen.\nSpanne deine Gesäßmuskeln und Rumpf an, hebe dann deine Hüften vom Boden ab, bis dein Körper eine gerade Linie von den Knien zu den Schultern bildet.\nHalte die Spitzenposition kurz und drücke deine Gesäßmuskeln zusammen.\nSenke deine Hüften langsam zurück zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel-Gesäßbrücke ist eine Kraftübung, die die Gesäßmuskeln trainiert und sekundär die Oberschenkelrückseiten und den unteren Rücken beansprucht.",
+    "primary_muscles": [
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "hamstrings_semimembranosus",
+      "lower_back",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "3177602c-575c-45cd-a590-bd4b7949edbe",
+    "exercise_db_id": "0045",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "3177602c-575c-45cd-a590-bd4b7949edbe.jpg",
+    "video_path": "3177602c-575c-45cd-a590-bd4b7949edbe.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:43.826639+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Guillotine-Bankdrücken",
+    "instructions": "Liegen Sie flach auf der Bank mit den Füßen am Boden und dem Rücken gegen die Bank gedrückt.\nGreifen Sie die Langhantel mit Obergriff, leicht breiter als Schulterbr eite.\nSenken Sie die Stange langsam in Richtung Hals, wobei Ihre Ellbogen nach außen zeigen.\nPausieren Sie kurz, wenn die Stange knapp über dem Hals ist.\nDrücken Sie die Stange zurück zur Ausgangsposition und strecken Sie Ihre Arme vollständig aus.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Guillotine-Bankdrücken ist eine Variante des Bankdrückens, bei der die Stange zum Hals statt zur Brust gesenkt wird und mehr Gewicht auf die oberen Brustmuskeln kommt. Diese Übung erfordert sorgfältige Kontrolle und korrekte Technik, um Verletzungen zu vermeiden.",
+    "primary_muscles": [
+      "chest_upper",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "8dabfa59-67da-4b09-b3a7-98b6ba2fefdc",
+    "exercise_db_id": "0046",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8dabfa59-67da-4b09-b3a7-98b6ba2fefdc.jpg",
+    "video_path": "8dabfa59-67da-4b09-b3a7-98b6ba2fefdc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:45.272663+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Hack-Kniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf, deine Zehen sind leicht nach außen gedreht.\nHalte die Langhantel hinter deinen Beinen, aufgelegt auf deinen Oberschenkeln.\nSenke deinen Körper ab, indem du in den Knien und Hüften beugst, halte deinen Rücken gerade und deine Brust oben.\nSenke dich weiter ab, bis deine Oberschenkel parallel zum Boden sind, oder so tief, wie du es komfortabel kannst.\nMache eine kurze Pause und drücke dich dann über deine Fersen zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Unterkörper-Kraftübung, die Gesäß, Quadrizeps, Beinbeuger und Waden trainiert und die hintere Kette sowie den Quadrizeps besonders betont.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "quads_vastus_lateralis",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "db0c5cf9-26ae-4fd2-b8a8-201ab0f7e594",
+    "exercise_db_id": "0125",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "db0c5cf9-26ae-4fd2-b8a8-201ab0f7e594.jpg",
+    "video_path": "db0c5cf9-26ae-4fd2-b8a8-201ab0f7e594.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:19.431086+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Handgelenkcurl",
+    "instructions": "Sitze auf einer Bank mit flachen Füßen und gebeugten Knien.\nHalte die Langhantel mit unterem Griff, Handflächen nach oben, Hände schulterbreit auseinander.\nLege deine Unterarme auf deine Oberschenkel, wobei deine Handgelenke über die Kante hängen.\nCurle deine Handgelenke langsam nach oben und führe die Langhantel zu deinen Unterarmen.\nHalte kurz oben an, senke die Langhantel dann langsam zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Handgelenkcurl ist eine Isolationsübung, die die Unterarmmuskulatur, speziell die Handgelenksbeuger, beansprucht. Sie wird sitzend ausgeführt mit Unterarmen auf den Oberschenkeln und Handgelenken über der Kante.",
+    "primary_muscles": [
+      "forearms_flexors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b0bddd50-1f75-43eb-bca7-cd20a2ab21c2",
+    "exercise_db_id": "1412",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "b0bddd50-1f75-43eb-bca7-cd20a2ab21c2.jpg",
+    "video_path": "b0bddd50-1f75-43eb-bca7-cd20a2ab21c2.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:27.05011+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Handgelenkcurl über einer Bank",
+    "instructions": "Sitze auf einer Bank mit flachen Füßen und halte eine Langhantel mit Untergriff, die Handflächen zeigen nach oben.\nLege deine Unterarme auf der Bank auf, sodass deine Handgelenke über die Kante hängen.\nHalte deine Unterarme stationär, atme aus und beuge deine Handgelenke nach oben so weit wie möglich.\nHalte die angespannte Position für einen kurzen Moment, atme dann ein und senke die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Handgelenkcurl über einer Bank ist eine Isolationsübung, die die Unterarme trainiert, speziell die Handgelenksbeuger. Sie wird durchgeführt, indem man auf einer Bank sitzt, die Unterarme auf der Bank ablegt und die Handgelenke herunterhängen, und dann eine Langhantel nach oben curlt, indem man nur die Handgelenke verwendet.",
+    "primary_muscles": [
+      "forearms_flexors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "0f8e7a6f-0c55-4f21-ab76-e957778aa3b7",
+    "exercise_db_id": "1436",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0f8e7a6f-0c55-4f21-ab76-e957778aa3b7.jpg",
+    "video_path": "0f8e7a6f-0c55-4f21-ab76-e957778aa3b7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:46.710166+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Hochstab-Kniebeuge",
+    "instructions": "Stellen Sie sich mit schulterbreit auseinander stehenden Füßen auf, die Zehen leicht nach außen gedreht.\nPlatzieren Sie die Langhantel auf Ihrem oberen Rücken, aufgelegt auf Ihre Kapuzenmuskel-Muskeln.\nSpannen Sie Ihren Kern an und halten Sie Ihre Brust oben, während Sie in die Kniebeuge gehen und Ihre Hüften zurück schieben und Ihre Knie beugen.\nSenken Sie sich ab, bis Ihre Oberschenkel parallel zum Boden sind, oder so tief wie Sie bequem gehen können.\nDrücken Sie sich durch Ihre Fersen ab, um wieder aufzustehen und strecken Sie Ihre Hüften und Knie.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel-Hochstab-Kniebeuge ist eine zusammengesetzte Unterkörperübung, die hauptsächlich die Gesäßmuskulatur trainiert und erheblich die Quadrizepse, Beinbeuger, Waden und den Kern beansprucht. Sie erfordert das Platzieren einer Langhantel auf dem oberen Rücken (Kapuzenmuskel) und das Ausführen einer Knievbeugungsbewegung.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "quads_vastus_lateralis",
+      "quads_vastus_medialis",
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "8cb0e4b2-d997-4869-8134-401bca92c467",
+    "exercise_db_id": "0051",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8cb0e4b2-d997-4869-8134-401bca92c467.jpg",
+    "video_path": "8cb0e4b2-d997-4869-8134-401bca92c467.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:55.181629+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Jefferson-Kniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, Zehen leicht nach außen gedreht.\nHalte die Langhantel im Obergriff, ruhend auf der Vorderseite deines Körpers, knapp unter der Taille.\nTritt mit deinem linken Fuß nach vorne und deinem rechten Fuß nach hinten, halte deine Füße schulterbreit auseinander.\nBeuge deine Knie und senke deinen Körper in eine Kniebeugenposition, halte deinen Rücken gerade und deine Brust oben.\nDrücke durch deine Fersen, um in die Ausgangsposition zurück zu stehen.\nWiederhole die Bewegung und wechsle bei jeder Wiederholung deine Beinposition.",
+    "tips": "Die Langhantel-Jefferson-Kniebeuge ist eine zusammengesetzte Unterkörperübung, die Gesäßmuskeln, Quadrizeps, hintere Oberschenkel und Waden trainiert.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae",
+      "adductors",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "38e83744-9d2b-4cf0-a310-091fcdc52d38",
+    "exercise_db_id": "0052",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "38e83744-9d2b-4cf0-a310-091fcdc52d38.jpg",
+    "video_path": "38e83744-9d2b-4cf0-a310-091fcdc52d38.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:56.633442+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-JM-Bankdrücken",
+    "instructions": "Lege dich flach auf eine Bank mit den Füßen auf dem Boden und dem Rücken gegen die Bank gedrückt.\nFasse die Langhantel mit einem Obergriff, etwas breiter als schulterbreit.\nSenke die Langhantel zu deiner Brust ab und halte deine Ellbogen nah am Körper.\nDrücke die Langhantel zurück in die Ausgangsposition und strecke deine Arme vollständig aus.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-JM-Bankdrücken ist eine Trizeps-fokussierte Drückbewegung, die Elemente des engen Griffes beim Bankdrücken und einer Trizepsstreckung kombiniert. Die Übung wird liegend auf einer Bank ausgeführt, wobei die Langhantel mit eingezogenen Ellbogen zur Brust gesenkt wird.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c0a03b22-b9b4-4b55-b453-11524005f4a6",
+    "exercise_db_id": "1461",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c0a03b22-b9b4-4b55-b453-11524005f4a6.jpg",
+    "video_path": "c0a03b22-b9b4-4b55-b453-11524005f4a6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:35.242972+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Kniebeuge (tiefe Ausführung)",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, die Zehen zeigen leicht nach außen.\nHalte die Langhantel über deinem oberen Rücken, aufgelegt auf deinen Trapezmuskeln oder hinteren Schultermuskeln.\nSpanne deinen Rumpf an und halte deine Brust oben während du deinen Körper nach unten bewegst.\nBeuge deine Knie und Hüften, schiebe deine Hüften zurück und nach unten, als würdest du dich auf einen Stuhl setzen.\nSenke deinen Körper, bis deine Oberschenkel parallel zum Boden oder leicht darunter sind.\nHalte deine Knie in Linie mit deinen Zehen und dein Gewicht in deinen Fersen.\nDrücke dich durch deine Fersen nach oben, strecke deine Hüften und Knie.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel-Kniebeuge ist eine komplexe Unterkörperübung, die Gesäßmuskeln, Oberschenkelvorderseite, Oberschenkelrückseite, Waden und Rumpf trainiert. Sie erfordert Kraft, Balance und korrektes Technik-Verständnis.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae",
+      "adductors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "4e5e157d-2246-41a3-afc2-68e00e435d79",
+    "exercise_db_id": "0063",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4e5e157d-2246-41a3-afc2-68e00e435d79.jpg",
+    "video_path": "4e5e157d-2246-41a3-afc2-68e00e435d79.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:15.073854+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Kniebeuge mit enger Fußstellung",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen auf, Zehenspitzen zeigen leicht nach außen.\nLege die Langhantel auf deinem oberen Rücken ab, ruhend auf deinen Trapezmuskeln oder hinteren Deltamuskeln.\nSpanne deinen Bauch an und halte deine Brust aufgerichtet, während du deinen Körper langsam absenkst, indem du deine Knie beugst und deine Hüfte zurückschiebst.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden oder leicht darunter sind.\nMache eine kurze Pause und drücke dich dann über deine Fersen zurück in die Ausgangsposition.\nWiederhole die Bewegung.",
+    "tips": "Dies ist eine Unterkörper-Kraftübung, die die Gesäßmuskeln mit signifikanter Beteiligung der Oberschenkel, Kniesehnen und Waden trainiert. Sie wird mit enger Fußstellung ausgeführt und betont die Innenseiten der Oberschenkel und Gesäßmuskeln.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis",
+      "quads_vastus_medialis"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "back_erector_spinae",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "9e0d7057-b91b-4127-ae27-e60b99474f76",
+    "exercise_db_id": "2798",
+    "category": "plyometric",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9e0d7057-b91b-4127-ae27-e60b99474f76.jpg",
+    "video_path": "9e0d7057-b91b-4127-ae27-e60b99474f76.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:35.119954+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Kniebeuge Sprung Ausfallschritt rückwärts",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und halte die Langhantel über deinem oberen Rücken.\nSenke deinen Körper in eine Kniebeugenposition, indem du deine Knie beugst und deine Hüften nach hinten schiebst.\nSpringe explosiv nach oben, so hoch wie möglich.\nLande sanft auf deinen Füßen und trete sofort mit einem Bein rückwärts in einen Ausfallschritt.\nSenke deinen Körper ab, bis dein vorderer Oberschenkel parallel zum Boden ist, während du deinen Rücken gerade hältst.\nDrücke dich über deine vordere Ferse ab, um in die Ausgangsposition zurückzukehren.\nWiederhole die Sprung- und Ausfallschrittfolge auf dem anderen Bein.\nWechsle weiterhin die Beine für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Kniebeuge Sprung Ausfallschritt rückwärts ist eine dynamische Unterkörperübung, die Sprung und rückwärtigen Ausfallschritt kombiniert und mit der Langhantel über dem oberen Rücken ausgeführt wird. Diese Bewegung trainiert Quadrizeps, Gesäßmuskeln, Oberschenkelrückseiten und Waden. Sie erfordert Kraft, Koordination und Balance.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus",
+      "quads_vastus_lateralis"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius",
+      "back_erector_spinae",
+      "adductors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "9d5f8bc4-cb0a-4e06-9f2a-040b42fde63b",
+    "exercise_db_id": "0116",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9d5f8bc4-cb0a-4e06-9f2a-040b42fde63b.jpg",
+    "video_path": "9d5f8bc4-cb0a-4e06-9f2a-040b42fde63b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:02.951546+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Kreuzheben mit gestreckten Beinen",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, deine Zehen zeigen nach vorne.\nHalte die Langhantel mit Obergriff, die Hände sind leicht breiter als schulterbreit auseinander.\nBeuge dich in den Hüften und senke die Langhantel Richtung Boden, halte deinen Rücken gerade und deine Knie leicht gebeugt.\nSenke die Langhantel soweit ab, bis du eine Dehnung in deinen Oberschenkelrückseiten spürst.\nSpanne deine Oberschenkelrückseiten und dein Gesäß an und hebe die Langhantel zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Kreuzheben mit gestreckten Beinen ist eine Compound-Übung, die hauptsächlich die Oberschenkelrückseiten trainiert und sekundär das Gesäß und den unteren Rücken beansprucht. Ein gerader Rücken und die richtige Hüftbeugung sind wichtig, um die Muskelkette sicher zu dehnen und zu trainieren.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "hamstrings_semimembranosus"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "23f57a20-11e7-48f3-a49e-0185f74a3a3d",
+    "exercise_db_id": "0059",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "23f57a20-11e7-48f3-a49e-0185f74a3a3d.jpg",
+    "video_path": "23f57a20-11e7-48f3-a49e-0185f74a3a3d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:11.083518+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Liegender-Preacher-Curl",
+    "instructions": "Setze dich auf eine Preacher-Bank, deine Brust gegen das Polster, deine Arme gestreckt über die Kante, halte eine Langhantel mit Untergriff.\nHalte deine Oberarme stabil, atme aus und curle die Langhantel, während du deine Bizepse anspannst.\nHebe die Langhantel weiter an, bis deine Bizepse vollständig angespannt sind und die Langhantel auf Schulterhöhe ist.\nHalte die angespannte Position kurz und drücke deine Bizepse zusammen.\nAtme ein und senke die Langhantel langsam zur Ausgangsposition ab.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Liegender-Preacher-Curl ist eine Isolationsübung für den Bizeps auf einer Preacher-Bank, die die Schulterbelastung minimiert und die Bizeps-Aktivierung maximiert.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "846d579c-5ae4-4ab5-b1e5-b546014ca5b8",
+    "exercise_db_id": "0070",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "846d579c-5ae4-4ab5-b1e5-b546014ca5b8.jpg",
+    "video_path": "846d579c-5ae4-4ab5-b1e5-b546014ca5b8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:31.217025+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Prediger-Curl",
+    "instructions": "Setze dich auf eine Prediger-Bank mit deinen Oberarmen auf dem Polster und deiner Brust gegen die Stütze.\nFasse die Langhantel mit Untergriff, etwas breiter als schulterbreit auseinander.\nHalte deine Oberarme still, atme aus und curl die Langhantel nach oben zu deinen Schultern.\nMache eine kurze Pause oben und spanne deine Bizeps an.\nAtme ein und senke die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Langhantel-Prediger-Curl ist eine Isolationsübung, die den Bizeps trainiert, indem eine Prediger-Bank die Oberarme stabilisiert und die Bizeps-Aktivierung maximiert. Sie ist effektiv für den Aufbau von Bizeps-Kraft und -Größe.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "87740956-dfe8-4ea0-9d01-729ebf1515d5",
+    "exercise_db_id": "0073",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "87740956-dfe8-4ea0-9d01-729ebf1515d5.jpg",
+    "video_path": "87740956-dfe8-4ea0-9d01-729ebf1515d5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:35.413459+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Pullover",
+    "instructions": "Lege dich flach auf eine Bank, dein Kopf an einem Ende und deine Füße auf dem Boden.\nHalte eine Langhantel mit schulterbreitem Griff und strecke deine Arme gerade über deiner Brust aus.\nSenke die Langhantel mit gestreckten Armen in einer kontrollierten Bewegung über deinen Kopf ab, bis du eine Dehnung in deinem Latissimus spürst.\nMache eine kurze Pause und hebe die Langhantel dann zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Pullover ist eine Kraftübung, die den Breiter Rückenmuskel (Latissimus) trainiert und zusätzlich die Brust und Trizeps beansprucht. Die Bewegung führt die Langhantel in einem Bogen von über der Brust hinter den Kopf, wobei die Dehnung und Kontraktion der oberen Rumpfmuskulatur betont wird.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "triceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "4eb5de91-27af-4bc7-ae08-722e0c19af25",
+    "exercise_db_id": "1316",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4eb5de91-27af-4bc7-ae08-722e0c19af25.jpg",
+    "video_path": "4eb5de91-27af-4bc7-ae08-722e0c19af25.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:05.424502+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Pullover mit angewinkelten Armen",
+    "instructions": "Liege flach auf einer Bank mit deinem Kopf an einem Ende und deinen Füßen auf dem Boden.\nHalte eine Langhantel mit schulterbreitem Griff und strecke deine Arme gerade über deiner Brust aus.\nSenke die Langhantel hinter deinen Kopf ab, während deine Arme leicht angewinkelt bleiben.\nMache eine kurze Pause und hebe die Langhantel dann zurück in die Ausgangsposition.\nWiederhole die Bewegung.",
+    "tips": "Dies ist eine Compound-Übung, die die Latissimus trainiert, mit sekundärer Betonung auf den Trizeps und die Brust. Sie erfordert Kontrolle und Kraft.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "back_teres",
+      "triceps_long"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "a610218f-b943-4c90-bd82-b8f9c1b34a26",
+    "exercise_db_id": "0022",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "a610218f-b943-4c90-bd82-b8f9c1b34a26.jpg",
+    "video_path": "a610218f-b943-4c90-bd82-b8f9c1b34a26.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:36.903012+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Pullover zum Drücken",
+    "instructions": "Liege flach auf einer Bank mit deinem Kopf an einem Ende und deinen Füßen auf dem Boden.\nHalte die Langhantel mit Obergriff (Handflächen von dir weg) und strecke deine Arme gerade über deiner Brust aus.\nSenke die Langhantel mit gestreckten Armen in einem Bogen hinter deinen Kopf, bis du eine Dehnung in deinem Lat spürst.\nPause kurz, dann kehre die Bewegung um und drücke die Langhantel zurück in die Ausgangsposition über deiner Brust.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "chest_middle",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "back_teres"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b3f80883-39a6-4f2e-a6de-ac2ffd700073",
+    "exercise_db_id": "0074",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b3f80883-39a6-4f2e-a6de-ac2ffd700073.jpg",
+    "video_path": "b3f80883-39a6-4f2e-a6de-ac2ffd700073.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:38.302485+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Rack-Zug",
+    "instructions": "Stelle eine Langhantel auf einem Rack in Kniehöhe auf.\nStelle dich mit schulterbreit auseinander stehenden Füßen hin, die Zehen zeigen leicht nach außen.\nBeuge dich in den Hüften und Knien, um dich nach unten zu bewegen, und fasse die Langhantel mit einem Obergriff, die Hände schulterbreit auseinander.\nSpanne deinen Core an und hebe die Langhantel, indem du deine Hüften und Knie streckst, deine Schultern zurückziehst und deine Gesäßmuskeln oben anspannst.\nSenke die Langhantel zurück in die Ausgangsposition, indem du dich in den Hüften und Knien beugst.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Rack-Zug ist eine zusammengesetzte Kraftübung, die Gesäßmuskeln, Oberschenkelrückseite und unteren Rücken trainiert. Sie konzentriert sich auf Hüftstreckung und Aktivierung der hinteren Muskelkette.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "back_erector_spinae",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "back_traps_lower",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c328ad6a-fd7d-4b34-9071-a1e4aee44988",
+    "exercise_db_id": "0067",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c328ad6a-fd7d-4b34-9071-a1e4aee44988.jpg",
+    "video_path": "c328ad6a-fd7d-4b34-9071-a1e4aee44988.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:20.669123+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Reißen einarmig",
+    "instructions": "Stelle dich hüftbreit hin, die Zehenspitzen zeigen leicht nach außen.\nFasse die Langhantel mit Obergriff, die Hände etwas breiter als schulterbreit.\nBeuge deine Knie und senke deine Hüften in eine Kniebeugen-Position, halte den Rücken gerade und die Brust oben.\nStrecke deine Hüfte, Knie und Knöchel explosiv durch und treibe die Langhantel nach oben.\nWenn die Langhantel Brusthöhe erreicht, ziehe sie mit deinem Arm nach oben und halte sie nah am Körper.\nRotiere deinen Ellbogen unter die Langhantel und strecke deinen Arm vollständig über Kopf aus, fixiere deinen Ellbogen.\nSenke die Langhantel kontrolliert zurück zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, wechsele dann die Seite.",
+    "tips": "Das Langhantel-Reißen einarmig ist eine explosive Ganzkörperübung, die die Schultern trainiert und Trapezmuskeln, Unterarme und Rumpf beansprucht. Die Übung erfordert Koordination, Balance und Kraft, um sicher und effektiv ausgeführt zu werden.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "back_erector_spinae",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper",
+      "shoulders_front",
+      "hamstrings_biceps_femoris",
+      "back_lats"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "629f4877-807d-4704-8617-0160f2ed6e1a",
+    "exercise_db_id": "0080",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "629f4877-807d-4704-8617-0160f2ed6e1a.jpg",
+    "video_path": "629f4877-807d-4704-8617-0160f2ed6e1a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:48.033607+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Reverse-Curl",
+    "instructions": "Stelle dich aufrecht hin, Füße schulterbeit auseinander, und halte eine Langhantel mit Obergriff, Handflächen nach unten.\nHalte deine Oberarme stationary und curl die Langhantel nach oben, während du deine Bizeps anspannst.\nHebe die Langhantel weiter an, bis deine Bizeps vollständig kontrahiert sind und die Langhantel auf Schulterhöhe ist.\nHalte diese Position kurz und squeeze deine Bizeps.\nSenke die Langhantel langsam und kontrolliert in die Ausgangsposition zurück, während deine Oberarme stationary bleiben.\nWiederholt die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Langhantel-Reverse-Curl trainiert Bizeps und Unterarme, indem die Langhantel mit Obergriff gecurlt wird.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "e4af1a00-e4aa-4cd9-9798-92d46fa2b41d",
+    "exercise_db_id": "1256",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "e4af1a00-e4aa-4cd9-9798-92d46fa2b41d.jpg",
+    "video_path": "e4af1a00-e4aa-4cd9-9798-92d46fa2b41d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:51.031869+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Reverse-Grip-Decline-Bankdrücken",
+    "instructions": "Lege dich auf eine Negative-Bank mit gesicherten Füßen, dein Kopf tiefer als die Hüften.\nFasse die Langhantel mit Reverse-Griff (Untergriff), etwas breiter als schulterbreit.\nNimm die Langhantel ab und senke sie langsam zur Brust, die Ellbogen eingezogen.\nMache eine kurze Pause unten an, dann drücke die Langhantel zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "chest_lower",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "4a319d4e-a5f6-4486-893a-f164fbcab9a6",
+    "exercise_db_id": "0081",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4a319d4e-a5f6-4486-893a-f164fbcab9a6.jpg",
+    "video_path": "4a319d4e-a5f6-4486-893a-f164fbcab9a6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:56.554239+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Reverse-Preacher-Curl",
+    "instructions": "Sitze auf einer Preacher-Bank mit deiner Brust gegen das Polster und deinen Armen gerade nach unten gestreckt, halte eine Langhantel mit Oberhandgriff.\nHalte deine Oberarme ruhig, atme aus und curle die Langhantel nach oben, während du deine Bizeps anspannst.\nHebe die Langhantel weiter an, bis deine Bizeps vollständig kontrahiert sind und die Langhantel auf Schulterhöhe ist.\nHalte die kontrahierte Position kurz, während du deine Bizeps anspannst.\nAtme ein und senke die Langhantel langsam zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "ecf14f54-efa8-4d09-a159-2f4d52c37a46",
+    "exercise_db_id": "0082",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "ecf14f54-efa8-4d09-a159-2f4d52c37a46.jpg",
+    "video_path": "ecf14f54-efa8-4d09-a159-2f4d52c37a46.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:57.929611+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Reverse-Wristcurl",
+    "instructions": "Setze dich auf eine Bank, stelle deine Füße flach auf den Boden und halte eine Langhantel mit Obergriff, Handflächen nach unten.\nLege deine Unterarme auf deinen Oberschenkeln ab und lasse deine Handgelenke über der Kante hängen.\nRolle deine Handgelenke langsam nach oben und führe die Langhantel in Richtung deines Körpers.\nPausiere kurz in der oberen Position und senke die Langhantel kontrolliert in die Ausgangsposition zurück.\nWiederhol die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Reverse-Wristcurl ist eine Isolationsübung für die Unterarme, speziell die Handgelenkstrecker. Sie wird im Sitzen mit Unterarmen auf den Oberschenkeln und Obergriff ausgeführt.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "ab87858f-59aa-4aea-98b3-a422f919745c",
+    "exercise_db_id": "0118",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ab87858f-59aa-4aea-98b3-a422f919745c.jpg",
+    "video_path": "ab87858f-59aa-4aea-98b3-a422f919745c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:49.46214+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Rudern (Untergriff)",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und beuge deine Knie leicht.\nHalte eine Langhantel mit Untergriff, Handflächen nach unten, die Hände etwas breiter als schulterbreit auseinander.\nBeuge dich nach vorne in der Hüfte, halte deinen Rücken gerade und deine Brust oben, bis dein Oberkörper fast parallel zum Boden ist.\nZiehe die Langhantel zu deiner unteren Brust, indem du deine Schulterblätter zusammendrückst.\nHalte einen Moment in der oberen Position, senke die Langhantel dann langsam zurück zur Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Rudern mit Untergriff ist eine Komplexübung, die den oberen Rücken trainiert, mit sekundärer Betonung auf Bizeps und Unterarmen. Es erfordert gute Ausführung und Rumpfstabilität.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "c0c6ae8d-5691-478c-b231-bd9d1d1e9051",
+    "exercise_db_id": "1317",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c0c6ae8d-5691-478c-b231-bd9d1d1e9051.jpg",
+    "video_path": "c0c6ae8d-5691-478c-b231-bd9d1d1e9051.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:53.790002+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Rudern auf Schrägbank (Untergriff)",
+    "instructions": "Stelle die Schrägbank auf etwa 45 Grad ein.\nSetze dich auf die Bank und lehne deine Brust gegen die Rückenlehne.\nGreife die Langhantel mit Untergriff (Handflächen nach unten) etwas breiter als schulterbreit.\nHalte deinen Rücken gerade und spanne deinen Core an.\nZiehe die Langhantel zu deinem oberen Bauch, während du deine Schulterblätter zusammendrückst.\nHalte kurz oben an.\nSenke die Langhantel langsam wieder in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert den oberen Rücken intensiv und beansprucht zusätzlich die Bizepse und Unterarme. Achte auf eine stabile, aufrechte Körperhaltung und konzentriere dich darauf, das Gewicht zum oberen Bauch zu ziehen.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "b1d99eea-3f62-4cdb-9bd1-8b58f931fd38",
+    "exercise_db_id": "0076",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b1d99eea-3f62-4cdb-9bd1-8b58f931fd38.jpg",
+    "video_path": "b1d99eea-3f62-4cdb-9bd1-8b58f931fd38.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:41.13076+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Rudern für hintere Deltamuskeln",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und leicht gebeugten Knien.\nHalte eine Langhantel mit Oberhand-Griff, deine Hände etwas breiter als schulterbreit auseinander.\nBeuge dich nach vorne in der Hüfte, halte deinen Rücken gerade und deine Brust oben.\nZiehe die Langhantel zu deiner Brust, drücke deine Schulterblätter zusammen.\nMache eine kurze Pause oben, dann senke die Langhantel langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Compound-Übung zielt auf die hinteren Deltamuskeln ab, mit sekundärer Betonung auf Kapuzenmuskel, Rhomboiden und Bizeps, indem eine Langhantel zur Brust gezogen wird und die Schulterblätter zusammengedrückt werden.",
+    "primary_muscles": [
+      "shoulders_rear",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "biceps_long",
+      "back_lats"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "6d10e0b9-0bdd-4e1e-9bba-72123430077a",
+    "exercise_db_id": "0027",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6d10e0b9-0bdd-4e1e-9bba-72123430077a.jpg",
+    "video_path": "6d10e0b9-0bdd-4e1e-9bba-72123430077a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:06.833056+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Rudern gebeugt",
+    "instructions": "Stehen Sie mit schulterbreiten Füßen und leicht gebeugten Knien.\nBeugen Sie sich nach vorne an den Hüften, während Sie Ihren Rücken gerade und die Brust oben halten.\nGreifen Sie die Langhantel mit Obergriff, die Hände etwas breiter als schulterbreit auseinander.\nZiehen Sie die Langhantel zu Ihrer unteren Brust, indem Sie Ihre Schulterblätter zurückziehen und Ihre Rückenmuskeln anspannen.\nMachen Sie eine kurze Pause oben, dann senken Sie die Langhantel langsam in die Ausgangsposition zurück.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "636cd835-1e1a-4e5e-8a1a-d99f674c3095",
+    "exercise_db_id": "0574",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "636cd835-1e1a-4e5e-8a1a-d99f674c3095.jpg",
+    "video_path": "636cd835-1e1a-4e5e-8a1a-d99f674c3095.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:52.2904+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Rudern vorgebeugt",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin und beuge deine Knie leicht.\nFasse die Langhantel mit Übergriff und deine Hände leicht breiter als schulterbreit auseinander.\nBeuge dich nach vorne in den Hüften, halte deinen Rücken gerade und deine Brust oben.\nZiehe die Langhantel zu deiner unteren Brust und drücke deine Schulterblätter zusammen.\nHalte oben kurz an und senke die Langhantel dann langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Rudern vorgebeugt ist eine zusammengesetzte Kraftübung, die den oberen Rücken trainiert. Die Übung erfordert gute Haltung, Rumpfstabilität und korrekte Ausführung, um Verletzungen zu vermeiden.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "248b27ca-533a-482c-ab9e-1e21ef31562a",
+    "exercise_db_id": "0057",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "248b27ca-533a-482c-ab9e-1e21ef31562a.jpg",
+    "video_path": "248b27ca-533a-482c-ab9e-1e21ef31562a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:08.181337+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Schädeldrucker",
+    "instructions": "Liege flach auf einer Bank mit Füßen auf dem Boden und Kopf am Ende der Bank.\nHalte die Langhantel mit Obergriff, Hände schulterbreit auseinander, und strecke deine Arme senkrecht über die Brust.\nSenke die Langhantel bei gestreckten Oberarmen langsam zur Stirn, indem du deine Ellbogen beugst.\nHalte die Position kurz an, strecke deine Arme dann zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Langhantel-Schädeldrucker ist eine Kraftübung für den Trizeps. Die Bewegung senkt eine Langhantel zur Stirn, indem die Ellbogen gebeugt werden, und streckt die Arme dann wieder.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "cd77ae53-6a7e-4f29-bd95-e5a2a72d6ce6",
+    "exercise_db_id": "0101",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "cd77ae53-6a7e-4f29-bd95-e5a2a72d6ce6.jpg",
+    "video_path": "cd77ae53-6a7e-4f29-bd95-e5a2a72d6ce6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:30.451166+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Schnellkniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen hin, die Zehen leicht nach außen gedreht.\nLege die Langhantel auf deinen oberen Rücken, sie ruht auf deinen Trapezmuskeln oder hinteren Deltamuskeln.\nSpanne deine Körpermitte an und halte deine Brust oben, während du deine Hüfte nach hinten und unten bewegst, als würdest du dich auf einen Stuhl setzen.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden sind, oder so tief, wie du dich wohlfühlst.\nDrücke dich über deine Fersen nach oben, und spanne deine Gesäßmuskeln oben zusammen.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Langhantel-Schnellkniebeuge ist eine dynamische Variation der traditionellen Kniebeuge mit Fokus auf explosive, schnelle Bewegungen. Diese Übung beansprucht primär die Gesäßmuskeln, mit großer Beteiligung von Quadrizeps, Beinbeuger und Waden. Sie erfordert gute Technik, Balance und Kraft für sicheres Trainieren, besonders mit zusätzlichem Gewicht.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae",
+      "adductors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "25877f97-05a2-4443-b794-7a17ccd1d6fc",
+    "exercise_db_id": "0047",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "25877f97-05a2-4443-b794-7a17ccd1d6fc.jpg",
+    "video_path": "25877f97-05a2-4443-b794-7a17ccd1d6fc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:48.297829+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Langhantel-Schrägbankdrücken",
+    "instructions": "Stelle die Schrägbank auf einen Winkel von etwa 45 Grad ein.\nLege dich auf die Bank und stelle deine Füße flach auf den Boden.\nFasse die Langhantel mit Obergriff, etwas breiter als Schulterbereite.\nNimm die Langhantel aus der Ablage und senke sie kontrolliert in Richtung Brust ab, wobei deine Ellbogen in einem Winkel von etwa 45 Grad bleiben.\nMache eine kurze Pause unten, drücke dann die Langhantel wieder in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Langhantel-Schrägbankdrücken ist eine zusammengesetzte Übung für den Oberkörper, die den oberen Teil der Brustmuskulatur trainiert. Sekundär werden Schultern und Trizeps beansprucht. Mit der Langhantel ausgeführt, ist diese Übung ein Klassiker im Krafttraining zur Entwicklung von Brustvolumen und Kraft.",
+    "primary_muscles": [
+      "chest_upper",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  }
+]

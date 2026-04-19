@@ -106,7 +106,7 @@ private struct MuscleTag: View {
             totalSets: 12,
             totalFrequency: 4,
             relativeIntensity: 1.0,
-            heatLevel: .veryHigh,
+            heatLevel: .high,
             lastTrainedDate: Date(),
             contributingMuscles: []
         ),

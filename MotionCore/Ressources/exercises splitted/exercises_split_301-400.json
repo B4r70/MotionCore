@@ -1,0 +1,2790 @@
+[
+  {
+    "id": "37b83235-8e0c-44bb-b374-081f73a9a139",
+    "exercise_db_id": "0497",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "37b83235-8e0c-44bb-b374-081f73a9a139.jpg",
+    "video_path": "37b83235-8e0c-44bb-b374-081f73a9a139.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:05.058319+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Invertiertes Rudern",
+    "instructions": "Stelle eine Stange in Hüfthöhe an einer Smith-Maschine ein oder verwende einen Schlingentrainer.\nStelle dich mit Blick zur Stange oder zum Schlingentrainer auf und greife mit Überhandgriff zu, Hände schulterbreit auseinander.\nGehe mit den Füßen nach vorne und lehne dich zurück, bis dein Körper einen leichten Winkel bildet.\nHalte deinen Körper gerade und ziehe deine Brust zur Stange oder zu den Griffen, indem du deine Schulterblätter zusammendrückst.\nMache eine kurze Pause oben, senke dich dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das invertierte Rudern ist eine Körpergewichtsübung, die den oberen Rücken trainiert. Die Brust wird zur Stange oder zum Schlingentrainer gezogen, während der Körper gerade bleibt. Die Übung beansprucht auch Bizeps und Unterarme.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "14774101-7566-48a7-9546-da5e3fc9a154",
+    "exercise_db_id": "0499",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "14774101-7566-48a7-9546-da5e3fc9a154.jpg",
+    "video_path": "14774101-7566-48a7-9546-da5e3fc9a154.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:00.507281+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Invertiertes Rudern",
+    "instructions": "Stelle eine Stange auf Hüfthöhe auf oder nutze einen Schlingentrainer.\nStelle dich zur Stange oder zum Schlingentrainer hin, mit hüftbreit auseinander stehenden Füßen.\nGriffe die Stange oder die Griffe mit Obergriff, etwas breiter als schulterweit auseinander.\nLehn dich zurück, halte deinen Körper gerade und deine Fersen auf dem Boden.\nZiehe deine Brust zur Stange oder zu den Griffen, wobei du deine Schulterblätter zusammen drückst.\nHalte einen Moment inne, dann senke dich langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "bc5fac36-3f23-4d12-8878-19b7f73f767a",
+    "exercise_db_id": "1419",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "bc5fac36-3f23-4d12-8878-19b7f73f767a.jpg",
+    "video_path": "bc5fac36-3f23-4d12-8878-19b7f73f767a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:08.062486+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Iron-Cross-Dehnung",
+    "instructions": "Liege flach auf deinem Rücken mit ausgestreckten Armen zu den Seiten.\nHebe deine Beine zur Decke, halte sie gerade.\nSenke deine Beine langsam zu einer Seite ab und versuche mit deinen Füßen den Boden zu berühren.\nHalte die Dehnung einige Sekunden, kehre dann zur Ausgangsposition zurück.\nWiederhole die Dehnung auf der anderen Seite.\nWechsle abwechselnd die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine dynamische Bewegung, die die Gesäßmuskeln trainiert und auch Oberschenkelrückseite und Oberschenkelvorderseite dehnt. Sie fördert Flexibilität und Mobilität in Hüften und unterem Rücken.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "380051d3-1da5-41f7-9158-6e6bc53136da",
+    "exercise_db_id": "0500",
+    "category": "strength",
+    "force_type": "static",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "380051d3-1da5-41f7-9158-6e6bc53136da.jpg",
+    "video_path": "380051d3-1da5-41f7-9158-6e6bc53136da.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:10.813284+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Isometrische Scheibenwischer",
+    "instructions": "Lege dich flach auf den Rücken auf eine Matte oder Bank.\nStrecke deine Arme seitlich aus, senkrecht zu deinem Körper.\nSpanne deinen Core an und hebe beide Beine vom Boden ab, halte sie zusammen und gestreckt.\nSenke deine Beine langsam zur einen Seite, versuche deine Füße am Boden zu berühren und behalte die Kontrolle.\nMache eine kurze Pause, dann hebe deine Beine mit Hilfe deines Cores zurück in die Ausgangsposition.\nWiederhole die Bewegung zur anderen Seite.\nWechsle abwechselnd die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_obliques",
+      "abs_transverse"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "17ab1872-9196-4296-8c26-0560da6ac469",
+    "exercise_db_id": "1297",
+    "category": "strength",
+    "force_type": "static",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "17ab1872-9196-4296-8c26-0560da6ac469.jpg",
+    "video_path": "17ab1872-9196-4296-8c26-0560da6ac469.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:09.401138+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Isometrisches Brustpressen",
+    "instructions": "Stelle dich mit hüftbreit auseinanderstehenden Füßen auf, die Knie leicht gebeugt.\nStrecke deine Arme gerade nach vorne aus, parallel zum Boden, die Handflächen zueinander.\nDrücke deine Brustmuskulatur so fest wie möglich zusammen, während deine Arme gerade bleiben.\nHalte diese Position für einige Sekunden und konzentriere dich auf die Anspannung deiner Brustmuskulatur.\nLasse die Spannung los und entspanne deine Brust.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Isometrische Übung mit Körpergewicht, die die Brustmuskulatur durch statische Kontraktion und Spannungshaltung aktiviert.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "c70a37ac-5e88-4bb5-a60f-ebe37cb0f8a3",
+    "exercise_db_id": "0501",
+    "category": "cardio",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c70a37ac-5e88-4bb5-a60f-ebe37cb0f8a3.jpg",
+    "video_path": "c70a37ac-5e88-4bb5-a60f-ebe37cb0f8a3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:12.162612+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Jack Burpee",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen aufrecht hin.\nSenke deinen Körper in eine Kniebeuge ab und platziere deine Hände auf dem Boden vor dir.\nKicke deine Füße zurück und lande in einer Liegestützposition.\nFühre einen Liegestütz durch, senke deine Brust zum Boden und drücke dich dann wieder hoch.\nSpringe mit deinen Füßen nach vorne und lande in einer Kniebeuge.\nSpringe explosiv nach oben und strecke deine Arme über deinen Kopf.\nLande sanft und senke dich sofort zurück in die Kniebeuge, um die nächste Wiederholung zu beginnen.",
+    "tips": null,
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front",
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "3e4ff6ff-95df-4ab8-87fc-34e7724db304",
+    "exercise_db_id": "0507",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "3e4ff6ff-95df-4ab8-87fc-34e7724db304.jpg",
+    "video_path": "3e4ff6ff-95df-4ab8-87fc-34e7724db304.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:15.130332+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Jackknife Sit-up",
+    "instructions": "Lege dich flach auf den Rücken mit ausgestreckten Beinen und den Armen über dem Kopf.\nSpanne deinen Core an und hebe gleichzeitig deine Beine und deinen Oberkörper, während du deine Hände zu deinen Zehen führst.\nHalte die Position kurz oben, dann senke deine Beine und deinen Oberkörper langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Jackknife Sit-up ist eine Körpergewichtsübung, die die Bauchmuskulatur trainiert. Die Beine und der Oberkörper werden gleichzeitig gehoben, um sich in der Mitte zu treffen, wodurch der Core und die Hüftbeuger beansprucht werden.",
+    "primary_muscles": [
+      "abs_lower",
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "3dc39f97-8e74-4506-8235-e43c82ac9eaa",
+    "exercise_db_id": "0508",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "3dc39f97-8e74-4506-8235-e43c82ac9eaa.jpg",
+    "video_path": "3dc39f97-8e74-4506-8235-e43c82ac9eaa.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:16.428274+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Janda Sit-up",
+    "instructions": "Lege dich flach auf den Rücken, beuge deine Knie und stelle deine Füße flach auf den Boden.\nPlatziere deine Hände hinter deinem Kopf mit den Ellbogen nach außen.\nSpanne deine Bauchmuskeln an und hebe deinen Oberkörper langsam vom Boden ab, indem du nach vorne rollst, bis dein Oberkörper in einem 45-Grad-Winkel ist.\nMache eine kurze Pause oben, senke dann deinen Oberkörper langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Janda Sit-up ist eine fortgeschrittene Bauchmuskelübung, die die Bauchmuskeln betont und die Beteiligung der Hüftbeuger minimiert. Sie erfordert beträchtliche Rumpfkraft und richtige Technik für sichere und effektive Ausführung.",
+    "primary_muscles": [
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "eda60c4b-c4e8-4261-bb41-42b770ee47fa",
+    "exercise_db_id": "1264",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "eda60c4b-c4e8-4261-bb41-42b770ee47fa.jpg",
+    "video_path": "eda60c4b-c4e8-4261-bb41-42b770ee47fa.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:21.973928+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabel-Flye einarmig auf Gymnastikball",
+    "instructions": "Setze dich auf einen Gymnastikball, deine Füße flach auf dem Boden, und lehne deinen Rücken gegen eine Schrägbank.\nHalte einen Kabelgriff in einer Hand mit gestrecktem Arm und Handfläche nach innen.\nHalte einen leichten Beuger im Ellbogen und führe deinen Arm langsam zur Seite, bis deine Hand auf Schulterhöhe ist.\nPausiere kurz, dann spanne deine Brustmuskulatur an und führe deinen Arm zurück in die Ausgangsposition.\nWiederhol die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsle den Arm.",
+    "tips": "Die Kabel-Flye einarmig auf Gymnastikball ist eine Brustübung am Kabelzug mit Gymnastikball, die die Brustmuskeln trainiert und gleichzeitig Deltamuskeln und Trizeps einbezieht. Die Übung erfordert Gleichgewicht und Koordination durch die instabile Oberfläche des Balls und die einseitige Bewegung.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "37abaf31-7edd-457b-9daa-2f2480975f11",
+    "exercise_db_id": "2464",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "37abaf31-7edd-457b-9daa-2f2480975f11.jpg",
+    "video_path": "37abaf31-7edd-457b-9daa-2f2480975f11.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:22.918593+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabel-Kajak-Rudern",
+    "instructions": "Befestige einen Kabelgriff an einer unteren Rolle und sitze dem Gerät zugewandt mit flachen Füßen auf dem Boden.\nGriffe den Griff mit deiner rechten Hand und strecke deinen Arm vollständig, wobei du eine leichte Beugung im Ellbogen beibehältst.\nBeuge dich von der Hüfte nach vorne, halte deinen Rücken gerade und spanne deine Bauchmuskulatur an.\nZiehe den Griff zu deinem Oberkörper, indem du dein Schulterblatt zurückziehst und deinen Ellbogen beugst, während du deinen Arm nah an deinem Körper hältst.\nSpanne deine Rückenmuskulatur in der oberen Position an und kehre dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "abs_obliques"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "37982f9a-be1d-4b1a-be62-690eecf9821d",
+    "exercise_db_id": "0861",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "37982f9a-be1d-4b1a-be62-690eecf9821d.jpg",
+    "video_path": "37982f9a-be1d-4b1a-be62-690eecf9821d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:37.502919+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabel-Rudern sitzend",
+    "instructions": "Sitze am Kabel-Rudergerät mit flachen Füßen auf den Fußstützen und leicht gebeugten Knien.\nGriffe die Griffe mit Überhand-Griff, halte deinen Rücken gerade und deine Schultern entspannt.\nZiehe die Griffe zu deinem Körper, indem du deine Schulterblätter zusammendrückst.\nHalte kurz inne, wenn dein Körper die höchste Position erreicht, dann löse die Griffe langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "c6d91738-bfba-489a-9400-f2a3fe45d40f",
+    "exercise_db_id": "0169",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c6d91738-bfba-489a-9400-f2a3fe45d40f.jpg",
+    "video_path": "c6d91738-bfba-489a-9400-f2a3fe45d40f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:44.057495+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabel-Schrägbankdrücken",
+    "instructions": "Stelle die Bank auf eine Neigung von 45 Grad ein.\nBefestige die Kabelgriffe an den oberen Umlenkrollen.\nSitze auf der Bank mit Blick auf die Kabelmaschine, deine Füße stehen flach auf dem Boden.\nFasse die Griffe mit Obergriff und bringe sie auf Schulterhöhe.\nDrücke die Griffe nach vorne und oben, bis deine Arme vollständig gestreckt sind.\nMache eine kurze Pause und senke die Griffe dann langsam zurück in die Ausgangsposition.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "triceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "20511ff0-9951-4739-8bb6-76b82e6495f5",
+    "exercise_db_id": "0173",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "20511ff0-9951-4739-8bb6-76b82e6495f5.jpg",
+    "video_path": "20511ff0-9951-4739-8bb6-76b82e6495f5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:51.229749+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabel-Trizeps-Streckung im Schrägwinkel",
+    "instructions": "Stelle die Kabelmaschine auf niedrige Rolle ein.\nBefestige eine gerade Stange am Kabel.\nStelle dich mit dem Rücken zur Maschine hin, Füße hüftbreit auseinander.\nGreife die Stange mit Obergriff und strecke deine Arme gerade über deinen Kopf.\nLehne dich leicht nach vorne, halte deinen Rücken gerade und deinen Rumpf angespannt.\nBeuge deine Ellbogen und senke die Stange hinter deinen Kopf, halte deine Oberarme nah bei deinen Ohren.\nMache eine kurze Pause, strecke deine Arme dann zurück zur Ausgangsposition.\nWiederhohle dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Isolationsübung konzentriert sich vollständig auf den Trizeps mit optimaler Spannung.",
+    "primary_muscles": [
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "1f978831-930a-4ca4-8448-1c7f9977fe52",
+    "exercise_db_id": "0170",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1f978831-930a-4ca4-8448-1c7f9977fe52.jpg",
+    "video_path": "1f978831-930a-4ca4-8448-1c7f9977fe52.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:48.361495+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelflys auf dem Sitzball im Schrägwinkel",
+    "instructions": "Positioniere einen Sitzball in einer Schrägwinkel-Position.\nBefestige die Kabelgriffe an den hohen Rollen einer Kabelmaschine.\nSitze auf dem Sitzball mit Blickrichtung weg von der Maschine, deine Füße sind fest am Boden.\nGreife die Kabelgriffe mit Obergriff an, Handflächen nach vorne.\nLehne dich leicht nach vorne, halte deinen Rücken gerade und deinen Rumpf angespannt.\nBringe deine Arme kontrolliert zur Seite, halte eine leichte Beugung in den Ellbogen.\nFortsetzen bis deine Arme parallel zum Boden sind.\nMache eine kurze Pause, senke dann langsam zur Ausgangsposition zurück.\nWiederhohle dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Isolationsübung trainiert die Brustmuskulatur mit Unterstützung des Sitzballes, der zusätzliche Stabilisierungsanforderungen schafft.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "b288206e-6d2b-47a1-87ae-c0bf362c65b6",
+    "exercise_db_id": "1319",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b288206e-6d2b-47a1-87ae-c0bf362c65b6.jpg",
+    "video_path": "b288206e-6d2b-47a1-87ae-c0bf362c65b6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:41.512453+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelrudern mit Handgelenkrotation",
+    "instructions": "Befestige einen Griff am Kabelzug auf Taillenhöhe.\nStelle dich mit schulterbreiten Füßen zum Gerät gewandt hin.\nGriffe den Griff mit Obergriff, Handflächen nach unten.\nTritt zurück, um Spannung im Kabel zu erzeugen, während du deinen Rücken gerade hältst und deine Knie leicht beugst.\nZiehe den Griff zu deinem Körper, während du deine Handflächen nach oben rotierst.\nPressiere deine Schulterblätter am Ende der Bewegung zusammen.\nLasse den Griff langsam zurück in die Ausgangsposition gleiten.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelrudern mit Handgelenkrotation ist eine kabelgestützte Übung, die den oberen Rücken zielt und zusätzlich Bizeps und Unterarme beansprucht. Die Übung verbessert die Rückenkraft und Griffstärke.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "9fd005e9-2820-47e4-a83f-bcce1c6edb27",
+    "exercise_db_id": "0234",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "9fd005e9-2820-47e4-a83f-bcce1c6edb27.jpg",
+    "video_path": "9fd005e9-2820-47e4-a83f-bcce1c6edb27.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:11.929922+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelrudern stehend (V-Griff)",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen vor das Kabelgerät.\nFasse den V-Griff mit Oberhandgriff an, Handflächen nach unten.\nHalte deinen Rücken gerade und deinen Core angespannt.\nZiehe den V-Griff zu deinem Körper, indem du deine Schulterblätter zusammenziehst.\nMache eine kurze Pause beim Höhepunkt der Bewegung, gebe dann langsam die Spannung ab und kehre in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelrudern stehend mit V-Griff ist eine zusammengesetzte Übung, die den oberen Rücken mit einem Kabelgerät und V-Griff trainiert. Sie beansprucht auch Bizeps und Schultern als sekundäre Muskulatur. Die Bewegung erfordert gute Körperhaltung und Core-Engagement für sichere und effektive Ausführung.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "29c2a341-b28e-453a-a7f0-4592d207b8c3",
+    "exercise_db_id": "0238",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "29c2a341-b28e-453a-a7f0-4592d207b8c3.jpg",
+    "video_path": "29c2a341-b28e-453a-a7f0-4592d207b8c3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:17.427161+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Armstrecken",
+    "instructions": "Befestige eine gerade Stange am oberen Seilzug einer Kabelzugmaschine.\nStelle dich mit schulterbreit auseinanderstehenden Füßen vor das Gerät.\nGriffe die Stange mit einem Übergriff, halte deine Arme gestreckt und deine Handflächen zeigen nach unten.\nSpanne deine Breitmuskeln an und ziehe die Stange nach unten in Richtung deiner Oberschenkel, wobei deine Arme während der gesamten Bewegung gestreckt bleiben.\nHalte kurz inne, dann führe die Stange langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die gerade Stange maximiert die Latissimus-Aktivierung und minimiert die Bizeps-Beteiligung bei dieser Isolationsübung.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "back_teres",
+      "triceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7fda1541-9855-4dcf-8d07-77cdde12295a",
+    "exercise_db_id": "0151",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7fda1541-9855-4dcf-8d07-77cdde12295a.jpg",
+    "video_path": "7fda1541-9855-4dcf-8d07-77cdde12295a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:12.496719+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Bankdrücken",
+    "instructions": "Stelle das Kabelgerät auf Brusthöhe ein und befestige die Griffe.\nStelle dich dem Gerät abgewandt hin mit schulterbreit auseinander stehenden Füßen.\nFasse die Griffe mit Obergriff und trete nach vorne, um Spannung in den Kabeln zu erzeugen.\nPositioniere deine Füße fest auf dem Boden und spanne deinen Rumpf an.\nBeuge deine Ellbogen und bringe deine Hände auf Schulterhöhe, halte deine Ellbogen in einem 90-Grad-Winkel.\nDrücke die Griffe nach vorne, strecke deine Arme vollständig vor dir aus.\nMache eine kurze Pause und bringe deine Hände dann langsam zurück auf Schulterhöhe.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_medial",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "69c77638-f22a-4ca3-a704-2c546c81185b",
+    "exercise_db_id": "2144",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "69c77638-f22a-4ca3-a704-2c546c81185b.jpg",
+    "video_path": "69c77638-f22a-4ca3-a704-2c546c81185b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:26.427666+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Brustdrücken sitzend",
+    "instructions": "Stelle die Sitzhöhe und die Kabelgriffe auf eine bequeme Position ein.\nSetze dich auf die Bank mit geradem Rücken und flachen Füßen auf dem Boden.\nGreife die Kabelgriffe mit Obergriff auf Schulterhöhe.\nDrücke die Griffe nach vorne weg von deinem Körper, strecke deine Arme vollständig aus.\nMache eine kurze Pause und bringe die Griffe dann langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das sitzende Kabelzug Brustdrücken trainiert hauptsächlich die Brustmuskeln. Schultern und Trizeps werden als Nebenmuskulatur beansprucht.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_medial",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "5c5f2516-3032-4a56-b5ff-555c7b45e43c",
+    "exercise_db_id": "0155",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5c5f2516-3032-4a56-b5ff-555c7b45e43c.jpg",
+    "video_path": "5c5f2516-3032-4a56-b5ff-555c7b45e43c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:20.953087+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Crossover",
+    "instructions": "Stelle die Kabelrollen auf Brusthöhe ein.\nStelle dich in die Mitte der Kabelmaschine, ein Fuß vor dem anderen.\nFasse die Griffe mit den Handflächen nach unten und deine Arme ausgestreckt zur Seite.\nMache einen Schritt nach vorne und halte deine Arme leicht gebeugt.\nBringe deine Hände mit leicht gebeugten Ellbogen vor deiner Brust zusammen.\nMache eine kurze Pause, dann bringe deine Arme langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Brustübung am Kabelzug, die vor allem die Brustmuskulatur trainiert und zusätzlich Schultern und Trizeps aktiviert.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "2715b287-042c-415f-8f75-ae29fc8511d6",
+    "exercise_db_id": "0874",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2715b287-042c-415f-8f75-ae29fc8511d6.jpg",
+    "video_path": "2715b287-042c-415f-8f75-ae29fc8511d6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:58.201901+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Crunch stehend (mit Seil)",
+    "instructions": "Befestige ein Seil an einem Kabelzuggerät auf Brusthöhe.\nStehe mit dem Rücken zum Gerät, die Füße schulterbreit auseinander.\nHalte das Seil mit beiden Händen und bringe es hinter deinen Kopf, die Ellbogen gebeugt.\nSpanne deine Bauchmuskeln an und beuge deinen Oberkörper langsam nach vorne, indem du deine Ellbogen zu deinen Knien bringst.\nMache eine kurze Pause oben bei der Crunch-Bewegung, dann kehre langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Crunch stehend ist eine Bauchübung mit Kabelzuggerät und Seil-Aufsatz. Sie trainiert die geraden Bauchmuskeln und engagiert auch die schrägen Bauchmuskeln. Die Bewegung beugt den Oberkörper gegen Widerstand und bietet ein anspruchsvolles Core-Training.",
+    "primary_muscles": [
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "6534ca03-b5ae-40a8-b5cf-6f9421e79199",
+    "exercise_db_id": "0195",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6534ca03-b5ae-40a8-b5cf-6f9421e79199.jpg",
+    "video_path": "6534ca03-b5ae-40a8-b5cf-6f9421e79199.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:42.969814+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Curl auf der Preacher Bank",
+    "instructions": "Stelle die Kabelmaschine so ein, dass die Preacher Bank auf Brusthöhe ist.\nSetze dich auf die Preacher Bank und platziere deine Oberarme auf der Auflage, halte die Kabelanlage mit einem Untergriff.\nHalte deinen Rücken gerade und deine Ellbogen dicht an deinen Seiten.\nBringe die Kabelanlage langsam zu deinen Schultern, indem du deine Bizepse an der obersten Bewegungsposition zusammenpresst.\nHalte einen Moment inne, dann senke die Kabelanlage langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Curl auf der Preacher Bank ist eine Isolationsübung zum Trainieren der Bizepse mit einer Kabelmaschine und Preacher Bank. Sie betont eine strikte Ausführung und konstante Spannung auf dem Bizeps während der gesamten Bewegung.",
+    "primary_muscles": [
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7a9b0d26-3f13-465d-b518-2e46b5eae8cd",
+    "exercise_db_id": "1645",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7a9b0d26-3f13-465d-b518-2e46b5eae8cd.jpg",
+    "video_path": "7a9b0d26-3f13-465d-b518-2e46b5eae8cd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:32.447724+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Curl beidhändig auf Schrägbank",
+    "instructions": "Setze dich auf eine Schrägbank mit deinem Rücken gegen das Polster und flachen Füßen auf dem Boden.\nFasse die Kabelgriffe mit Untergriff, Handflächen nach oben, und deine Arme vollständig gestreckt.\nHalte deine Oberarme ruhig, atme aus und curl die Griffe zu deinen Schultern, während du deine Bizeps kontrahierst.\nHalte die Position kurz oben und quetsche deine Bizeps zusammen.\nAtme ein und senke die Griffe kontrolliert in die Ausgangsposition, wobei du deine Arme vollständig streckst.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "0acecafe-0c55-4522-b09a-82dad17430f7",
+    "exercise_db_id": "1630",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "0acecafe-0c55-4522-b09a-82dad17430f7.jpg",
+    "video_path": "0acecafe-0c55-4522-b09a-82dad17430f7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:13.964619+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Curl enger Griff",
+    "instructions": "Befestige eine gerade Stange an der unteren Rolle des Kabelzugs.\nStehe mit Füßen hüftbreit auseinander und Knie leicht gebeugt vor der Maschine.\nGreifen die Stange mit Untergriff, Hände hüftbreit auseinander.\nHalte deine Ellbogen nah an den Seiten und deinen Oberarm während der gesamten Übung still.\nCurle die Stange nach oben zu den Schultern, während du deinen Bizeps anspannst.\nHalte oben kurz an und spanne deinen Bizeps an.\nSenke die Stange langsam zurück in die Ausgangsposition.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Isolationsübung trainiert den Bizeps mit enger Griffweite und beansprucht sekundär die Unterarme.",
+    "primary_muscles": [
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "5bd1f5ad-0cc0-440c-8362-7f681b8fc5ac",
+    "exercise_db_id": "0199",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5bd1f5ad-0cc0-440c-8362-7f681b8fc5ac.jpg",
+    "video_path": "5bd1f5ad-0cc0-440c-8362-7f681b8fc5ac.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:52.650293+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Drücken gerader Arm",
+    "instructions": "Befestige einen geraden Griff an einem hohen Kabelzug.\nStehe zur Maschine gewandt, die Füße schulterbreit auseinander und leicht in den Knien gebeugt.\nFasse den Griff mit Obergriff, halte deine Arme gestreckt und deine Handflächen nach unten.\nSpanne deinen Rumpf an und halte deinen Rücken gerade, während du ausatmest und den Griff zu deinen Oberschenkeln drückst.\nHalte einen Moment am unteren Punkt, dann führe den Griff langsam während des Einatmens zur Ausgangsposition zurück.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Drücken gerader Arm ist eine Isolationsübung, die primär den großen Rückenmuskel (Breiter Rückenmuskel) mit einem geraden Griff trainiert. Es beansprucht auch Trizepse und Schultern als sekundäre Muskelgruppen. Die Bewegung erfordert gestreckte Arme und einen stabilen Rumpf während der gesamten Übung.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "f71fe1fc-cb32-4672-bf05-4f957f8d856a",
+    "exercise_db_id": "1260",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f71fe1fc-cb32-4672-bf05-4f957f8d856a.jpg",
+    "video_path": "f71fe1fc-cb32-4672-bf05-4f957f8d856a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:26.52985+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Einarm-Neigungsdrücken",
+    "instructions": "Stelle die Kabelzugmaschine in die Neigungsposition ein.\nStehe mit dem Rücken zur Maschine und fasse den Griff mit einer Hand.\nPositioniere dich mit dem Rücken zur Neigungsbank und deinen Arm ausgestreckt vor dir.\nBeuge deinen Ellbogen und senke den Griff Richtung Brust, während du deinen Oberarm stabil hältst.\nHalte kurz unten, dann drücke den Griff zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle den Arm.",
+    "tips": "Das Kabelzug Einarm-Neigungsdrücken ist eine unilaterale Brustübung, die Stabilität und Kontrolle durch die einseitige Belastung erfordert.",
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "triceps_long",
+      "chest_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7e0e2038-db17-4e6a-ac29-b8c25894dd6c",
+    "exercise_db_id": "0193",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7e0e2038-db17-4e6a-ac29-b8c25894dd6c.jpg",
+    "video_path": "7e0e2038-db17-4e6a-ac29-b8c25894dd6c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:34.659011+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Einarm-Rudern kniend",
+    "instructions": "Befestige einen Griff am Kabelzug auf Höhe der Taille.\nKnie dich vor der Kabelzug-Maschine hin und greife den Griff mit einer Hand.\nHalte deinen Rücken gerade und spanne deinen Rumpf an.\nZiehe den Griff zu deiner Brust, während du deine Schulterblätter zusammendrückst.\nPause einen Moment in der oberen Position.\nSenke den Griff langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.\nWechsle die Seite und wiederhole die Übung mit dem anderen Arm.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "2dd8f256-d152-4d96-83cc-67ac2ef59691",
+    "exercise_db_id": "1635",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2dd8f256-d152-4d96-83cc-67ac2ef59691.jpg",
+    "video_path": "2dd8f256-d152-4d96-83cc-67ac2ef59691.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:33.173886+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug einarmer umgekehrter Prediger Curl",
+    "instructions": "Stelle die Kabelmaschine so ein, dass die Rolle in der niedrigsten Position ist.\nStehe der Kabelmaschine zugewandt mit schulterbreitem Abstand.\nFasse den Griff mit Untergriff und positioniere deinen Oberarm gegen das Prediger-Polster.\nHalte deinen Rücken gerade und deinen Kern angespannt während der gesamten Übung.\nBeuege langsam deinen Unterarm zu deinem Bizeps, halte deinen Oberarm gegen das Polster stationär.\nHalte einen Moment oben inne und spanne deinen Bizeps an.\nSenke den Griff langsam zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.\nWechsle den Arm und wiederhole die Übung.",
+    "tips": "Der Kabelzug einarmer umgekehrter Prediger Curl ist eine Isolationsübung für den Bizeps mit Kabelmaschine und Prediger-Bank. Sie betont strikte Ausführung und Kontrolle, um die Bizeps-Aktivierung zu maximieren und andere Muskeln minimal zu involvieren.",
+    "primary_muscles": [
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "c9f5416d-9774-4bbf-8883-0908fd00f2b3",
+    "exercise_db_id": "0190",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "c9f5416d-9774-4bbf-8883-0908fd00f2b3.jpg",
+    "video_path": "c9f5416d-9774-4bbf-8883-0908fd00f2b3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:17.799691+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug einarmiger Curl",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen vor das Kabelzuggerät.\nFasse den Griff mit einem Untergriff, Handfläche nach oben.\nHalte deinen Ellbogen nah am Körper und curl deinen Unterarm langsam nach oben zur Schulter.\nHalte kurz inne und senke deinen Unterarm langsam zur Ausgangsposition ab.\nWiederhol die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug einarmiger Curl ist eine Isolationsübung für den Bizeps mit konstanter Spannung während der gesamten Bewegung, was ihn für Muskelaufbau und Kraft in Bizeps und Unterarmen sehr effektiv macht.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "d18180be-5d04-499e-91eb-c7d89e8e606d",
+    "exercise_db_id": "0227",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d18180be-5d04-499e-91eb-c7d89e8e606d.jpg",
+    "video_path": "d18180be-5d04-499e-91eb-c7d89e8e606d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:59.505052+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Fliegende (stehend)",
+    "instructions": "Befestige die Griffe am Kabelzug auf Brusthöhe.\nStehe mit schulterbreit auseinanderstehenden Füßen, mit dem Rücken zur Kabelmaschine.\nFasse die Griffe mit Obergriff, Handflächen nach vorne weisend.\nMache einen Schritt nach vorne, um Spannung in den Kabeln zu erzeugen.\nHalte deinen Core angespannt und deinen Rücken gerade während der gesamten Bewegung.\nBringe deine Arme mit leicht gebeugten Ellbogen langsam nach vorne und zusammen vor deiner Brust.\nSpanne deine Brustmuskulatur am oberen Punkt an.\nBringe deine Arme langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kabelzug Fliegende (stehend) ist eine Isolationsübung für die Brust mit dem Kabelzug, die die Brustmuskulatur zielt und zusätzlich die Schultermuskeln und den Trizeps aktiviert. Die Bewegung erfordert gute Ausführung, Balance und Kontrolle.",
+    "primary_muscles": [
+      "chest_middle",
+      "chest_outer"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7f65014e-836d-4712-bc8b-c3fad8f7ac0a",
+    "exercise_db_id": "0162",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7f65014e-836d-4712-bc8b-c3fad8f7ac0a.jpg",
+    "video_path": "7f65014e-836d-4712-bc8b-c3fad8f7ac0a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:35.384331+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Frontheben",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und fasse den Kabelgriff mit Obergriff.\nHalte deinen Rücken gerade und deine Körpermitte angespannt.\nHebe den Kabelgriff vor dir, halte deine Arme gestreckt und die Handflächen zeigen nach unten.\nHebe weiter an, bis deine Arme parallel zum Boden sind.\nMache eine kurze Pause oben und senke den Kabelgriff dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Frontheben ist eine Schulterübung, die die Deltamuskeln, besonders den vorderen Deltamuskel trainiert. Die Bewegung betont kontrollierte Ausführung und Muskelkontraktion.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "0b966428-eede-400f-af33-41cb94772485",
+    "exercise_db_id": "0237",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "0b966428-eede-400f-af33-41cb94772485.jpg",
+    "video_path": "0b966428-eede-400f-af33-41cb94772485.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:18.673582+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug gerades Armziehen",
+    "instructions": "Befestige ein Seil am Kabelzug auf der höchsten Einstellung.\nStelle dich mit schulterbreit auseinander stehenden Füßen zur Maschine gewandt hin.\nFasse das Seil mit beiden Händen, Handflächen nach unten.\nStrecke deine Arme vollständig aus, halte deine Ellbogen dabei leicht gebeugt.\nSpanne deine Latissimus an und ziehe das Seil langsam in Richtung deiner Oberschenkel, halte dabei deine Arme gerade.\nMache eine kurze Pause am unteren Punkt und gebe dann langsam die Spannung ab, um zur Ausgangsposition zurückzukehren.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Halte deine Arme während der gesamten Bewegung gerade und nutze hauptsächlich deine Rückenmuskeln, um das Gewicht zu ziehen.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "60ec994a-16b0-423b-9161-1d16d5805be7",
+    "exercise_db_id": "0165",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "60ec994a-16b0-423b-9161-1d16d5805be7.jpg",
+    "video_path": "60ec994a-16b0-423b-9161-1d16d5805be7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:38.456031+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Hammer Curl mit Seil",
+    "instructions": "Stehe aufrecht mit schulterbreit auseinanderstehenden Füßen und leichter Kniebeugen.\nGreife den Kabelzug-Seilaufsatz mit unterem Griff, Handflächen zueinander gewandt, und Arme vollständig gestreckt.\nHalte deine Oberarme stabil und curl das Seil, während du deine Bizepse anspannst.\nHebe den Kabelzug-Seilaufsatz weiter an, bis deine Bizepse vollständig angespannt sind und das Seil auf Schulterhöhe ist.\nHalte die angespannte Position kurz und squeeze deine Bizepse.\nSenke den Kabelzug-Seilaufsatz langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Hammer Curl mit Seil ist eine Isolationsübung für Bizepse und Unterarme mit Fokus auf den Armbeuger und Oberarmspeichenmuskel. Die konstante Spannung während der gesamten Bewegung sorgt für optimale Muskelaktivierung.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "65c50827-a236-4d60-8258-763627fa4edb",
+    "exercise_db_id": "0224",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "65c50827-a236-4d60-8258-763627fa4edb.jpg",
+    "video_path": "65c50827-a236-4d60-8258-763627fa4edb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:52.76122+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Handgelenks-Strecker",
+    "instructions": "Stelle dich frontal zur Kabelmaschine mit schulterbreit auseinander stehenden Füßen hin.\nGreife den Kabelgriff mit Übergriff, Handflächen nach unten.\nHalte deine Arme gestreckt und deine Ellbogen nahe an deinen Seiten.\nBeuge deine Handgelenke langsam nach oben und bringe den Kabelgriff zu deinem Körper.\nHalte kurz am oberen Punkt und senke den Kabelgriff dann langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Handgelenks-Strecker ist eine Isolationsübung, die die Unterarmmuskulatur beansprucht. Sie wird an einer Kabelmaschine durchgeführt und konzentriert sich auf die Stärkung der Handgelenksstrecker.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7d040d25-c430-4747-88ea-56713ae1bde9",
+    "exercise_db_id": "0203",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7d040d25-c430-4747-88ea-56713ae1bde9.jpg",
+    "video_path": "7d040d25-c430-4747-88ea-56713ae1bde9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:56.899056+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Hinterer Schulterheben",
+    "instructions": "Befestige einen Seilgriff an einer unteren Umlenkrolle eines Kabelzuggeräts.\nStehe dem Gerät zugewandt mit schulterbreit auseinander stehenden Füßen.\nFasse den Seilgriff mit einem Übergriff, Handflächen zueinander gewandt.\nBeuge deine Knie leicht und neige dich nach vorne an der Hüfte, während du deinen Rücken gerade hältst.\nHalte deine Ellbogen leicht gebogen und ziehe den Seilgriff zu deiner Brust, wobei du deine Schulterblätter zusammendrückst.\nMache eine kurze Pause oben, senke dann langsam die Spannung und kehre zur Ausgangsposition zurück.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Hintere Schulterheben ist eine Isolationsübung für die hinteren Deltamuskeln, mit sekundärer Betonung auf Kapuzenmuskel, Rhomboiden und Bizeps. Es nutzt ein Kabelzuggerät mit Seilaufsatz, um konstante Spannung während der gesamten Bewegung zu bieten und trägt zur Entwicklung von Schulterkraft und Stabilität bei.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "76f8acc1-4e3d-4c3b-856f-2ec86f9f69a6",
+    "exercise_db_id": "0168",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "76f8acc1-4e3d-4c3b-856f-2ec86f9f69a6.jpg",
+    "video_path": "76f8acc1-4e3d-4c3b-856f-2ec86f9f69a6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:42.602134+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Hüftadduktion",
+    "instructions": "Befestige die Fußmanschette an deinem Knöchel und stelle dich dem Kabelzuggerät zugewandt hin.\nPositioniere dich so weit entfernt vom Gerät, dass Spannung auf dem Kabel liegt.\nLege deine Hände zur Stabilisierung auf das Gerät.\nHalte dein Bein gestreckt und bewege es langsam über deinen Körper zur Mittellinie hin.\nMache eine kurze Pause am Ende der Bewegung und führe dein Bein dann langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Hüftadduktion trainiert die Adduktoren der Innenseite des Oberschenkels mit dem Kabelzuggerät. Die Bewegung gegen Widerstand stärkt und formt die Adduktoren effektiv.",
+    "primary_muscles": [
+      "adductors"
+    ],
+    "secondary_muscles": [
+      "glutes_medius"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "80c728fb-b9ed-4194-b065-87cfa6339094",
+    "exercise_db_id": "0228",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "80c728fb-b9ed-4194-b065-87cfa6339094.jpg",
+    "video_path": "80c728fb-b9ed-4194-b065-87cfa6339094.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:00.985798+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Hüftstrecker stehend",
+    "instructions": "Befestige ein Kabel an einer niedrigen Rolle und stelle dich mit dem Rücken zur Maschine hin.\nBefestige das Kabel um deinen Knöchel und stelle dich mit schulterbreit auseinander stehenden Füßen hin.\nHalte deine Rumpfmuskulatur angespannt und deinen Rücken gerade während der gesamten Übung.\nStrecke dein Bein langsam nach hinten aus und spanne deine Gesäßmuskulatur am höchsten Punkt an.\nMache eine kurze Pause und kehre dann in die Ausgangsposition zurück.\nWiederhhole die gewünschte Anzahl von Wiederholungen und wechsle die Seite.",
+    "tips": "Diese Übung zielt auf die Gesäßmuskulatur durch Hüftstreckung gegen Widerstand ab. Die Oberschenkelrückseite und der Quadrizeps werden sekundär beansprucht. Die Übung erfordert Gleichgewicht und Rumpfstabilität.",
+    "primary_muscles": [
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "03a4ebd5-4ce2-4bd4-97d9-4ae969b738dd",
+    "exercise_db_id": "0175",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "03a4ebd5-4ce2-4bd4-97d9-4ae969b738dd.jpg",
+    "video_path": "03a4ebd5-4ce2-4bd4-97d9-4ae969b738dd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:55.337479+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Kniebeuge Crunch",
+    "instructions": "Befestige einen Seilgriff an einer hohen Umlenkrolle und kniele dich hin, während du von der Maschine weg schaust.\nHalte den Seilgriff mit beiden Händen und platziere ihn hinter deinem Kopf, wobei du deine Ellbogen zu den Seiten hältst.\nHalte deine Hüften stationär, beuge deine Taille und rolle deinen Oberkörper nach vorne zu deinen Oberschenkeln.\nHalte die Position unten kurz an, kehre dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kabelzug Kniebeuge Crunch ist eine Bauchübung, die mit einer Kabelmaschine und einem Seilgriff ausgeführt wird. Sie beansprucht die Bauchmuskeln und aktiviert auch die schrägen Bauchmuskeln. Die Bewegung beinhaltet Knien, das Halten des Seils hinter dem Kopf und das Rollen des Oberkörpers zu den Oberschenkeln.",
+    "primary_muscles": [
+      "abs_upper"
+    ],
+    "secondary_muscles": [
+      "abs_lower"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "80935d57-4ae9-440b-8ede-23094e297c9f",
+    "exercise_db_id": "3697",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "80935d57-4ae9-440b-8ede-23094e297c9f.jpg",
+    "video_path": "80935d57-4ae9-440b-8ede-23094e297c9f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:56.601048+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Knien Nackenrudern (Seil)",
+    "instructions": "Befestige ein Seilgriff an einer niedrigen Kabelrolle und knien dich vor der Maschine hin.\nFasse das Seil mit neutralem Griff (Handflächen zueinander) und strecke deine Arme vollständig nach vorne aus.\nHalte deinen Rücken gerade und deine Rumpfmuskulatur angespannt, ziehe dann das Seil zu deinem Körper, indem du deine Schulterblätter zurückziehst.\nPresse deine Schulterblätter am Ende der Bewegung zusammen und halte kurz inne.\nLasse die Spannung langsam nach und kehre in die Ausgangsposition zurück.\nWiederhhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung zielt auf die hintere Schultermuskulatur und den oberen Rücken ab. Achte darauf, eine stabile Körperhaltung zu bewahren und deine Rumpfmuskulatur durchgehend angespannt zu halten.",
+    "primary_muscles": [
+      "shoulders_rear",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "274e020a-53c8-479a-b8ac-1d16d5588a40",
+    "exercise_db_id": "0150",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "274e020a-53c8-479a-b8ac-1d16d5588a40.jpg",
+    "video_path": "274e020a-53c8-479a-b8ac-1d16d5588a40.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:11.199934+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Latzug",
+    "instructions": "Stelle die Kabelrolle auf eine hohe Position ein und befestige eine gerade Stange.\nSitze dem Kabelzuggerät zugewandt mit flachen Füßen auf dem Boden und leicht gebeugten Knien.\nGreife die Stange mit Obergriff, etwas breiter als schulterbreit auseinander.\nLehne dich leicht zurück und halte deine Brust oben, mit einem leichten Hohlkreuz im unteren Rücken.\nZiehe die Stange zu deiner Brust hinab, führe mit deinen Ellbogen und drücke deine Schulterblätter zusammen.\nHalte einen Moment am unteren Ende der Bewegung an und führe die Stange dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Latzug ist eine Kraftübung, die den Breiter Rückenmuskel mit einem Kabelzuggerät und gerader Stange trainiert. Auch Bizeps, Rauten- und hintere Deltamuskeln werden aktiviert. Die Bewegung erfolgt mit kontrollierter Ausführung und guter Körperhaltung.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "807d5b09-bfab-4708-b8b9-8afaa5e613ed",
+    "exercise_db_id": "0198",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "807d5b09-bfab-4708-b8b9-8afaa5e613ed.jpg",
+    "video_path": "807d5b09-bfab-4708-b8b9-8afaa5e613ed.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:46.873366+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Latzug",
+    "instructions": "Stelle das Latzuggerät so ein, dass der Sitz in einer angenehmen Höhe ist und die Kniestütze gesichert ist.\nSitze auf dem Sitz mit geradem Rücken und flachen Füßen auf dem Boden.\nFasse die Latzugstange mit Obergriff, etwas breiter als schulterbreit.\nLehne dich leicht zurück und spanne deinen Rumpf an.\nZiehe die Stange zu deiner Brust hinunter und presse deine Schulterblätter zusammen.\nMache eine kurze Pause unten und gebe die Stange dann langsam zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "3236c2f4-f38b-457a-bff1-0bd5ee9c8ebb",
+    "exercise_db_id": "0245",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "3236c2f4-f38b-457a-bff1-0bd5ee9c8ebb.jpg",
+    "video_path": "3236c2f4-f38b-457a-bff1-0bd5ee9c8ebb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:35.150642+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Latzug mit Untergriff",
+    "instructions": "Stellen Sie den Kabelzug so ein, dass die Latzugstange über Kopfhöhe ist.\nSetzen Sie sich auf den Sitz und greifen Sie die Stange mit Untergriff, Hände leicht breiter als Schulterbreite.\nHalten Sie Ihren Rücken gerade und lehnen Sie sich leicht zurück.\nZiehen Sie die Stange zu Ihrer Brust, indem Sie Ihre Schulterblätter zusammenpressen.\nPausieren Sie kurz am unteren Punkt und führen Sie die Stange langsam zur Ausgangsposition zurück.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Latzug mit Untergriff trainiert den Breiter Rückenmuskel (Latissimus) mit sekundärer Betonung auf Bizeps und Unterarme. Diese Variation mit Untergriff kann die Rückenkraft und Muskeldefinition verbessern.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids",
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7cb526a3-d514-48bd-b81d-dfa2df0aacaf",
+    "exercise_db_id": "0186",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7cb526a3-d514-48bd-b81d-dfa2df0aacaf.jpg",
+    "video_path": "7cb526a3-d514-48bd-b81d-dfa2df0aacaf.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:13.632936+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Liegender Trizeps-Strecker",
+    "instructions": "Befestige einen Seilgriff an einer unteren Umlenkrolle eines Kabelzuggeräts.\nLege dich auf eine flache Bank mit dem Gesicht nach oben und deinem Kopf zum Kabelzuggerät hin.\nFasse den Seilgriff mit beiden Händen, Handflächen zueinander gewandt, und strecke deine Arme gerade über deiner Brust.\nHalte deine Oberarme stillstehend und senke den Seilgriff langsam in Richtung deiner Stirn, indem du deine Ellbogen beugst.\nMache eine kurze Pause unten, strecke dann deine Arme zurück in die Ausgangsposition.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Liegende Trizeps-Strecker ist eine Isolationsübung für den Trizeps, ausgeführt auf einer Bank mit einem Seilaufsatz an einer unteren Umlenkrolle. Sie betont kontrollierte Ellbogenstreckung und wird häufig zum Aufbau von Trizepskraft und -größe verwendet.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "8a7f959b-d127-4c21-bb7a-d62f02eb6db5",
+    "exercise_db_id": "0196",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8a7f959b-d127-4c21-bb7a-d62f02eb6db5.jpg",
+    "video_path": "8a7f959b-d127-4c21-bb7a-d62f02eb6db5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:45.562478+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug mit Seil",
+    "instructions": "Stelle dich mit Blick weg vom Kabelzuggerät auf, die Füße schulterbreit auseinander.\nGreife mit beiden Händen den Seilaufsatz und tritt nach vorne, um Spannung im Kabel aufzubauen.\nBeuge dich in den Hüften und senke deinen Oberkörper ab, bis er parallel zum Boden ist, während du deinen Rücken gerade hältst.\nSpanne deine Gesäßmuskeln und Oberschenkelbeuger an und ziehe deinen Körper zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "lower_back",
+      "hamstrings_semimembranosus"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "5b0ca556-9b51-4aad-8ded-f2cbb84d7f8a",
+    "exercise_db_id": "0205",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5b0ca556-9b51-4aad-8ded-f2cbb84d7f8a.jpg",
+    "video_path": "5b0ca556-9b51-4aad-8ded-f2cbb84d7f8a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:59.723484+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Nackenziehen",
+    "instructions": "Stelle die Kabelmaschine so ein, dass die Rolle in der höchsten Position ist.\nSetze dich zur Maschine gewandt hin, die Füße flach auf dem Boden und die Knie leicht gebeugt.\nFasse den Kabelgriff mit Obergriff, die Hände etwas breiter als schulterbreit auseinander.\nLehn dich leicht nach hinten, halte deinen Rücken gerade und die Brust aufrecht.\nZiehe den Kabelgriff zu deiner Brust, indem du deine Schulterblätter zusammendrückst.\nHalte einen Moment am unteren Punkt, dann lass den Kabelgriff langsam wieder in die Ausgangsposition zurück.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Nackenziehen ist eine Kraftübung, die hauptsächlich den großen Rückenmuskel (Breiter Rückenmuskel) trainiert. Es beansprucht auch die Bizepse, Rhomboiden und hinteren Deltamuskeln.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "c8989309-1d24-4862-ab91-f02e1642db6e",
+    "exercise_db_id": "0242",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c8989309-1d24-4862-ab91-f02e1642db6e.jpg",
+    "video_path": "c8989309-1d24-4862-ab91-f02e1642db6e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:27.172402+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Reverse Crunch",
+    "instructions": "Befestige ein Kabel an einer unteren Rolle und lege dich auf eine Matte auf deinen Rücken.\nHalte das Kabel mit beiden Händen und strecke deine Arme gerade über deiner Brust aus.\nBeuge deine Knie und hebe deine Beine an, indem du deine Knie zur Brust bringst.\nZiehe gleichzeitig dein Becken zu deiner Brust hoch und hebe deine Hüften vom Boden ab.\nMache eine kurze Pause oben und senke dann deine Beine und Hüften kontrolliert zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Reverse Crunch ist eine Bauchmuskel-Übung, die mit dem Kabelzuggerät durchgeführt wird. Die Bewegung trainiert die Bauchmuskulatur intensiv durch zusätzlichen Widerstand.",
+    "primary_muscles": [
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "abs_upper"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7a985875-e0e4-4508-89bd-dba785dffd8c",
+    "exercise_db_id": "0210",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7a985875-e0e4-4508-89bd-dba785dffd8c.jpg",
+    "video_path": "7a985875-e0e4-4508-89bd-dba785dffd8c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:08.067028+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Reverse Handgelenk-Curl",
+    "instructions": "Befestige ein Kabel an einer unteren Rolle und setze dich auf eine Bank, dem Kabelzug-Gerät zugewandt.\nFasse den Griff mit Obergriff, Handflächen nach unten.\nLege deine Unterarme auf deinen Oberschenkeln ab, mit den Handgelenken über der Kante hängend.\nHalte deine Unterarme ruhig, atme aus und curl deine Handgelenke nach oben so weit wie möglich.\nHalte die Position kurz, atme dann ein und senke deine Handgelenke kontrolliert in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [],
+    "equipment": []
+  },
+  {
+    "id": "159adff4-e770-41dc-b6ae-81d403efb155",
+    "exercise_db_id": "0160",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "159adff4-e770-41dc-b6ae-81d403efb155.jpg",
+    "video_path": "159adff4-e770-41dc-b6ae-81d403efb155.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:32.166946+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Ruderer im Sitzen mit breitem Griff",
+    "instructions": "Setze dich auf den Boden mit ausgestreckten Beinen und geradem Rücken hin.\nBefestige einen Griff an einem tiefen Umlenkblock und positioniere die Kabelmaschine hinter dir.\nFasse den Griff mit breitem Obergriff, Handflächen nach unten.\nLehn dich leicht zurück, halte deinen Rücken gerade und deine Brust aufrecht.\nZiehe den Griff zu deiner Taille, indem du deine Schulterblätter zusammenziehst.\nHalte für einen Moment an der oberen Position an, dann senke den Griff langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Ruderer im Sitzen mit breitem Griff ist eine Kraftübung, die den oberen Rücken trainiert und im Sitzen mit einer Kabelmaschine ausgeführt wird. Sie betont die Schulterblattretraktionen und die Muskulatur des oberen Rückens mit sekundärer Aktivierung der Bizepse und Unterarme.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_lats"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "04703975-d9fa-424f-ad4f-1babcbd96b05",
+    "exercise_db_id": "0218",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "04703975-d9fa-424f-ad4f-1babcbd96b05.jpg",
+    "video_path": "04703975-d9fa-424f-ad4f-1babcbd96b05.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:41.748372+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Rudern breit im Sitzen",
+    "instructions": "Setze dich auf die Rudermaschine mit flachen Füßen auf den Fußstützen und leicht gebeugten Knien.\nGreife den Griff mit breitem Obergriff, Handflächen nach unten.\nHalte deinen Rücken gerade und lehne dich leicht aus den Hüften nach vorne.\nZiehe den Griff zu deiner unteren Brust, während du deine Schulterblätter zusammendrückst.\nHalte kurz in der Spitzenposition an.\nSenke den Griff langsam und kontrolliert zur Ausgangsposition zurück, bis deine Arme vollständig gestreckt sind.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Rudern breit im Sitzen ist eine Kraftübung für den oberen Rücken. Konzentriere dich darauf, die Schulterblätter zusammenzuziehen, um die Rückenmuskulatur optimal zu aktivieren.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_lats"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "18e25943-934d-464b-9220-910d6e13c209",
+    "exercise_db_id": "0202",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "18e25943-934d-464b-9220-910d6e13c209.jpg",
+    "video_path": "18e25943-934d-464b-9220-910d6e13c209.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:55.507718+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Rudern hinten (Steigbügel)",
+    "instructions": "Befestigen Sie einen Steigbügelgriff an einer unteren Kabelrolle und stellen Sie sich frontal zur Maschine.\nFassen Sie den Griff mit Ihrer linken Hand und machen Sie einen Schritt mit dem rechten Fuß nach hinten, sodass Ihr Körper leicht schräg positioniert ist.\nBeugen Sie Ihre Knie leicht und lehnen Sie sich vom Hüftgelenk nach vorne, während Sie Ihren Rücken gerade halten und Ihren Core anspannen.\nZiehen Sie mit ausgestrecktem linkem Arm und nach unten gerichteter Handfläche den Griff zu Ihrer Brust, indem Sie Ihre Schulterblätter zurückziehen.\nPausieren Sie kurz oben und drücken Sie Ihre Schulterblätter zusammen.\nLösen Sie den Griff langsam zur Ausgangsposition zurück und wiederholen Sie die gewünschte Anzahl von Wiederholungen.\nWechseln Sie die Seite und wiederholen Sie die Übung mit Ihrem rechten Arm.",
+    "tips": "Das Kabelzug Rudern hinten ist eine Isolationsübung, die die hinteren Deltamuskeln anspricht, mit zusätzlicher Aktivierung des Kapuzenmuskel, der Rhomboiden und des Bizeps. Es wird mit einer Kabelmaschine und Steigbügelgriff durchgeführt und konzentriert sich auf Schulterblattretraktion und Kontrolle.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "6b9b6169-a72e-48d7-aab1-01268a9e821e",
+    "exercise_db_id": "0244",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6b9b6169-a72e-48d7-aab1-01268a9e821e.jpg",
+    "video_path": "6b9b6169-a72e-48d7-aab1-01268a9e821e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:31.102174+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Rudern mit Rotation",
+    "instructions": "Befestige einen Griff am unteren Seilzug und stelle dich zur Maschine gerichtet hin.\nFasse den Griff mit deiner linken Hand und tritt von der Maschine weg, strecke deinen Arm vollständig aus.\nPositioniere deine Füße schulterbreit auseinander mit leicht gebeugten Knien.\nHalte deinen Rücken gerade und deinen Rumpf während der gesamten Übung angespannt.\nZiehe den Griff zu deinem Körper und rotiere dabei deinen Oberkörper nach rechts.\nPress deine Rückenmuskeln am Ende der Bewegung zusammen.\nKehre langsam in die Ausgangsposition zurück und halte die Spannung auf dem Kabel.\nWiederhole die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite, indem du mit deiner rechten Hand trainierst.",
+    "tips": "Das Kabelzug Rudern mit Rotation ist eine Übung, die den großen Rückenmuskel trainiert und eine Rotationsbewegung einbezieht, die die Schultern und Bizeps als Nebenmuskeln beansprucht. Sie erfordert eine Kabelmaschine und beinhaltet das Ziehen eines Griffs bei gleichzeitiger Oberkörperrotation, wobei Kraft und Koordination gleichermaßen betont werden.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "abs_obliques"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7a5e41e1-24bb-47b6-9799-e9545cff51e8",
+    "exercise_db_id": "0180",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7a5e41e1-24bb-47b6-9799-e9545cff51e8.jpg",
+    "video_path": "7a5e41e1-24bb-47b6-9799-e9545cff51e8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:06.637873+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Rudern sitzend",
+    "instructions": "Setze dich auf das Gerät mit flachen Füßen auf den Fußstützen und leicht gebeugten Knien.\nFasse die Griffe mit Obergriff, Handflächen nach unten.\nHalte deinen Rücken gerade und lehne dich leicht nach vorn, mit einem leichten Bend in den Ellbogen.\nZiehe die Griffe zu deinem Körper, indem du deine Schulterblätter zusammenquetschst.\nHalte die Position kurz und führe die Griffe kontrolliert in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "a76ebbff-7b15-447a-9211-71a0f3f72819",
+    "exercise_db_id": "0214",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "a76ebbff-7b15-447a-9211-71a0f3f72819.jpg",
+    "video_path": "a76ebbff-7b15-447a-9211-71a0f3f72819.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:31.785582+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Rudern sitzend einarmig alternierend",
+    "instructions": "Sitzen Sie auf einer Bank vor einem Kabelzuggerät mit den Füßen flach auf dem Boden und leicht gebeugten Knien.\nGreifen Sie den Griff mit einer Hand und halten Sie Ihren Arm vollständig ausgestreckt vor Ihnen.\nZiehen Sie den Griff zu Ihrem Körper, indem Sie Ihr Schulterblatt zurückziehen und Ihren Ellbogen nah an Ihrer Seite halten.\nMachen Sie eine kurze Pause oben in der Bewegung und drücken Sie Ihre Rückenmuskeln zusammen.\nLassen Sie den Griff langsam in die Ausgangsposition zurück.\nWiederholen Sie mit dem anderen Arm.\nWechseln Sie weiter zwischen den Armen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Rudern sitzend einarmig alternierend ist eine Kraftübung für den oberen Rücken, die am Kabelzuggerät ausgeführt wird. Sie beinhaltet das Ziehen eines Griffs zu Ihrem Körper mit einem Arm zur Zeit, wobei der Fokus auf der Schulterblatt-Retraktion und einer kontrollierten Bewegung liegt.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "f6e9d882-f259-4e8e-af95-c34580874785",
+    "exercise_db_id": "0208",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f6e9d882-f259-4e8e-af95-c34580874785.jpg",
+    "video_path": "f6e9d882-f259-4e8e-af95-c34580874785.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:10.848892+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Rudern untergriff sitzend",
+    "instructions": "Setze dich auf den Sitz vor der Kabelzugmaschine mit flachen Füßen auf dem Boden.\nFasse den Kabelgriff mit unterem Griff, Handflächen nach oben, Hände schulterbreit auseinander.\nHalte deinen Rücken gerade und lehne dich leicht aus der Hüfte nach vorne.\nZiehe das Kabel zu deinem Oberkörper, indem du deine Schulterblätter zurückziehst und deine Rückenmuskeln anspannst.\nHalte kurz in der maximalen Spannung, dann führe das Kabel langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Rudern im unterem Griff sitzend zielt auf den oberen Rücken ab und erfordert gute Körperkontrolle durch die Kabelspannung.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "578fb2a6-0bf0-400a-85ac-bad9d71c8d38",
+    "exercise_db_id": "0158",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "578fb2a6-0bf0-400a-85ac-bad9d71c8d38.jpg",
+    "video_path": "578fb2a6-0bf0-400a-85ac-bad9d71c8d38.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:25.114958+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Schrägbank-Fliegende",
+    "instructions": "Stelle die Kabelzugmaschine auf eine Schrägbank-Position ein.\nStelle dich nach vorne orientiert weg von der Maschine mit deinen Füßen hüftbreit auseinander.\nHalte die Griffe mit deinen Handflächen nach vorne und deinen Armen gerade nach vorne ausgestreckt.\nHalte eine leichte Beugung in deinen Ellbogen und öffne deine Arme kontrolliert zur Seite.\nMache eine kurze Pause in der vollständig geöffneten Position und kehre dann langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Isolationsübung zielt mit einem Kabelzug auf Schrägbank-Winkel auf die Brustmuskulatur ab. Sie konzentriert sich auf die untere Brust und beinhaltet eine kontrollierte Armbewegung zum Dehnen und Zusammenziehen der Brustmuskeln.",
+    "primary_muscles": [
+      "chest_upper",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "9870ed8c-5373-4466-9e70-49df025da1b3",
+    "exercise_db_id": "1265",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9870ed8c-5373-4466-9e70-49df025da1b3.jpg",
+    "video_path": "9870ed8c-5373-4466-9e70-49df025da1b3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:23.373883+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Schrägbankdrücken einarmig",
+    "instructions": "Stellen Sie die Kabelmaschine auf niedrige Pulleyposition ein.\nSetzen Sie sich auf eine Schrägbank mit Blickrichtung weg von der Kabelmaschine.\nGreifen Sie den Griff mit einer Hand und bringen Sie ihn auf Schulterhöhe.\nPositionieren Sie Ihre Füße fest auf dem Boden und bewahren Sie eine stabile Position.\nDrücken Sie den Griff nach vorne und oben, bis Ihr Arm vollständig gestreckt ist.\nMachen Sie eine kurze Pause oben an, senken Sie den Griff dann kontrolliert zurück zur Ausgangsposition.\nWiederholen Sie für die gewünschte Anzahl von Wiederholungen, dann Seitenwechsel.",
+    "tips": "Das Kabelzug Schrägbankdrücken einarmig ist eine unilaterale Brustübung auf der Schrägbank mit der Kabelmaschine. Sie trainiert die Brustmuskulatur und beansprucht sekundär die Deltamuskeln und Trizeps. Diese Bewegung erfordert Stabilität und Koordination beim einseitigen Drücken des Kabelgriffs nach oben.",
+    "primary_muscles": [
+      "chest_upper",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "triceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "27496bad-a1e8-49fa-a6b3-d839a68af589",
+    "exercise_db_id": "0172",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "27496bad-a1e8-49fa-a6b3-d839a68af589.jpg",
+    "video_path": "27496bad-a1e8-49fa-a6b3-d839a68af589.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:49.8121+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Schrägdrücken abwärts",
+    "instructions": "Befestige eine gerade Stange an einer hohen Rolle des Kabelzuggeräts.\nStelle dich mit schulterbreit auseinanderstehenden Füßen mit Blick weg vom Gerät auf.\nGreife die Stange mit Obergriff, die Hände etwas breiter als schulterbreit auseinander.\nLehne dich leicht nach vorne und halte deinen Rücken gerade.\nZiehe die Stange durch Strecken deiner Ellbogen zu deinen Oberschenkeln nach unten.\nHalte einen Moment unten an und führe die Stange dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Schrägdrücken ist eine Isolationsübung, die den Breiter Rückenmuskel mit Hilfe eines Kabelzuggeräts trainiert. Kontrollierte Bewegungen und korrekte Ausführung sind wichtig, um die Latissimus effektiv zu aktivieren, während Trizeps und Schultern als Nebenmuskeln beteiligt sind.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "back_teres",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "31182bb9-4523-4168-9b07-52d4a6d496f1",
+    "exercise_db_id": "0235",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "31182bb9-4523-4168-9b07-52d4a6d496f1.jpg",
+    "video_path": "31182bb9-4523-4168-9b07-52d4a6d496f1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:13.325589+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Schulterrotation (Außenrotation)",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und leicht gebeugten Knien.\nHalte den Kabelzug-Griff mit gestrecktem Arm vor dir, parallel zum Boden.\nHalte deinen Ellbogen leicht gebeugt und deine Schulterblätter zurückgezogen.\nDrehe deinen Arm langsam nach außen, weg von deinem Körper, während du deinen Ellbogen in derselben Position hältst.\nHalte am Ende der Bewegung kurz inne, dann kehre langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Die Kabelzug Schulterrotation ist eine Übung, die die Deltamuskeln, insbesondere die Schulterstabilität und Außenrotation, anspricht. Sie beansprucht auch die Rotatorenmanschette und den Kapuzenmuskel und ist effektiv für die Verbesserung der Schultergesundheit.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "96dbc2ce-f348-43fb-aa9b-8a37eaceef70",
+    "exercise_db_id": "0178",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "96dbc2ce-f348-43fb-aa9b-8a37eaceef70.jpg",
+    "video_path": "96dbc2ce-f348-43fb-aa9b-8a37eaceef70.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:03.792889+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug seitliche Raises",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte die Kabelgriffe mit Obergriff.\nHalte deine Arme gestreckt und spanne deinen Core an.\nHebe deine Arme zur Seite, bis sie parallel zum Boden sind.\nPause kurz oben, dann senke deine Arme langsam zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kabelzug seitliche Raise ist eine Isolationsübung, die die Deltoidmuskeln zielt, besonders den seitlichen (mittleren) Kopf. Der Kabelzug bietet durchgehende Spannung während der Bewegung. Diese Übung hilft, Schulterbreite und -kraft aufzubauen.",
+    "primary_muscles": [
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "70448efc-8bf7-4743-82e4-f8958d787dbc",
+    "exercise_db_id": "0232",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "70448efc-8bf7-4743-82e4-f8958d787dbc.jpg",
+    "video_path": "70448efc-8bf7-4743-82e4-f8958d787dbc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:07.71266+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug stehend mit Seil",
+    "instructions": "Befestige ein Seil an der Kabelmaschine auf der höchsten Einstellung.\nStehe mit schulterbreit auseinanderstehenden Füßen zur Maschine gewandt.\nFasse das Seil mit Obergriff, Handflächen nach unten.\nHalte deinen Rücken gerade und deinen Core angespannt während der gesamten Übung.\nZiehe das Seil zu deinen Oberschenkeln hinunter und presse deine Bizeps zusammen.\nMache eine kurze Pause am tiefsten Punkt, dann lasse das Seil langsam zurück nach oben.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der stehende Kabelzug mit Seil ist eine Isolationsübung, die primär den Bizeps trainiert, mit sekundärer Betonung auf Unterarme und Schultern. Die Übung erfordert gute Ausführung und Kontrolle.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "back_teres",
+      "triceps_long"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "03ae687c-60f8-4c3e-a840-551b6e9abd7e",
+    "exercise_db_id": "0229",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "03ae687c-60f8-4c3e-a840-551b6e9abd7e.jpg",
+    "video_path": "03ae687c-60f8-4c3e-a840-551b6e9abd7e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:02.339973+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug stehender Curl",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen vor eine Kabelmaschine hin.\nFasse den Griff mit einem Untergriff, wobei deine Handflächen nach oben zeigen.\nHalte deine Ellbogen nah an deinen Seiten und deine Oberarme stationär.\nAtme aus und ziehe den Griff zu deinen Schultern, dabei kontrahierst du deine Bizeps.\nHalte die Position oben kurz an und spanne deine Bizeps zusätzlich an.\nAtme ein und senke den Griff langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kabelzug stehender Curl ist eine Isolationsübung für die Bizeps mit einer Kabelmaschine. Sie betont eine kontrollierte Bewegung und Kontraktion der Bizeps, während die Unterarme ebenfalls aktiviert werden.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "ef727252-b87f-4e01-89c6-b36ef5e627d3",
+    "exercise_db_id": "0176",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ef727252-b87f-4e01-89c6-b36ef5e627d3.jpg",
+    "video_path": "ef727252-b87f-4e01-89c6-b36ef5e627d3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:58.142297+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Trizeps Extension im Knien",
+    "instructions": "Befestige ein Seil an einer hohen Rolle und knien dich vor der Kabelmaschine hin.\nFasse das Seil mit neutralem Griff (Handflächen zueinander) und bringe deine Hände zu den Seiten deines Kopfes.\nHalte deine Ellbogen nah am Kopf und deine Oberarme während der gesamten Übung stillstehen.\nStrecke deine Unterarme durch die Kontraktion des Trizeps, bis deine Arme vollständig ausgestreckt sind.\nHalte die Spannung kurz, dann kehre langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "59adc625-9518-449e-add5-445e9b8399d7",
+    "exercise_db_id": "1728",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "59adc625-9518-449e-add5-445e9b8399d7.jpg",
+    "video_path": "59adc625-9518-449e-add5-445e9b8399d7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:33.798182+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Trizeps Kickback",
+    "instructions": "Stelle dich hüftbreit hin und beuge deine Knie leicht.\nFasse die Griffe des Kabelzugs in beiden Händen, Handflächen nach innen, Arme im 90-Grad-Winkel gebeugt.\nHalte deine Oberarme stabil und strecke deine Unterarme nach hinten, bis deine Arme vollständig ausgestreckt sind.\nMache eine kurze Pause oben und kehre dann kontrolliert zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "beb3aed2-ce8c-4466-843b-93336bf5010f",
+    "exercise_db_id": "2406",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "beb3aed2-ce8c-4466-843b-93336bf5010f.jpg",
+    "video_path": "beb3aed2-ce8c-4466-843b-93336bf5010f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:03.858378+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Trizeps Pushdown mit Untergriff (SZ-Stange)",
+    "instructions": "Befestige eine gerade Stange an der höchsten Einstellung des Kabelzugs.\nStehe schulterbreit vor dem Kabelzug.\nGreife die Stange mit Untergriff, Handflächen nach oben, Hände schulterbreit auseinander.\nHalte deine Ellbogen nah an deinem Körper und deine Oberarme während der ganzen Übung stationär.\nSpanne deine Trizepse an und drücke die Stange langsam nach unten, bis deine Arme vollständig ausgestreckt sind.\nHalte kurz an der unteren Position an, führe dann die Stange langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Trizeps Pushdown mit Untergriff ist eine Isolationsübung für die Trizepse mit Kabelzug und Untergriff für verstärkte Betonung des langen Trizepskopfes. Eine Armstütze hilft, die Oberarme stationär zu halten und verbessert die Form und Muskelaktivierung.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "0afffb00-d681-4744-940f-4debd0ccd2d5",
+    "exercise_db_id": "1722",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0afffb00-d681-4744-940f-4debd0ccd2d5.jpg",
+    "video_path": "0afffb00-d681-4744-940f-4debd0ccd2d5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:39.89205+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Trizeps-Extension",
+    "instructions": "Befestige ein Seil am oberen Kabelzug und stelle dich mit dem Gesicht zur Maschine gewandt hin.\nFasse das Seil mit beiden Händen und strecke deine Arme nach oben.\nHalte deine Ellbogen nah am Kopf und deine Oberarme stabil.\nSenke das Seil langsam hinter deinen Kopf, indem du deine Ellbogen beugst.\nMache eine kurze Pause und strecke deine Arme dann wieder in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Seil sollte eine stabile Position haben und die Bewegung sollte nur aus den Ellbogen kommen, um maximale Trizeps-Aktivierung zu erreichen.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "30a78c74-b345-4f35-b72f-11f091f607b3",
+    "exercise_db_id": "0207",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "30a78c74-b345-4f35-b72f-11f091f607b3.jpg",
+    "video_path": "30a78c74-b345-4f35-b72f-11f091f607b3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:09.398322+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Trizeps-Pushdown (Untergriff)",
+    "instructions": "Befestige eine gerade Stange an einem hohen Seilzug.\nStelle dich mit schulterbreit auseinanderstehenden Füßen vor die Maschine.\nFasse die Stange mit Untergriff (Handflächen nach oben), Hände schulterbreit auseinander.\nHalte deine Ellbogen nah an deinen Seiten und deine Oberarme während der gesamten Übung stabil.\nDrücke die Stange mit den Trizeps nach unten, bis deine Arme vollständig gestreckt sind und die Trizeps angespannt sind.\nHalte kurz inne, dann führe die Stange langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Kabelzug Trizeps-Pushdown mit Untergriff ist eine Isolationsübung für die Trizeps mit Untergriff, die auch die Unterarme beansprucht.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "b5753f8d-850c-492b-9909-2fee1c1ed1da",
+    "exercise_db_id": "0184",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b5753f8d-850c-492b-9909-2fee1c1ed1da.jpg",
+    "video_path": "b5753f8d-850c-492b-9909-2fee1c1ed1da.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:10.784462+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Überzug liegend (mit Seilgriff)",
+    "instructions": "Befestige ein Seil an einem Kabelzug und stelle die Rolle auf die höchste Position.\nLege dich auf eine Bank, mit dem Kopf zum Kabelzug hin.\nHalte das Seil mit beiden Händen und strecke deine Arme gerade über deine Brust.\nSenke das Seil mit gestreckten Armen langsam hinter deinen Kopf, während du die Kontrolle behältst.\nMache eine kurze Pause unten und hebe das Seil dann langsam zurück in die Ausgangsposition.\nWiederhole das für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug Überzug liegend mit Seilgriff ist eine Isolationsübung, die den Latissimus trainiert. Sie erfordert eine gute Bewegungskontrolle, um die Rückenmuskulatur effektiv zu aktivieren und Schulterverletzungen zu vermeiden.",
+    "primary_muscles": [
+      "back_lats",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "back_teres",
+      "chest_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7faaecae-0d9d-40ed-9294-51f4a43ae8ae",
+    "exercise_db_id": "3235",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7faaecae-0d9d-40ed-9294-51f4a43ae8ae.jpg",
+    "video_path": "7faaecae-0d9d-40ed-9294-51f4a43ae8ae.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:09.628807+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug unterstützter inverser Beincurl",
+    "instructions": "Stelle das Kabelgerät so ein, dass die Fußgelenkbefestigung auf der niedrigsten Einstellung ist.\nLiege mit der Brust nach unten auf der Bank, deine Beine sind gestreckt und die Fußgelenkbefestigung ist an deinen Fußgelenken gesichert.\nHalte dich an den Griffen der Bank fest zur Stabilisierung.\nHalte deinen oberen Körper stationär, atme aus und beuge deine Beine nach oben zu deinen Gesäßmuskeln, indem du deine Knie beugst.\nMache eine kurze Pause oben und spanne deine Beinbeuger an.\nAtme ein und senke deine Beine langsam zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus",
+      "hamstrings_semimembranosus"
+    ],
+    "secondary_muscles": [
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "a81be5c2-568e-4c1d-b806-375f52e89d06",
+    "exercise_db_id": "1375",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "a81be5c2-568e-4c1d-b806-375f52e89d06.jpg",
+    "video_path": "a81be5c2-568e-4c1d-b806-375f52e89d06.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:54.160631+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Wadenheben stehend",
+    "instructions": "Stellen Sie sich vor einem Kabelzuggerät mit schulterbreit auseinander stehenden Füßen hin.\nGreifen Sie die Griffe des Kabelzuggeräts oder befestigen Sie einen Kabelzug-Fußriemen an Ihren Knöcheln.\nHeben Sie Ihre Fersen vom Boden ab, indem Sie Ihre Knöchel so weit wie möglich strecken.\nMachen Sie oben eine kurze Pause, dann senken Sie Ihre Fersen langsam in die Ausgangsposition zurück.\nWiederholen Sie dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug Wadenheben stehend ist eine Übung, die die Wadenmuskeln mit Hilfe eines Kabelzuggeräts trainiert. Es beinhaltet das Aufrechtstehen und das Anheben der Fersen vom Boden, um die Waden zu beanspruchen, mit sekundärer Aktivierung der Oberschenkelrückseite und des Gesäßes.",
+    "primary_muscles": [
+      "calves_gastrocnemius"
+    ],
+    "secondary_muscles": [
+      "calves_soleus"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "576f4c9e-96b8-40d9-a90b-71fa08a30e8a",
+    "exercise_db_id": "0148",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "576f4c9e-96b8-40d9-a90b-71fa08a30e8a.jpg",
+    "video_path": "576f4c9e-96b8-40d9-a90b-71fa08a30e8a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:06.626035+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Wechsel-Schulterdrücken",
+    "instructions": "Stelle dich hüftbreit hin und greife die Griffe der Kabelzugmaschine mit einem Obergriff.\nPositioniere deine Hände auf Schulterhöhe mit den Handflächen nach vorne.\nHalte deinen Rumpf angespannt und deinen Rücken gerade.\nDrücke einen Griff nach oben und nach vorne, bis dein Arm vollständig gestreckt ist.\nMache eine kurze Pause oben und senke den Griff dann langsam in die Ausgangsposition zurück.\nWiederhole dies mit dem anderen Arm.\nWechsle zwischen den Armen für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Diese Kraftübung zielt auf die Schultermuskeln ab. Du drückst abwechselnd einen Kabelgriff über deinem Kopf nach oben und benötigst Stabilität und Koordination.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "f9d91f16-6a29-4560-adb2-50fc714545e5",
+    "exercise_db_id": "0149",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f9d91f16-6a29-4560-adb2-50fc714545e5.jpg",
+    "video_path": "f9d91f16-6a29-4560-adb2-50fc714545e5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:08.257875+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug Wechsel-Trizepsstreckung",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen vor die Kabelzug-Maschine.\nGreife das Seil mit deiner rechten Hand und bringe deinen Arm so hoch, dass dein Oberarm parallel zum Boden ist und dein Ellbogen im 90-Grad-Winkel gebeugt ist.\nHalte deinen Oberarm stationär und strecke deinen Unterarm nach hinten, bis dein Arm vollständig gestreckt ist.\nMache eine kurze Pause, dann führe deine Hand kontrolliert zur Ausgangsposition zurück.\nWiederhole mit deinem linken Arm.\nWechsle die Arme für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Halte deinen Oberarm während der gesamten Bewegung ruhig – die Bewegung sollte nur im Ellbogengelenk stattfinden. Dies isoliert optimal den Trizeps.",
+    "primary_muscles": [
+      "triceps_lateral",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "4f37cae7-c963-4b3c-9a3b-3d46ec15f89a",
+    "exercise_db_id": "1268",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4f37cae7-c963-4b3c-9a3b-3d46ec15f89a.jpg",
+    "video_path": "4f37cae7-c963-4b3c-9a3b-3d46ec15f89a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:44.255262+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Brustdrücken auf Gymnastikball",
+    "instructions": "Sitze auf einem Gymnastikball mit flachen Füßen auf dem Boden und Knien im 90-Grad-Winkel.\nHalte die Kabelgriffe auf Brusthöhe, Handflächen nach unten, Ellbogen gebeugt.\nSpanne deine Rumpfmuskulatur an und drücke die Kabelgriffe nach vorne, bis deine Arme vollständig gestreckt sind.\nMache eine kurze Pause, löse dann die Spannung langsam und bringe die Griffe zurück in die Ausgangsposition.\nWiederhol die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Brustdrücken auf dem Gymnastikball trainiert die Brust und beansprucht auch Schultern und Trizepse. Die Übung wird sitzend auf dem Ball ausgeführt und erfordert gute Rumpfstabilität und Gleichgewichtssinn.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "4a2a5728-2c7a-4988-bf36-5c35462a63cd",
+    "exercise_db_id": "0212",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4a2a5728-2c7a-4988-bf36-5c35462a63cd.jpg",
+    "video_path": "4a2a5728-2c7a-4988-bf36-5c35462a63cd.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:27.825921+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Crunch sitzend",
+    "instructions": "Sitze an einem Kabelzug-Gerät mit flachen Füßen auf dem Boden und gebeugten Knien.\nHalte den Griff des Kabelzugs mit beiden Händen und positioniere ihn hinter deinem Kopf.\nSpanne deine Abs an und curle deinen Oberkörper langsam nach vorne, bringe deine Brust zu deinen Knien.\nMache eine kurze Pause oben, kehre dann langsam zur Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_upper"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "872d67fc-cc4a-4d18-9d81-cd8c100c35f1",
+    "exercise_db_id": "0226",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "872d67fc-cc4a-4d18-9d81-cd8c100c35f1.jpg",
+    "video_path": "872d67fc-cc4a-4d18-9d81-cd8c100c35f1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:56.903527+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Crunch stehend",
+    "instructions": "Befestige einen Kabelgriff am hohen Seilzug und stelle dich mit dem Gesicht zur Maschine gewandt weg von dieser.\nHalte den Griff mit beiden Händen hinter deinem Kopf, Ellbogen gebeugt.\nStehe mit schulterbereiter Fußstellung und leicht gebeugten Knien.\nBauchmuskulatur angespannt, atme aus und führe deinen Oberkörper Richtung Knie nach unten, Ellbogen zu den Oberschenkeln.\nHalte unten kurz an, dann kehre langsam zur Ausgangslage zurück.\nWiederhole die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Dies ist eine Bauchmuskelübung mit Kabelzug, die auch die schrägen Bauchmuskeln trainiert. Der Bewegungswiderstand erhöht die Rumpfkraft und Stabilität.",
+    "primary_muscles": [
+      "abs_upper"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "ec0e22a6-d00b-4212-bd9d-28a58041af87",
+    "exercise_db_id": "0868",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "ec0e22a6-d00b-4212-bd9d-28a58041af87.jpg",
+    "video_path": "ec0e22a6-d00b-4212-bd9d-28a58041af87.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:22.354759+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Curl",
+    "instructions": "Stelle dich vor die Kabelzugmaschine, deine Füße schulterbreit auseinander.\nGreife den Kabelzug-Aufsatz mit unterem Griff, Handflächen zeigen nach oben.\nHalte deine Ellbogen nah an deinen Seiten und deine Oberarme stationär.\nAtme aus und curl den Kabelzug-Aufsatz zu deinen Schultern, spanne deinen Bizeps an.\nHalte kurz oben an, drücke dabei deinen Bizeps.\nAtme ein und senke den Kabelzug-Aufsatz langsam zur Ausgangsposition.\nWiederhhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Curl ist eine Kraftübung, die den Bizeps mit einer Kabelzugmaschine trainiert. Er beinhaltet das Curl des Kabelzug-Aufsatzes zu den Schultern, während die Ellbogen nah am Körper gehalten werden, was konstante Spannung auf dem Bizeps während der gesamten Bewegung bietet.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "2e916bd5-e5a3-4b05-8d23-13e75fc27983",
+    "exercise_db_id": "1643",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2e916bd5-e5a3-4b05-8d23-13e75fc27983.jpg",
+    "video_path": "2e916bd5-e5a3-4b05-8d23-13e75fc27983.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:34.613292+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Curl im Sitzen",
+    "instructions": "Sitze auf einer Bank vor dem Kabelzuggerät mit den Füßen flach auf dem Boden.\nFasse den Kabelgriff mit Untergriff, Handflächen nach oben, und halte deine Hände schulterbreit auseinander.\nHalte deine Oberarme stillstehend und deine Ellbogen nah an deinem Körper.\nAtme aus und führe den Kabelgriff in Richtung Schultern, während du deine Bizepse anspannst.\nHalte oben kurz inne und spanne deine Bizepse an.\nAtme ein und senke den Kabelgriff langsam zurück in die Ausgangsposition mit vollständig ausgestreckten Armen.\nWiederhole die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Dies ist eine Isolationsübung für die Bizepse am Kabelzuggerät im Sitzen. Sie betont kontrollierte Bewegungen und konstante Spannung auf den Bizepsen während des gesamten Bewegungsumfangs.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "887de913-ebef-47b4-aee1-3284915a95d5",
+    "exercise_db_id": "0182",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "887de913-ebef-47b4-aee1-3284915a95d5.jpg",
+    "video_path": "887de913-ebef-47b4-aee1-3284915a95d5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:09.498563+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Curl liegend mit engem Griff",
+    "instructions": "Befestige eine gerade Stange an einer unteren Kabelmaschine.\nLege dich mit dem Gesicht nach oben auf eine flache Bank, deine Füße flach auf dem Boden.\nGriffe die Stange mit Unterhandgriff, die Hände schulterbreit auseinander.\nStrecke deine Arme vollständig aus und halte deine Ellbogen nah an deinen Seiten.\nBewege die Stange bei ruhigem Oberarm durch Anspannung deiner Bizeps in Richtung deiner Brust.\nMache eine kurze Pause oben und spanne deinen Bizeps an.\nSenke die Stange langsam zurück zur Ausgangsposition und strecke deine Arme vollständig aus.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Curl liegend mit engem Griff ist eine Isolationsübung für den Bizeps, ausgeführt auf einer Bank mit einer Kabelmaschine. Sie betont eine saubere Ausführung und konstante Spannung auf dem Bizeps.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "fad3ca4c-25e8-4cf3-8c3c-fa2d4ec6f5b3",
+    "exercise_db_id": "0236",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "fad3ca4c-25e8-4cf3-8c3c-fa2d4ec6f5b3.jpg",
+    "video_path": "fad3ca4c-25e8-4cf3-8c3c-fa2d4ec6f5b3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:14.607207+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Drehrudern (V-Griff)",
+    "instructions": "Befestige einen V-Griff an einem Kabelzuggerät in Brusthöhe.\nStelle dich frontal zum Gerät mit schulterbreit auseinander stehenden Füßen.\nFasse den V-Griff mit Obergriff, Handflächen nach unten.\nMache einen Schritt zurück, um Spannung im Kabel aufzubauen.\nHalte deinen Rücken gerade und deine Rumpfmuskulatur angespannt.\nZiehe den V-Griff durch Retraktion der Schulterblätter und Beugung der Ellbogen zu deinem Oberkörper.\nWährend du ziehst, drehe deinen Oberkörper zu einer Seite und drücke deine Schulterblätter zusammen.\nHalte kurz in der obersten Position und spüre die Kontraktion im oberen Rücken.\nSenke das Gewicht langsam ab und kehre zur Ausgangsposition zurück, indem du deinen Oberkörper entspannst.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen und wechsle die Drehrichtung mit jeder Wiederholung.",
+    "tips": "Das Kabelzug-Drehrudern ist eine Compound-Übung, die den oberen Rücken trainiert und gleichzeitig Bizeps und Schultern beansprucht. Die Drehbewegung verstärkt die Rumpfaktivierung und verbessert die Koordination.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "5921950f-84e9-49b5-a158-e132bef7684d",
+    "exercise_db_id": "0862",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5921950f-84e9-49b5-a158-e132bef7684d.jpg",
+    "video_path": "5921950f-84e9-49b5-a158-e132bef7684d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:29.80504+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Drehung",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen vor der Kabelzug-Maschine.\nHalte den Kabelgriff mit beiden Händen vor deiner Brust, die Arme leicht gebeugt.\nSpanne deinen Rumpf an und rotiere deinen Oberkörper langsam zur einen Seite, während Hüften und Beine stabil bleiben.\nMache eine kurze Pause am Ende der Rotation, dann kehre langsam in die Ausgangsposition zurück.\nWiederhole die Rotation zur anderen Seite.\nWechsle weiterhin die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kabelzug-Drehung trainiert die Bauchmuskulatur, besonders die seitlichen Bauchmuskeln und den unteren Rücken, durch den Widerstand des Kabelzugs bei rotierenden Bewegungen.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "bd30e09e-213a-4046-95d6-d1139eb20688",
+    "exercise_db_id": "2399",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "bd30e09e-213a-4046-95d6-d1139eb20688.jpg",
+    "video_path": "bd30e09e-213a-4046-95d6-d1139eb20688.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:40.439804+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Drehung im Sitzen",
+    "instructions": "Sitze an der Kabelzug-Maschine mit flachen Füßen und leicht gebeugten Knien.\nFasse den Kabelgriff mit beiden Händen und strecke deine Arme nach vorne.\nBei angespanntem Rumpf rotiere deinen Oberkörper langsam zur Seite und ziehe das Kabel über deinen Körper.\nHalte kurz am Ende des Bewegungsumfangs an, drehe deinen Oberkörper dann langsam zurück.\nWiederhole auf der anderen Seite.\nWechsle abwechselnd die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Übung an der Kabelzug-Maschine, die die Bauchmuskulatur trainiert, besonders die seitlichen Bauchmuskeln (Obliquen). Sie bietet Widerstand während der gesamten Drehbewegung im Sitzen.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "550dbb96-b202-4439-9b2c-07623fa575ee",
+    "exercise_db_id": "1263",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "550dbb96-b202-4439-9b2c-07623fa575ee.jpg",
+    "video_path": "550dbb96-b202-4439-9b2c-07623fa575ee.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:20.559858+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Einarm-Flye auf dem Trainingsball",
+    "instructions": "Sitze auf einem Trainingsball mit flachen Füßen auf dem Boden und geradem Rücken.\nHalte einen Kabelgriff in einer Hand und strecke deinen Arm zur Seite aus, parallel zum Boden.\nHalte deinen Ellbogen leicht gebeugt und deine Handfläche nach vorne gerichtet.\nBringe deinen Arm langsam über deinen Körper, während du deine Brustmuskulatur zusammendrückst.\nMache eine kurze Pause am Ende der Bewegung und kehre dann langsam in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite.",
+    "tips": "Die Kabelzug-Einarm-Flye auf dem Trainingsball ist eine einseitige Brustübung, die auf einem Trainingsball ausgeführt wird, was eine Balance-Komponente zur traditionellen Kabelzug-Flye-Bewegung hinzufügt. Sie trainiert die Brustmuskulatur und beansprucht zudem die vorderen und hinteren Schultermuskeln sowie die Trizeps, wobei Rumpfstabilität erforderlich ist, um die Körperhaltung auf dem Ball zu halten.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "7362577c-ad0f-4004-9ddd-9811aa909cbb",
+    "exercise_db_id": "1633",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7362577c-ad0f-4004-9ddd-9811aa909cbb.jpg",
+    "video_path": "7362577c-ad0f-4004-9ddd-9811aa909cbb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:28.867901+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Einarm-Prediger-Curl",
+    "instructions": "Stelle den Kabelzug so ein, dass das Prediger-Curl-Polster auf Brusthöhe ist.\nStehe vor dem Kabelzug mit schulterbreit auseinander stehenden Füßen.\nFasse den Kabelgriff mit Untergriff und positioniere deinen Oberarm gegen das Prediger-Polster.\nHalte deinen Rücken gerade und deinen Core angespannt.\nCurle den Kabelgriff langsam zu deiner Schulter, halte deinen Oberarm gegen das Polster.\nHalte einen Moment oben inne und spanne deinen Bizeps an.\nSenke den Kabelgriff langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.\nWechsle die Arme und wiederhole die Übung.",
+    "tips": "Der Kabelzug-Einarm-Prediger-Curl ist eine Isolationsübung für den Bizeps mit Kabelzug und Prediger-Polster, die strikte Ausführung und konstante Spannung auf dem Bizeps betont.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "fdc32010-5042-42d4-923e-e842c336ac98",
+    "exercise_db_id": "0185",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "fdc32010-5042-42d4-923e-e842c336ac98.jpg",
+    "video_path": "fdc32010-5042-42d4-923e-e842c336ac98.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:12.163679+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Fliegende",
+    "instructions": "Befestige die Griffe am Kabelzug und lege dich flach auf eine Bank mit den Füßen auf dem Boden.\nHalte die Griffe mit den Handflächen zueinander gewandt und den Armen gestreckt über der Brust.\nBei leicht angewinkelten Ellbogen senkst du deine Arme in einem weiten Bogen nach außen, bis du eine Dehnung in der Brust spürst.\nHalte kurz an und drücke dann deine Brustmuskulatur zusammen, um deine Arme in die Ausgangsposition zurückzubringen.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kabelzug-Fliegende ist eine isolierte Brustübung an einer Bank mit Kabelmaschinen. Sie zielt auf die Brustmuskeln ab und beansprucht auch die vorderen Schultermuskeln und Trizepse als sekundäre Muskulatur. Die Bewegung konzentriert sich darauf, die Arme in einem weiten Bogen zu senken und dann zusammenzuführen, wobei der Fokus auf dem Zusammendrücken der Brust liegt.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "4c6129d9-1d39-4754-a073-c1374984a879",
+    "exercise_db_id": "0191",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4c6129d9-1d39-4754-a073-c1374984a879.jpg",
+    "video_path": "4c6129d9-1d39-4754-a073-c1374984a879.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:26.058842+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Fliegende (einarmig, vorgebeugt)",
+    "instructions": "Stelle dich mit schulterbreit auseinanderstehenden Füßen vor einem Kabelzuggerät hin.\nGreifen den Griff mit einer Hand und treten zurück, um Spannung auf dem Kabel zu erzeugen.\nBeuge dich nach vorne an der Hüfte, halte deinen Rücken gerade und deinen Core angespannt.\nStrecke deinen Arm zur Seite aus, parallel zum Boden, mit leichter Ellbogenbiegung.\nBringe deinen Arm langsam zur Ausgangsposition zurück, behielte die Kontrolle während der gesamten Bewegung bei.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Das einarmige Kabelzug-Fliegende vorgebeugt ist eine Isolationsübung mit dem Kabelzuggerät, die die Brustmuskeln trainiert. Die Deltamuskeln und der Kapuzenmuskel sind sekundär beteiligt.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "f6b8733e-2484-4861-981c-c15719329d74",
+    "exercise_db_id": "1270",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "f6b8733e-2484-4861-981c-c15719329d74.jpg",
+    "video_path": "f6b8733e-2484-4861-981c-c15719329d74.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:36.584776+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Fliegende obere Brust",
+    "instructions": "Befestige die Griffe an den Kabeln auf Brrusthöhe.\nStehe in der Mitte der Kabelmaschine mit einem Fuß leicht vor dem anderen.\nFasse die Griffe mit den Handflächen nach unten und den Armen zur Seite ausgestreckt.\nHalte eine leichte Beugung in deinen Ellbogen und spanne deinen Core an.\nZiehe die Kabel vor deiner Brust zusammen und kreuze sie übereinander.\nSpanne deine Brustmuskulatur beim Höhepunkt der Bewegung an.\nLasse die Kabel langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Kabelzug-Fliegende obere Brust trainieren die Brustmuskulatur mit einem Kabelzug und betonen den oberen Brustbereich. Die Bewegung beinhaltet das Kreuzen der Kabel vor dem Körper, was auch die Schultern und den Trizeps beansprucht.",
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "shoulders_front",
+      "chest_middle"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "8914fe8b-7946-4a95-a874-34ff7e562f10",
+    "exercise_db_id": "1269",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8914fe8b-7946-4a95-a874-34ff7e562f10.jpg",
+    "video_path": "8914fe8b-7946-4a95-a874-34ff7e562f10.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:16.006163+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Fliegende stehend",
+    "instructions": "Stelle dich in die Mitte einer Kabelmaschine, deine Füße schulterbreit auseinander.\nHalte die Griffe der Kabel mit den Handflächen nach unten und deine Arme gerade zu den Seiten ausgestreckt.\nBringe deine Hände bei gestreckten Armen nach vorne vor deinen Körper zusammen und überkreuze sie.\nMache eine kurze Pause und kehre dann langsam zur Ausgangsposition zurück, deine Arme bleiben gestreckt.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Kabelzug-Fliegende stehend ist eine Brustübung mit einer Kabelmaschine. Die Bewegung bringt die Arme nach vorne vor den Körper zusammen und überkreuzt sie, wobei die Brustmuskulatur trainiert wird und zusätzlich die Deltamuskeln und der Trizeps beansprucht werden.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "d56bfead-70c0-4754-97f9-f20135589402",
+    "exercise_db_id": "0179",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d56bfead-70c0-4754-97f9-f20135589402.jpg",
+    "video_path": "d56bfead-70c0-4754-97f9-f20135589402.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:05.272998+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Flyer (unten)",
+    "instructions": "Befestige die Griffe an den unteren Rollen des Kabelzug-Geräts und wähle ein angemessenes Gewicht.\nStehe in der Mitte des Geräts mit schulterbreit auseinander stehenden Füßen und leicht gebeugten Knien.\nFasse die Griffe mit Obergriff und strecke deine Arme zu den Seiten aus, wobei deine Ellbogen leicht gebeugt bleiben.\nBringe deine Arme unter Kontrolle in einer fließenden Bewegung nach vorne und kreuze sie vor deinem Körper.\nMache eine kurze Pause am höchsten Punkt der Bewegung und spüre die Dehnung in deiner Brustmuskulatur.\nReverse die Bewegung und führe deine Arme langsam zurück zur Ausgangsposition, während du die Spannung in der Brust aufrechterhältst.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine isolierte Brustübung am Kabelzug, die die Brustmuskeln von unten nach oben zusammenführt und besonders den unteren und inneren Brustbereich beansprucht.",
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "d4135e71-6431-4b4f-b63c-529adff63c73",
+    "exercise_db_id": "0164",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d4135e71-6431-4b4f-b63c-529adff63c73.jpg",
+    "video_path": "d4135e71-6431-4b4f-b63c-529adff63c73.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:36.954918+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Fronterheben",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen vor dem Kabelzug auf und greife den Griff mit Obergriff.\nHalte deinen Rücken gerade und spanne dein Core an.\nHebe den Kabelgriff vor dir an, mit gestreckten Armen und Handflächen nach unten gerichtet.\nHebe weiter an, bis deine Arme parallel zum Boden sind.\nHalte kurz inne und senke den Kabelgriff dann langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Fronterheben ist eine Isolationsübung für die Deltamuskeln und nutzt die konstante Spannung des Kabelzugs während der gesamten Bewegung. Kapuzenmuskel und Bizeps werden sekundär beansprucht.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "shoulders_side"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "d06f6d9c-0b3a-448a-9232-095713e4ad35",
+    "exercise_db_id": "0161",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d06f6d9c-0b3a-448a-9232-095713e4ad35.jpg",
+    "video_path": "d06f6d9c-0b3a-448a-9232-095713e4ad35.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:33.727183+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Frontheben",
+    "instructions": "Stelle dich mit schulterbreitem Fußabstand auf und beuge deine Knie leicht.\nHalte den Kabelgriff mit Obergriff, Handflächen nach unten, und strecke deine Arme vollständig vor dir aus.\nHebe den Kabelgriff mit gestreckten Armen bis auf Schulterhöhe.\nMache eine kurze Pause oben und senke den Kabelgriff langsam zur Ausgangsposition ab.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "shoulders_side"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "748c112b-da83-42a6-94f5-3c0d84a2351c",
+    "exercise_db_id": "0247",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "748c112b-da83-42a6-94f5-3c0d84a2351c.jpg",
+    "video_path": "748c112b-da83-42a6-94f5-3c0d84a2351c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:00:42.148541+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Handgelenkcurl",
+    "instructions": "Befestige einen geraden Griff an einem tiefen Seilzug.\nStehe mit schulterbreit auseinander stehenden Füßen vor der Maschine.\nFasse den Griff mit Untergriff, die Handflächen nach oben, Hände schulterbreit auseinander.\nRuhe deine Unterarme auf einer Bank oder einem Pad, wobei deine Handgelenke über die Kante ragen.\nHalte deine Unterarme stabil und hebe deine Handgelenke nach oben so weit wie möglich.\nPause kurz oben, dann senke den Griff langsam zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Handgelenkcurl ist eine Isolationsübung, die die Unterarmmuskulatur, besonders die Handgelenk-Flexoren, trainiert und mit einem Kabelzug und geraden Griff durchgeführt wird.",
+    "primary_muscles": [
+      "forearms_flexors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "d8271d82-f096-4ba6-a66a-d23e22c1fd81",
+    "exercise_db_id": "0167",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d8271d82-f096-4ba6-a66a-d23e22c1fd81.jpg",
+    "video_path": "d8271d82-f096-4ba6-a66a-d23e22c1fd81.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:41.261238+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Hochrudern (kniend)",
+    "instructions": "Befestigen Sie eine Langhantel an einem Kabelzug in Brusthöhe.\nKnien Sie sich vor dem Kabelzug hin und greifen Sie die Stange mit Obergriff, schulterbreit auseinander.\nSetzen Sie sich auf Ihre Fersen, halten Sie Ihren Rücken gerade und die Bauchmuskulatur angespannt.\nZiehen Sie die Stange zu Ihrem oberen Bauchbereich, drücken Sie Ihre Schulterblätter zusammen.\nMachen Sie eine kurze Pause oben, dann lassen Sie die Stange langsam in die Ausgangsposition zurück.\nWiederholen Sie für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Hochrudern (kniend) ist eine Kraftübung für den oberen Rücken, durchgeführt mit einem Kabelzug in kniender Position, mit Betonung auf Schulterblattzurückziehen.",
+    "primary_muscles": [
+      "back_traps_upper",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "shoulders_side"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "40ed9a81-8cac-4569-9d2c-a4dd54333680",
+    "exercise_db_id": "0174",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "40ed9a81-8cac-4569-9d2c-a4dd54333680.jpg",
+    "video_path": "40ed9a81-8cac-4569-9d2c-a4dd54333680.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:52.588471+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Judo-Flip",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen zum Kabelzug-Gerät gewandt.\nHalte den Kabelgriff mit beiden Händen auf Brusthöhe, die Handflächen zeigen nach unten.\nSpanne deinen Rumpf an und rotiere deinen Oberkörper nach rechts, während du den Kabelzug über deinen Körper ziehst.\nWährend der Rotation drehst du deinen hinteren Fuß und lässt deine Hüfte natürlich mitrotieren.\nStrecke deine Arme vollständig und beende die Bewegung, indem du den Griff über deine Schulter flipst.\nKehre in die Ausgangsposition zurück, indem du die Bewegung umkehrst und deinen Oberkörper wieder zur Mitte rotierst.\nWiederhole die Bewegung auf der anderen Seite.\nWechsle die Seiten für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kabelzug-Judo-Flip ist eine Rotationsübung für den Rumpf, die Bauchmuskeln, schräge Bauchmuskeln und Schultern am Kabelzug-Gerät trainiert. Die Bewegung ahmt einen Judo-Wurf nach und erfordert Koordination, Rumpfstabilität und kontrollierte Ausführung.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "5da109a6-769e-4389-a06f-dc993c6db7b7",
+    "exercise_db_id": "1644",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5da109a6-769e-4389-a06f-dc993c6db7b7.jpg",
+    "video_path": "5da109a6-769e-4389-a06f-dc993c6db7b7.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:51.362682+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Kniebeuge mit Curl",
+    "instructions": "Befestige einen Griffaufsatz am untersten Anschlag des Kabelzuggerätes.\nStehe mit schulterbreit auseinander stehenden Füßen zum Gerät gewandt.\nHalte den Griffaufsatz mit einem Unterhandgriff, Handflächen nach oben, Arme vollständig gestreckt.\nSenke deinen Körper in eine Kniebeugeposition ab, halte deinen Rücken gerade und die Knie hinter den Zehen.\nWährend du nach unten gehst, führe den Griffaufsatz nach oben zu deinen Schultern, halte deine Ellbogen nah am Körper.\nMache eine kurze Pause oben und spanne deine Bizeps an.\nSenke den Griffaufsatz langsam zurück zur Ausgangsposition, strecke deine Arme vollständig.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kabelzug-Kniebeuge mit Curl ist eine Verbundübung, die eine Kniebeuge mit einem Bizeps-Curl am Kabelzuggerät kombiniert. Sie trainiert primär die Bizeps und Unterarme und beansprucht gleichzeitig die untere Körperhälfte und den Core zur Stabilisierung.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "9bdd9ac6-0f29-4b7a-be7a-933cbecfe43d",
+    "exercise_db_id": "1717",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9bdd9ac6-0f29-4b7a-be7a-933cbecfe43d.jpg",
+    "video_path": "9bdd9ac6-0f29-4b7a-be7a-933cbecfe43d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:50.08766+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Kniebeuge-Rudern mit Seil",
+    "instructions": "Befestige ein Seil an einer Kabelmaschine in Hüfthöhe.\nStehe mit schulterbreit auseinander stehenden Füßen zur Maschine gewandt.\nBeuge deine Knie und senke deinen Körper in eine Kniebeugenposition, halte deinen Rücken gerade und die Brust oben.\nGreife das Seil mit Oberhandgriff, Hände schulterbreit auseinander.\nSpanne deinen Kern an und ziehe das Seil zu deinem Körper, drücke deine Schulterblätter zusammen.\nHalte deine Ellbogen nah am Körper und zieheweiter, bis deine Hände deine Brust erreichen.\nMache eine kurze Pause oben und lass das Seil dann langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Eine Komplexübung, die eine Kniebeuge mit einer Ruderbewegung kombiniert. Trainiert den Rücken und beansprucht Bizeps, Rhomboiden und hintere Deltamuskeln. Erfordert Koordination und Rumpfstabilität.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "quads_rectus_femoris"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "22d6d1e1-36cd-4100-ad9d-6d9b744f44a0",
+    "exercise_db_id": "1631",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "22d6d1e1-36cd-4100-ad9d-6d9b744f44a0.jpg",
+    "video_path": "22d6d1e1-36cd-4100-ad9d-6d9b744f44a0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:15.382203+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Konzentrations-Curl",
+    "instructions": "Setze dich auf eine Bank oder einen Stuhl, die Füße flach auf dem Boden und die Knie leicht gebeugt.\nGreife den Kabelgriff mit Untergriff und lehne deinen Ellenbogen an die Innenseite deines Oberschenkels.\nHalte deinen Oberarm stabil, atme aus und curle den Griff zu deiner Schulter, während du deine Bizepse anspannst.\nMache eine kurze Pause oben, atme dann ein und senke den Griff langsam zurück zur Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen, dann wechsle den Arm.",
+    "tips": "Der Kabelzug-Konzentrations-Curl ist eine Isolationsübung für den Bizeps an der Kabelmaschine im Sitzen. Sie betont strikte Ausführung und Muskelkontraktion, indem der Oberarm gegen den Oberschenkel gestützt wird.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "fb1aea73-65bc-4e34-8213-f016e992b61a",
+    "exercise_db_id": "1642",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "fb1aea73-65bc-4e34-8213-f016e992b61a.jpg",
+    "video_path": "fb1aea73-65bc-4e34-8213-f016e992b61a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:59:33.199857+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Konzentrations-Curl (einseitig, sitzend)",
+    "instructions": "Sitze auf einer Bank mit flachen Füßen auf dem Boden und aufrechtem Rücken.\nHalte einen Kabelgriff mit einer Hand und lege deinen Ellbogen auf der Innenseite deines Oberschenkels knapp über dem Knie ab.\nHalte deinen Oberarm stabil und ziehe den Griff beim Ausatmen zu deiner Schulter.\nHalte kurz oben an und spanne deinen Bizeps an.\nSenke den Griff langsam beim Einatmen zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite.",
+    "tips": "Das einseitige sitzende Kabelzug-Konzentrations-Curl ist eine Isolationsübung für den Bizeps am Kabelzuggerät. Sie ermöglicht strikte Ausführung und intensive Muskelkontraktion durch die Stabilisierung des Oberarms gegen den Oberschenkel.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "cd82b052-39c2-4d0d-8208-fdda2eb8fbc8",
+    "exercise_db_id": "0152",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "cd82b052-39c2-4d0d-8208-fdda2eb8fbc8.jpg",
+    "video_path": "cd82b052-39c2-4d0d-8208-fdda2eb8fbc8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:16.782362+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Konzentrations-Trizepsstreckung (auf Knie)",
+    "instructions": "Sitze auf einer Bank oder einem Stuhl mit gebeugten Knien und flachen Füßen auf dem Boden.\nHalte den Kabelgriff mit deiner rechten Hand und platziere deinen Ellbogen auf der Innenseite deines rechten Knies.\nStrecke deinen Arm vollständig, halte deinen Ellbogen stationär und nah am Knie.\nMache eine kurze Pause oben, dann senke deinen Arm langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Die Kabelzug-Konzentrations-Trizepsstreckung ist eine Isolationsübung, die den Trizeps im Sitzen am Kabelzuggerät trainiert. Der Ellbogen wird gegen die Innenseite des Knies gestützt, um die Bewegung zu stabilisieren und den Fokus auf die Trizepsstreckung zu legen.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "cf80a4f8-3333-4bfe-ae4e-63a88464f8b5",
+    "exercise_db_id": "0157",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "cf80a4f8-3333-4bfe-ae4e-63a88464f8b5.jpg",
+    "video_path": "cf80a4f8-3333-4bfe-ae4e-63a88464f8b5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:23.764129+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Kreuzheben",
+    "instructions": "Stelle dich dem Kabelzuggerät gegenüber mit schulterbreit auseinander stehenden Füßen.\nBeuge dich in der Hüfte und den Knien, senke deinen Oberkörper ab, bis dein Rücken parallel zum Boden ist.\nGreife die Kabelzuggriffe mit einem Obergriff, halte deine Arme gerade und deine Schultern zurück.\nSpanne deine Gesäßmuskeln und Oberschenkelrückseiten an, um die Kabelzuggriffe zu heben und hebe deine Hüften an, während du aufrecht stehst.\nMache eine kurze Pause oben, senke dann die Kabelzuggriffe langsam zur Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kabelzug-Kreuzheben ist eine Grundübung, die in erster Linie die Gesäßmuskeln trainiert und sekundär die Oberschenkelrückseiten, Oberschenkelvorderseiten und den unteren Rücken beansprucht. Es beinhaltet das Heben eines Kabelzugs aus einer tiefen Position durch eine Hüftbeugung.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris",
+      "hamstrings_semimembranosus"
+    ],
+    "secondary_muscles": [
+      "back_erector_spinae",
+      "quads_rectus_femoris"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "8759da65-5ef4-4006-bfad-0377b47256a1",
+    "exercise_db_id": "3563",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8759da65-5ef4-4006-bfad-0377b47256a1.jpg",
+    "video_path": "8759da65-5ef4-4006-bfad-0377b47256a1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:58:31.717243+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Latzug einseitig",
+    "instructions": "Befestige einen einzelnen Griff am hohen Seilzug.\nStehe vor der Maschine mit schulterbereiter Fußstellung.\nFasse den Griff mit Übergriff und strecke deinen Arm vollständig.\nHalte deinen Rücken gerade und spanne deine Rumpfmuskulatur an.\nZiehe den Griff zu deiner Seite nach unten und halte dabei deinen Ellbogen nah am Körper.\nHalte unten kurz an und spanne deinen Latissimus intensiv an.\nLasse den Griff langsam zur Ausgangslage zurück.\nWiederhole die gewünschte Anzahl an Wiederholungen.\nWechsle die Seite und wiederhole mit dem anderen Arm.",
+    "tips": "Dies ist eine einseitige Übung für den Breiter Rückenmuskel mit Kabelzug. Sekundär werden Bizeps und Unterarme trainiert. Eine gute Ausführung und Kontrolle sind wichtig, um den Lat zu isolieren und Ausweichbewegungen zu vermeiden.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  },
+  {
+    "id": "df439858-5c5c-4b22-9924-a82ece2ac55f",
+    "exercise_db_id": "0153",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "df439858-5c5c-4b22-9924-a82ece2ac55f.jpg",
+    "video_path": "df439858-5c5c-4b22-9924-a82ece2ac55f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:57:18.238595+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kabelzug-Latzug mit Überkreuzung",
+    "instructions": "Befestige einen Kabelgriff auf jeder Seite der Kabelzugmaschine auf Schulterhöhe.\nStehe in der Mitte der Maschine mit schulterbreit auseinander stehenden Füßen.\nFasse die Griffe mit Obergriff und tritt einen Schritt zurück, um Spannung in den Kabeln zu erzeugen.\nNeige dich leicht von der Hüfte nach vorne, halte deinen Rücken gerade und deine Brust aufrecht.\nZiehe die Griffe nach unten und über deinen Körper, wobei du deine Schulterblätter zusammendrückst.\nMache eine kurze Pause unten und kehre dann langsam zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "shoulders_rear",
+      "back_teres"
+    ],
+    "equipment": [
+      "cable_machine"
+    ]
+  }
+]

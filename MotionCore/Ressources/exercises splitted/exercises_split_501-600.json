@@ -1,0 +1,2844 @@
+[
+  {
+    "id": "d6f0c66b-1972-464f-ad56-490c7f583f9a",
+    "exercise_db_id": "3640",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d6f0c66b-1972-464f-ad56-490c7f583f9a.jpg",
+    "video_path": "d6f0c66b-1972-464f-ad56-490c7f583f9a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:26.292569+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Knee-Touch Crunch",
+    "instructions": "Legen Sie sich flach auf den Rücken mit gebeugten Knien und flachen Füßen auf dem Boden.\nPlatzieren Sie Ihre Hände hinter dem Kopf mit nach außen zeigenden Ellbogen.\nSpannen Sie Ihre Bauchmuskulatur an, heben Sie Ihre Schulterblätter vom Boden und greifen Sie mit Ihrer rechten Hand zu Ihrem linken Knie.\nKehren Sie in die Ausgangsposition zurück und wiederholen Sie, diesmal mit Ihrer linken Hand zum rechten Knie.\nWechseln Sie weiterhin zwischen den Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Knee-Touch Crunch ist eine Bauchmuskelübung mit Körpergewicht, die die Bauchmuskeln trainiert und auch die Hüftbeuger beansprucht.",
+    "primary_muscles": [
+      "abs_upper",
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "5cd0dacb-f066-4263-b58c-701d10ee997b",
+    "exercise_db_id": "3769",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5cd0dacb-f066-4263-b58c-701d10ee997b.jpg",
+    "video_path": "5cd0dacb-f066-4263-b58c-701d10ee997b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:22.610289+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Knicks-Kniebeuge",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin.\nTrete mit deinem rechten Fuß diagonal nach hinten über dein linkes Bein hinweg.\nBeuge beide Knie, als würdest du einen Knicks machen, und senke deinen Körper Richtung Boden.\nHalte deinen Oberkörper aufrecht und konzentriere dein Gewicht auf dem vorderen Fuß.\nDrücke dich über den vorderen Fuß wieder in die Ausgangsposition zurück.\nWiederhole die Bewegung auf der anderen Seite mit dem linken Fuß.",
+    "tips": "Diese Übung trainiert vorrangig die Gesäßmuskulatur und beansprucht zusätzlich die Oberschenkel, die hinteren Oberschenkelmuskeln und die Waden. Die Bewegung fördert Balance und Koordination.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "hamstrings_biceps_femoris",
+      "adductors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "5c6a25fb-9cb2-4e68-8d74-a3f4f33f3e57",
+    "exercise_db_id": "1418",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5c6a25fb-9cb2-4e68-8d74-a3f4f33f3e57.jpg",
+    "video_path": "5c6a25fb-9cb2-4e68-8d74-a3f4f33f3e57.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:35.76169+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Knie zur Brust ziehen",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen.\nBeuge deine Knie und senke deinen Körper in eine Kniebeugen-Position ab.\nZiehe deine Knie während der Abwärtsbewegung nach oben zur Brust und umfasse sie mit deinen Armen.\nHalte diese Position kurz, dann kehre langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Körpergewicht-Übung mit Fokus auf Gesäß und Beine, wobei auch Oberschenkelmuskulatur aktiviert wird.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "43ba4c3f-5c05-4768-8981-31d14690cf69",
+    "exercise_db_id": "0650",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "43ba4c3f-5c05-4768-8981-31d14690cf69.jpg",
+    "video_path": "43ba4c3f-5c05-4768-8981-31d14690cf69.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:51.627666+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Knie-Heran-Ziehen auf Stabilitätsball",
+    "instructions": "Beginne damit, auf dem Stabilitätsball zu sitzen mit flachen Füßen auf dem Boden und gebeugten Knien im 90-Grad-Winkel.\nPlatziere deine Hände auf den Seiten des Balls zur Stabilisierung.\nSpanne deine Bauchmuskeln an und rolle deine Hüfte langsam nach vorne, während du deine Knie zur Brust bringst.\nMache eine kurze Pause oben, dann strecke deine Beine langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Knie-Heran-Ziehen auf dem Stabilitätsball ist eine Bauchübung, die auch die Hüftbeuger beansprucht. Sie erfordert Balance und Kernkraft, während du deine Knie zur Brust bringst und gleichzeitig dein Körper auf dem Ball stabilisiert wird.",
+    "primary_muscles": [
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "abs_upper"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "1ee724ca-b1b5-4357-8bab-6eeadb8377ef",
+    "exercise_db_id": "0257",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1ee724ca-b1b5-4357-8bab-6eeadb8377ef.jpg",
+    "video_path": "1ee724ca-b1b5-4357-8bab-6eeadb8377ef.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:03.6402+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Knie-Kreise",
+    "instructions": "Stelle dich aufrecht hin mit hüftbreitem Abstand und Händen auf den Hüften.\nBeuge deine Knie leicht und hebe deine Fersen vom Boden ab, balanciere auf dem Fußballen.\nFühre mit deinen Knien kreisende Bewegungen aus, erst im Uhrzeigersinn, dann gegen den Uhrzeigersinn.\nFühre diese Bewegung für die gewünschte Anzahl von Wiederholungen durch.",
+    "tips": null,
+    "primary_muscles": [
+      "calves_gastrocnemius"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "dacf0057-5b34-47c8-a9ed-3de336cd580f",
+    "exercise_db_id": "3119",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "dacf0057-5b34-47c8-a9ed-3de336cd580f.jpg",
+    "video_path": "dacf0057-5b34-47c8-a9ed-3de336cd580f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:41.60778+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge",
+    "instructions": "Stehe mit schulterbreitem Fuß auseinander, Zehen zeigen leicht nach außen.\nSenke deinen Körper ab, indem du deine Knie beugst und deine Hüfte nach hinten schiebst, als würdest du dich auf einen Stuhl setzen.\nHalte deine Brust aufrecht und deinen Rücken gerade während der gesamten Bewegung.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden sind oder so weit, wie es sich bequem anfühlt.\nMache einen Moment Pause am unteren Punkt und drücke dich dann über deine Fersen zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kniebeuge ist eine Körpergewicht-Übung, die den Bauch zielt, während sie auch die Oberschenkelmuskulatur und das Gesäß beansprucht. Sie beinhaltet das Hocken, als würdest du auf einem Stuhl sitzen, während du einen geraden Rücken und aufrechte Brust hältst, und dann zurück in eine aufrechte Position.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "4c877286-1cad-4c59-843d-a42f2e8b44a2",
+    "exercise_db_id": "0124",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4c877286-1cad-4c59-843d-a42f2e8b44a2.jpg",
+    "video_path": "4c877286-1cad-4c59-843d-a42f2e8b44a2.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:14.793823+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge (breite Stände)",
+    "instructions": "Stelle dich mit breiterer als schulterbreiter Fußstellung hin, Zehen zeigen leicht nach außen.\nHalte die Langhantel über deinen oberen Rücken, aufgelegt auf deine Fallen oder hinteren Deltamuskeln.\nSpanne deinen Core an und halte deine Brust aufrecht, während du deinen Körper in die Kniebeuge senkst, drücke deine Hüften zurück und beuge deine Knien.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden sind, oder so tief wie du es komfortabel kannst.\nHalte einen Moment unten, drücke dich dann durch deine Fersen zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kniebeuge mit breitem Stand mit Langhantel ist eine zusammengesetzte Unterkörperübung, die die Quadrizepse trainiert, mit sekundärem Fokus auf Gesäß, Beinbeuger und Waden.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "hamstrings_biceps_femoris",
+      "adductors"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "e1eb1182-55ca-4b1d-a5c5-dfa844b6bf0d",
+    "exercise_db_id": "3533",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "e1eb1182-55ca-4b1d-a5c5-dfa844b6bf0d.jpg",
+    "video_path": "e1eb1182-55ca-4b1d-a5c5-dfa844b6bf0d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:38:14.863973+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge (Körpergewicht)",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin.\nSenke deinen Körper ab, indem du deine Knie beugst und deine Hüfte nach hinten schiebst, als würdest du dich auf einen Stuhl setzen.\nHalte deine Brust aufrecht und deinen Rücken gerade.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden sind.\nDrücke dich über deine Fersen nach oben, um in die Ausgangsposition zurückzukehren.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kniebeuge mit Körpergewicht trainiert primär die Quadrizeps, aktiviert sekundär die Oberschenkelbeuger und das Gesäß. Diese grundlegende Bewegung ist essentiell für die Kraft der unteren Extremitäten und benötigt keine Ausrüstung.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "9343c6cb-f33e-4df3-9f29-7b7e89ae3884",
+    "exercise_db_id": "1705",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9343c6cb-f33e-4df3-9f29-7b7e89ae3884.jpg",
+    "video_path": "9343c6cb-f33e-4df3-9f29-7b7e89ae3884.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:46.3532+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge auf dem BOSU-Ball",
+    "instructions": "Stelle den BOSU-Ball auf den Boden mit der flachen Seite nach oben.\nStehe mit schulterbreit auseinander stehenden Füßen auf dem BOSU-Ball.\nSenke deinen Körper ab, indem du deine Knie und Hüften beugst, als würdest du dich in einen Stuhl setzen.\nHalte deine Brust aufgerichtet und dein Gewicht auf deinen Fersen.\nSenke dich ab, bis deine Oberschenkel parallel zum Boden sind.\nHalte kurz an, drücke dann durch deine Fersen und kehre zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die instabile Oberfläche erfordert zusätzliche Rumpfstabilität. Fokussiere dich auf Balance und kontrollierte Bewegungen, um das beste Ergebnis zu erzielen.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus"
+    ],
+    "equipment": [
+      "exercise_ball"
+    ]
+  },
+  {
+    "id": "453c5a34-522e-4d32-a81b-a2d1d0f125bc",
+    "exercise_db_id": "0102",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "453c5a34-522e-4d32-a81b-a2d1d0f125bc.jpg",
+    "video_path": "453c5a34-522e-4d32-a81b-a2d1d0f125bc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:55:33.502943+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge auf Knien mit Langhantel",
+    "instructions": "Beginne auf den Knien, hüftbreit auseinander, Zehen zeigen nach vorne.\nLege eine Langhantel quer über deine Schultern, greife sie mit Obergriff, die Hände etwas breiter als Schulterbrei.\nSpanne deinen Core an und halte deine Brust aufrecht, während du dich langsam nach unten bewegst, indem du deine Knie beugst und deinen Rücken gerade hältst.\nSenke dich weiter ab, bis deine Oberschenkel parallel zum Boden sind oder so tief, wie es komfortabel möglich ist.\nMache eine kurze Pause unten und drücke dich dann über die Fersen zurück in die Ausgangsposition.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kniebeuge auf Knien mit Langhantel ist eine Variation der klassischen Kniebeuge aus kniender Position. Diese Übung trainiert primär die Quadrizeps und sekundär Gesäß, Beinbeuger und Waden. Sie erfordert gute Core-Stabilität und Gleichgewicht sowie korrekte Technik im Umgang mit der Langhantel.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "06afcb02-777d-4001-937e-0265f1b8696d",
+    "exercise_db_id": "1435",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "06afcb02-777d-4001-937e-0265f1b8696d.jpg",
+    "video_path": "06afcb02-777d-4001-937e-0265f1b8696d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:54:01.079118+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge Low Bar",
+    "instructions": "Stelle dich mit schulterbreiten Füßen hin und positioniere die Langhantel auf deinem oberen Rücken.\nHalte deine Brust oben und dein Bauchmuskelkorsett angespannt, senke deinen Körper langsam, indem du deine Knie beugst und deine Hüfte nach hinten drückst.\nSenke dich weiter ab, bis deine Oberschenkel parallel zum Boden oder leicht darunter sind.\nHalte einen Moment inne, dann drücke durch deine Fersen, um in die Ausgangsposition zurückzukehren.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kniebeuge Low Bar ist eine zusammengesetzte Übung für die untere Körperhälfte, die primär die Gesäßmuskulatur beansprucht, mit bedeutsamer Beteiligung von Oberschenkelstreckern, Oberschenkelrückseite und Waden. Sie wird mit der Langhantel tiefer auf dem Rücken ausgeführt und erfordert gute Technik, Rumpfstabilität und Hüftmobilität.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "hamstrings_semitendinosus",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "e1586287-e86c-41bd-9404-414fab8be7d3",
+    "exercise_db_id": "3132",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "e1586287-e86c-41bd-9404-414fab8be7d3.jpg",
+    "video_path": "e1586287-e86c-41bd-9404-414fab8be7d3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:37:43.020152+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge mit Hilfe",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, die Zehen zeigen leicht nach außen.\nHalte dich an einer stabilen Stütze, wie einem Stuhl oder einer Wand, zum Gleichgewichthalten fest.\nSenke deinen Körper in eine Kniebeugeposition ab, indem du deine Knie beugst und deine Hüfte nach hinten schiebst.\nHalte deine Brust oben und deinen Rücken gerade während der gesamten Bewegung.\nHalte einen Moment in der unteren Position, drücke dann durch deine Fersen, um in die Ausgangsposition zurückzukehren.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kniebeuge mit Hilfe ist eine Körpergewichtübung, die die Gesäßmuskeln anspricht und mit Unterstützung einer stabilen Stütze zum Gleichgewichthalten durchgeführt wird. Sie eignet sich für diejenigen, die ihre Beinkraft und die richtige Kniebeugetechnik entwickeln.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_medius"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "153649f9-548e-4c7a-a88d-a4a909d5b460",
+    "exercise_db_id": "1685",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "153649f9-548e-4c7a-a88d-a4a909d5b460.jpg",
+    "video_path": "153649f9-548e-4c7a-a88d-a4a909d5b460.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:47.898627+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge mit Überkopfreach",
+    "instructions": "Stelle dich mit hüftbreit auseinander stehenden Füßen hin, deine Zehen zeigen leicht nach außen.\nSenke deinen Körper in eine Kniebeugenposition, indem du deine Knie beugst und deine Hüften nach hinten schiebst.\nStrecke deine Arme über deinen Kopf aus, während du aus der Kniebeuge hochkommst, und reach in Richtung der Decke.\nKehre in die Ausgangsposition zurück, indem du deine Arme senkst und deine Knie beugst, um erneut in die Kniebeuge zu gehen.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "c7b2d5df-5994-4458-b837-4c7a9d268da8",
+    "exercise_db_id": "1686",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "c7b2d5df-5994-4458-b837-4c7a9d268da8.jpg",
+    "video_path": "c7b2d5df-5994-4458-b837-4c7a9d268da8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:41:49.521125+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge mit Überkopfreichung und Drehung",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen und leicht nach außen zeigenden Zehen hin.\nSenke deinen Körper in eine Kniebeugenposition, indem du deine Knie beugst und deine Hüften zurückdrückst.\nWährend du aus der Kniebeuge hochkommst, hebe deine Arme über deinen Kopf und drehe deinen Oberkörper zur einen Seite.\nKehre zur Ausgangsposition zurück und wiederhole die Kniebeuge, drehe diesmal deinen Oberkörper zur anderen Seite.\nWechsle bei jeder Kniebeuge-Wiederholung die Seite ab.",
+    "tips": "Die Kniebeuge mit Überkopfreichung und Drehung ist eine dynamische Körpergewicht-Übung, die eine traditionelle Kniebeuge mit Überkopfreichung und Oberkörperdrehung kombiniert und die Oberschenkel, Gesäßmuskeln, Beinbeuger und den Rumpf beansprucht sowie die Rotationsbeweglichkeit verbessert.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "abs_obliques",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "0434a572-c264-48fc-9f43-ac54b4539f00",
+    "exercise_db_id": "1004",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "0434a572-c264-48fc-9f43-ac54b4539f00.jpg",
+    "video_path": "0434a572-c264-48fc-9f43-ac54b4539f00.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:52:36.708595+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniebeuge mit Widerstandsband",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, mit dem Widerstandsband direkt über deinen Knien platziert.\nHalte deine Brust angehoben und deinen Rumpf angespannt, schiebe deine Hüfte nach hinten und beuge deine Knie, um in die Kniebeuge-Position zu senken.\nAchte darauf, dass deine Knie über deinen Zehen ausgerichtet sind und dein Gewicht in den Fersen liegt.\nHalte einen Moment in der unteren Position, dann drücke dich über deine Fersen ab, um zur Ausgangsposition zurückzukehren.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Die Kniebeuge mit Widerstandsband ist eine Unterkörperübung, die mit einem Band über den Knien das Gesäß trainiert und zusätzlich die Oberschenkelvoderseiten, Oberschenkelrückseiten und Waden beansprucht. Diese Übung hilft beim Aufbau von Kraft und Stabilität in der unteren Körperhälfte.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "hamstrings_biceps_femoris",
+      "abductors"
+    ],
+    "equipment": [
+      "resistance_band"
+    ]
+  },
+  {
+    "id": "ed1b7f35-da75-490f-9078-3a47a15bec06",
+    "exercise_db_id": "1420",
+    "category": "plyometric",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ed1b7f35-da75-490f-9078-3a47a15bec06.jpg",
+    "video_path": "ed1b7f35-da75-490f-9078-3a47a15bec06.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:27.56431+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniend Jump Squat mit Langhantel",
+    "instructions": "Beginne in kniender Position auf dem Boden, deine Füße etwa hüftbreit auseinander und Zehen nach vorne.\nHalte eine Langhantel über deinem Rücken, sie ruht auf deinen Schultern.\nSpanne deinen Rumpf und deine Gesäßmuskeln an und springe dann explosiv in die Luft, während du deine Hüften und Knie streckst.\nDrücke durch deine Zehen und strecke deine Knöchel, Knie und Hüften vollständig.\nLande kontrolliert zurück auf dem Boden, beuge deine Knie um die Landung abzufangen.\nGehe sofort in die nächste Wiederholung über und wiederhole die Jump-Squat-Bewegung.",
+    "tips": "Der kniend Jump Squat ist eine dynamische Unterkörperübung, die Gesäßmuskeln trainiert und auch Quadrizeps, Beinbeuger und Waden aktiviert.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "glutes_medius",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "f5c03970-3d6e-4bdd-8655-b22b1d611e2f",
+    "exercise_db_id": "3239",
+    "category": "strength",
+    "force_type": "static",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "f5c03970-3d6e-4bdd-8655-b22b1d611e2f.jpg",
+    "video_path": "f5c03970-3d6e-4bdd-8655-b22b1d611e2f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:30.578259+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniende Plank mit Schulterklopfen",
+    "instructions": "Beginne in einer knienden Position mit den Händen auf dem Boden, schulterbreit auseinander.\nStrecke deine Beine nach hinten, ruhe dich auf deinen Zehen aus und hebe deinen Körper in eine Plank-Position.\nHalte deinen Core angespannt und deine Hüfte stabil, hebe eine Hand vom Boden ab und tippe auf die gegenüberliegende Schulter.\nSetze die Hand wieder auf den Boden und wiederhole mit der anderen Hand.\nWechsle die Seiten ab für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die kniende Plank mit Schulterklopfen ist eine Core-Stabilitätsübung, die primär die Bauchmuskulatur trainiert und sekundär die Schultern und den Trizeps beansprucht. Sie erfordert, eine stabile Plank-Position zu halten, während du abwechselnd mit der gegenüberliegenden Hand auf jede Schulter tippst, was Gleichgewicht und Koordination herausfordert.",
+    "primary_muscles": [
+      "abs_upper",
+      "abs_lower"
+    ],
+    "secondary_muscles": [
+      "abs_obliques",
+      "abs_transverse"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "f3a8f588-9201-44c6-8f5c-c092c8a90743",
+    "exercise_db_id": "1346",
+    "category": "stretching",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "f3a8f588-9201-44c6-8f5c-c092c8a90743.jpg",
+    "video_path": "f3a8f588-9201-44c6-8f5c-c092c8a90743.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:29.10965+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniender Lat-Stretch",
+    "instructions": "Knien Sie auf dem Boden mit hüftbreit auseinanderstehenden Knien und Zehen, die nach hinten zeigen.\nStrecken Sie Ihre Arme über den Kopf und verschränken Sie Ihre Finger.\nHalten Sie Ihren Rücken gerade und lehnen Sie sich langsam zur rechten Seite, um eine Dehnung in Ihrem linken Lat zu spüren.\nHalten Sie die Dehnung 20-30 Sekunden lang und kehren Sie dann in die Ausgangsposition zurück.\nWiederholen Sie die Dehnung auf der linken Seite, lehnen Sie sich nach links und spüren Sie eine Dehnung in Ihrem rechten Lat.\nWechseln Sie abwechselnd die Seiten für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der kniende Lat-Stretch ist eine Körpergewicht-Übung, die den großen Rückenmuskel (Latissimus) trainiert und die Flexibilität und Mobilität im oberen Rücken und den Schultern verbessert. Die Übung wird durchgeführt, indem man kniet, die Arme über den Kopf streckt und seitlich lehnt.",
+    "primary_muscles": [
+      "back_lats"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "b308b1a6-4e88-48db-9c82-094a48499f1c",
+    "exercise_db_id": "1771",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b308b1a6-4e88-48db-9c82-094a48499f1c.jpg",
+    "video_path": "b308b1a6-4e88-48db-9c82-094a48499f1c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:42.700452+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kniender Trizeps-Strecker",
+    "instructions": "Kniele auf dem Boden mit hüftbreiten Knien.\nPlatziere deine Hände schulterbreit vor dir auf dem Boden, Finger zeigen nach vorne.\nStrecke deine Beine gerade hinter dir aus, balanciere auf deinen Zehen und Händen und bilde eine gerade Linie von Kopf bis Ferse.\nBeuege deine Ellbogen und senke deinen Oberkörper Richtung Boden, halte deine Ellbogen nah an deinen Seiten.\nMache eine kurze Pause am unteren Punkt und drücke dich dann über deine Hände hoch, um deine Arme zu strecken und in die Ausgangsposition zurückzukehren.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der kniende Trizeps-Strecker ist eine Körpergewicht-Übung, die den Trizeps zielt und zusätzlich Schultern und Brust beansprucht. Die Übung senkt den Körper, indem die Ellbogen gebeugt werden, während die Core angespannt bleibt.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "1e09218d-f3d7-4f2c-9321-fb65989e62a4",
+    "exercise_db_id": "0418",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1e09218d-f3d7-4f2c-9321-fb65989e62a4.jpg",
+    "video_path": "1e09218d-f3d7-4f2c-9321-fb65989e62a4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:37.760718+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Konzentrations-Curl einarmig",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf und halte eine Kurzhantel in einer Hand, wobei dein Arm vollständig gestreckt ist und deine Handfläche nach innen zeigt.\nLege deine andere Hand auf deinen Oberschenkel zur Stabilisierung.\nHalte deinen Oberarm ruhig und beuge die Kurzhantel nach oben Richtung Schulter, indem du deinen Bizeps anspannst.\nHebe die Kurzhantel weiter bis dein Bizeps vollständig kontrahiert ist und die Kurzhantel auf Schulterhöhe angekommen ist.\nHalte diese kontrahierte Position kurz und spanne deinen Bizeps zusätzlich an.\nAtme ein und senke die Kurzhantel langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen und wechsle dann den Arm.",
+    "tips": "Der Konzentrations-Curl ist eine Isolationsübung für den Bizeps, die stehend mit einem Arm ausgeführt wird und eine intensive Kontraktion ermöglicht.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "28b9e5d9-6e10-46a8-916c-cb72605d8c06",
+    "exercise_db_id": "0353",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "28b9e5d9-6e10-46a8-916c-cb72605d8c06.jpg",
+    "video_path": "28b9e5d9-6e10-46a8-916c-cb72605d8c06.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:43.85113+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Konzentrations-Curl mit Kurzhantel auf Stabilitätsball",
+    "instructions": "Setze dich auf einen Stabilitätsball mit flachen Füßen auf dem Boden und Knien in einem 90-Grad-Winkel.\nHalte eine Kurzhantel in einer Hand mit der Handfläche nach oben und dem Arm nach unten zur Decke gestreckt.\nLege deinen Ellbogen auf der Innenseite deines Oberschenkels, direkt über dem Knie, ab.\nHalte deinen Oberarm stillstehend, atme aus und beuge die Kurzhantel nach oben zur Schulter, während du deinen Bizeps anspannst.\nHalte einen Moment in der obersten Position, atme dann ein und senke die Kurzhantel langsam zur Ausgangsposition ab.\nWiederholen für die gewünschte Anzahl von Wiederholungen, dann den Arm wechseln und wiederholen.",
+    "tips": "Konzentrations-Curl mit Kurzhantel auf Stabilitätsball ist eine Isolationsübung, die den Bizeps trainiert und auf einem Stabilitätsball ausgeführt wird, um die Rumpfmuskulatur und Balance-Anforderungen zu erhöhen.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "8be96c71-98ff-42ae-b982-796e2efff12c",
+    "exercise_db_id": "3288",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "8be96c71-98ff-42ae-b982-796e2efff12c.jpg",
+    "video_path": "8be96c71-98ff-42ae-b982-796e2efff12c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:25:33.52509+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Korean Dips",
+    "instructions": "Positioniere dich zwischen zwei Parallelbars mit ausgestreckten Armen, die dein Körpergewicht tragen.\nSenke deinen Körper ab, indem du deine Ellbogen beugst, bis deine Oberarme parallel zum Boden sind.\nMache eine kurze Pause, drücke dich dann zurück in die Ausgangsposition, indem du deine Arme streckst.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Korean Dips sind eine anspruchsvolle Körpergewichtsübung an Parallelbars, die Brustmuskeln, Trizeps und Schultern trainiert und großer Oberkörperkraft sowie Schultermobilität bedarf.",
+    "primary_muscles": [
+      "triceps_long",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "triceps_medial"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "d1eb694d-b7a6-48de-9408-4492559af03d",
+    "exercise_db_id": "3167",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d1eb694d-b7a6-48de-9408-4492559af03d.jpg",
+    "video_path": "d1eb694d-b7a6-48de-9408-4492559af03d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:46.821314+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Körpergewicht Kniebeuge mit Rudern (mit Handtuch)",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und halte ein Handtuch vor dir mit Handflächen nach unten weisend.\nBeuge deine Knie und senke deinen Körper in eine Kniebeugenposition, während du deinen Rücken gerade und deine Brust oben hältst.\nWhile lowering into the squat, ziehe das Handtuch gleichzeitig zur Brust und spanne deine Schulterblattern zusammen.\nMache eine kurze Pause am unteren Punkt der Kniebeuge, dann kehre langsam zur Ausgangsposition zurück, während du deine Arme ausstreckst.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Körpergewicht Kniebeuge mit Rudern (mit Handtuch) ist eine Verbundübung, die den oberen Rücken trainiert und zusätzlich Bizeps und Schultern aktiviert. Sie kombiniert eine Kniebeuge mit einer Ruderbewegung und nutzt ein Handtuch als Widerstand – eine funktionale Bewegung, die Kraft und Koordination entwickelt.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "biceps_long",
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "4bd4f443-1b17-4ff9-82db-d3aeab028f42",
+    "exercise_db_id": "3168",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4bd4f443-1b17-4ff9-82db-d3aeab028f42.jpg",
+    "video_path": "4bd4f443-1b17-4ff9-82db-d3aeab028f42.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:45.446807+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Körpergewicht Kniebeuge Rudern",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und halte dich an einem stabilen Objekt oder einem Suspensionstrainer mit ausgestreckten Armen fest.\nSenke deinen Körper in eine Kniebeugeposition ab, wobei du deinen Rücken gerade hältst und deine Knie hinter deinen Zehen positioniert sind.\nAus der Kniebeugeposition ziehst du deinen Körper zum Objekt oder Suspensionstrainer hoch und drückst deine Schulterblätter zusammen.\nMache eine kurze Pause an der oberen Position, dann senke deinen Körper langsam in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Körpergewicht Kniebeuge Rudern ist eine zusammengesetzte Übung, die den oberen Rücken trainiert und gleichzeitig den Bizeps und die Schultern beansprucht. Sie kombiniert eine Kniebeugebewegung mit einer Ruderbewegung und erfordert Koordination und Kraft.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "biceps_long",
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "2d4d4316-77c1-4c0b-a375-3174012c8309",
+    "exercise_db_id": "3165",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "2d4d4316-77c1-4c0b-a375-3174012c8309.jpg",
+    "video_path": "2d4d4316-77c1-4c0b-a375-3174012c8309.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:56.736116+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Körpergewicht Rudern stehend (mit Handtuch)",
+    "instructions": "Stelle dich mit schulterbreitem Abstand hin und halte ein Handtuch vor dir mit beiden Händen.\nBeuege deine Knie leicht und neige dich an den Hüften nach vorne, halte deinen Rücken gerade.\nZiehe das Handtuch zu deiner Brust, presse deine Schulterblätter zusammen.\nHalte einen Moment oben inne, senke dann langsam die Spannung und kehre zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Körpergewicht Rudern stehend mit Handtuch ist eine Rückenübung, die den oberen Rücken mit einem Handtuch als Widerstand trainiert. Es aktiviert auch Bizeps und Schultern. Die Bewegung erfolgt durch Ziehen des Handtuchs zur Brust bei aufrechter Körperhaltung.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "biceps_long"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "a2725e9f-d20d-4f47-a3d7-df7ed7fb9ca9",
+    "exercise_db_id": "3158",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "a2725e9f-d20d-4f47-a3d7-df7ed7fb9ca9.jpg",
+    "video_path": "a2725e9f-d20d-4f47-a3d7-df7ed7fb9ca9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:50.964548+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Körpergewicht-Rudern enger Griff stehend",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf und beuge deine Knie leicht.\nBeuge dich in der Hüfte nach vorne, halte deinen Rücken gerade und spanne deinen Kern an.\nStrecke deine Arme geradeaus nach vorne und greife die Stange oder die Griffe mit engem Griff.\nZiehe die Stange oder die Griffe zu deinem Körper hin, drücke deine Schulterblätter zusammen.\nHalte die Position einen Moment oben an, gib dann kontrolliert nach und kehre zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung trainiert den oberen Rücken ausschließlich mit Körpergewicht als Widerstand und konzentriert sich auf das Zusammenziehen der Schulterblätter.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "1cb0c68a-5b37-41fc-bf24-5bc88b42a863",
+    "exercise_db_id": "3166",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1cb0c68a-5b37-41fc-bf24-5bc88b42a863.jpg",
+    "video_path": "1cb0c68a-5b37-41fc-bf24-5bc88b42a863.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:55.432674+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Körpergewicht-Rudern stehend",
+    "instructions": "Stelle dich mit hüftbreit auseinander stehenden Füßen hin und beuge deine Knie leicht.\nGriffe eine Stange oder Griffe mit Obergriff, Handflächen zeigen nach unten.\nHalte deinen Rücken gerade und spanne deinen Rumpf an.\nZiehe die Stange oder Griffe zu deinem Körper hin und drücke deine Schulterblätter zusammen.\nMache eine kurze Pause oben.\nLasse los und strecke deine Arme kontrolliert zur Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "783da735-387e-4047-a6b4-0a3704e4d34c",
+    "exercise_db_id": "1468",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "783da735-387e-4047-a6b4-0a3704e4d34c.jpg",
+    "video_path": "783da735-387e-4047-a6b4-0a3704e4d34c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:13.473493+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Krabbe mit Zehentipp",
+    "instructions": "Setze dich auf den Boden mit gebeugten Knien und flachen Füßen.\nPlatziere deine Hände hinter dir, Finger zeigen zu deinen Füßen, und hebe deine Hüfte vom Boden ab.\nStrecke ein Bein gerade nach vorne, während du gleichzeitig die gegenüberliegende Hand zu deinen Zehen führst.\nKehre zur Ausgangsposition zurück und wiederhole auf der anderen Seite.\nWechsle die Seiten für die gewünschte Anzahl an Wiederholungen ab.",
+    "tips": null,
+    "primary_muscles": [
+      "abs_lower",
+      "abs_obliques"
+    ],
+    "secondary_muscles": [
+      "glutes_maximus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "5ce12192-c77b-4775-bde9-c66eedb4b399",
+    "exercise_db_id": "0032",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5ce12192-c77b-4775-bde9-c66eedb4b399.jpg",
+    "video_path": "5ce12192-c77b-4775-bde9-c66eedb4b399.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:53:15.465762+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kreuzheben",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin, die Langhantel liegt vor dir auf dem Boden.\nBeuge deine Knie und neige deinen Oberkörper nach vorne, um die Langhantel mit einem Obergriff zu fassen, die Hände etwas breiter als schulterbreit.\nHalte deinen Rücken gerade und die Brust aufrecht, während du dich durch deine Fersen nach oben drückst und die Langhantel vom Boden hebst.\nStrecke deine Hüften und Knie vollständig, spanne dein Gesäß an und halte deinen Core angespannt.\nSenke die Langhantel kontrolliert zurück zum Boden, indem du deine Hüften und Knie beugst und deinen Rücken gerade hältst.\nWiederhole die Übung für die gewünschte Wiederholungszahl.",
+    "tips": "Dies ist eine komplexe Kraftübung, die Gesäß, hintere Oberschenkelmuskeln und den unteren Rücken trainiert. Richtige Ausführung und Core-Spannung sind essentiell.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "hamstrings_biceps_femoris",
+      "back_erector_spinae"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris",
+      "adductors",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "barbell"
+    ]
+  },
+  {
+    "id": "1eb8d9b0-4726-44b0-9a6f-f8da754f9266",
+    "exercise_db_id": "0539",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "1eb8d9b0-4726-44b0-9a6f-f8da754f9266.jpg",
+    "video_path": "1eb8d9b0-4726-44b0-9a6f-f8da754f9266.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:24:55.921129+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kugelhantel Einarm-Schulterdrücken seitlich",
+    "instructions": "Stelle dich aufrecht hin mit hüftbreitem Abstand und halte eine Kugelhantel in einer Hand auf Schulterhöhe.\nSpanne deinen Rumpf an und halte deinen Rücken gerade.\nDrücke die Kugelhantel nach oben über deinen Kopf, bis dein Arm vollständig gestreckt ist.\nMache eine kurze Pause oben, senke die Kugelhantel dann langsam zur Ausgangsposition.\nWiederhohle dies für die gewünschte Anzahl von Wiederholungen und wechsle die Seite.",
+    "tips": "Diese unilaterale Übung trainiert die Schultermuskeln intensiv und erfordert Stabilisierung durch Rumpf und Schultern. Sie fördert Ausgleichskraft und Koordination.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "kettlebell"
+    ]
+  },
+  {
+    "id": "55bedb89-707b-4177-9ad1-23c5e9a92433",
+    "exercise_db_id": "3656",
+    "category": "cardio",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "55bedb89-707b-4177-9ad1-23c5e9a92433.jpg",
+    "video_path": "55bedb89-707b-4177-9ad1-23c5e9a92433.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:39:29.007847+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurze Sprintschritte",
+    "instructions": "Finde einen offenen Platz oder ein Laufband für diese Übung.\nStehe aufrecht mit hüftbreit auseinander stehenden Füßen.\nBeginne, an Ort und Stelle zu joggen, hebe deine Knie hoch und pumpe deine Arme.\nNach ein paar Sekunden fange an, mit kurzen Schritten nach vorne zu laufen und halte dabei ein schnelles Tempo.\nSetze das Laufen mit kurzen Schritten für die gewünschte Dauer oder Distanz fort.",
+    "tips": "Das Laufen mit kurzen Schritten ist eine Herz-Kreislauf-Übung, bei der man mit schnellen, kurzen Schritten entweder an Ort und Stelle oder nach vorne läuft. Sie trainiert in erster Linie das Herz-Kreislauf-System und beansprucht auch die Oberschenkelmuskulatur, Oberschenkelrückseite und Wade.",
+    "primary_muscles": [
+      "hamstrings_biceps_femoris",
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "calves_gastrocnemius",
+      "calves_soleus"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "7e1c2218-d85a-4f10-befd-1e36b1118114",
+    "exercise_db_id": "0286",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7e1c2218-d85a-4f10-befd-1e36b1118114.jpg",
+    "video_path": "7e1c2218-d85a-4f10-befd-1e36b1118114.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:43.42694+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel alterniertes Schulterdrücken",
+    "instructions": "Stelle dich hüftbreit hin und halte eine Kurzhantel in jeder Hand auf Schulterhöhe.\nDrücke eine Kurzhantel nach oben über den Kopf, während die andere Kurzhantel auf Schulterhöhe bleibt.\nSenke die gedrückte Kurzhantel zurück auf Schulterhöhe, während du die andere Kurzhantel nach oben drückst.\nWechsle weiterhin die Seiten für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": null,
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "db88fe32-3eea-4f1b-b443-014759c5c748",
+    "exercise_db_id": "2137",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "db88fe32-3eea-4f1b-b443-014759c5c748.jpg",
+    "video_path": "db88fe32-3eea-4f1b-b443-014759c5c748.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:47.574152+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Arnold Press",
+    "instructions": "Setze dich auf eine Bank mit Rückenlehne und halte eine Kurzhantel in jeder Hand auf Schulterhöhe, die Handflächen zeigen zu deinem Körper und die Ellbogen sind gebeugt.\nDrücke die Kurzhanteln nach oben, bis deine Arme vollständig gestreckt sind und deine Handflächen nach vorne zeigen.\nRotiere deine Handgelenke während du hebst, sodass deine Handflächen oben in der Bewegung nach vorne zeigen.\nMache eine kurze Pause oben, dann senke die Kurzhanteln langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Arnold Press ist eine Schulterübung, die die Deltamuskeln trainiert und gleichzeitig die Trizeps und obere Brust aktiviert. Die rotative Bewegung beim Überkopfdrücken erhöht den Bewegungsumfang und die Muskelaktivierung im Vergleich zu einem Standard-Schulterdrücken.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "7b5e2bc8-7010-4e1f-b655-00bbd77639dc",
+    "exercise_db_id": "0287",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7b5e2bc8-7010-4e1f-b655-00bbd77639dc.jpg",
+    "video_path": "7b5e2bc8-7010-4e1f-b655-00bbd77639dc.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:49.06854+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Arnold Press",
+    "instructions": "Setze dich auf eine Bank mit Rückenlehne und halte eine Kurzhantel in jeder Hand auf Schulterhöhe, mit den Handflächen zu deinem Körper zeigend und angewinkelten Ellbogen.\nDrücke die Kurzhanteln nach oben, bis deine Arme vollständig gestreckt sind und deine Handflächen nach vorne zeigen.\nRotiere deine Handgelenke während der Bewegung, sodass deine Handflächen oben nach vorne zeigen.\nMache eine kurze Pause oben, senke dann die Kurzhanteln kontrolliert zurück in die Ausgangsposition.\nWiederholen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Arnold Press ist eine Schulterübung, die das Drücken von Kurzhanteln über Kopf mit Handgelenkrotation kombiniert und hauptsächlich die Deltamuskeln trainiert, während Trizeps und obere Brust beteiligt sind.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "9805e356-0f2d-46a9-99c9-2de00707ff2a",
+    "exercise_db_id": "3635",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9805e356-0f2d-46a9-99c9-2de00707ff2a.jpg",
+    "video_path": "9805e356-0f2d-46a9-99c9-2de00707ff2a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:15.943217+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Ausfallschritt vorwärts",
+    "instructions": "Stehen Sie mit schulterbreiten Füßen und halten Sie in jeder Hand eine Kurzhantel.\nMachen Sie einen großen Schritt nach vorne mit Ihrem rechten Fuß, während Sie Ihren Rücken gerade halten und Ihren Core anspannen.\nSenken Sie Ihren Körper durch Beugung beider Knie, bis Ihr rechter Oberschenkel parallel zum Boden ist.\nDrücken Sie sich durch Ihre rechte Ferse zurück zur Ausgangsposition.\nWiederholen Sie mit Ihrem linken Bein.\nWechseln Sie die Beine für die gewünschte Anzahl von Wiederholungen ab.",
+    "tips": "Der Kurzhantel Ausfallschritt vorwärts ist eine Unterkörperübung, die primär die Gesäßmuskulatur trainiert und sekundär die Quadrizeps, Beinbeuger und Waden beansprucht. Die Übung erfordert abwechselnde Schritte mit einer Kurzhantel in der gegenüberliegenden Hand und fordert Kraft, Balance und Koordination.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus",
+      "hamstrings_biceps_femoris"
+    ],
+    "secondary_muscles": [
+      "glutes_medius",
+      "adductors",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "523c95eb-ccf1-42f2-b742-1fbd175ea40a",
+    "exercise_db_id": "0352",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "523c95eb-ccf1-42f2-b742-1fbd175ea40a.jpg",
+    "video_path": "523c95eb-ccf1-42f2-b742-1fbd175ea40a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:38.543319+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Bankdrücken neutraler Griff",
+    "instructions": "Lege dich flach auf eine Bank, Füße auf dem Boden, Rücken gegen die Bank gepresst.\nHalte eine Kurzhantel in jeder Hand mit neutralem Griff (Handflächen zeigen zueinander), Arme gestreckt über der Brust.\nSenke die Kurzhanteln langsam in Richtung deiner Brust ab, halte deine Ellbogen nah am Körper.\nPause kurz unten, dann drücke die Kurzhanteln zurück in die Ausgangsposition, strecke deine Arme vollständig.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Bankdrücken mit neutralem Griff ist eine Drückübung auf der Bank mit Kurzhanteln, bei der die Handflächen zueinander zeigen. Es trainiert primär den Trizeps, mit sekundärem Fokus auf Brust und Schultern.",
+    "primary_muscles": [
+      "chest_middle",
+      "chest_outer"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "062589e8-4b98-48f9-aaa8-3404014f94d1",
+    "exercise_db_id": "0390",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "062589e8-4b98-48f9-aaa8-3404014f94d1.jpg",
+    "video_path": "062589e8-4b98-48f9-aaa8-3404014f94d1.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:36.061633+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Bizeps Curl sitzend auf Gymnastikball",
+    "instructions": "Sitze auf einem Gymnastikball mit flachen Füßen auf dem Boden und aufrechtem Rücken.\nHalte eine Kurzhantel in jeder Hand, Handflächen nach vorne, Arme vollständig gestreckt.\nHalte deine Oberarme stabil und atme aus, während du die Kurzhanteln hochziehst und deine Bizepse kontrahierst.\nHebe die Kurzhanteln weiter, bis deine Bizepse vollständig kontrahiert sind und die Kurzhanteln auf Schulterhöhe sind.\nHalte diese Position kurz an und drücke deine Bizepse zusammen.\nAtme ein und senke die Kurzhanteln langsam und kontrolliert zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Bizeps Curl sitzend auf Gymnastikball ist eine Bizeps-fokussierte Übung, die Balance und Rumpfstabilität trainiert. Neben dem Bizeps arbeiten auch die Unterarme als sekundäre Muskulatur.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6ebe7ac9-e222-4ee3-b465-6e3cba05f0eb",
+    "exercise_db_id": "1653",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6ebe7ac9-e222-4ee3-b465-6e3cba05f0eb.jpg",
+    "video_path": "6ebe7ac9-e222-4ee3-b465-6e3cba05f0eb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:00.674+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Bizeps-Curl im Storchstand",
+    "instructions": "Stelle dich schulterbreit hin und halte eine Kurzhantel in jeder Hand mit den Handflächen nach vorne.\nStrecke ein Bein hinter dir aus und balanciere auf den Zehen dieses Fußes.\nHalte deine Oberarme stabil und hebe die Gewichte mit einer Curl-Bewegung an, während du deine Bizepse anspannst.\nHebe die Hanteln so weit an, bis deine Bizepse vollständig kontrahiert sind und die Hanteln auf Schulterhöhe sind.\nHalte diese Position kurz und spanne deine Bizepse kräftig an.\nSenke die Hanteln kontrolliert zurück zur Ausgangsposition.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen, wechsle dann die Seite und wiederhole.",
+    "tips": "Diese Variation des Kurzhantel Bizeps-Curls integriert eine Balanceherausforderung, indem du auf einem Bein stehst. Dies trainiert zusätzlich die Stabilisierungsfähigkeit des Core und verbessert das Gleichgewicht.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "1f330bd6-db4f-43fd-9e28-d77ecabf0d23",
+    "exercise_db_id": "1655",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1f330bd6-db4f-43fd-9e28-d77ecabf0d23.jpg",
+    "video_path": "1f330bd6-db4f-43fd-9e28-d77ecabf0d23.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:06.191017+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Bizeps-Curl mit Kniebeuge",
+    "instructions": "Stelle dich aufrecht hin mit hüftbreitem Abstand und halte in jeder Hand eine Kurzhantel mit Handflächen nach vorne.\nHalte deinen Rücken gerade und deine Ellbogen nah an deinem Körper, atme aus und curle die Kurzhanteln nach oben zu deinen Schultern.\nMache eine kurze Pause oben und spanne deinen Bizeps an.\nAtme ein und senke die Kurzhanteln langsam zur Ausgangsposition.\nWiederhohle dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "817836cc-130b-4f43-a807-4d21c6e581af",
+    "exercise_db_id": "1654",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "817836cc-130b-4f43-a807-4d21c6e581af.jpg",
+    "video_path": "817836cc-130b-4f43-a807-4d21c6e581af.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:04.784055+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Bizeps-Curl Rückwärts",
+    "instructions": "Stelle dich aufrecht hin und halte in jeder Hand eine Kurzhantel, Handflächen nach unten und Arme vollständig ausgestreckt.\nHalte deine Oberarme statisch, curle die Gewichte ausatmend während du deine Bizepse anspannst.\nHebe die Kurzhanteln weiter an, bis deine Bizepse vollständig kontrahiert sind und die Kurzhanteln auf Schulterhöhe sind.\nHalte die kontrahierte Position kurz an und spanne deine Bizepse kräftig an.\nAtme ein und senke die Kurzhanteln langsam zurück in die Ausgangsposition.\nWiederhhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Kraftübung, die auf Bizeps und Unterarm abzielt. Sie funktioniert durch das Curlen von Kurzhanteln mit Handflächen nach unten, wodurch die Armbeuger-Muskulatur und die Unterarmmuskulatur besonders beansprucht werden.",
+    "primary_muscles": [
+      "forearms_extensors",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6c137773-35f6-4bfb-825e-5384b5c2551c",
+    "exercise_db_id": "0383",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6c137773-35f6-4bfb-825e-5384b5c2551c.jpg",
+    "video_path": "6c137773-35f6-4bfb-825e-5384b5c2551c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:09.510517+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Butterfly Reverse",
+    "instructions": "Stelle dich schulterbreit hin und halte je eine Kurzhantel in jeder Hand.\nBeuge deine Knie leicht und beuge dich in der Hüfte vor, während du deinen Rücken gerade hältst.\nStrecke deine Arme vollständig nach vorne aus, Handflächen zueinander gerichtet.\nHalte eine leichte Beugung in deinen Ellbogen und hebe deine Arme zur Seite an, bis sie parallel zum Boden sind.\nMache eine kurze Pause oben und senke deine Arme dann langsam in die Ausgangsposition zurück.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kurzhantel Butterfly Reverse ist eine Übung, die die hinteren Deltoidmuskeln trainiert, mit sekundärem Fokus auf den Kapuzenmuskel und die Rautenmuskeln. Sie wird durch eine Vorbeugung in der Hüfte, einen geraden Rücken und kontrolliertes Heben von Kurzhanteln zur Seite ausgeführt.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "91d20e89-2715-48bf-b262-c18f20e32516",
+    "exercise_db_id": "0299",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "91d20e89-2715-48bf-b262-c18f20e32516.jpg",
+    "video_path": "91d20e89-2715-48bf-b262-c18f20e32516.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:20.196863+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Cuban Press",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Kurzhantel in jeder Hand auf Schulterhöhe mit Handflächen nach unten.\nHalte deinen Rumpf angespannt und deine Ellbogen leicht gebeugt, drücke die Kurzhanteln nach oben und über dem Kopf, bis deine Arme vollständig ausgestreckt sind.\nRotiere deine Handgelenke so, dass deine Handflächen nach vorne zeigen.\nSenke die Kurzhanteln langsam zurück in die Ausgangsposition, rotiere deine Handgelenke dabei zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kurzhantel Cuban Press ist eine Schulterübung, die externe Rotation mit Drücken kombiniert, um die Deltamuskeln, Trizeps und oberen Rücken zu trainieren. Sie wird häufig verwendet, um die Schulterkraft und -stabilität zu verbessern sowie gesunde Schulterbewegungsmuster zu fördern.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_rear",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "30ce134b-a320-4b48-a946-8f0d50a44f93",
+    "exercise_db_id": "2136",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "30ce134b-a320-4b48-a946-8f0d50a44f93.jpg",
+    "video_path": "30ce134b-a320-4b48-a946-8f0d50a44f93.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:21.783721+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Cuban Press V2",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und halte eine Kurzhantel in jeder Hand auf Schulterhöhe mit Handflächen nach unten.\nHalte deinen Rumpf angespannt und deinen Rücken gerade, drücke die Kurzhanteln gerade nach oben über den Kopf, bis deine Arme vollständig gestreckt sind.\nDrehe deine Handgelenke so, dass die Handflächen nach vorne zeigen.\nSenke die Kurzhanteln wieder auf Schulterhöhe ab und drehe deine Handgelenke zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Die Kurzhantel Cuban Press V2 ist eine Schulterübung, die die Deltamuskeln, Trizeps und oberen Rücken beansprucht. Die Kombination aus Druck- und Rotationsbewegung macht sie effektiv für den Aufbau von Kraft und Stabilität im Schultergelenk.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "shoulders_rear",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "52966522-6a43-436d-9f0b-7f15ad643661",
+    "exercise_db_id": "1662",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "52966522-6a43-436d-9f0b-7f15ad643661.jpg",
+    "video_path": "52966522-6a43-436d-9f0b-7f15ad643661.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:37.107662+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Curl liegend weiter Griff",
+    "instructions": "Lege dich flach auf eine Bank, eine Kurzhantel in jeder Hand, Handflächen zeigen nach oben, Arme vollständig gestreckt.\nHalte deine Oberarme stillschweigend, atme aus und curl die Gewichte, während du deine Bizeps anspannst.\nHebe die Gewichte weiter an, bis deine Bizeps vollständig angespannt sind und die Kurzhanteln auf Schulterhöhe sind.\nHalte diese angespannte Position kurz und spanne deine Bizeps.\nAtme ein und senke die Kurzhanteln langsam in die Ausgangsposition ab.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Curl liegend weiter Griff ist eine Isolationsübung für die Bizeps, die liegend auf einer Bank mit Kurzhanteln ausgeführt wird. Sie betont den äußeren Bizepsbereich und beansprucht auch die Unterarme.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6925cda8-1b67-4070-aa06-55d8fb2e0b3b",
+    "exercise_db_id": "0397",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6925cda8-1b67-4070-aa06-55d8fb2e0b3b.jpg",
+    "video_path": "6925cda8-1b67-4070-aa06-55d8fb2e0b3b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:49.954678+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Curl sitzend neutraler Griff",
+    "instructions": "Setze dich auf eine Bank, deine Füße flach auf dem Boden, und halte in jeder Hand eine Kurzhantel mit neutralem Griff, Handflächen zueinander.\nLege deine Unterarme auf deinen Oberschenkeln ab, die Kurzhanteln hängen nach unten.\nHalte deine Handgelenke in neutraler Position und curl die Kurzhanteln zu deinen Schultern hoch.\nHalte einen Moment oben an, senke dann die Kurzhanteln langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung zielt auf die Bizepse und Unterarme ab und entwickelt dabei Kraft im Handgelenk und Unterarm.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "biceps_short",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "95a69ea6-3110-4f74-ad08-35c6a1dd4d0f",
+    "exercise_db_id": "1276",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "95a69ea6-3110-4f74-ad08-35c6a1dd4d0f.jpg",
+    "video_path": "95a69ea6-3110-4f74-ad08-35c6a1dd4d0f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:28.877399+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Decline Flys einarmig",
+    "instructions": "Lege dich auf eine Decline-Bank und halte eine Kurzhantel in einer Hand, die auf deinem Oberschenkel ruht.\nNutze deinen Oberschenkel, um die Kurzhantel anzuheben und bringe sie auf Schulterhöhe, wobei deine Handfläche zu deinem Körper zeigt.\nDrehe dein Handgelenk, sodass deine Handfläche nach vorne zeigt.\nAtme ein und senke die Kurzhantel langsam zur Seite, bis du eine Dehnung in deiner Brust spürst.\nAtme aus und nutze deine Brustmuskulatur, um die Kurzhantel zur Ausgangsposition zurückzubringen.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen und wechsle dann den Arm.",
+    "tips": "Die einarmige Decline-Flys ist eine unilaterale Brustübung auf der Decline-Bank, die die Brustmuskulatur zielt und die Schultern einbezieht. Sie erfordert gute Kontrolle und Stabilität, besonders aufgrund des Decline-Winkels und der einseitigen Bewegung.",
+    "primary_muscles": [
+      "chest_lower",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "96e7c2a1-75bf-47a6-821d-1f2064378efa",
+    "exercise_db_id": "0304",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "96e7c2a1-75bf-47a6-821d-1f2064378efa.jpg",
+    "video_path": "96e7c2a1-75bf-47a6-821d-1f2064378efa.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:15:45.837573+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Decline Shrugs v. 2",
+    "instructions": "Stelle eine Decline-Bank in einem 45-Grad-Winkel ein.\nLege dich mit Brust und Bauch auf die Bank.\nHalte eine Kurzhantel in jeder Hand mit Handflächen zueinander und vollständig gestreckten Armen.\nHebe deine Schultern so hoch wie möglich, während du deine Schulterblattspreizen zusammendrückst.\nHalte die Kontraktion kurz, dann senke die Kurzhanteln zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kurzhantel Decline Shrug v. 2 zielt auf die Trapezmuskulatur ab, indem man mit dem Gesicht nach unten auf einer Decline-Bank liegt und eine Shrugging-Bewegung mit Kurzhanteln ausführt, wobei der obere Rücken und die Schultern betont werden.",
+    "primary_muscles": [
+      "back_traps_upper",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "4ab96059-60ee-4455-856e-99834fdbb834",
+    "exercise_db_id": "0307",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "4ab96059-60ee-4455-856e-99834fdbb834.jpg",
+    "video_path": "4ab96059-60ee-4455-856e-99834fdbb834.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:15:48.571502+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Decline Twist Flyer",
+    "instructions": "Lege dich auf eine Negativbank, wobei dein Kopf tiefer als deine Hüften positioniert ist.\nHalte eine Kurzhantel in jeder Hand mit den Handflächen zueinander gewandt und deine Arme nach oben über der Brust ausgestreckt.\nSenke die Kurzhanteln in einem breiten Bogen zur Seite ab, bis du eine Dehnung in der Brustmuskulatur spürst.\nWährend du die Kurzhanteln absenkst, drehe deine Handgelenke so, dass deine Handflächen am unteren Punkt der Bewegung nach vorne zeigen.\nBringe die Kurzhanteln wieder zur Ausgangsposition hoch und drücke oben deine Brustmuskeln zusammen.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Decline Twist Flyer ist eine Brustübung auf einer Negativbank, die die Brustmuskulatur trainiert und gleichzeitig die Schultern und den Trizeps beansprucht. Die Bewegung beinhaltet das Senken von Kurzhanteln in einem breiten Bogen mit einer Drehbewegung, wodurch die Dehnung und Kontraktion der Brustmuskulatur verstärkt wird.",
+    "primary_muscles": [
+      "chest_lower",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "025843ab-fc20-48c4-b822-312bab50c231",
+    "exercise_db_id": "3156",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "025843ab-fc20-48c4-b822-312bab50c231.jpg",
+    "video_path": "025843ab-fc20-48c4-b822-312bab50c231.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T13:56:49.470082+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Einarm-Rudern (eng)",
+    "instructions": "Stelle dich mit hüftbreit auseinander stehenden Füßen hin, die Knie leicht gebeugt, und halte eine Kurzhantel in einer Hand mit neutralem Griff.\nBeuge dich nach vorne in den Hüften, halte deinen Rücken gerade und spanne deinen Core an.\nZiehe die Kurzhantel zu deiner Brust hoch, halte deinen Ellbogen nah am Körper und spanne deine Schulterblätter zusammen.\nPause einen Moment oben, senke die Kurzhantel dann kontrolliert zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Das Kurzhantel Einarm-Rudern (eng) ist eine einseitige Übung für den oberen Rücken, die mit Körpergewicht und Fokus auf Zugkraft und Stabilität ausgeführt wird.",
+    "primary_muscles": [
+      "back_rhomboids",
+      "back_lats"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "bodyweight"
+    ]
+  },
+  {
+    "id": "01bc22fa-4ea2-4c10-a27a-00bbb682e3ca",
+    "exercise_db_id": "1289",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "01bc22fa-4ea2-4c10-a27a-00bbb682e3ca.jpg",
+    "video_path": "01bc22fa-4ea2-4c10-a27a-00bbb682e3ca.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:51.764338+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Einarm-Schrägbankdrücken",
+    "instructions": "Stelle die Schrägbank auf einen Winkel von 45 Grad ein.\nSitze auf der Bank, lehne deinen Rücken gegen das Polster und stelle deine Füße flach auf den Boden.\nHalte eine Kurzhantel in einer Hand im Obergriff und ruhe sie auf deiner Schulter.\nDrücke die Kurzhantel nach oben und weg von deinem Körper, strecke deinen Arm vollständig.\nHalte einen Moment an der höchsten Position an, senke die Kurzhantel dann kontrolliert zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle zur anderen Seite.",
+    "tips": "Das Kurzhantel Einarm-Schrägbankdrücken ist eine einseitige Oberkörperübung, die primär die Brustmuskulatur trainiert, mit sekundärer Betonung auf Schultern und Trizeps. Sie wird auf einer Schrägbank mit einer einzelnen Kurzhantel ausgeführt und erhöht die Anforderung an Core-Stabilität und Koordination.",
+    "primary_muscles": [
+      "chest_upper",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "5c138136-3733-45d7-b463-c7193e9d3cbb",
+    "exercise_db_id": "0355",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5c138136-3733-45d7-b463-c7193e9d3cbb.jpg",
+    "video_path": "5c138136-3733-45d7-b463-c7193e9d3cbb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:54.538101+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel einarmiges Seitenheben",
+    "instructions": "Stehe mit schulterbreit auseinander stehenden Füßen und halte eine Kurzhantel in einer Hand, die Handfläche zum Körper gewandt.\nHalte deinen Rücken gerade und deinen Rumpf angespannt während der gesamten Übung.\nHebe die Kurzhantel zur Seite, halte deinen Arm gestreckt und deine Handfläche nach unten.\nHebe weiter, bis dein Arm parallel zum Boden ist.\nHalte einen Moment am oberen Punkt, dann senke die Kurzhantel langsam zur Ausgangsposition.\nWiederholen für die gewünschte Anzahl von Wiederholungen, dann zum anderen Arm wechseln.",
+    "tips": "Das einarmige Kurzhantel Seitenheben ist eine Isolationsübung, die primär den seitlichen Deltamuskel trainiert. Es beansprucht auch den Kapuzenmuskel und Trizeps als sekundäre Muskelgruppen. Diese Übung hilft beim Aufbau von Schulterkraft und Definition.",
+    "primary_muscles": [
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "7812401b-b1a0-4034-a048-ccf139c91d8a",
+    "exercise_db_id": "0400",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7812401b-b1a0-4034-a048-ccf139c91d8a.jpg",
+    "video_path": "7812401b-b1a0-4034-a048-ccf139c91d8a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:55.368542+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Einbein-Wadenheben sitzend",
+    "instructions": "Sitze auf einer Bank oder einem Stuhl mit flach auf dem Boden stehenden Füßen und einer Kurzhantel auf deinem rechten Oberschenkel.\nStrecke dein linkes Bein nach vorne aus und halte deinen Fuß angespannt.\nPlatziere den Fußballen deines rechten Fußes auf einer erhöhten Fläche, wie eine Stufe oder Gewichtsplatte.\nHebe deine rechte Ferse so hoch wie möglich mit deinen Wadenmuskeln.\nMache eine kurze Pause oben, dann senke deine Ferse langsam in die Ausgangsposition zurück.\nWiederhole die Übung für die gewünschte Anzahl von Wiederholungen, dann wechsle das Bein.",
+    "tips": "Das Kurzhantel Einbein-Wadenheben sitzend ist eine Isolationsübung, die die Wadenmuskeln trainiert und im Sitzen mit einer Kurzhantel auf dem Oberschenkel ausgeführt wird. Sie baut Kraft und Muskelmasse in den Waden auf, mit etwas Aktivierung von Beinbeuger und Gesäß zur Stabilisierung.",
+    "primary_muscles": [
+      "calves_soleus"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "5ab97224-5c4d-46cb-9ec3-145424b31181",
+    "exercise_db_id": "1679",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5ab97224-5c4d-46cb-9ec3-145424b31181.jpg",
+    "video_path": "5ab97224-5c4d-46cb-9ec3-145424b31181.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:51.330328+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel einseitiger Bizeps-Curl sitzend auf Gymnastikball mit gehobenem Bein",
+    "instructions": "Sitze auf einem Gymnastikball mit flachen Füßen und geradem Rücken.\nHalte eine Kurzhantel in einer Hand, Handfläche nach oben, Arm vollständig ausgestreckt.\nPlatziere deine andere Hand auf deiner Hüfte zur Stabilisierung.\nCurle die Kurzhantel langsam zu deiner Schulter, halte deinen Oberarm stabil.\nMache eine kurze Pause oben und spanne deinen Bizeps an.\nSenke die Kurzhantel langsam zur Ausgangsposition ab.\nWiederhole für die gewünschte Anzahl von Wiederholungen.\nWechsle die Arme und wiederhole die Übung.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d96ec89e-1ef8-49c4-aeaa-134781b3a832",
+    "exercise_db_id": "1622",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d96ec89e-1ef8-49c4-aeaa-134781b3a832.jpg",
+    "video_path": "d96ec89e-1ef8-49c4-aeaa-134781b3a832.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:18:05.673341+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel einseitiges Drücken mit Reverse Grip",
+    "instructions": "Sitze auf einer flachen Bank mit einer Kurzhantel in einer Hand, Handfläche zu deinem Körper gewandt.\nStelle deine Füße flach auf den Boden und halte deinen Rücken gerade.\nHebe die Kurzhantel bis zur Schulterhöhe, halte deinen Ellbogen nah am Körper.\nDrücke die Kurzhantel nach oben, bis dein Arm vollständig ausgestreckt ist.\nHalte kurz oben inne, dann senke die Kurzhantel langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle zum anderen Arm.",
+    "tips": "Dies ist eine einseitige Brustübung, die die Brustmuskulatur mit einem besonderen Griff trainiert und auch Trizeps und Schultern beansprucht. Sie erfordert Stabilität und Kontrolle durch den Reverse Grip und die einseitige Ausführung.",
+    "primary_muscles": [
+      "shoulders_front",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "612cdef8-16b7-4b51-bdea-55b446d7bc41",
+    "exercise_db_id": "0296",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "612cdef8-16b7-4b51-bdea-55b446d7bc41.jpg",
+    "video_path": "612cdef8-16b7-4b51-bdea-55b446d7bc41.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:02:13.216989+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Enge-Griff Drücken",
+    "instructions": "Setze dich auf eine flache Bank mit je einer Kurzhantel in jeder Hand auf deinen Oberschenkeln.\nHebe die Kurzhanteln mit Hilfe deiner Oberschenkel nacheinander an, sodass du sie vor dir auf Schulterhöhe hältst.\nRotiere deine Handgelenke nach vorne, sodass deine Handflächen von dir weg zeigen. Das ist deine Ausgangsposition.\nSenke die Kurzhanteln beim Einatmen langsam auf Brustseite ab, bis sie etwa auf Brusthöhe sind.\nDrücke beim Ausatmen die Kurzhanteln mit deinen Trizepsen zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Enge-Griff Drücken ist eine Oberarmübung, die primär die Trizepse trainiert mit sekundärem Fokus auf Brust und Schultern. Der enge Griff maximiert die Trizeps-Aktivierung.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d9d3d800-34a8-4a22-9a81-45b5c5b85b8a",
+    "exercise_db_id": "3234",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d9d3d800-34a8-4a22-9a81-45b5c5b85b8a.jpg",
+    "video_path": "d9d3d800-34a8-4a22-9a81-45b5c5b85b8a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:23:37.104917+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Fliegende",
+    "instructions": "Liege flach auf einer Bank mit je einer Kurzhantel in jeder Hand, Handflächen zueinander.\nStrecke deine Arme direkt über deine Brust mit einer leichten Beugung in den Ellbogen.\nHalte eine leichte Beugung in deinen Ellbogen und senke die Kurzhanteln in einem weiten Bogen zu den Seiten, bis du eine Dehnung in deiner Brust spürst.\nMache eine kurze Pause und führe dann die Bewegung rückwärts durch, um die Kurzhanteln in die Ausgangsposition zurückzubringen.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kurzhantel Fliegende ist eine Brustübung auf einer Bank mit Kurzhanteln. Sie zielt auf die Brustmuskulatur ab und beansprucht auch die Schultern. Die Bewegung beinhaltet das Senken der Kurzhanteln in einem weiten Bogen, um die Brust zu dehnen, und anschließend das Zusammenführen über der Brust.",
+    "primary_muscles": [
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "1da4f8eb-2d36-438e-b358-92e06b3dd08f",
+    "exercise_db_id": "0309",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1da4f8eb-2d36-438e-b358-92e06b3dd08f.jpg",
+    "video_path": "1da4f8eb-2d36-438e-b358-92e06b3dd08f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:15:57.43287+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Frontalheben",
+    "instructions": "Stellen Sie sich mit schulterbreit auseinanderstehenden Füßen hin und halten Sie in jeder Hand eine Kurzhantel, Handflächen zu Ihren Oberschenkeln gerichtet.\nHalten Sie Ihren Rücken gerade und spannen Sie Ihren Core an.\nHeben Sie die Kurzhanteln langsam vor Ihnen an, mit gestreckten Armen, bis sie auf Schulterhöhe sind.\nPausieren Sie kurz oben, senken Sie dann die Kurzhanteln langsam zur Ausgangsposition.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Frontalheben ist eine Schulterübung, die die Deltamuskeln anspricht. Es beinhaltet das Heben von Kurzhanteln vor dem Körper bis zur Schulterhöhe mit Fokus auf kontrollierte Bewegung und korrekte Ausführung.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6467047a-efb4-427f-a72d-7142200100e4",
+    "exercise_db_id": "0392",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6467047a-efb4-427f-a72d-7142200100e4.jpg",
+    "video_path": "6467047a-efb4-427f-a72d-7142200100e4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:41.368627+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Frontheben sitzend",
+    "instructions": "Setze dich auf eine Bank und stelle deine Füße flach auf den Boden. Halte eine Kurzhantel in jeder Hand, die auf deinen Oberschenkeln ruht.\nHalte deinen Rücken gerade und spannen deinen Core an.\nHebe die Kurzhanteln vor dir an, mit den Handflächen nach unten, bis sie Schulterhöhe erreichen.\nHalte einen Moment an der obersten Position inne, dann senke die Kurzhanteln langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Frontheben sitzend ist eine Schulterübung, die die Deltamuskeln trainiert. Die sitzende Position hilft, die Schultern zu isolieren und Schwungbewegungen zu minimieren, was eine kontrollierte Bewegung für den Schulteraufbau ermöglicht.",
+    "primary_muscles": [
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6ab1e9e8-e9a9-42a7-94af-b758c6688e3f",
+    "exercise_db_id": "1659",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6ab1e9e8-e9a9-42a7-94af-b758c6688e3f.jpg",
+    "video_path": "6ab1e9e8-e9a9-42a7-94af-b758c6688e3f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:03.650363+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Hammer Curl auf Gymnastikball",
+    "instructions": "Sitze auf einem Gymnastikball mit flachen Füßen auf dem Boden und geradem Rücken.\nHalte je eine Kurzhantel in jeder Hand mit den Handflächen zu deinem Körper gerichtet und vollständig ausgestreckten Armen.\nHalte deine Oberarme stationär und atme aus, während du die Kurzhanteln curl und deine Bizeps kontrahierst.\nHebe die Kurzhanteln weiter an, bis dein Bizeps vollständig kontrahiert ist und die Kurzhanteln auf Schulterhöhe sind.\nHalte die kontrahierte Position kurz und presse deine Bizeps zusammen.\nAtme ein und senke die Kurzhanteln langsam in die Ausgangsposition zurück.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Hammer Curl auf Gymnastikball ist eine bizepsfokussierte Übung, die auch die Unterarme und den Rumpf durch die Instabilität des Gymnstikballs beansprucht. Sie erfordert neben Kraft auch Balance und Koordination.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_extensors",
+      "forearms_flexors"
+    ],
+    "equipment": []
+  },
+  {
+    "id": "d857547e-bc62-4b52-b42b-83773c970990",
+    "exercise_db_id": "3560",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d857547e-bc62-4b52-b42b-83773c970990.jpg",
+    "video_path": "d857547e-bc62-4b52-b42b-83773c970990.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:25.054427+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Hammer Curl und Überkopfdrücken alternierend",
+    "instructions": "Stelle dich aufrecht hin und halte eine Kurzhantel in jeder Hand, Handflächen zum Körper gewandt.\nHalte deine Ellbogen nah am Oberkörper und deinen Rücken gerade.\nAtme aus und führe die Kurzhantel in deiner rechten Hand zu deiner Schulter nach oben, wobei dein Oberarm stationär bleibt.\nHebe die Kurzhantel weiter, bis dein Bizeps vollständig kontrahiert ist und die Kurzhantel auf Schulterhöhe ist.\nAtme ein und senke die Kurzhantel langsam in die Ausgangsposition zurück.\nWiederhole den Curl mit deiner linken Hand.\nNach dem Curl mit deiner linken Hand, atme aus und drücke die Kurzhantel in deiner rechten Hand nach oben über den Kopf.\nStrecke deinen Arm vollständig aus und halte kurz in der oberen Position.\nAtme ein und senke die Kurzhantel langsam zurück in die Ausgangsposition.\nWiederhole das Drücken mit deiner linken Hand.\nWechsle weiterhin zwischen Curls und Drücken für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Kombinationsübung trainiert Bizeps, Unterarme und Schultern. Sie verbindet einen Curl mit neutralem Griff mit einem Überkopfdrücken, wobei die Arme jede Wiederholung wechseln.",
+    "primary_muscles": [
+      "biceps_long",
+      "shoulders_front",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors",
+      "back_traps_upper"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "5c4d7830-5a7e-48f0-8e28-83cff8625332",
+    "exercise_db_id": "1648",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "5c4d7830-5a7e-48f0-8e28-83cff8625332.jpg",
+    "video_path": "5c4d7830-5a7e-48f0-8e28-83cff8625332.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:01:42.011118+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Hammer-Curl (alternierend, sitzend)",
+    "instructions": "Setze dich auf eine Bank und halte eine Kurzhantel in jeder Hand. Deine Handflächen zeigen zu deinem Körper und deine Arme sind ausgestreckt.\nHalte deinen Rücken gerade und deine Ellbogen nah am Körper.\nAtme aus und hebe die rechte Kurzhantel in einer Curl-Bewegung zur Schulter, während dein Oberarm stationär bleibt.\nBewege die Kurzhantel bis dein Bizeps maximal kontrahiert ist und die Hantel auf Schulterhöhe erreicht.\nMache eine kurze Pause, atme ein und senke die Kurzhantel langsam zur Ausgangsposition.\nWiederhole die Bewegung mit deinem linken Arm.\nWechsle weiterhin zwischen den Armen für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Übung ist eine isolierte Bizepsübung, die auch die Unterarme trainiert und mit neutralem Griff ausgeführt wird.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_extensors",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6602e1ae-e520-4880-9b11-c1ed234c152d",
+    "exercise_db_id": "0364",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6602e1ae-e520-4880-9b11-c1ed234c152d.jpg",
+    "video_path": "6602e1ae-e520-4880-9b11-c1ed234c152d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:18:24.360227+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Handgelenks-Curl",
+    "instructions": "Sitze auf einer Bank oder einem Stuhl mit flachen Füßen auf dem Boden.\nHalte eine Kurzhantel in einer Hand mit Untergriff, dein Unterarm ruht auf deinem Oberschenkel.\nLasse dein Handgelenk strecken und die Kurzhantel zu deinen Fingern rollen.\nBeuge dein Handgelenk langsam zurück und bringe die Kurzhantel zu deinem Unterarm.\nWiederhole für die gewünschte Anzahl von Wiederholungen und wechsle dann zur anderen Hand.",
+    "tips": "Der Kurzhantel Handgelenks-Curl ist eine Isolationsübung, die die Unterarmmuskulatur, besonders die Handgelenksflexoren beansprucht. Sie wird im Sitzen durchgeführt, mit gestütztem Unterarm und nach oben rollender Kurzhantel.",
+    "primary_muscles": [
+      "forearms_flexors"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "04701d05-181e-4ab2-848f-6c63d5c9d541",
+    "exercise_db_id": "1664",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "04701d05-181e-4ab2-848f-6c63d5c9d541.jpg",
+    "video_path": "04701d05-181e-4ab2-848f-6c63d5c9d541.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:08.1072+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel High Curl",
+    "instructions": "Stehe aufrecht hin und halte eine Kurzhantel in jeder Hand mit den Handflächen nach vorne.\nHalte deine Oberarme ruhig und curl die Kurzhanteln so hoch wie möglich, während du deine Bizepse anspannst.\nHalte einen Moment in der obersten Position, dann senke die Kurzhanteln kontrolliert in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kurzhantel High Curl ist eine Isolationsübung, die die Bizepse trainiert, indem die Kurzhanteln so hoch wie möglich gehoben werden, während die Oberarme ruhig bleiben.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "13aed79c-b1bc-4784-8449-4abe8d939dee",
+    "exercise_db_id": "0341",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "13aed79c-b1bc-4784-8449-4abe8d939dee.jpg",
+    "video_path": "13aed79c-b1bc-4784-8449-4abe8d939dee.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:13.506619+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel hintere Schulter liegend (einarmig)",
+    "instructions": "Liege mit dem Gesicht nach unten auf einer flachen Bank und halte eine Kurzhantel in einer Hand mit der Handfläche nach innen.\nStrecke deinen Arm gerade nach unten in Richtung Boden, wobei er dicht bei deinem Körper bleibt.\nHebe deinen Arm nach oben und nach hinten, während du dein Schulterblatt in Richtung Wirbelsäule zusammenziehst.\nMache eine kurze Pause oben an, senke deinen Arm dann langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, wechsle dann die Arme.",
+    "tips": "Die Kurzhantel hintere Schulter liegend ist eine Isolationsübung für die hinteren Deltamuskeln. Die Ausführung erfolgt in Bauchlage auf der Bank, wobei eine Kurzhantel verwendet wird.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "7e21ac28-fdcd-42ec-8cad-094672e37baf",
+    "exercise_db_id": "0379",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "7e21ac28-fdcd-42ec-8cad-094672e37baf.jpg",
+    "video_path": "7e21ac28-fdcd-42ec-8cad-094672e37baf.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:03.732546+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel hinteres Schulterheben",
+    "instructions": "Stelle dich hüftbreit hin und halte eine Kurzhantel in jeder Hand.\nBeuge deine Knie leicht und neige dich in den Hüften nach vorne, während du deinen Rücken gerade hältst.\nHebe deine Arme zu den Seiten, mit leichtem Ellbogenbeugewinkel, bis sie parallel zum Boden sind.\nPause einen Moment oben, senke deine Arme dann langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "bda072fc-3db7-43a6-b6dd-6dc0a28d6813",
+    "exercise_db_id": "0322",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "bda072fc-3db7-43a6-b6dd-6dc0a28d6813.jpg",
+    "video_path": "bda072fc-3db7-43a6-b6dd-6dc0a28d6813.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:24.288595+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Incline Inner Biceps Curl",
+    "instructions": "Setzen Sie sich auf eine Schrägbank mit je einer Kurzhantel in jeder Hand, Handflächen zueinander gewandt.\nRuhen Sie Ihre Oberarme auf der Bank, lassen Sie Ihre Ellbogen nach unten hängen und Ihre Handflächen zeigen nach vorne.\nHalten Sie Ihre Oberarme stationär, atmen Sie aus und curlen Sie die Gewichte, während Sie Ihre Bizepse anspannen.\nHeben Sie die Kurzhanteln weiter an, bis Ihre Bizepse vollständig angespannt sind und die Kurzhanteln auf Schulterhöhe sind.\nHalten Sie die angespannte Position kurz und drücken Sie Ihre Bizepse zusammen.\nAtmen Sie ein und senken Sie die Kurzhanteln langsam zur Ausgangsposition zurück.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "fcd21634-c0c3-4a41-8249-baa19b49d8c9",
+    "exercise_db_id": "0337",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "fcd21634-c0c3-4a41-8249-baa19b49d8c9.jpg",
+    "video_path": "fcd21634-c0c3-4a41-8249-baa19b49d8c9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:03.680518+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Liegend Trizepsstreckung (über Stirn)",
+    "instructions": "Lege dich flach auf eine Bank, die Füße auf dem Boden, der Kopf am Ende der Bank.\nHalte eine Kurzhantel mit beiden Händen und strecke deine Arme senkrecht nach oben über deiner Brust, Handflächen zueinander.\nHalte deine Oberarme stabil und senke die Kurzhantel langsam in einem Bogen hinter deinen Kopf ab, bis deine Unterarme parallel zum Boden sind.\nMache eine kurze Pause, dann kontrahiere deine Trizepse und bringe die Kurzhantel zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Isolationsübung für den Trizeps, die liegend auf einer Bank durchgeführt wird und die Kurzhantel in einem Bogen hinter dem Kopf bewegt wird.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "ca1ed961-64cd-40e0-88f7-f31f4771cd61",
+    "exercise_db_id": "1294",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "ca1ed961-64cd-40e0-88f7-f31f4771cd61.jpg",
+    "video_path": "ca1ed961-64cd-40e0-88f7-f31f4771cd61.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:18:52.469532+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Pullover mit Hüftstreckung auf Trainingsball",
+    "instructions": "Setze dich auf einen Trainingsball mit flachen Füßen und der Kurzhantel auf deinen Oberschenkeln.\nGehe langsam mit deinen Füßen nach vorne und rolle den Trainingsball hinunter, bis dein Kopf, Nacken und oberer Rücken auf dem Ball gestützt sind.\nHalte die Kurzhantel mit beiden Händen und strecke deine Arme mit leichter Ellbogenbiegung gerade nach oben über deiner Brust.\nSenke die Kurzhantel hinter deinen Kopf ab, während deine Arme gestreckt bleiben und du die Kontrolle bewahrst.\nHalte kurz inne und hebe die Kurzhantel zur Ausgangsposition zurück.\nHebe bei ausgestreckten Armen deine Hüfte vom Boden ab, spanne dein Gesäß an und aktiviere deinen Core.\nSenke deine Hüfte zur Ausgangsposition ab.\nWiederhol die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Pullover mit Hüftstreckung auf dem Trainingsball ist eine Compound-Übung, die die Brustmuskulatur trainiert und auch Trizeps, Schultern und Core aktiviert. Die instabile Oberfläche erhöht die Anforderungen an Balance und Koordination.",
+    "primary_muscles": [
+      "back_lats",
+      "chest_middle"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "back_teres"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "0490a135-ed88-4fbd-896a-939c996ddb7b",
+    "exercise_db_id": "1700",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0490a135-ed88-4fbd-896a-939c996ddb7b.jpg",
+    "video_path": "0490a135-ed88-4fbd-896a-939c996ddb7b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:18:55.318944+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Push Press",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen auf und halte eine Kurzhantel in jeder Hand auf Schulterhöhe.\nBeuge deine Knie leicht und senke deinen Körper ab, dann drücke deine Beine explosiv durch und drücke die Kurzhanteln über den Kopf.\nStrecke deine Arme oben vollständig aus, senke die Kurzhanteln dann zurück auf Schulterhöhe.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kurzhantel Push Press ist eine Compound-Übung, die die Deltamuskeln anspricht und zusätzlich Trizeps und Rumpf trainiert. Der explosive Beinantrieb macht dies zu einer dynamischen Bewegung, die Kraft und Power kombiniert.",
+    "primary_muscles": [
+      "shoulders_front",
+      "shoulders_side",
+      "triceps_long"
+    ],
+    "secondary_muscles": [
+      "quads_rectus_femoris",
+      "triceps_lateral"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "262bd395-ae6b-4c78-9767-a0570830d6a4",
+    "exercise_db_id": "0359",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "262bd395-ae6b-4c78-9767-a0570830d6a4.jpg",
+    "video_path": "262bd395-ae6b-4c78-9767-a0570830d6a4.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:18:04.284484+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Reverse Fly einarmig (mit Unterstützung)",
+    "instructions": "Setze dich auf eine Bank mit flachen Füßen auf dem Boden und geradem Rücken.\nHalte eine Kurzhantel in einer Hand mit der Handfläche nach innen.\nLehne dich vor und platziere deine freie Hand zur Stabilität auf der Bank.\nHalte deinen Arm leicht gebeugt und hebe ihn zur Seite, bis er parallel zum Boden ist.\nMache eine kurze Pause oben, dann senke deinen Arm langsam zurück zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite.",
+    "tips": "Die Kurzhantel Reverse Fly einarmig ist eine Isolationsübung, die den hinteren Deltamuskel gezielt trainiert und zusätzlich den Kapuzenmuskel und die Rhomboiden aktiviert. Sie wird sitzend ausgeführt mit einer Hand gestützt auf der Bank, was sie für die Entwicklung von Schulterkraft und Kontrolle zugänglich macht.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "0411aa5b-98d5-4d9b-a0e3-592007481d7b",
+    "exercise_db_id": "0386",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "0411aa5b-98d5-4d9b-a0e3-592007481d7b.jpg",
+    "video_path": "0411aa5b-98d5-4d9b-a0e3-592007481d7b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:20.626643+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Reverse Fly mit Rotation",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Kurzhantel in jeder Hand mit den Handflächen nach innen.\nBeuge deine Knie leicht und neige deinen Oberkörper nach vorne, während du deinen Rücken gerade hältst und die Brust anhebst.\nHebe deine Arme seitlich an, mit einem leichten Bend in den Ellbogen, bis sie parallel zum Boden sind.\nRotiere deine Arme, sodass deine Handflächen nach unten zeigen.\nSenke deine Arme kontrolliert in die Ausgangsposition zurück.\nWiederhole die Bewegung für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Die Kurzhantel Reverse Fly mit Rotation ist eine Schulterübung, die primär die Deltamuskeln trainiert und sekundär die Kapuzenmuskel und Rhomboiden beansprucht. Die Bewegung kombiniert eine Hüftbeuge mit einem seitlichen Armheben und einer Rotationskomponente.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "be6e706b-9f04-4f2e-b25c-e0873ad9a0b6",
+    "exercise_db_id": "1331",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "be6e706b-9f04-4f2e-b25c-e0873ad9a0b6.jpg",
+    "video_path": "be6e706b-9f04-4f2e-b25c-e0873ad9a0b6.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:12.188844+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Reverse Grip Schrägbank Rudern",
+    "instructions": "Stelle eine Schrägbank in einem 45-Grad-Winkel ein.\nSetze dich auf die Bank mit der Brust gegen die Rückenlehne und den Füßen flach auf dem Boden.\nHalte je eine Kurzhantel in jeder Hand mit Untergriff.\nLehn dich nach vorne und lasse deine Arme vollständig ausgestreckt nach unten hängen.\nZiehe die Kurzhanteln zu deiner Brust hoch und drücke deine Schulterblätter zusammen.\nHalte kurz an der oberen Position, senke dann langsam die Kurzhanteln zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Reverse Grip Schrägbank Rudern ist eine Kraftübung, die den oberen Rücken trainiert und auf einer Schrägbank mit Untergriff ausgeführt wird. Es beansprucht auch die Bizepse und Unterarme.",
+    "primary_muscles": [
+      "back_lats",
+      "back_rhomboids",
+      "back_traps_middle"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d157ff48-439f-49ee-a787-9747541a275a",
+    "exercise_db_id": "1414",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d157ff48-439f-49ee-a787-9747541a275a.jpg",
+    "video_path": "d157ff48-439f-49ee-a787-9747541a275a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:18:07.086898+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Reverse Preacher-Curl (einarmig)",
+    "instructions": "Sitze auf einer Preacher-Bank mit der Brust gegen das Polster und deinen Arm über die Kante der Bank streckend, eine Kurzhantel mit Untergriff haltend.\nSenke die Kurzhantel langsam, bis dein Arm vollständig gestreckt ist.\nCurle die Kurzhantel zurück zur Schulter, während du deinen Oberarm stabil hältst.\nSpanne deine Bizepse oben an, dann senke die Kurzhantel langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle den Arm.",
+    "tips": "Der Kurzhantel Reverse Preacher-Curl (einarmig) ist eine Isolationsübung für den Bizeps auf der Preacher-Bank mit einer einzelnen Kurzhantel. Sie betont strikte Ausführung und Kontrolle und hilft beim Aufbau von Bizeps- und Unterarmkraft.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "973d6273-3303-4ece-aa59-7af7b805a46f",
+    "exercise_db_id": "1667",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "973d6273-3303-4ece-aa59-7af7b805a46f.jpg",
+    "video_path": "973d6273-3303-4ece-aa59-7af7b805a46f.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:18:08.507022+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Reverse-Curl einarmig",
+    "instructions": "Stehen Sie aufrecht und halten Sie eine Kurzhantel in einer Hand mit dem Handrücken nach unten und vollständig ausgestrecktem Arm.\nBeugen Sie die Kurzhantel bei stillstehendem Oberarm durch Ellbogenflexion zur Schulter.\nMachen Sie eine kurze Pause oben an, senken Sie die Kurzhantel anschließend kontrolliert zurück zur Ausgangsposition.\nWiederholen Sie für die gewünschte Anzahl von Wiederholungen, dann Seitenwechsel.",
+    "tips": "Der Kurzhantel Reverse-Curl einarmig ist eine Isolationsübung, die den Bizeps und die Unterarmmuskulatur trainiert. Durch den Reverse-Griff wird besonderer Wert auf den Armbeuger und die Unterarme gelegt.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "97cdbb99-4344-40ce-a2f3-0ca8d0e50e1a",
+    "exercise_db_id": "0403",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "97cdbb99-4344-40ce-a2f3-0ca8d0e50e1a.jpg",
+    "video_path": "97cdbb99-4344-40ce-a2f3-0ca8d0e50e1a.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:02.560305+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Reverse-Konzentrationsucurl sitzend",
+    "instructions": "Sitzen Sie auf einer Bank mit flachen Füßen auf dem Boden und halten Sie eine Kurzhantel in einer Hand mit der Handfläche nach oben.\nLegen Sie Ihren Ellbogen an der Innenseite Ihres Oberschenkels ab, knapp über dem Knie.\nHeben Sie die Kurzhantel mit stillstehendem Oberarm zur Schulter, während Sie ausatmen.\nMachen Sie eine kurze Pause oben an und spannen Sie dabei Ihren Bizeps an.\nAtmen Sie ein und senken Sie die Kurzhantel kontrolliert zurück zur Ausgangsposition.\nWiederholen Sie für die gewünschte Anzahl von Wiederholungen, dann Seitenwechsel.",
+    "tips": "Der Kurzhantel Reverse-Konzentrationsucurl sitzend ist eine Isolationsübung, die den Bizeps trainiert und im Sitzen mit einer Kurzhantel und Reverse-Griff durchgeführt wird. Sie betont saubere Form und intensive Muskelkontraktion.",
+    "primary_muscles": [
+      "biceps_short",
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d9bf837c-aa2d-4570-8f6e-3c4cbb3ee0ed",
+    "exercise_db_id": "0318",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d9bf837c-aa2d-4570-8f6e-3c4cbb3ee0ed.jpg",
+    "video_path": "d9bf837c-aa2d-4570-8f6e-3c4cbb3ee0ed.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:15.054892+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbank Curl",
+    "instructions": "Stelle eine Schrägbank auf einen Winkel von etwa 45 Grad ein und setze dich darauf mit je einer Kurzhantel in jeder Hand, Handflächen nach vorne.\nLehne deine Oberarme an der Schrägbank ab und lass deine Ellbogen hängen, während deine Arme vollständig ausgestreckt sind.\nHalte deine Oberarme ruhig, atme aus und führe die Kurzhanteln nach oben, während du deine Bizeps anspannst.\nHebe die Kurzhanteln weiter an, bis deine Bizeps vollständig kontrahiert sind und die Kurzhanteln auf Schulterhöhe sind.\nHalte die kontrahierte Position kurz, während du deine Bizeps anspannst.\nAtme ein und senke die Kurzhanteln langsam in die Ausgangsposition zurück.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Schrägbank Curl ist eine Isolationsübung, die den Bizeps zielt. Auf einer Schrägbank ausgeführt, betont sie die Dehnung und Kontraktion des Bizeps durch reduzierte Schulterbelastung. Die Übung ist sehr wirksam für den Aufbau von Bizepskraft und -volumen.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "2deb8b2d-990f-4553-8170-25bc56464351",
+    "exercise_db_id": "0320",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2deb8b2d-990f-4553-8170-25bc56464351.jpg",
+    "video_path": "2deb8b2d-990f-4553-8170-25bc56464351.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:20.26795+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbank Hammer Curl",
+    "instructions": "Sitze auf einer Schrägbank mit einer Kurzhantel in jeder Hand, Handflächen zu deinem Oberkörper gerichtet und Arme vollständig ausgestreckt.\nHalte deinen Rücken gegen die Bank und deine Füße flach auf dem Boden.\nHalte deine Oberarme stationär, atme aus und curle die Gewichte, während du deinen Bizeps anspannst.\nHebe die Gewichte weiter, bis dein Bizeps vollständig angespannt ist und die Kurzhanteln auf Schulterhöhe sind.\nHalte die angespannte Position kurz inne und spanne deinen Bizeps an.\nAtme ein und senke die Kurzhanteln langsam zur Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Der Kurzhantel Schrägbank Hammer Curl ist eine Oberarm-Übung, die den Bizeps trainiert und auch die Unterarme beansprucht. Sie wird auf einer Schrägbank ausgeführt, was die Dehnung des Bizeps erhöht und die Muskeln durch einen größeren Bewegungsumfang belastet.",
+    "primary_muscles": [
+      "biceps_long"
+    ],
+    "secondary_muscles": [
+      "forearms_extensors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "331e9378-607e-467a-8b44-3241f1f0ff8d",
+    "exercise_db_id": "0326",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "331e9378-607e-467a-8b44-3241f1f0ff8d.jpg",
+    "video_path": "331e9378-607e-467a-8b44-3241f1f0ff8d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:39.638092+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbank Reverse Flys",
+    "instructions": "Stelle die Schrägbank auf einen 45-Grad-Winkel ein.\nSetze dich auf die Bank mit der Brust gegen die Rückenlehne und halte eine Kurzhantel in jeder Hand.\nStrecke deine Arme gerade nach unten mit den Handflächen zueinander gewandt.\nHalte einen leichten Bend in deinen Ellbogen und hebe deine Arme zur Seite, bis sie parallel zum Boden sind.\nMache eine kurze Pause oben, senke dann deine Arme langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kurzhantel Schrägbank Reverse Flys zielen auf die hinteren Deltamuskeln ab, mit sekundärer Betonung auf Kapuzenmuskel und Rhomboide. Die Übung wird auf der Schrägbank durchgeführt, um die hinteren Schultermuskeln zu isolieren.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "7e1294df-d5f9-439b-a3d7-b2586ea5e0e8",
+    "exercise_db_id": "0329",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "7e1294df-d5f9-439b-a3d7-b2586ea5e0e8.jpg",
+    "video_path": "7e1294df-d5f9-439b-a3d7-b2586ea5e0e8.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:44.081954+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbank Schulterzucken",
+    "instructions": "Stelle eine Schrägbank auf einen 45-Grad-Winkel ein und setze dich darauf mit einer Kurzhantel in jeder Hand.\nPlatziere deine Füße flach auf dem Boden und lasse deine Arme gerade nach unten hängen, Handflächen zeigen zum Körper.\nZucke bei gestreckten Armen deine Schultern nach oben zu deinen Ohren, so hoch wie möglich.\nHalte die Kontraktion einen Moment, dann senke deine Schultern langsam zurück in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "dacaadaf-b599-4bd1-aa02-7f4cd7ad44f5",
+    "exercise_db_id": "0330",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "dacaadaf-b599-4bd1-aa02-7f4cd7ad44f5.jpg",
+    "video_path": "dacaadaf-b599-4bd1-aa02-7f4cd7ad44f5.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:46.985371+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbank Trizeps Streckung",
+    "instructions": "Sitze auf einer Schrägbank mit je einer Kurzhantel in jeder Hand, Handflächen nach innen.\nStrecke deine Arme vollständig über deinen Kopf, halte deine Ellbogen nah bei deinem Kopf.\nSenke die Kurzhanteln hinter deinen Kopf, indem du deine Ellbogen beugst und deine Oberarme ruhig hältst.\nMache einen Moment Pause und hebe dann die Kurzhanteln zurück in die Ausgangsposition, indem du deine Arme streckst.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Die Kurzhantel Schrägbank Trizeps Streckung ist eine Isolationsübung, die den Trizeps zielt und auf einer Schrägbank ausgeführt wird, um die Dehnung und Aktivierung der Trizeps-Muskulatur zu erhöhen.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [
+      "triceps_lateral"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d152abdc-51da-47d0-a790-36d821a4e94c",
+    "exercise_db_id": "0321",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d152abdc-51da-47d0-a790-36d821a4e94c.jpg",
+    "video_path": "d152abdc-51da-47d0-a790-36d821a4e94c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:21.614767+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbankdrücken (Hammer)",
+    "instructions": "Stelle die Schrägbank auf einen Winkel von 45 Grad ein und setze dich mit je einer Kurzhantel in den Händen hin, die auf deinen Oberschenkeln ruhen.\nLehne dich zurück und positioniere die Kurzhanteln auf Schulterhöhe mit den Handflächen zueinander weisend.\nDrücke die Kurzhanteln nach oben und weg von deinem Körper, bis deine Arme vollständig gestreckt sind.\nMache eine kurze Pause oben, dann senke die Kurzhanteln langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Schrägbankdrücken mit Hammer-Griff ist eine Brustübung auf der Schrägbank mit neutralem Griff (Handflächen zueinander). Es zielt hauptsächlich auf die obere Brust ab und trainiert zusätzlich Schultern und Trizeps.",
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "2770532d-4f22-4aed-acd4-4568af04ebc9",
+    "exercise_db_id": "3545",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2770532d-4f22-4aed-acd4-4568af04ebc9.jpg",
+    "video_path": "2770532d-4f22-4aed-acd4-4568af04ebc9.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:09.616179+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbankdrücken alternativ",
+    "instructions": "Sitze auf einer Schrägbank mit je einer Kurzhantel in jeder Hand, die auf deinen Oberschenkeln ruhen.\nLehne dich auf der Bank zurück und nutze deine Oberschenkel, um die Kurzhanteln bis zur Schulterhöhe anzuheben, Handflächen nach vorne.\nSobald auf Schulterhöhe angekommen, drehe deine Handgelenke so, dass deine Handflächen nach vorne zeigen.\nDrücke die Kurzhanteln mit Brust und Schultern nach oben und strecke deine Arme vollständig aus.\nSenke die Kurzhanteln zurück in die Ausgangsposition ab, halte deine Ellbogen leicht gebeugt.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, wobei du die Arme abwechselst.",
+    "tips": "Das Kurzhantel Schrägbankdrücken ist eine Brustübung auf der Schrägbank, bei der Kurzhanteln abwechselnd gepresst werden, um die obere Brust, Schultern und Trizeps zu trainieren.",
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "b645badc-d097-43e5-b013-17aec0606f30",
+    "exercise_db_id": "1279",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "b645badc-d097-43e5-b013-17aec0606f30.jpg",
+    "video_path": "b645badc-d097-43e5-b013-17aec0606f30.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:25.735027+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schrägbankflug einseitig",
+    "instructions": "Stelle die Schrägbank auf einen Winkel von 30-45 Grad ein.\nSetze dich auf die Bank mit einer Kurzhantel in einer Hand, die auf deinem Oberschenkel ruht.\nLege dich auf die Bank zurück und halte deine Füße flach am Boden.\nHalte die Kurzhantel mit gestrecktem Arm gerade über deiner Brust.\nSenke die Kurzhantel in einem weiten Bogen zur Seite, mit einer leichten Beugung im Ellbogen.\nMache eine Pause, wenn dein Arm parallel zum Boden ist, dann kehre die Bewegung um und bringe die Kurzhantel zurück in die Ausgangsposition.\nWiederhole das für die gewünschte Anzahl von Wiederholungen, dann wechsle den Arm.",
+    "tips": "Der Kurzhantel Schrägbankflug einseitig ist eine unilaterale Brustübung auf der Schrägbank. Die Brustmuskulatur wird primär trainiert, während die Deltamuskeln und der Trizeps sekundär beansprucht werden. Die Übung erfordert Kontrolle und Stabilität, da nur ein Arm arbeitet.",
+    "primary_muscles": [
+      "chest_upper"
+    ],
+    "secondary_muscles": [
+      "chest_middle",
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "efed1cc9-0d15-4f95-bdd6-3c57b6e7c04d",
+    "exercise_db_id": "0406",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "efed1cc9-0d15-4f95-bdd6-3c57b6e7c04d.jpg",
+    "video_path": "efed1cc9-0d15-4f95-bdd6-3c57b6e7c04d.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:09.728421+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Schulterzucken",
+    "instructions": "Stelle dich mit schulterbreit auseinander stehenden Füßen hin und halte eine Kurzhantel in jeder Hand mit den Handflächen zum Körper gedreht.\nHalte deine Arme gerade und lasse die Kurzhanteln an deinen Seiten hängen.\nHebe deine Schultern so hoch wie möglich, als würdest du versuchen, deine Ohren mit den Schultern zu berühren.\nHalte die Kontraktion eine Sekunde lang, dann senke deine Schultern langsam in die Ausgangsposition.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": null,
+    "primary_muscles": [
+      "back_traps_upper"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "2ad9e385-3039-4271-9638-05ad30330ed0",
+    "exercise_db_id": "0335",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "2ad9e385-3039-4271-9638-05ad30330ed0.jpg",
+    "video_path": "2ad9e385-3039-4271-9638-05ad30330ed0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:16:59.347389+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Seiten- und Frontheben",
+    "instructions": "Stehe mit schulterbreit auseinanderstehenden Füßen und halte eine Kurzhantel in jeder Hand, mit Handflächen zum Körper.\nHalte deinen Rücken gerade und spanne deine Rumpfmuskulatur an.\nHebe deine Arme zu den Seiten, bis sie parallel zum Boden sind, mit leichtem Ellbogenbeugen.\nHalte kurz inne, dann senke deine Arme langsam in die Ausgangsposition zurück.\nHebe anschließend deine Arme vor dir an, bis sie parallel zum Boden sind, wieder mit leichtem Ellbogenbeugen.\nHalte kurz inne, dann senke deine Arme langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Diese Schulterübung kombiniert Seiten- und Frontheben in einer Bewegung und baut Schulterkraft und Stabilität auf.",
+    "primary_muscles": [
+      "shoulders_side",
+      "shoulders_front"
+    ],
+    "secondary_muscles": [
+      "shoulders_rear"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d24c6ff3-31fd-4fe4-82dc-3728517e78c3",
+    "exercise_db_id": "0345",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "d24c6ff3-31fd-4fe4-82dc-3728517e78c3.jpg",
+    "video_path": "d24c6ff3-31fd-4fe4-82dc-3728517e78c3.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:19.162023+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Seitheben liegend einarmig",
+    "instructions": "Lege dich bäuchlings auf eine flache Bank und halte eine Kurzhantel in einer Hand, die zum Boden hängt.\nHalte deinen Arm gestreckt und hebe die Kurzhantel zur Seite, weg von deinem Körper.\nHalte oben kurz inne, senke die Kurzhantel dann langsam zurück in die Ausgangsposition.\nWiederhole die Bewegung für die gewünschte Anzahl von Wiederholungen, dann wechsle zum anderen Arm.",
+    "tips": "Das einarmige Seitheben liegend ist eine Isolationsübung, die die hinteren Deltamuskeln trainiert und im Liegen auf einer Bank durchgeführt wird. Sie hilft, Schulterkraft und -stabilität zu entwickeln, mit zusätzlicher Beteiligung von Kapuzenmuskel und Rhomboiden.",
+    "primary_muscles": [
+      "shoulders_rear"
+    ],
+    "secondary_muscles": [
+      "back_traps_middle",
+      "back_rhomboids"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "9a0afae4-e144-472f-a14e-db668eb8895e",
+    "exercise_db_id": "0407",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "9a0afae4-e144-472f-a14e-db668eb8895e.jpg",
+    "video_path": "9a0afae4-e144-472f-a14e-db668eb8895e.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:10.953478+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Seitneigung",
+    "instructions": "Stelle dich aufrecht hin mit schulterbreit auseinander stehenden Füßen und halte eine Kurzhantel in einer Hand, sie hängt an deiner Seite herunter.\nHalte deinen Rücken gerade und deinen Core angespannt, beuge dich langsam seitwärts in der Taille zur Seite der Kurzhantel und senke das Gewicht so weit wie möglich ab.\nPause kurz an, dann kehre langsam zur Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl von Wiederholungen, dann wechsle die Seite und wiederhole.",
+    "tips": "Die Kurzhantel Seitneigung ist eine Isolationsübung, die die seitlichen Bauchmuskeln anspricht. Du hältst eine Kurzhantel in einer Hand und beugst dich seitwärts zur Seite des Gewichts.",
+    "primary_muscles": [
+      "abs_obliques"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6c069ca9-2581-4752-aafc-3e0265cc2655",
+    "exercise_db_id": "2317",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "6c069ca9-2581-4752-aafc-3e0265cc2655.jpg",
+    "video_path": "6c069ca9-2581-4752-aafc-3e0265cc2655.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:30.649617+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel sitzende angewinkelte Seitenheben",
+    "instructions": "Sitze auf einer Bank mit geradem Rücken und flachen Füßen auf dem Boden.\nHalte je eine Kurzhantel in jeder Hand mit Handflächen zu deinem Körper gerichtet und Armen in einem 90-Grad-Winkel gebeugt.\nHalte deine Ellbogen gebeugt und hebe deine Arme zur Seite an, bis sie parallel zum Boden sind.\nMache eine kurze Pause oben und senke deine Arme dann langsam in die Ausgangsposition zurück.\nWiederhole die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel sitzende angewinkelte Seitenheben trainiert die Deltoidmuskeln in den Schultern mit sekundärem Fokus auf den Kapuzenmuskel und die Rautenmuskeln. Es wird sitzend ausgeführt, was dem Körper Stabilität bietet und die Anstrengung auf die Schultern konzentriert.",
+    "primary_muscles": [
+      "shoulders_side"
+    ],
+    "secondary_muscles": [
+      "shoulders_front"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "6a91ff2e-b5ad-4ea7-89b9-5a0528ac3363",
+    "exercise_db_id": "0410",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "6a91ff2e-b5ad-4ea7-89b9-5a0528ac3363.jpg",
+    "video_path": "6a91ff2e-b5ad-4ea7-89b9-5a0528ac3363.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:20.480083+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Split Squat",
+    "instructions": "Stelle dich schulterbreit hin und halte je eine Kurzhantel in jeder Hand.\nMache einen Schritt nach vorne und positioniere deine Füße so, dass dein vorderer Fuß flach auf dem Boden und dein hinterer Fuß erhöht auf einer Bank oder Stufe ist.\nSenke deinen Körper ab, indem du dein vorderes Knie und die Hüfte beugst, während du dein hinteres Knie leicht gebeugt hältst und deine hintere Ferse vom Boden abgehoben ist.\nSenke deinen Oberschenkel weiter ab, bis er parallel zum Boden ist, drücke dich dann durch deine vordere Ferse ab, um in die Ausgangsposition zurückzukehren.\nWiederhole die gewünschte Anzahl von Wiederholungen, wechsle dann das Bein und wiederhole.",
+    "tips": "Die Kurzhantel Split Squat ist eine unilaterale Unterkörperübung, die die Oberschenkelmuskulatur trainiert und sekundär die Gesäßmuskulatur, Oberschenkelrückseite und Waden beansprucht. Sie erfordert Balance, Koordination und Kraft, da ein Bein erhöht ist und die Bewegung mit zusätzlichem Widerstand von Kurzhanteln ausgeführt wird.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "quads_vastus_lateralis",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "adductors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "5c84c54f-847d-43a5-a688-5f9c872604b0",
+    "exercise_db_id": "2812",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5c84c54f-847d-43a5-a688-5f9c872604b0.jpg",
+    "video_path": "5c84c54f-847d-43a5-a688-5f9c872604b0.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:04.810845+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Step-up Split Squat",
+    "instructions": "Stelle dich vor eine Bank oder Stufe und halte je eine Kurzhantel in jeder Hand, Handflächen zum Körper.\nPlatziere deinen rechten Fuß auf der Bank oder Stufe, stelle sicher, dass dein gesamter Fuß Kontakt hat.\nSteige mit deinem rechten Fuß auf die Bank, drücke durch deine Ferse um deinen Körper hochzudrücken.\nHebe gleichzeitig dein linkes Knie nach oben zur Brust.\nMache eine Pause oben, senke dein linkes Bein langsam nach unten, während dein rechter Fuß auf der Bank bleibt.\nWiederhole die Bewegung mit deinem linken Fuß auf der Bank.\nWechsle weiterhin zwischen rechtem und linkem Fuß für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Unterkörperübung, die Oberschenkel trainiert und zusätzlich Gesäß, hintere Oberschenkelmuskulatur und Waden aktiviert. Sie erfordert Gleichgewicht und Koordination.",
+    "primary_muscles": [
+      "quads_rectus_femoris",
+      "glutes_maximus"
+    ],
+    "secondary_muscles": [
+      "hamstrings_biceps_femoris",
+      "calves_gastrocnemius"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "1df7292e-2cf7-4f10-9c7e-b5ccc805cb1b",
+    "exercise_db_id": "2706",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "1df7292e-2cf7-4f10-9c7e-b5ccc805cb1b.jpg",
+    "video_path": "1df7292e-2cf7-4f10-9c7e-b5ccc805cb1b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:31.615837+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Supination liegend am Boden",
+    "instructions": "Liegen Sie flach auf Ihrem Rücken auf dem Boden mit ausgestreckten Beinen und Armen an Ihren Seiten, eine Kurzhantel in jeder Hand haltend.\nDrehen Sie Ihre Handflächen nach oben, während Sie Ihre Ellbogen nah bei Ihren Seiten halten.\nCurlen Sie die Kurzhanteln langsam zu Ihren Schultern, während Sie Ihre Unterarme drücken.\nPausieren Sie kurz oben, senken Sie dann die Kurzhanteln langsam zur Ausgangsposition.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Supination liegend am Boden ist eine Isolationsübung, die die Unterarme anspricht, mit sekundärer Beteiligung des Bizeps und der Schultern. Es beinhaltet, auf dem Rücken zu liegen und eine Supinations-Curl-Bewegung mit Kurzhanteln durchzuführen.",
+    "primary_muscles": [
+      "biceps_long",
+      "biceps_short"
+    ],
+    "secondary_muscles": [
+      "forearms_flexors"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "9f3aa499-cffc-461c-90b7-e8a8b3dbd203",
+    "exercise_db_id": "0436",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "9f3aa499-cffc-461c-90b7-e8a8b3dbd203.jpg",
+    "video_path": "9f3aa499-cffc-461c-90b7-e8a8b3dbd203.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:13.553032+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Tate Press",
+    "instructions": "Setze dich auf eine flache Bank mit einer Kurzhantel in jeder Hand, Handflächen zueinander gewandt.\nHebe die Kurzhanteln bis zur Schulterhöhe, drehe dann deine Handgelenke so, dass deine Handflächen von dir wegzeigen.\ndrücke die Kurzhanteln nach oben, bis deine Arme vollständig gestreckt sind, senke sie dann zurück zur Schulterhöhe.\nDrehe deine Handgelenke zurück in die Ausgangsposition und wiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Der Kurzhantel Tate Press ist eine Armübung, die primär die Trizeps trainiert, mit sekundärer Beteiligung der Schultern. Sie wird mit Kurzhanteln im Sitzen auf einer flachen Bank ausgeführt und beinhaltet eine einzigartige Druckbewegung, die die Trizeps-Aktivierung besonders betont.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral",
+      "triceps_medial"
+    ],
+    "secondary_muscles": [],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "c8fb170c-a466-4716-ab14-b7bb66de6cac",
+    "exercise_db_id": "1684",
+    "category": "strength",
+    "force_type": "pull",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "c8fb170c-a466-4716-ab14-b7bb66de6cac.jpg",
+    "video_path": "c8fb170c-a466-4716-ab14-b7bb66de6cac.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:00.22744+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Treppensteiger mit einbeiniger Balance und Bizeps-Curl",
+    "instructions": "Stelle dich vor einer Stufe oder Plattform hin, mit einer Kurzhantel in jeder Hand, Handflächen zu deinem Körper gerichtet.\nPlatziere deinen rechten Fuß auf der Stufe und stelle sicher, dass dein ganzer Fuß Kontakt mit der Oberfläche hat.\nSpanne deinen Core an und drücke durch deine rechte Ferse, um deinen Körper auf die Stufe zu heben und dein linkes Knie zur Brust hochzubringen.\nFühre oben an der Stufe einen Bizeps-Curl durch, indem du deine Ellbogen beugst und die Kurzhanteln zu deinen Schultern bringst.\nSenke die Kurzhanteln und dein linkes Bein gleichzeitig wieder ab.\nWiederhole die Bewegung auf der anderen Seite, indem du mit deinem linken Fuß auf die Stufe trittst.\nWechsle die Seiten ab für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Verbundübung, die einen Treppensteiger mit einbeiniger Balance und Bizeps-Curl kombiniert. Sie trainiert die Bizeps und beansprucht gleichzeitig den unteren Körper und den Core für Stabilität.",
+    "primary_muscles": [
+      "glutes_maximus",
+      "quads_rectus_femoris"
+    ],
+    "secondary_muscles": [
+      "biceps_long",
+      "hamstrings_biceps_femoris"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "0a88d265-dfe2-4775-b440-d568b60f428c",
+    "exercise_db_id": "1739",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "0a88d265-dfe2-4775-b440-d568b60f428c.jpg",
+    "video_path": "0a88d265-dfe2-4775-b440-d568b60f428c.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:29.516556+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Trizeps Kickback alternierend",
+    "instructions": "Stehe mit Füßen hüftbreit auseinander, eine Kurzhantel in jeder Hand.\nBeuge deine Knie leicht und lehne dich nach vorne, während du deinen Rücken gerade hältst.\nStrecke deine Arme nach hinten, Ellbogen nah am Körper.\nHalte kurz oben an, dann senke die Kurzhanteln langsam zurück.\nWiederhole mit dem anderen Arm, wechsle die Seiten bei jeder Wiederholung.",
+    "tips": "Diese Isolationsübung zielt auf den Trizeps ab und trainiert sekundär die Schultern.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "5a4fffbe-bbbd-4fbc-89fb-81a5b8393f5b",
+    "exercise_db_id": "1742",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "5a4fffbe-bbbd-4fbc-89fb-81a5b8393f5b.jpg",
+    "video_path": "5a4fffbe-bbbd-4fbc-89fb-81a5b8393f5b.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:21:14.923905+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Trizeps Kickback mit Storch-Stand",
+    "instructions": "Stelle dich hüftbreit hin und halte eine Kurzhantel in deiner rechten Hand.\nBeuge deine Knie leicht und neige dich in der Hüfte nach vorne, halte deinen Rücken gerade.\nBringe deinen rechten Ellbogen neben deinen Körper, gebeugt im 90-Grad-Winkel.\nStrecke deinen rechten Arm nach hinten, spanne dabei deinen Trizeps an.\nMache eine kurze Pause, dann senke die Kurzhantel kontrolliert zur Ausgangsposition ab.\nWiederhole für die gewünschte Anzahl von Wiederholungen und wechsle dann die Seite.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d8cd72c1-d52d-4979-aa2c-9eb5cc44d874",
+    "exercise_db_id": "1730",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d8cd72c1-d52d-4979-aa2c-9eb5cc44d874.jpg",
+    "video_path": "d8cd72c1-d52d-4979-aa2c-9eb5cc44d874.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:31.966911+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Trizeps Kickback sitzend",
+    "instructions": "Sitze auf einer Bank und halte eine Kurzhantel in jeder Hand, Handflächen nach innen gewandt.\nBeuge deinen Oberkörper nach vorne in der Taille, halte deinen Rücken gerade und parallel zum Boden.\nStrecke einen Arm nach hinten, halte ihn nah am Körper, bis dein Arm vollständig ausgestreckt ist.\nHalte kurz inne, dann senke die Kurzhantel langsam in die Ausgangsposition zurück.\nWiederhole mit dem anderen Arm.\nWechsle weiterhin die Arme für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Dies ist eine Isolationsübung für den Trizeps, die sitzend auf einer Bank und nach vorne gebeugt durchgeführt wird. Sie trainiert jeden Arm abwechselnd.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "31544e03-e01f-4974-ba2c-fed478dbafca",
+    "exercise_db_id": "0394",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "31544e03-e01f-4974-ba2c-fed478dbafca.jpg",
+    "video_path": "31544e03-e01f-4974-ba2c-fed478dbafca.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:45.655114+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Trizeps-Kickback (sitzend)",
+    "instructions": "Sitze auf einer Bank mit flachen Füßen auf dem Boden und halte eine Kurzhantel in jeder Hand.\nBeuge deine Knie leicht und lehne dich von den Hüften nach vorne, während du deinen Rücken gerade hältst.\nBringe deine Oberarme nah an deine Seiten und halte deine Ellbogen in einem 90-Grad-Winkel.\nStrecke deine Arme gerade nach hinten aus und spanne deine Trizeps an der höchsten Stelle an.\nHalte kurz inne, dann senke die Kurzhanteln langsam in die Ausgangsposition zurück.\nWiederhole für die gewünschte Anzahl an Wiederholungen.",
+    "tips": "Das Kurzhantel Trizeps-Kickback (sitzend) ist eine Isolationsübung für die Trizeps mit Kurzhanteln. Es erfordert eine stabile Körperhaltung und korrekte Ausführung zur effektiven Beanspruchung der Trizeps.",
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "be4f945f-d550-4451-a839-bfb883dc45ef",
+    "exercise_db_id": "1740",
+    "category": "strength",
+    "force_type": "push",
+    "mechanic_type": "compound",
+    "difficulty": "intermediate",
+    "poster_path": "be4f945f-d550-4451-a839-bfb883dc45ef.jpg",
+    "video_path": "be4f945f-d550-4451-a839-bfb883dc45ef.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:20:32.51819+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Trizepsstreckung im Obergriff",
+    "instructions": "Stehen Sie mit schulterbreit auseinander stehenden Füßen und halten Sie eine Kurzhantel in einer Hand.\nBeugen Sie sich in der Hüfte vor, halten Sie Ihren Rücken gerade und parallel zum Boden.\nStrecken Sie Ihren Arm gerade nach hinten, halten Sie Ihren Ellbogen nah an Ihrem Körper.\nSenken Sie die Kurzhantel langsam zur Ausgangsposition zurück.\nWiederholen Sie die gewünschte Anzahl von Wiederholungen, dann wechseln Sie die Arme.",
+    "tips": null,
+    "primary_muscles": [
+      "triceps_long",
+      "triceps_lateral"
+    ],
+    "secondary_muscles": [
+      "triceps_medial"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "09f39c64-cf50-437a-907b-bfcd11767195",
+    "exercise_db_id": "0399",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "09f39c64-cf50-437a-907b-bfcd11767195.jpg",
+    "video_path": "09f39c64-cf50-437a-907b-bfcd11767195.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:19:54.060332+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Unterarmdrehen sitzend",
+    "instructions": "Setze dich auf eine Bank und halte eine Kurzhantel in einer Hand auf deinem Oberschenkel ab.\nHebe die Kurzhantel bis zur Schulterhöhe an, während du deinen Ellbogen nah am Körper hältst.\nDrehe deinen Unterarm nach außen weg vom Körper, während du deinen Oberarm stillhältst.\nHalte diese Position kurz, dann drehe deinen Unterarm langsam in die Ausgangsposition zurück.\nWiederhole die gewünschte Anzahl von Wiederholungen und wechsle dann zur anderen Seite.",
+    "tips": "Diese Isolationsübung zielt auf die Unterarme ab und beansprucht Schultern und Bizeps sekundär. Sie verbessert die Unterarmkraft und Mobilität.",
+    "primary_muscles": [
+      "forearms_flexors",
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_short"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  },
+  {
+    "id": "d9ffb4bc-a74b-47e0-8fef-130a981036cb",
+    "exercise_db_id": "2705",
+    "category": "strength",
+    "force_type": "dynamic",
+    "mechanic_type": "compound",
+    "difficulty": "beginner",
+    "poster_path": "d9ffb4bc-a74b-47e0-8fef-130a981036cb.jpg",
+    "video_path": "d9ffb4bc-a74b-47e0-8fef-130a981036cb.mp4",
+    "source": "exercisedb",
+    "is_verified": true,
+    "is_archived": false,
+    "created_at": "2026-01-11T14:17:23.478672+00:00",
+    "updated_at": "2026-01-17T13:48:36.02017+00:00",
+    "name": "Kurzhantel Unterarmheben liegend",
+    "instructions": "Liege flach auf dem Boden mit dem Gesicht nach unten und deine Arme vollständig ausgestreckt nach vorne, eine Kurzhantel in jeder Hand haltend.\nDrehe deine Handflächen so, dass sie zum Boden zeigen.\nHalte deine Arme gerade und hebe die Kurzhanteln vom Boden ab, indem du deine Unterarme anspannst.\nHebe weiter an, bis deine Unterarme vollständig kontrahiert sind und die Kurzhanteln auf Schulterhöhe sind.\nHalte einen Moment lang an und senke die Kurzhanteln dann langsam zurück in die Ausgangsposition.\nWiederhole dies für die gewünschte Anzahl von Wiederholungen.",
+    "tips": "Das Kurzhantel Unterarmheben liegend zielt auf die Unterarme ab, indem es erfordert, deine Handflächen abwärts zu drehen und Kurzhanteln zu heben, wobei Unterarmkraft und Stabilität betont werden.",
+    "primary_muscles": [
+      "forearms_extensors"
+    ],
+    "secondary_muscles": [
+      "biceps_long"
+    ],
+    "equipment": [
+      "dumbbell"
+    ]
+  }
+]

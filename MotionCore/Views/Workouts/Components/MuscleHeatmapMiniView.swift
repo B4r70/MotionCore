@@ -132,7 +132,7 @@ struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: transparent; }
         svg { width: 100%; height: 100%; display: block; }
-        svg path { fill: #374151 !important; }
+        svg path { fill: #6B7280 !important; stroke: none !important; }
         #front_borders path, #rear_borders path { fill: none !important; stroke: #666666; stroke-width: 0.8px; }
         @media (prefers-color-scheme: dark) {
             svg path { fill: #4B5563 !important; }
