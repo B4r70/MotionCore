@@ -1034,6 +1034,9 @@ struct ActiveWorkoutView: View {
             // Complications nach Workout-Abschluss aktualisieren
             WatchComplicationService.updateComplications(allSessions: allSessions)
 
+            // Widget-Snapshot nach Workout-Abschluss aktualisieren
+            WidgetSnapshotPublisher.publish(allSessions: allSessions)
+
             // Supabase-Upload (non-blocking, CloudKit bleibt primär)
             Task {
                 let success = await SupabaseSessionService.shared.upload(session)

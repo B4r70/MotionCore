@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Live Activity                                                    /
+// Abschnitt . . : Widget Extension                                                 /
 // Datei . . . . : MotionCoreWidgetsBundle.swift                                    /
 // Autor . . . . : Bartosz Stryjewski                                               /
-// Erstellt am . : 02.01.2026                                                       /
-// Beschreibung  : Live Activity UI für Dynamic Island und Sperrbildschirm          /
+// Erstellt am . : 2026-04-20                                                       /
+// Beschreibung  : Widget-Bundle — registriert alle Widgets und die Live Activity   /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -16,8 +16,20 @@ import SwiftUI
 @main
 struct MotionCoreWidgetsBundle: WidgetBundle {
     var body: some Widget {
-        MotionCoreWidgets()
+        // MARK: - Home Screen Widgets
+        StreakWidget()
+        WeeklyGoalWidget()
+        LastWorkoutWidget()
+        TrainingOverviewWidget()
+
+        // MARK: - Lock Screen Widgets
+        CircularStatusWidget()
+        InlineStatusWidget()
+
+        // MARK: - Control Widget (bestehend)
         MotionCoreWidgetsControl()
+
+        // MARK: - Live Activity (bestehend)
         MotionCoreWidgetsLiveActivity()
     }
 }

@@ -1,89 +1,113 @@
-# Ausklappbare Exercise Rows in ExercisesOverviewCard
+# iOS Home Screen Widgets (System + Lock Screen)
 
-**Complexity:** Medium
+**Complexity:** Large
 
 ## Summary
 
-Implementierung ausklappbarer Übungs-Rows in `ExercisesOverviewCard` laut Instruction-Dokument. Accordion-Verhalten mit Chevron, Satz-Detail-Sektion, Play-Icon zur Auswahl aktiver Übung und Reaktivität auf `selectedExerciseKey` + `isSortMode`. Umsetzung in 7 streng sequenziellen Schritten mit STOPP nach jedem Schritt.
+Die bestehende Emoji-Template-Datei `MotionCoreWidgets.swift` wird durch produktive MotionCore-Widgets ersetzt. Ziel ist ein Satz nützlicher Widgets für Home Screen (Small/Medium/Large) und Lock Screen (accessoryCircular/Rectangular/Inline), die Kern-Daten aus MotionCore anzeigen: Wochen-Fortschritt, Streak, nächstes Training, letzter Workout, Top-PRs und 4-Wochen-Volumen-Trend. Die bereits funktionierende Live Activity (`MotionCoreWidgetsLiveActivity.swift`) bleibt unverändert.
 
 ## Scope
 
-**Enthalten:**
-- Neuer Parameter `selectedExerciseKey` in `ExercisesOverviewCard`
-- `@State expandedExerciseKey` + Reaktivität (onAppear / onChange)
-- Erweiterung `ExerciseOverviewRow` (isExpanded, onToggleExpand, onSelectAsActive, Tap-Handler)
-- Chevron-Indikator in topLine
-- Neue private Subview `ExerciseOverviewExpandedDetail`
-- Play-Icon bei nicht-aktiven Übungen
-- Edge-Case-Verifikation inkl. Superset-Linien und Sortiermodus
+Included:
+- Widget-Bundle um Home-Screen- und Lock-Screen-Widgets erweitern
+- AppGroup-basierte Datenbrücke (UserDefaults + JSON-Snapshot-File) nach bestehendem `WatchComplicationService`-Pattern
+- Snapshot-Publisher-Service in der Main-App, der nach relevanten Events schreibt
+- deep link per `widgetURL` in App-Views
 
-**Explizit ausgeschlossen:**
-- Keine Änderungen an bestehender Drag-&-Drop-Logik
-- Keine Änderungen an Superset-Verbindungslinien
-- Keine Refactorings nebenbei
-- Keine Auslagerung in eigene Datei (nur falls >600 Zeilen nach Schritt 7 — dann separat besprechen)
+Explicitly excluded:
+- Direkter SwiftData/CloudKit-Zugriff aus der Widget-Extension (zu fragil, keine garantierte Store-Migration im Extension-Prozess)
+- Supabase-Calls aus Widget (Network in Timeline-Provider verboten/begrenzt)
+- Interaktive Widgets mit `AppIntent` (Phase 2)
+- Neue Live Activities
+- Konfigurierbare Widgets (`AppIntentConfiguration`) — Phase 2 falls gewünscht
+
+## UX Placement
+
+- **Small (Home)**: "Streak" (Flammen-Icon + Tage + Best-Streak-Subtitle)
+- **Small (Home)**: "Wochenziel" (Ring-Progress Workouts/Woche, fix 5/Woche)
+- **Medium (Home)**: "Letztes Workout" (Datum, Volumen, Dauer, Top-Übung, Satz-Count)
+- **Large (Home)**: "Trainings-Überblick" (Wochenziel-Ring + Streak + 4-Wochen-Volumen-Bar-Chart via Swift Charts + Big-3-PRs)
+- **Lock Screen accessoryCircular**: Streak-Ring (Fortschritt ggü. Wochenziel)
+- **Lock Screen accessoryInline**: "MotionCore · 3/5 diese Woche · 🔥12"
+
+Rationale: Widgets dienen Motivation (Streak, Wochenziel) und Kontext (letzte Session), nicht interaktiver Steuerung. Keine Duplikate von Apple-Health-Widgets.
 
 ## Affected Files
 
-- `Views/.../ExercisesOverviewCard.swift` — neuer Parameter, State, Subview-Erweiterung, neue `ExerciseOverviewExpandedDetail`-Subview (~448 → ~530 Zeilen)
-- `Views/.../ActiveWorkoutView.swift` — eine Zeile: Parameter `selectedExerciseKey:` an Aufrufstelle von `ExercisesOverviewCard`
+### Neue Dateien (Widget-Extension Target)
 
-## Risks
+- `MotionCoreWidgets/Shared/WidgetSnapshot.swift` — Codable Snapshot-Struct mit Sub-Structs
+- `MotionCoreWidgets/Shared/WidgetDataStore.swift` — AppGroup Reader/Writer
+- `MotionCoreWidgets/Providers/MotionCoreEntry.swift` — TimelineEntry
+- `MotionCoreWidgets/Providers/MotionCoreTimelineProvider.swift` — gemeinsamer Provider
+- `MotionCoreWidgets/Widgets/StreakWidget.swift`
+- `MotionCoreWidgets/Widgets/WeeklyGoalWidget.swift`
+- `MotionCoreWidgets/Widgets/LastWorkoutWidget.swift`
+- `MotionCoreWidgets/Widgets/TrainingOverviewWidget.swift`
+- `MotionCoreWidgets/Widgets/InlineStatusWidget.swift`
+- `MotionCoreWidgets/Views/` — SwiftUI-Komponenten (StreakRing, WeeklyGoalRing, VolumeMiniChart)
 
-- Datei-Größen-Risiko: Prognose ~530 Zeilen, Warnschwelle 600 Zeilen — falls Schritt 7 drüber → STOPP und Auslagerung besprechen
-- Tap-Gesten-Konflikt: Play-Button darf Row-Tap nicht propagieren (`.buttonStyle(.plain)` sollte genügen; Fallback `simultaneousGesture` notiert)
-- Drag-Floating-Row: neue Parameter müssen in beiden Row-Aufrufen (Background + Drag-Floating) gesetzt werden — leicht vergessen
-- Animation-Race: gleichzeitiges `onChange(selectedExerciseKey)` + manuelles Toggle könnten sich überlagern — geminderte Risiken durch konsistente `withAnimation(.easeInOut(duration: 0.25))`
-- Superset-Linien: dürfen bei ausgeklappter Row visuell nicht brechen — explizit im Edge-Case-Test
+### Geänderte Dateien
+
+- `MotionCoreWidgets/MotionCoreWidgets.swift` — Emoji-Template ersetzen
+- `MotionCoreWidgets/MotionCoreWidgetsBundle.swift` — Neue Widgets registrieren
+- `MotionCore/Services/Widget/WidgetSnapshotPublisher.swift` (neu) — Daten-Publisher
+- `MotionCore/App/MotionCoreApp.swift` — Publisher triggern bei App-Start + Foreground
 
 ## Implementation Steps
 
-- [x] **Schritt 1** — Parameter `selectedExerciseKey` durchreichen
-- [x] **Schritt 2** — `expandedExerciseKey`-State + onChange-Handler
-- [x] **Schritt 3** — `ExerciseOverviewRow` mit `isExpanded` + `onToggleExpand`
-- [x] **Schritt 4** — Chevron-Indikator in topLine
-- [x] **Schritt 5** — `ExerciseOverviewExpandedDetail` implementieren
-- [x] **Schritt 6** — Play-Icon für Auswahl als aktive Übung
-- [x] **Schritt 7** — Edge-Cases + Feinschliff
+- [x] Schritt 1: `Shared/WidgetSnapshot.swift` definieren
+- [x] Schritt 2: `Shared/WidgetDataStore.swift` implementieren
+- [x] Schritt 3: `Services/Widget/WidgetSnapshotPublisher.swift` implementieren (Big-3-PRs statt alle)
+- [x] Schritt 4: Publisher in `BaseView` (onAppear + scenePhase.active) und `ActiveWorkoutView` triggern
+- [x] Schritt 5: Template `MotionCoreWidgets.swift` ersetzen
+- [x] Schritt 6: `MotionCoreTimelineProvider` + `MotionCoreEntry` anlegen
+- [x] Schritt 7: `StreakWidget` implementieren
+- [x] Schritt 8: `WeeklyGoalWidget` implementieren (fix 5)
+- [x] Schritt 9: `LastWorkoutWidget` implementieren
+- [x] Schritt 10: `TrainingOverviewWidget` implementieren (Big-3-PRs)
+- [x] Schritt 11: `InlineStatusWidget` implementieren (accessoryCircular + accessoryInline)
+- [x] Schritt 12: `MotionCoreWidgetsBundle` erweitern
+- [x] Schritt 13: Entitlements geprüft — beide Targets haben `group.com.barto.motioncore`
+- [ ] Schritt 14: Manuelles Verify + Lessons.md
 
-## Manual Verification Checklist
+## Produktentscheidungen (Geklärt)
 
-- [ ] Xcode build (`Cmd+B`) nach **jedem** der 7 Schritte
-- [ ] Simulator: Aktive Übung ist beim Öffnen der `ActiveWorkoutView` automatisch aufgeklappt
-- [ ] Simulator: Accordion (alte Row schließt, neue öffnet) funktioniert weich
-- [ ] Simulator: Play-Icon wechselt aktive Übung korrekt, ohne Row-Toggle auszulösen
-- [ ] Simulator: Sortiermodus schließt offene Row und blockiert Tap-Expand
-- [ ] Simulator: Superset-Verbindungslinien bleiben bei aufgeklappter Row korrekt
-- [ ] `ExercisesOverviewCard.swift` < 600 Zeilen
-- [ ] Keine Compile-Warnungen aus geänderten Dateien
+1. ✅ **Wochenziel**: Fix 5/Woche
+2. ✅ **"Nächstes Training" Widget**: Entfällt (nicht nötig)
+3. ✅ **Top-PRs**: Big-3 (Bench/Squat/Deadlift)
+
+## Status
+
+- [x] Produktfragen geklärt
+- [x] Implementation freigegeben
+- [ ] Quality gate bestanden
 
 ---
 
 ## Fortschritt
 
-**2026-04-19 — Schritt 7 abgeschlossen**
+**Datum:** 2026-04-20
 
-**Abgeschlossene Schritte:** 1–7 (alle)
+**Abgeschlossene Schritte:** 1–13
 
-**Code-Bug behoben in Schritt 7:**
-Äußerer `onTapGesture` in `ExercisesOverviewCard` (Zeile 128–132) rief `onSelectExercise` auf und blockierte den `onToggleExpand`-Aufruf in `ExerciseOverviewRow.background`. In SwiftUI gewinnt die äußere Geste — der Toggle wurde nie ausgelöst. Der fehlerhafte Tap-Handler wurde entfernt. Das Play-Icon übernimmt weiterhin die Übungsauswahl via `onSelectAsActive`.
+**Geänderte / neue Dateien:**
+- `MotionCoreWidgets/Shared/WidgetSnapshot.swift` (neu, Widget-Extension-Target)
+- `MotionCoreWidgets/Shared/WidgetDataStore.swift` (neu, Widget-Extension-Target — Lesen + Placeholder)
+- `MotionCoreWidgets/Providers/MotionCoreEntry.swift` (neu)
+- `MotionCoreWidgets/Providers/MotionCoreTimelineProvider.swift` (neu)
+- `MotionCoreWidgets/Widgets/StreakWidget.swift` (neu)
+- `MotionCoreWidgets/Widgets/WeeklyGoalWidget.swift` (neu)
+- `MotionCoreWidgets/Widgets/LastWorkoutWidget.swift` (neu)
+- `MotionCoreWidgets/Widgets/TrainingOverviewWidget.swift` (neu)
+- `MotionCoreWidgets/Widgets/InlineStatusWidget.swift` (neu — accessoryCircular + accessoryInline)
+- `MotionCoreWidgets/MotionCoreWidgets.swift` (ersetzt — war Emoji-Template)
+- `MotionCoreWidgets/MotionCoreWidgetsBundle.swift` (geändert — alle 6 Widgets + LiveActivity registriert)
+- `MotionCore/Services/Widget/WidgetSnapshot.swift` (neu, App-Target — identische Structs)
+- `MotionCore/Services/Widget/WidgetDataStore.swift` (neu, App-Target — nur Write)
+- `MotionCore/Services/Widget/WidgetSnapshotPublisher.swift` (neu, App-Target)
+- `MotionCore/Views/Root/View/BaseView.swift` (geändert — @Query + Publisher-Trigger)
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` (geändert — Publisher nach Session-Abschluss)
 
-**Geänderte Dateien:**
-- `/Users/bartosz/Developments/MotionCore/MotionCore/Views/Workouts/Active/Components/ExercisesOverviewCard.swift` — 4 Zeilen entfernt (äußerer onTapGesture)
-
-**Datei-Größe:** 564 Zeilen (unter 600-Warnschwelle)
-
-**Keine print-Statements / TODOs / FIXMEs vorhanden**
-
-**Ausstehend:** Xcode `Cmd+B` Build-Check durch den User, Simulator-Tests der Checkliste
-
-## Open Questions
-
-Keine offenen Produkt-/UX-/Datenfragen — Konzept und Instruction sind vollständig spezifiziert. Einzige bedingte Entscheidung: Falls Datei nach Schritt 7 >600 Zeilen liegt, Auslagerung von `ExerciseOverviewExpandedDetail` in eigene Datei besprechen.
-
----
-
-## Referenzen
-
-- **Concept:** `/Users/bartosz/Developments/MotionCore/Documentation/Concepts/MotionCore_ActiveWorkout_ExpandableExerciseRow_Concept.md`
-- **Instruction:** `/Users/bartosz/Developments/MotionCore/Documentation/Instructions/MotionCore_ActiveWorkout_ExpandableExerciseRow_Instruction.md`
+**Offene Punkte:**
+- Schritt 14: Manuelles Verify via Xcode Cmd+B durch User erforderlich

@@ -58,6 +58,10 @@ struct BaseView: View {
     @State private var selectedDeviceFilter: CardioDevice = .none
     @State private var selectedTimeFilter: TimeFilter = .all
 
+    // Widget-Snapshot: alle abgeschlossenen Sessions (für Publisher)
+    @Query(filter: #Predicate<StrengthSession> { $0.isCompleted }, sort: \StrengthSession.date, order: .reverse)
+    private var completedSessionsForWidget: [StrengthSession]
+
     // MARK: Vorabeinstellungen Farbgebung Tabbar
     init() {
         let appearance = UITabBarAppearance()
@@ -298,6 +302,8 @@ struct BaseView: View {
                 Task {
                     await SupabaseResyncService.shared.syncPendingChanges(in: context)
                 }
+                // Widget-Snapshot beim App-Start aktualisieren
+                WidgetSnapshotPublisher.publish(allSessions: completedSessionsForWidget)
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
@@ -305,6 +311,8 @@ struct BaseView: View {
                 Task {
                     await SupabaseResyncService.shared.syncPendingChanges(in: context)
                 }
+                // Widget-Snapshot beim Foreground-Wechsel aktualisieren
+                WidgetSnapshotPublisher.publish(allSessions: completedSessionsForWidget)
             }
         }
     }
