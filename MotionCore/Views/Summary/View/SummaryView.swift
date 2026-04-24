@@ -49,9 +49,7 @@ struct SummaryView: View {
 
     // Readiness der letzten Strength-Session (Soft-Link über sessionUUID)
     private var latestSessionReadiness: SessionReadiness? {
-        guard let lastSession = strengthSessions.first else { return nil }
-        let uuid = lastSession.sessionUUID.uuidString
-        return allReadiness.first { $0.sessionUUID == uuid }
+        allReadiness.first
     }
 
     private let gridColumns: [GridItem] = [
