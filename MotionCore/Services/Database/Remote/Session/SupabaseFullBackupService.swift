@@ -236,6 +236,9 @@ final class SupabaseFullBackupService: ObservableObject {
                 consecutiveSuccessCount: state.consecutiveSuccessCount,
                 consecutiveFailCount: state.consecutiveFailCount,
                 isActive: state.isActive,
+                lastAutoProgressionDate: state.lastAutoProgressionDate,
+                lastAutoProgressionAmount: state.lastAutoProgressionAmount,
+                autoProgressionUndoable: state.autoProgressionUndoable,
                 createdAt: state.createdAt,
                 updatedAt: Date()
             )
@@ -358,7 +361,8 @@ final class SupabaseFullBackupService: ObservableObject {
                     isCompleted: set.isCompleted,
                     rpe: set.rpe,
                     notes: set.notes,
-                    isLastSetOfExercise: set.isLastSetOfExercise
+                    isLastSetOfExercise: set.isLastSetOfExercise,
+                    rpeRecorded: set.rpeRecorded
                 )
             }
 
@@ -530,7 +534,8 @@ final class SupabaseFullBackupService: ObservableObject {
                 isCompleted: set.isCompleted,
                 rpe: set.rpe,
                 notes: set.notes,
-                isLastSetOfExercise: set.isLastSetOfExercise
+                isLastSetOfExercise: set.isLastSetOfExercise,
+                rpeRecorded: set.rpeRecorded
             )
         }
 

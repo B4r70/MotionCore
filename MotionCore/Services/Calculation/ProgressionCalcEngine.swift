@@ -140,24 +140,25 @@ struct ProgressionCalcEngine {
             )
         }
 
-        // Letzter Work-Set: isLastSetOfExercise bevorzugt (für korrekte RIR-Quelle),
-        // Fallback auf workSets.last für Legacy-Sessions vor 1.4 (isLastSetOfExercise war noch nicht gesetzt)
-        let lastSet = workSets.first(where: { $0.isLastSetOfExercise }) ?? workSets.last!
+        let modeW = Self.modeWeight(from: workSets) ?? workSets.last!.weight
+        let modeWeightSets = workSets.filter { $0.weight == modeW }
 
-        // hasRIRData-Guard: rpe == 0 ist Default-Wert, bedeutet "nicht gesetzt".
-        // calculatedRIR = 10 - 0 = 10 wäre fälschlich "sehr frisch" → alle Progressions-Checks abschalten.
-        let hasRIRData = lastSet.rpe > 0
+        // RIR-Quelle: letzter Modus-Satz mit rpeRecorded, Fallback auf letzten Modus-Satz
+        let lastSet = modeWeightSets.last(where: { $0.rpeRecorded }) ?? modeWeightSets.last ?? workSets.last!
+
+        // hasRIRData via rpeRecorded-Flag (Phase 1.5): disambiguiert rpe=0 ("RIR 10 = leicht" vs. "nicht erfasst").
+        let hasRIRData = lastSet.rpeRecorded
         let lastRIR = lastSet.calculatedRIR
 
-        let allHitTarget = workSets.allSatisfy { $0.reps >= state.targetReps }
-        let repsBelowMin = workSets.contains { $0.reps < state.minTargetReps }
+        let allHitTarget = modeWeightSets.allSatisfy { $0.reps >= state.targetReps }
+        let repsBelowMin = modeWeightSets.contains { $0.reps < state.minTargetReps }
         let increment = input.studioEquipment?.increment ?? input.exerciseFallbackStep
 
         // -----------------------------------------------------------------------
         // 5a: Alle Reps erreicht + RIR ≤ 1 → 1× Increment erhöhen
         // -----------------------------------------------------------------------
         if allHitTarget && hasRIRData && lastRIR <= 1 {
-            let raw = state.workingWeight + increment
+            let raw = modeW + increment
             let rounded = EquipmentWeightRounding.roundToValidWeight(
                 raw,
                 equipment: input.studioEquipment,
@@ -178,7 +179,7 @@ struct ProgressionCalcEngine {
         // -----------------------------------------------------------------------
         // RIR 2 (mittel) + alle Reps erreicht → fällt in Fallback .holdWeight (Concept-konform)
         if allHitTarget && hasRIRData && lastRIR >= 3 {
-            let raw = state.workingWeight + 2 * increment
+            let raw = modeW + 2 * increment
             let rounded = EquipmentWeightRounding.roundToValidWeight(
                 raw,
                 equipment: input.studioEquipment,
@@ -227,7 +228,7 @@ struct ProgressionCalcEngine {
             } else {
                 // 5c: Progression zu neu — Gewicht halten, mehr Anpassungszeit geben
                 return Output(
-                    suggestedWeight: state.workingWeight,
+                    suggestedWeight: modeW,
                     suggestedReps: state.targetReps,
                     reasoning: .holdWeight,
                     isProgressionStep: false,
@@ -242,12 +243,23 @@ struct ProgressionCalcEngine {
         // Tritt auf wenn: allHitTarget=true, hasRIRData=false (kein RPE gesetzt)
         // oder RIR == 2 (mittlere Reserve, kein klarer Signal für Steigerung)
         return Output(
-            suggestedWeight: state.workingWeight,
+            suggestedWeight: modeW,
             suggestedReps: state.targetReps,
             reasoning: .holdWeight,
             isProgressionStep: false,
             isRollbackCandidate: false
         )
+    }
+
+    // MARK: - Private Helpers
+
+    /// Häufigstes Gewicht aus den übergebenen Sätzen. Bei Gleichstand: niedrigstes (konservativ).
+    private static func modeWeight(from sets: [ExerciseSet]) -> Double? {
+        guard !sets.isEmpty else { return nil }
+        var counts: [Double: Int] = [:]
+        for set in sets { counts[set.weight, default: 0] += 1 }
+        let maxCount = counts.values.max()!
+        return counts.filter { $0.value == maxCount }.keys.min()
     }
 }
 
@@ -255,9 +267,10 @@ struct ProgressionCalcEngine {
 //
 // 1. lastSessionSets.isEmpty .......................... → .firstSession
 // 2. progressionMode == .off .......................... → .noProgression
-// 3. alle Sätze ≥ targetReps + lastSet rpe=9 (RIR 1) .. → .increaseWeight
-// 4. alle Sätze ≥ targetReps + lastSet rpe=6 (RIR 4) .. → .bigIncrease
-// 5. reps < minTargetReps + rpe=10, lastProgDate > 14d . → .holdWeight (5c)
-// 6. reps < minTargetReps + lastProgDate heute-5d ...... → .rollbackSuggested (5d)
+// 3. Modus 30kg, alle ≥ targetReps, rpeRecorded=true, rpe=9 (RIR 1) ..... → .increaseWeight (modeW+inc)
+// 4. Modus 30kg, alle ≥ targetReps, rpeRecorded=true, rpe=6 (RIR 4) ..... → .bigIncrease (modeW+2*inc)
+// 5. Modus 30kg, reps < minTargetReps, rpeRecorded=false, progDate>14d ... → .holdWeight 30kg (5c)
+// 6. Modus 30kg, reps < minTargetReps, lastProgDate heute-5d ............. → .rollbackSuggested (5d)
+// 9. Sätze: 30/30/32.5kg → modeW=30, Auswertung nur auf 30kg-Sätze ........ → korrekte Baseline
 // 7. readinessModifier=0.85 ........................... → .readinessReduced (floor-gerundet)
 // 8. currentSessionSetIndex=1 + prev=60kg ............. → suggestedWeight=60, .holdWeight

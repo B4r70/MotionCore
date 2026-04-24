@@ -23,6 +23,7 @@ struct ExercisesOverviewCard: View {
     let onSelectExercise: (String) -> Void
     let onDeleteExercise: (String) -> Void
     let onReorderExercise: (Int, Int) -> Void
+    var onRetroRIR: ((ExerciseSet) -> Void)? = nil
 
     // Sortiermodus-State
     @State private var isSortMode: Bool = false
@@ -98,7 +99,8 @@ struct ExercisesOverviewCard: View {
                                 onSelectAsActive: {
                                     guard let key = sets.first?.groupKey else { return }
                                     onSelectExercise(key)
-                                }
+                                },
+                                onRetroRIR: onRetroRIR
                             )
                             // Höhe messen für Drag-Berechnung
                             .background(
@@ -356,6 +358,7 @@ private struct RowOffsetModifier: ViewModifier {
 
 private struct ExerciseOverviewExpandedDetail: View {
     let sets: [ExerciseSet]
+    var onRetroRIR: ((ExerciseSet) -> Void)? = nil
 
     var body: some View {
         VStack(spacing: 0) {
@@ -397,6 +400,15 @@ private struct ExerciseOverviewExpandedDetail: View {
                 .foregroundStyle(set.isCompleted ? Color.green : Color.secondary.opacity(0.5))
                 .padding(.leading, 4)
         }
+        .contextMenu {
+            if set.isLastSetOfExercise && !set.rpeRecorded, let callback = onRetroRIR {
+                Button {
+                    callback(set)
+                } label: {
+                    Label("RIR nachtragen", systemImage: "pencil.and.outline")
+                }
+            }
+        }
     }
 
     private func formatSetValue(_ set: ExerciseSet) -> String {
@@ -434,6 +446,7 @@ private struct ExerciseOverviewRow: View {
     let isExpanded: Bool
     let onToggleExpand: () -> Void
     let onSelectAsActive: () -> Void
+    var onRetroRIR: ((ExerciseSet) -> Void)? = nil
 
     private var completedCount: Int { sets.filter { $0.isCompleted }.count }
     private var isAllCompleted: Bool { completedCount == sets.count }
@@ -468,7 +481,7 @@ private struct ExerciseOverviewRow: View {
                 topLine
                 dotsLine
                 if isExpanded {
-                    ExerciseOverviewExpandedDetail(sets: sets)
+                    ExerciseOverviewExpandedDetail(sets: sets, onRetroRIR: onRetroRIR)
                         .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
@@ -480,12 +493,12 @@ private struct ExerciseOverviewRow: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(backgroundColor)
-                .onTapGesture {
-                    guard !isSortMode else { return }
-                    onToggleExpand()
-                }
         )
         .contentShape(Rectangle())
+        .onTapGesture {
+            guard !isSortMode else { return }
+            onToggleExpand()
+        }
         .animation(.easeInOut(duration: 0.15), value: isPressed)
     }
 

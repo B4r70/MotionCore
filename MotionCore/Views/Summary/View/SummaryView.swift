@@ -29,6 +29,9 @@ struct SummaryView: View {
     @Query(sort: \ExerciseProgressionState.updatedAt, order: .reverse)
     private var progressionStates: [ExerciseProgressionState]
 
+    @Query(sort: \SessionReadiness.capturedAt, order: .reverse)
+    private var allReadiness: [SessionReadiness]
+
     // MARK: - Environment
 
     @Environment(\.modelContext) private var context
@@ -39,9 +42,17 @@ struct SummaryView: View {
     @State private var selectedTimeframe: SummaryTimeframe = .week
     @State private var viewModel = SummaryViewModel()
     @State private var showCalendar: Bool = false
+    @State private var showAutoProgressionDetails: Bool = false
     @State private var displayedMonth: Date = Date()
     @State private var calendarGrid: [[ActivityDay?]] = []
     @State private var calendarStats: (trainingDays: Int, averagePerWeek: Double) = (0, 0.0)
+
+    // Readiness der letzten Strength-Session (Soft-Link über sessionUUID)
+    private var latestSessionReadiness: SessionReadiness? {
+        guard let lastSession = strengthSessions.first else { return nil }
+        let uuid = lastSession.sessionUUID.uuidString
+        return allReadiness.first { $0.sessionUUID == uuid }
+    }
 
     private let gridColumns: [GridItem] = [
         GridItem(.flexible()),
@@ -62,6 +73,11 @@ struct SummaryView: View {
                         motivationalContext: viewModel.motivationalContext,
                         xpLevel: viewModel.xpLevel
                     )
+
+                    // 1b. Readiness-Card der letzten Session
+                    if let readiness = latestSessionReadiness {
+                        ReadinessSummaryCard(readiness: readiness)
+                    }
 
                     // 2. 7-Tage-Strip + expandierbarer Kalender
                     SummaryWeekStrip(
@@ -99,6 +115,19 @@ struct SummaryView: View {
                             },
                             onSwitchToAdvanced: { state in
                                 ProgressionRollbackService.switchToAdvanced(state: state, in: context)
+                            }
+                        )
+                    }
+
+                    // 3c. Auto-Progression-Karte (nur nach Auto-Progress, bis Undo oder neue Session)
+                    if !viewModel.autoProgressionSuggestions.isEmpty {
+                        AutoProgressionInsightCard(
+                            suggestions: viewModel.autoProgressionSuggestions,
+                            onUndo: {
+                                AutoProgressionApplier.undoAll(context: context)
+                            },
+                            onShowDetails: {
+                                showAutoProgressionDetails = true
                             }
                         )
                     }
@@ -275,6 +304,14 @@ struct SummaryView: View {
         }
         .onChange(of: displayedMonth) { _, _ in
             refreshCalendarData()
+        }
+        .sheet(isPresented: $showAutoProgressionDetails) {
+            AutoProgressionDetailsView(
+                suggestions: viewModel.autoProgressionSuggestions,
+                onUndoOne: { state in
+                    AutoProgressionApplier.undo(state: state, context: context)
+                }
+            )
         }
     }
 

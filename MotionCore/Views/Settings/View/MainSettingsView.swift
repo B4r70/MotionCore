@@ -21,6 +21,9 @@ struct MainSettingsView: View {
     @Query(sort: \Exercise.name, order: .forward)
     private var allExercises: [Exercise]
 
+    @Query(sort: \HealthBaseline.lastUpdated, order: .reverse)
+    private var allBaselines: [HealthBaseline]
+
     @State private var showingSeederDialog = false
     @State private var showingSeederResult = false
     @State private var seederResultMessage = ""
@@ -141,6 +144,11 @@ struct MainSettingsView: View {
 
             // MARK: - Supabase Full-Backup
             SupabaseFullBackupSection()
+
+            // MARK: - Debug — Readiness (nur im DEBUG-Build)
+            #if DEBUG
+            DebugReadinessSection(baselines: allBaselines)
+            #endif
 
             // MARK: - App Information
             Section("App") {

@@ -289,6 +289,14 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // Debug-Override für den Readiness-Score (nur im DEBUG-Build).
+    // -1 = kein Override (echter Score wird verwendet).
+    @Published var debugReadinessScoreOverride: Int {
+        didSet {
+            UserDefaults.standard.set(debugReadinessScoreOverride, forKey: "debug.readinessScoreOverride")
+        }
+    }
+
         // Im init():
 
     // MARK: - Init
@@ -395,6 +403,9 @@ class AppSettings: ObservableObject {
 
         // Tagesform: Kreislaufwirksame Medikamente (Default: false)
         takesCardioMedication = defaults.bool(forKey: "health.takesCardioMedication")
+
+        // Debug: Readiness-Score-Override (Default: -1 = kein Override)
+        debugReadinessScoreOverride = defaults.object(forKey: "debug.readinessScoreOverride") as? Int ?? -1
     }
 }
 

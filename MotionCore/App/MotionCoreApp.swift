@@ -20,6 +20,8 @@ struct MotionCoreApp: App {
     @StateObject private var appSettings = AppSettings.shared
     @StateObject private var activeSessionManager = ActiveSessionManager.shared
 
+    @Environment(\.scenePhase) private var scenePhase
+
     @State private var showSessionRestoreAlert = false
     @State private var pendingRestoreInfo: (sessionID: String, workoutType: WorkoutType)?
 
@@ -127,6 +129,18 @@ struct MotionCoreApp: App {
                     ExerciseSeeder.seedMissing(context: context)
                     // 3. Primary-Studio + Default-Geräte anlegen (idempotent, nur beim ersten Start)
                     DefaultStudioSeeder.seedIfNeeded(context: context)
+                }
+                .onChange(of: scenePhase) { _, newPhase in
+                    guard newPhase == .active else { return }
+                    let context = sharedModelContainer.mainContext
+                    let takesCardioMedication = appSettings.takesCardioMedication
+                    Task {
+                        let service = HealthBaselineUpdateService(
+                            healthKit: .shared,
+                            context: context
+                        )
+                        await service.updateIfNeeded(takesCardioMedication: takesCardioMedication)
+                    }
                 }
                 .alert("Aktive Session gefunden", isPresented: $showSessionRestoreAlert) {
                     Button("Fortsetzen") { restoreSession() }

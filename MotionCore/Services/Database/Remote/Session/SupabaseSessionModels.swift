@@ -116,6 +116,7 @@ struct SupabaseExerciseSetDTO: Encodable {
     let rpe: Int
     let notes: String
     let isLastSetOfExercise: Bool
+    let rpeRecorded: Bool
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -143,6 +144,7 @@ struct SupabaseExerciseSetDTO: Encodable {
         case rpe
         case notes
         case isLastSetOfExercise    = "is_last_set_of_exercise"
+        case rpeRecorded            = "rpe_recorded"
     }
 }
 
@@ -278,25 +280,31 @@ struct SupabaseExerciseProgressionStateDTO: Encodable {
     let consecutiveSuccessCount: Int
     let consecutiveFailCount: Int
     let isActive: Bool
+    let lastAutoProgressionDate: Date?
+    let lastAutoProgressionAmount: Double?
+    let autoProgressionUndoable: Bool
     let createdAt: Date
     let updatedAt: Date
 
     enum CodingKeys: String, CodingKey {
         case id
-        case exerciseGroupKey       = "exercise_group_key"
-        case workingWeight          = "working_weight"
-        case previousWorkingWeight  = "previous_working_weight"
-        case targetReps             = "target_reps"
-        case minTargetReps          = "min_target_reps"
-        case maxTargetReps          = "max_target_reps"
-        case progressionMode        = "progression_mode"
-        case lastProgressionDate    = "last_progression_date"
-        case lastRollbackDate       = "last_rollback_date"
-        case consecutiveSuccessCount = "consecutive_success_count"
-        case consecutiveFailCount   = "consecutive_fail_count"
-        case isActive               = "is_active"
-        case createdAt              = "created_at"
-        case updatedAt              = "updated_at"
+        case exerciseGroupKey           = "exercise_group_key"
+        case workingWeight              = "working_weight"
+        case previousWorkingWeight      = "previous_working_weight"
+        case targetReps                 = "target_reps"
+        case minTargetReps              = "min_target_reps"
+        case maxTargetReps              = "max_target_reps"
+        case progressionMode            = "progression_mode"
+        case lastProgressionDate        = "last_progression_date"
+        case lastRollbackDate           = "last_rollback_date"
+        case consecutiveSuccessCount    = "consecutive_success_count"
+        case consecutiveFailCount       = "consecutive_fail_count"
+        case isActive                   = "is_active"
+        case lastAutoProgressionDate    = "last_auto_progression_date"
+        case lastAutoProgressionAmount  = "last_auto_progression_amount"
+        case autoProgressionUndoable    = "auto_progression_undoable"
+        case createdAt                  = "created_at"
+        case updatedAt                  = "updated_at"
     }
 }
 

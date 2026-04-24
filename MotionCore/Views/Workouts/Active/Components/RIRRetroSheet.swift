@@ -2,11 +2,11 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Workout                                                          /
-// Datei . . . . : RIRInputSheet.swift                                              /
-// Autor . . . . : Bartosz Stryjewski                                               /
-// Erstellt am . : 18.04.2026                                                       /
-// Beschreibung  : Kompaktes Sheet am letzten Work-Set einer Uebung — erfasst RIR  /
-//                 (Reps in Reserve) via 5 Buttons, parallel zum RestTimer.         /
+// Datei . . . . : RIRRetroSheet.swift                                              /
+// Autor . . . . : Bartosz Stryjewski                                               //
+// Erstellt am . : 24.04.2026                                                       /
+// Beschreibung  : Vereinfachtes RIR-Sheet ohne RestTimer — fuer nachtraegliche     /
+//                 RIR-Eingabe wenn der letzte Satz durch Loeschen wechselte.       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -14,34 +14,26 @@
 import SwiftUI
 import UIKit
 
-struct RIRInputSheet: View {
+struct RIRRetroSheet: View {
     @Environment(\.dismiss) private var dismiss
 
-    @ObservedObject var restTimerManager: RestTimerManager
-    let targetSeconds: Int
-    let onAdjustRest: (Int) -> Void
-    let onSelectRIR: (Int) -> Void   // 0..4, 4 = "4+"
+    let onSelectRIR: (Int) -> Void
     let onSkip: () -> Void
 
     private let haptic = UIImpactFeedbackGenerator(style: .light)
 
     var body: some View {
         VStack(spacing: 20) {
-            // Kompakter Rest-Timer oben
-            CompactRestTimerView(
-                restTimerManager: restTimerManager,
-                targetSeconds: targetSeconds,
-                onAdjust: onAdjustRest
-            )
+            Text("RIR für letzten Satz nachtragen")
+                .font(.headline)
+                .multilineTextAlignment(.center)
 
-            // RIR-Abfrage
             VStack(spacing: 10) {
                 Text("Wie viele Reps wären noch drin gewesen?")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
 
-                // 5 gleich breite RIR-Buttons: 0, 1, 2, 3, 4+
                 HStack(spacing: 8) {
                     ForEach(0..<5, id: \.self) { idx in
                         Button {
@@ -63,7 +55,6 @@ struct RIRInputSheet: View {
                 }
             }
 
-            // Skip-Link
             Button("Ohne RIR fortfahren") {
                 onSkip()
                 dismiss()
@@ -73,7 +64,7 @@ struct RIRInputSheet: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 24)
-        .presentationDetents([.fraction(0.45)])
+        .presentationDetents([.fraction(0.35)])
         .presentationDragIndicator(.visible)
     }
 }
@@ -81,10 +72,7 @@ struct RIRInputSheet: View {
 // MARK: - Preview
 
 #Preview {
-    RIRInputSheet(
-        restTimerManager: RestTimerManager(),
-        targetSeconds: 90,
-        onAdjustRest: { _ in },
+    RIRRetroSheet(
         onSelectRIR: { _ in },
         onSkip: { }
     )

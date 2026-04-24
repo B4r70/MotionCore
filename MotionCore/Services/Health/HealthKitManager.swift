@@ -55,6 +55,7 @@ class HealthKitManager: ObservableObject {
         let types: Set<HKObjectType?> = [
             HKObjectType.quantityType(forIdentifier: .heartRate),
             HKObjectType.quantityType(forIdentifier: .restingHeartRate),
+            HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN),
             HKObjectType.quantityType(forIdentifier: .stepCount),
             HKObjectType.quantityType(forIdentifier: .appleExerciseTime),
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned),
@@ -493,6 +494,132 @@ class HealthKitManager: ObservableObject {
             case "schlaf": return 3
             case "wach": return 4
             default: return 99
+        }
+    }
+}
+
+// MARK: - Readiness-Abfragen (Phase 2)
+
+extension HealthKitManager {
+
+    /// HRV (SDNN in ms) pro Tag für die letzten N Tage
+    func hrvSamples(daysBack: Int) async throws -> [Date: Double] {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
+            throw HealthKitManagerError.notAuthorized
+        }
+        return try await dailySamples(type: type, unit: HKUnit.secondUnit(with: .milli), daysBack: daysBack)
+    }
+
+    /// Gesamtschlafdauer in Stunden für die Nacht, die am angegebenen Datum endet
+    func sleepDuration(forNightEnding date: Date) async throws -> Double? {
+        guard let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
+            throw HealthKitManagerError.notAuthorized
+        }
+        let calendar = Calendar.current
+        let endOfDay = calendar.startOfDay(for: date)
+        guard let startWindow = calendar.date(byAdding: .hour, value: -20, to: endOfDay) else {
+            throw HealthKitManagerError.queryFailed(NSError(domain: "DateCalc", code: -1))
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: startWindow, end: endOfDay, options: .strictEndDate)
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: sleepType,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: nil
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: HealthKitManagerError.queryFailed(error))
+                    return
+                }
+                guard let samples = samples as? [HKCategorySample], !samples.isEmpty else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                var totalSeconds: TimeInterval = 0
+                for s in samples {
+                    guard let value = HKCategoryValueSleepAnalysis(rawValue: s.value) else { continue }
+                    switch value {
+                    case .awake, .inBed: break
+                    default: totalSeconds += s.endDate.timeIntervalSince(s.startDate)
+                    }
+                }
+                continuation.resume(returning: totalSeconds > 0 ? totalSeconds / 3600.0 : nil)
+            }
+            healthStore.execute(query)
+        }
+    }
+
+    /// Ruhepuls (bpm) pro Tag für die letzten N Tage
+    func restingHRSamples(daysBack: Int) async throws -> [Date: Double] {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .restingHeartRate) else {
+            throw HealthKitManagerError.notAuthorized
+        }
+        return try await dailySamples(type: type, unit: HKUnit.count().unitDivided(by: .minute()), daysBack: daysBack)
+    }
+
+    /// Aktive Energie (kcal) für einen bestimmten Tag
+    func activeEnergy(forDate date: Date) async throws -> Double? {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned) else {
+            throw HealthKitManagerError.notAuthorized
+        }
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: date)
+        guard let end = calendar.date(byAdding: .day, value: 1, to: start) else { return nil }
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: .strictStartDate)
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let query = HKStatisticsQuery(
+                quantityType: type,
+                quantitySamplePredicate: predicate,
+                options: .cumulativeSum
+            ) { _, result, error in
+                if let error {
+                    continuation.resume(throwing: HealthKitManagerError.queryFailed(error))
+                    return
+                }
+                let value = result?.sumQuantity()?.doubleValue(for: .kilocalorie())
+                continuation.resume(returning: value)
+            }
+            healthStore.execute(query)
+        }
+    }
+
+    // Hilfsmethode: Tagesdurchschnitt pro Quantity-Typ über N Tage
+    private func dailySamples(type: HKQuantityType, unit: HKUnit, daysBack: Int) async throws -> [Date: Double] {
+        let calendar = Calendar.current
+        let now = Date()
+        guard let start = calendar.date(byAdding: .day, value: -daysBack, to: calendar.startOfDay(for: now)) else {
+            return [:]
+        }
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: now, options: .strictStartDate)
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: nil
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: HealthKitManagerError.queryFailed(error))
+                    return
+                }
+                guard let samples = samples as? [HKQuantitySample] else {
+                    continuation.resume(returning: [:])
+                    return
+                }
+                // Tagesdurchschnitt aus allen Samples
+                var buckets: [Date: [Double]] = [:]
+                for s in samples {
+                    let day = calendar.startOfDay(for: s.startDate)
+                    buckets[day, default: []].append(s.quantity.doubleValue(for: unit))
+                }
+                let result = buckets.mapValues { values in values.reduce(0, +) / Double(values.count) }
+                continuation.resume(returning: result)
+            }
+            self.healthStore.execute(query)
         }
     }
 }

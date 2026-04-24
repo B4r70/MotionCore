@@ -25,6 +25,7 @@ struct ActiveSetCard: View {
         // 2b. Optionale Callbacks (Default: nil für bestehende Call-Sites)
     var onOpenQuickConfig: (() -> Void)? = nil
     var isEngineSuggestion: Bool = false
+    var isReadinessReduced: Bool = false
         // 3. Bindings
     @Binding var selectedSetForEdit: ExerciseSet?
         // 4. Actions
@@ -76,6 +77,11 @@ struct ActiveSetCard: View {
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(.secondary.opacity(0.15), in: Capsule())
+                        }
+
+                        // B2: Readiness-Badge (sichtbar wenn Gewicht wegen Tagesform reduziert)
+                        if isReadinessReduced {
+                            ReadinessReducedBadge()
                         }
                     }
                 }

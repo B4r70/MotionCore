@@ -72,6 +72,20 @@ final class SummaryViewModel {
 
     private(set) var rollbackSuggestions: [RollbackSuggestion] = []
 
+    // MARK: - Auto-Progression-Vorschläge (Phase 1.5)
+
+    struct AutoProgressionSuggestion: Identifiable {
+        let id: PersistentIdentifier
+        let state: ExerciseProgressionState
+        let exerciseName: String
+        let previousWeight: Double
+        let newWeight: Double
+        let amount: Double
+        let reasoning: String
+    }
+
+    private(set) var autoProgressionSuggestions: [AutoProgressionSuggestion] = []
+
     // MARK: - Gecachte Werte (timeframe-gefiltert)
 
     private(set) var filteredTotalWorkouts: Int = 0
@@ -145,6 +159,9 @@ final class SummaryViewModel {
 
         // Rollback-Vorschläge (aktive States + Engine-Check)
         recalculateRollbackSuggestions(states: progressionStates, strengthSessions: strength)
+
+        // Auto-Progression: States mit autoProgressionUndoable = true
+        recalculateAutoProgressionSuggestions(states: progressionStates)
 
         // Motivations-Kontext
         let xpEngine = XPCalcEngine(
@@ -307,6 +324,26 @@ final class SummaryViewModel {
         }
 
         rollbackSuggestions = result
+    }
+
+    // MARK: - Auto-Progression-Berechnung
+
+    private func recalculateAutoProgressionSuggestions(states: [ExerciseProgressionState]) {
+        autoProgressionSuggestions = states
+            .filter { $0.autoProgressionUndoable }
+            .compactMap { state -> AutoProgressionSuggestion? in
+                guard let prev = state.previousWorkingWeight,
+                      let amount = state.lastAutoProgressionAmount else { return nil }
+                return AutoProgressionSuggestion(
+                    id: state.persistentModelID,
+                    state: state,
+                    exerciseName: state.exerciseGroupKey,
+                    previousWeight: prev,
+                    newWeight: state.workingWeight,
+                    amount: amount,
+                    reasoning: ""
+                )
+            }
     }
 
 }

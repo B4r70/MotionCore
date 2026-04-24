@@ -94,7 +94,8 @@ final class SupabaseSessionService {
                     isCompleted: set.isCompleted,
                     rpe: set.rpe,
                     notes: set.notes,
-                    isLastSetOfExercise: set.isLastSetOfExercise
+                    isLastSetOfExercise: set.isLastSetOfExercise,
+                    rpeRecorded: set.rpeRecorded
                 )
             }
 

@@ -49,7 +49,8 @@ final class ActiveWorkoutSmartFillViewModel {
         exercise: Exercise?,
         session: StrengthSession,
         lastCompletedSession: StrengthSession?,
-        equipmentByID: [UUID: StudioEquipment]
+        equipmentByID: [UUID: StudioEquipment],
+        readinessModifier: Double = 1.0
     ) {
         // Idempotent: nur einmal pro Übung pro Session-Öffnung
         guard cachedOutputs[exerciseGroupKey] == nil else { return }
@@ -80,7 +81,7 @@ final class ActiveWorkoutSmartFillViewModel {
             lastSessionSets: lastSessionSets,
             studioEquipment: studioEquipment,
             exerciseFallbackStep: exercise.progressionStep,
-            readinessModifier: 1.0,   // Phase 1 konstant; Phase 2 nutzt SessionReadiness
+            readinessModifier: readinessModifier,
             currentSessionSetIndex: currentIdx,
             currentSessionPreviousSets: currentSessionPrev
         )
@@ -136,10 +137,16 @@ final class ActiveWorkoutSmartFillViewModel {
         suggestionFlags[set.setUUID.uuidString] = false
     }
 
-    // MARK: - UI-Hilfsmethode
+    // MARK: - UI-Hilfsmethoden
 
     /// Gibt zurück ob für den gegebenen Satz eine Engine-Suggestion aktiv ist.
     func isSuggestionActive(for set: ExerciseSet) -> Bool {
         suggestionFlags[set.setUUID.uuidString] == true
+    }
+
+    /// Gibt zurück ob der gecachte Engine-Output für den Satz auf .readinessReduced lautet.
+    /// Wird von ReadinessReducedBadge genutzt um das Badge sichtbar zu schalten.
+    func isReadinessReduced(for set: ExerciseSet) -> Bool {
+        cachedOutputs[set.groupKey]?.reasoning == .readinessReduced
     }
 }

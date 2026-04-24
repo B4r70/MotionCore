@@ -88,6 +88,11 @@ struct ActiveWorkoutView: View {
 
         // Smart-Progression: letzter Work-Set einer Übung — triggert RIR-Sheet
     @State private var rirSheetSet: ExerciseSet? = nil
+    @State private var rirRetroSet: ExerciseSet? = nil
+
+    @State private var currentReadinessModifier: Double = 1.0
+    @State private var currentSessionReadiness: SessionReadiness? = nil
+    @State private var selectedReadinessForDetail: SessionReadiness? = nil
         // Quick-Config: geöffnete Übung für das Konfigurations-Sheet
     @State private var quickConfigExercise: Exercise? = nil
 
@@ -372,6 +377,7 @@ struct ActiveWorkoutView: View {
             for key in groupKeys {
                 cleanupLastSetFlag(for: key)
             }
+            checkRetroRIR()
         }
 
             // Foreground-Handler für Rest-Timer: berechnet verbleibende Zeit aus restEndDate
@@ -460,15 +466,30 @@ struct ActiveWorkoutView: View {
                     } else {
                         set.rpe = 10 - rir
                     }
+                    set.rpeRecorded = true
                     Task { @MainActor in try? context.save() }
                 },
                 onSkip: {
-                    // rpe bleibt 0 — ProgressionCalcEngine.hasRIRData behandelt rpe == 0 als "unbekannt"
+                    // rpe + rpeRecorded bleiben 0/false — Engine erkennt fehlenden Eintrag via rpeRecorded
                 }
+            )
+        }
+        .sheet(item: $rirRetroSet) { set in
+            RIRRetroSheet(
+                onSelectRIR: { rir in
+                    if rir == 4 { set.rpe = 6 } else { set.rpe = 10 - rir }
+                    set.rpeRecorded = true
+                    Task { @MainActor in try? context.save() }
+                },
+                onSkip: { }
             )
         }
         .sheet(item: $quickConfigExercise) { exercise in
             ExerciseQuickConfigSheet(exercise: exercise)
+                .environmentObject(appSettings)
+        }
+        .sheet(item: $selectedReadinessForDetail) { readiness in
+            ReadinessDetailView(readiness: readiness)
                 .environmentObject(appSettings)
         }
         .onChange(of: selectedSetForEdit) { _, newSet in
@@ -595,6 +616,24 @@ struct ActiveWorkoutView: View {
             smartFill = ActiveWorkoutSmartFillViewModel(context: context)
         }
         prefillSmartSuggestionsIfNeeded()
+
+        // Readiness-Snapshot einmalig beim Start erzeugen (non-blocking)
+        let captureSession = session
+        let captureContext = context
+        let takesCardio = appSettings.takesCardioMedication
+        Task { @MainActor in
+            let modifier = await SessionReadinessService.captureReadiness(
+                for: captureSession,
+                context: captureContext,
+                takesCardioMedication: takesCardio
+            )
+            currentReadinessModifier = modifier
+            // Persistierten Snapshot nachladen für UI
+            let snapshots = (try? captureContext.fetch(FetchDescriptor<SessionReadiness>())) ?? []
+            currentSessionReadiness = snapshots.first {
+                $0.sessionUUID == captureSession.sessionUUID.uuidString
+            }
+        }
     }
 
         // Zugriff Exercise-Key prüfen
@@ -954,22 +993,23 @@ struct ActiveWorkoutView: View {
         return workSets.allSatisfy { $0.isCompleted }
     }
 
-    /// Flag-Hygiene fuer isLastSetOfExercise: genau ein Set einer Uebung
-    /// traegt das Flag, und nur wenn alle Work-Sets completed sind.
-    /// Aufruf nach Add-Set / Delete-Set.
+    /// Haelt isLastSetOfExercise-Flag nach Add/Delete/Reorder konsistent.
+    /// Delegiert an ExerciseSetFlagUpdater (Phase 1.5.4).
     private func cleanupLastSetFlag(for groupKey: String) {
-        let workSets = session.safeExerciseSets
-            .filter { $0.groupKey == groupKey && $0.setKind == .work }
-            .sorted { $0.setNumber < $1.setNumber }
-        // Alle Flags zuruecksetzen
-        for s in workSets where s.isLastSetOfExercise {
-            s.isLastSetOfExercise = false
-        }
-        // Letzten Work-Set flaggen, aber nur wenn alle abgeschlossen
-        if workSets.allSatisfy({ $0.isCompleted }), let last = workSets.last {
-            last.isLastSetOfExercise = true
-        }
+        ExerciseSetFlagUpdater.updateLastSetFlags(forExerciseGroup: groupKey, in: session)
         Task { @MainActor in try? context.save() }
+    }
+
+    /// Zeigt nachtraegliches RIR-Sheet wenn der neu markierte letzte Satz noch kein RIR hat.
+    private func checkRetroRIR() {
+        guard let currentKey = selectedExerciseKey else { return }
+        let workSets = session.safeExerciseSets
+            .filter { $0.groupKey == currentKey && $0.setKind == .work && $0.isCompleted }
+            .sorted { $0.setNumber < $1.setNumber }
+        guard let lastSet = workSets.last,
+              lastSet.isLastSetOfExercise,
+              !lastSet.rpeRecorded else { return }
+        rirRetroSet = lastSet
     }
 
     private func finishWorkout() {
@@ -991,6 +1031,17 @@ struct ActiveWorkoutView: View {
         )
         let qualityOutput = SessionQualityCalcEngine.calculate(input: qualityInput)
         session.sessionQualityScore = qualityOutput.score
+
+        // Auto-Progression: alte Undo-States löschen, neue prüfen und anwenden (Phase 1.5)
+        // readinessModifier weitergeben — bei < 1.0 wird Auto-Progress unterdrückt (Phase 2)
+        AutoProgressionApplier.resetAllUndoable(context: context)
+        AutoProgressionApplier.apply(
+            forSession: session,
+            allPreviousSessions: allSessions,
+            studioEquipments: studioEquipments,
+            context: context,
+            readinessModifier: currentReadinessModifier
+        )
 
         // Health-Daten der letzten Übung speichern
         saveCurrentExerciseMetrics(forKey: selectedExerciseKey)
@@ -1359,7 +1410,9 @@ struct ActiveWorkoutView: View {
         session.safeExerciseSets.first(where: { $0.groupKey == groupKey })?.exercise
     }
 
-    /// Delegiert Prefill an das SmartFillViewModel wenn eine Übung ausgewählt ist
+    /// Delegiert Prefill an das SmartFillViewModel wenn eine Übung ausgewählt ist.
+    /// Übergibt den aktuellen Readiness-Modifier (Phase 2) damit die Engine
+    /// reduzierte Gewichte vorschlägt wenn die Tagesform eingeschränkt ist.
     private func prefillSmartSuggestionsIfNeeded() {
         guard let smartFill, let currentKey = selectedExerciseKey else { return }
         smartFill.prefillSuggestion(
@@ -1367,7 +1420,8 @@ struct ActiveWorkoutView: View {
             exercise: resolveExercise(for: currentKey),
             session: session,
             lastCompletedSession: lastCompletedSession(for: currentKey),
-            equipmentByID: equipmentByID
+            equipmentByID: equipmentByID,
+            readinessModifier: currentReadinessModifier
         )
     }
 
@@ -1450,6 +1504,9 @@ struct ActiveWorkoutView: View {
             },
             onReorderExercise: { from, to in
                 reorderExercise(from: from, to: to)
+            },
+            onRetroRIR: { set in
+                rirRetroSet = set
             }
         )
     }
@@ -1457,6 +1514,11 @@ struct ActiveWorkoutView: View {
     private var scrollContent: some View {
         VStack(spacing: 20) {
             heroCard
+
+            // Readiness-Karte (Phase 2)
+            ReadinessCard(readiness: currentSessionReadiness) {
+                selectedReadinessForDetail = currentSessionReadiness
+            }
 
             // Live Health-Karte (unter RestTimer/ActiveSet, nur wenn Watch-Tracking aktiv)
             if phoneSession.isWatchTrackingActive {
@@ -1510,6 +1572,7 @@ struct ActiveWorkoutView: View {
                     quickConfigExercise = resolveExercise(for: activeSet.groupKey)
                 },
                 isEngineSuggestion: smartFill?.isSuggestionActive(for: activeSet) ?? false,
+                isReadinessReduced: smartFill?.isReadinessReduced(for: activeSet) ?? false,
                 selectedSetForEdit: $selectedSetForEdit,
                 onComplete: completeSet
             )

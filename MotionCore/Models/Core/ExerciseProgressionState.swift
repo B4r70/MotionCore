@@ -56,6 +56,12 @@ final class ExerciseProgressionState {
     var consecutiveFailCount: Int = 0
     var isActive: Bool = true
 
+    // MARK: - Auto-Progression (Phase 1.5)
+
+    var lastAutoProgressionDate: Date?
+    var lastAutoProgressionAmount: Double?
+    var autoProgressionUndoable: Bool = false
+
     // MARK: - Metadaten
 
     var createdAt: Date = Date()

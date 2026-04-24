@@ -78,6 +78,9 @@ final class ExerciseSet {
     /// True = letzter Work-Set der Übung in dieser Session → triggert RIR-Sheet (Schritt 1.18)
     var isLastSetOfExercise: Bool = false
 
+    /// True = User hat RIR bewusst eingetragen. Disambiguiert rpe=0 ("nicht erfasst" vs. "RIR 10").
+    var rpeRecorded: Bool = false
+
     // MARK: - Beziehungen
     @Relationship(deleteRule: .nullify)
     var session: StrengthSession?
@@ -186,7 +189,8 @@ final class ExerciseSet {
         groupId: String = "",
         sortOrder: Int = 0,
         supersetGroupId: String? = nil,
-        isLastSetOfExercise: Bool = false
+        isLastSetOfExercise: Bool = false,
+        rpeRecorded: Bool = false
     ) {
         self.exerciseName = exerciseName
         self.exerciseNameSnapshot = exerciseNameSnapshot.isEmpty ? exerciseName : exerciseNameSnapshot
@@ -211,6 +215,7 @@ final class ExerciseSet {
         self.sortOrder = sortOrder
         self.supersetGroupId = supersetGroupId
         self.isLastSetOfExercise = isLastSetOfExercise
+        self.rpeRecorded = rpeRecorded
     }
 }
 
@@ -244,7 +249,7 @@ extension ExerciseSet {
         copy.isUnilateralSnapshot = isUnilateralSnapshot
         copy.supersetGroupId = supersetGroupId
 
-        // isLastSetOfExercise wird nicht kopiert — neuer Session-Satz ist zunächst nie der letzte
+        // isLastSetOfExercise + rpeRecorded werden nicht kopiert — frischer Template-Satz hat keinen RIR-Status
 
         // Important: detach relations
         copy.exercise = nil
@@ -298,7 +303,7 @@ extension ExerciseSet {
         copy.exercise = self.exercise
         copy.supersetGroupId = supersetGroupId
 
-        // isLastSetOfExercise wird nicht kopiert — neuer Session-Satz ist zunächst nie der letzte
+        // isLastSetOfExercise + rpeRecorded werden nicht kopiert — neuer Session-Satz startet ohne RIR-Eintrag
 
         // Ownership: Session kommt später via session.addSet(...)
         copy.session = nil
