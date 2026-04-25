@@ -1,7 +1,7 @@
 # Dashboard Redesign — Variante B (Command Center)
 
 **Komplexität:** Large
-**Status:** Phase 6 abgeschlossen — Quality Gate bereit
+**Status:** ✅ ABGESCHLOSSEN — alle 6 Phasen + Bugfixes, commit-ready (2026-04-25)
 **Konzept-Quelle:** `Documentation/Concepts/MotionCore_Redesign_Dashboard_Body_Instruction.md`
 
 ## Summary
