@@ -96,6 +96,10 @@ final class SummaryViewModel {
     private(set) var filteredWorkoutTypeChartData: [DonutChartData] = []
     private(set) var filteredHeatmapAnalysis: MuscleHeatmapAnalysis? = nil
 
+    // MARK: - Muskel-Erholung (zeitraum-unabhängig, letzte 14 Tage)
+
+    private(set) var recoveryAnalysis: MuscleRecoveryAnalysis? = nil
+
     // MARK: - Neuberechnung (vollständige Datenmenge)
 
     /// Berechnet alle zeitraum-unabhängigen Werte neu.
@@ -178,6 +182,9 @@ final class SummaryViewModel {
             weeklyGoal: weeklyGoalTarget,
             lastWorkoutDate: engine.lastWorkoutDate
         )
+
+        // Muskel-Erholung (letzte 14 Tage, timeframe-unabhängig)
+        self.recoveryAnalysis = MuscleRecoveryCalcEngine.analyze(sessions: strength)
 
         // Gefilterte Werte direkt mitberechnen
         recalculateFiltered(engine: engine, timeframe: timeframe, strength: strength)

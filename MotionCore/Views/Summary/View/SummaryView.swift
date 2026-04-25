@@ -46,6 +46,7 @@ struct SummaryView: View {
     @State private var displayedMonth: Date = Date()
     @State private var calendarGrid: [[ActivityDay?]] = []
     @State private var calendarStats: (trainingDays: Int, averagePerWeek: Double) = (0, 0.0)
+    @State private var recoveryDetailItem: MuscleRecoveryAnalysis? = nil
 
     // Readiness der letzten Strength-Session (Soft-Link über sessionUUID)
     private var latestSessionReadiness: SessionReadiness? {
@@ -75,6 +76,13 @@ struct SummaryView: View {
                     // 1b. Readiness-Card der letzten Session
                     if let readiness = latestSessionReadiness {
                         ReadinessSummaryCard(readiness: readiness)
+                    }
+
+                    // 1c. Muscle-Recovery Vorschau
+                    if let recovery = viewModel.recoveryAnalysis {
+                        MuscleRecoveryCard(analysis: recovery, style: .compact) {
+                            recoveryDetailItem = recovery
+                        }
                     }
 
                     // 2. 7-Tage-Strip + expandierbarer Kalender
@@ -310,6 +318,10 @@ struct SummaryView: View {
                     AutoProgressionApplier.undo(state: state, context: context)
                 }
             )
+        }
+        .sheet(item: $recoveryDetailItem) { analysis in
+            MuscleRecoveryDetailView(analysis: analysis)
+                .environmentObject(appSettings)
         }
     }
 

@@ -1,161 +1,242 @@
-# Phase 2 — Readiness
+# MuscleRecoveryCalcEngine + Body-Tab
 
-**Complexity:** Medium-Large
-**Status:** In Arbeit — strikt phased, 8 Schritte mit STOPP-Gates
-**Voraussetzung:** Phase 1 ✓ + Phase 1.5 ✓ (rpeRecorded, Modus-Gewicht, AutoProgression abgeschlossen)
+**Complexity:** Large
+**Status:** Bereit zur Umsetzung — strikt phased, 11 Schritte mit STOPP-Gates
+**Voraussetzung:** Phase 1 + Phase 1.5 + Phase 2 Readiness abgeschlossen (alle vorhanden)
+**Bezug:** `Documentation/Concepts/MotionCore_MuscleRecoveryCalcEngine_Concept_v3.md`
+**Instruction:** `Documentation/Concepts/MotionCore_MuscleRecovery_ClaudeCodeInstruction_v2.md`
 
 ## Summary
 
-Phase 2 aktiviert den `readinessModifier` in `ProgressionCalcEngine` (bisher hardcoded 1.0). Dazu wird HealthKit um HRV, Schlaf, Ruhepuls und Aktivität erweitert, rollende Baselines (28 Tage, 42 Tage bei Kardio-Medikation) werden täglich auf Foreground-Wechsel aktualisiert, und pro Session wird ein `SessionReadiness`-Snapshot (Score 0–100 + Label) erzeugt. UI: kompakte Readiness-Card auf dem Workout-Start-Screen mit Detail-Sheet (Breakdown + optionale Energie/Stress-Abfrage) und eigener Kalibrierungs-Darstellung während der ersten ~14 Tage. Die Progression reagiert bei Modifier < 0.9 mit Entlastung (bereits vorhanden), Auto-Progression (Phase 1.5) wird bei reduzierter Readiness unterdrückt.
+`MuscleRecoveryCalcEngine` berechnet pro Muskelgruppe einen Erholungs-Score (0–100%) aus den letzten 14 Tagen mit exponentiellem Decay (Halbwertszeit 7 Tage). Anzeige in neuem **Body-Tab** (zwischen Stats und Training) plus kompakte Vorschau in `SummaryView`. Genau ein Snapshot pro Tag wird beim ersten App-Open ab 6:00 Uhr in die Supabase-Tabelle `motioncore.muscle_recovery_snapshots` geschrieben.
 
 ## Scope
 
-Included:
-- HealthKit-Service-Erweiterung (HRV SDNN, Schlaf, RestingHR, ActiveEnergy), on-demand Permission-Request
-- `HealthBaselineUpdateService` mit daily-Trigger auf `scenePhase == .active`
-- `ReadinessCalcEngine` + `ReadinessTypes` (pure Struct, gewichtetes z-Score-Modell)
-- `SessionReadiness`-Snapshot bei Workout-Start (einmalig, nicht kontinuierlich)
-- `ReadinessCard` + `ReadinessDetailView` + `ReadinessViewModel`
-- Verdrahtung `readinessModifier` in `ProgressionCalcEngine`-Aufrufen in ActiveWorkoutView
-- Auto-Progression (Phase 1.5) bei `readinessModifier < 1.0` unterdrücken
-- Kalibrierungs-UI (Progress-Bars + Text)
-- Debug-Helper hinter `#if DEBUG` für Baseline-Mock + Score-Override
-- Medikamenten-Toggle (AppSettings, beeinflusst Fenster-Länge + Gewichtung)
+**Inkludiert (Phase 1):**
+- Pure CalcEngine + Ergebnistypen
+- 2 Card-Styles (`.compact` / `.full`) und ein Detail-Sheet
+- Neuer `BodyView`-Tab inkl. Readiness-Faktoren-Wiederverwendung
+- SummaryView-Vorschau direkt nach `ReadinessSummaryCard`
+- Supabase-Tabelle + DTO + Service + scenePhase-Trigger (1 Snapshot pro Tag, 6-Uhr-Schwelle)
 
-Explicitly excluded:
-- Supabase-Sync der neuen `SessionReadiness`/`HealthBaseline`-Tabellen (Folge-Phase)
-- Kontinuierliche Readiness-Neuberechnung während laufender Session
-- Rollback-Logik-Erweiterung um Readiness
-- Phase 3
+**Explizit ausgeschlossen:**
+- Adaptive Lernlogik (`baseRecoveryHours` aus Verhalten — Phase 2)
+- TrainingDetailView-Integration / `PlanRecoveryAnalysis`
+- ActiveWorkoutView Recovery-Header
+- Lokale SwiftData-Persistenz der Snapshots
+- Body-Composition-Cards
+- Backfill historischer Snapshots
+- Session-Complete-Trigger (bewusst entfernt vs. v2)
 
 ## UX Placement
 
-- **Readiness-Card:** auf dem Workout-Start-Screen direkt unter dem Plan-Header, vor der Übungsliste
-- **Entry Point:** Tap auf Card → `ReadinessDetailView` als Sheet (`.sheet(item:)`-Pattern gemäß Lessons)
-- **Medikamenten-Toggle:** in Settings unter neuer Sektion „Gesundheit" (`takesCardioMedication: Bool` in AppSettings, Default `false`)
-- **Kalibrierungs-Zustand:** gleicher Kartenplatz, andere Darstellung + gelbes Icon
-- **Debug-Tools:** SettingsView unter `#if DEBUG` (Baseline mocken, Score überschreiben)
+- **Tab-Position:** Zwischen `stats` und `training` in `BaseView.Tab`
+- **Tab-Icon:** `figure.arms.open` (Fallback: `figure.strengthtraining.traditional`)
+- **SummaryView-Card:** Direkt unter `ReadinessSummaryCard`, Style `.compact`
+- **Detail-Sheet:** Tap auf Card öffnet `MuscleRecoveryDetailView` via `.sheet(item:)`
 
 ## Affected Files
 
-### Schritt 2.1 — HealthKit-Service erweitern
-- NEU oder ÄNDERN: `MotionCore/Services/HealthKit/HealthKitService.swift` — 4 neue API-Methoden (hrvSamples, sleepDuration, restingHRSamples, activeEnergy)
-- NEU: `MotionCore/Services/HealthKit/HealthKitServiceError.swift` — enum `.notAuthorized`, `.noData`, `.queryFailed(Error)`
-- PRÜFEN: `MotionCore/Info.plist` / Build Settings — `NSHealthShareUsageDescription` vorhanden?
+### Neu (9 Dateien)
 
-### Schritt 2.2 — HealthBaseline-Update-Service
-- NEU: `MotionCore/Services/HealthBaselineUpdateService.swift` — `@MainActor final class`, `updateIfNeeded()` + `forceUpdate()`
-- ÄNDERN: `MotionCore/App/MotionCoreApp.swift` — `.onChange(of: scenePhase)` Hook
+- `MotionCore/Services/Calculation/MuscleRecoveryTypes.swift`
+- `MotionCore/Services/Calculation/MuscleRecoveryCalcEngine.swift`
+- `MotionCore/Views/Body/MuscleRecoveryDonut.swift`
+- `MotionCore/Views/Body/MuscleRecoveryCard.swift`
+- `MotionCore/Views/Body/MuscleRecoveryDetailView.swift`
+- `MotionCore/Views/Body/BodyViewModel.swift`
+- `MotionCore/Views/Body/BodyView.swift`
+- `MotionCore/Services/Supabase/SupabaseMuscleRecoverySnapshot.swift`
+- `MotionCore/Services/Supabase/SupabaseMuscleRecoveryService.swift`
 
-### Schritt 2.3 — ReadinessCalcEngine
-- NEU: `MotionCore/Services/Calculation/ReadinessCalcEngine.swift` — pure Struct mit `Input`/`Output` + `calculate(input:)`
-- NEU: `MotionCore/Services/Calculation/ReadinessTypes.swift` — `ReadinessLabel`, `ReadinessFactor`, Modifier-Mapping
+### Geändert (3 Dateien)
 
-### Schritt 2.4 — SessionReadiness-Speicherung
-- NEU: `MotionCore/Services/SessionReadinessService.swift` — `captureReadiness(forSession:context:)` async
-- ÄNDERN: `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — in `setupSession()` neuer `Task { @MainActor in ... }` Branch
+- `BaseView.swift` — `Tab`-Enum + neue TabView-Section + App-Open-Trigger
+- `SummaryViewModel.swift` — `recoveryAnalysis` Property + Recompute-Aufruf
+- `SummaryView.swift` — `MuscleRecoveryCard` nach `ReadinessSummaryCard` + Sheet
 
-### Schritt 2.5 — Readiness-Karte (kompakt)
-- NEU: `MotionCore/Views/Readiness/ReadinessCard.swift`
-- NEU: `MotionCore/ViewModels/ReadinessViewModel.swift` — `@Observable`
-- NEU: `MotionCore/Views/Readiness/ReadinessLabelStyle.swift` — Color/Icon-Resolver
-- ÄNDERN: `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — Card einbinden
+### Datenbank (1 Migration)
 
-### Schritt 2.6 — Readiness-Expanded-View + optionale Fragen
-- NEU: `MotionCore/Views/Readiness/ReadinessDetailView.swift`
-- NEU: `MotionCore/Views/Readiness/ReadinessFactorRow.swift`
-- ÄNDERN: `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `.sheet(item: $selectedReadiness)`
-
-### Schritt 2.7 — Verdrahtung mit ProgressionCalcEngine
-- ÄNDERN: `ActiveWorkoutSmartFillViewModel` (oder wo ProgressionCalcEngine-Input gebaut wird) — `readinessModifier: Double` dynamisch statt 1.0
-- ÄNDERN: `MotionCore/Services/AutoProgressionApplier.swift` — Guard: bei `readinessModifier < 1.0` kein Auto-Progression
-- NEU: `MotionCore/Views/Workouts/Active/Components/ReadinessReducedBadge.swift` — Badge im Set-Input wenn `reasoning == .readinessReduced`
-
-### Schritt 2.8 — Kalibrierungs-Hinweis-UI-Feinschliff
-- ÄNDERN: `MotionCore/Views/Readiness/ReadinessCard.swift` — Kalibrierungs-Variante
-- ÄNDERN: `MotionCore/Views/Readiness/ReadinessDetailView.swift` — Progress-Bars
-- NEU: `MotionCore/Views/Readiness/CalibrationProgressRow.swift`
-- ÄNDERN: `AppSettings` + Settings-View — neuer Toggle `takesCardioMedication`
-- `#if DEBUG` Helper: Baseline mocken + Score überschreiben
+- Supabase MCP `apply_migration` (Project ID: `jeebptrnhjekwtviecvz`) — `motioncore.muscle_recovery_snapshots`
 
 ## Risks
 
-- **ActiveWorkoutView ~2230 Zeilen:** neue Logik strikt in Services/ViewModels, View nur Card-Binding + ein neuer `@State currentReadinessModifier`
-- **HealthKit-Permission on-demand:** Dialog darf nicht beim App-Start erscheinen, sondern erst beim ersten `updateIfNeeded()`-Aufruf mit fehlender Auth
-- **Info.plist Usage-String:** via `INFOPLIST_KEY_*` Build Settings (Lesson), NICHT als eigene Info.plist-Datei
-- **stdDev == 0 → NaN/Infinity:** Guard bei `stdDev < 0.01` → neutrale Metrik
-- **Timezone / Tagesgrenzen:** `Calendar.isDateInToday()` statt Raw-Date-Differenz
-- **`.sheet(item:)` Pflicht:** Detail-Sheet immer via `selectedReadiness: SessionReadiness?` (Lesson 2026-04-06)
-- **Auto-Progression-Guard:** muss in `AutoProgressionApplier`, nicht in der View — sonst wirkungslos
-- **CloudKit-Dedupe:** prüfen ob `HealthBaseline.id` + `SessionReadiness.id` bereits in `deduplicateAllSyncUUIDs()` stehen
+- **Default-Tab nach Enum-Erweiterung:** Initial-Wert muss explizit `.summary` bleiben.
+- **Doppel-Inserts:** UserDefaults-Set NUR nach erfolgreichem Upload — kein Tag-Check im Service.
+- **Sheet-Race (lessons.md):** MUSS `.sheet(item:)` verwenden — niemals `.sheet(isPresented:)`.
+- **CodingKeys-Falle (lessons.md):** Alle DTO-Felder explizit in `CodingKeys` listen.
+- **Supabase RLS:** KEIN `ENABLE ROW LEVEL SECURITY` — Tabellen bleiben UNRESTRICTED.
+- **Muscle-Resolution-Duplikat:** Bewusste Copy-Paste aus `MuscleHeatmapCalcEngine` mit `// TODO: extract to SharedMuscleResolver`.
 
 ## Implementation Steps
 
-- [x] **Schritt 2.1** — HealthKit-Service: 4 neue Methoden + Error-Enum + Info.plist-Strings
-- [x] **Schritt 2.2** — `HealthBaselineUpdateService` + App-Foreground-Hook
-- [x] **Schritt 2.3** — `ReadinessCalcEngine` + `ReadinessTypes`
-- [x] **Schritt 2.4** — `SessionReadinessService` + Einbindung in `setupSession()`
-- [x] **Schritt 2.5** — `ReadinessCard` + `ReadinessViewModel` + Einbindung in Workout-Start-Scroll
-- [x] **Schritt 2.6** — `ReadinessDetailView` + optionale Energie/Stress-Inputs + Neu-Berechnung
-- [x] **Schritt 2.7** — `readinessModifier` durchreichen + Auto-Progression-Guard + `ReadinessReducedBadge`
-- [x] **Schritt 2.8** — Kalibrierungs-UI-Feinschliff + Settings-Toggle + Debug-Helper
+### Step 1 — `MuscleRecoveryTypes.swift` (NEU)
+
+- [x] Datei in `MotionCore/Services/Calculation/` anlegen, Standard-Header
+- [x] `DetailedMuscleRecovery` (Identifiable struct): `id: String`, `muscle: DetailedMuscle`, `recoveryPercent: Double`, `lastTrainedDate: Date?`, `totalFatigueScore: Double`, computed `displayName`, `muscleGroup`
+- [x] `MuscleGroupRecovery` (Identifiable struct): `id`, `muscleGroup`, `recoveryPercent`, `muscleDetails: [DetailedMuscleRecovery]`, `lastTrainedDate`, `wasTrainedInTimeframe: Bool`, computed `displayName`, `isFullyRecovered`
+- [x] `MuscleRecoveryAnalysis`: `analysisDate`, `timeframeDays: Int`, `muscleGroupScores: [MuscleGroupRecovery]`, `detailedScores: [DetailedMuscleRecovery]`, computed `leastRecoveredGroups`, `overallRecoveryPercent`
+- [x] `recoveryColor(percent:) -> Color` Hilfsfunktion (HSL-Interpolation rot→grün)
+- [ ] **STOPP-Gate 1:** Build prüfen.
+
+### Step 2 — `MuscleRecoveryCalcEngine.swift` (NEU)
+
+- [x] Datei in `MotionCore/Services/Calculation/` anlegen, Standard-Header
+- [x] `struct MuscleRecoveryCalcEngine` mit Konstanten exakt nach Konzept 5.1
+- [x] `static func analyze(sessions: [StrengthSession]) -> MuscleRecoveryAnalysis` nach Konzept 5.2
+- [x] Private Hilfsfunktionen: `intensityFromRIR(_:)`, `normalizedVolume(weight:reps:sessionBodyWeight:)`, `fatigueMultiplier(_:)`
+- [x] `resolveDetailedMuscles` als Copy-Paste aus `MuscleHeatmapCalcEngine.swift` mit `// TODO: extract to SharedMuscleResolver`
+- [x] Sets-Filter: nur `isCompleted && reps > 0 && setKind == .work`
+- [x] Output-Reihenfolge: `[chest, back, shoulders, arms, legs, core, glutes]`
+- [ ] **STOPP-Gate 2:** Build + mentaler Algorithmus-Check.
+
+### Step 3 — `MuscleRecoveryDonut.swift` + `MuscleRecoveryCard.swift` (NEU)
+
+- [x] Donut: Parameter `percent`, `wasTrained`, `label`, `size` + Gradient-Farbe vs. grauer Ring
+- [x] Card: `enum CardStyle { case compact, full }`, `.glassCard()`, `onTap`-Closure
+- [x] `.compact`: ~60pt Donuts, horizontaler Scroll; `.full`: ~80pt, LazyVGrid 4 Spalten
+- [x] Header: "Muskel-Erholung" + Gesamt-%; Footer (`.full`): "Letzte 14 Tage"
+- [x] Preview mit Mock-Daten (trainiert + untrainiert)
+- [ ] **STOPP-Gate 3:** Preview visuell prüfen.
+
+### Step 4 — `MuscleRecoveryDetailView.swift` (NEU)
+
+- [x] Sheet mit ScrollView + `AnimatedBackground`, analog `ReadinessDetailView`
+- [x] Header: Gesamt-Donut + "Letzte 14 Tage"
+- [x] Pro MuscleGroup: Zeile mit Donut + Name + relative Zeit + aufklappbare DetailedMuscle-Liste
+- [x] Untrainierte Gruppen: grau + "noch nicht trainiert"
+- [x] `scrollViewContentPadding()`, < 400 Zeilen, Preview vorhanden
+- [ ] **STOPP-Gate 4:** Preview prüfen.
+
+### Step 5 — `BodyViewModel.swift` + `BodyView.swift` (NEU)
+
+- [x] ViewModel: `@Observable`, `recoveryAnalysis`, `readinessFactors`, `recalculate(sessions:)`, `loadReadinessFactors(...)`
+- [x] View: ScrollView + AnimatedBackground, `@State viewModel`, `@Query` Sessions + Readiness + Baselines
+- [x] Refresh: `.task` + `.onChange(of: scenePhase) { if newPhase == .active { ... } }`
+- [x] Sheet via `.sheet(item: $detailItem)` — niemals `isPresented`
+- [x] Section "Tagesform-Faktoren" mit `ReadinessFactorRow`
+- [x] `EmptyState()` wenn keine Daten, Preview vorhanden
+- [ ] **STOPP-Gate 5:** Build + Preview prüfen.
+
+### Step 6 — `BaseView.swift` EDIT — Body-Tab einfügen
+
+- [x] `enum Tab` erweitern: `case summary, workouts, stats, body, training`
+- [x] Default-Tab bleibt explizit `.summary`
+- [x] Neue NavigationStack-Section mit `BodyView()`, HeaderView "Body", Settings-Link
+- [x] `.tabItem { Label("Body", systemImage: "figure.arms.open") }.tag(Tab.body)`
+- [x] App-Open-Trigger NOCH NICHT hier — folgt Step 11
+- [ ] **STOPP-Gate 6 (visuell):** Tab zwischen Stats und Training, kein Layout-Glitch.
+
+### Step 7 — `SummaryViewModel.swift` EDIT
+
+- [x] `private(set) var recoveryAnalysis: MuscleRecoveryAnalysis?`
+- [x] In `recalculate(...)`: `recoveryAnalysis = MuscleRecoveryCalcEngine.analyze(sessions: strengthSessions)`
+- [x] Keine bestehende Berechnung verändern
+- [ ] **STOPP-Gate 7:** Build prüfen.
+
+### Step 8 — `SummaryView.swift` EDIT
+
+- [x] `@State private var recoveryDetailItem: MuscleRecoveryAnalysis?`
+- [x] Nach `ReadinessSummaryCard`-Block: `if let recovery = viewModel.recoveryAnalysis { MuscleRecoveryCard(analysis: recovery, style: .compact) { recoveryDetailItem = recovery } }`
+- [x] `.sheet(item: $recoveryDetailItem) { MuscleRecoveryDetailView(analysis: $0) }`
+- [ ] **STOPP-Gate 8 (visuell):** Card erscheint, Tap öffnet Sheet, Sheet-Race-Test direkt nach App-Start.
+
+### Step 9 — Supabase-Migration
+
+- [x] MCP `apply_migration` — `public.muscle_recovery_snapshots` (im `public`-Schema, konsistent mit allen anderen App-Daten-Tabellen)
+- [x] KEIN `related_session_uuid`, KEIN RLS
+- [x] 2 Indices: `captured_at DESC`, `snapshot_date DESC`
+- [x] `list_tables` zur Verifikation — Tabelle vorhanden, `rls_enabled: false`
+- [ ] **STOPP-Gate 9:** Schema im Supabase-Dashboard bestätigen.
+
+### Step 10 — `SupabaseMuscleRecoverySnapshot.swift` + `SupabaseMuscleRecoveryService.swift` (NEU)
+
+- [x] DTO: `Encodable`, alle 20 Felder explicit in `CodingKeys` mit snake_case (lessons.md!)
+- [x] KEIN `related_session_uuid`
+- [x] Service: `@MainActor final class`, `static let shared`, `func uploadSnapshot(...) async -> Bool`
+- [x] Gibt `true`/`false` zurück — kein Crash, kein Rethrow; `#if DEBUG print(...)` bei Fehler
+- [x] Keine Dedup-Logik im Service
+- [ ] **STOPP-Gate 10:** Build prüfen.
+
+### Step 11 — `BaseView.swift` EDIT — App-Open-Trigger
+
+- [x] `triggerDailyMuscleRecoverySnapshotIfNeeded()`: UserDefaults-Key `lastMuscleRecoverySnapshotDate`, 6-Uhr-Schwelle, Task mit Fetch + analyze + upload
+- [x] UserDefaults-Key NUR bei `success == true` gesetzt (retry bei Fehler)
+- [x] In bestehendem `.onChange(of: scenePhase)` ergänzt (kein Duplikat)
+- [x] Im bestehenden `.onAppear`-Block ergänzt (nach 1s-Delay, initialer Launch)
+- [ ] **STOPP-Gate 11 (End-to-End):**
+  - Test 1: Key löschen → App öffnen → 1 Snapshot in Supabase
+  - Test 2: App sofort nochmal öffnen → KEIN zweiter Snapshot
+  - Test 3: Body-Tab → Background → Foreground → recalculate läuft
+  - Test 4: Werte in SummaryView-Vorschau und BodyView konsistent
 
 ---
 
----
+## Fortschritt
 
-## Progress
+**2026-04-25 17:20 Uhr**
 
-**2026-04-24 15:30 — Schritt 2.6 abgeschlossen**
+Abgeschlossene Steps: 1, 2, 3, 4, 5, 6
 
-Completed steps: 2.6
+Erstellte / geänderte Dateien:
+- `MotionCore/Services/Calculation/MuscleRecoveryTypes.swift` — `extension MuscleRecoveryAnalysis: Identifiable` ergänzt
+- `MotionCore/Services/Calculation/MuscleRecoveryCalcEngine.swift`
+- `MotionCore/Views/Body/MuscleRecoveryDonut.swift`
+- `MotionCore/Views/Body/MuscleRecoveryCard.swift`
+- `MotionCore/Views/Body/MuscleRecoveryDetailView.swift`
+- `MotionCore/Views/Body/BodyViewModel.swift` (NEU, 50 Zeilen) — `@Observable`, delegiert an `ReadinessViewModel` intern
+- `MotionCore/Views/Body/BodyView.swift` (NEU, 120 Zeilen) — ScrollView + AnimatedBackground, `.sheet(item:)`
+- `MotionCore/Views/Root/View/BaseView.swift` — Tab-Enum auf 5 Cases erweitert, Body-Tab zwischen Stats und Training eingefügt
 
-Modified files:
-- NEU: `MotionCore/Views/Readiness/ReadinessFactorRow.swift` — kompakte Zeile pro ReadinessFactor mit ProgressView-Balken und farbigem Tint
-- NEU: `MotionCore/Views/Readiness/ReadinessDetailView.swift` — Detail-Sheet mit Score-Header, Faktoren-Liste, Energie/Stress-Segmented-Picker, Kalibrierungs-Platzhalter
-- GEÄNDERT: `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `showReadinessDetail: Bool` → `selectedReadinessForDetail: SessionReadiness?`, `.sheet(item: $selectedReadinessForDetail)` ergänzt
+Hinweise:
+- `BodyViewModel` hält intern ein `ReadinessViewModel` und ruft `load(...)` auf — kein Kopieren der privaten `buildBreakdown`-Logik
+- `MuscleRecoveryAnalysis: Identifiable` via `var id: Date { analysisDate }` — nötig für `.sheet(item:)`
+- Default-Tab in BaseView bleibt `= .summary` (Zeile 27, unverändert)
+- STOPP-Gates 1–6: Build- und Preview-Verifikation ausstehend (via Xcode Cmd+B)
 
-Known remaining: Schritt 2.7 (readinessModifier durchreichen + Auto-Progression-Guard + ReadinessReducedBadge), Schritt 2.8 (Kalibrierungs-UI-Feinschliff + Settings-Toggle + Debug-Helper)
-
----
-
-**2026-04-24 15:30 — Schritt 2.7 abgeschlossen**
-
-Completed steps: 2.7
-
-Modified files:
-- GEÄNDERT: `MotionCore/Views/Workouts/Active/ViewModel/ActiveWorkoutSmartFillViewModel.swift` — `prefillSuggestion` erhält neuen Parameter `readinessModifier: Double = 1.0`; wird an `ProgressionCalcEngine.Input` weitergegeben (bisher hardcoded `1.0`); neue Hilfsmethode `isReadinessReduced(for:)` für Badge-Abfrage
-- GEÄNDERT: `MotionCore/Services/AutoProgressionApplier.swift` — `apply(...)` erhält neuen Parameter `readinessModifier: Double = 1.0`; Guard am Anfang: `guard readinessModifier >= 1.0 else { return [] }`
-- GEÄNDERT: `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `prefillSmartSuggestionsIfNeeded()` übergibt `readinessModifier: currentReadinessModifier`; `AutoProgressionApplier.apply(...)` übergibt `readinessModifier: currentReadinessModifier`; `ActiveSetCard`-Aufruf übergibt `isReadinessReduced: smartFill?.isReadinessReduced(for: activeSet) ?? false`
-- NEU: `MotionCore/Views/Workouts/Active/Components/ReadinessReducedBadge.swift` — gelbes Moon-Badge als Inline-Chip; in `ActiveSetCard` eingebunden via `isReadinessReduced: Bool = false` Parameter
-- GEÄNDERT: `MotionCore/Views/Workouts/Active/Components/ActiveSetCard.swift` — neuer Parameter `isReadinessReduced: Bool = false`; `ReadinessReducedBadge` im Header-HStack nach "Vorschlag"-Badge
-
-Known remaining: —
+Offene Steps: 9–11
 
 ---
 
-**2026-04-24 15:35 — Schritt 2.8 abgeschlossen — Phase 2 vollständig**
+**2026-04-25 17:30 Uhr**
 
-Completed steps: 2.8
+Abgeschlossene Steps: 7, 8
 
-Modified files:
-- NEU: `MotionCore/Views/Readiness/CalibrationProgressRow.swift` — Progress-Bar-Zeile pro Metrik (Name, X/14 Tage, gelber ProgressView, grün wenn bereit)
-- GEÄNDERT: `MotionCore/Views/Readiness/ReadinessDetailView.swift` — `calibratingSection` zeigt jetzt 4 echte `CalibrationProgressRow`-Zeilen mit `sampleCount` aus `HealthBaseline`-Proxy; neue Hilfsmethode `baselineSampleCount(for:)`; beide `viewModel.load`-Aufrufe erhalten `debugScoreOverride`-Parameter
-- GEÄNDERT: `MotionCore/Models/Core/AppSettings.swift` — `debugReadinessScoreOverride: Int` ergänzt (Default -1 = kein Override), mit UserDefaults-Persistenz
-- NEU: `MotionCore/Views/Settings/View/DebugReadinessSection.swift` — `#if DEBUG`-Sektion mit Baseline-Reset-Button, Score-Override-Slider+Toggle, letztes-Update-Label
-- GEÄNDERT: `MotionCore/Views/Settings/View/MainSettingsView.swift` — `@Query allBaselines` ergänzt; `#if DEBUG DebugReadinessSection(baselines: allBaselines)` vor App-Sektion eingebunden
-- GEÄNDERT: `MotionCore/Services/ViewModels/ReadinessViewModel.swift` — `debugScoreOverride: Int = -1` Property + Parameter in `load()`; `score` gibt Override zurück wenn `>= 0` (nur in `#if DEBUG`)
-- GEÄNDERT: `MotionCore/Views/Workouts/Active/Components/ReadinessCard.swift` — `@EnvironmentObject appSettings` ergänzt; `score` berücksichtigt `debugReadinessScoreOverride` unter `#if DEBUG`; Previews mit `.environmentObject(AppSettings.shared)`
+Geänderte Dateien:
+- `MotionCore/Services/ViewModels/SummaryViewModel.swift` — neue Property `recoveryAnalysis: MuscleRecoveryAnalysis?` (nach `filteredHeatmapAnalysis`), Zuweisung via `MuscleRecoveryCalcEngine.analyze(sessions: strength)` am Ende von `recalculate(...)` vor `recalculateFiltered`
+- `MotionCore/Views/Summary/View/SummaryView.swift` — neuer `@State private var recoveryDetailItem: MuscleRecoveryAnalysis?`, Block "1c. Muscle-Recovery Vorschau" nach ReadinessSummaryCard, `.sheet(item: $recoveryDetailItem)` mit `.environmentObject(appSettings)` (nötig da `MuscleRecoveryDetailView` `@EnvironmentObject var appSettings: AppSettings` deklariert)
 
-Notes:
-- `takesCardioMedication` war bereits in AppSettings + UserSettingsView vorhanden — keine Änderung nötig
-- `CalibrationProgressRow` nutzt `HealthBaseline.sampleCount` als Proxy statt eigener SessionReadiness-Felder (TODO für Schritt 2.9 kommentiert)
-- Phase 2 alle 8 Schritte abgeschlossen
+STOPP-Gates 7 + 8: Build + visuelle Verifikation via Xcode Cmd+B ausstehend.
 
 ---
 
-## Open Questions
+**2026-04-25 17:30 Uhr**
 
-1. Readiness bei pausiertem Workout, das am Folgetag fortgesetzt wird → **Empfehlung: ursprünglicher Snapshot behalten** (ein Start = ein Snapshot)
-2. Kalibrierungs-Granularität: binär (calibrating ja/nein bei ≥14 Samples) oder 3-stufig → **Empfehlung: binär**
-3. Card-Anzeige bei Superset-Plänen → **Empfehlung: immer zeigen**
+Abgeschlossene Steps: 9, 10, 11
+
+Architektur-Entscheid Step 9: Tabelle in `public`-Schema angelegt (nicht `motioncore`), da:
+- Alle User-Daten-Tabellen (`strength_sessions`, `session_readiness`, etc.) liegen in `public`
+- `motioncore`-Schema enthält nur Exercise-Stammdaten (read-only via RPC)
+- `SupabaseClient.upsert()` unterstützt kein Schema-Header-Switching → kein Client-Umbau nötig
+
+Erstellte Dateien:
+- `MotionCore/Services/Database/Remote/MuscleRecovery/SupabaseMuscleRecoverySnapshot.swift` — DTO mit 20 expliziten CodingKeys
+- `MotionCore/Services/Database/Remote/MuscleRecovery/SupabaseMuscleRecoveryService.swift` — `@MainActor`, gibt `Bool` zurück
+
+Geänderte Datei:
+- `MotionCore/Views/Root/View/BaseView.swift` — `triggerDailyMuscleRecoverySnapshotIfNeeded()` hinzugefügt; Aufruf in bestehendem `.onAppear` (nach 1s-Delay) und bestehendem `.onChange(of: scenePhase)` ergänzt; UserDefaults-Key nur bei `success == true` gesetzt
+
+STOPP-Gate 9: via `list_tables` MCP-Verifikation bestätigt (0 rows, rls_enabled: false).
+STOPP-Gates 10 + 11: Build-Verifikation via Xcode Cmd+B ausstehend.
+
+---
+
+## Manual Verification
+
+- [ ] Xcode Build ohne Warnings nach jedem Step
+- [ ] Default-Tab bei App-Start ist `.summary`
+- [ ] Neuer Snapshot nur 1× pro Tag ab 6:00 Uhr
+- [ ] Keine NULL-Verletzungen in Supabase
+- [ ] Kein Crash bei fehlender Internetverbindung
+- [ ] Alle 7 Gruppen grau mit leerer Datenbank
+- [ ] Lessons-Checks: `sheet(item:)`, alle CodingKeys, Engine nicht als computed property

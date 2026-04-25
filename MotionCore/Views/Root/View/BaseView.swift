@@ -81,9 +81,9 @@ struct BaseView: View {
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 
-    //  Tab-Enum angepasst (4 Tabs: summary, workouts, stats, training)
+    //  Tab-Enum angepasst (5 Tabs: summary, workouts, stats, body, training)
     enum Tab: Hashable {
-        case summary, workouts, stats, training
+        case summary, workouts, stats, body, training
     }
 
     var body: some View {
@@ -172,7 +172,33 @@ struct BaseView: View {
             }
             .tag(Tab.stats)
 
-            // MARK: Tab 4 - Trainingsplan
+            // MARK: Tab 4 - Body
+            NavigationStack {
+                BodyView()
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            HeaderView(
+                                title: "MotionCore",
+                                subtitle: "Body"
+                            )
+                        }
+
+                        ToolbarItem(placement: .topBarTrailing) {
+                            NavigationLink {
+                                MainSettingsView()
+                            } label: {
+                                ToolbarButton(icon: .system("gearshape"))
+                            }
+                        }
+                    }
+            }
+            .tabItem {
+                Label("Body", systemImage: "figure.arms.open")
+            }
+            .tag(Tab.body)
+
+            // MARK: Tab 5 - Trainingsplan
             NavigationStack {
                 TrainingListView()
                     .navigationBarTitleDisplayMode(.inline)
@@ -304,6 +330,8 @@ struct BaseView: View {
                 }
                 // Widget-Snapshot beim App-Start aktualisieren
                 WidgetSnapshotPublisher.publish(allSessions: completedSessionsForWidget)
+                // Täglichen Muskel-Erholungs-Snapshot beim initialen Launch hochladen
+                triggerDailyMuscleRecoverySnapshotIfNeeded()
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
@@ -313,6 +341,42 @@ struct BaseView: View {
                 }
                 // Widget-Snapshot beim Foreground-Wechsel aktualisieren
                 WidgetSnapshotPublisher.publish(allSessions: completedSessionsForWidget)
+                // Täglichen Muskel-Erholungs-Snapshot hochladen (max. 1× pro Tag ab 6 Uhr)
+                triggerDailyMuscleRecoverySnapshotIfNeeded()
+            }
+        }
+    }
+
+    // MARK: - Muskel-Erholungs-Snapshot
+
+    /// Lädt genau einmal pro Tag (ab 6:00 Uhr) einen Muskel-Erholungs-Snapshot nach Supabase.
+    /// UserDefaults-Key wird NUR bei erfolgreichem Upload gesetzt → Retry beim nächsten App-Open.
+    private func triggerDailyMuscleRecoverySnapshotIfNeeded() {
+        let key = "lastMuscleRecoverySnapshotDate"
+        let last = UserDefaults.standard.object(forKey: key) as? Date
+
+        let calendar = Calendar.current
+        guard let todaySixAM = calendar.date(
+            bySettingHour: 6, minute: 0, second: 0, of: Date()
+        ) else { return }
+
+        // Bereits ein Snapshot heute seit 6:00 Uhr vorhanden → überspringen
+        if let last, last >= todaySixAM { return }
+
+        Task {
+            let descriptor = FetchDescriptor<StrengthSession>(
+                predicate: #Predicate { $0.isCompleted }
+            )
+            let sessions = (try? context.fetch(descriptor)) ?? []
+            let analysis = MuscleRecoveryCalcEngine.analyze(sessions: sessions)
+
+            let success = await SupabaseMuscleRecoveryService.shared.uploadSnapshot(
+                analysis: analysis,
+                triggerSource: "app_open"
+            )
+            // NUR bei Erfolg setzen — bei Fehler greift der nächste App-Open
+            if success {
+                UserDefaults.standard.set(Date(), forKey: key)
             }
         }
     }
