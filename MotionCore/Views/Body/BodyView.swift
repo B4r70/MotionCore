@@ -5,7 +5,7 @@
 // Datei . . . . : BodyView.swift                                                   /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 25.04.2026                                                       /
-// Beschreibung  : Body-Tab — Muskel-Erholung + Tagesform-Faktoren                 /
+// Beschreibung  : Body-Tab — Muskel-Erholung, Tagesform und Trend                  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -15,12 +15,18 @@ import SwiftUI
 
 struct BodyView: View {
 
+    // MARK: - Eingaben
+
+    let onStartWorkoutTap: () -> Void
+
     // MARK: - ViewModel
 
     @State private var viewModel = BodyViewModel()
 
-    // Sheet-Item für MuscleRecoveryDetailView
-    @State private var detailItem: MuscleRecoveryAnalysis?
+    // MARK: - Lokaler State
+
+    @State private var detailItem: MuscleRecoveryAnalysis? = nil
+    @State private var selectedTab: BodyTab = .recovery
 
     // MARK: - Queries
 
@@ -50,8 +56,10 @@ struct BodyView: View {
 
             ScrollView {
                 VStack(spacing: 16) {
-                    recoverySection
-                    readinessFactorsSection
+                    compositeSection
+                    BodyTabSwitch(selectedTab: $selectedTab)
+                    tabContentSection
+                    avoidSection
                     emptySection
                 }
                 .scrollViewContentPadding()
@@ -66,42 +74,53 @@ struct BodyView: View {
             guard newPhase == .active else { return }
             refresh()
         }
+        .onChange(of: strengthSessions) { _, _ in
+            refresh()
+        }
         .sheet(item: $detailItem) { analysis in
             MuscleRecoveryDetailView(analysis: analysis)
+                .environmentObject(appSettings)
         }
     }
 
     // MARK: - Sections
 
     @ViewBuilder
-    private var recoverySection: some View {
+    private var compositeSection: some View {
         if let analysis = viewModel.recoveryAnalysis {
-            MuscleRecoveryCard(analysis: analysis, style: .full) {
-                detailItem = analysis
-            }
+            BodyCompositeScoreCard(
+                recoveryPercent: Int(analysis.overallRecoveryPercent),
+                recommendation: viewModel.recommendation,
+                onStartWorkoutTap: onStartWorkoutTap
+            )
         }
     }
 
     @ViewBuilder
-    private var readinessFactorsSection: some View {
-        if !viewModel.readinessFactors.isEmpty {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Tagesform-Faktoren")
-                    .font(.headline)
-                    .padding(.horizontal, 4)
-
-                VStack(spacing: 0) {
-                    ForEach(viewModel.readinessFactors.indices, id: \.self) { idx in
-                        ReadinessFactorRow(factor: viewModel.readinessFactors[idx])
-                            .padding(.horizontal, 4)
-                        if idx < viewModel.readinessFactors.count - 1 {
-                            Divider()
-                                .padding(.horizontal, 4)
-                        }
-                    }
+    private var tabContentSection: some View {
+        switch selectedTab {
+        case .recovery:
+            if let analysis = viewModel.recoveryAnalysis {
+                BodyRecoveryListCard(analysis: analysis) { _ in
+                    detailItem = analysis
                 }
-                .glassCard()
+            } else {
+                EmptyState()
             }
+        case .form:
+            BodyReadinessFactorsCard(
+                factors: viewModel.readinessFactors,
+                score: viewModel.readinessScore
+            )
+        case .trend:
+            BodyRecoveryTrendCard()
+        }
+    }
+
+    @ViewBuilder
+    private var avoidSection: some View {
+        if !viewModel.recommendation.avoidGroups.isEmpty {
+            BodyAvoidCard(recommendation: viewModel.recommendation)
         }
     }
 
@@ -128,7 +147,7 @@ struct BodyView: View {
 
 #Preview("BodyView") {
     NavigationStack {
-        BodyView()
+        BodyView(onStartWorkoutTap: {})
             .navigationBarTitleDisplayMode(.inline)
     }
     .modelContainer(PreviewData.sharedContainer)

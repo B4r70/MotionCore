@@ -5,7 +5,7 @@
 // Datei . . . . : SummaryView.swift                                                /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 07.01.2026                                                       /
-// Beschreibung  : Gamifiziertes Trainings-Dashboard (Redesign 2026-04)             /
+// Beschreibung  : Command-Center-Dashboard (Redesign 2026-04)                      /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -14,6 +14,10 @@ import SwiftData
 import SwiftUI
 
 struct SummaryView: View {
+
+    // MARK: - Callback
+
+    let onStartWorkoutTap: () -> Void
 
     // MARK: - Data Queries
 
@@ -48,15 +52,10 @@ struct SummaryView: View {
     @State private var calendarStats: (trainingDays: Int, averagePerWeek: Double) = (0, 0.0)
     @State private var recoveryDetailItem: MuscleRecoveryAnalysis? = nil
 
-    // Readiness der letzten Strength-Session (Soft-Link über sessionUUID)
+    // Readiness der neuesten Session (softlink über Query-Reihenfolge)
     private var latestSessionReadiness: SessionReadiness? {
         allReadiness.first
     }
-
-    private let gridColumns: [GridItem] = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
 
     // MARK: - Body
 
@@ -65,169 +64,16 @@ struct SummaryView: View {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
             ScrollView {
-                VStack(spacing: 20) {
-
-                    // 1. Hero Card
-                    SummaryHeroCard(
-                        motivationalContext: viewModel.motivationalContext,
-                        xpLevel: viewModel.xpLevel
-                    )
-
-                    // 1b. Readiness-Card der letzten Session
-                    if let readiness = latestSessionReadiness {
-                        ReadinessSummaryCard(readiness: readiness)
-                    }
-
-                    // 1c. Muscle-Recovery Vorschau
-                    if let recovery = viewModel.recoveryAnalysis {
-                        MuscleRecoveryCard(analysis: recovery, style: .compact) {
-                            recoveryDetailItem = recovery
-                        }
-                    }
-
-                    // 2. 7-Tage-Strip + expandierbarer Kalender
-                    SummaryWeekStrip(
-                        days: viewModel.currentWeekStrip,
-                        showCalendar: $showCalendar
-                    )
-
-                    if showCalendar {
-                        SummaryActivityCalendar(
-                            monthGrid: calendarGrid,
-                            displayedMonth: $displayedMonth,
-                            stats: calendarStats
-                        )
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                    }
-
-                    // 3. Wochenziel-Ring + Trend-Stats (untereinander)
-                    SummaryWeeklyGoalRing(goal: viewModel.weeklyGoal)
-
-                    SummaryTrendCard(
-                        volumeTrend: viewModel.volumeTrend,
-                        caloriesTrend: viewModel.caloriesTrend,
-                        durationTrend: viewModel.durationTrend
-                    )
-
-                    // 3b. Rollback-Insight-Karte (nur bei aktiven Vorschlägen)
-                    if !viewModel.rollbackSuggestions.isEmpty {
-                        RollbackInsightCard(
-                            suggestions: viewModel.rollbackSuggestions,
-                            onRollback: { state in
-                                ProgressionRollbackService.applyRollback(state: state, in: context)
-                            },
-                            onContinue: { state in
-                                ProgressionRollbackService.dismissSuggestion(state: state, in: context)
-                            },
-                            onSwitchToAdvanced: { state in
-                                ProgressionRollbackService.switchToAdvanced(state: state, in: context)
-                            }
-                        )
-                    }
-
-                    // 3c. Auto-Progression-Karte (nur nach Auto-Progress, bis Undo oder neue Session)
-                    if !viewModel.autoProgressionSuggestions.isEmpty {
-                        AutoProgressionInsightCard(
-                            suggestions: viewModel.autoProgressionSuggestions,
-                            onUndo: {
-                                AutoProgressionApplier.undoAll(context: context)
-                            },
-                            onShowDetails: {
-                                showAutoProgressionDetails = true
-                            }
-                        )
-                    }
-
-                    // 4. TimeframePicker
+                VStack(spacing: 16) {
+                    heroSection
+                    chipRow
+                    muscleRingsSection
+                    statGrid
+                    progressionInsights
                     TimeframePicker(selection: $selectedTimeframe)
-
-                    // 5. Stat-Grid 2×2 (timeframe-gefiltert)
-                    LazyVGrid(columns: gridColumns, spacing: 20) {
-                        StatisticGridCard(
-                            icon: .system("figure.mixed.cardio"),
-                            title: "Workouts",
-                            valueView: CountUpText(targetValue: viewModel.filteredTotalWorkouts),
-                            color: .blue
-                        )
-
-                        StatisticGridCard(
-                            icon: .system("flame.fill"),
-                            title: "Kalorien",
-                            valueView: CountUpText(
-                                targetValue: viewModel.filteredTotalCalories,
-                                suffix: " kcal"
-                            ),
-                            color: Color.orange
-                        )
-
-                        StatisticGridCard(
-                            icon: .system("clock.fill"),
-                            title: "Trainingszeit",
-                            valueView: Text(viewModel.filteredFormattedDuration),
-                            color: .purple
-                        )
-
-                        StatisticGridCard(
-                            icon: .system("heart.fill"),
-                            title: "⌀ Herzfrequenz",
-                            valueView: CountUpText(
-                                targetValue: viewModel.filteredAverageHeartRate,
-                                suffix: " bpm"
-                            ),
-                            color: Color.red
-                        )
-                    }
-
-                    // 6. Muskel-Heatmap (nur bei Kraft-Sessions)
-                    if let heatmap = viewModel.filteredHeatmapAnalysis {
-                        SummaryMuscleHeatmapCard(analysis: heatmap)
-                    }
-
-                    // 7. Rating-Insights (auffällige Bewertungsmuster)
-                    if !viewModel.ratingInsights.isEmpty {
-                        SummaryRatingInsightCard(insights: viewModel.ratingInsights)
-                    }
-
-                    // 8. Streak-Card
-                    if viewModel.totalWorkouts > 0 {
-                        StreakCard(
-                            currentStreak: viewModel.currentStreak,
-                            workoutsThisWeek: viewModel.workoutsThisWeek,
-                            averagePerWeek: viewModel.averageWorkoutsPerWeek,
-                            streakMilestone: viewModel.currentStreakMilestone,
-                            nextMilestone: viewModel.nextStreakMilestone
-                        )
-                    }
-
-                    // 9. XP & Rang Card
-                    if viewModel.totalWorkouts > 0 {
-                        SummaryXPCard(
-                            xpLevel: viewModel.xpLevel,
-                            recentGains: viewModel.recentXPGains
-                        )
-                    }
-
-                    // 10. Typ-Aufschlüsselung
-                    if !viewModel.filteredWorkoutTypeDistribution.isEmpty {
-                        TypeBreakdownCard(distribution: viewModel.filteredWorkoutTypeDistribution)
-                    }
-
-                    if viewModel.filteredWorkoutTypeDistribution.count > 1 {
-                        StatisticDonutChart(
-                            title: "Workouts nach Typ",
-                            data: viewModel.filteredWorkoutTypeChartData
-                        )
-                    }
-
-                    // 11. Rekorde
-                    if viewModel.totalWorkouts > 0 {
-                        SummaryRecordsCard(
-                            highestCaloriesBurn: viewModel.highestCaloriesBurn,
-                            longestWorkout: viewModel.longestWorkout,
-                            longestStreak: viewModel.longestStreak
-                        )
-                    }
-
+                    detailCards
+                    calendarSection
+                    heatmapSection
                 }
                 .scrollViewContentPadding()
                 .animation(.easeInOut(duration: 0.3), value: showCalendar)
@@ -239,56 +85,14 @@ struct SummaryView: View {
             }
         }
         .task {
-            viewModel.recalculate(
-                cardio: cardioSessions,
-                strength: strengthSessions,
-                outdoor: outdoorSessions,
-                timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
-                progressionStates: progressionStates
-            )
+            recalculateAll()
             refreshCalendarData()
         }
-        .onChange(of: cardioSessions) { _, new in
-            viewModel.recalculate(
-                cardio: new,
-                strength: strengthSessions,
-                outdoor: outdoorSessions,
-                timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
-                progressionStates: progressionStates
-            )
-        }
-        .onChange(of: strengthSessions) { _, new in
-            viewModel.recalculate(
-                cardio: cardioSessions,
-                strength: new,
-                outdoor: outdoorSessions,
-                timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
-                progressionStates: progressionStates
-            )
-        }
-        .onChange(of: outdoorSessions) { _, new in
-            viewModel.recalculate(
-                cardio: cardioSessions,
-                strength: strengthSessions,
-                outdoor: new,
-                timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
-                progressionStates: progressionStates
-            )
-        }
-        .onChange(of: progressionStates) { _, _ in
-            viewModel.recalculate(
-                cardio: cardioSessions,
-                strength: strengthSessions,
-                outdoor: outdoorSessions,
-                timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
-                progressionStates: progressionStates
-            )
-        }
+        .onChange(of: cardioSessions)        { _, _ in recalculateAll() }
+        .onChange(of: strengthSessions)      { _, _ in recalculateAll() }
+        .onChange(of: outdoorSessions)       { _, _ in recalculateAll() }
+        .onChange(of: progressionStates)     { _, _ in recalculateAll() }
+        .onChange(of: appSettings.weeklyWorkoutGoal) { _, _ in recalculateAll() }
         .onChange(of: selectedTimeframe) { _, new in
             // Nur gefilterte Werte neu berechnen — günstiger als volle Neuberechnung
             viewModel.recalculateFiltered(
@@ -298,19 +102,7 @@ struct SummaryView: View {
                 timeframe: new
             )
         }
-        .onChange(of: appSettings.weeklyWorkoutGoal) { _, _ in
-            viewModel.recalculate(
-                cardio: cardioSessions,
-                strength: strengthSessions,
-                outdoor: outdoorSessions,
-                timeframe: selectedTimeframe,
-                weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
-                progressionStates: progressionStates
-            )
-        }
-        .onChange(of: displayedMonth) { _, _ in
-            refreshCalendarData()
-        }
+        .onChange(of: displayedMonth) { _, _ in refreshCalendarData() }
         .sheet(isPresented: $showAutoProgressionDetails) {
             AutoProgressionDetailsView(
                 suggestions: viewModel.autoProgressionSuggestions,
@@ -323,6 +115,165 @@ struct SummaryView: View {
             MuscleRecoveryDetailView(analysis: analysis)
                 .environmentObject(appSettings)
         }
+    }
+
+    // MARK: - Hero + Chip
+
+    private var heroSection: some View {
+        SummaryCommandHero(
+            readinessScore: latestSessionReadiness?.overallScore,
+            readinessLabel: latestSessionReadiness.map { ReadinessLabel.from(score: $0.overallScore) },
+            readinessIsCalibrating: latestSessionReadiness?.isCalibrating ?? false,
+            recoveryPercent: Int(viewModel.recoveryAnalysis?.overallRecoveryPercent ?? 0),
+            currentStreak: viewModel.currentStreak,
+            nextStreakMilestone: viewModel.nextStreakMilestone,
+            recommendation: viewModel.recommendation,
+            onStartWorkoutTap: onStartWorkoutTap
+        )
+    }
+
+    private var chipRow: some View {
+        SummaryChipRow(
+            xpLevel: viewModel.xpLevel,
+            volumeTrend: viewModel.volumeTrend,
+            averageHeartRate: viewModel.filteredAverageHeartRate,
+            sleepDuration: nil  // SessionReadiness hat kein sleepDuration-Property
+        )
+    }
+
+    // MARK: - Muskel-Rings
+
+    @ViewBuilder
+    private var muscleRingsSection: some View {
+        if let analysis = viewModel.recoveryAnalysis {
+            SummaryMuscleRingsCard(analysis: analysis) {
+                recoveryDetailItem = analysis
+            }
+        }
+    }
+
+    // MARK: - Stat-Grid
+
+    private var statGrid: some View {
+        SummaryStatGridCard(
+            totalWorkouts: viewModel.filteredTotalWorkouts,
+            totalCalories: viewModel.filteredTotalCalories,
+            formattedDuration: viewModel.filteredFormattedDuration,
+            averageHeartRate: viewModel.filteredAverageHeartRate,
+            volumeTrend: viewModel.volumeTrend,
+            caloriesTrend: viewModel.caloriesTrend,
+            durationTrend: viewModel.durationTrend
+        )
+    }
+
+    // MARK: - Progression-Insights
+
+    @ViewBuilder
+    private var progressionInsights: some View {
+        if !viewModel.rollbackSuggestions.isEmpty {
+            RollbackInsightCard(
+                suggestions: viewModel.rollbackSuggestions,
+                onRollback: { state in
+                    ProgressionRollbackService.applyRollback(state: state, in: context)
+                },
+                onContinue: { state in
+                    ProgressionRollbackService.dismissSuggestion(state: state, in: context)
+                },
+                onSwitchToAdvanced: { state in
+                    ProgressionRollbackService.switchToAdvanced(state: state, in: context)
+                }
+            )
+        }
+        if !viewModel.autoProgressionSuggestions.isEmpty {
+            AutoProgressionInsightCard(
+                suggestions: viewModel.autoProgressionSuggestions,
+                onUndo: {
+                    AutoProgressionApplier.undoAll(context: context)
+                },
+                onShowDetails: {
+                    showAutoProgressionDetails = true
+                }
+            )
+        }
+    }
+
+    // MARK: - Detail-Cards (timeframe-gefiltert)
+
+    @ViewBuilder
+    private var detailCards: some View {
+        if !viewModel.ratingInsights.isEmpty {
+            SummaryRatingInsightCard(insights: viewModel.ratingInsights)
+        }
+        if viewModel.totalWorkouts > 0 {
+            StreakCard(
+                currentStreak: viewModel.currentStreak,
+                workoutsThisWeek: viewModel.workoutsThisWeek,
+                averagePerWeek: viewModel.averageWorkoutsPerWeek,
+                streakMilestone: viewModel.currentStreakMilestone,
+                nextMilestone: viewModel.nextStreakMilestone
+            )
+            SummaryXPCard(
+                xpLevel: viewModel.xpLevel,
+                recentGains: viewModel.recentXPGains
+            )
+        }
+        if !viewModel.filteredWorkoutTypeDistribution.isEmpty {
+            TypeBreakdownCard(distribution: viewModel.filteredWorkoutTypeDistribution)
+        }
+        if viewModel.filteredWorkoutTypeDistribution.count > 1 {
+            StatisticDonutChart(
+                title: "Workouts nach Typ",
+                data: viewModel.filteredWorkoutTypeChartData
+            )
+        }
+        if viewModel.totalWorkouts > 0 {
+            SummaryRecordsCard(
+                highestCaloriesBurn: viewModel.highestCaloriesBurn,
+                longestWorkout: viewModel.longestWorkout,
+                longestStreak: viewModel.longestStreak
+            )
+        }
+    }
+
+    // MARK: - Kalender-Sektion
+
+    private var calendarSection: some View {
+        VStack(spacing: 8) {
+            SummaryWeekStrip(
+                days: viewModel.currentWeekStrip,
+                showCalendar: $showCalendar
+            )
+            if showCalendar {
+                SummaryActivityCalendar(
+                    monthGrid: calendarGrid,
+                    displayedMonth: $displayedMonth,
+                    stats: calendarStats
+                )
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+    }
+
+    // MARK: - Heatmap-Sektion
+
+    @ViewBuilder
+    private var heatmapSection: some View {
+        if let heatmap = viewModel.filteredHeatmapAnalysis {
+            SummaryMuscleHeatmapCard(analysis: heatmap)
+        }
+    }
+
+    // MARK: - Neuberechnung
+
+    private func recalculateAll() {
+        viewModel.recalculate(
+            cardio: cardioSessions,
+            strength: strengthSessions,
+            outdoor: outdoorSessions,
+            timeframe: selectedTimeframe,
+            weeklyGoalTarget: appSettings.weeklyWorkoutGoal,
+            progressionStates: progressionStates
+        )
     }
 
     // MARK: - Kalender-Daten
@@ -342,7 +293,7 @@ struct SummaryView: View {
 // MARK: - Preview
 
 #Preview("Summary") {
-    SummaryView()
+    SummaryView(onStartWorkoutTap: {})
         .modelContainer(PreviewData.sharedContainer)
         .environmentObject(AppSettings.shared)
 }

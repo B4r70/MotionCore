@@ -91,7 +91,7 @@ struct BaseView: View {
 
             // MARK: Tab 1 - Summary (NEU)
             NavigationStack {
-                SummaryView()
+                SummaryView(onStartWorkoutTap: { showingWorkoutPicker = true })
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
@@ -174,7 +174,7 @@ struct BaseView: View {
 
             // MARK: Tab 4 - Body
             NavigationStack {
-                BodyView()
+                BodyView(onStartWorkoutTap: { showingWorkoutPicker = true })
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {

@@ -239,6 +239,15 @@ private struct DetailedMuscleRow: View {
 // MARK: - Preview
 
 #Preview("MuscleRecoveryDetailView") {
-    MuscleRecoveryDetailView(analysis: .preview)
-        .environmentObject(AppSettings.shared)
+    MuscleRecoveryDetailView(analysis: MuscleRecoveryAnalysis(
+        analysisDate: .now,
+        timeframeDays: 7,
+        muscleGroupScores: [
+            MuscleGroupRecovery(id: "chest", muscleGroup: .chest, recoveryPercent: 87, muscleDetails: [], lastTrainedDate: Calendar.current.date(byAdding: .day, value: -2, to: .now), wasTrainedInTimeframe: true),
+            MuscleGroupRecovery(id: "back",  muscleGroup: .back,  recoveryPercent: 45, muscleDetails: [], lastTrainedDate: Calendar.current.date(byAdding: .day, value: -1, to: .now), wasTrainedInTimeframe: true),
+            MuscleGroupRecovery(id: "legs",  muscleGroup: .legs,  recoveryPercent: 62, muscleDetails: [], lastTrainedDate: Calendar.current.date(byAdding: .day, value: -3, to: .now), wasTrainedInTimeframe: true)
+        ],
+        detailedScores: []
+    ))
+    .environmentObject(AppSettings.shared)
 }

@@ -100,6 +100,10 @@ final class SummaryViewModel {
 
     private(set) var recoveryAnalysis: MuscleRecoveryAnalysis? = nil
 
+    // MARK: - Trainings-Empfehlung (abgeleitet aus recoveryAnalysis)
+
+    private(set) var recommendation: RecoveryRecommendation = .empty
+
     // MARK: - Neuberechnung (vollständige Datenmenge)
 
     /// Berechnet alle zeitraum-unabhängigen Werte neu.
@@ -185,6 +189,13 @@ final class SummaryViewModel {
 
         // Muskel-Erholung (letzte 14 Tage, timeframe-unabhängig)
         self.recoveryAnalysis = MuscleRecoveryCalcEngine.analyze(sessions: strength)
+
+        // Trainings-Empfehlung aus Erholungsanalyse ableiten
+        if let analysis = self.recoveryAnalysis {
+            self.recommendation = RecoveryRecommendationCalcEngine.recommend(from: analysis)
+        } else {
+            self.recommendation = .empty
+        }
 
         // Gefilterte Werte direkt mitberechnen
         recalculateFiltered(engine: engine, timeframe: timeframe, strength: strength)

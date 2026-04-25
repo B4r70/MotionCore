@@ -69,7 +69,7 @@ No XCTest suite; verify via Xcode build, SwiftUI previews, simulator.
 
 - Prefer `ExerciseSet.exerciseNameSnapshot` over `.exerciseName`
 - `StatsAndRecordsView` uses `.statistics`, `.records` and `.heatmap`
-- `BaseView.Tab`: `summary`, `workouts`, `stats`, `training`
+- `BaseView.Tab`: `summary`, `workouts`, `stats`, `body`, `training` (5 Tabs seit Dashboard-Redesign)
 
 ## File System for Work Artifacts
 
