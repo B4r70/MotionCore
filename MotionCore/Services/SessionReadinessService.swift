@@ -35,9 +35,10 @@ enum SessionReadinessService {
         }
 
         // Heutige HealthKit-Werte holen (Fehler = nil, kein Crash)
-        let hrv      = try? await HealthKitManager.shared.hrvSamples(daysBack: 1).values.first
+        // .max(by:) wählt deterministisch den aktuellsten Tag statt non-deterministisch .values.first
+        let hrv      = try? await HealthKitManager.shared.hrvSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
         let sleep    = try? await HealthKitManager.shared.sleepDuration(forNightEnding: Date())
-        let restHR   = try? await HealthKitManager.shared.restingHRSamples(daysBack: 1).values.first
+        let restHR   = try? await HealthKitManager.shared.restingHRSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
         let activity = try? await HealthKitManager.shared.activeEnergy(
             forDate: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
         )
@@ -92,9 +93,10 @@ enum SessionReadinessService {
         }
 
         // Heutige HealthKit-Werte holen (Fehler = nil, kein Crash)
-        let hrv      = try? await HealthKitManager.shared.hrvSamples(daysBack: 1).values.first
+        // .max(by:) wählt deterministisch den aktuellsten Tag statt non-deterministisch .values.first
+        let hrv      = try? await HealthKitManager.shared.hrvSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
         let sleep    = try? await HealthKitManager.shared.sleepDuration(forNightEnding: Date())
-        let restHR   = try? await HealthKitManager.shared.restingHRSamples(daysBack: 1).values.first
+        let restHR   = try? await HealthKitManager.shared.restingHRSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
         let activity = try? await HealthKitManager.shared.activeEnergy(
             forDate: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
         )
