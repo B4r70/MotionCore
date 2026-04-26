@@ -181,9 +181,12 @@ struct ExercisesOverviewCard: View {
                 expandedExerciseKey = selectedExerciseKey
             }
         }
-        .onChange(of: selectedExerciseKey) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.25)) {
-                expandedExerciseKey = newValue
+        .onChange(of: selectedExerciseKey) { oldValue, newValue in
+            // Nur folgen wenn keine abweichende manuelle Auswahl offen ist
+            if expandedExerciseKey == oldValue || expandedExerciseKey == nil {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    expandedExerciseKey = newValue
+                }
             }
         }
         .onChange(of: isSortMode) { _, newValue in
