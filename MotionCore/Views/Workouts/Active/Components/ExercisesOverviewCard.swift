@@ -178,8 +178,13 @@ struct ExercisesOverviewCard: View {
         .glassCard()
         .onAppear {
             if expandedExerciseKey == nil {
-                // Fallback auf erste Gruppe wenn noch keine Übung gewählt (frischer Workout)
                 expandedExerciseKey = selectedExerciseKey ?? groupedSets.first?.first?.groupKey
+            }
+        }
+        // groupedSets kommt nach onAppear — reagiert wenn erste Übungen ankommen
+        .onChange(of: groupedSets.first?.first?.groupKey) { _, newKey in
+            if expandedExerciseKey == nil {
+                expandedExerciseKey = selectedExerciseKey ?? newKey
             }
         }
         .onChange(of: selectedExerciseKey) { oldValue, newValue in
