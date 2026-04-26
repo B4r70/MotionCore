@@ -23,6 +23,16 @@ struct UserSettingsView: View {
         List {
                 // MARK: Benutzerangaben
             Section {
+                // Userdefault: Vorname des Benutzers
+                HStack {
+                    Text("Vorname")
+                    Spacer()
+                    TextField("Vorname", text: $appSettings.userSurname)
+                        .keyboardType(.default)
+                        .textContentType(.givenName)
+                        .multilineTextAlignment(.trailing)
+                }
+
                 // Userdefault: Körpergröße des Benutzers
                 HStack {
                     DisclosureRow(

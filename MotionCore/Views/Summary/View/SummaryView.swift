@@ -51,6 +51,7 @@ struct SummaryView: View {
     @State private var calendarGrid: [[ActivityDay?]] = []
     @State private var calendarStats: (trainingDays: Int, averagePerWeek: Double) = (0, 0.0)
     @State private var recoveryDetailItem: MuscleRecoveryAnalysis? = nil
+    @State private var greetingText: String = ""
 
     // Readiness der neuesten Session (softlink über Query-Reihenfolge)
     private var latestSessionReadiness: SessionReadiness? {
@@ -65,6 +66,7 @@ struct SummaryView: View {
 
             ScrollView {
                 VStack(spacing: 16) {
+                    dashboardHeader
                     heroSection
                     chipRow
                     muscleRingsSection
@@ -88,6 +90,10 @@ struct SummaryView: View {
             recalculateAll()
             refreshCalendarData()
         }
+        .onAppear {
+            refreshGreeting()
+        }
+        .onChange(of: appSettings.userSurname) { _, _ in refreshGreeting() }
         .onChange(of: cardioSessions)        { _, _ in recalculateAll() }
         .onChange(of: strengthSessions)      { _, _ in recalculateAll() }
         .onChange(of: outdoorSessions)       { _, _ in recalculateAll() }
@@ -261,6 +267,40 @@ struct SummaryView: View {
         if let heatmap = viewModel.filteredHeatmapAnalysis {
             SummaryMuscleHeatmapCard(analysis: heatmap)
         }
+    }
+
+    // MARK: - Header
+
+    private var dashboardHeader: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(greetingText)
+                .font(.title2.bold())
+                .foregroundStyle(.primary)
+                .accessibilityAddTraits(.isHeader)
+
+            Text(formattedDate)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+    }
+
+    private static let dateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "de_DE")
+        f.dateFormat = "EEEE, d. MMMM"
+        return f
+    }()
+
+    private var formattedDate: String {
+        Self.dateFormatter.string(from: Date())
+    }
+
+    private func refreshGreeting() {
+        greetingText = GreetingCalcEngine.greeting(for: appSettings.userSurname)
     }
 
     // MARK: - Neuberechnung

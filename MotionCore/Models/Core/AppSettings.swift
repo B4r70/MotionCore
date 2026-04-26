@@ -92,7 +92,7 @@ class AppSettings: ObservableObject {
     }
 
     // MARK: Userdefaults in AppSettings
-/*
+
     // Userdefault: Vorname des Benutzers
     @Published var userSurname: String {
         didSet {
@@ -100,6 +100,7 @@ class AppSettings: ObservableObject {
         }
     }
 
+/*
         // Userdefault: Nachname des Benutzers
     @Published var userLastName: String {
         didSet {
@@ -107,6 +108,7 @@ class AppSettings: ObservableObject {
         }
     }
 */
+
     // Userdefault: Körpergröße in cm
     @Published var userBodyHeight: Int {
         didSet {
@@ -339,6 +341,9 @@ class AppSettings: ObservableObject {
 
         // Rest-Timer: Standard-Pausenzeit (Default: 90 Sekunden)
         defaultRestTime = defaults.object(forKey: "workout.defaultRestTime") as? Int ?? 90
+
+        // Initialisiere den Vornamen
+        userSurname = defaults.string(forKey: "user.userSurname") ?? ""
 
         // Initialisiere die Körpergröße
         userBodyHeight = UserDefaults.standard.integer(forKey: "user.userBodyHeight")
