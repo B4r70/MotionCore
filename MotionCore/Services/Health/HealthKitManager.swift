@@ -510,17 +510,30 @@ extension HealthKitManager {
         return try await dailySamples(type: type, unit: HKUnit.secondUnit(with: .milli), daysBack: daysBack)
     }
 
-    /// Gesamtschlafdauer in Stunden für die Nacht, die am angegebenen Datum endet
+    /// Schlafdauer in Stunden für eine Nacht, die am Morgen von `date` endet.
+    /// Window: 18:00 Vortag bis 12:00 Stichtag.
+    /// Wird sowohl für die heutige Tagesform als auch für historische Baseline-Berechnung genutzt.
     func sleepDuration(forNightEnding date: Date) async throws -> Double? {
         guard let sleepType = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
             throw HealthKitManagerError.notAuthorized
         }
         let calendar = Calendar.current
-        let endOfDay = calendar.startOfDay(for: date)
-        guard let startWindow = calendar.date(byAdding: .hour, value: -20, to: endOfDay) else {
+        let dayStart = calendar.startOfDay(for: date)
+
+        // Fenster: Vortag 18:00 bis Stichtag 12:00
+        guard
+            let windowStart = calendar.date(byAdding: .hour, value: -6,  to: dayStart),
+            let windowEnd   = calendar.date(byAdding: .hour, value: 12, to: dayStart)
+        else {
             throw HealthKitManagerError.queryFailed(NSError(domain: "DateCalc", code: -1))
         }
-        let predicate = HKQuery.predicateForSamples(withStart: startWindow, end: endOfDay, options: .strictEndDate)
+
+        // options: [] erlaubt Samples, die das Fenster überschreiten (Start vor 18:00 oder Ende nach 12:00)
+        let predicate = HKQuery.predicateForSamples(
+            withStart: windowStart,
+            end: windowEnd,
+            options: []
+        )
 
         return try await withCheckedThrowingContinuation { continuation in
             let query = HKSampleQuery(

@@ -12,6 +12,7 @@
 // ---------------------------------------------------------------------------------/
 //
 import Foundation
+import SwiftData
 
 @Observable
 final class BodyViewModel {
@@ -26,6 +27,10 @@ final class BodyViewModel {
     // MARK: - Internes Readiness-ViewModel (Logik-Wiederverwendung)
 
     private let readinessVM = ReadinessViewModel()
+
+    // MARK: - Race-Guard
+
+    private var refreshTask: Task<Void, Never>?
 
     // MARK: - Berechnungen
 
@@ -60,5 +65,22 @@ final class BodyViewModel {
             let totalWeight = breakdown.reduce(0) { $0 + $1.weightPercent }
             readinessScore = totalWeight > 0 ? Int((weighted / Double(totalWeight)) * 100) : nil
         }
+    }
+
+    /// Berechnet Readiness live aus HealthKit und aktualisiert den UI-State.
+    /// Ein laufender Refresh wird abgebrochen bevor ein neuer startet (Race-Guard).
+    @MainActor
+    func loadLiveReadiness(context: ModelContext, takesCardioMedication: Bool) async {
+        refreshTask?.cancel()
+        refreshTask = Task { @MainActor in
+            let output = await SessionReadinessService.computeLive(
+                context: context,
+                takesCardioMedication: takesCardioMedication
+            )
+            guard !Task.isCancelled else { return }
+            readinessFactors = output.breakdown
+            readinessScore = output.isCalibrating ? nil : output.score
+        }
+        await refreshTask?.value
     }
 }

@@ -59,6 +59,11 @@ struct MCFactorBar: View {
                 animatedValue = max(0, min(1, value))
             }
         }
+        .onChange(of: value) { _, newValue in
+            withAnimation(.easeOut(duration: 0.4)) {
+                animatedValue = max(0, min(1, newValue))
+            }
+        }
     }
 }
 

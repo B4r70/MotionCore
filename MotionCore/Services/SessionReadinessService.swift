@@ -76,6 +76,45 @@ enum SessionReadinessService {
         return output.modifier
     }
 
+    /// Berechnet Readiness live aus HealthKit — persistiert nichts.
+    static func computeLive(
+        context: ModelContext,
+        takesCardioMedication: Bool
+    ) async -> ReadinessCalcEngine.Output {
+        // Baselines sicherstellen
+        let baselineService = HealthBaselineUpdateService(healthKit: .shared, context: context)
+        await baselineService.updateIfNeeded(takesCardioMedication: takesCardioMedication)
+
+        // Baselines laden
+        let baselines = (try? context.fetch(FetchDescriptor<HealthBaseline>())) ?? []
+        func baseline(_ type: HealthMetricType) -> HealthBaseline? {
+            baselines.first { $0.metricType == type }
+        }
+
+        // Heutige HealthKit-Werte holen (Fehler = nil, kein Crash)
+        let hrv      = try? await HealthKitManager.shared.hrvSamples(daysBack: 1).values.first
+        let sleep    = try? await HealthKitManager.shared.sleepDuration(forNightEnding: Date())
+        let restHR   = try? await HealthKitManager.shared.restingHRSamples(daysBack: 1).values.first
+        let activity = try? await HealthKitManager.shared.activeEnergy(
+            forDate: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+        )
+
+        let input = ReadinessCalcEngine.Input(
+            takesCardioMedication: takesCardioMedication,
+            hrvToday: hrv,
+            sleepToday: sleep,
+            restingHRToday: restHR,
+            activityYesterday: activity,
+            hrvBaseline: baseline(.hrv),
+            sleepBaseline: baseline(.sleep),
+            restingHRBaseline: baseline(.restingHR),
+            activityBaseline: baseline(.activity),
+            userEnergy: nil,
+            userStressRaw: nil
+        )
+        return ReadinessCalcEngine.calculate(input: input)
+    }
+
     /// Aktualisiert den Score mit User-Input (Energie + Stress) und speichert neu.
     static func refineWithUserInput(
         readiness: SessionReadiness,

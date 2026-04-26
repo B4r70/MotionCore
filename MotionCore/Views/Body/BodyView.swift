@@ -37,16 +37,15 @@ struct BodyView: View {
     )
     private var strengthSessions: [StrengthSession]
 
-    @Query(sort: \SessionReadiness.capturedAt, order: .reverse)
-    private var allReadiness: [SessionReadiness]
-
-    @Query
-    private var baselines: [HealthBaseline]
-
     // MARK: - Umgebung
 
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appSettings: AppSettings
+
+    // MARK: - Persistierter Tages-Guard (max 1× Baseline-Refresh pro Tag)
+
+    @AppStorage("lastBaselineForceRefreshDay") private var lastBaselineForceRefreshDay: String = ""
 
     // MARK: - Body
 
@@ -135,11 +134,24 @@ struct BodyView: View {
 
     private func refresh() {
         viewModel.recalculate(sessions: strengthSessions)
-        viewModel.loadReadinessFactors(
-            latestReadiness: allReadiness.first,
-            baselines: baselines,
-            takesCardioMedication: appSettings.takesCardioMedication
-        )
+        Task {
+            await refreshBaselineIfNeeded()
+            await viewModel.loadLiveReadiness(
+                context: modelContext,
+                takesCardioMedication: appSettings.takesCardioMedication
+            )
+        }
+    }
+
+    /// Erzwingt Baseline-Update maximal einmal pro Tag.
+    private func refreshBaselineIfNeeded() async {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let today = formatter.string(from: Date())
+        guard today != lastBaselineForceRefreshDay else { return }
+        let service = HealthBaselineUpdateService(healthKit: .shared, context: modelContext)
+        await service.forceUpdate(takesCardioMedication: appSettings.takesCardioMedication)
+        lastBaselineForceRefreshDay = today
     }
 }
 
