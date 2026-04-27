@@ -44,7 +44,9 @@ final class SupabaseClient {
 
     private static func makeDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        // Kein keyDecodingStrategy: Alle Decodable-DTOs haben explizite snake_case CodingKeys.
+        // convertFromSnakeCase würde JSON-Keys vorab in camelCase wandeln und das Lookup
+        // gegen die rawValues (z.B. "created_at") brechen → keyNotFound.
 
         // Supabase liefert z.B. 2026-01-11T13:51:01.816726+00:00 (microseconds!)
         decoder.dateDecodingStrategy = .custom { d in
