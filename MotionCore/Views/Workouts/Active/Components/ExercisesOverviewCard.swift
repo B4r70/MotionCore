@@ -25,13 +25,13 @@ struct ExercisesOverviewCard: View {
     let onReorderExercise: (Int, Int) -> Void
     var onRetroRIR: ((ExerciseSet) -> Void)? = nil
 
-    // Sortiermodus-State
+        // Sortiermodus-State
     @State private var isSortMode: Bool = false
 
-    // Expand-State für Accordion-Verhalten
+        // Expand-State für Accordion-Verhalten
     @State private var expandedExerciseKey: String? = nil
 
-    // Drag & Drop State
+        // Drag & Drop State
     @State private var draggingIndex: Int? = nil
     @State private var dragOffset: CGSize = .zero
     @State private var cardHeights: [Int: CGFloat] = [:]
@@ -74,7 +74,7 @@ struct ExercisesOverviewCard: View {
             header
 
             ZStack(alignment: .top) {
-                // Hintergrund-Rows (verschieben sich beim Drag)
+                    // Hintergrund-Rows (verschieben sich beim Drag)
                 VStack(spacing: 0) {
                     ForEach(Array(groupedSets.enumerated()), id: \.element.first?.groupKey) { index, sets in
                         if let firstSet = sets.first {
@@ -102,7 +102,7 @@ struct ExercisesOverviewCard: View {
                                 },
                                 onRetroRIR: onRetroRIR
                             )
-                            // Höhe messen für Drag-Berechnung
+                                // Höhe messen für Drag-Berechnung
                             .background(
                                 GeometryReader { geo in
                                     Color.clear
@@ -113,7 +113,7 @@ struct ExercisesOverviewCard: View {
                             .opacity(draggingIndex == index ? 0 : 1)
                             .animation(nil, value: draggingIndex)
                             .modifier(RowOffsetModifier(offset: offsetForIndex(index)))
-                            // Drag-Handle Gesture (nur im Sortiermodus, nur wenn kein Superset-Mitglied)
+                                // Drag-Handle Gesture (nur im Sortiermodus, nur wenn kein Superset-Mitglied)
                             .overlay(alignment: .trailing) {
                                 if isSortMode {
                                     if isSupersetMember(at: index) {
@@ -127,7 +127,7 @@ struct ExercisesOverviewCard: View {
                                     }
                                 }
                             }
-                            // LongPress zum Löschen (nur außerhalb des Sortiermodus)
+                                // LongPress zum Löschen (nur außerhalb des Sortiermodus)
                             .onLongPressGesture(minimumDuration: 0.5) {
                                 guard !isSortMode else { return }
                                 let generator = UIImpactFeedbackGenerator(style: .medium)
@@ -139,7 +139,7 @@ struct ExercisesOverviewCard: View {
                     }
                 }
 
-                // Schwebende Card während Drag
+                    // Schwebende Card während Drag
                 if let dragIndex = draggingIndex,
                    let sets = groupedSets[safe: dragIndex],
                    let firstSet = sets.first {
@@ -178,21 +178,12 @@ struct ExercisesOverviewCard: View {
         .glassCard()
         .onAppear {
             if expandedExerciseKey == nil {
-                expandedExerciseKey = selectedExerciseKey ?? groupedSets.first?.first?.groupKey
+                expandedExerciseKey = selectedExerciseKey
             }
         }
-        // groupedSets kommt nach onAppear — reagiert wenn erste Übungen ankommen
-        .onChange(of: groupedSets.first?.first?.groupKey) { _, newKey in
-            if expandedExerciseKey == nil {
-                expandedExerciseKey = selectedExerciseKey ?? newKey
-            }
-        }
-        .onChange(of: selectedExerciseKey) { oldValue, newValue in
-            // Nur folgen wenn keine abweichende manuelle Auswahl offen ist
-            if expandedExerciseKey == oldValue || expandedExerciseKey == nil {
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    expandedExerciseKey = newValue
-                }
+        .onChange(of: selectedExerciseKey) { _, newValue in
+            withAnimation(.easeInOut(duration: 0.25)) {
+                expandedExerciseKey = newValue
             }
         }
         .onChange(of: isSortMode) { _, newValue in
@@ -208,7 +199,7 @@ struct ExercisesOverviewCard: View {
         }
     }
 
-    // MARK: - Header
+        // MARK: - Header
 
     private var header: some View {
         HStack {
@@ -219,7 +210,7 @@ struct ExercisesOverviewCard: View {
             Spacer()
 
             HStack(spacing: 12) {
-                // "(+) Übung"-Button: nur im Nicht-Sortiermodus
+                    // "(+) Übung"-Button: nur im Nicht-Sortiermodus
                 if !isSortMode {
                     Button {
                         onAddExercise()
@@ -230,7 +221,7 @@ struct ExercisesOverviewCard: View {
                     }
                 }
 
-                // Sortier- / Fertig-Button
+                    // Sortier- / Fertig-Button
                 Button {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                         isSortMode.toggle()
@@ -238,8 +229,8 @@ struct ExercisesOverviewCard: View {
                 } label: {
                     Image(
                         systemName: isSortMode
-                            ? "checkmark.circle.fill"
-                            : "arrow.up.arrow.down.circle.fill"
+                        ? "checkmark.circle.fill"
+                        : "arrow.up.arrow.down.circle.fill"
                     )
                     .font(.title2)
                     .foregroundStyle(isSortMode ? Color.green : .blue)
@@ -249,7 +240,7 @@ struct ExercisesOverviewCard: View {
         }
     }
 
-    // MARK: - Drag Handle
+        // MARK: - Drag Handle
 
     @ViewBuilder
     private func dragHandleView(index: Int) -> some View {
@@ -298,7 +289,7 @@ struct ExercisesOverviewCard: View {
             )
     }
 
-    // MARK: - Positions-Berechnung
+        // MARK: - Positions-Berechnung
 
     private func yStart(for index: Int) -> CGFloat {
         var y: CGFloat = 0
@@ -352,7 +343,7 @@ struct ExercisesOverviewCard: View {
     }
 }
 
-// MARK: - Row Offset Modifier (verhindert doppelte offsetForIndex-Berechnung)
+    // MARK: - Row Offset Modifier (verhindert doppelte offsetForIndex-Berechnung)
 
 private struct RowOffsetModifier: ViewModifier {
     let offset: CGFloat
@@ -363,7 +354,7 @@ private struct RowOffsetModifier: ViewModifier {
     }
 }
 
-// MARK: - Exercise Overview Expanded Detail
+    // MARK: - Exercise Overview Expanded Detail
 
 private struct ExerciseOverviewExpandedDetail: View {
     let sets: [ExerciseSet]
@@ -389,6 +380,7 @@ private struct ExerciseOverviewExpandedDetail: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func setDetailRow(set: ExerciseSet) -> some View {
@@ -409,15 +401,9 @@ private struct ExerciseOverviewExpandedDetail: View {
                 .foregroundStyle(set.isCompleted ? Color.green : Color.secondary.opacity(0.5))
                 .padding(.leading, 4)
         }
-        .contextMenu {
-            if set.isLastSetOfExercise && !set.rpeRecorded, let callback = onRetroRIR {
-                Button {
-                    callback(set)
-                } label: {
-                    Label("RIR nachtragen", systemImage: "pencil.and.outline")
-                }
-            }
-        }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
+        .modifier(RetroRIRContextMenu(set: set, onRetroRIR: onRetroRIR))
     }
 
     private func formatSetValue(_ set: ExerciseSet) -> String {
@@ -431,7 +417,28 @@ private struct ExerciseOverviewExpandedDetail: View {
     }
 }
 
-// MARK: - Safe Array Access
+    // MARK: - Retro-RIR Context Menu (bedingt anhängen, sonst kollabiert HStack auf intrinsische Breite)
+
+private struct RetroRIRContextMenu: ViewModifier {
+    let set: ExerciseSet
+    let onRetroRIR: ((ExerciseSet) -> Void)?
+
+    func body(content: Content) -> some View {
+        if set.isLastSetOfExercise && !set.rpeRecorded, let callback = onRetroRIR {
+            content.contextMenu {
+                Button {
+                    callback(set)
+                } label: {
+                    Label("RIR nachtragen", systemImage: "pencil.and.outline")
+                }
+            }
+        } else {
+            content
+        }
+    }
+}
+
+    // MARK: - Safe Array Access
 
 private extension Array {
     subscript(safe index: Int) -> Element? {
@@ -439,7 +446,7 @@ private extension Array {
     }
 }
 
-// MARK: - Exercise Overview Row
+    // MARK: - Exercise Overview Row
 
 private struct ExerciseOverviewRow: View {
     let index: Int
@@ -462,7 +469,7 @@ private struct ExerciseOverviewRow: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            // Vertikale Superset-Linie links
+                // Vertikale Superset-Linie links
             VStack(spacing: 0) {
                 Rectangle()
                     .fill(Color.blue.opacity(0.6))
@@ -485,7 +492,7 @@ private struct ExerciseOverviewRow: View {
             }
             .frame(width: 12)
 
-            // Inhalt
+                // Inhalt
             VStack(spacing: 8) {
                 topLine
                 dotsLine
@@ -495,7 +502,7 @@ private struct ExerciseOverviewRow: View {
                 }
             }
             .padding(12)
-            // Rechts Platz für Drag-Handle lassen im Sortiermodus
+                // Rechts Platz für Drag-Handle lassen im Sortiermodus
             .padding(.trailing, isSortMode ? 32 : 0)
             .frame(maxWidth: .infinity)
         }

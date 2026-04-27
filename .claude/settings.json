@@ -1,6 +1,6 @@
 {
   "enabledPlugins": {
-    "context7@claude-plugins-official": true,
+    "context7@claude-plugins-official": false,
     "supabase@claude-plugins-official": true
   }
 }
