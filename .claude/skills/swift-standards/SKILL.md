@@ -91,3 +91,23 @@ Swift file order:
 - No `Timer.scheduledTimer` for background-sensitive timing — use `Date` anchors
 - Remove debug `print` before task done
 - Check existing shared types before creating new ones
+
+## UI Conventions
+
+- Cards: `.glassCard()`
+- Background: `AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)`
+- Empty: `EmptyState()`
+- Scroll padding: `scrollViewContentPadding()`, not manual
+
+## Key Types
+
+- Stats: `TrendPoint`, `IntensitySummary`, `DonutChartData`, `ProgramSummary` → `StatisticCalcEngine.swift`
+- Records: `StrengthRecord` → `StrengthRecordCalcEngine.swift`
+- Time: `SummaryTimeframe`, `TimeframePicker`
+- UI: `StatisticGridCard`, `StatisticCard`, `RecordGridCard`
+
+## MotionCore Project Rules
+
+- `StatsAndRecordsView` segments: `.statistics`, `.records`, `.heatmap`
+- `BaseView.Tab`: `summary`, `workouts`, `stats`, `body`, `training` (5 tabs)
+- Architecture: CalcEngines in `Services/Calculation/` (pure, stateless), Views koordinieren ohne Business-Logik

@@ -397,8 +397,10 @@ extension Exercise {
         let difficultyRaw = difficultyEnum.rawValue
 
         let categoryEnum = ExerciseCategory.fromSupabase(
+            category: supabase.category,
             mechanic: supabase.mechanicType,
-            force: supabase.forceType
+            force: supabase.forceType,
+            equipment: supabase.equipment
         )
         let categoryRaw = categoryEnum.rawValue
 

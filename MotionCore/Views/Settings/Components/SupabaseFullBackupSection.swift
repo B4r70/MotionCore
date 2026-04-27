@@ -56,6 +56,7 @@ struct SupabaseFullBackupSection: View {
                         .foregroundStyle(Color.green)
 
                     Group {
+                        summaryRow(label: "Übungen", count: stats.exerciseMeta)
                         summaryRow(label: "Krafttrainings", count: stats.strengthSessions)
                         summaryRow(label: "Cardio-Sessions", count: stats.cardioSessions)
                         summaryRow(label: "Outdoor-Sessions", count: stats.outdoorSessions)

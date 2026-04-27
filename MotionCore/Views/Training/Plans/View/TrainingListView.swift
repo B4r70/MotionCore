@@ -16,6 +16,7 @@ import SwiftUI
 struct TrainingListView: View {
 
     @EnvironmentObject private var appSettings: AppSettings
+    @EnvironmentObject private var planImportManager: PlanImportManager
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \TrainingPlan.startDate, order: .reverse)
@@ -41,6 +42,10 @@ struct TrainingListView: View {
                 .scrollViewContentPadding()
             }
             .scrollIndicators(.hidden)
+            .refreshable {
+                // Pull-to-Refresh triggert Plan-Import-Polling
+                await planImportManager.poll(context: modelContext)
+            }
 
             if plans.isEmpty {
                 EmptyState()
@@ -77,6 +82,7 @@ struct TrainingListView: View {
     NavigationStack {
         TrainingListView()
             .environmentObject(AppSettings.shared)
+            .environmentObject(PlanImportManager())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {

@@ -108,3 +108,43 @@ Do not add generic notes from unrelated projects.
 - Root Cause: Swift compiler cannot infer return type of the closure
 - Rule: Always annotate the explicit return type in the closure: `trained.map { ex -> (PersistentIdentifier, [TrendPoint]) in ... }`
 - Applies To: any `Dictionary(uniqueKeysWithValues:)` call with SwiftData model objects
+
+### HealthKit Dictionary `.values.first` ist non-deterministisch
+
+- Added: 2026-04-26
+- Trigger: `HealthKitManager.hrvSamples(daysBack:)` / `.restingHRSamples(daysBack:)` liefert `Dictionary<Date, Double>`. Code nutzt `.values.first` zur Auswahl
+- Symptom: `BodyReadinessFactorsCard` Bar-Farben flackern bei jedem View-Rebuild, obwohl HK-Daten stabil sind. Werte oszillieren um Schwellen (0.75 / 0.4) → Farb-Flip green/yellow/orange
+- Root Cause: `Dictionary.values` hat **keine garantierte Reihenfolge**. Bei z.B. 10–20 HRV-Samples pro Tag wählt `.values.first` zufällig ein Sample (38ms vs 51ms etc.) → unterschiedlicher `normalizedScore` jeden Aufruf
+- Rule: Bei Mehrfach-Samples pro Tag immer **deterministische Auswahl**: `.max(by: { $0.key < $1.key })` für letztes Sample des Tages, oder Tagesdurchschnitt. Niemals `.values.first` auf HK-Dictionaries. Zusätzlich bei UI-Schwellen ~0.03 Buffer einbauen, um Float-Mikrovariationen abzufangen
+- Applies To: `SessionReadinessService.computeLive(...)`, `HealthKitManager.hrvSamples/restingHRSamples`, alle UI-Karten mit hartem Farb-Threshold (`BodyReadinessFactorsCard.tintForScore`)
+- Example:
+  ```swift
+  // Falsch
+  let hrv = HealthKitManager.shared.hrvSamples(daysBack: 1).values.first
+
+  // Richtig — deterministisch
+  let hrv = HealthKitManager.shared.hrvSamples(daysBack: 1)
+      .max(by: { $0.key < $1.key })?.value
+  ```
+
+### .contextMenu — niemals conditional via if/else in ViewModifier
+
+- Added: 2026-04-27
+- Trigger: ViewModifier wrapt `content` mal mit `.contextMenu`, mal ohne, abhängig von Datenzustand (z.B. `set.isLastSetOfExercise && !set.rpeRecorded`)
+- Symptom: HStack-Inhalt teilweise unsichtbar — nur das letzte Element (z.B. trailing Icon) wird gerendert. Tritt nur bei den Rows auf, deren Bedingung beim ersten Render `true` ist
+- Root Cause: Conditional-`if` in `body(content:)` produziert `_ConditionalContent` → unterschiedliche View-Identity zwischen Rows. SwiftUI's `.contextMenu` interagiert mit dieser Identity-Variation und kollabiert HStack-Children auf intrinsische Größe (Text/Spacer = 0pt)
+- Rule: `.contextMenu` IMMER unconditional anwenden. Den Inhalt (Buttons) conditional rendern. So bleibt View-Identity stabil. Nicht-eligible Rows zeigen leeres Menü on Long-Press — minor UX-Trade-off, akzeptabel
+- Applies To: `ExercisesOverviewCard.swift` (`RetroRIRContextMenu`), allgemein alle ViewModifier die `.contextMenu` conditional anhängen
+- Example:
+  ```swift
+  // Falsch — kollabiert Layout
+  func body(content: Content) -> some View {
+      if eligible { content.contextMenu { ... } } else { content }
+  }
+  // Richtig — stabile Identity
+  func body(content: Content) -> some View {
+      content.contextMenu {
+          if eligible { Button(...) }
+      }
+  }
+  ```

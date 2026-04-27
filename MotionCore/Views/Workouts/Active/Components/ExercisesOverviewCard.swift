@@ -396,14 +396,24 @@ private struct ExerciseOverviewExpandedDetail: View {
                 .foregroundStyle(set.isCompleted ? .primary : .secondary)
                 .opacity(set.isCompleted ? 1.0 : 0.5)
 
+            if set.isLastSetOfExercise && !set.rpeRecorded, let callback = onRetroRIR {
+                Button {
+                    callback(set)
+                } label: {
+                    Image(systemName: "pencil.and.outline")
+                        .font(.caption)
+                        .foregroundStyle(Color.blue)
+                }
+                .buttonStyle(.plain)
+                .padding(.leading, 4)
+            }
+
             Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle.dashed")
                 .font(.caption)
                 .foregroundStyle(set.isCompleted ? Color.green : Color.secondary.opacity(0.5))
                 .padding(.leading, 4)
         }
         .frame(maxWidth: .infinity)
-        .contentShape(Rectangle())
-        .modifier(RetroRIRContextMenu(set: set, onRetroRIR: onRetroRIR))
     }
 
     private func formatSetValue(_ set: ExerciseSet) -> String {
@@ -414,27 +424,6 @@ private struct ExerciseOverviewExpandedDetail: View {
             weightStr = String(format: "%.1f", set.weight)
         }
         return "\(weightStr) kg × \(set.reps) Wdh."
-    }
-}
-
-    // MARK: - Retro-RIR Context Menu (bedingt anhängen, sonst kollabiert HStack auf intrinsische Breite)
-
-private struct RetroRIRContextMenu: ViewModifier {
-    let set: ExerciseSet
-    let onRetroRIR: ((ExerciseSet) -> Void)?
-
-    func body(content: Content) -> some View {
-        if set.isLastSetOfExercise && !set.rpeRecorded, let callback = onRetroRIR {
-            content.contextMenu {
-                Button {
-                    callback(set)
-                } label: {
-                    Label("RIR nachtragen", systemImage: "pencil.and.outline")
-                }
-            }
-        } else {
-            content
-        }
     }
 }
 

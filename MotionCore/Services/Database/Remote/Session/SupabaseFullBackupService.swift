@@ -44,6 +44,7 @@ struct BackupStats: Equatable {
     var progressionStates: Int = 0
     var readinessEntries: Int = 0
     var healthBaselines: Int = 0
+    var exerciseMeta: Int = 0
 }
 
 // MARK: - SupabaseFullBackupService
@@ -78,6 +79,10 @@ final class SupabaseFullBackupService: ObservableObject {
         deduplicateAllSyncUUIDs(context: context)
 
         do {
+            // 0. Übungs-Stammdaten (keine FK-Abhängigkeit, früh damit Fehler sofort auffallen)
+            progress = .running(step: "Übungs-Stammdaten", current: 0, total: 1)
+            let exerciseMetaCount = try await uploadAllExerciseMeta(context: context)
+
             // 1. TrainingPlans zuerst (Foreign Key training_plan_id in exercise_sets)
             progress = .running(step: "Trainingspläne", current: 0, total: 1)
             let plansCount = try await uploadAllTrainingPlans(context: context)
@@ -126,11 +131,12 @@ final class SupabaseFullBackupService: ObservableObject {
             stats.progressionStates = progressionCount
             stats.readinessEntries = readinessCount
             stats.healthBaselines = baselineCount
+            stats.exerciseMeta = exerciseMetaCount
 
             progress = .completed(stats: stats)
             isRunning = false
 
-            print("✅ Full-Backup abgeschlossen: \(strengthCount) Kraft, \(cardioCount) Cardio, \(outdoorCount) Outdoor, \(plansCount) Pläne, \(exerciseSetCount) Sets, \(templateSetCount) Template-Sets, \(studioCount) Studios, \(equipmentCount) Equipment, \(progressionCount) Progressionen, \(readinessCount) Readiness, \(baselineCount) Baselines")
+            print("✅ Full-Backup abgeschlossen: \(strengthCount) Kraft, \(cardioCount) Cardio, \(outdoorCount) Outdoor, \(plansCount) Pläne, \(exerciseSetCount) Sets, \(templateSetCount) Template-Sets, \(studioCount) Studios, \(equipmentCount) Equipment, \(progressionCount) Progressionen, \(readinessCount) Readiness, \(baselineCount) Baselines, \(exerciseMetaCount) Exercises")
 
         } catch {
             progress = .failed(error: error.localizedDescription)
@@ -247,6 +253,41 @@ final class SupabaseFullBackupService: ObservableObject {
         }
 
         return states.count
+    }
+
+    /// Lädt alle Übungs-Stammdaten (nur Exercises mit apiID) nach Supabase hoch.
+    /// Custom-Exercises (apiID == nil) werden übersprungen — sie existieren nicht im Katalog.
+    private func uploadAllExerciseMeta(context: ModelContext) async throws -> Int {
+        let all = (try? context.fetch(FetchDescriptor<Exercise>())) ?? []
+        let filtered = all.filter { $0.apiID != nil }
+        guard !filtered.isEmpty else { return 0 }
+
+        progress = .running(step: "Übungs-Stammdaten", current: 0, total: filtered.count)
+
+        // Einzeln statt Batch — Swift kodiert nil-Optionals via encodeIfPresent (Key fehlt im JSON),
+        // das löst bei Batch PostgREST PGRST102 aus (gleicher Grund wie ProgressionStates/Cardio/Outdoor).
+        for (index, ex) in filtered.enumerated() {
+            let dto = SupabaseExerciseMetaUpsertDTO(
+                id: ex.apiID!,
+                movementPattern: ex.movementPatternRaw.isEmpty ? nil : ex.movementPatternRaw,
+                bodyPosition: ex.bodyPositionRaw.isEmpty ? nil : ex.bodyPositionRaw,
+                isUnilateral: ex.isUnilateral,
+                repRangeMin: ex.repRangeMin,
+                repRangeMax: ex.repRangeMax,
+                targetRIR: ex.targetRIR,
+                // progressionModeRaw hat Modell-Default "smart" — direkt durchreichen, nie NULL pushen.
+                progressionMode: ex.progressionModeRaw.isEmpty ? "smart" : ex.progressionModeRaw,
+                customTargetReps: ex.customTargetReps,
+                progressionStep: ex.progressionStep,
+                detailedPrimaryMuscles: ex.detailedPrimaryMusclesRaw,
+                detailedSecondaryMuscles: ex.detailedSecondaryMusclesRaw,
+                metaUpdatedAt: Date()
+            )
+            try await client.upsert(endpoint: "exercises", body: dto)
+            progress = .running(step: "Übungs-Stammdaten", current: index + 1, total: filtered.count)
+        }
+
+        return filtered.count
     }
 
     /// Lädt alle SessionReadiness-Einträge und HealthBaselines nach Supabase hoch.

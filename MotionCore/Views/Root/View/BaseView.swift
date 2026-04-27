@@ -23,6 +23,9 @@ struct BaseView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var didRepair = false
 
+    // Plan-Import Manager (einmalige Instanz, lifetime: App)
+    @StateObject private var planImportManager = PlanImportManager()
+
     //  Default-Tab auf .summary geändert
     @State private var selectedTab: Tab = .summary
 
@@ -87,6 +90,7 @@ struct BaseView: View {
     }
 
     var body: some View {
+        ZStack(alignment: .top) {
         TabView(selection: $selectedTab) {
 
             // MARK: Tab 1 - Summary (NEU)
@@ -343,8 +347,57 @@ struct BaseView: View {
                 WidgetSnapshotPublisher.publish(allSessions: completedSessionsForWidget)
                 // Täglichen Muskel-Erholungs-Snapshot hochladen (max. 1× pro Tag ab 6 Uhr)
                 triggerDailyMuscleRecoverySnapshotIfNeeded()
+                // Plan-Import Polling beim Foreground-Wechsel
+                Task {
+                    await planImportManager.poll(context: context)
+                }
             }
         }
+
+        // MARK: - Plan-Import Sheets (item: — niemals isPresented: — Sheet-Race-Gotcha)
+
+        // Preview-Sheet für einzelnen Import
+        .sheet(item: $planImportManager.activeImport) { dto in
+            PlanImportPreviewSheet(
+                dto: dto,
+                onAccept: {
+                    Task { await planImportManager.acceptImport(dto, context: context) }
+                },
+                onReject: {
+                    Task { await planImportManager.rejectImport(dto) }
+                },
+                onLater: {
+                    planImportManager.laterImport(dto)
+                }
+            )
+        }
+
+        // List-Sheet für ≥2 Imports
+        .sheet(item: $planImportManager.listTrigger) { _ in
+            PlanImportListSheet()
+                .environmentObject(planImportManager)
+        }
+
+        // Plan-Import Polling beim App-Start
+        .task {
+            await planImportManager.poll(context: context)
+        }
+
+        // MARK: - Plan-Import Banner (über TabView, Schema-Mismatch-Info)
+
+        if planImportManager.schemaMismatchVisible {
+            VStack {
+                PlanImportSchemaMismatchBanner(
+                    onDismiss: { planImportManager.schemaMismatchVisible = false }
+                )
+                .padding(.horizontal)
+                .padding(.top, 8)
+            }
+            .zIndex(1)
+        }
+
+        } // Ende ZStack
+        .environmentObject(planImportManager)
     }
 
     // MARK: - Muskel-Erholungs-Snapshot

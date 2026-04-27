@@ -287,6 +287,42 @@ final class SupabaseClient {
         try validate(response, data: data)
     }
 
+    // MARK: - PATCH
+
+    /// Aktualisiert Datensätze anhand eines Supabase-Filterstrings.
+    /// Beispiel: patchWhere(endpoint: "pending_plan_imports", filter: "id=eq.UUID-STRING", body: body)
+    func patchWhere<Body: Encodable>(
+        endpoint: String,
+        filter: String,
+        body: Body
+    ) async throws {
+        guard !filter.isEmpty else {
+            throw SupabaseError.invalidFilter
+        }
+
+        let fullURL = baseURL
+            .appendingPathComponent("rest")
+            .appendingPathComponent("v1")
+            .appendingPathComponent(endpoint)
+
+        var components = URLComponents(url: fullURL, resolvingAgainstBaseURL: false)
+        components?.query = filter
+
+        guard let url = components?.url else {
+            throw SupabaseError.invalidURL
+        }
+
+        print("📝 PATCH \(url.absoluteString)")
+        var request = makeRequest(url: url, method: "PATCH")
+        request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
+
+        let encoder = Self.makeEncoder()
+        request.httpBody = try encoder.encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try validate(response, data: data)
+    }
+
     // MARK: - DELETE
 
     /// Löscht Datensätze anhand eines Supabase-Filterstrings.

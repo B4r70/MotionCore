@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(git:*)",
-      "Skill(claude-md-management:revise-claude-md)"
+      "Skill(claude-md-management:revise-claude-md)",
+      "Bash(rm /Users/bartosz/Developments/MotionCore/.claude/agents/*.original.md /Users/bartosz/Developments/MotionCore/.claude/skills/swift-standards/SKILL.original.md /Users/bartosz/Developments/MotionCore/.claude/.DS_Store)",
+      "Bash(rm -rf /Users/bartosz/Developments/MotionCore/.claude/agents/archive)"
     ]
   },
   "spinnerTipsEnabled": true

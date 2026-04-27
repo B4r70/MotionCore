@@ -47,23 +47,11 @@ iOS fitness app: SwiftUI, SwiftData, Swift Charts, HealthKit, ActivityKit, Supab
 ### Muscles Heatmap SVG
 **`Muscles_Heatmap.svg` has inline `fill` on paths.** CSS-override in WebView needs `!important`.
 
-## UI Conventions
-- Cards: `.glassCard()`
-- Background: `AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)`
-- Empty: `EmptyState()`
-- Scroll padding: `scrollViewContentPadding()`, not manual
-
-## Key Types
-- Stats: `TrendPoint`, `IntensitySummary`, `DonutChartData`, `ProgramSummary` → `StatisticCalcEngine.swift`
-- Records: `StrengthRecord` → `StrengthRecordCalcEngine.swift`
-- Time: `SummaryTimeframe`, `TimeframePicker`
-- UI: `StatisticGridCard`, `StatisticCard`, `RecordGridCard`
-
-## MotionCore Rules
-- Prefer `ExerciseSet.exerciseNameSnapshot` over `.exerciseName`
-- `StatsAndRecordsView`: `.statistics`, `.records`, `.heatmap` segments
-- `BaseView.Tab`: `summary`, `workouts`, `stats`, `body`, `training` (5 tabs)
+## Project Rules (kritisch, immer beachten)
 - **Supabase: all tables UNRESTRICTED (no RLS)** — never `ENABLE ROW LEVEL SECURITY`
+- Prefer `ExerciseSet.exerciseNameSnapshot` over `.exerciseName`
+
+UI-Conventions, Key-Types und weitere Project-Rules siehe `.claude/skills/swift-standards/SKILL.md`.
 
 ## Artifacts
 Active plan: `tasks/current.md`. Quality: `tasks/quality/`. Domain: `tasks/domain/`. Archive: `tasks/archive/`. Lessons: `tasks/lessons.md`.

@@ -267,6 +267,10 @@ enum ExerciseInstructionsPresentation {
 // MARK: - Supabase Mapping
 
 extension ExerciseEquipment {
+    /// Kanonische Bodyweight-Synonyme aus Supabase — Single Source of Truth.
+    /// Wird in `ExerciseCategory.fromSupabase` wiederverwendet; beide Stellen MÜSSEN identisch bleiben.
+    static let bodyweightSynonyms: Set<String> = ["body weight", "bodyweight", "body_only"]
+
     // Konvertiert Supabase Equipment-Werte zu MotionCore Equipment-Enum
     static func fromSupabase(_ value: String?) -> ExerciseEquipment {
         guard let value = value?.lowercased() else { return .none }
@@ -310,24 +314,50 @@ extension ExerciseDifficulty {
 }
 
 extension ExerciseCategory {
-    // Konvertiert Supabase Mechanic/Force-Werte zu MotionCore Category-Enum
-    static func fromSupabase(mechanic: String?, force: String?) -> ExerciseCategory {
-        // Wenn compound mechanic → compound
-        if mechanic?.lowercased() == "compound" {
-            return .compound
+    // Konvertiert Supabase category/mechanic/force/equipment zu MotionCore Category-Enum.
+    // Reihenfolge ist semantisch relevant — früherer Treffer überstimmt spätere Bedingungen.
+    static func fromSupabase(
+        category: String?,
+        mechanic: String?,
+        force: String?,
+        equipment: [String]
+    ) -> ExerciseCategory {
+        let cat = category?.lowercased()
+        let mec = mechanic?.lowercased()
+        let frc = force?.lowercased()
+        let equip = equipment.map { $0.lowercased() }
+
+        // 1. Domänenspezifische Kardio-Kategorie aus DB hat höchste Priorität
+        if cat == "cardio" {
+            return .cardio
         }
 
-        // Wenn isolation mechanic → isolation
-        if mechanic?.lowercased() == "isolation" {
-            return .isolation
+        // 2. Dehnungsübungen — "flexibility" für Robustheit gegenüber künftigen Daten, "stretching" laut aktueller DB
+        if cat == "flexibility" || cat == "stretching" {
+            return .stretching
         }
 
-        // Fallback basierend auf force
-        if force?.lowercased() == "static" {
+        // 3. Statische Kraftübungen (Plank, Holds) → Core; vor Bodyweight, damit isometrische Holds nicht in .bodyweight landen
+        if frc == "static" {
             return .core
         }
 
-        // Default
+        // 4. Körpergewichtsübungen — DB mechanic immer "compound", daher Equipment-Heuristik vor Mechanic
+        if equip.contains(where: { ExerciseEquipment.bodyweightSynonyms.contains($0) }) {
+            return .bodyweight
+        }
+
+        // 5. Isolationsübungen (heute nicht in DB, aber für manuelle iOS-Einträge oder spätere Daten)
+        if mec == "isolation" {
+            return .isolation
+        }
+
+        // 6. Explizite Mehrgelenk-Übung laut Mechanic-Feld
+        if mec == "compound" {
+            return .compound
+        }
+
+        // 7. Default für alle anderen Fälle (z.B. plyometric, strength ohne Bodyweight-Equipment)
         return .compound
     }
 

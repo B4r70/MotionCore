@@ -314,8 +314,10 @@ struct BundledExerciseSeeder {
 
         // Kategorie
         let newCategory = ExerciseCategory.fromSupabase(
+            category: source.category,
             mechanic: source.mechanicType,
-            force: source.forceType
+            force: source.forceType,
+            equipment: source.equipment
         )
         if existing.category != newCategory {
             existing.category = newCategory
