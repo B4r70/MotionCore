@@ -26,15 +26,22 @@ struct SupabaseTrainingPlanDTO: Encodable {
     let endDate: Date?
     let isActive: Bool
     let planTypeRaw: String
+    // Session-Sync Undo Felder (Option A) — nil wenn kein Sync stattgefunden hat
+    let lastSyncSnapshotJSON: String?
+    let lastSessionSyncDate: Date?
+    let lastSessionSyncSourceUUID: String?
 
     enum CodingKeys: String, CodingKey {
         case id
         case title
-        case planDescription    = "plan_description"
-        case startDate          = "start_date"
-        case endDate            = "end_date"
-        case isActive           = "is_active"
-        case planTypeRaw        = "plan_type"
+        case planDescription            = "plan_description"
+        case startDate                  = "start_date"
+        case endDate                    = "end_date"
+        case isActive                   = "is_active"
+        case planTypeRaw                = "plan_type"
+        case lastSyncSnapshotJSON       = "last_sync_snapshot_json"
+        case lastSessionSyncDate        = "last_session_sync_date"
+        case lastSessionSyncSourceUUID  = "last_session_sync_source_uuid"
     }
 }
 

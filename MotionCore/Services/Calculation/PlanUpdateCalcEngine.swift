@@ -234,7 +234,8 @@ struct PlanUpdateCalcEngine {
         }
 
         var changes: [PlanUpdateChange] = []
-        let minOccurrences = sessions.count == 1 ? 1 : 2
+        // 2/3-Schwelle: konsistent mit Gewichts- und Satzanzahl-Trend-Analyse
+        let minOccurrences = max(1, Int(ceil(Double(sessions.count) * 2.0 / 3.0)))
 
         for (key, info) in groupKeyOccurrences where info.count >= minOccurrences {
             guard let firstSet = info.newestSets.first else { continue }
@@ -265,11 +266,18 @@ struct PlanUpdateCalcEngine {
                     )
                 }
 
+            // Metadaten für Hinweistext "In X von Y Sessions trainiert"
+            let metadata = PlanUpdateChangeMetadata(
+                sessionOccurrences: info.count,
+                sessionsAnalyzed: sessions.count
+            )
+
             let change = PlanUpdateChange(
                 exerciseGroupKey: key,
                 exerciseName: exerciseName,
                 changeType: .exerciseAdded(sets: snapshots),
-                isSelected: false // Neue Übungen standardmäßig nicht vorselektiert
+                isSelected: false, // Neue Übungen standardmäßig nicht vorselektiert
+                metadata: metadata
             )
             changes.append(change)
         }

@@ -51,6 +51,17 @@ final class TrainingPlan {
     // UUID-String der Session, die den letzten Update ausgelöst hat (String? für CloudKit-Kompatibilität)
     var lastUpdateSourceSessionUUID: String? = nil
 
+    // MARK: - Session-Sync Undo (Option A)
+
+    // JSON-Snapshot der Template-Sets vor dem letzten Session-Sync (für 72h-Undo)
+    var lastSyncSnapshotJSON: String? = nil
+
+    // Zeitpunkt des letzten Session-Syncs (für 72h-Ablauf-Check)
+    var lastSessionSyncDate: Date? = nil
+
+    // UUID-String der Session, aus der der letzte Sync stammt (String? für CloudKit-Kompatibilität)
+    var lastSessionSyncSourceUUID: String? = nil
+
     // MARK: - Beziehungen
 
     @Relationship(deleteRule: .cascade, inverse: \ExerciseSet.trainingPlan)
@@ -309,7 +320,7 @@ final class TrainingPlan {
 
     /// Nummeriert alle sortOrder-Werte lückenlos neu (1-basiert, pro Übungsgruppe).
     /// Behält die relative Reihenfolge der Gruppen bei.
-    private func reindexSortOrders() {
+    func reindexSortOrders() {
         let allGroups = groupedTemplateSets
         for (index, group) in allGroups.enumerated() {
             group.forEach { $0.sortOrder = index + 1 }
@@ -353,5 +364,41 @@ extension TrainingPlan {
     func removeTemplateSets(where predicate: (ExerciseSet) -> Bool) {
         ensureTemplateSets()
         templateSets?.removeAll(where: predicate)
+    }
+
+    /// Erstellt eine vollständige Kopie dieses Plans.
+    /// - Parameter context: SwiftData ModelContext (für Insert der neuen Sets)
+    /// - Returns: Der neu erstellte Duplikat-Plan (noch nicht gespeichert)
+    @discardableResult
+    func duplicate(context: ModelContext) -> TrainingPlan {
+        let copy = TrainingPlan(
+            title: "\(title) (Kopie)",
+            planDescription: planDescription,
+            startDate: Date(),
+            endDate: nil,
+            planType: planType,
+            isActive: true
+        )
+
+        // Explizit neue UUID setzen (CloudKit-UUID-Default-Bug-Vorsorge)
+        copy.planUUID = UUID()
+
+        // Undo-Felder NICHT übertragen — Kopie startet clean
+        copy.lastSyncSnapshotJSON = nil
+        copy.lastSessionSyncDate = nil
+        copy.lastSessionSyncSourceUUID = nil
+        copy.lastUpdatedFromSession = nil
+        copy.lastUpdateSourceSessionUUID = nil
+
+        context.insert(copy)
+
+        // Template-Sets klonen (sortiert nach sortOrder)
+        for templateSet in safeTemplateSets.sorted(by: { $0.sortOrder < $1.sortOrder }) {
+            let cloned = templateSet.cloneForPlanEditing()
+            context.insert(cloned)
+            copy.addTemplateSet(cloned)
+        }
+
+        return copy
     }
 }

@@ -23,6 +23,11 @@ struct PlanUpdateChangeRow: View {
         return false
     }
 
+    private var isInfoOnly: Bool {
+        if case .exerciseSkipped = change.changeType { return true }
+        return false
+    }
+
     var body: some View {
         Toggle(isOn: $change.isSelected) {
             VStack(alignment: .leading, spacing: 4) {
@@ -35,8 +40,8 @@ struct PlanUpdateChangeRow: View {
             }
         }
         .toggleStyle(.switch)
-        // Übersprungene Übungen sind reine Info — kein Toggle nötig
-        .disabled(isSkipped)
+        // Übersprungene Übungen sind rein informativ — Toggle nur für aktive Änderungen schaltbar
+        .disabled(isInfoOnly)
         .padding()
         .glassCard()
     }
@@ -55,10 +60,17 @@ struct PlanUpdateChangeRow: View {
 
         case .exerciseAdded(let sets):
             let setCount = sets.count
-            return "Neue Übung hinzufügen (\(setCount) \(setCount == 1 ? "Satz" : "Sätze"))"
+            let baseText = "Neue Übung hinzufügen (\(setCount) \(setCount == 1 ? "Satz" : "Sätze"))"
+            if let meta = change.metadata {
+                return "\(baseText) · In \(meta.sessionOccurrences) von \(meta.sessionsAnalyzed) Sessions trainiert"
+            }
+            return baseText
 
         case .exerciseSkipped(let timesSkipped, let outOf):
             return "Übersprungen in \(timesSkipped) von \(outOf) Sessions"
+
+        case .exerciseRemoved:
+            return "Übung aus Plan entfernen"
         }
     }
 
@@ -72,6 +84,8 @@ struct PlanUpdateChangeRow: View {
             return .blue
         case .exerciseSkipped:
             return Color.orange
+        case .exerciseRemoved:
+            return Color.red
         }
     }
 }

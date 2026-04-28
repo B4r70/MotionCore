@@ -15,6 +15,7 @@ import SwiftUI
 struct PlanActionsSection: View {
     let plan: TrainingPlan
     let onStartWorkout: () -> Void
+    let onDuplicate: () -> Void
     let onDelete: () -> Void
     
     private var accentColor: Color {
@@ -51,7 +52,10 @@ struct PlanActionsSection: View {
             
             // Plan bearbeiten
             editPlanButton
-            
+
+            // Plan duplizieren
+            duplicatePlanButton
+
             // Plan löschen
             deletePlanButton
         }
@@ -100,6 +104,24 @@ struct PlanActionsSection: View {
         .buttonStyle(.plain)
     }
     
+    private var duplicatePlanButton: some View {
+        Button {
+            onDuplicate()
+        } label: {
+            HStack {
+                Image(systemName: "doc.on.doc")
+                Text("Plan duplizieren")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .background(Color.blue.opacity(0.12))
+            .foregroundStyle(Color.blue)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+    }
+
     private var deletePlanButton: some View {
         Button(role: .destructive) {
             onDelete()
@@ -176,6 +198,7 @@ struct PlanActionRow: View {
             PlanActionsSection(
                 plan: TrainingPlan(title: "Push Day", planType: .strength),
                 onStartWorkout: { print("Start") },
+                onDuplicate: { print("Duplicate") },
                 onDelete: { print("Delete") }
             )
             .padding(.horizontal)

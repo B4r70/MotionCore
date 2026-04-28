@@ -246,18 +246,22 @@ final class SupabaseClient {
     // MARK: - Upsert (INSERT OR UPDATE)
 
     /// Fügt einen einzelnen Datensatz ein oder aktualisiert ihn bei id-Konflikt.
+    /// `schema` setzt den PostgREST-`Content-Profile`-Header (Default: `public`).
+    /// Das Ziel-Schema muss in den Supabase-Project-API-Settings als „Exposed schema" freigegeben sein.
     func upsert<Body: Encodable>(
         endpoint: String,
-        body: Body
+        body: Body,
+        schema: String? = nil
     ) async throws {
         let url = baseURL
             .appendingPathComponent("rest")
             .appendingPathComponent("v1")
             .appendingPathComponent(endpoint)
 
-        print("🔄 UPSERT \(url.absoluteString)")
+        print("🔄 UPSERT \(url.absoluteString)\(schema.map { " [schema: \($0)]" } ?? "")")
         var request = makeRequest(url: url, method: "POST")
         request.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+        if let schema { request.setValue(schema, forHTTPHeaderField: "Content-Profile") }
 
         let encoder = Self.makeEncoder()
         request.httpBody = try encoder.encode(body)
@@ -267,9 +271,11 @@ final class SupabaseClient {
     }
 
     /// Batch-Upsert für ein Array von Datensätzen.
+    /// `schema` setzt den PostgREST-`Content-Profile`-Header (Default: `public`).
     func upsert<Body: Encodable>(
         endpoint: String,
-        body: [Body]
+        body: [Body],
+        schema: String? = nil
     ) async throws {
         guard !body.isEmpty else { return }
 
@@ -278,9 +284,10 @@ final class SupabaseClient {
             .appendingPathComponent("v1")
             .appendingPathComponent(endpoint)
 
-        print("🔄 BATCH UPSERT \(url.absoluteString) (\(body.count) Einträge)")
+        print("🔄 BATCH UPSERT \(url.absoluteString) (\(body.count) Einträge)\(schema.map { " [schema: \($0)]" } ?? "")")
         var request = makeRequest(url: url, method: "POST")
         request.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+        if let schema { request.setValue(schema, forHTTPHeaderField: "Content-Profile") }
 
         let encoder = Self.makeEncoder()
         request.httpBody = try encoder.encode(body)

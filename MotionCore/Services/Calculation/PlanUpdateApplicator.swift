@@ -97,11 +97,27 @@ struct PlanUpdateApplicator {
             case .exerciseSkipped:
                 // Übersprungene Übungen nur informativ — keine Aktion
                 break
+
+            case .exerciseRemoved:
+                // Alle Template-Sets dieser Übungsgruppe löschen
+                let setsToRemove = plan.safeTemplateSets.filter {
+                    $0.groupKey == change.exerciseGroupKey
+                }
+                for set in setsToRemove {
+                    plan.removeTemplateSets { $0.persistentModelID == set.persistentModelID }
+                    context.delete(set)
+                }
             }
         }
+
+        // sortOrder lückenlos neu vergeben (nach möglichen Löschungen durch exerciseRemoved)
+        plan.reindexSortOrders()
 
         // Tracking-Felder aktualisieren
         plan.lastUpdatedFromSession = Date()
         plan.lastUpdateSourceSessionUUID = sourceSessionUUID
+
+        // Sicherstellen dass alle Übungen im Plan einen ExerciseProgressionState haben
+        ProgressionStateEnsurer.ensureStates(forPlan: plan, sessionSets: nil, context: context)
     }
 }

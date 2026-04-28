@@ -239,7 +239,10 @@ final class SupabaseSessionService {
                 startDate: plan.startDate,
                 endDate: plan.endDate,
                 isActive: plan.isActive,
-                planTypeRaw: plan.planTypeRaw
+                planTypeRaw: plan.planTypeRaw,
+                lastSyncSnapshotJSON: plan.lastSyncSnapshotJSON,
+                lastSessionSyncDate: plan.lastSessionSyncDate,
+                lastSessionSyncSourceUUID: plan.lastSessionSyncSourceUUID
             )
 
             try await client.upsert(endpoint: "training_plans", body: dto)

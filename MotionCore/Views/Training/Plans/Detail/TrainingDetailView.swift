@@ -26,6 +26,10 @@ struct TrainingDetailView: View {
     /// Lokale Kopie für das Sheet — getrennt von pendingPlanUpdateProposal
     /// damit Banner-Sichtbarkeit und Sheet-Öffnen unabhängig voneinander sind.
     @State private var planUpdateSheetProposal: PlanUpdateProposal?
+    /// Steuert Sichtbarkeit des Undo-Banners (wird nach Undo/Verwerfen auf false gesetzt)
+    @State private var showUndoBanner: Bool = true
+    /// Toast-Nachricht nach Duplizieren (nil = kein Toast)
+    @State private var duplicateToastMessage: String? = nil
 
     // MARK: - Body
 
@@ -46,7 +50,7 @@ struct TrainingDetailView: View {
                             .padding(.horizontal)
                     }
 
-                    // Plan-Update Banner (nach Workout-Ende, wenn Vorschlag vorhanden)
+                    // Plan-Update Banner (nach Workout-Ende, wenn Vorschlag vorhanden) — Option B
                     if let proposal = sessionManager.pendingPlanUpdateProposal,
                        proposal.hasChanges,
                        proposal.plan.planUUID == plan.planUUID {
@@ -58,13 +62,47 @@ struct TrainingDetailView: View {
                         .padding(.horizontal)
                     }
 
+                    // Session-Sync Undo-Banner (Option A — 72h nach Plan-Sync sichtbar)
+                    if showUndoBanner && SessionSyncUndoService.isUndoAvailable(for: plan) {
+                        SessionSyncUndoBanner(
+                            plan: plan,
+                            onUndo: { showUndoBanner = false },
+                            onDiscard: { showUndoBanner = false }
+                        )
+                        .padding(.horizontal)
+                    }
+
                     // Übungen
                     PlanExercisesSection(plan: plan, mode: .detail)
+
+                    // Toast-Banner nach Duplizieren
+                    if let message = duplicateToastMessage {
+                        HStack(spacing: 10) {
+                            Image(systemName: "doc.on.doc.fill")
+                                .foregroundStyle(Color.blue)
+                            Text(message)
+                                .font(.subheadline)
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Button {
+                                duplicateToastMessage = nil
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding()
+                        .glassCard()
+                        .padding(.horizontal)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
 
                     // Aktionen
                     PlanActionsSection(
                         plan: plan,
                         onStartWorkout: { startWorkout() },
+                        onDuplicate: { duplicatePlan() },
                         onDelete: { showDeleteAlert = true }
                     )
                     .padding(.horizontal)
@@ -109,6 +147,20 @@ struct TrainingDetailView: View {
         context.insert(session)
         try? context.save()
         startedSession = session
+    }
+
+    private func duplicatePlan() {
+        let copy = plan.duplicate(context: context)
+        try? context.save()
+        withAnimation {
+            duplicateToastMessage = "Plan \"\(copy.title)\" wurde erstellt."
+        }
+        // Toast nach 4 Sekunden automatisch ausblenden
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            withAnimation {
+                duplicateToastMessage = nil
+            }
+        }
     }
 }
 

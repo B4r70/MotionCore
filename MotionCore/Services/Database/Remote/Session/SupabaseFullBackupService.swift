@@ -164,7 +164,10 @@ final class SupabaseFullBackupService: ObservableObject {
                 startDate: plan.startDate,
                 endDate: plan.endDate,
                 isActive: plan.isActive,
-                planTypeRaw: plan.planTypeRaw
+                planTypeRaw: plan.planTypeRaw,
+                lastSyncSnapshotJSON: plan.lastSyncSnapshotJSON,
+                lastSessionSyncDate: plan.lastSessionSyncDate,
+                lastSessionSyncSourceUUID: plan.lastSessionSyncSourceUUID
             )
             try await client.upsert(endpoint: "training_plans", body: dto)
             plan.syncedToSupabase = true
@@ -267,8 +270,36 @@ final class SupabaseFullBackupService: ObservableObject {
         // Einzeln statt Batch — Swift kodiert nil-Optionals via encodeIfPresent (Key fehlt im JSON),
         // das löst bei Batch PostgREST PGRST102 aus (gleicher Grund wie ProgressionStates/Cardio/Outdoor).
         for (index, ex) in filtered.enumerated() {
+            // mechanic_type ist in iOS in `category` zusammengelegt — nur compound/isolation lassen sich verlustfrei zurückmappen.
+            let mechanicType: String? = {
+                switch ex.category {
+                case .compound:  return "compound"
+                case .isolation: return "isolation"
+                default:         return nil
+                }
+            }()
+
+            // force_type wird aus dem MovementPattern abgeleitet (Achse: push/pull/static).
+            let forceType: String? = {
+                switch MovementPattern(rawValue: ex.movementPatternRaw) {
+                case .push:      return "push"
+                case .pull:      return "pull"
+                case .isometric: return "static"
+                default:         return nil
+                }
+            }()
+
             let dto = SupabaseExerciseMetaUpsertDTO(
                 id: ex.apiID!,
+                // category/difficulty sind in motioncore.exercises NOT NULL — Getter haben Fallback (.compound / .intermediate).
+                category: ex.category.rawValue,
+                difficulty: ex.difficulty.rawValue,
+                mechanicType: mechanicType,
+                forceType: forceType,
+                // Storage-Konvention: <apiID>.jpg / <apiID>.mp4 (lowercased, wie im exercises_seed.json).
+                // Deterministisch aus der ID statt aus dem lokalen Feld — robust gegen leere Local-Werte.
+                posterPath: "\(ex.apiID!.uuidString.lowercased()).jpg",
+                videoPath: "\(ex.apiID!.uuidString.lowercased()).mp4",
                 movementPattern: ex.movementPatternRaw.isEmpty ? nil : ex.movementPatternRaw,
                 bodyPosition: ex.bodyPositionRaw.isEmpty ? nil : ex.bodyPositionRaw,
                 isUnilateral: ex.isUnilateral,
@@ -283,7 +314,8 @@ final class SupabaseFullBackupService: ObservableObject {
                 detailedSecondaryMuscles: ex.detailedSecondaryMusclesRaw,
                 metaUpdatedAt: Date()
             )
-            try await client.upsert(endpoint: "exercises", body: dto)
+            // Stammdaten-Katalog liegt im Schema `motioncore`, nicht `public`.
+            try await client.upsert(endpoint: "exercises", body: dto, schema: "motioncore")
             progress = .running(step: "Übungs-Stammdaten", current: index + 1, total: filtered.count)
         }
 

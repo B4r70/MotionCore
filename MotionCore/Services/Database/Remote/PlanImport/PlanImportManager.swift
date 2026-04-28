@@ -126,7 +126,10 @@ final class PlanImportManager: ObservableObject {
             return
         }
 
-        // 3. Plan nach Supabase hochladen (training_plans) — analog TrainingFormView
+        // 3. ExerciseProgressionStates für alle Plan-Übungen sicherstellen (workingWeight aus Template-Sets)
+        ProgressionStateEnsurer.ensureStates(forPlan: plan, sessionSets: nil, context: context)
+
+        // 4. Plan nach Supabase hochladen (training_plans) — analog TrainingFormView
         let uploaded = await SupabaseSessionService.shared.upload(plan)
         if uploaded {
             plan.syncedToSupabase = true

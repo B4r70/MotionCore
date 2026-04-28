@@ -129,6 +129,8 @@ struct MotionCoreApp: App {
                     ExerciseSeeder.seedMissing(context: context)
                     // 3. Primary-Studio + Default-Geräte anlegen (idempotent, nur beim ersten Start)
                     DefaultStudioSeeder.seedIfNeeded(context: context)
+                    // 4. ExerciseProgressionStates für alle Bestandspläne sicherstellen (Backfill für alte Imports)
+                    backfillProgressionStates(context: context)
                 }
                 .onChange(of: scenePhase) { _, newPhase in
                     guard newPhase == .active else { return }
@@ -156,6 +158,16 @@ struct MotionCoreApp: App {
                 }
         }
         .modelContainer(sharedModelContainer)
+    }
+
+    /// Einmaliger Backfill beim App-Start: stellt für alle Pläne ExerciseProgressionStates sicher.
+    /// Idempotent — existierende States bleiben unverändert. Kostet nichts wenn alle States schon da sind.
+    private func backfillProgressionStates(context: ModelContext) {
+        let descriptor = FetchDescriptor<TrainingPlan>()
+        guard let plans = try? context.fetch(descriptor) else { return }
+        for plan in plans {
+            ProgressionStateEnsurer.ensureStates(forPlan: plan, sessionSets: nil, context: context)
+        }
     }
 
     private func checkForActiveSession() {

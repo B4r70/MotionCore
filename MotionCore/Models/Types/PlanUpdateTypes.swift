@@ -14,7 +14,7 @@ import Foundation
 
 // MARK: - ExerciseSet-Snapshot (schlanke Kopie ohne SwiftData-Abhängigkeit)
 
-struct ExerciseSetSnapshot {
+struct ExerciseSetSnapshot: Codable {
     var exerciseName: String
     var exerciseNameSnapshot: String
     var exerciseUUIDSnapshot: String
@@ -41,6 +41,17 @@ enum PlanUpdateChangeType {
     case setCountUpdate(from: Int, to: Int)
     case exerciseAdded(sets: [ExerciseSetSnapshot])
     case exerciseSkipped(timesSkipped: Int, outOf: Int)
+    /// Übung aus dem Plan entfernen (aus Option-A Session-Sync; standardmäßig NICHT vorselektiert)
+    case exerciseRemoved
+}
+
+// MARK: - Metadaten für Änderungs-Hinweistexte
+
+struct PlanUpdateChangeMetadata {
+    /// Anzahl Sessions, in denen diese Übung vorkam
+    var sessionOccurrences: Int
+    /// Gesamtzahl der analysierten Sessions
+    var sessionsAnalyzed: Int
 }
 
 // MARK: - Einzelne Änderung
@@ -51,6 +62,8 @@ struct PlanUpdateChange: Identifiable {
     var exerciseName: String
     var changeType: PlanUpdateChangeType
     var isSelected: Bool = true
+    /// Optionale Metadaten für Hinweistexte (z.B. "In X von Y Sessions trainiert")
+    var metadata: PlanUpdateChangeMetadata? = nil
 }
 
 // MARK: - Gesamtvorschlag

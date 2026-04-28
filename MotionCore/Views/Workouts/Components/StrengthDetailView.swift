@@ -26,6 +26,8 @@ struct StrengthDetailView: View {
     @State private var showEditSheet = false
     @State private var exerciseToEdit: Exercise? = nil
     @State private var rollbackCandidate: ExerciseProgressionState? = nil
+    /// Kontext für Session→Plan-Sync-Sheet (Option A) — nil = Sheet geschlossen
+    @State private var syncContext: SessionPlanSyncContext? = nil
 
     var body: some View {
         ZStack {
@@ -543,6 +545,27 @@ struct StrengthDetailView: View {
     private var actionsSection: some View {
         VStack(spacing: 12) {
 
+            // Plan aus Session aktualisieren (Option A — nur für abgeschlossene Sessions mit Plan)
+            if let plan = session.sourceTrainingPlan, session.isCompleted {
+                Button {
+                    syncContext = SessionPlanSyncContext(session: session, plan: plan)
+                } label: {
+                    HStack {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Text("Plan aus Session aktualisieren")
+                            .font(.subheadline.weight(.semibold))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                    }
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 14)
+                    .background(Color.purple.opacity(0.15))
+                    .foregroundStyle(Color.purple)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+            }
+
             // Plan bearbeiten (nur sichtbar wenn Session einem Plan zugeordnet ist)
             if let plan = session.sourceTrainingPlan {
                 NavigationLink {
@@ -584,6 +607,9 @@ struct StrengthDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             }
+        }
+        .sheet(item: $syncContext) { ctx in
+            SessionPlanSyncSheet(session: ctx.session, plan: ctx.plan)
         }
     }
 
