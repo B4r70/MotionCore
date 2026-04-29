@@ -399,10 +399,11 @@ struct StrengthDetailView: View {
                     .frame(width: 24, height: 24)
                     .background(Circle().fill(Color.blue))
 
-                ExerciseVideoView(
-                    assetName: mediaAssetName,
-                    size: 44
-                )
+                if let exercise {
+                    ExerciseVideoView.forExercise(exercise, size: 44)
+                } else {
+                    ExerciseVideoView(assetName: mediaAssetName, size: 44)
+                }
 
                 Text(name)
                     .font(.headline)

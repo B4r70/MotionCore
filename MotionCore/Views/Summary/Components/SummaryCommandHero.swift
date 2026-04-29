@@ -69,7 +69,7 @@ struct SummaryCommandHero: View {
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(10)
         .background(MCColor.mcEnergySoft, in: RoundedRectangle(cornerRadius: 10))
     }
@@ -90,7 +90,7 @@ struct SummaryCommandHero: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(10)
         .background(MCColor.mcBodySoft, in: RoundedRectangle(cornerRadius: 10))
     }
@@ -122,7 +122,7 @@ struct SummaryCommandHero: View {
                     .lineLimit(1)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(10)
         .background(MCColor.mcStreakSoft, in: RoundedRectangle(cornerRadius: 10))
     }

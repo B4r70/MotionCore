@@ -82,7 +82,7 @@ struct SetEditSheet: View {
     private var exerciseInfoCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                ExerciseVideoView(assetName: set.exerciseMediaAssetName, size: 60)
+                ExerciseVideoView.forSet(set, size: 60)
                 VStack(alignment: .leading) {
                     Text(set.exerciseName).font(.headline)
                     Text("Satz \(set.setNumber)").font(.subheadline).foregroundStyle(.secondary)

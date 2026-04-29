@@ -424,8 +424,20 @@ extension ExerciseVideoView {
         ExerciseVideoView(exercise: exercise, size: size)
     }
 
-    /// Für Screens mit nur Snapshots aus einem Set (Active Workout)
+    /// Für Screens mit nur Snapshots aus einem Set (Active Workout).
+    /// Bevorzugt die Live-Verknüpfung (`set.exercise`) als Quelle der Wahrheit für
+    /// Remote Poster/Video — fällt auf den UUID-Snapshot zurück, wenn die Übung
+    /// nicht (mehr) verknüpft ist (z. B. legacy oder Übung gelöscht).
     static func forSet(_ set: ExerciseSet, size: CGFloat = 80) -> ExerciseVideoView {
+        if let exercise = set.exercise {
+            return ExerciseVideoView(
+                assetName: exercise.mediaAssetName,
+                posterPath: exercise.posterPath,
+                videoPath: exercise.videoPath,
+                size: size
+            )
+        }
+
         let asset = set.exerciseMediaAssetName
         let uuid = set.exerciseUUIDSnapshot
 

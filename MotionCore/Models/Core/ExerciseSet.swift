@@ -221,7 +221,9 @@ final class ExerciseSet {
 
 extension ExerciseSet {
     /// Creates a detached copy for editing in the plan sheet.
-    /// No relationships are copied (exercise/trainingPlan/session).
+    /// `exercise` (Library-Verknüpfung, many-to-one) wird übernommen, damit
+    /// Poster/Video, repRange, equipment, cautionNote etc. im neuen Plan funktionieren.
+    /// `trainingPlan` und `session` werden bewusst entkoppelt — der Aufrufer setzt sie neu.
     func cloneForPlanEditing() -> ExerciseSet {
         let copy = ExerciseSet(
             exerciseName: exerciseName,
@@ -251,8 +253,8 @@ extension ExerciseSet {
 
         // isLastSetOfExercise + rpeRecorded werden nicht kopiert — frischer Template-Satz hat keinen RIR-Status
 
-        // Important: detach relations
-        copy.exercise = nil
+        // Library-Verknüpfung erhalten (many-to-one auf Exercise) — Plan & Session werden vom Aufrufer neu gesetzt
+        copy.exercise = self.exercise
         copy.trainingPlan = nil
         copy.session = nil
 

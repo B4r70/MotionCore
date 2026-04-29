@@ -687,11 +687,12 @@ struct ExerciseDetailRow: View {
                     .font(.caption2)
                     .foregroundStyle(Color.blue)
             }
-            // Anzeige MP4 Übungsdurchführung
-            ExerciseVideoView(
-                assetName: mediaAssetName,
-                size: 50
-            )
+            // Anzeige MP4 Übungsdurchführung — bevorzugt die verknüpfte Exercise (Remote Poster/Video)
+            if let exercise = sets.first?.exercise {
+                ExerciseVideoView.forExercise(exercise, size: 50)
+            } else {
+                ExerciseVideoView(assetName: mediaAssetName, size: 50)
+            }
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(exerciseName)
