@@ -312,6 +312,13 @@ final class SupabaseFullBackupService: ObservableObject {
                 progressionStep: ex.progressionStep,
                 detailedPrimaryMuscles: ex.detailedPrimaryMusclesRaw,
                 detailedSecondaryMuscles: ex.detailedSecondaryMusclesRaw,
+                nameDe:          ex.name.isEmpty ? nil : ex.name,
+                nameEn:          nil,
+                descriptionDe:   ex.exerciseDescription.isEmpty ? nil : ex.exerciseDescription,
+                descriptionEn:   nil,
+                instructionsDe:  (ex.instructions?.isEmpty ?? true) ? nil : ex.instructions,
+                instructionsEn:  nil,
+                equipmentRaw:    ex.equipmentRaw.isEmpty ? nil : ex.equipmentRaw,
                 metaUpdatedAt: Date()
             )
             // Stammdaten-Katalog liegt im Schema `motioncore`, nicht `public`.

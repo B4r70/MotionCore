@@ -9,6 +9,9 @@
 //                 Übungs-Stammdaten nach Supabase (Backup). iCloud ist Source of   /
 //                 Truth — alle lokal verfügbaren Felder dürfen geschrieben werden, /
 //                 NOT-NULL-Spalten (category, difficulty) sind Pflicht.            /
+//                 DE-Texte (name_de, description_de, instructions_de) werden aus   /
+//                 dem lokalen SwiftData-Modell befüllt. EN-Slots sind für Phase 2  /
+//                 (separater Englisch-Enrichment-Run aus Dump) reserviert.         /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -22,6 +25,8 @@ import Foundation
 /// `category` und `difficulty` sind in `motioncore.exercises` NOT NULL und daher Pflicht.
 /// Vollständige CodingKeys wegen CodingKeys-Trap: bei vorhandenem CodingKeys-Enum ignoriert
 /// der JSONEncoder das keyEncodingStrategy komplett — alle Felder müssen explizit gelistet sein.
+/// DE-Texte (name_de, description_de, instructions_de) kommen aus dem lokalen Modell.
+/// EN-Slots (nameEn, descriptionEn, instructionsEn) sind für Phase 2 reserviert, aktuell nil.
 struct SupabaseExerciseMetaUpsertDTO: Encodable {
     let id:                       UUID
     let category:                 String
@@ -41,6 +46,13 @@ struct SupabaseExerciseMetaUpsertDTO: Encodable {
     let progressionStep:          Double?
     let detailedPrimaryMuscles:   [String]?
     let detailedSecondaryMuscles: [String]?
+    let nameDe:          String?
+    let nameEn:          String?
+    let descriptionDe:   String?
+    let descriptionEn:   String?
+    let instructionsDe:  String?
+    let instructionsEn:  String?
+    let equipmentRaw:    String?
     let metaUpdatedAt:            Date
 
     enum CodingKeys: String, CodingKey {
@@ -62,6 +74,13 @@ struct SupabaseExerciseMetaUpsertDTO: Encodable {
         case progressionStep          = "progression_step"
         case detailedPrimaryMuscles   = "detailed_primary_muscles"
         case detailedSecondaryMuscles = "detailed_secondary_muscles"
+        case nameDe          = "name_de"
+        case nameEn          = "name_en"
+        case descriptionDe   = "description_de"
+        case descriptionEn   = "description_en"
+        case instructionsDe  = "instructions_de"
+        case instructionsEn  = "instructions_en"
+        case equipmentRaw    = "equipment_raw"
         case metaUpdatedAt            = "meta_updated_at"
     }
 }
