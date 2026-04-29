@@ -148,3 +148,24 @@ Do not add generic notes from unrelated projects.
       }
   }
   ```
+
+### Clone-Methods — Library-Relations erhalten, nur Ownership entkoppeln
+
+- Added: 2026-04-29
+- Trigger: neue `clone*`-Methode auf `@Model`-Typ; oder Bestehende ergänzen (z.B. `cloneForPlanEditing`, `cloneForSession`)
+- Symptom: Beim Plan-Duplizieren keine Übungs-Poster sichtbar; ActiveSetCard ausgegraut (Felder editierbar fehlt); UI-Bindings auf `set.exercise?.xxx` liefern nil
+- Root Cause: `cloneForPlanEditing` setzte alle Relationships auf `nil` (Kommentar "detach relations"). Die `exercise`-Relation ist aber many-to-one auf die Library-Übung — viele Sets dürfen dieselbe Exercise referenzieren. Beim Detachen geht Poster/Video/Equipment/repRange/cautionNote verloren. `cloneForSession` machte es korrekt (`copy.exercise = self.exercise`).
+- Rule: Bei Clone-Methoden zwischen **Ownership-Relationen** (`trainingPlan`, `session` — vom Aufrufer neu zu setzen) und **Library-Relationen** (`exercise` — Verweis auf gemeinsame Stammdaten) unterscheiden. Library-Relationen IMMER per `copy.X = self.X` übernehmen, nicht auf nil setzen.
+- Applies To: `ExerciseSet.cloneForPlanEditing`, `ExerciseSet.cloneForSession`, alle künftigen `clone*`-Methoden auf SwiftData-Models mit Library-Verknüpfungen
+- Example:
+  ```swift
+  // Falsch — Library-Verweis verloren
+  copy.exercise = nil
+  copy.trainingPlan = nil
+  copy.session = nil
+
+  // Richtig — Library bleibt, Ownership wird neu gesetzt
+  copy.exercise = self.exercise
+  copy.trainingPlan = nil
+  copy.session = nil
+  ```
