@@ -93,6 +93,10 @@ struct AutoProgressionCalcEngine {
             rule: .nearest
         )
 
+        // Equipment-Clamp (maxWeight) oder Rundung können newWeight ≤ workingWeight liefern.
+        // In dem Fall existiert keine valide Steigerung → keine Auto-Progression.
+        guard newWeight > state.workingWeight else { return noProgress }
+
         return Output(
             shouldAutoProgress: true,
             newWeight: newWeight,

@@ -169,3 +169,23 @@ Do not add generic notes from unrelated projects.
   copy.trainingPlan = nil
   copy.session = nil
   ```
+
+### EquipmentWeightRounding — Clamp/Rundung kann newWeight ≤ workingWeight liefern
+
+- Added: 2026-04-30
+- Trigger: Engines die `workingWeight + step` berechnen und anschließend via `EquipmentWeightRounding.roundToValidWeight(...)` auf valide Equipment-Stufen runden (z.B. `AutoProgressionCalcEngine`, `ProgressionCalcEngine`)
+- Symptom: „Arbeitsgewichte erhöht"-Karte zeigt 24→24 kg (0 kg Steigerung) oder 36→24 kg (Regression). `workingWeight` fällt nach „Auto-Progression" sogar nach unten.
+- Root Cause: `roundToValidWeight` clampt auf `eq.maxWeight` und rundet via `.nearest` auf einen Sprung — beides kann ein `newWeight ≤ workingWeight` liefern. Tritt z.B. auf wenn Equipment-Konfiguration nachträglich geändert wurde (`maxWeight` jetzt unter aktuellem `workingWeight`) oder wenn `increment` so groß ist, dass der nächstgelegene Sprung der aktuelle Wert selbst ist. Die Engine setzte trotzdem `shouldAutoProgress: true` und der Applier schrieb `workingWeight = newWeight`.
+- Rule: Nach jeder `roundToValidWeight(...)`-Berechnung in einer Progressions-Engine **immer** prüfen `guard newWeight > workingWeight else { return noProgress }`. Eine Regression ist keine Progression — wenn Equipment keinen höheren validen Schritt zulässt, gibt es keinen Progressions-Vorschlag.
+- Applies To: `AutoProgressionCalcEngine.calculate`, `ProgressionCalcEngine` und alle künftigen Engines die Equipment-aware aufrunden
+- Example:
+  ```swift
+  // Falsch — clamp/round kann ≤ liefern, Engine progressiert trotzdem
+  let newWeight = EquipmentWeightRounding.roundToValidWeight(raw, equipment: eq, ...)
+  return Output(shouldAutoProgress: true, newWeight: newWeight, amount: newWeight - workingWeight, ...)
+
+  // Richtig — Guard gegen Null/Negativ-Progression
+  let newWeight = EquipmentWeightRounding.roundToValidWeight(raw, equipment: eq, ...)
+  guard newWeight > state.workingWeight else { return noProgress }
+  return Output(shouldAutoProgress: true, newWeight: newWeight, ...)
+  ```

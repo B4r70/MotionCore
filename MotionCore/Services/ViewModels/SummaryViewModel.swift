@@ -169,7 +169,7 @@ final class SummaryViewModel {
         recalculateRollbackSuggestions(states: progressionStates, strengthSessions: strength)
 
         // Auto-Progression: States mit autoProgressionUndoable = true
-        recalculateAutoProgressionSuggestions(states: progressionStates)
+        recalculateAutoProgressionSuggestions(states: progressionStates, strengthSessions: strength)
 
         // Motivations-Kontext
         let xpEngine = XPCalcEngine(
@@ -346,16 +346,32 @@ final class SummaryViewModel {
 
     // MARK: - Auto-Progression-Berechnung
 
-    private func recalculateAutoProgressionSuggestions(states: [ExerciseProgressionState]) {
+    private func recalculateAutoProgressionSuggestions(
+        states: [ExerciseProgressionState],
+        strengthSessions: [StrengthSession]
+    ) {
         autoProgressionSuggestions = states
             .filter { $0.autoProgressionUndoable }
             .compactMap { state -> AutoProgressionSuggestion? in
                 guard let prev = state.previousWorkingWeight,
                       let amount = state.lastAutoProgressionAmount else { return nil }
+
+                // Übungsname aus neuester Session mit diesem groupKey, sonst groupKey als Fallback
+                let groupKey = state.exerciseGroupKey
+                let latestSnapshot = strengthSessions
+                    .filter { $0.isCompleted }
+                    .sorted { $0.date > $1.date }
+                    .lazy
+                    .compactMap { session in
+                        session.safeExerciseSets.first { $0.groupKey == groupKey }?.exerciseNameSnapshot
+                    }
+                    .first { !$0.isEmpty }
+                let name = latestSnapshot ?? groupKey
+
                 return AutoProgressionSuggestion(
                     id: state.persistentModelID,
                     state: state,
-                    exerciseName: state.exerciseGroupKey,
+                    exerciseName: name,
                     previousWeight: prev,
                     newWeight: state.workingWeight,
                     amount: amount,
