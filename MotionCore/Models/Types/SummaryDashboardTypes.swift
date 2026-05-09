@@ -114,6 +114,7 @@ enum TrendDirection {
     case up
     case down
     case stable
+    case unknown
 }
 
 // MARK: - Streak-Meilenstein

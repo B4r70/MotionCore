@@ -59,6 +59,12 @@ struct MainSettingsView: View {
                 }
 
                 NavigationLink {
+                    BodyMeasurementSettingsView()
+                } label: {
+                    Label("Körpermaße", systemImage: "ruler")
+                }
+
+                NavigationLink {
                     DisplaySettingsView()
                 } label: {
                     Label("Displayeinstellungen", systemImage: "display")

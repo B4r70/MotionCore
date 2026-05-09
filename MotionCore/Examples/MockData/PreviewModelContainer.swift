@@ -20,6 +20,7 @@ struct PreviewData {
         // In-Memory-Konfiguration für die Preview
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try! ModelContainer(for: CardioSession.self,
+                                            BodyMeasurement.self,
                                             configurations: config)
 
         // Mock-Daten in den Kontext einfügen

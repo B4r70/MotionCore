@@ -27,6 +27,7 @@ struct BodyView: View {
 
     @State private var detailItem: MuscleRecoveryAnalysis? = nil
     @State private var selectedTab: BodyTab = .recovery
+    @State private var navigateToBodyMeasurements = false
 
     // MARK: - Queries
 
@@ -36,6 +37,9 @@ struct BodyView: View {
         order: .reverse
     )
     private var strengthSessions: [StrengthSession]
+
+    @Query(sort: \BodyMeasurement.date, order: .reverse)
+    private var bodyMeasurements: [BodyMeasurement]
 
     // MARK: - Umgebung
 
@@ -56,6 +60,9 @@ struct BodyView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     compositeSection
+                    BodyMeasurementsCard(measurements: bodyMeasurements) {
+                        navigateToBodyMeasurements = true
+                    }
                     BodyTabSwitch(selectedTab: $selectedTab)
                     tabContentSection
                     avoidSection
@@ -78,6 +85,10 @@ struct BodyView: View {
         }
         .sheet(item: $detailItem) { analysis in
             MuscleRecoveryDetailView(analysis: analysis)
+                .environmentObject(appSettings)
+        }
+        .navigationDestination(isPresented: $navigateToBodyMeasurements) {
+            BodyMeasurementsView()
                 .environmentObject(appSettings)
         }
     }

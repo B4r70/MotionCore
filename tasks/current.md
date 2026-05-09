@@ -1,49 +1,47 @@
-# 3 Bugs in ActiveWorkoutView
+# BodyMeasurement-Feature — Phase 6 / Schritt 4: Detail-History & Edit/Delete
 
-**Komplexität:** Small (drei isolierte Fixes)
-**Status:** Implementiert — wartet auf manuelle Verifikation
-
-## Bugs
-
-1. **Pausen-Timer beim letzten Satz des Trainings** → soll entfallen, direkt `WorkoutCompletedCard` zeigen.
-2. **Übungsbewertung erscheint erst nach Pausen-Timer** → soll parallel laufen (Timer + Bewertungs-Card sichtbar gleichzeitig).
-3. **TabView manchmal sichtbar in ActiveWorkoutView** → Ursache: `ListView` öffnet via `NavigationLink` (Push), TabView wird nicht ausgeblendet. Andere Aufrufer nutzen `fullScreenCover` (TabView weg).
-
-## Affected Files
-
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `completeSet` (Bug 1), `heroCard` (Bug 2), body-Modifier (Bug 3)
-
-## Implementation Steps
-
-- [x] **Bug 1:** In `completeSet` (Nicht-Superset-Pfad, Zeile 900–906): Vor `restTimerManager.start(...)` prüfen ob `session.allSetsCompleted`. Wenn ja → return (kein Timer, kein RIR-Sheet). `WorkoutCompletedCard` wird automatisch via `heroCard`-Logik gezeigt. Superset-Pfad braucht keine Änderung — `handleSupersetRotation` startet Timer nur wenn `anyOpenInGroup == true`, also Workout per Definition nicht fertig.
-
-- [x] **Bug 2:** `heroCard` umstellen: Wenn `restTimerManager.isResting && cachedLastCompletedSet != nil && isSelectedExerciseComplete && !session.allSetsCompleted`, dann **beide Cards** in VStack: RestTimerCardContainer oben, ExerciseCompletedCard darunter. Sonst bestehende `if/else if/else`-Kette.
-
-- [x] **Bug 3:** `.toolbar(.hidden, for: .tabBar)` am body des `ActiveWorkoutView` ergänzen. iOS 16+, no-op bei fullScreenCover-Aufruf, blendet TabView aus bei NavigationLink-Aufruf aus `ListView`.
-
-## Manual Verification
-
-- [ ] Xcode build grün
-- [ ] Letzten Satz des Workouts abschließen → kein Timer, sofort `WorkoutCompletedCard` ("Alle Sätze abgeschlossen!")
-- [ ] Letzten Satz einer Übung (nicht der letzten Übung) abschließen → RestTimer + ExerciseCompletedCard parallel sichtbar
-- [ ] Aus "Workouts"-Tab eine laufende Session via NavigationLink öffnen → TabView nicht mehr sichtbar
-- [ ] Neue Session via Plus-Button starten → TabView weg (fullScreenCover, war schon ok)
-- [ ] Aus TrainingDetailView Session starten → TabView weg (fullScreenCover, war schon ok)
-
-## Open Questions
-
-Keine. Layout-Entscheidung für Bug 2 (RestTimer oben, Bewertungs-Card darunter) folgt Lese-Reihenfolge top-down.
+**Status:** Bereit zur Implementierung · **Komplexität:** Small-Medium · **Scope:** Phase 6, Schritt 4
 
 ---
 
-## Progress
+## Schritte
 
-**2026-04-29**
+### 1. `BodyMeasurementHistorySheet.swift` anlegen
+**Pfad:** `MotionCore/Views/Body/BodyMeasurements/BodyMeasurementHistorySheet.swift`
+- Props: `title: String`, `unit: String`, `keyPath: KeyPath<BodyMeasurement, Double?>`, `measurements: [BodyMeasurement]`
+- Filtert auf Einträge mit non-nil-Wert, absteigend nach Datum
+- `NavigationStack` mit Titel = `title`
+- `List` mit Datum + Wert (1 Nachkommastelle + unit)
+- `.swipeActions(edge: .trailing)`: Delete-Button → `modelContext.delete(measurement)` + `try? modelContext.save()`
+- Tap auf Zeile → öffnet `BodyMeasurementEntrySheet(editingMeasurement:)` per `.sheet(item:)` (CLAUDE.md Sheet-Pattern)
+- `@Environment(\.modelContext)`, `@EnvironmentObject private var appSettings: AppSettings`
+- Leerer Zustand: Hinweistext „Noch keine Messungen für diesen Maß-Typ"
 
-Modified file: `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift`
+### 2. `BodyMeasurementsValueCarousel.swift` anpassen
+- Neues internes `struct MeasurementDetailContext: Identifiable` mit `let id = UUID()`, `title`, `unit`, `keyPath`
+- `@State private var detailContext: MeasurementDetailContext?` in `BodyMeasurementsValueCarousel`
+- In der ForEach-Schleife: `.onTapGesture { detailContext = MeasurementDetailContext(title: type.title, unit: type.unit, keyPath: type.keyPath) }` auf `BodyMeasurementHeroCard`
+- `.sheet(item: $detailContext)` auf dem `TabView` → öffnet `BodyMeasurementHistorySheet`
+- Sheet braucht `.environmentObject(AppSettings.shared)` (für BodyMeasurementEntrySheet)
 
-- Bug 1: `completeSet` — `if session.allSetsCompleted { return }` vor `restTimerManager.start(...)`
-- Bug 2: `heroCard` — bei aktivem RestTimer **und** abgeschlossener Übung (nicht letzter Übung) → VStack mit `RestTimerCardContainer` oben + `ExerciseCompletedCard` darunter
-- Bug 3: `.toolbar(.hidden, for: .tabBar)` am body, blendet TabView aus (für `NavigationLink`-Aufruf aus `ListView`; no-op für die zwei `fullScreenCover`-Aufrufer)
+---
 
-Build: BUILD SUCCEEDED
+## Akzeptanzkriterien
+- [ ] Build erfolgreich
+- [ ] Tap auf Karussell-Card öffnet History-Sheet mit korrektem Titel
+- [ ] Nur Einträge mit Wert für diesen Maß-Typ sichtbar
+- [ ] Swipe-to-Delete löscht Messung persistent
+- [ ] Tap auf Zeile öffnet Edit-Sheet, Änderungen werden gespeichert
+- [ ] Sheet-Pattern: `.sheet(item:)` für beide Sheets (kein `.sheet(isPresented:)`)
+
+---
+
+## Fortschritt
+
+**09.05.2026**
+
+Abgeschlossene Schritte: 1, 2
+
+Geänderte Dateien:
+- `MotionCore/Views/Body/BodyMeasurements/BodyMeasurementHistorySheet.swift` (neu angelegt)
+- `MotionCore/Views/Body/BodyMeasurements/BodyMeasurementsValueCarousel.swift` (MeasurementDetailContext + State + onTapGesture + sheet(item:) hinzugefügt)

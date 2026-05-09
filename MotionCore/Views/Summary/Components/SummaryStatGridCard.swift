@@ -134,9 +134,10 @@ private struct SparkStatCard: View {
 
     private func deltaColor(_ trend: TrendComparison) -> Color {
         switch trend.trend {
-        case .up:     return .green
-        case .down:   return .red
-        case .stable: return .secondary
+        case .up:      return .green
+        case .down:    return .red
+        case .stable:  return .secondary
+        case .unknown: return .secondary
         }
     }
 }

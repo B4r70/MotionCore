@@ -299,7 +299,17 @@ class AppSettings: ObservableObject {
         }
     }
 
-        // Im init():
+    // MARK: - Körpermaße
+
+    // Körpermaße: Modus für Armumfang (ein Wert oder Links + Rechts)
+    @Published var bodyMeasurementArmMode: BodyMeasurementSideMode = .singleSide {
+        didSet { UserDefaults.standard.set(bodyMeasurementArmMode.rawValue, forKey: "body.armMode") }
+    }
+
+    // Körpermaße: Modus für Oberschenkelumfang (ein Wert oder Links + Rechts)
+    @Published var bodyMeasurementThighMode: BodyMeasurementSideMode = .singleSide {
+        didSet { UserDefaults.standard.set(bodyMeasurementThighMode.rawValue, forKey: "body.thighMode") }
+    }
 
     // MARK: - Init
     private init() {
@@ -411,6 +421,16 @@ class AppSettings: ObservableObject {
 
         // Debug: Readiness-Score-Override (Default: -1 = kein Override)
         debugReadinessScoreOverride = defaults.object(forKey: "debug.readinessScoreOverride") as? Int ?? -1
+
+        // Körpermaße-Einstellungen laden
+        if let raw = defaults.string(forKey: "body.armMode"),
+           let loaded = BodyMeasurementSideMode(rawValue: raw) {
+            bodyMeasurementArmMode = loaded
+        }
+        if let raw = defaults.string(forKey: "body.thighMode"),
+           let loaded = BodyMeasurementSideMode(rawValue: raw) {
+            bodyMeasurementThighMode = loaded
+        }
     }
 }
 

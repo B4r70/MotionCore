@@ -6,7 +6,7 @@
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 24.04.2026                                                       /
 // Beschreibung  : Wendet Auto-Progression auf ExerciseProgressionStates an und     /
-//                 erlaubt Undo. Transaktional pro Aufruf. (Phase 1.5)             /
+//                 erlaubt Undo. Transaktional pro Aufruf. (Phase 1.5)              /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

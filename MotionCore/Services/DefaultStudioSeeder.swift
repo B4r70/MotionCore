@@ -5,7 +5,7 @@
 // Datei . . . . : DefaultStudioSeeder.swift                                        /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 18.04.2026                                                       /
-// Beschreibung  : Idempotenter Seeder fuer "Mein Studio" + 5 Default-Geraete      /
+// Beschreibung  : Idempotenter Seeder fuer "Mein Studio" + 5 Default-Geraete       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

@@ -45,6 +45,7 @@ struct BackupStats: Equatable {
     var readinessEntries: Int = 0
     var healthBaselines: Int = 0
     var exerciseMeta: Int = 0
+    var bodyMeasurements: Int = 0
 }
 
 // MARK: - SupabaseFullBackupService
@@ -111,7 +112,11 @@ final class SupabaseFullBackupService: ObservableObject {
             progress = .running(step: "Outdoor-Sessions", current: 0, total: 1)
             let outdoorCount = try await uploadAllOutdoorSessions(context: context)
 
-            // 8. Template-Sets (ExerciseSets ohne Session, mit TrainingPlan)
+            // 8. Körpermaße
+            progress = .running(step: "Körpermaße", current: 0, total: 1)
+            let bodyMeasurementCount = try await uploadAllBodyMeasurements(context: context)
+
+            // 9. Template-Sets (ExerciseSets ohne Session, mit TrainingPlan)
             progress = .running(step: "Template-Sets", current: 0, total: 1)
             let templateSetCount = try await uploadAllTemplateSets(context: context)
 
@@ -132,11 +137,12 @@ final class SupabaseFullBackupService: ObservableObject {
             stats.readinessEntries = readinessCount
             stats.healthBaselines = baselineCount
             stats.exerciseMeta = exerciseMetaCount
+            stats.bodyMeasurements = bodyMeasurementCount
 
             progress = .completed(stats: stats)
             isRunning = false
 
-            print("✅ Full-Backup abgeschlossen: \(strengthCount) Kraft, \(cardioCount) Cardio, \(outdoorCount) Outdoor, \(plansCount) Pläne, \(exerciseSetCount) Sets, \(templateSetCount) Template-Sets, \(studioCount) Studios, \(equipmentCount) Equipment, \(progressionCount) Progressionen, \(readinessCount) Readiness, \(baselineCount) Baselines, \(exerciseMetaCount) Exercises")
+            print("✅ Full-Backup abgeschlossen: \(strengthCount) Kraft, \(cardioCount) Cardio, \(outdoorCount) Outdoor, \(plansCount) Pläne, \(exerciseSetCount) Sets, \(templateSetCount) Template-Sets, \(studioCount) Studios, \(equipmentCount) Equipment, \(progressionCount) Progressionen, \(readinessCount) Readiness, \(baselineCount) Baselines, \(exerciseMetaCount) Exercises, \(bodyMeasurementCount) Körpermaße")
 
         } catch {
             progress = .failed(error: error.localizedDescription)
@@ -579,6 +585,39 @@ final class SupabaseFullBackupService: ObservableObject {
         return sessions.count
     }
 
+    /// Lädt alle BodyMeasurements nach Supabase hoch.
+    private func uploadAllBodyMeasurements(context: ModelContext) async throws -> Int {
+        let measurements = (try? context.fetch(FetchDescriptor<BodyMeasurement>())) ?? []
+        guard !measurements.isEmpty else { return 0 }
+
+        progress = .running(step: "Körpermaße", current: 0, total: measurements.count)
+
+        for (index, m) in measurements.enumerated() {
+            let dto = SupabaseBodyMeasurementDTO(
+                id: m.measurementUUID,
+                date: m.date,
+                notes: m.notes,
+                bodyWeight: m.bodyWeight,
+                chestCircumference: m.chestCircumference,
+                waistCircumference: m.waistCircumference,
+                abdomenCircumference: m.abdomenCircumference,
+                hipCircumference: m.hipCircumference,
+                armCircumferenceLeft: m.armCircumferenceLeft,
+                armCircumferenceRight: m.armCircumferenceRight,
+                thighCircumferenceLeft: m.thighCircumferenceLeft,
+                thighCircumferenceRight: m.thighCircumferenceRight,
+                updatedAt: Date()
+            )
+            // Einzel-Upsert – Batch würde PGRST102 auslösen: nil-Optionals fehlen als Keys im JSON
+            try await client.upsert(endpoint: "body_measurements", body: dto)
+            m.syncedToSupabase = true
+            m.needsSupabaseResync = false
+            progress = .running(step: "Körpermaße", current: index + 1, total: measurements.count)
+        }
+
+        return measurements.count
+    }
+
     /// Lädt alle Template-Sets (ExerciseSets ohne Session, mit TrainingPlan) nach Supabase hoch.
     private func uploadAllTemplateSets(context: ModelContext) async throws -> Int {
         // Template-Sets: haben trainingPlan, aber keine session
@@ -703,6 +742,13 @@ final class SupabaseFullBackupService: ObservableObject {
         // HealthBaseline.id
         let baselines = (try? context.fetch(FetchDescriptor<HealthBaseline>())) ?? []
         totalFixed += deduplicateUUIDs(baselines, label: "HealthBaseline") { $0.id } fix: { $0.id = UUID() }
+
+        // BodyMeasurement.measurementUUID
+        let bodyMeasurements = (try? context.fetch(FetchDescriptor<BodyMeasurement>())) ?? []
+        totalFixed += deduplicateUUIDs(bodyMeasurements, label: "BodyMeasurement") { $0.measurementUUID } fix: {
+            $0.measurementUUID = UUID()
+            $0.syncedToSupabase = false
+        }
 
         if totalFixed > 0 {
             try? context.save()
