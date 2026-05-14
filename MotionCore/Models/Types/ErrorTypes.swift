@@ -19,6 +19,7 @@ enum SupabaseError: LocalizedError {
     case httpError(statusCode: Int, data: Data)
     case decodingError(Error)
     case invalidFilter
+    case notConfigured
 
     var errorDescription: String? {
         switch self {
@@ -33,6 +34,8 @@ enum SupabaseError: LocalizedError {
                 return "Fehler beim Dekodieren: \(error.localizedDescription)"
             case .invalidFilter:
                 return "DELETE ohne Filter ist nicht erlaubt"
+            case .notConfigured:
+                return "Supabase Konfiguration fehlt — Supabase deaktiviert"
         }
     }
 }

@@ -45,3 +45,15 @@ Abgeschlossene Schritte: 1, 2
 Geänderte Dateien:
 - `MotionCore/Views/Body/BodyMeasurements/BodyMeasurementHistorySheet.swift` (neu angelegt)
 - `MotionCore/Views/Body/BodyMeasurements/BodyMeasurementsValueCarousel.swift` (MeasurementDetailContext + State + onTapGesture + sheet(item:) hinzugefügt)
+
+---
+
+## Review-Finding L1-012 — SupabaseClient graceful degradation
+
+**14.05.2026**
+
+Abgeschlossene Schritte: alle (L1-012 vollständig)
+
+Geänderte Dateien:
+- `MotionCore/Models/Types/ErrorTypes.swift` — `notConfigured` case + `errorDescription` zu `SupabaseError` hinzugefügt (Zeile 22, 37)
+- `MotionCore/Services/Database/Remote/Core/SupabaseClient.swift` — `baseURL`/`anonKey` auf `Optional` geändert, `fatalError` durch `print`-Warnung ersetzt, `makeRequest` ist jetzt `throws`, alle public-Methoden (get/post x2/rpc/upsert x2/patchWhere/deleteWhere) werfen `SupabaseError.notConfigured` wenn Konfiguration fehlt

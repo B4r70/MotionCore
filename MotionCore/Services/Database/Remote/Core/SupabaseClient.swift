@@ -15,15 +15,14 @@ import Foundation
 final class SupabaseClient {
     static let shared = SupabaseClient()
 
-    private let baseURL: URL
-    private let anonKey: String
+    private let baseURL: URL?
+    private let anonKey: String?
 
     private init() {
-        do {
-            self.baseURL = try SupabaseConfig.url
-            self.anonKey = try SupabaseConfig.anonKey
-        } catch {
-            fatalError("Supabase Konfiguration fehlt: \(error)")
+        self.baseURL = try? SupabaseConfig.url
+        self.anonKey = try? SupabaseConfig.anonKey
+        if baseURL == nil || anonKey == nil {
+            print("⚠️ SupabaseClient: Konfiguration fehlt — Supabase deaktiviert")
         }
     }
 
@@ -82,7 +81,8 @@ final class SupabaseClient {
 
     // MARK: - HTTP
 
-    private func makeRequest(url: URL, method: String) -> URLRequest {
+    private func makeRequest(url: URL, method: String) throws -> URLRequest {
+        guard let anonKey else { throw SupabaseError.notConfigured }
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
@@ -108,6 +108,7 @@ final class SupabaseClient {
         endpoint: String,
         queryItems: [URLQueryItem]? = nil
     ) async throws -> T {
+        guard let baseURL else { throw SupabaseError.notConfigured }
 
         let fullURL = baseURL
             .appendingPathComponent("rest")
@@ -122,7 +123,7 @@ final class SupabaseClient {
         }
 
         print("🌐 GET \(url.absoluteString)")
-        let request = makeRequest(url: url, method: "GET")
+        let request = try makeRequest(url: url, method: "GET")
 
         let (data, response) = try await URLSession.shared.data(for: request)
         try validate(response, data: data)
@@ -141,6 +142,7 @@ final class SupabaseClient {
         endpoint: String,
         body: Body
     ) async throws -> T {
+        guard let baseURL else { throw SupabaseError.notConfigured }
 
         let url = baseURL
             .appendingPathComponent("rest")
@@ -148,7 +150,7 @@ final class SupabaseClient {
             .appendingPathComponent(endpoint)
 
         print("🌐 POST \(url.absoluteString)")
-        var request = makeRequest(url: url, method: "POST")
+        var request = try makeRequest(url: url, method: "POST")
         request.setValue("return=representation", forHTTPHeaderField: "Prefer")
 
         let encoder = Self.makeEncoder()
@@ -171,6 +173,7 @@ final class SupabaseClient {
         endpoint: String,
         body: [String: Any]
     ) async throws -> T {
+        guard let baseURL else { throw SupabaseError.notConfigured }
 
         let url = baseURL
             .appendingPathComponent("rest")
@@ -180,7 +183,7 @@ final class SupabaseClient {
         print("🌐 POST \(url.absoluteString)")
         print("📤 Body: \(body)")
 
-        var request = makeRequest(url: url, method: "POST")
+        var request = try makeRequest(url: url, method: "POST")
         request.setValue("return=representation", forHTTPHeaderField: "Prefer")
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
 
@@ -208,6 +211,7 @@ final class SupabaseClient {
         function: String,
         params: [String: Any] = [:]
     ) async throws -> T {
+        guard let baseURL else { throw SupabaseError.notConfigured }
 
         let url = baseURL
             .appendingPathComponent("rest")
@@ -218,7 +222,7 @@ final class SupabaseClient {
         print("🔧 RPC \(function)")
         print("📤 Params: \(params)")
 
-        var request = makeRequest(url: url, method: "POST")
+        var request = try makeRequest(url: url, method: "POST")
         request.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
 
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -253,13 +257,15 @@ final class SupabaseClient {
         body: Body,
         schema: String? = nil
     ) async throws {
+        guard let baseURL else { throw SupabaseError.notConfigured }
+
         let url = baseURL
             .appendingPathComponent("rest")
             .appendingPathComponent("v1")
             .appendingPathComponent(endpoint)
 
         print("🔄 UPSERT \(url.absoluteString)\(schema.map { " [schema: \($0)]" } ?? "")")
-        var request = makeRequest(url: url, method: "POST")
+        var request = try makeRequest(url: url, method: "POST")
         request.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
         if let schema { request.setValue(schema, forHTTPHeaderField: "Content-Profile") }
 
@@ -278,6 +284,7 @@ final class SupabaseClient {
         schema: String? = nil
     ) async throws {
         guard !body.isEmpty else { return }
+        guard let baseURL else { throw SupabaseError.notConfigured }
 
         let url = baseURL
             .appendingPathComponent("rest")
@@ -285,7 +292,7 @@ final class SupabaseClient {
             .appendingPathComponent(endpoint)
 
         print("🔄 BATCH UPSERT \(url.absoluteString) (\(body.count) Einträge)\(schema.map { " [schema: \($0)]" } ?? "")")
-        var request = makeRequest(url: url, method: "POST")
+        var request = try makeRequest(url: url, method: "POST")
         request.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
         if let schema { request.setValue(schema, forHTTPHeaderField: "Content-Profile") }
 
@@ -308,6 +315,7 @@ final class SupabaseClient {
         guard !filter.isEmpty else {
             throw SupabaseError.invalidFilter
         }
+        guard let baseURL else { throw SupabaseError.notConfigured }
 
         let fullURL = baseURL
             .appendingPathComponent("rest")
@@ -322,7 +330,7 @@ final class SupabaseClient {
         }
 
         print("📝 PATCH \(url.absoluteString)")
-        var request = makeRequest(url: url, method: "PATCH")
+        var request = try makeRequest(url: url, method: "PATCH")
         request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
 
         let encoder = Self.makeEncoder()
@@ -343,6 +351,7 @@ final class SupabaseClient {
         guard !filter.isEmpty else {
             throw SupabaseError.invalidFilter
         }
+        guard let baseURL else { throw SupabaseError.notConfigured }
 
         let fullURL = baseURL
             .appendingPathComponent("rest")
@@ -357,7 +366,7 @@ final class SupabaseClient {
         }
 
         print("🗑️ DELETE \(url.absoluteString)")
-        let request = makeRequest(url: url, method: "DELETE")
+        let request = try makeRequest(url: url, method: "DELETE")
 
         let (data, response) = try await URLSession.shared.data(for: request)
         try validate(response, data: data)
