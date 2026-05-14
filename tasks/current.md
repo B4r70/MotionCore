@@ -70,3 +70,16 @@ Geänderte Dateien:
 - `MotionCore/Services/Calculation/HealthMetricCalcEngine.swift` — `class : ObservableObject` → `struct`, `import Combine`/`import SwiftUI` entfernt, Init nimmt jetzt konkrete Werte statt `AppSettings`, `calculateTodayCalorieBalance` nimmt `consumed/basal/active: Int?` statt `HealthKitManager`, `CalorieBalance.statusColor` aus der struct entfernt (war SwiftUI-Abhängigkeit)
 - `MotionCore/Views/Statistics/Health/Components/HealthMetricCalorieHeroCard.swift` — `CalorieBalance` SwiftUI-Extension mit `statusColor: Color` hinzugefügt (vor dem Preview-Block)
 - `MotionCore/Views/Statistics/Health/View/HealthMetricView.swift` — Engine-Init und `calculateTodayCalorieBalance`-Aufruf auf neue Signatur umgestellt; View extrahiert konkrete Werte aus `AppSettings` und `HealthKitManager`
+
+---
+
+## Strukturfix L1-008 — exerciseUUIDSnapshot nie wieder per hashValue befüllen
+
+**14.05.2026**
+
+Abgeschlossene Schritte: 1, 2, 3, 4
+
+Geänderte Dateien:
+- `MotionCore/Models/Core/Exercise.swift` — Schritt 1: `var exerciseUUID: UUID = UUID()` nach `isSystemExercise` eingefügt (mit Kommentar zu CloudKit-Default-Bug und Fallback-Zweck)
+- `MotionCore/Models/Core/ExerciseSet.swift` — Schritt 2: Convenience-Init Zeile ~108: `exercise.persistentModelID.hashValue.description` ersetzt durch `(exercise.apiID ?? exercise.exerciseUUID).uuidString`
+- `MotionCore/Views/Root/View/BaseView.swift` — Schritte 3+4: `deduplicateExerciseUUIDs(context:)` als private Methode hinzugefügt; Aufruf in `onAppear` vor `repairSnapshotsOnLaunch` eingetragen

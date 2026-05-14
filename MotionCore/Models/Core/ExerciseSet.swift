@@ -105,7 +105,7 @@ final class ExerciseSet {
         self.init(
             exerciseName: exercise.name,
             exerciseNameSnapshot: exercise.name,
-            exerciseUUIDSnapshot: exercise.persistentModelID.hashValue.description,
+            exerciseUUIDSnapshot: (exercise.apiID ?? exercise.exerciseUUID).uuidString,
             exerciseMediaAssetName: exercise.mediaAssetName,
             isUnilateralSnapshot: exercise.isUnilateral, // NEU
             setNumber: setNumber,

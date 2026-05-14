@@ -51,6 +51,11 @@ final class Exercise {
     var apiID: UUID?
     var isSystemExercise: Bool = false
 
+    /// Stabile UUID-Brücke für ExerciseSet.exerciseUUIDSnapshot.
+    /// Fallback wenn apiID nil ist (Custom-Exercises).
+    /// CloudKit-Default-Bug: muss in deduplicateExerciseUUIDs() repariert werden.
+    var exerciseUUID: UUID = UUID()
+
     var videoPath: String?
     var posterPath: String?
     var instructions: String?

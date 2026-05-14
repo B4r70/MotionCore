@@ -78,6 +78,8 @@ final class SupabaseFullBackupService: ObservableObject {
 
         // Duplikate Sync-UUIDs reparieren (CloudKit-Migration-Bug: Default UUID() wird einmal evaluiert)
         deduplicateAllSyncUUIDs(context: context)
+        // Exercise-UUID-Default-Bug: analog zu deduplicateAllSyncUUIDs
+        deduplicateExerciseUUIDs(context: context)
 
         do {
             // 0. Übungs-Stammdaten (keine FK-Abhängigkeit, früh damit Fehler sofort auffallen)
@@ -753,6 +755,32 @@ final class SupabaseFullBackupService: ObservableObject {
         if totalFixed > 0 {
             try? context.save()
             print("🔧 Gesamt \(totalFixed) doppelte Sync-UUID(s) korrigiert")
+        }
+    }
+
+    /// Repariert doppelte exerciseUUIDs, die durch den CloudKit-Default-UUID-Bug entstehen.
+    /// Analog zu deduplicateAllSyncUUIDs — gehört zentral hier, nicht in eine View.
+    private func deduplicateExerciseUUIDs(context: ModelContext) {
+        let exercises = (try? context.fetch(FetchDescriptor<Exercise>())) ?? []
+        guard exercises.count > 1 else { return }
+
+        var seen = Set<UUID>()
+        var fixedCount = 0
+
+        for exercise in exercises {
+            let id = exercise.exerciseUUID
+            if seen.contains(id) {
+                exercise.exerciseUUID = UUID()
+                fixedCount += 1
+                print("🔧 Doppelte Exercise-UUID repariert: \(id)")
+            } else {
+                seen.insert(id)
+            }
+        }
+
+        if fixedCount > 0 {
+            try? context.save()
+            print("🔧 deduplicateExerciseUUIDs: \(fixedCount) doppelte Exercise-UUID(s) korrigiert")
         }
     }
 
