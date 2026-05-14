@@ -590,9 +590,6 @@ struct ActiveWorkoutView: View {
                 startNewSession(sessionID: sessionID)
             }
         }
-            // UUID in Exercise bereinigen
-        repairExerciseUUIDSnapshotsIfNeeded()
-
             // Fallback: falls ResumeStore nix gesetzt hat
         if selectedExerciseKey == nil {
             selectedExerciseKey = sessionManager.getSelectedExerciseKey()
@@ -718,25 +715,6 @@ struct ActiveWorkoutView: View {
     private func cleanupLocalTimer() {
         localTimer?.invalidate()
         localTimer = nil
-    }
-
-        // ExerciseUUID in der Datei bereinigen.
-    private func repairExerciseUUIDSnapshotsIfNeeded() {
-        var didChange = false
-
-        for s in session.safeExerciseSets {
-            guard let api = s.exercise?.apiID?.uuidString, !api.isEmpty else { continue }
-
-            if s.exerciseUUIDSnapshot != api {
-                s.exerciseUUIDSnapshot = api
-                didChange = true
-            }
-        }
-
-        if didChange {
-            try? context.save()
-            print("🛠️ Repaired exerciseUUIDSnapshot for existing sets.")
-        }
     }
 
         // =========================================================================

@@ -9,10 +9,12 @@
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
+import SwiftData
 import SwiftUI
 
 struct SetConfigurationSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appSettings: AppSettings
 
     // Quelle 1: aus Library
@@ -551,18 +553,30 @@ struct SetConfigurationSheet: View {
 
             return set
         } else {
+            // Library-Lookup: snapshotName matcht nur eindeutig, sonst kein Exercise
+            let descriptor = FetchDescriptor<Exercise>()
+            let allExercises = (try? modelContext.fetch(descriptor)) ?? []
+            let matches = allExercises.filter { $0.name == snapshotName }
+            let resolvedExercise: Exercise? = (matches.count == 1) ? matches[0] : nil
+
             let set = ExerciseSet(
                 exerciseName: snapshotName,
                 exerciseNameSnapshot: snapshotName,
-                exerciseUUIDSnapshot: "",
+                exerciseUUIDSnapshot: ExerciseSet.resolveSnapshot(
+                    existing: "",
+                    exercise: resolvedExercise
+                ),
                 exerciseMediaAssetName: snapshotMediaAssetName,
                 setNumber: setNumber,
                 weight: weight,
                 reps: reps
             )
 
-            // NEU: Snapshot-Fall
             set.isUnilateralSnapshot = snapshotIsUnilateral
+
+            if let resolvedExercise {
+                set.exercise = resolvedExercise
+            }
 
             return set
         }
