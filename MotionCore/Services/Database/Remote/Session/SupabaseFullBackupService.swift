@@ -678,6 +678,10 @@ final class SupabaseFullBackupService: ObservableObject {
     }
 
     // MARK: - UUID-Deduplizierung
+    //
+    // Twin-Familie: BaseView.repairSnapshotsOnLaunch heilt zusätzlich
+    // leere/ungültige ExerciseSet.exerciseUUIDSnapshot-Werte aus der
+    // Exercise-Library beim App-Start.
 
     /// Repariert doppelte Sync-UUIDs, die durch CloudKit-Schema-Migration entstehen.
     /// Wenn ein neues Property `var xxxUUID: UUID = UUID()` zum Model hinzugefügt wird,

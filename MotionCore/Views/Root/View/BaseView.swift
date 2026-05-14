@@ -494,27 +494,81 @@ struct BaseView: View {
         showActiveWorkout = true
     }
 
+    // MARK: - Snapshot-Heilung beim App-Start
+    //
+    // Twin-Familie: SupabaseFullBackupService.deduplicateAllSyncUUIDs /
+    // .deduplicateExerciseUUIDs dedupliziert UUIDs vor dem Backup-Lauf.
+    // Diese Routine hier heilt fehlende/ungültige Snapshots in
+    // ExerciseSet beim App-Start.
     private func repairSnapshotsOnLaunch(context: ModelContext) {
+        // MARK: - Bestand-Heilung für ExerciseSet.exerciseUUIDSnapshot
+        //
+        // Konstruktive Reparatur. Twin-Familie in
+        // SupabaseFullBackupService.deduplicateAllSyncUUIDs /
+        // .deduplicateExerciseUUIDs. Diese hier bleibt in BaseView, weil
+        // einmaliger Boot-Zeit-Repair, unabhängig von der Mirror-Pipeline.
         do {
-            // Nur auf cleanem Context arbeiten
-            if context.hasChanges {
-                try context.save()
-            }
-
+            if context.hasChanges { try context.save() }
             let sets = try context.fetch(FetchDescriptor<ExerciseSet>())
+            let allExercises = try context.fetch(FetchDescriptor<Exercise>())
 
-            var changed = 0
+            var healedViaRelation = 0
+            var healedViaLookup = 0
+            var ambiguous = 0
+            var clearedInvalid = 0
+
             for s in sets {
-                let uuid = s.exerciseUUIDSnapshot.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !uuid.isEmpty && UUID(uuidString: uuid) == nil {
-                    s.exerciseUUIDSnapshot = ""
-                    changed += 1
+                let current = s.exerciseUUIDSnapshot
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                let currentIsValid = !current.isEmpty
+                    && UUID(uuidString: current) != nil
+
+                if currentIsValid { continue }
+
+                // Strategie 1: Relationship vorhanden
+                if let ex = s.exercise {
+                    s.exerciseUUIDSnapshot = (ex.apiID ?? ex.exerciseUUID).uuidString
+                    healedViaRelation += 1
+                    continue
+                }
+
+                // Strategie 2: Namens-Lookup
+                let searchName = s.exerciseNameSnapshot.isEmpty
+                    ? s.exerciseName
+                    : s.exerciseNameSnapshot
+                guard !searchName.isEmpty else {
+                    if !current.isEmpty {
+                        s.exerciseUUIDSnapshot = ""
+                        clearedInvalid += 1
+                    }
+                    continue
+                }
+
+                let matches = allExercises.filter {
+                    $0.name == s.exerciseName
+                    || $0.name == s.exerciseNameSnapshot
+                }
+
+                if matches.count == 1 {
+                    let ex = matches[0]
+                    s.exercise = ex
+                    s.exerciseUUIDSnapshot = (ex.apiID ?? ex.exerciseUUID).uuidString
+                    healedViaLookup += 1
+                } else if matches.count > 1 {
+                    ambiguous += 1
+                    print("⚠️ Repair: ambiguous match for \"\(searchName)\" (\(matches.count) candidates) — set \(s.setUUID) not healed")
+                } else {
+                    if !current.isEmpty {
+                        s.exerciseUUIDSnapshot = ""
+                        clearedInvalid += 1
+                    }
                 }
             }
 
-            if changed > 0 {
+            let total = healedViaRelation + healedViaLookup + clearedInvalid
+            if total > 0 || ambiguous > 0 {
                 try context.save()
-                print("🧹 Repair: cleaned \(changed) invalid exerciseUUIDSnapshot values")
+                print("🛠️ Repair: \(healedViaRelation) via relation, \(healedViaLookup) via name-lookup, \(ambiguous) ambiguous, \(clearedInvalid) invalid cleared")
             }
         } catch {
             print("⚠️ Repair failed:", error)
