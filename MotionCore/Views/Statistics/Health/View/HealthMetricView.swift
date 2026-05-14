@@ -23,7 +23,14 @@ struct HealthMetricView: View {
     @EnvironmentObject private var appSettings: AppSettings
 
     private var calcHealthMetrics: HealthMetricCalcEngine {
-        HealthMetricCalcEngine(workouts: allWorkouts, settings: appSettings)
+        HealthMetricCalcEngine(
+            workouts: allWorkouts,
+            birthday: appSettings.userBirthdayDate,
+            age: appSettings.userAge,
+            gender: appSettings.userGender,
+            bodyHeight: appSettings.userBodyHeight,
+            activityLevel: appSettings.userActivityLevel
+        )
     }
 
         // Lesen der HealthKit-Daten
@@ -104,7 +111,11 @@ struct HealthMetricView: View {
                         )
                     }
                         // Kalorienbilanz als Übersicht
-                    if let balance = calcHealthMetrics.calculateTodayCalorieBalance(from: healthKitManager) {
+                    if let balance = calcHealthMetrics.calculateTodayCalorieBalance(
+                        consumed: healthKitManager.dietaryConsumedCalories,
+                        basal: healthKitManager.basalBurnedCalories,
+                        active: healthKitManager.activeBurnedCalories
+                    ) {
                         HealthMetricHeroCard(
                             date: Date(),
                             calorieBalance: balance

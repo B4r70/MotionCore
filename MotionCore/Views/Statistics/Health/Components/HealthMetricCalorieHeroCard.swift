@@ -218,6 +218,16 @@ struct HealthMetricHeroCard: View {
     }
 }
 
+// MARK: - CalorieBalance UI-Erweiterung
+// Farb-Eigenschaft in SwiftUI-Schicht, da Color ein SwiftUI-Typ ist
+
+extension CalorieBalance {
+    // Farbe für die Bilanz-Anzeige
+    var statusColor: Color {
+        isDeficit ? Color.green : Color.red
+    }
+}
+
 // MARK: - Preview
 
 #Preview("Hero Card - Interaktiv") {

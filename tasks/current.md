@@ -57,3 +57,16 @@ Abgeschlossene Schritte: alle (L1-012 vollständig)
 Geänderte Dateien:
 - `MotionCore/Models/Types/ErrorTypes.swift` — `notConfigured` case + `errorDescription` zu `SupabaseError` hinzugefügt (Zeile 22, 37)
 - `MotionCore/Services/Database/Remote/Core/SupabaseClient.swift` — `baseURL`/`anonKey` auf `Optional` geändert, `fatalError` durch `print`-Warnung ersetzt, `makeRequest` ist jetzt `throws`, alle public-Methoden (get/post x2/rpc/upsert x2/patchWhere/deleteWhere) werfen `SupabaseError.notConfigured` wenn Konfiguration fehlt
+
+---
+
+## Review-Finding L1-002 — HealthMetricCalcEngine CalcEngine-Reinheit
+
+**14.05.2026**
+
+Abgeschlossene Schritte: alle (L1-002 vollständig)
+
+Geänderte Dateien:
+- `MotionCore/Services/Calculation/HealthMetricCalcEngine.swift` — `class : ObservableObject` → `struct`, `import Combine`/`import SwiftUI` entfernt, Init nimmt jetzt konkrete Werte statt `AppSettings`, `calculateTodayCalorieBalance` nimmt `consumed/basal/active: Int?` statt `HealthKitManager`, `CalorieBalance.statusColor` aus der struct entfernt (war SwiftUI-Abhängigkeit)
+- `MotionCore/Views/Statistics/Health/Components/HealthMetricCalorieHeroCard.swift` — `CalorieBalance` SwiftUI-Extension mit `statusColor: Color` hinzugefügt (vor dem Preview-Block)
+- `MotionCore/Views/Statistics/Health/View/HealthMetricView.swift` — Engine-Init und `calculateTodayCalorieBalance`-Aufruf auf neue Signatur umgestellt; View extrahiert konkrete Werte aus `AppSettings` und `HealthKitManager`

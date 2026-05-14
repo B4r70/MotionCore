@@ -11,10 +11,8 @@
 // ---------------------------------------------------------------------------------/
 //
 import Foundation
-import Combine
-import SwiftUI
 
-class HealthMetricCalcEngine: ObservableObject {
+struct HealthMetricCalcEngine {
 
     // Die dynamischen Daten (Workouts) kommen als Input in den Initializer
     let allWorkouts: [CardioSession]
@@ -27,14 +25,20 @@ class HealthMetricCalcEngine: ObservableObject {
     private let userActivityLevel: UserActivityLevel
 
     // MARK: - Initializer
-    init(workouts: [CardioSession], settings: AppSettings) {
+    init(
+        workouts: [CardioSession],
+        birthday: Date,
+        age: Int,
+        gender: Gender,
+        bodyHeight: Int,
+        activityLevel: UserActivityLevel
+    ) {
         self.allWorkouts = workouts
-        // Werte beim Init kopieren
-        self.userBirthdayDate = settings.userBirthdayDate
-        self.userAge = settings.userAge
-        self.userGender = settings.userGender
-        self.userBodyHeight = settings.userBodyHeight
-        self.userActivityLevel = settings.userActivityLevel
+        self.userBirthdayDate = birthday
+        self.userAge = age
+        self.userGender = gender
+        self.userBodyHeight = bodyHeight
+        self.userActivityLevel = activityLevel
     }
 
     // MARK: Statische Daten direkt aus gespeicherten Werten
@@ -100,12 +104,14 @@ class HealthMetricCalcEngine: ObservableObject {
         return bmr * userActivityLevel.rawValue
     }
 
-    // Berechnung: Kalorienbilanz aus HealthKit
-    func calculateTodayCalorieBalance(from healthKit: HealthKitManager) -> CalorieBalance? {
-        // Guard-Statement prüft alle notwendigen HealthKit-Werte
-        guard let consumed = healthKit.dietaryConsumedCalories,
-              let basal = healthKit.basalBurnedCalories,
-              let active = healthKit.activeBurnedCalories else {
+    // Berechnung: Kalorienbilanz aus konkreten HealthKit-Werten
+    func calculateTodayCalorieBalance(
+        consumed: Int?,
+        basal: Int?,
+        active: Int?
+    ) -> CalorieBalance? {
+        // Guard-Statement prüft alle notwendigen Werte
+        guard let consumed, let basal, let active else {
             return nil
         }
 
@@ -154,10 +160,5 @@ struct CalorieBalance {
     // Gibt den Status als Text zurück
     var statusText: String {
         isDeficit ? "Kaloriendefizit" : "Kalorienüberschuss"
-    }
-
-    // Farbe für die Bilanz-Anzeige
-    var statusColor: Color {
-        isDeficit ? Color.green : Color.red
     }
 }
