@@ -228,7 +228,10 @@ extension ExerciseSet {
         let copy = ExerciseSet(
             exerciseName: exerciseName,
             exerciseNameSnapshot: exerciseNameSnapshot,
-            exerciseUUIDSnapshot: exerciseUUIDSnapshot,
+            exerciseUUIDSnapshot: ExerciseSet.resolveSnapshot(
+                existing: exerciseUUIDSnapshot,
+                exercise: exercise
+            ),
             exerciseMediaAssetName: exerciseMediaAssetName,
             setNumber: setNumber,
             weight: weight,
@@ -280,7 +283,10 @@ extension ExerciseSet {
         let copy = ExerciseSet(
             exerciseName: exerciseName,
             exerciseNameSnapshot: exerciseNameSnapshot,
-            exerciseUUIDSnapshot: exerciseUUIDSnapshot,
+            exerciseUUIDSnapshot: ExerciseSet.resolveSnapshot(
+                existing: exerciseUUIDSnapshot,
+                exercise: exercise
+            ),
             exerciseMediaAssetName: exerciseMediaAssetName,
             isUnilateralSnapshot: isUnilateralSnapshot,
             setNumber: setNumber,
@@ -312,5 +318,35 @@ extension ExerciseSet {
         copy.trainingPlan = nil
 
         return copy
+    }
+}
+
+// MARK: - Snapshot-Resolution Helper
+
+extension ExerciseSet {
+    /// Resolves a stable exercise UUID snapshot from available sources.
+    /// Priority order:
+    ///   1. existing snapshot (if non-empty and parses as UUID)
+    ///   2. exercise.apiID (stable for bundle exercises)
+    ///   3. exercise.exerciseUUID (fallback for custom exercises)
+    ///   4. empty string (no source — groupKey will fall back to name)
+    ///
+    /// Used by all ExerciseSet anlege/clone paths to prevent empty
+    /// snapshots whenever an Exercise relationship is available.
+    static func resolveSnapshot(
+        existing: String,
+        exercise: Exercise?
+    ) -> String {
+        // Existing snapshot is valid → keep it (no drift)
+        let trimmed = existing.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty, UUID(uuidString: trimmed) != nil {
+            return trimmed
+        }
+        // Derive from exercise relationship
+        if let ex = exercise {
+            return (ex.apiID ?? ex.exerciseUUID).uuidString
+        }
+        // No source — groupKey falls back to exerciseName
+        return ""
     }
 }

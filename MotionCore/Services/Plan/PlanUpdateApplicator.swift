@@ -69,11 +69,22 @@ struct PlanUpdateApplicator {
             case .exerciseAdded(let snapshots):
                 // Neue Übung aus Snapshots als Template-Sets anlegen
                 let nextOrder = plan.nextSortOrder
+                let allExercises = (try? context.fetch(FetchDescriptor<Exercise>())) ?? []
                 for snapshot in snapshots {
+                    // Library-Lookup über Namen: nur eindeutige Treffer verwenden (bei Ambiguität: kein Exercise)
+                    let matches = allExercises.filter {
+                        $0.name == snapshot.exerciseName
+                        || $0.name == snapshot.exerciseNameSnapshot
+                    }
+                    let resolvedExercise: Exercise? = (matches.count == 1) ? matches[0] : nil
+
                     let newSet = ExerciseSet(
                         exerciseName: snapshot.exerciseName,
                         exerciseNameSnapshot: snapshot.exerciseNameSnapshot,
-                        exerciseUUIDSnapshot: snapshot.exerciseUUIDSnapshot,
+                        exerciseUUIDSnapshot: ExerciseSet.resolveSnapshot(
+                            existing: snapshot.exerciseUUIDSnapshot,
+                            exercise: resolvedExercise
+                        ),
                         exerciseMediaAssetName: snapshot.exerciseMediaAssetName,
                         isUnilateralSnapshot: snapshot.isUnilateralSnapshot,
                         setNumber: snapshot.setNumber,
@@ -90,6 +101,7 @@ struct PlanUpdateApplicator {
                         sortOrder: nextOrder,
                         supersetGroupId: snapshot.supersetGroupId
                     )
+                    newSet.exercise = resolvedExercise
                     context.insert(newSet)
                     plan.addTemplateSet(newSet)
                 }

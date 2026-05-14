@@ -100,7 +100,10 @@ final class TrainingPlan {
             let newSet = ExerciseSet(
                 exerciseName: templateSet.exerciseName,
                 exerciseNameSnapshot: templateSet.exerciseNameSnapshot,
-                exerciseUUIDSnapshot: templateSet.exerciseUUIDSnapshot,
+                exerciseUUIDSnapshot: ExerciseSet.resolveSnapshot(
+                    existing: templateSet.exerciseUUIDSnapshot,
+                    exercise: templateSet.exercise
+                ),
                 exerciseMediaAssetName: templateSet.exerciseMediaAssetName,
                 setNumber: templateSet.setNumber,
                 weight: templateSet.weight,

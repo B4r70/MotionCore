@@ -83,3 +83,17 @@ Geänderte Dateien:
 - `MotionCore/Models/Core/Exercise.swift` — Schritt 1: `var exerciseUUID: UUID = UUID()` nach `isSystemExercise` eingefügt (mit Kommentar zu CloudKit-Default-Bug und Fallback-Zweck)
 - `MotionCore/Models/Core/ExerciseSet.swift` — Schritt 2: Convenience-Init Zeile ~108: `exercise.persistentModelID.hashValue.description` ersetzt durch `(exercise.apiID ?? exercise.exerciseUUID).uuidString`
 - `MotionCore/Views/Root/View/BaseView.swift` — Schritte 3+4: `deduplicateExerciseUUIDs(context:)` als private Methode hinzugefügt; Aufruf in `onAppear` vor `repairSnapshotsOnLaunch` eingetragen
+
+---
+
+## Phase C.2b — Anlegepfade absichern (L1-008)
+
+**14.05.2026**
+
+Abgeschlossene Schritte: Schritt 7 (Recherche), 1, 2, 3, 4, 5, 6
+
+Geänderte Dateien:
+- `MotionCore/Models/Core/ExerciseSet.swift` — Schritt 1: `resolveSnapshot(existing:exercise:)` als neue Extension; Schritt 2: `cloneForSession()` nutzt Helper; Schritt 3: `cloneForPlanEditing()` nutzt Helper
+- `MotionCore/Models/Core/TrainingPlan.swift` — Schritt 4: `createSession()` nutzt Helper für templateSet-Loop
+- `MotionCore/Services/Plan/PlanUpdateApplicator.swift` — Schritt 5: `.exerciseAdded` fetcht alle Exercises, führt name-basierten eindeutigen Lookup durch, nutzt Helper + setzt `newSet.exercise`
+- `MotionCore/Services/Database/Remote/PlanImport/PlanImportApplyService.swift` — Schritt 6: `buildNameLookup` hinzugefügt; `apply` ergänzt name-basierten Fallback nach apiID-Lookup; `mapSet` nutzt `resolveSnapshot` mit payload-UUID als `existing`

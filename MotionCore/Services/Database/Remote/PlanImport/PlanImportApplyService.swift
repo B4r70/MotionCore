@@ -60,14 +60,22 @@ enum PlanImportApplyService {
             isActive: true
         )
 
-        // MARK: Exercise-Lookup-Dictionary (einmaliger Fetch, O(1) Lookup danach)
+        // MARK: Exercise-Lookup-Dictionaries (einmaliger Fetch, O(1) Lookup danach)
 
         let exerciseLookup: [String: Exercise] = buildExerciseLookup(in: context)
+        let nameLookup: [String: [Exercise]] = buildNameLookup(in: context)
 
         // MARK: Sets aus Exercises mappen
 
         for exerciseDTO in payload.exercises {
-            let foundExercise = exerciseLookup[exerciseDTO.exerciseUuid.lowercased()]
+            // Primärer Lookup via apiID (kanonische UUID aus dem Server-Katalog)
+            var foundExercise = exerciseLookup[exerciseDTO.exerciseUuid.lowercased()]
+
+            // Fallback: Name-Lookup (bei Exercises noch nicht im lokalen Katalog per apiID)
+            if foundExercise == nil {
+                let nameMatches = nameLookup[exerciseDTO.exerciseName] ?? []
+                if nameMatches.count == 1 { foundExercise = nameMatches[0] }
+            }
 
             for setDTO in exerciseDTO.sets {
                 let set = mapSet(
@@ -85,7 +93,9 @@ enum PlanImportApplyService {
 
     // MARK: - Hilfsmethoden (privat)
 
-    /// Fetcht alle Exercises mit apiID != nil und baut ein lowercased-UUID-String → Exercise Dictionary.
+    /// Fetcht alle Exercises und baut:
+    ///   1. lowercased-UUID-String (apiID) → Exercise  (primärer Lookup)
+    ///   2. Name → Exercise  (Fallback für name-based Resolution)
     private static func buildExerciseLookup(in context: ModelContext) -> [String: Exercise] {
         let descriptor = FetchDescriptor<Exercise>()
         guard let all = try? context.fetch(descriptor) else { return [:] }
@@ -94,6 +104,18 @@ enum PlanImportApplyService {
         for exercise in all {
             guard let apiID = exercise.apiID else { continue }
             dict[apiID.uuidString.lowercased()] = exercise
+        }
+        return dict
+    }
+
+    /// Fetcht alle Exercises für name-basierten Fallback-Lookup.
+    private static func buildNameLookup(in context: ModelContext) -> [String: [Exercise]] {
+        let descriptor = FetchDescriptor<Exercise>()
+        guard let all = try? context.fetch(descriptor) else { return [:] }
+
+        var dict: [String: [Exercise]] = [:]
+        for exercise in all {
+            dict[exercise.name, default: []].append(exercise)
         }
         return dict
     }
@@ -127,7 +149,10 @@ enum PlanImportApplyService {
         let nameSnapshot = exerciseDTO.exerciseName
 
         let mediaAsset = foundExercise?.mediaAssetName ?? exerciseDTO.exerciseMediaAssetName
-        let uuidSnapshot = exerciseDTO.exerciseUuid.lowercased()
+        let uuidSnapshot = ExerciseSet.resolveSnapshot(
+            existing: exerciseDTO.exerciseUuid,
+            exercise: foundExercise
+        )
         let isUnilateral = foundExercise?.isUnilateral ?? false
 
         let set = ExerciseSet(
