@@ -18,7 +18,6 @@
 //
 import Foundation
 import SwiftData
-import SwiftUI
 
 // MARK: - Helper Types
 

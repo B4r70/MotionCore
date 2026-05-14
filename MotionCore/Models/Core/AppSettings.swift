@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------------/
 //
 import Combine
-import SwiftUI
+import Foundation
 
 // MARK: - App Settings Manager
 

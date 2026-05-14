@@ -97,7 +97,6 @@
 		4EF7B9D12F0815DC00C603DC /* Exceptions for "MotionCoreWidgets" folder in "MotionCore" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Assets.xcassets,
 				WorkoutActivityAttributes.swift,
 			);
 			target = 4EBA616C2EA7C87D002426EE /* MotionCore */;
