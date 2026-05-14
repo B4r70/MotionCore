@@ -90,6 +90,24 @@ Then:
 
 Silently skipping false finding not allowed — even if "correct" reaction (no change) same.
 
+## When the fix suggestion mentions architecture intent
+
+If the "Empfohlene Korrektur" or "Konkreter Fix" mentions terms
+like "zentrale Konstante", "Single Source of Truth", "Extract",
+"avoid duplication", "ideal lösung wäre …":
+
+- The reviewer is signaling that the structural change is part
+  of the fix, not optional polish.
+- Implementing only the symptom (matching values, expanded list,
+  added flag) and leaving the duplication / coupling in place
+  is NOT a complete fix.
+- If the structural change feels too large for the current phase,
+  STOP and report this back as a sub-question, e.g.:
+  "Finding [ID] suggests extracting X to avoid drift. Implementing
+   the minimal version now would leave the drift risk in place.
+   Should I do the full extraction or the minimal version?"
+- Do not silently choose the minimal version.
+
 ## Import handling
 
 When fix removes import:

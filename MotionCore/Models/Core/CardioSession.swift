@@ -146,23 +146,4 @@ final class CardioSession {
         cardioDeviceRaw = cardioDevice.rawValue
     }
 
-    // MARK: - Session-Steuerung (NEU)
-
-    // Training starten
-    func start() {
-        startedAt = Date()
-        isCompleted = false
-        isLiveSession = true
-    }
-
-    // Training beenden
-    func complete() {
-        completedAt = Date()
-        isCompleted = true
-
-        // Dauer berechnen und speichern
-        if let minutes = actualDuration {
-            duration = minutes
-        }
-    }
 }

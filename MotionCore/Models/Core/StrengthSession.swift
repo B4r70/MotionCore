@@ -241,26 +241,6 @@ final class StrengthSession {
         self.intensityRaw = intensity.rawValue
     }
 
-    // MARK: - Session-Steuerung
-
-    // Training starten
-    func start() {
-        startedAt = Date()
-        isCompleted = false
-        isLiveSession = true // Markiert als Live-Session
-    }
-
-    // Training beenden
-    func complete() {
-        completedAt = Date()
-        isCompleted = true
-
-        // Dauer berechnen und speichern
-        if let minutes = actualDuration {
-            duration = minutes
-        }
-    }
-
     // Nächster unerledigter Satz
     var nextUncompletedSet: ExerciseSet? {
         safeExerciseSets
