@@ -17,11 +17,12 @@ import Foundation
 @MainActor
 struct PreviewData {
     static let sharedContainer: ModelContainer = {
-        // In-Memory-Konfiguration für die Preview
+        // In-Memory-Konfiguration für die Preview — Schema aus der zentralen Quelle AppSchema.swift
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: CardioSession.self,
-                                            BodyMeasurement.self,
-                                            configurations: config)
+        let container = try! ModelContainer(
+            for: appSchema,
+            configurations: config
+        )
 
         // Mock-Daten in den Kontext einfügen
         let context = container.mainContext

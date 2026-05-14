@@ -38,23 +38,6 @@ struct MotionCoreApp: App {
 
     private static let log = Logger(subsystem: "MotionCore", category: "SwiftData")
 
-    private static let appSchema = Schema([
-        CardioSession.self,
-        StrengthSession.self,
-        OutdoorSession.self,
-        ExerciseSet.self,
-        ExerciseMetrics.self,
-        ExerciseRating.self,
-        Exercise.self,
-        TrainingPlan.self,
-        Studio.self,
-        StudioEquipment.self,
-        ExerciseProgressionState.self,
-        SessionReadiness.self,
-        HealthBaseline.self,
-        BodyMeasurement.self
-    ])
-
     // ✅ CloudKit im Simulator standardmäßig AUS (Widget/LiveActivity kann trotzdem via AppGroup lokal lesen)
     private static var useCloudKit: Bool {
         #if targetEnvironment(simulator)
@@ -88,13 +71,13 @@ struct MotionCoreApp: App {
 
         do {
             let config = ModelConfiguration(
-                schema: MotionCoreApp.appSchema,
+                schema: appSchema,
                 url: storeURL,
                 cloudKitDatabase: MotionCoreApp.useCloudKit ? .automatic : .none
             )
 
             MotionCoreApp.log.info("✅ Creating ModelContainer (CloudKit=\(MotionCoreApp.useCloudKit ? "ON" : "OFF")) store=\(storeURL.path)")
-            return try ModelContainer(for: MotionCoreApp.appSchema, configurations: [config])
+            return try ModelContainer(for: appSchema, configurations: [config])
 
         } catch {
             MotionCoreApp.log.error("❌ ModelContainer init failed: \(String(describing: error))")
@@ -105,12 +88,12 @@ struct MotionCoreApp: App {
 
             // Fallback: lokal (aber weiterhin AppGroup-Store, damit Widget/LiveActivity mitliest)
             let localConfig = ModelConfiguration(
-                schema: MotionCoreApp.appSchema,
+                schema: appSchema,
                 url: storeURL,
                 cloudKitDatabase: .none
             )
             MotionCoreApp.log.warning("⚠️ Falling back to LOCAL (CloudKit OFF) store=\(storeURL.path)")
-            return try! ModelContainer(for: MotionCoreApp.appSchema, configurations: [localConfig])
+            return try! ModelContainer(for: appSchema, configurations: [localConfig])
         }
     }()
 

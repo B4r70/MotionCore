@@ -48,6 +48,11 @@ Swift file order:
 - Subview from `ActiveWorkoutView` → `ActiveWorkout[Section]View.swift` (e.g. `ActiveWorkoutStatsSection.swift`)
 - Shared helpers → `[Domain]Helper.swift` or existing utilities
 - Reusable UI components → shared components directory
+- **No `+` in filenames.** Use descriptive compound names instead.
+  Wrong: `BaseView+Lifecycle.swift`, `Exercise+Supabase.swift`
+  Right: `BaseViewLifecycle.swift`, `ExerciseSupabaseImport.swift`
+  The file may still declare an `extension` on the parent type;
+  the constraint applies only to the filename.
 
 ### What stays together
 

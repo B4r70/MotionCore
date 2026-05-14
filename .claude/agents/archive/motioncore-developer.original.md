@@ -68,43 +68,51 @@ Otherwise:
 
 ## Special case: false finding
 
-If finding to fix is NOT reproducible in file:
-- Cited code excerpt not in file
-- Allegedly existing import doesn't exist
-- Cited line empty or contains something else
-- Claimed method signature not present
+If a finding to be fixed is NOT reproducible in the file:
+- The cited code excerpt is not in the file
+- The allegedly existing import does not exist
+- The cited line is empty or contains something else
+- The claimed method signature is not present
 
 Then:
-1. Do NOT modify file.
-2. Do NOT construct workaround ("reviewer probably meant …").
-3. Report finding explicitly:
+1. Do NOT modify the file.
+2. Do NOT construct a workaround ("the reviewer probably meant …").
+3. Report the finding back explicitly using this format:
 
    ❌ FALSE FINDING [<ID>]
    File: <path>
-   Claim: <what reviewer claimed, 1 sentence>
-   Reality: <what actually in file, 1 sentence>
+   Claim: <what the reviewer claimed, 1 sentence>
+   Reality: <what is actually in the file, 1 sentence>
    Verification: <how verified, e.g. "lines 1-25 read via Read,
                   no import SwiftUI present">
 
-4. Bartosz / orchestrating conversation decides whether reviewer corrected or finding re-investigated.
+4. Bartosz / the orchestrating conversation decides whether the
+   reviewer is corrected or the finding is re-investigated.
 
-Silently skipping false finding not allowed — even if "correct" reaction (no change) same.
+Silently skipping a false finding is not allowed — even if the
+"correct" reaction (no change) is the same.
 
 ## Import handling
 
-When fix removes import:
+When a fix removes an import:
 
-1. Check which symbols file uses:
+1. Check which symbols the file uses:
    - `Date`, `URL`, `UUID`, `Data`, `Calendar`, `Locale` → Foundation
    - `@Model`, `@Relationship`, `ModelContext` → SwiftData
    - `View`, `Color`, `@State`, `@Binding`, `Image` → SwiftUI
    - `@Published`, `ObservableObject`, `AnyCancellable` → Combine
 
-2. SwiftUI re-exports Foundation implicitly. If `import SwiftUI` removed and no explicit `import Foundation` present: add `import Foundation`.
+2. SwiftUI re-exports Foundation implicitly. If `import SwiftUI`
+   is removed and no explicit `import Foundation` is present:
+   add `import Foundation`.
 
-3. Combine NOT re-exported by SwiftUI (even though `@Published` often works with `@StateObject`). If `ObservableObject` or `@Published` used: `import Combine` must be explicit.
+3. Combine is NOT re-exported by SwiftUI (even though `@Published`
+   often works together with `@StateObject`). If `ObservableObject`
+   or `@Published` is used in the file: `import Combine` must be
+   explicit.
 
-4. After every import change, walk through file mentally: which types used? Modules still imported?
+4. After every import change, mentally walk through the file:
+   which types are used? Are their modules still imported?
 
 ## Agent Memory
 
