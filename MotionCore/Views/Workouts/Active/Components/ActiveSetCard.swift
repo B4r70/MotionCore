@@ -26,6 +26,8 @@ struct ActiveSetCard: View {
     var onOpenQuickConfig: (() -> Void)? = nil
     var isEngineSuggestion: Bool = false
     var isReadinessReduced: Bool = false
+        // 2c. Historische Referenz aus letzter Session (nil = keine Anzeige)
+    var lastSessionReference: LastSessionReferenceCalcEngine.Reference? = nil
         // 3. Bindings
     @Binding var selectedSetForEdit: ExerciseSet?
         // 4. Actions
@@ -204,6 +206,13 @@ struct ActiveSetCard: View {
                 .frame(maxWidth: .infinity)
             }
 
+            // Dezente Referenz-Zeile: Werte aus letzter Session (nur wenn >= 2 Saetze abwichen)
+            if let ref = lastSessionReference {
+                Text("Letztes Mal: \(ref.reps) Wdh. × \(formattedLastWeight(ref))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Button {
                 selectedSetForEdit = set
             } label: {
@@ -277,6 +286,28 @@ struct ActiveSetCard: View {
         let instructions = (exercise.instructions ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let description = exercise.exerciseDescription.trimmingCharacters(in: .whitespacesAndNewlines)
         return !instructions.isEmpty || !description.isEmpty
+    }
+
+    /// Formatiert das Gewicht der historischen Referenz.
+    /// Bei Koerpergewichts-Uebungen (weight == 0): "Koerpergewicht".
+    /// Bei unilateralen Uebungen: "2× X,X kg" (halbes Gewicht pro Seite).
+    private func formattedLastWeight(_ ref: LastSessionReferenceCalcEngine.Reference) -> String {
+        guard ref.weight > 0 else { return "Körpergewicht" }
+        let isUnilateral = set.isUnilateralSnapshot || (exercise?.isUnilateral ?? false)
+        if isUnilateral {
+            let perSide = ref.weight / 2
+            return "2× \(formatWeight(perSide)) kg"
+        }
+        return "\(formatWeight(ref.weight)) kg"
+    }
+
+    /// Gewicht als lokalisierte Zeichenkette (keine fuehrenden Nullen, max. 1 Nachkommastelle).
+    private func formatWeight(_ w: Double) -> String {
+        // Ganzzahliges Gewicht ohne Nachkommastelle anzeigen (z.B. "80" statt "80.0")
+        if w.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", w)
+        }
+        return String(format: "%.1f", w)
     }
 }
 

@@ -76,6 +76,9 @@ struct ActiveWorkoutView: View {
         // Gecachte Bewertungen pro Übungsgruppen-Schlüssel
     @State private var cachedExerciseRatings: [String: ExerciseQualityRating] = [:]
 
+        // Gecachte Letzte-Session-Referenzen pro groupKey → setNumber → Reference
+    @State private var cachedLastSessionReferences: [String: [Int: LastSessionReferenceCalcEngine.Reference]] = [:]
+
         // Rest-Timer: ausgelagert in eine Klasse, damit Timer-Closures
         // zuverlässig auf den State zugreifen – auch nach SwiftUI-Redraws.
     @StateObject private var restTimerManager = RestTimerManager()
@@ -321,6 +324,12 @@ struct ActiveWorkoutView: View {
             refreshSetCaches()
             cachedSessionVolume = computeSessionVolume()
 
+            // Letzte-Session-Referenzen fuer alle Uebungen vorbereiten
+            let initialKeys = Set(cachedGroupedSets.compactMap { $0.first?.groupKey })
+            for key in initialKeys {
+                refreshLastSessionReference(for: key)
+            }
+
             // Health-Tracking starten wenn Watch verbunden
             PhoneSessionManager.shared.sendStartHealthTracking()
             // Heartbeat immer aktivieren für Live-HR-Updates
@@ -348,6 +357,11 @@ struct ActiveWorkoutView: View {
         .onChange(of: exerciseListRefreshID) { _, _ in
             cachedGroupedSets = session.groupedSets
             refreshSetCaches()
+            // Letzte-Session-Referenzen fuer alle Uebungen neu aufbauen (z.B. nach Add-Exercise)
+            let allKeys = Set(cachedGroupedSets.compactMap { $0.first?.groupKey })
+            for key in allKeys {
+                refreshLastSessionReference(for: key)
+            }
         }
         .onChange(of: selectedExerciseKey) { oldValue, newValue in
             refreshSetCaches()
@@ -361,6 +375,11 @@ struct ActiveWorkoutView: View {
 
             // Smart-Fill: Prefill für neue Übung anstoßen
             prefillSmartSuggestionsIfNeeded()
+
+            // Letzte-Session-Referenz fuer neue Uebung auffrischen
+            if let key = newValue {
+                refreshLastSessionReference(for: key)
+            }
         }
         .onChange(of: sessionManager.isPaused) { _, isPaused in
             syncLiveActivityStates()
@@ -1395,6 +1414,54 @@ struct ActiveWorkoutView: View {
         session.safeExerciseSets.first(where: { $0.groupKey == groupKey })?.exercise
     }
 
+    // MARK: - Letzte-Session-Referenz Helpers
+
+    /// Berechnet und cached die Referenz-Werte der letzten Session fuer alle Work-Sets
+    /// einer Uebung. Wird bei Setup, Uebungswechsel und nach Add-Exercise aufgerufen.
+    private func refreshLastSessionReference(for groupKey: String) {
+        // Plan-Template-Sets fuer diese Uebung
+        let planSets = session.sourceTrainingPlan?.safeTemplateSets.filter {
+            $0.groupKey == groupKey
+        } ?? []
+
+        // Kein Plan vorhanden oder keine Template-Sets → leerer Cache-Eintrag
+        guard !planSets.isEmpty else {
+            cachedLastSessionReferences[groupKey] = [:]
+            return
+        }
+
+        // Letzte abgeschlossene Session fuer diese Uebung
+        let lastSets = lastCompletedSession(for: groupKey)?.safeExerciseSets.filter {
+            $0.groupKey == groupKey
+        } ?? []
+
+        // Keine historischen Daten → leerer Cache-Eintrag
+        guard !lastSets.isEmpty else {
+            cachedLastSessionReferences[groupKey] = [:]
+            return
+        }
+
+        // Engine pro Work-Set-Nummer aufrufen und Sub-Dictionary aufbauen
+        let workSetNumbers = planSets.filter { $0.setKind == .work }.map { $0.setNumber }
+        var references: [Int: LastSessionReferenceCalcEngine.Reference] = [:]
+        for setNumber in workSetNumbers {
+            let input = LastSessionReferenceCalcEngine.Input(
+                activeSetNumber: setNumber,
+                lastSessionSets: lastSets,
+                planTemplateSets: planSets
+            )
+            if let ref = LastSessionReferenceCalcEngine.resolve(input: input) {
+                references[setNumber] = ref
+            }
+        }
+        cachedLastSessionReferences[groupKey] = references
+    }
+
+    /// Liefert die gecachte Referenz fuer einen spezifischen Satz (nil wenn nicht vorhanden).
+    private func lastSessionReference(for set: ExerciseSet) -> LastSessionReferenceCalcEngine.Reference? {
+        cachedLastSessionReferences[set.groupKey]?[set.setNumber]
+    }
+
     /// Delegiert Prefill an das SmartFillViewModel wenn eine Übung ausgewählt ist.
     /// Übergibt den aktuellen Readiness-Modifier (Phase 2) damit die Engine
     /// reduzierte Gewichte vorschlägt wenn die Tagesform eingeschränkt ist.
@@ -1578,6 +1645,7 @@ struct ActiveWorkoutView: View {
                 },
                 isEngineSuggestion: smartFill?.isSuggestionActive(for: activeSet) ?? false,
                 isReadinessReduced: smartFill?.isReadinessReduced(for: activeSet) ?? false,
+                lastSessionReference: lastSessionReference(for: activeSet),
                 selectedSetForEdit: $selectedSetForEdit,
                 onComplete: completeSet
             )
