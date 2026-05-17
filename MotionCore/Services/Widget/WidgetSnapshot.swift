@@ -1,17 +1,13 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Services / Widget                                                /
+// Abschnitt . . : Services / Widget (Shared)                                       /
 // Datei . . . . : WidgetSnapshot.swift                                             /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 2026-04-20                                                       /
-// Beschreibung  : Codable Snapshot-Struct für Widget-Daten (App-Target)            /
+// Beschreibung  : Codable Snapshot-Struct für Widget-Daten (AppGroup-Bridge)       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
-// ---------------------------------------------------------------------------------/
-// Hinweis  . . : Identische Struct-Definitionen existieren im Widget-Extension     /
-//                Target (MotionCoreWidgets/Shared/WidgetSnapshot.swift).            /
-//                Änderungen müssen in beiden Dateien synchron gepflegt werden.     /
 // ---------------------------------------------------------------------------------/
 //
 import Foundation
@@ -46,6 +42,47 @@ struct WidgetSnapshot: Codable {
     // MARK: - Zeitstempel
 
     let updatedAt: Date
+
+    // MARK: - Preview-Daten (für Widget-Previews und Placeholder)
+
+    static var preview: WidgetSnapshot {
+        WidgetSnapshot(
+            streak: StreakInfo(currentStreak: 7, longestStreak: 21),
+            weeklyProgress: WeeklyProgress(completed: 3, goal: 5),
+            lastWorkout: LastWorkoutSummary(
+                date: Date().addingTimeInterval(-86400),
+                durationMinutes: 62,
+                totalVolumeKg: 8450,
+                topExerciseName: "Kniebeugen",
+                completedSets: 18
+            ),
+            big3PRs: [
+                PRItem(exerciseName: "Bankdrücken", weight1RMkg: 102.5),
+                PRItem(exerciseName: "Kniebeugen", weight1RMkg: 145.0),
+                PRItem(exerciseName: "Kreuzheben", weight1RMkg: 180.0)
+            ],
+            volumeTrend: [
+                VolumeTrendPoint(weekLabel: "KW14", volumeKg: 7200),
+                VolumeTrendPoint(weekLabel: "KW15", volumeKg: 8100),
+                VolumeTrendPoint(weekLabel: "KW16", volumeKg: 7800),
+                VolumeTrendPoint(weekLabel: "KW17", volumeKg: 8450)
+            ],
+            updatedAt: Date()
+        )
+    }
+
+    // MARK: - Leerer Placeholder (keine Daten)
+
+    static var placeholder: WidgetSnapshot {
+        WidgetSnapshot(
+            streak: StreakInfo(currentStreak: 0, longestStreak: 0),
+            weeklyProgress: WeeklyProgress(completed: 0, goal: 5),
+            lastWorkout: nil,
+            big3PRs: [],
+            volumeTrend: [],
+            updatedAt: .distantPast
+        )
+    }
 }
 
 // MARK: - Sub-Structs

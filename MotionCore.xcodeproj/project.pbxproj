@@ -101,6 +101,22 @@
 			);
 			target = 4EBA616C2EA7C87D002426EE /* MotionCore */;
 		};
+		749EA5B488504B7C9AC6F909 /* Exceptions for "MotionCore" folder in "MotionCoreWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Services/Widget/WidgetDataStore.swift,
+				Services/Widget/WidgetSnapshot.swift,
+			);
+			target = 4EF7B9B22F08133600C603DC /* MotionCoreWidgetsExtension */;
+		};
+		EEDE2C4753614E379CD84B7B /* Exceptions for "MotionCore" folder in "MotionCoreWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Services/Watch/WatchHealthDataTypes.swift,
+				Services/Watch/WatchMessageKeys.swift,
+			);
+			target = 4ECC81722F5B4C2F004A3D66 /* MotionCoreWatch Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -108,6 +124,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				4E0C700B2EBB7C81007CE982 /* Exceptions for "MotionCore" folder in "MotionCore" target */,
+				749EA5B488504B7C9AC6F909 /* Exceptions for "MotionCore" folder in "MotionCoreWidgetsExtension" target */,
+				EEDE2C4753614E379CD84B7B /* Exceptions for "MotionCore" folder in "MotionCoreWatch Watch App" target */,
 			);
 			path = MotionCore;
 			sourceTree = "<group>";
