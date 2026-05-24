@@ -214,6 +214,11 @@ extension WatchSessionManager {
 
         // Health-Tracking starten (F1: Auth automatisch beim ersten Start)
         if message[WatchWorkoutLifecycleKey.startHealthTracking] != nil {
+            if let existing = workoutManager {
+                workoutManager = nil
+                stopHeartbeatTimer()
+                Task { await existing.discardWorkout() }
+            }
             let manager = WatchWorkoutManager()
             self.workoutManager = manager
 

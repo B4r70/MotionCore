@@ -191,9 +191,13 @@ struct ActiveWorkoutView: View {
                 setManager.refreshLastSessionReference(for: key)
             }
 
-            // Health-Tracking starten wenn Watch verbunden
-            PhoneSessionManager.shared.sendStartHealthTracking()
-            PhoneSessionManager.shared.sendHeartbeatEnabled(true)
+            // Health-Tracking nur starten wenn noch kein Tracking läuft (verhindert
+            // Session-Fragmentierung bei Re-Appear der View während laufendem Workout).
+            if !PhoneSessionManager.shared.isWatchTrackingActive {
+                PhoneSessionManager.shared.resetHealthData()
+                PhoneSessionManager.shared.sendStartHealthTracking()
+                PhoneSessionManager.shared.sendHeartbeatEnabled(true)
+            }
         }
 
         // =====================================================================
