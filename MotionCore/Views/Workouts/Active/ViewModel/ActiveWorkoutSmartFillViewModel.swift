@@ -33,11 +33,13 @@ final class ActiveWorkoutSmartFillViewModel {
     // MARK: - Abhängigkeiten
 
     private let context: ModelContext
+    private let repository: ProgressionStateProviding
 
     // MARK: - Init
 
-    init(context: ModelContext) {
+    init(context: ModelContext, repository: ProgressionStateProviding) {
         self.context = context
+        self.repository = repository
     }
 
     // MARK: - Prefill
@@ -57,10 +59,7 @@ final class ActiveWorkoutSmartFillViewModel {
         guard let exercise else { return }
 
         // Progressions-Zustand laden — fehlt er, gibt es keine Suggestion (neue Übung ohne Historie)
-        guard let progressionState = ExerciseProgressionStateResolver.fetch(
-            in: context,
-            exerciseGroupKey: exerciseGroupKey
-        ) else { return }
+        guard let progressionState = repository.fetch(exerciseGroupKey: exerciseGroupKey) else { return }
 
         // Letzte abgeschlossene Session-Sätze für diese Übung
         let lastSessionSets = lastCompletedSession?.safeExerciseSets
@@ -121,8 +120,7 @@ final class ActiveWorkoutSmartFillViewModel {
 
         // Lazy-State-Creation: nur für Work-Sets und nur wenn Exercise bekannt
         guard let exercise, completedSet.setKindRaw == "work" else { return }
-        ExerciseProgressionStateResolver.createIfMissing(
-            in: context,
+        repository.createIfMissing(
             exerciseGroupKey: completedSet.groupKey,
             workingWeight: completedSet.weight,
             exercise: exercise

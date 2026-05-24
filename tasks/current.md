@@ -1,210 +1,524 @@
-# Letzte Trainingswerte als dezente Referenz im ActiveSetCard
+# C1 — ActiveWorkoutView-Extraktion: Fokussierte Observables
 
-**Status:** Bereit zur Implementierung · **Komplexität:** Medium
-
----
-
-## Summary
-
-`ActiveSetCard` zeigt unauffällig die Reps/Gewicht-Werte des letzten Trainings für genau diesen Satz an — aber nur, wenn das letzte Training in **mindestens zwei** Sätzen der Übung sichtbar vom aktuellen Trainingsplan abwich (Gewicht und/oder Reps). Einmalige Ausreißer werden ignoriert.
+**Status:** Bereit zur Implementierung · **Komplexität:** Large
 
 ---
 
-## Scope
+## Ziel
 
-**Included:**
-- Vergleich letzte Session-Sätze ↔ Plan-Template-Sätze pro Übung
-- Per-Satz-Anzeige der historischen Werte (Reps × Gewicht) im aktiven `ActiveSetCard`
-- Dezente UI (Caption, secondary) — kein Badge, keine Card, kein Icon-Hervorheben
-- Nur Work-Sets
+`ActiveWorkoutView` (2 176 Zeilen, ~30 Methoden, kein Seam) in fokussierte, testbare Observables aufteilen.
+Die View wird auf ~400 Zeilen reduziert und koordiniert nur noch UI/Sheets/Alerts/SwiftData-Writes.
 
-**Excluded:**
-- Keine neue Datenmodell-Änderung
-- Keine Anpassung von `SmartFill`/`ProgressionCalcEngine`
-- Kein Diff-Banner / kein „+X kg"-Hinweis
-- Keine Anzeige im `RestTimerCard` / `ExerciseCompletedCard`
-- Keine Anzeige wenn `session.sourceTrainingPlan == nil` (Ad-hoc-Workouts)
+---
+
+## Design-Entscheide (unveränderlich)
+
+| Frage | Entscheid |
+|---|---|
+| Scope | Mehrere fokussierte Observables (nicht ein großes ViewModel) |
+| Koordination | Combine Publishers — `SetManager` publiziert Events, `WatchBridge` + `LiveActivityCtrl` subscriben |
+| WatchBridge | Konkrete Klasse (kein Protokoll-Seam), `@Observable` |
+| Datenfluss | View reicht `@Model`-Objekte durch — Observables enthalten KEINEN `ModelContext` |
+| SwiftData-Mutationen | **Regel:** Property-Mutationen auf `@Model`-Instanzen (z.B. `set.isCompleted = true`) sind in Observables erlaubt. `context.insert / context.delete / context.save` MUSS in der View bleiben |
+| C5 zuerst | `ExerciseProgressionStateResolver` → `ProgressionStateRepository` als Voraussetzung |
+
+---
+
+## Ziel-Architektur
+
+```
+ActiveWorkoutView (~400 L)
+├── @Bindable var session: StrengthSession                             ← Input
+├── @Query(filter: isCompleted) var allSessions: [StrengthSession]     ← bleibt
+├── @Query var studioEquipments: [StudioEquipment]                     ← bleibt
+├── @Environment(\.modelContext) var context                           ← bleibt (inserts/deletes/saves)
+├── @EnvironmentObject var sessionManager: ActiveSessionManager         ← bleibt
+├── @EnvironmentObject var appSettings: AppSettings                     ← bleibt
+├── @ObservedObject var phoneSession = PhoneSessionManager.shared      ← bleibt
+├── @StateObject var restTimerManager = RestTimerManager()             ← bleibt
+├── @State var setManager: SetManager                                   ← ~200 L
+├── @State var exerciseNav: ExerciseNav                                 ← ~150 L
+├── @State var watchBridge: WatchBridge                                 ← ~100 L
+├── @State var liveActivity: LiveActivityCtrl                           ← ~180 L
+└── @State var smartFill: ActiveWorkoutSmartFillViewModel?             ← bleibt (Init mit Repository)
+
+SetManager.setCompleted (PassthroughSubject<ExerciseSet, Never>)
+    → WatchBridge.sink { sendState() }
+    → LiveActivityCtrl.sink { syncDebounced() }
+SetManager.exerciseKeyChanged (PassthroughSubject<String, Never>)
+    → ExerciseNav.sink { selectedExerciseKey = $0 }   // Superset-Rotation
+```
 
 ---
 
 ## Affected Files
 
 | Datei | Änderung |
-|-------|----------|
-| `Services/Calculation/LastSessionReferenceCalcEngine.swift` | **neu** — pure struct, ermittelt Reference pro setNumber mit Gating (≥ 2 abweichende Work-Sets) |
-| `Views/Workouts/Active/Components/ActiveSetCard.swift` | neuer optionaler Parameter `lastSessionReference`; dezente Caption-Zeile |
-| `Views/Workouts/Active/View/ActiveWorkoutView.swift` | neuer Cache `cachedLastSessionReferences`, Helper `refreshLastSessionReference()`, Verdrahtung |
-
----
-
-## Risks
-
-- **Plan fehlt:** `session.sourceTrainingPlan` kann `nil` sein → Engine wird nicht aufgerufen, `Reference? = nil`.
-- **groupKey-Drift:** Bei alten Sessions ohne `exerciseUUIDSnapshot` — durch L1-008-Fixes weitgehend entschärft; Engine liefert `nil` bei fehlendem Match.
-- **Set-Number-Mismatch:** Letzte Session und Plan können unterschiedliche Satzanzahl haben → strenge `setNumber`-Zuordnung, fehlende → keine Referenz.
-- **Cache-Invalidierung:** Cache muss bei `selectedExerciseKey`-Wechsel UND `exerciseListRefreshID` aufgefrischt werden.
-- **Gleitkomma-Vergleich:** `abs(delta) >= 0.01` für `weight`, direkte Int-Gleichheit für `reps`.
+|---|---|
+| `Services/Calculation/ExerciseProgressionStateResolver.swift` | **löschen** |
+| `Services/Progression/ProgressionStateRepository.swift` | **neu** — Protokoll + konkrete Impl |
+| `Services/AutoProgressionApplier.swift` | Signatur um `repository: ProgressionStateProviding` erweitern |
+| `Views/Workouts/Active/ViewModel/ActiveWorkoutSmartFillViewModel.swift` | Init: `context` + `repository` |
+| `Views/Workouts/Active/ViewModel/SetManager.swift` | **neu** — Set/Superset-Logik + Caches + Publishers |
+| `Views/Workouts/Active/ViewModel/ExerciseNav.swift` | **neu** — Exercise-Selektion/Reorder |
+| `Views/Workouts/Active/ViewModel/WatchBridge.swift` | **neu** — Watch-Sync konkrete Klasse |
+| `Views/Workouts/Active/ViewModel/LiveActivityCtrl.swift` | **neu** — Live Activity Management |
+| `Views/Workouts/Active/Components/RestTimerCardContainer.swift` | **neu** — aus View extrahiert |
+| `Views/Workouts/Active/Components/AddExerciseDuringWorkoutSheet.swift` | **neu** — aus View extrahiert |
+| `Views/Workouts/Active/View/ActiveWorkoutView.swift` | stark reduziert (~400 L) |
 
 ---
 
 ## Implementation Steps
 
-### Schritt 1 — CalcEngine anlegen
+### Phase 0 — C5: ProgressionStateRepository (Voraussetzung)
 
-Neue Datei `MotionCore/Services/Calculation/LastSessionReferenceCalcEngine.swift`:
+#### Schritt 0.1 — Protokoll + Implementierung anlegen
+
+Neue Datei `MotionCore/Services/Progression/ProgressionStateRepository.swift`:
 
 ```swift
-struct LastSessionReferenceCalcEngine {
-    struct Reference {
-        let reps: Int
-        let weight: Double
+protocol ProgressionStateProviding {
+    func fetch(exerciseGroupKey: String) -> ExerciseProgressionState?
+    @discardableResult
+    func createIfMissing(
+        exerciseGroupKey: String,
+        workingWeight: Double,
+        exercise: Exercise
+    ) -> ExerciseProgressionState
+}
+
+final class ProgressionStateRepository: ProgressionStateProviding {
+    private let context: ModelContext
+    init(context: ModelContext) { self.context = context }
+
+    func fetch(exerciseGroupKey: String) -> ExerciseProgressionState? {
+        var d = FetchDescriptor<ExerciseProgressionState>(
+            predicate: #Predicate { $0.exerciseGroupKey == exerciseGroupKey }
+        )
+        d.fetchLimit = 1
+        return (try? context.fetch(d))?.first
     }
 
-    struct Input {
-        let activeSetNumber: Int
-        let lastSessionSets: [ExerciseSet]
-        let planTemplateSets: [ExerciseSet]
+    @discardableResult
+    func createIfMissing(
+        exerciseGroupKey: String,
+        workingWeight: Double,
+        exercise: Exercise
+    ) -> ExerciseProgressionState {
+        if let existing = fetch(exerciseGroupKey: exerciseGroupKey) { return existing }
+        let minReps = exercise.repRangeMin > 0 ? exercise.repRangeMin : 8
+        let maxReps = exercise.repRangeMax > 0 ? exercise.repRangeMax : 12
+        let targetReps: Int
+        if let custom = exercise.customTargetReps, custom > 0 { targetReps = custom }
+        else { targetReps = max(1, (minReps + maxReps) / 2) }
+        let state = ExerciseProgressionState(
+            exerciseGroupKey: exerciseGroupKey,
+            workingWeight: workingWeight
+        )
+        state.targetReps = targetReps
+        state.minTargetReps = minReps
+        state.maxTargetReps = maxReps
+        state.progressionModeRaw = exercise.progressionModeRaw
+        context.insert(state)
+        try? context.save()
+        return state
     }
+}
+```
 
-    static func resolve(input: Input) -> Reference? {
-        // 1. Nur Work-Sets
-        let lastWork = input.lastSessionSets.filter { $0.setKind == .work }
-        let planWork = input.planTemplateSets.filter { $0.setKind == .work }
+#### Schritt 0.2 — AutoProgressionApplier migrieren
 
-        // 2. Paare per setNumber
-        var pairs: [Int: (last: ExerciseSet, plan: ExerciseSet)] = [:]
-        for planSet in planWork {
-            if let lastSet = lastWork.first(where: { $0.setNumber == planSet.setNumber }) {
-                pairs[planSet.setNumber] = (last: lastSet, plan: planSet)
+`AutoProgressionApplier.apply(...)` bekommt einen zusätzlichen Parameter:
+```swift
+static func apply(
+    forSession session: StrengthSession,
+    allPreviousSessions: [StrengthSession],
+    studioEquipments: [StudioEquipment],
+    context: ModelContext,
+    repository: ProgressionStateProviding,   // NEU
+    readinessModifier: Double = 1.0
+) -> [ExerciseProgressionState]
+```
+Im Body: `ExerciseProgressionStateResolver.fetch(in: context, exerciseGroupKey: groupKey)` → `repository.fetch(exerciseGroupKey: groupKey)`.
+Aufrufer in `ActiveWorkoutView.finishWorkout()` reicht `ProgressionStateRepository(context: context)` durch.
+
+#### Schritt 0.3 — ActiveWorkoutSmartFillViewModel migrieren
+
+```swift
+init(context: ModelContext, repository: ProgressionStateProviding)
+```
+- `context` bleibt (nötig für `context.save()` in `prefillSuggestion`)
+- Callsite 1: `ExerciseProgressionStateResolver.fetch(in: context, ...)` → `repository.fetch(...)`
+- Callsite 2: `ExerciseProgressionStateResolver.createIfMissing(in: context, ...)` → `repository.createIfMissing(...)`
+
+In `ActiveWorkoutView.setupSession()`:
+```swift
+smartFill = ActiveWorkoutSmartFillViewModel(
+    context: context,
+    repository: ProgressionStateRepository(context: context)
+)
+```
+
+#### Schritt 0.4 — ExerciseProgressionStateResolver löschen
+
+Datei entfernen + aus `project.pbxproj` austragen.
+
+**Verifikation Phase 0:** Build grün · `grep -r "ExerciseProgressionStateResolver" MotionCore/` → 0 Treffer.
+
+---
+
+### Phase 1 — Nested Structs extrahieren
+
+#### Schritt 1.1 — RestTimerCardContainer
+
+Datei `Views/Workouts/Active/Components/RestTimerCardContainer.swift` anlegen.
+Struct 1:1 aus `ActiveWorkoutView.swift` ausschneiden — keine Logikänderung.
+
+#### Schritt 1.2 — AddExerciseDuringWorkoutSheet
+
+Struct (inkl. `AdjustmentField`-Enum, Increment/Decrement-Logik, `addExerciseToSession`) in:
+`Views/Workouts/Active/Components/AddExerciseDuringWorkoutSheet.swift`
+
+---
+
+### Phase 2 — ExerciseNav extrahieren
+
+Neue Datei `Views/Workouts/Active/ViewModel/ExerciseNav.swift`:
+
+```swift
+@Observable @MainActor
+final class ExerciseNav {
+    var selectedExerciseKey: String?
+    private var session: StrengthSession?
+    private var cancellables = Set<AnyCancellable>()
+
+    func configure(session: StrengthSession, supersetKeyChanged: AnyPublisher<String, Never>) {
+        self.session = session
+        supersetKeyChanged
+            .sink { [weak self] key in
+                withAnimation(.easeInOut) { self?.selectedExerciseKey = key }
             }
-        }
+            .store(in: &cancellables)
+    }
 
-        // 3. Abweichungen zählen
-        let deviationCount = pairs.values.filter {
-            abs($0.last.weight - $0.plan.weight) >= 0.01 || $0.last.reps != $0.plan.reps
-        }.count
+    func selectExercise(key: String) { selectedExerciseKey = key }
 
-        // 4. Gating: mindestens 2 abweichende Sätze
-        guard deviationCount >= 2 else { return nil }
+    // Berechnet neue sortOrder-Werte — mutiert nur Properties, kein context.save
+    func reorderExercise(from: Int, to: Int, in groupedSets: [[ExerciseSet]]) { ... }
 
-        // 5. Referenz für aktiven Satz
-        guard let pair = pairs[input.activeSetNumber] else { return nil }
-        return Reference(reps: pair.last.reps, weight: pair.last.weight)
+    func validateSelectedKey(against groupedSets: [[ExerciseSet]]) { ... }
+
+    // Nach Bestätigtem Delete: Key-Cleanup
+    func handleDeleted(groupKey: String) {
+        if selectedExerciseKey == groupKey { selectedExerciseKey = nil }
     }
 }
 ```
 
+Methoden aus `ActiveWorkoutView` migrieren:
+- `selectExercise(key:)` → `ExerciseNav.selectExercise`
+- `reorderExercise(from:to:)` → `ExerciseNav.reorderExercise` (Property-Mutation, kein save)
+- `validateSelectedExerciseKey()` → `ExerciseNav.validateSelectedKey`
+
+In View verbleibend:
+- `deleteExercise(groupKey:)` → setzt `exerciseToDelete + showDeleteAlert` (Alert-Trigger)
+- `confirmDelete()` → `context.delete(set)` + `exerciseNav.handleDeleted(groupKey:)` + Refresh
+- `onChange(of: exerciseNav.selectedExerciseKey)` → ruft `sessionManager.setSelectedExerciseKey` + `watchBridge.sendState()` + `prefillSmartSuggestionsIfNeeded()` + `setManager.refreshLastSessionReference` + `saveCurrentExerciseMetrics`
+
 ---
 
-### Schritt 2 — Cache + Helper in `ActiveWorkoutView`
+### Phase 3 — SetManager extrahieren
 
-Neuer State:
+Neue Datei `Views/Workouts/Active/ViewModel/SetManager.swift`:
+
+**State-Inventar (wandert rein):**
+- `cachedGroupedSets: [[ExerciseSet]]`
+- `cachedSessionVolume: Double`
+- `cachedCurrentSet: ExerciseSet?`
+- `cachedLastCompletedSet: ExerciseSet?`
+- `cachedCurrentExerciseIndex: Int`
+- `cachedLastSessionReferences: [String: [Int: LastSessionReferenceCalcEngine.Reference]]`
+
+**Publishers:**
 ```swift
-@State private var cachedLastSessionReferences: [String: [Int: LastSessionReferenceCalcEngine.Reference]] = [:]
+let setCompleted = PassthroughSubject<ExerciseSet, Never>()
+let exerciseKeyChanged = PassthroughSubject<String, Never>()   // Superset-Rotation
+let workoutShouldFinish = PassthroughSubject<Void, Never>()
+let restShouldStart = PassthroughSubject<Int, Never>()         // seconds
+let rirSheetShouldShow = PassthroughSubject<ExerciseSet, Never>()
+let prDetected = PassthroughSubject<(ExerciseSet, String, Double), Never>() // (set, name, oneRM)
 ```
 
-Neue Methode `refreshLastSessionReference(for groupKey: String)`:
-- Plan-Sets: `session.sourceTrainingPlan?.safeTemplateSets.filter { $0.groupKey == groupKey } ?? []`
-- Last-Sets: `lastCompletedSession(for: groupKey)?.safeExerciseSets.filter { $0.groupKey == groupKey } ?? []`
-- Wenn Plan-Sets leer → `cachedLastSessionReferences[groupKey] = [:]`, return
-- Sonst: alle Work-Set-Nummern ermitteln, Engine pro `setNumber` aufrufen, Sub-Dictionary füllen
-
-Aufrufstellen:
-- `setupSession()` — einmalig für alle groupKeys in `cachedGroupedSets`
-- `.onChange(of: selectedExerciseKey)` — für den neuen Key
-- `.onChange(of: exerciseListRefreshID)` — für alle Keys (nach Add-Exercise)
-
-Lookup-Helper:
+**Configure-Signatur:**
 ```swift
-func lastSessionReference(for set: ExerciseSet) -> LastSessionReferenceCalcEngine.Reference? {
-    cachedLastSessionReferences[set.groupKey]?[set.setNumber]
+func configure(
+    session: StrengthSession,
+    historicalSessionsProvider: @escaping () -> [StrengthSession],  // Closure statt @Query
+    selectedKeyProvider: @escaping () -> String?,
+    selectedKeySetter: @escaping (String?) -> Void
+)
+```
+
+**API (kein `context`, keine SwiftData-Writes):**
+- `rebuildGroupedCaches()` — aus `session.safeExerciseSets` neu aufbauen
+- `refreshSetCaches()` — currentSet / lastCompletedSet / currentExerciseIndex ableiten
+- `recomputeSessionVolume()` — Volume neu berechnen
+- `completeSet(_ set: ExerciseSet)` — mutiert `set.isCompleted = true` + Flags; publiziert `setCompleted`, ggf. `exerciseKeyChanged`, `restShouldStart`, `rirSheetShouldShow`, `prDetected`; **kein** `context.save`
+- `handleSupersetRotation(completedSet:supersetGroupId:)` → `exerciseKeyChanged.send(key)`
+- `isLastWorkSet(of:) -> Bool`
+- `cleanupLastSetFlag(for:)` — mutiert Properties via `ExerciseSetFlagUpdater`, kein save
+- `retroRIRCandidate(for selectedKey: String?) -> ExerciseSet?`
+- `refreshLastSessionReference(for groupKey: String)`
+- `lastSessionReference(for set: ExerciseSet) -> LastSessionReferenceCalcEngine.Reference?`
+- `resolveExercise(for groupKey: String) -> Exercise?`
+- `lastCompletedSession(for groupKey: String) -> StrengthSession?`
+- `saveCurrentExerciseMetrics(forKey:)` — **NEIN**: enthält `context.insert` → bleibt in View
+- `supersetDisplayContext(for:) -> SupersetDisplayContext?`
+- `supersetNextRoundNames(for:) -> [String]?`
+
+**View bindet (onReceive):**
+```swift
+.onReceive(setManager.setCompleted) { _ in
+    Task { @MainActor in try? context.save() }
+    PhoneSessionManager.shared.sendRequestSnapshot()
+    completionHapticMedium.impactOccurred()
+}
+.onReceive(setManager.restShouldStart) { secs in restTimerManager.start(seconds: secs) }
+.onReceive(setManager.rirSheetShouldShow) { set in rirSheetSet = set }
+.onReceive(setManager.prDetected) { set, name, oneRM in
+    prSetIDs.insert(set.persistentModelID)
+    prBannerExercise = name; prBannerOneRM = oneRM
+    Task { try? await Task.sleep(for: .seconds(3)); withAnimation { prBannerExercise = nil } }
 }
 ```
 
 ---
 
-### Schritt 3 — `ActiveSetCard` erweitern
+### Phase 4 — WatchBridge extrahieren
 
-Neuer optionaler Parameter:
-```swift
-var lastSessionReference: LastSessionReferenceCalcEngine.Reference? = nil
-```
+Neue Datei `Views/Workouts/Active/ViewModel/WatchBridge.swift`:
 
-Neue Caption-Zeile (nur wenn `lastSessionReference != nil`), unter dem Weight/Reps-HStack:
 ```swift
-if let ref = lastSessionReference {
-    Text("Letztes Mal: \(ref.reps) Wdh. × \(formattedLastWeight(ref))")
-        .font(.caption)
-        .foregroundStyle(.secondary)
-}
-```
+@Observable @MainActor
+final class WatchBridge {
+    private var cancellables = Set<AnyCancellable>()
+    private weak var session: StrengthSession?
+    private weak var sessionManager: ActiveSessionManager?
+    private weak var restTimer: RestTimerManager?
+    private weak var setManager: SetManager?
+    private weak var exerciseNav: ExerciseNav?
 
-Hilfsfunktion im Card (oder als Extension):
-```swift
-private func formattedLastWeight(_ ref: LastSessionReferenceCalcEngine.Reference) -> String {
-    guard ref.weight > 0 else { return "Körpergewicht" }
-    if exercise.isUnilateral {
-        return "2× \(formatWeight(ref.weight / 2)) kg"
+    func configure(
+        session: StrengthSession,
+        sessionManager: ActiveSessionManager,
+        restTimer: RestTimerManager,
+        setManager: SetManager,
+        exerciseNav: ExerciseNav,
+        setCompleted: AnyPublisher<ExerciseSet, Never>
+    ) {
+        // deps speichern
+        setCompleted
+            .sink { [weak self] _ in self?.sendState() }
+            .store(in: &cancellables)
     }
-    return "\(formatWeight(ref.weight)) kg"
+
+    func sendState() { /* PhoneSessionManager.shared.sendWorkoutState(...) */ }
+
+    func handleAction(_ action: WatchAction) {
+        // .completeSet → setManager.completeSet(_:)
+        // .nextExercise / .previousExercise → exerciseNav.selectExercise(key:)
+        // .skipRest → restTimer.skip()
+        // .pauseResume → sessionManager.pauseSession() / resumeSession()
+    }
 }
 ```
 
-- `exercise.isUnilateral` — boolean bereits auf `Exercise`-Modell prüfen (ggf. `trackingMode == .unilateral`)
-- `formatWeight(_:)` — bestehende Gewichtsformatierungs-Helper verwenden
-
-Kein Hintergrund, kein Icon — reiner Caption-Text.
+In View verbleibend (PhoneSessionManager-Setup):
+- `onAppear`: `PhoneSessionManager.shared.onAction = { watchBridge.handleAction($0) }`
+- `onAppear`: `onWatchBecameReachable` → `if !isWatchTrackingActive { sendStartHealthTracking(); sendHeartbeatEnabled(true) }; watchBridge.sendState()`
+- `onDisappear`: beide Closures nil + `sendIdleState()`
+- `onChange(of: restTimerManager.isResting)` + `onChange(of: exerciseNav.selectedExerciseKey)` + `onChange(of: sessionManager.isPaused)` → `watchBridge.sendState()`
 
 ---
 
-### Schritt 4 — Verdrahtung in `ActiveWorkoutView`
+### Phase 5 — LiveActivityCtrl extrahieren
 
-In der `ActiveSetCard(…)`-Erzeugung:
+Neue Datei `Views/Workouts/Active/ViewModel/LiveActivityCtrl.swift`:
+
+**State-Inventar (wandert rein):**
+- `currentActivity: Activity<WorkoutActivityAttributes>?`
+- `workoutStartDate: Date`
+- `syncDebounceTask: Task<Void, Never>?`
+
+**Configure-Signatur:**
 ```swift
-lastSessionReference: lastSessionReference(for: activeSet)
+func configure(
+    session: StrengthSession,
+    sessionManager: ActiveSessionManager,
+    restTimer: RestTimerManager,
+    setManager: SetManager,
+    setCompleted: AnyPublisher<ExerciseSet, Never>
+) {
+    setCompleted
+        .sink { [weak self] _ in self?.syncDebounced(saveResume: nil) }
+        .store(in: &cancellables)
+}
+```
+
+**API:**
+- `start()` · `update()` · `end()` · `reattachIfNeeded()`
+- `makeLiveContentState() -> WorkoutActivityAttributes.ContentState`
+- `syncDebounced(saveResume: (() -> Void)?)` — debounce 150 ms; ruft `saveResume?()`
+- `restoreWorkoutStartDate(_ date: Date)` — für Resume-State
+- `async func ensureSingleActivity() -> Bool`
+- `async func endActivities(_ activities: [Activity<WorkoutActivityAttributes>])`
+
+In View verbleibend:
+```swift
+.onChange(of: restTimerManager.isResting) { _, _ in liveActivity.syncDebounced(saveResume: saveResumeState) }
+.onChange(of: exerciseNav.selectedExerciseKey) { _, _ in liveActivity.syncDebounced(saveResume: saveResumeState) }
+.onChange(of: sessionManager.isPaused) { _, _ in liveActivity.syncDebounced(saveResume: saveResumeState) }
 ```
 
 ---
 
-### Schritt 5 — Edge-Cases absichern
+### Phase 6 — ActiveWorkoutView verdrahten und reduzieren
 
-- Ad-hoc-Workout (`sourceTrainingPlan == nil`): Plan-Sets leer → Engine nicht aufgerufen → `nil`
-- Plan und letzte Session identisch: `deviationCount == 0` → `nil`
-- Nur 1 Satz weicht ab: `deviationCount == 1` → `nil` (Gating greift)
-- `setNumber` fehlt in letzter Session: Pair fehlt → `nil` für diesen Satz
+**Setup-Reihenfolge (ORDER IS LOAD-BEARING):**
+```swift
+private func setupSession() {
+    let plan = session.sourceTrainingPlan   // KEIN sessionManager.currentPlan — existiert nicht
+    let repo = ProgressionStateRepository(context: context)
+    if smartFill == nil {
+        smartFill = ActiveWorkoutSmartFillViewModel(context: context, repository: repo)
+    }
+
+    // 1. SetManager zuerst (publiziert), dann Subscriber
+    setManager.configure(
+        session: session,
+        historicalSessionsProvider: { [self] in
+            allSessions.filter { $0.persistentModelID != session.persistentModelID }
+        },
+        selectedKeyProvider: { [exerciseNav] in exerciseNav.selectedExerciseKey },
+        selectedKeySetter: { [exerciseNav] in exerciseNav.selectedExerciseKey = $0 }
+    )
+    // 2. ExerciseNav subscribed auf SetManager.exerciseKeyChanged
+    exerciseNav.configure(
+        session: session,
+        supersetKeyChanged: setManager.exerciseKeyChanged.eraseToAnyPublisher()
+    )
+    // 3. WatchBridge + LiveActivityCtrl subscriben auf setManager.setCompleted
+    watchBridge.configure(
+        session: session, sessionManager: sessionManager,
+        restTimer: restTimerManager, setManager: setManager, exerciseNav: exerciseNav,
+        setCompleted: setManager.setCompleted.eraseToAnyPublisher()
+    )
+    liveActivity.configure(
+        session: session, sessionManager: sessionManager,
+        restTimer: restTimerManager, setManager: setManager,
+        setCompleted: setManager.setCompleted.eraseToAnyPublisher()
+    )
+
+    exerciseNav.validateSelectedKey(against: setManager.cachedGroupedSets)
+    liveActivity.reattachIfNeeded()
+    liveActivity.syncDebounced(saveResume: saveResumeState)
+    watchBridge.sendState()
+    // ... Rest unverändert (Ratings-Cache, Readiness-Task, Initial-RefreshLastSession)
+}
+```
+
+**In View verbleibende Methoden:**
+
+| Methode | Begründung |
+|---|---|
+| `setupSession()` | Verdrahtung |
+| `restoreResumeStateIfPossible()` / `saveResumeState()` | UserDefaults — liest `liveActivity.workoutStartDate` + `exerciseNav.selectedExerciseKey` |
+| `startNewSession(sessionID:)` | `session.start()` + `context.save` + `liveActivity.start()` |
+| `finishWorkout()` | `context.delete` unfertige Sets + `AutoProgressionApplier.apply(repository:)` + `liveActivity.end()` + Supabase-Upload + dismiss |
+| `cancelWorkout()` | `context.delete(session)` + `liveActivity.end()` |
+| `handlePausedExit()`, `handlePauseAndExit()` | dismiss-Logik |
+| `toggleTimer()` | sessionManager.pause/resume + Haptic |
+| `deleteExercise(groupKey:)` | `exerciseToDelete + showDeleteAlert` |
+| `confirmDelete()` | `context.delete(set)` + `exerciseNav.handleDeleted(groupKey:)` |
+| `rateExercise(groupKey:rating:)` | `context.delete(old)` + `context.insert(new)` |
+| `saveCurrentExerciseMetrics(forKey:)` | `context.insert(metrics)` |
+| `prefillSmartSuggestionsIfNeeded()` | View-Helper, ruft `smartFill?.prefillSuggestion(...)` |
+
+---
+
+## Risks
+
+- **SwiftData-Mutationsregel:** Property-Mutationen auf `@Model` in Observables OK. `context.insert / delete / save` MUSS in der View bleiben. Coder-Drift verhindern.
+- **`session.sourceTrainingPlan` statt `sessionManager.currentPlan`:** `ActiveSessionManager` hat KEIN `currentPlan`. Plan kommt aus `session.sourceTrainingPlan`.
+- **Combine-Subscription-Ordnung:** `setupSession()` muss `setManager.configure()` VOR WatchBridge/LiveActivityCtrl aufrufen (Subscriber nach Publisher). `configure()` muss synchron vor dem ersten User-Event laufen.
+- **Superset-Koordination:** `SetManager.exerciseKeyChanged` Publisher → `ExerciseNav` subscribed. Subjects sind `PassthroughSubject` (kein Replay) — aber `completeSet` wird erst durch User-Tap getriggert, niemals vor `onAppear`-Setup. OK.
+- **Resume-State:** `saveResumeState()` liest nach Migration `exerciseNav.selectedExerciseKey` + `liveActivity.workoutStartDate` statt direkter @State.
+- **`allSessions` Predicate:** `#Predicate { $0.isCompleted }` MUSS im @Query-Filter bleiben — sonst sehen historicalSessions auch die laufende Session.
+- **`localTimer` @State:** Prüfen ob unbenutzt — falls ja löschen.
+- **Combine-Import:** Alle neuen Observable-Dateien brauchen `import Combine`.
 
 ---
 
 ## Manual Verification
 
-- [ ] Xcode-Build (`Cmd+B`) erfolgreich, keine Warnings
-- [ ] Aktives Workout aus Plan, letzte Session plan-konform → keine Caption sichtbar
-- [ ] Aktives Workout aus Plan, letzte Session nur 1 Satz abweichend → keine Caption sichtbar
-- [ ] Aktives Workout aus Plan, letzte Session ≥ 2 Sätze abweichend → Caption „Letztes Mal: X Wdh. × Y kg" pro Satz sichtbar, korrekt nach `setNumber`
-- [ ] Unilaterale Übung → Caption zeigt „2× X kg" (halbes Gewicht pro Seite)
-- [ ] Übungswechsel → Referenz aktualisiert sich korrekt
-- [ ] Übung während Training hinzufügen → neue Übung ohne Plan-Sets zeigt keine Referenz
-- [ ] Ad-hoc-Workout ohne `sourceTrainingPlan` → keine Caption
-- [ ] Visuell dezent: Caption, secondary, kein Banner/Badge/Icon
+- [ ] Xcode-Build (`Cmd+B`) erfolgreich, keine neuen Warnings
+- [ ] `grep -r "ExerciseProgressionStateResolver" MotionCore/` → 0 Treffer
+- [ ] Aktives Workout starten → Sets abschließen → Rest-Timer startet korrekt
+- [ ] Superset-Rotation: nach Set-Abschluss wechselt Übung automatisch (Publisher-Pfad)
+- [ ] Letzter Work-Set einer Übung → RIR-Sheet öffnet sich
+- [ ] PR-Banner erscheint bei neuem 1RM
+- [ ] Watch-Sync: Satz-Abschluss auf Phone → Watch zeigt aktualisierten State
+- [ ] Watch-Aktionen (`completeSet`, `nextExercise`, `previousExercise`, `pauseResume`, `skipRest`) funktionieren
+- [ ] Live Activity: startet, aktualisiert bei Satz-Abschluss (debounced), endet nach Workout
+- [ ] Übung löschen → Alert → Bestätigung → Liste aktualisiert
+- [ ] Übungs-Reordering per Drag&Drop → persistent
+- [ ] Übung hinzufügen via Sheet → Liste refresht
+- [ ] Workout pausieren → App beenden → neu öffnen → Resume mit korrektem Key + workoutStartDate
+- [ ] Ad-hoc-Workout (ohne `sourceTrainingPlan`) startet ohne Crash
+- [ ] SmartFill-Vorschläge erscheinen korrekt (Repository-Pfad)
+- [ ] Auto-Progression beim `finishWorkout` korrekt (Repository-Pfad)
 
 ---
 
 ## Progress
 
-**2026-05-16**
+### 2026-05-22 — Phase 0 abgeschlossen
 
-Completed steps: 1, 2, 3, 4, 5 (alle Schritte implementiert)
+**Abgeschlossene Schritte:** 0.1 · 0.2 · 0.3 · 0.4
 
-Modified files:
-- `MotionCore/Services/Calculation/LastSessionReferenceCalcEngine.swift` — neu angelegt
-- `MotionCore/Views/Workouts/Active/Components/ActiveSetCard.swift` — `lastSessionReference`-Parameter + Caption-Zeile + `formattedLastWeight`/`formatWeight`-Helpers
-- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `cachedLastSessionReferences` State, `refreshLastSessionReference(for:)`, `lastSessionReference(for:)`, Aufrufstellen in `onAppear`, `.onChange(of: selectedExerciseKey)`, `.onChange(of: exerciseListRefreshID)`, Verdrahtung in `heroCard`
+**Geänderte Dateien:**
+- `Services/Progression/ProgressionStateRepository.swift` — neu angelegt (Protokoll + Implementierung)
+- `Services/AutoProgressionApplier.swift` — `repository: ProgressionStateProviding` Parameter hinzugefügt, `ExerciseProgressionStateResolver.fetch` → `repository.fetch`
+- `Views/Workouts/Active/ViewModel/ActiveWorkoutSmartFillViewModel.swift` — Init um `repository` erweitert, beide Callsites migriert
+- `Views/Workouts/Active/View/ActiveWorkoutView.swift` — SmartFill-Init + AutoProgressionApplier-Aufruf aktualisiert
+- `Services/Calculation/ExerciseProgressionStateResolver.swift` — **gelöscht**
 
-Remaining: Manual Verification (Xcode-Build + Laufzeit-Test)
+**Phasen 1–6 abgeschlossen (2026-05-22):**
 
----
+**Phase 1:** RestTimerCardContainer + AddExerciseDuringWorkoutSheet in eigene Dateien extrahiert, aus ActiveWorkoutView entfernt.
 
-## Entschiedene Design-Fragen
+**Phase 2:** ExerciseNav.swift neu angelegt — Exercise-Selektion, Reordering, Superset-Key-Rotation via Combine-Publisher.
 
-1. **setNumber-Matching:** Strikt — kein Match für eine Satznummer → keine Caption für diesen Satz.
-2. **Unilateral-Darstellung:** `2× X kg` (halbes Gewicht pro Seite), z. B. „Letztes Mal: 8 Wdh. × 2× 15 kg".
+**Phase 3:** SetManager.swift neu angelegt — Caches, alle 6 Publisher, completeSet-Logik, Superset-Rotation, SmartProgression-Helpers, LastSessionReference.
+
+**Phase 4:** WatchBridge.swift neu angelegt — Watch-State-Push, WatchAction-Verarbeitung.
+
+**Phase 5:** LiveActivityCtrl.swift neu angelegt — Live-Activity-Lifecycle, debounced Sync, Resume-State-Integration.
+
+**Phase 6:** ActiveWorkoutView vollständig verdrahtet — 2176 → 926 Zeilen, alle Observables als @State, Combine-onReceive Handler, Methoden SwiftData-konform.
+
+**Geänderte Dateien (Phasen 1–6):**
+- `Views/Workouts/Active/Components/RestTimerCardContainer.swift` — neu
+- `Views/Workouts/Active/Components/AddExerciseDuringWorkoutSheet.swift` — neu
+- `Views/Workouts/Active/ViewModel/ExerciseNav.swift` — neu
+- `Views/Workouts/Active/ViewModel/SetManager.swift` — neu
+- `Views/Workouts/Active/ViewModel/WatchBridge.swift` — neu
+- `Views/Workouts/Active/ViewModel/LiveActivityCtrl.swift` — neu
+- `Views/Workouts/Active/View/ActiveWorkoutView.swift` — stark reduziert (2176 → 926 L)
+
+**Compile-Fixes und Bereinigung (2026-05-22):**
+- `ExerciseNav.swift` — `import SwiftUI` hinzugefügt (fehlte; `withAnimation` braucht SwiftUI)
+- `SetManager.swift` — `workoutShouldFinish` Publisher entfernt (dead code; View-Button steuert finishWorkout direkt)
+
+**Offen:** Xcode-Build-Verifikation (Cmd+B) — durch motioncore-quality-gate

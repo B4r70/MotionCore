@@ -27,6 +27,7 @@ enum AutoProgressionApplier {
         allPreviousSessions: [StrengthSession],
         studioEquipments: [StudioEquipment],
         context: ModelContext,
+        repository: ProgressionStateProviding,
         readinessModifier: Double = 1.0
     ) -> [ExerciseProgressionState] {
         // Kein Auto-Progress bei eingeschränkter Tagesform — Gewicht soll nicht steigen
@@ -43,7 +44,7 @@ enum AutoProgressionApplier {
         var applied: [ExerciseProgressionState] = []
 
         for groupKey in groupKeys {
-            guard let state = ExerciseProgressionStateResolver.fetch(in: context, exerciseGroupKey: groupKey),
+            guard let state = repository.fetch(exerciseGroupKey: groupKey),
                   state.progressionMode == .smart else { continue }
 
             // Letzte 2 abgeschlossene Sessions (exkl. aktuelle) mit Sets dieser Übung
