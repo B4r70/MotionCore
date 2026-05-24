@@ -141,6 +141,24 @@ struct ProgressionCalcEngine {
         }
 
         let modeW = Self.modeWeight(from: workSets) ?? workSets.last!.weight
+
+        // -----------------------------------------------------------------------
+        // Schritt 5.0: Auto-Progression hat workingWeight bereits angehoben
+        // -----------------------------------------------------------------------
+        // modeW stammt noch aus der letzten Session (altes Gewicht) — der User
+        // hat den AP-Sprung noch nicht trainiert. workingWeight als Vorschlag
+        // zurückgeben, damit AutoProgressionCalcEngine.Kriterium-2 in der
+        // nächsten Session erfüllt ist (modeW ≈ workingWeight).
+        if state.workingWeight > modeW + 0.01 {
+            return Output(
+                suggestedWeight: state.workingWeight,
+                suggestedReps: state.targetReps,
+                reasoning: .holdWeight,
+                isProgressionStep: false,
+                isRollbackCandidate: false
+            )
+        }
+
         let modeWeightSets = workSets.filter { $0.weight == modeW }
 
         // RIR-Quelle: letzter Modus-Satz mit rpeRecorded, Fallback auf letzten Modus-Satz
@@ -274,3 +292,4 @@ struct ProgressionCalcEngine {
 // 9. Sätze: 30/30/32.5kg → modeW=30, Auswertung nur auf 30kg-Sätze ........ → korrekte Baseline
 // 7. readinessModifier=0.85 ........................... → .readinessReduced (floor-gerundet)
 // 8. currentSessionSetIndex=1 + prev=60kg ............. → suggestedWeight=60, .holdWeight
+// 10. workingWeight=82.5, modeW=80 (AP-Sprung noch nicht trainiert) ....... → suggestedWeight=82.5, .holdWeight (5.0)
