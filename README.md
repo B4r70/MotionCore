@@ -43,6 +43,7 @@ The app is designed around clean architecture principles, with a clear separatio
 - **Session Resume** — recover interrupted sessions after app restart
 - **Exercise Sets** — track weight, reps, RPE, RIR, rest times, and set types (work, warmup, drop, AMRAP)
 - **Live Activity** — Dynamic Island / Lock Screen widget showing current workout progress and rest timer
+- **Last Session Reference** — previous session values shown as subtle reference during active sets via `LastSessionReferenceCalcEngine`
 
 ### Training Plans
 - Create reusable workout templates with predefined exercises and set configurations
@@ -71,6 +72,12 @@ The app is designed around clean architecture principles, with a clear separatio
 - **Strength Statistics** — 1RM estimation charts, volume tracking per exercise
 - **Records Overview** — personal bests across all categories
 - **Streak Tracking** — weekly goal-based workout streaks
+
+### Body Measurements
+- Track body composition metrics over time (`BodyMeasurement` model)
+- Ratio analysis via `BodyMeasurementRatioCalcEngine`
+- Radar chart for body composition profile via `BodyMeasurementRadarCalcEngine`
+- Trend visualization via `BodyMeasurementTrendCalcEngine`
 
 ### Health Integration
 - Apple HealthKit integration for heart rate, calories, steps, exercise minutes, and sleep data
@@ -110,12 +117,17 @@ View (SwiftUI)  →  CalcEngine (pure logic)  →  Model (SwiftData)
 | `HealthMetricCalcEngine` | HealthKit data processing and formatting |
 | `RecordCalcEngine` | Personal record detection and ranking |
 | `ProgressionCalcEngine` | RIR-based auto-progression recommendations |
+| `LastSessionReferenceCalcEngine` | Previous session values as in-workout reference |
+| `BodyMeasurementRatioCalcEngine` | Body measurement ratio calculations |
+| `BodyMeasurementRadarCalcEngine` | Body measurement radar chart data |
+| `BodyMeasurementTrendCalcEngine` | Body measurement trend analysis |
 
 ### Key Principles
 - **Autonomous models** — each workout type has its own independent model (no shared base class)
 - **German code comments, English variable/method names**
 - **No testing code** — production-only focus
 - **Singleton services** — shared instances for managers (`HealthKitManager.shared`, `ActiveSessionManager.shared`, etc.)
+- **Single schema source** — all SwiftData models registered in `App/AppSchema.swift`
 
 ---
 
@@ -178,6 +190,10 @@ View (SwiftUI)  →  CalcEngine (pure logic)  →  Model (SwiftData)
 - Template sets with predefined exercises and configurations
 - Plan types: cardio, strength, outdoor, mixed
 - Tracks derived sessions
+
+**BodyMeasurement** — Body composition tracking
+- Weight, body fat percentage, muscle mass, and circumferences
+- Timestamped for trend analysis via `BodyMeasurementTrendCalcEngine`
 
 ### Shared Protocols
 
@@ -251,6 +267,7 @@ MotionCore uses a **Liquid Glass / Glassmorphism** design language:
 MotionCore/
 ├── App/
 │   ├── MotionCoreApp.swift              # Entry point, ModelContainer setup
+│   ├── AppSchema.swift                  # SwiftData schema (single source)
 │   └── BaseView.swift                   # Tab-based main navigation
 │
 ├── Models/
@@ -260,6 +277,7 @@ MotionCore/
 │   ├── ExerciseSet.swift                # Individual set model
 │   ├── Exercise.swift                   # Exercise library model
 │   ├── TrainingPlan.swift               # Workout template model
+│   ├── BodyMeasurement.swift            # Body composition tracking model
 │   └── CoreSession.swift                # Shared session protocol
 │
 ├── Models/Types/
@@ -281,7 +299,11 @@ MotionCore/
 │   ├── StrengthStatisticCalcEngine.swift # Strength-specific stats
 │   ├── HealthMetricCalcEngine.swift     # HealthKit processing
 │   ├── RecordCalcEngine.swift           # PR detection logic
-│   └── ProgressionCalcEngine.swift      # RIR auto-progression
+│   ├── ProgressionCalcEngine.swift      # RIR auto-progression
+│   ├── LastSessionReferenceCalcEngine.swift # Previous session reference
+│   ├── BodyMeasurementRatioCalcEngine.swift # Body ratio calculations
+│   ├── BodyMeasurementRadarCalcEngine.swift # Body radar chart data
+│   └── BodyMeasurementTrendCalcEngine.swift # Body trend analysis
 │
 ├── Services/
 │   ├── Database/Local/
@@ -299,6 +321,9 @@ MotionCore/
 │   │   ├── SupabaseFilterService.swift
 │   │   └── SupabaseStorageBucket.swift
 │   │
+│   ├── Plan/
+│   │   └── PlanUpdateApplicator.swift   # Plan update application logic
+│   │
 │   ├── HealthKitManager.swift           # HealthKit integration
 │   ├── PRDetectionService.swift         # Personal record detection
 │   ├── ActiveSessionManager.swift       # Workout lifecycle
@@ -311,6 +336,7 @@ MotionCore/
 │   ├── Training/                        # Training plan management
 │   ├── Exercises/                       # Exercise library & search
 │   ├── Statistics/                      # Stats, records, charts
+│   ├── Body/                            # Body measurements
 │   ├── HealthMetrics/                   # HealthKit display
 │   └── Settings/                        # App configuration
 │
@@ -355,7 +381,7 @@ SUPABASE_URL = https://your-project.supabase.co
 SUPABASE_ANON_KEY = your-anon-key
 ```
 
-These are read by `SupabaseConfig.swift` at runtime.
+These are read by `SupabaseConfig.swift` at runtime. If credentials are missing, the app degrades gracefully (Supabase features disabled, local data unaffected).
 
 ### CloudKit
 - Requires an iCloud container configured in Xcode capabilities
