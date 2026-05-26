@@ -280,3 +280,75 @@ extension StrengthSession {
         exerciseSets?.removeAll(where: predicate)
     }
 }
+
+// MARK: - Superset-API
+
+extension StrengthSession {
+
+    /// Erstellt ein neues Superset aus den übergebenen Gruppen-Indizes
+    /// (0-basiert, bezogen auf groupedSets).
+    /// Voraussetzungen:
+    ///   - Mindestens 2, maximal 5 Indizes
+    ///   - Alle Indizes lückenlos aufeinanderfolgend
+    ///   - Keine der gewählten Übungen hat completed Sets
+    /// Passt restSeconds an: alle Sätze außer dem letzten Satz der letzten
+    /// Übung pro Runde werden auf 0 gesetzt.
+    /// Kein context.save() — übernimmt der Aufrufer.
+    func createSuperset(fromGroupIndices indices: [Int]) {
+        let groups = groupedSets
+        let sorted = indices.sorted()
+
+        // Vorbedingungen prüfen
+        guard sorted.count >= 2, sorted.count <= 5 else { return }
+        guard sorted.allSatisfy({ $0 >= 0 && $0 < groups.count }) else { return }
+
+        // Lückenlosigkeit
+        let isContiguous = zip(sorted, sorted.dropFirst()).allSatisfy { $1 - $0 == 1 }
+        guard isContiguous else { return }
+
+        // Eligibility: keine completed Sets in den gewählten Gruppen
+        let allEligible = sorted.allSatisfy { idx in
+            groups[idx].allSatisfy { !$0.isCompleted }
+        }
+        guard allEligible else { return }
+
+        let newGroupId = UUID().uuidString
+
+        // supersetGroupId für alle gewählten Übungen setzen
+        for idx in sorted {
+            groups[idx].forEach { $0.supersetGroupId = newGroupId }
+        }
+
+        // Pausenzeiten anpassen:
+        // Alle Übungen außer der letzten Übung pro Runde bekommen restSeconds = 0.
+        // Die letzte Übung (letzter Index) behält ihre Originalzeiten.
+        let lastGroupIndex = sorted.last!
+        for idx in sorted where idx != lastGroupIndex {
+            groups[idx].forEach { $0.restSeconds = 0 }
+        }
+    }
+
+    /// Entfernt eine einzelne Übung (Gruppe an Gruppen-Index) aus ihrem
+    /// Superset. Falls danach nur noch eine Übung in der Gruppe verbleibt,
+    /// wird das gesamte Superset aufgelöst.
+    /// restSeconds bleiben unverändert — der User kann sie manuell anpassen.
+    /// Kein context.save() — übernimmt der Aufrufer.
+    func removeFromSuperset(groupAt index: Int) {
+        let groups = groupedSets
+        guard index >= 0, index < groups.count else { return }
+        let targetGroup = groups[index]
+
+        guard let groupId = targetGroup.first?.supersetGroupId else { return }
+
+        // Diese Übung aus dem Superset entfernen
+        targetGroup.forEach { $0.supersetGroupId = nil }
+
+        // Prüfen ob die verbleibende Gruppe noch ≥ 2 Übungen hat
+        let remaining = safeExerciseSets.filter { $0.supersetGroupId == groupId }
+        let remainingExerciseCount = Set(remaining.map { $0.groupKey }).count
+
+        if remainingExerciseCount < 2 {
+            remaining.forEach { $0.supersetGroupId = nil }
+        }
+    }
+}

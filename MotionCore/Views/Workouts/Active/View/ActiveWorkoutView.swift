@@ -64,6 +64,11 @@ struct ActiveWorkoutView: View {
     @State private var selectedReadinessForDetail: SessionReadiness? = nil
     @State private var quickConfigExercise: Exercise? = nil
 
+    // MARK: - Superset-Selection-State
+
+    @State private var isSupersetSelectionMode: Bool = false
+    @State private var selectedGroupIndicesForSuperset: Set<Int> = []
+
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
     private let completionHapticMedium = UIImpactFeedbackGenerator(style: .medium)
 
@@ -133,10 +138,17 @@ struct ActiveWorkoutView: View {
                 .zIndex(100)
             }
 
-            VStack {
+            VStack(spacing: 0) {
                 Spacer()
+                if isSupersetSelectionMode {
+                    supersetActionBar
+                        .padding(.horizontal)
+                        .padding(.bottom, 8)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
                 bottomActionBar
             }
+            .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isSupersetSelectionMode)
         }
         .navigationTitle(session.planName ?? "Training")
         .navigationBarTitleDisplayMode(.inline)
@@ -711,6 +723,44 @@ struct ActiveWorkoutView: View {
     }
 
     // =========================================================================
+    // MARK: - Superset-Aktionen
+    // =========================================================================
+
+    private func createSupersetFromSelection() {
+        let indices = Array(selectedGroupIndicesForSuperset)
+        session.createSuperset(fromGroupIndices: indices)
+
+        Task { @MainActor in
+            try? context.save()
+        }
+
+        // Cache-Refresh — sonst zeigt ExercisesOverviewCard alte Daten
+        setManager.rebuildGroupedCaches()
+        setManager.refreshSetCaches()
+
+        // Selection-Modus beenden
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+            isSupersetSelectionMode = false
+            selectedGroupIndicesForSuperset = []
+        }
+
+        completionHapticMedium.impactOccurred()
+    }
+
+    private func removeFromSupersetAtIndex(_ index: Int) {
+        session.removeFromSuperset(groupAt: index)
+
+        Task { @MainActor in
+            try? context.save()
+        }
+
+        setManager.rebuildGroupedCaches()
+        setManager.refreshSetCaches()
+
+        hapticGenerator.impactOccurred()
+    }
+
+    // =========================================================================
     // MARK: - Health Metrics
     // =========================================================================
 
@@ -903,6 +953,8 @@ struct ActiveWorkoutView: View {
             currentExerciseIndex: setManager.cachedCurrentExerciseIndex,
             selectedExerciseKey: exerciseNav.selectedExerciseKey,
             prSetIDs: prSetIDs,
+            isSupersetSelectionMode: $isSupersetSelectionMode,
+            selectedGroupIndicesForSuperset: $selectedGroupIndicesForSuperset,
             onAddExercise: { showAddExerciseSheet = true },
             onSelectExercise: { key in
                 exerciseNav.selectExercise(key: key)
@@ -916,7 +968,34 @@ struct ActiveWorkoutView: View {
                 Task { @MainActor in try? context.save() }
                 hapticGenerator.impactOccurred()
             },
+            onRemoveFromSuperset: { index in
+                removeFromSupersetAtIndex(index)
+            },
             onRetroRIR: { set in rirRetroSet = set }
+        )
+    }
+
+    // MARK: - Superset Action Bar
+
+    private var supersetActionBar: some View {
+        let helper = SupersetSelectionHelper(groupedSets: setManager.cachedGroupedSets)
+        let canCreate = helper.canCreateSuperset(from: selectedGroupIndicesForSuperset)
+        let hasGap = selectedGroupIndicesForSuperset.count >= 2
+            && !helper.isContiguous(selectedGroupIndicesForSuperset)
+
+        return ActiveWorkoutSupersetActionBar(
+            selectedCount: selectedGroupIndicesForSuperset.count,
+            canCreate: canCreate,
+            hasGap: hasGap,
+            onCancel: {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                    isSupersetSelectionMode = false
+                    selectedGroupIndicesForSuperset = []
+                }
+            },
+            onCreate: {
+                createSupersetFromSelection()
+            }
         )
     }
 }
