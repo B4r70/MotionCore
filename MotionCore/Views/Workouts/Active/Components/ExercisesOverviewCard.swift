@@ -24,6 +24,11 @@ struct ExercisesOverviewCard: View {
     let onDeleteExercise: (String) -> Void
     let onReorderExercise: (Int, Int) -> Void
     var onRetroRIR: ((ExerciseSet) -> Void)? = nil
+    var onRemoveFromSuperset: ((Int) -> Void)? = nil
+
+    // Superset-Selection-State als Bindings (State liegt in ActiveWorkoutView)
+    @Binding var isSupersetSelectionMode: Bool
+    @Binding var selectedGroupIndicesForSuperset: Set<Int>
 
         // Sortiermodus-State
     @State private var isSortMode: Bool = false
@@ -69,6 +74,24 @@ struct ExercisesOverviewCard: View {
         sets.contains { prSetIDs.contains($0.persistentModelID) }
     }
 
+    // MARK: - Superset-Selection-Helpers
+
+    private var supersetHelper: SupersetSelectionHelper {
+        SupersetSelectionHelper(groupedSets: groupedSets)
+    }
+
+    private func isEligibleForSuperset(at index: Int) -> Bool {
+        supersetHelper.isEligible(at: index)
+    }
+
+    private func isInOtherSuperset(at index: Int) -> Bool {
+        supersetHelper.isInOtherSuperset(at: index)
+    }
+
+    private var eligibleExerciseCount: Int {
+        supersetHelper.eligibleCount
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
@@ -90,6 +113,10 @@ struct ExercisesOverviewCard: View {
                                 isSortMode: isSortMode,
                                 isSupersetMember: isSupersetMember(at: index),
                                 isExpanded: expandedExerciseKey == sets.first?.groupKey,
+                                isSupersetSelectionMode: isSupersetSelectionMode,
+                                isSelectedForSuperset: selectedGroupIndicesForSuperset.contains(index),
+                                isEligibleForSuperset: isEligibleForSuperset(at: index),
+                                isInOtherSuperset: isInOtherSuperset(at: index),
                                 onToggleExpand: {
                                     guard let key = sets.first?.groupKey else { return }
                                     withAnimation(.easeInOut(duration: 0.25)) {
@@ -99,6 +126,18 @@ struct ExercisesOverviewCard: View {
                                 onSelectAsActive: {
                                     guard let key = sets.first?.groupKey else { return }
                                     onSelectExercise(key)
+                                },
+                                onToggleSupersetSelection: {
+                                    withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                                        if selectedGroupIndicesForSuperset.contains(index) {
+                                            selectedGroupIndicesForSuperset.remove(index)
+                                        } else {
+                                            selectedGroupIndicesForSuperset.insert(index)
+                                        }
+                                    }
+                                },
+                                onRemoveFromSuperset: {
+                                    onRemoveFromSuperset?(index)
                                 },
                                 onRetroRIR: onRetroRIR
                             )
@@ -127,9 +166,9 @@ struct ExercisesOverviewCard: View {
                                     }
                                 }
                             }
-                                // LongPress zum Löschen (nur außerhalb des Sortiermodus)
+                                // LongPress zum Löschen (nur außerhalb des Sortier- und Selection-Modus)
                             .onLongPressGesture(minimumDuration: 0.5) {
-                                guard !isSortMode else { return }
+                                guard !isSortMode, !isSupersetSelectionMode else { return }
                                 let generator = UIImpactFeedbackGenerator(style: .medium)
                                 generator.impactOccurred()
                                 onDeleteExercise(firstSet.groupKey)
@@ -158,8 +197,14 @@ struct ExercisesOverviewCard: View {
                         isSortMode: true,
                         isSupersetMember: false,
                         isExpanded: false,
+                        isSupersetSelectionMode: false,
+                        isSelectedForSuperset: false,
+                        isEligibleForSuperset: false,
+                        isInOtherSuperset: false,
                         onToggleExpand: {},
-                        onSelectAsActive: {}
+                        onSelectAsActive: {},
+                        onToggleSupersetSelection: {},
+                        onRemoveFromSuperset: {}
                     )
                     .overlay(alignment: .trailing) {
                         Image(systemName: "line.3.horizontal")
@@ -195,6 +240,16 @@ struct ExercisesOverviewCard: View {
                 withAnimation(.easeInOut(duration: 0.25)) {
                     expandedExerciseKey = nil
                 }
+                // Sort-Modus beendet Selection-Modus (Mutex)
+                isSupersetSelectionMode = false
+            }
+        }
+        .onChange(of: isSupersetSelectionMode) { _, newValue in
+            if newValue {
+                // Selection-Modus beendet Sort-Modus (Mutex)
+                isSortMode = false
+            } else {
+                selectedGroupIndicesForSuperset = []
             }
         }
     }
@@ -210,8 +265,8 @@ struct ExercisesOverviewCard: View {
             Spacer()
 
             HStack(spacing: 12) {
-                    // "(+) Übung"-Button: nur im Nicht-Sortiermodus
-                if !isSortMode {
+                    // "(+) Übung"-Button: nur im Nicht-Sortier- und Nicht-Selection-Modus
+                if !isSortMode && !isSupersetSelectionMode {
                     Button {
                         onAddExercise()
                     } label: {
@@ -221,20 +276,37 @@ struct ExercisesOverviewCard: View {
                     }
                 }
 
-                    // Sortier- / Fertig-Button
-                Button {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        isSortMode.toggle()
+                    // Bolt-Button: Superset-Selection-Modus ein-/ausschalten
+                if !isSortMode {
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            isSupersetSelectionMode.toggle()
+                        }
+                    } label: {
+                        Image(systemName: "bolt")
+                            .font(.title3)
+                            .foregroundStyle(Color.blue)
                     }
-                } label: {
-                    Image(
-                        systemName: isSortMode
-                        ? "checkmark.circle.fill"
-                        : "arrow.up.arrow.down.circle.fill"
-                    )
-                    .font(.title2)
-                    .foregroundStyle(isSortMode ? Color.green : .blue)
-                    .contentTransition(.symbolEffect(.replace))
+                    .opacity(eligibleExerciseCount >= 2 ? 1.0 : 0.4)
+                    .disabled(eligibleExerciseCount < 2)
+                }
+
+                    // Sortier- / Fertig-Button: nicht im Selection-Modus
+                if !isSupersetSelectionMode {
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            isSortMode.toggle()
+                        }
+                    } label: {
+                        Image(
+                            systemName: isSortMode
+                            ? "checkmark.circle.fill"
+                            : "arrow.up.arrow.down.circle.fill"
+                        )
+                        .font(.title2)
+                        .foregroundStyle(isSortMode ? Color.green : .blue)
+                        .contentTransition(.symbolEffect(.replace))
+                    }
                 }
             }
         }
@@ -449,8 +521,15 @@ private struct ExerciseOverviewRow: View {
     let isSortMode: Bool
     let isSupersetMember: Bool
     let isExpanded: Bool
+    // Superset-Selection-Parameter
+    let isSupersetSelectionMode: Bool
+    let isSelectedForSuperset: Bool
+    let isEligibleForSuperset: Bool
+    let isInOtherSuperset: Bool
     let onToggleExpand: () -> Void
     let onSelectAsActive: () -> Void
+    let onToggleSupersetSelection: () -> Void
+    let onRemoveFromSuperset: () -> Void
     var onRetroRIR: ((ExerciseSet) -> Void)? = nil
 
     private var completedCount: Int { sets.filter { $0.isCompleted }.count }
@@ -485,7 +564,7 @@ private struct ExerciseOverviewRow: View {
             VStack(spacing: 8) {
                 topLine
                 dotsLine
-                if isExpanded {
+                if isExpanded && !isSupersetSelectionMode {
                     ExerciseOverviewExpandedDetail(sets: sets, onRetroRIR: onRetroRIR)
                         .transition(.opacity.combined(with: .move(edge: .top)))
                 }
@@ -499,10 +578,61 @@ private struct ExerciseOverviewRow: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(backgroundColor)
         )
+        // Blauer Border wenn im Selection-Modus ausgewählt
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(
+                    isSupersetSelectionMode && isSelectedForSuperset ? Color.blue : Color.clear,
+                    lineWidth: 2
+                )
+        )
+        // Overlays: Checkmark / Schloss / Link-Icon
+        .overlay(alignment: .topTrailing) {
+            if isSupersetSelectionMode {
+                if isSelectedForSuperset {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(Color.white)
+                        .background(Color.blue, in: Circle())
+                        .padding(6)
+                } else if isInOtherSuperset {
+                    Image(systemName: "link.circle.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(Color.white)
+                        .background(Color.blue.opacity(0.6), in: Circle())
+                        .padding(6)
+                } else if !isEligibleForSuperset {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 14))
+                        .foregroundStyle(Color.secondary)
+                        .padding(8)
+                }
+            }
+        }
+        // Transparenz für nicht-eligble Übungen im Selection-Modus
+        .opacity(isSupersetSelectionMode && !isEligibleForSuperset && !isInOtherSuperset ? 0.5 : 1.0)
         .contentShape(Rectangle())
         .onTapGesture {
-            guard !isSortMode else { return }
-            onToggleExpand()
+            if isSupersetSelectionMode {
+                // Im Selection-Modus: Auswahl toggle, nur wenn eligible und nicht in anderem Superset
+                guard isEligibleForSuperset, !isInOtherSuperset else {
+                    UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+                    return
+                }
+                onToggleSupersetSelection()
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            } else {
+                guard !isSortMode else { return }
+                onToggleExpand()
+            }
+        }
+        // Kontextmenü unconditional — Inhalt conditional (verhindert HStack-Kollaps)
+        .contextMenu {
+            if isSupersetMember {
+                Button("Aus Superset entfernen", systemImage: "link.badge.minus") {
+                    onRemoveFromSuperset()
+                }
+            }
         }
         .animation(.easeInOut(duration: 0.15), value: isPressed)
     }
@@ -530,7 +660,7 @@ private struct ExerciseOverviewRow: View {
                         .foregroundStyle(.secondary)
                 }
 
-                if !isCurrentExercise && !isSortMode {
+                if !isCurrentExercise && !isSortMode && !isSupersetSelectionMode {
                     Button {
                         onSelectAsActive()
                     } label: {
