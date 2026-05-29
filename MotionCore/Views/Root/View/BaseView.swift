@@ -82,6 +82,16 @@ struct BaseView: View {
 
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
+
+        // MARK: Navigation-Bar-Blur beim Scrollen
+        // Ohne Blur-Background schiebt sich Karteninhalt beim Scrollen unscharf
+        // hinter den (custom) HeaderView und kollidiert mit dem Titeltext.
+        // standardAppearance = Blur greift beim Scrollen; scrollEdge bleibt
+        // transparent, damit der Top-Zustand nahtlos auf dem Verlauf sitzt.
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithDefaultBackground()
+        UINavigationBar.appearance().standardAppearance = navAppearance
+        UINavigationBar.appearance().compactAppearance = navAppearance
     }
 
     //  Tab-Enum angepasst (5 Tabs: summary, workouts, stats, body, training)

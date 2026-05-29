@@ -43,7 +43,9 @@ extension View {
         size: CGFloat = 60,
         action: @escaping () -> Void
     ) -> some View {
-        self.overlay(alignment: .bottomTrailing) {
+        // safeAreaInset (statt overlay) reserviert den Platz unten, damit der
+        // Scroll-Inhalt über dem Button endet und nicht mehr verdeckt wird.
+        self.safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
             FloatingButton(
                 icon: icon,
                 color: color,

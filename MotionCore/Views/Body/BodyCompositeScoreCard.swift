@@ -61,7 +61,7 @@ struct BodyCompositeScoreCard: View {
                         Button("Heute trainieren →") {
                             onStartWorkoutTap()
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.borderedProminent)
                         .tint(MCColor.mcBody)
                         .font(.caption)
                     } else {
