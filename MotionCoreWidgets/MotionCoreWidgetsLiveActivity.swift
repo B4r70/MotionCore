@@ -41,6 +41,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         Text(context.state.currentExercise ?? "Training")
                             .font(.caption.bold())
                             .foregroundStyle(.primary)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.9)
 
                         if let set = context.state.currentSet {
                             Text(set)
@@ -57,7 +59,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                        let end = context.state.restEndDate {
                             // PAUSEN-MODUS (erweitert)
                         VStack(spacing: 2) {
-                            Text("Pause")
+                            Text("Satzpause")
                                 .font(.caption2)
                                 .foregroundStyle(restTimerColor(for: context))
 
@@ -89,8 +91,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                     HStack {
                             // Fortschritt
                         HStack(spacing: 4) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(Color.green)
+                            Image(systemName: context.state.completedSets == 0 ? "checklist" : "checkmark.circle.fill")
+                                .foregroundStyle(context.state.completedSets == 0 ? Color.secondary : Color.green)
                                 .font(.caption)
                             Text("\(context.state.completedSets)/\(context.state.totalSets) Sätze")
                                 .font(.caption)
@@ -101,7 +103,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
 
                             // Status-Icon mit angepassten Farben
                         if context.state.isResting {
-                            Image(systemName: "pause.circle.fill")
+                            Image(systemName: "hourglass")
                                 .foregroundStyle(restTimerColor(for: context))
                                 .font(.caption)
                         } else {
@@ -121,7 +123,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                     // Kompakt Links - Icon + Satz-Fortschritt je nach Modus
                 if context.state.isResting {
                         // PAUSEN-MODUS: Pause-Icon mit Farbverlauf
-                    Image(systemName: "pause.circle.fill")
+                    // Rest-Glyph (hourglass) — im Endspurt Form-Wechsel statt nur Farbe (Deuteranopie)
+                    Image(systemName: isInFinalCountdown(context) ? "exclamationmark.circle.fill" : "hourglass")
                         .foregroundStyle(restTimerColor(for: context))
                         .font(.body)
                         .symbolEffect(.pulse, options: .repeating, isActive: isInFinalCountdown(context))
@@ -171,7 +174,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                     // MARK: - Minimal View (wenn mehrere Activities laufen)
                     // =====================================================================
                 if context.state.isResting {
-                    Image(systemName: "pause.circle.fill")
+                    Image(systemName: "hourglass")
                         .foregroundStyle(restTimerColor(for: context))
                 } else if context.state.isPaused {
                     Image(systemName: "pause.fill")
@@ -194,11 +197,14 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                     Text(context.attributes.planName ?? "Training")
                         .font(.headline)
                         .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
 
                     if let exercise = context.state.currentExercise {
                         Text(exercise)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
                     }
 
                     if let set = context.state.currentSet {
@@ -216,7 +222,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                    let end = context.state.restEndDate {
                         // PAUSEN-MODUS
                     VStack(spacing: 4) {
-                        Text("Pause")
+                        Text("Satzpause")
                             .font(.caption)
                             .foregroundStyle(restTimerColor(for: context))
 
@@ -227,7 +233,7 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                 } else {
                         // AKTIV-MODUS
                     VStack(spacing: 4) {
-                        Text(context.state.isPaused ? "Pausiert" : "Training")
+                        Text(context.state.isPaused ? "Pausiert" : "Läuft")
                             .font(.caption)
                             .foregroundStyle(context.state.isPaused ? Color.orange : Color.green)
 
@@ -274,8 +280,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                 // Untere Info-Zeile
             HStack {
                 HStack(spacing: 4) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color.green)
+                    Image(systemName: context.state.completedSets == 0 ? "checklist" : "checkmark.circle.fill")
+                        .foregroundStyle(context.state.completedSets == 0 ? Color.secondary : Color.green)
                     Text("\(context.state.completedSets)/\(context.state.totalSets) Sätze")
                         .font(.caption)
                 }
@@ -284,14 +290,14 @@ struct MotionCoreWidgetsLiveActivity: Widget {
 
                 HStack(spacing: 4) {
                     if context.state.isResting {
-                        Image(systemName: "pause.circle.fill")
+                        Image(systemName: "hourglass")
                             .foregroundStyle(restTimerColor(for: context))
                         Text("Satzpause")
                             .font(.caption)
                     } else {
                         Image(systemName: context.state.isPaused ? "pause.circle.fill" : "play.circle.fill")
                             .foregroundStyle(context.state.isPaused ? Color.orange : Color.green)
-                        Text(context.state.isPaused ? "Pausiert" : "Aktiv")
+                        Text(context.state.isPaused ? "Pausiert" : "Läuft")
                             .font(.caption)
                     }
                 }
