@@ -113,9 +113,11 @@ If the pre-commit hook is not set up, run `/setup-caliber` to configure everythi
 - Config file: ~/.gbrain/config.json (mode 0600)
 - Setup date: 2026-05-29
 - MCP registered: yes (user scope)
-- Embedding provider: none (no API key / Ollama) — keyword/full-text search works, semantic + symbol search disabled until an embedding provider is configured
-- Artifacts sync: off
+- Embedding provider: none working (OPENAI_API_KEY returns 401) — keyword/full-text search works, semantic + symbol search disabled until a valid embedding provider is set + `gbrain embed --stale` runs once
+- Artifacts sync: artifacts-only → private repo github.com/B4r70/gstack-artifacts-bartosz (federated gbrain source "gstack-artifacts-bartosz")
+- Transcript ingest: incremental (historical bulk deferred until embeddings work; then run `/sync-gbrain --full`)
 - Current repo policy: read-write (git.barto.cloud/barto/motioncore)
+- gstack: upgraded to v1.52.1.0
 
 ## GBrain Search Guidance (configured by /sync-gbrain)
 <!-- gstack-gbrain-search-guidance:start -->

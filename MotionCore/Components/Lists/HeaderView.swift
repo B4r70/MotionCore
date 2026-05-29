@@ -17,20 +17,23 @@ struct HeaderView: View {
     let subtitle: String
 
     var body: some View {
-        VStack(spacing: 5) {
+        // Section-Name ist die prominente Information; der App-Name steht als
+        // dezentes Overline darüber (vorher invertiert: Brand groß, Section klein).
+        VStack(spacing: 1) {
             Text(title)
-                .font(.title)
-                .fontWeight(.regular)
+                .font(.caption2)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+                .fixedSize()
+            Text(subtitle)
+                .font(.title3)
+                .fontWeight(.semibold)
                 .foregroundStyle(.primary)
                 .fixedSize()
                 .accessibilityAddTraits(.isHeader)
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fixedSize()
         }
-        .padding(.top, 20)
-        .padding(.bottom, 20)
+        .padding(.top, 8)
+        .padding(.bottom, 8)
     }
 }
 

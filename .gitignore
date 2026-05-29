@@ -64,3 +64,6 @@ Icon?
 
 # Logs
 *.log
+
+# gstack iOS design-review screenshots (local only)
+.design-review-shots/

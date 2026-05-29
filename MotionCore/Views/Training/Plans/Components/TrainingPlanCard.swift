@@ -218,8 +218,8 @@ struct TrainingPlanCard: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .background(planAccent.opacity(0.15))
-                    .foregroundStyle(planAccent)
+                    .background(planAccent)
+                    .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
 
