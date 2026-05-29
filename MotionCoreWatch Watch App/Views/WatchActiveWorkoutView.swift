@@ -14,6 +14,7 @@ import SwiftUI
 
 struct WatchActiveWorkoutView: View {
     @EnvironmentObject private var watchSession: WatchSessionManager
+    @State private var isPauseLocked = false
 
     var body: some View {
         VStack(spacing: 6) {
@@ -24,12 +25,19 @@ struct WatchActiveWorkoutView: View {
                     .foregroundStyle(watchSession.workoutState == .paused ? Color.orange : .primary)
                 Spacer()
                 Button {
+                    guard !isPauseLocked else { return }
+                    isPauseLocked = true
                     watchSession.sendAction(.pauseResume)
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(500))
+                        await MainActor.run { isPauseLocked = false }
+                    }
                 } label: {
                     Image(systemName: watchSession.workoutState == .paused ? "play.fill" : "pause.fill")
                         .font(.caption)
                 }
                 .buttonStyle(.plain)
+                .disabled(isPauseLocked)
                 .foregroundStyle(watchSession.workoutState == .paused ? Color.orange : .secondary)
             }
 
