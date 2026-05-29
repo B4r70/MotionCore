@@ -36,6 +36,12 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     private var workoutSession: HKWorkoutSession?
     private var workoutBuilder: HKLiveWorkoutBuilder?
 
+    // Gecachte HK-Typen und Einheiten — vermeiden wiederholte Allokation in didCollectDataOf
+    private let hrType   = HKQuantityType(.heartRate)
+    private let calType  = HKQuantityType(.activeEnergyBurned)
+    private let hrUnit   = HKUnit.count().unitDivided(by: .minute())
+    private let calUnit  = HKUnit.kilocalorie()
+
     /// HR-Samples für die aktuelle Übung (wird bei Transition zurückgesetzt)
     private var heartRateSamplesForExercise: [Double] = []
     private var minHRForExercise: Double = .infinity
@@ -248,14 +254,11 @@ extension WatchWorkoutManager: HKLiveWorkoutBuilderDelegate {
             guard let self else { return }
 
             // Herzfrequenz auslesen
-            if collectedTypes.contains(HKQuantityType(.heartRate)) {
-                let hrType = HKQuantityType(.heartRate)
-                let hrUnit = HKUnit.count().unitDivided(by: .minute())
-
-                if let stats = workoutBuilder.statistics(for: hrType) {
+            if collectedTypes.contains(self.hrType) {
+                if let stats = workoutBuilder.statistics(for: self.hrType) {
                     // Aktuelle HR (letzter Wert)
                     if let mostRecent = stats.mostRecentQuantity() {
-                        let hr = mostRecent.doubleValue(for: hrUnit)
+                        let hr = mostRecent.doubleValue(for: self.hrUnit)
                         self.currentHeartRate = hr
                         self.heartRateSamplesForExercise.append(hr)
                         if hr < self.minHRForExercise {
@@ -264,21 +267,20 @@ extension WatchWorkoutManager: HKLiveWorkoutBuilderDelegate {
                     }
                     // Durchschnittliche HR seit Workout-Start
                     if let avg = stats.averageQuantity() {
-                        self.averageHeartRate = avg.doubleValue(for: hrUnit)
+                        self.averageHeartRate = avg.doubleValue(for: self.hrUnit)
                     }
                     // Maximale HR seit Workout-Start
                     if let max = stats.maximumQuantity() {
-                        self.maxHeartRate = max.doubleValue(for: hrUnit)
+                        self.maxHeartRate = max.doubleValue(for: self.hrUnit)
                     }
                 }
             }
 
             // Aktive Kalorien auslesen
-            if collectedTypes.contains(HKQuantityType(.activeEnergyBurned)) {
-                let calType = HKQuantityType(.activeEnergyBurned)
-                if let stats = workoutBuilder.statistics(for: calType),
+            if collectedTypes.contains(self.calType) {
+                if let stats = workoutBuilder.statistics(for: self.calType),
                    let sum = stats.sumQuantity() {
-                    self.activeCalories = sum.doubleValue(for: .kilocalorie())
+                    self.activeCalories = sum.doubleValue(for: self.calUnit)
                 }
             }
         }

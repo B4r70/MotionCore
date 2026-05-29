@@ -24,9 +24,7 @@ struct StreakEntry: TimelineEntry {
 
 struct StreakProvider: TimelineProvider {
 
-    private var sharedDefaults: UserDefaults? {
-        UserDefaults(suiteName: "group.com.barto.motioncore")
-    }
+    private var sharedDefaults: UserDefaults? { WatchAppGroup.defaults }
 
     func placeholder(in context: Context) -> StreakEntry {
         StreakEntry(date: .now, streakCount: 7)

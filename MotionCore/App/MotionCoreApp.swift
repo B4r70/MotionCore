@@ -34,7 +34,7 @@ struct MotionCoreApp: App {
     private static let requireCloudKit: Bool = false
 
     // ✅ DEINE AppGroup-ID eintragen (Xcode → App Groups)
-    private static let appGroupID: String = "group.com.barto.motioncore"
+    private static let appGroupID: String = WatchAppGroup.identifier
 
     private static let log = Logger(subsystem: "MotionCore", category: "SwiftData")
 

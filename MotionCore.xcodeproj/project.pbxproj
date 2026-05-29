@@ -104,6 +104,7 @@
 		749EA5B488504B7C9AC6F909 /* Exceptions for "MotionCore" folder in "MotionCoreWidgetsExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Services/Watch/WatchMessageKeys.swift,
 				Services/Widget/WidgetDataStore.swift,
 				Services/Widget/WidgetSnapshot.swift,
 			);

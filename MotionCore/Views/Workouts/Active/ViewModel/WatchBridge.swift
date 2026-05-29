@@ -70,7 +70,10 @@ final class WatchBridge {
             ?? ""
 
         let exIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
-        let currentExName = grouped[safe: exIdx]?.first?.exerciseName ?? ""
+        let firstSet = grouped[safe: exIdx]?.first
+        let currentExName = firstSet?.exerciseNameSnapshot.isEmpty == false
+            ? firstSet!.exerciseNameSnapshot
+            : (firstSet?.exerciseName ?? "")
         let groupSets = grouped[safe: exIdx] ?? []
         let totalInGroup = groupSets.count
         let nextOpenIdx = groupSets.firstIndex(where: { !$0.isCompleted })

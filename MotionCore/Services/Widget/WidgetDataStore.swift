@@ -20,7 +20,7 @@ struct WidgetDataStore {
 
     // MARK: - Konstanten
 
-    static let appGroup = "group.com.barto.motioncore"
+    static let appGroup = WatchAppGroup.identifier
     private static let snapshotFileName = "widget_snapshot.json"
 
     // MARK: - Container-URL

@@ -13,6 +13,8 @@
 // Hinweis: Diese Datei ist in beiden Targets identisch (MotionCore + MotionCoreWatch).
 // Änderungen müssen in beiden Dateien synchron gepflegt werden.
 
+import Foundation
+
 // MARK: - State Keys (iPhone → Watch)
 
 /// Keys für State-Updates vom iPhone zur Watch
@@ -52,6 +54,16 @@ enum WatchAction: String {
     case previousExercise
     /// Überspringt den aktuell laufenden Rest-Timer auf dem iPhone
     case skipRest
+}
+
+// MARK: - App Group
+
+/// Zentrale Konstante für den App-Group-Identifier und den zugehörigen UserDefaults-Container
+enum WatchAppGroup {
+    static let identifier = "group.com.barto.motioncore"
+    static var defaults: UserDefaults? {
+        UserDefaults(suiteName: identifier)
+    }
 }
 
 // MARK: - App Group UserDefaults Keys (für Complications)

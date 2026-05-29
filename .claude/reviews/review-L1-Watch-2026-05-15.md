@@ -294,6 +294,8 @@ func session(_ session: WCSession, didReceiveMessage message: [String: Any], rep
 
 ### [L1-Watch-005] App-Group-Identifier `"group.com.barto.motioncore"` ist 4× als String-Literal verstreut
 
+**Status:** ✅ Implementiert am 2026-05-29 (Build grün). Zentrales `enum WatchAppGroup { identifier; defaults }` in `WatchMessageKeys.swift` (+ `import Foundation` ergänzt, da die Datei vorher nur String-Konstanten enthielt). Alle 4 Review-Stellen umgestellt (WatchComplicationService, StreakComplication, WeeklyProgressComplication, IdleView). **Scope-Erweiterung (von Bartosz freigegeben):** zwei weitere, nicht im Review gelistete Literal-Stellen mitbereinigt — `MotionCoreApp.swift:37` und `WidgetDataStore.swift:23`. Für letztere musste `WatchMessageKeys.swift` der **WidgetsExtension**-Target-Membership hinzugefügt werden (Xcode-16 Synchronized File Groups → `membershipExceptions` in `project.pbxproj`, gespiegelt vom bestehenden Watch-/Widget-Muster).
+
 **Severity:** 🟡 Medium
 **Kategorie:** Wartbarkeit
 **Datei:** mehrere Stellen (Liste unten)
@@ -357,6 +359,8 @@ private static let appGroup = WatchAppGroup.identifier
 ---
 
 ### [L1-Watch-006] Watch-State nutzt `exerciseName` statt `exerciseNameSnapshot`
+
+**Status:** ✅ Implementiert am 2026-05-29 (Build grün). `WatchBridge.sendState()` bevorzugt jetzt `exerciseNameSnapshot` mit `exerciseName` als Fallback (`WatchBridge.swift:73–76`). Stelle lag laut Review noch in `ActiveWorkoutView`, ist beim Refactoring nach `WatchBridge` gewandert.
 
 **Severity:** 🟡 Medium
 **Kategorie:** Projekt-Konvention
@@ -473,6 +477,8 @@ PhoneSessionManager.shared.sendWorkoutState(
 ---
 
 ### [L1-Watch-008] `IdleView` re-rendert nicht, wenn Complications-UserDefaults von außen aktualisiert werden
+
+**Status:** ✅ Implementiert am 2026-05-29 (Build grün). `IdleView` nutzt jetzt drei `@AppStorage(..., store: WatchAppGroup.defaults)`-Properties (streakCount, weeklyCount, weeklyGoalRaw) statt computed-property-UserDefaults-Reads → externe Änderungen triggern Re-Render. `weeklyGoal`-Fallback (`> 0 ? : 5`) als computed wrapper erhalten, Body unverändert. Gemeinsam mit [L1-Watch-005] umgesetzt (nutzt dessen `WatchAppGroup.defaults`).
 
 **Severity:** 🔵 Low
 **Kategorie:** SwiftUI-State
@@ -598,6 +604,8 @@ Button {
 ---
 
 ### [L1-Watch-010] `HKLiveWorkoutBuilder`-Statistics werden in jeder `didCollectDataOf`-Iteration neu gelesen, auch für nicht-betroffene Typen
+
+**Status:** ✅ Implementiert am 2026-05-29 (Build grün). HK-Typen/Einheiten als `private let` gecacht (`hrType`, `calType`, `hrUnit`, `calUnit` in `WatchWorkoutManager.swift:39–43`); `didCollectDataOf` nutzt die gecachten Instanzen statt sie pro Iteration neu zu allokieren. Reines Caching-Refactor, Verhalten identisch.
 
 **Severity:** 🔵 Low
 **Kategorie:** Performance

@@ -14,23 +14,17 @@ import SwiftUI
 
 struct IdleView: View {
 
-    // Complications-Daten aus App Group UserDefaults lesen
-    private var sharedDefaults: UserDefaults? {
-        UserDefaults(suiteName: "group.com.barto.motioncore")
-    }
+    // Complications-Daten aus App Group UserDefaults — @AppStorage reagiert auf externe Änderungen
+    @AppStorage(WatchComplicationKey.streakCount, store: WatchAppGroup.defaults)
+    private var streakCount: Int = 0
 
-    private var streakCount: Int {
-        sharedDefaults?.integer(forKey: WatchComplicationKey.streakCount) ?? 0
-    }
+    @AppStorage(WatchComplicationKey.weeklyWorkoutCount, store: WatchAppGroup.defaults)
+    private var weeklyCount: Int = 0
 
-    private var weeklyCount: Int {
-        sharedDefaults?.integer(forKey: WatchComplicationKey.weeklyWorkoutCount) ?? 0
-    }
+    @AppStorage(WatchComplicationKey.weeklyWorkoutGoal, store: WatchAppGroup.defaults)
+    private var weeklyGoalRaw: Int = 0
 
-    private var weeklyGoal: Int {
-        let goal = sharedDefaults?.integer(forKey: WatchComplicationKey.weeklyWorkoutGoal) ?? 0
-        return goal > 0 ? goal : 5  // Default 5 falls noch nicht gesetzt
-    }
+    private var weeklyGoal: Int { weeklyGoalRaw > 0 ? weeklyGoalRaw : 5 }  // Default 5 falls noch nicht gesetzt
 
     var body: some View {
         VStack(spacing: 12) {

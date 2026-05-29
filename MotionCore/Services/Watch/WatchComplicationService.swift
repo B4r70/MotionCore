@@ -18,10 +18,6 @@ import WidgetKit
 /// Berechnet und schreibt Complication-Daten nach jedem Workout-Abschluss
 struct WatchComplicationService {
 
-    // MARK: - App Group
-
-    private static let appGroup = "group.com.barto.motioncore"
-
     // MARK: - Update
 
     /// Aktualisiert alle Complication-Daten nach einem Workout-Abschluss
@@ -29,7 +25,7 @@ struct WatchComplicationService {
     ///   - allSessions: Alle abgeschlossenen StrengthSessions (aus @Query)
     ///   - weeklyGoal: Wöchentliches Workout-Ziel (Default: 5)
     static func updateComplications(allSessions: [StrengthSession], weeklyGoal: Int = 5) {
-        guard let defaults = UserDefaults(suiteName: appGroup) else { return }
+        guard let defaults = WatchAppGroup.defaults else { return }
 
         let streak      = calculateStreak(sessions: allSessions)
         let weeklyCount = calculateWeeklyCount(sessions: allSessions)

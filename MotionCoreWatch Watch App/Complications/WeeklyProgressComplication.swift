@@ -25,9 +25,7 @@ struct WeeklyProgressEntry: TimelineEntry {
 
 struct WeeklyProgressProvider: TimelineProvider {
 
-    private var sharedDefaults: UserDefaults? {
-        UserDefaults(suiteName: "group.com.barto.motioncore")
-    }
+    private var sharedDefaults: UserDefaults? { WatchAppGroup.defaults }
 
     func placeholder(in context: Context) -> WeeklyProgressEntry {
         WeeklyProgressEntry(date: .now, workoutCount: 3, workoutGoal: 5)
