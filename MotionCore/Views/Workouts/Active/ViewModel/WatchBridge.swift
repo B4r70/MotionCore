@@ -71,13 +71,18 @@ final class WatchBridge {
 
         let exIdx = grouped.firstIndex(where: { $0.first?.groupKey == currentKey }) ?? 0
         let currentExName = grouped[safe: exIdx]?.first?.exerciseName ?? ""
-        let completedInGroup = grouped[safe: exIdx]?.filter { $0.isCompleted }.count ?? 0
-        let totalInGroup = grouped[safe: exIdx]?.count ?? 0
+        let groupSets = grouped[safe: exIdx] ?? []
+        let totalInGroup = groupSets.count
+        let nextOpenIdx = groupSets.firstIndex(where: { !$0.isCompleted })
+        // setIndex = Index des aktuellen/nächsten offenen Satzes (0-basiert).
+        // Alle erledigt → auf letzten Satz clampen, damit die Watch "Satz N/N"
+        // statt "Satz N+1/N" zeigt (L1-Watch-007).
+        let displaySetIndex = nextOpenIdx ?? max(0, totalInGroup - 1)
 
         PhoneSessionManager.shared.sendWorkoutState(
             state: state,
             exerciseName: currentExName,
-            setIndex: completedInGroup,
+            setIndex: displaySetIndex,
             totalSets: totalInGroup,
             exerciseIndex: exIdx,
             totalExercises: grouped.count,

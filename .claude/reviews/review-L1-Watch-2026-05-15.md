@@ -412,6 +412,8 @@ private func sendWatchState() {
 
 ### [L1-Watch-007] `setIndex` kann transient `totalSets` überschreiten → Watch zeigt "Satz 4/3"
 
+**Status:** ✅ Implementiert am 2026-05-29 (Build grün). **Variante A (iPhone-Seite)** gewählt: `WatchBridge.sendState()` sendet `setIndex` jetzt als Index des nächsten offenen Satzes (`nextOpenIdx ?? max(0, totalInGroup - 1)`) statt als `completedInGroup`-Count (`WatchBridge.swift:74–86`, `completedInGroup` entfernt). Behebt die Count-vs-Index-Verwechslung an der Quelle — deckt sowohl die „Satz X/Y"-Zeile als auch das Button-Label ab und korrigiert zusätzlich den Out-of-order-Fall. Variante B (Watch-seitiges Clampen) verworfen, weil sie nur das Symptom maskiert und je Anzeige-Stelle dupliziert werden müsste. Hinweis: Stelle lag laut Review noch in `ActiveWorkoutView`, ist beim Refactoring nach `WatchBridge` gewandert.
+
 **Severity:** 🟡 Medium
 **Kategorie:** UI / Watch-Bridge
 **Datei:** MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift:1153–1166 + MotionCoreWatch Watch App/Views/WatchActiveWorkoutView.swift:59,99
@@ -538,6 +540,8 @@ struct IdleView: View {
 ---
 
 ### [L1-Watch-009] Pause-Toggle-Button auf der Watch hat keine Disable-Sicherung gegen Doppelklick
+
+**Status:** ✅ Implementiert am 2026-05-29 (Build grün). Debounce-Lock (Variante A) **nur auf dem Pause/Resume-Button** (`WatchActiveWorkoutView.swift:17,27–41`): `@State isPauseLocked`, 500 ms `Task.sleep`-Auto-Unlock, `.disabled(isPauseLocked)`. **Satz-Button bewusst NICHT gelockt** — der `handleAction(.completeSet)`-Guard (erster nicht-abgeschlossener Satz) verhindert den Doppel-Complete-Bug bereits, und ein Lock würde schnelle legitime Mehrfach-Logger ausbremsen. Optimistic-State (Variante B) als Over-Engineering für ein Low-Finding verworfen.
 
 **Severity:** 🔵 Low
 **Kategorie:** UI-Robustheit
