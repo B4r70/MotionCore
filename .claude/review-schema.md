@@ -1,163 +1,233 @@
 # MotionCore Review Schema
 
-Verbindliches Format für alle Review-Findings, erstellt durch den
-`motioncore-reviewer`-Agent. Jedes Finding folgt exakt diesem Schema,
-damit der Output sowohl maschinell parsebar (für `motioncore-developer`)
-als auch im Chat lesbar bleibt.
+Binding format for all review findings produced by the
+`motioncore-reviewer` agent. Every finding follows this schema exactly,
+so the output stays both machine-parseable (for `motioncore-developer`
+and `/fix-review`) and human-readable in chat.
 
 ---
 
-## Datei-Struktur
+## File Structure
 
-Jede Review-Datei wird abgelegt unter:
+Each review file is stored at:
 
-`~/developments/MotionCore/.claude/reviews/review-L{layer}-{YYYY-MM-DD}.md`
+`~/developments/MotionCore/.claude/reviews/review-L{scope}-{YYYY-MM-DD}.md`
 
-Aufbau der Datei:
+where `{scope}` is the layer, optionally with a sub-scope suffix
+(see "Issue ID Format" below). Examples:
 
-1. **Header-Block** mit Metadaten
-2. **Executive Summary** (max. 10 Bullets + Severity-Counts + Top-3-Themen + Top-3-Wins)
-3. **Findings** — gruppiert nach Datei, sortiert nach Severity innerhalb der Datei
+- `review-L3-2026-05-15.md` (full L3 review)
+- `review-L1-Watch-2026-05-15.md` (L1 review scoped to the Watch target)
+
+File layout:
+
+1. **Header block** with metadata
+2. **Executive Summary** (themes + severity counts + top wins + recommendation)
+3. **Findings** — grouped by file, sorted by severity within each file
+4. **Observations for other layers** (optional)
+5. **Statistics** and **Next Steps** (mandatory)
 
 ---
 
-## Header-Block (Pflicht, oben in der Datei)
+## Issue ID Format (binding — parsed by `/fix-review`)
 
-```markdown
-# Code Review — Layer {N}: {Layer-Name}
-
-**Datum:** YYYY-MM-DD
-**Reviewer:** motioncore-reviewer (Opus)
-**Scope:** {kurze Beschreibung der untersuchten Bereiche}
-**Codebase-Stand:** {Git-Commit-Hash oder Branch}
-**Gelesene Dateien:** {Anzahl}
-**Gefundene Issues:** {Gesamtzahl}
+```
+L{layer}[-{scope}]-{seq:03d}
 ```
 
+- `{layer}` — one of `1`, `2`, `3`, `4`, `5` (the review layer)
+- `{scope}` — OPTIONAL sub-scope tag, `UpperCamelCase`, no digits, no
+  hyphens inside the tag (e.g. `Watch`, `LiveActivity`, `Widgets`).
+  Only used when a review deliberately narrows to a sub-area of a layer.
+- `{seq:03d}` — zero-padded 3-digit sequence, unique **within one
+  review file**
+
+Valid: `L3-007`, `L1-Watch-001`, `L4-LiveActivity-012`
+Invalid: `L3-7` (not padded), `L6-001` (no layer 6),
+`L1-Watch-01` (seq not 3 digits), `L1-watch-001` (scope not capitalized)
+
+**Cross-run uniqueness:** sequence numbers are only unique within a
+single review file, not across review runs. To address the case where
+two review files for the same layer both contain e.g. `L3-007`,
+`/fix-review` always resolves an ID against the **most recent** review
+file. When citing an older finding, archive or delete the superseded
+review file first, or pass the explicit file path.
+
 ---
 
-## Executive Summary (Pflicht, direkt nach Header)
+## Header Block (mandatory, top of file)
+
+```markdown
+# Code Review — Layer {scope}: {Layer/Scope Name}
+
+**Date:** YYYY-MM-DD
+**Reviewer:** motioncore-reviewer (Opus)
+**Scope:** {short description of the areas examined}
+**Codebase State:** {git commit hash or branch — single source of truth}
+**Files Read:** {count}
+**Issues Found:** {count}
+```
+
+The `Codebase State` value is the global reference commit. Individual
+findings may add a per-finding `Code State:` field (see below) when a
+finding's line numbers are likely to drift before it gets fixed.
+
+---
+
+## Executive Summary (mandatory, directly after header)
 
 ```markdown
 ## Executive Summary
 
-### Severity-Verteilung
+### Severity Distribution
 - 🔴 Critical: {n}
 - 🟠 High: {n}
 - 🟡 Medium: {n}
 - 🔵 Low: {n}
 - ⚪ Info: {n}
 
-### Top-3-Themen (was zieht sich durch?)
-1. {Thema} — betrifft {n} Findings
-2. {Thema} — betrifft {n} Findings
-3. {Thema} — betrifft {n} Findings
+### Top Themes (what runs through the review? — list 3 to 5)
+1. {theme} — affects {n} findings
+2. {theme} — affects {n} findings
+3. {theme} — affects {n} findings
 
-### Top-3-Wins (was ist gut gemacht?)
-1. {konkrete Beobachtung mit Datei-Verweis}
-2. {konkrete Beobachtung mit Datei-Verweis}
-3. {konkrete Beobachtung mit Datei-Verweis}
+### Top 3 Wins (what is done well?)
+1. {concrete observation with file reference}
+2. {concrete observation with file reference}
+3. {concrete observation with file reference}
 
-### Empfehlung
-{1–3 Sätze: Was sollte zuerst angegangen werden? Welche Findings
-können warten? Gibt es Cluster, die zusammen gefixt werden sollten?}
+### Recommendation
+{1–3 sentences: what should be tackled first? Which findings can wait?
+Are there clusters that should be fixed together?}
 ```
+
+The total issue count lives **only** in the header (`Issues Found`).
+The severity distribution here is the per-severity breakdown — do not
+restate the total to avoid drift during manual edits.
 
 ---
 
-## Finding-Schema (für jeden Befund identisch)
+## Finding Schema (identical for every finding)
 
 ````markdown
-### [L{layer}-{seq:03d}] {kurze prägnante Überschrift}
+### [L{layer}[-{scope}]-{seq:03d}] {short, precise headline}
 
 **Severity:** {🔴 Critical | 🟠 High | 🟡 Medium | 🔵 Low | ⚪ Info}
-**Kategorie:** {z.B. "CalcEngine-Reinheit", "SwiftUI-State", "Persistenz"}
-**Datei:** {relativer Pfad ab MotionCore/}:{startZeile}–{endZeile}
-**Verwandte Findings:** {optional: [L3-002], [L3-005] wenn Cluster}
+**Category:** {e.g. "CalcEngine purity", "SwiftUI state", "Persistence"}
+**File:** {relative path from MotionCore/}:{startLine}–{endLine}
+**Related Findings:** {optional: [L3-002], [L3-005] when clustered, else —}
+**Touches Locked Area:** {Yes | No}
+**Code State:** {optional: commit hash — only if line numbers may drift}
 
-**Fundstelle:**
+**Location:**
 ```swift
-{Code-Ausschnitt — max. 15 Zeilen, der die Stelle eindeutig zeigt}
+{code excerpt — max 15 lines, unambiguously showing the spot}
 ```
 
 **Problem:**
-{1–3 Sätze: Was ist das technische Problem? Sachlich, ohne Wertung.}
+{1–3 sentences: what is the technical problem? Factual, no judgment.}
 
-**Auswirkung:**
-- {Konkrete Folge 1, z.B. "Tests werden flaky"}
-- {Konkrete Folge 2, z.B. "Crash bei leerem Plan"}
-- {Konkrete Folge 3, falls relevant}
+**Impact:**
+- {concrete consequence 1, e.g. "tests become flaky"}
+- {concrete consequence 2, e.g. "crash on empty plan"}
+- {concrete consequence 3, if relevant}
 
-**Empfohlene Korrektur:**
-{1–3 Sätze: Welche Strategie löst das Problem? Warum diese und keine andere?}
+**Recommended Correction:**
+{1–3 sentences: which strategy solves the problem? Why this one and
+not another?}
 
-**Konkreter Fix:**
+**Concrete Fix:**
 ```swift
-{Patch-fertiger Code, der direkt eingespielt werden kann.
- Bei größeren Änderungen: nur die relevanten Zeilen, Rest mit
- // ... unverändert markieren.}
+{patch-ready code that can be applied directly. For larger changes:
+ only the relevant lines, rest marked with // ... unchanged.}
 ```
 
-**Aufwand:** {<5 Min | ~10 Min | ~30 Min | ~1h | mehrere Stunden}
-**Risiko:** {Niedrig | Mittel | Hoch}
-**Diskussion erwünscht:** {Ja | Nein}
-**Begründung Diskussion:** {nur wenn "Ja": kurzer Hinweis, was unklar ist}
+**Effort:** {<5 min | ~10 min | ~30 min | ~1h | several hours}
+**Risk:** {Low | Medium | High}
+**Discussion Wanted:** {Yes | No}
+**Discussion Reason:** {only if "Yes": concrete note on what is unclear}
 ````
 
+### Field notes
+
+- **Touches Locked Area** — set to `Yes` if the fix would structurally
+  touch `ExerciseRating` (and all groupKey-based matching) or
+  `PlanUpdateCalcEngine`. This field is read deterministically by
+  `/fix-review` Gate B. The reviewer has the code context; do not make
+  `/fix-review` guess from prose. A pure bug-fix that does not change
+  structure in those areas stays `No`, but call it out in the fix text.
+- **Code State** — only add when a finding sits in a file likely to
+  change before the fix lands (e.g. large, actively edited files). It
+  lets `motioncore-developer` notice when cited line numbers no longer
+  match. Omit otherwise; the global header commit is enough.
+
 ---
 
-## Regeln für Findings
+## Rules for Findings
 
-### Severity-Kalibrierung
+### Severity Calibration
 
-| Severity | Wann verwenden | Beispiele |
+| Severity | When to use | Examples |
 |---|---|---|
-| 🔴 Critical | Datenverlust, Crash, Sync-Korruption, Memory Leak in Hot Path | `try?` schluckt CloudKit-Save-Error; Force-Unwrap auf Optional aus Netzwerk |
-| 🟠 High | Etablierte Konvention verletzt, klare Bug-Falle, spürbare Performance-Falle | CalcEngine schreibt UserDefaults; `@Published` triggert View-Storm |
-| 🟡 Medium | Code-Smell, mittlere Wartbarkeitsgrenze, Inkonsistenz mit Nachbar-Code | Datei 750 Zeilen; doppelte Logik in zwei Views |
-| 🔵 Low | Stilistisch, Namensgebung, Kommentar-Qualität | `func calc()` statt `func calculateScore()` |
-| ⚪ Info | Beobachtung, kein Handlungsbedarf — nur zur Awareness | "Modul könnte später Watch-tauglich werden" |
+| 🔴 Critical | Data loss, crash, sync corruption, memory leak in a hot path | `try?` swallows a CloudKit save error; force-unwrap on an optional from the network |
+| 🟠 High | Established convention violated, clear bug trap, noticeable performance trap | CalcEngine writes UserDefaults; `@Published` triggers a view storm |
+| 🟡 Medium | Code smell, moderate maintainability limit, inconsistency with neighbouring code | file at 750 lines; duplicated logic across two views |
+| 🔵 Low | Style, naming, comment quality | `func calc()` instead of `func calculateScore()` |
+| ⚪ Info | Observation, no action needed — awareness only | "module could later become Watch-capable" |
 
-**Wichtig:** Severity nicht inflationieren. Wenn alles "High" ist, ist nichts mehr "High".
+**Important:** do not inflate severity. If everything is "High",
+nothing is "High".
 
-### Diskussion erwünscht: Ja vs. Nein
+### Discussion Wanted: Yes vs. No
 
-- **Nein** = klare Konventions-Verletzung, eindeutiger Bug, mechanischer Fix
-- **Ja** = echter Architektur-Trade-off, mehrere valide Lösungen, Auswirkung auf andere Module unklar, oder Findings, die mit gesperrten Bereichen (ExerciseRating, PlanUpdateCalcEngine) angrenzen
+- **No** = clear convention violation, unambiguous bug, mechanical fix
+- **Yes** = real architecture trade-off, multiple valid solutions,
+  unclear impact on other modules, or findings adjacent to locked areas
+  (`ExerciseRating`, `PlanUpdateCalcEngine`)
 
-Bei "Ja" muss die Begründung *konkret* sein ("Lösung A spart Tokens, Lösung B ist robuster — Trade-off offen"), nicht generisch ("könnte man diskutieren").
+For "Yes", the reason must be *concrete* ("solution A saves tokens,
+solution B is more robust — trade-off open"), not generic ("could be
+discussed").
 
-### Gesperrte Bereiche
+### Locked Areas
 
-Findings in folgenden Modulen werden **nur als Bug-Hinweis** geführt,
-nie als Refactoring-Vorschlag:
+Findings in the following modules are reported **as bug notes only**,
+never as refactoring proposals:
 
-- `ExerciseRating` und alle groupKey-basierten Matchings
-- `PlanUpdateCalcEngine` (strukturelle Änderungen)
-- Bewusste German/English-Mischung (UI=Deutsch, Identifier=Englisch, Comments=Deutsch, Agent-Prompts=Englisch)
+- `ExerciseRating` and all groupKey-based matching
+- `PlanUpdateCalcEngine` (structural changes)
+- Deliberate German/English mix (UI = German, identifiers = English,
+  comments = German, agent prompts = English)
 
-Wenn dort echte Bugs auffallen: Severity vergeben, aber im Fix-Vorschlag
-explizit anmerken: "Strukturelle Änderung gesperrt — minimaler Patch:"
+If a genuine bug appears there: assign severity, set
+**Touches Locked Area: Yes**, and note explicitly in the fix:
+"Structural change locked — minimal patch:".
 
-### Code-Snippet-Regeln
+### Code Snippet Rules
 
-- Maximal 15 Zeilen pro Fundstelle
-- Keine Auslassung mit `...` mitten im Code, der das Problem zeigt
-- Bei langen Methoden: nur die problematische Region zitieren, mit Kommentar `// ... Setup oben ausgelassen`
+- Maximum 15 lines per location
+- No `...` elision in the middle of the code that demonstrates the problem
+- For long methods: cite only the problematic region, with a comment
+  like `// ... setup above omitted`
+- Do **not** use `###`-level (or higher) Markdown headers inside a
+  finding body. `/fix-review` slices a finding from its `### [ID]`
+  header to the next `###`; an inner `###` would truncate the finding.
+  Use bold labels or `####`+ only inside fenced code if needed.
 
 ---
 
-## Beispiel-Finding (Vorlage zum Abgleich)
+## Example Finding (reference template)
 
 ````markdown
-### [L3-007] ProgressionCalcEngine: Side-Effect über UserDefaults
+### [L3-007] ProgressionCalcEngine: side effect via UserDefaults
 
 **Severity:** 🟠 High
-**Kategorie:** CalcEngine-Reinheit
-**Datei:** Services/Calculation/ProgressionCalcEngine.swift:142–158
-**Verwandte Findings:** —
+**Category:** CalcEngine purity
+**File:** Services/Calculation/ProgressionCalcEngine.swift:142–158
+**Related Findings:** —
+**Touches Locked Area:** No
 
-**Fundstelle:**
+**Location:**
 ```swift
 static func calculate(input: Input) -> Output {
     let result = computeProgression(input)
@@ -167,59 +237,59 @@ static func calculate(input: Input) -> Output {
 ```
 
 **Problem:**
-CalcEngines sind laut Projekt-Konvention pure Structs ohne Side Effects.
-Der UserDefaults-Schreibzugriff bricht diese Garantie.
+Per project convention, CalcEngines are pure structs without side
+effects. The UserDefaults write breaks that guarantee.
 
-**Auswirkung:**
-- Engine ist nicht mehr deterministisch testbar (Tests werden flaky)
-- Engine kann nicht in SwiftUI-Previews verwendet werden
-- Zustand leakt zwischen Sessions, ohne dass es im Aufrufer sichtbar ist
+**Impact:**
+- Engine is no longer deterministically testable (tests become flaky)
+- Engine cannot be used in SwiftUI previews
+- State leaks between sessions without being visible to the caller
 
-**Empfohlene Korrektur:**
-Side-Effect aus dem Engine herausziehen. Engine liefert nur das Ergebnis,
-der Caller (`WorkoutSessionManager.finishSession`) übernimmt die
-UserDefaults-Persistenz.
+**Recommended Correction:**
+Pull the side effect out of the engine. The engine returns only the
+result; the caller (`WorkoutSessionManager.finishSession`) handles the
+UserDefaults persistence.
 
-**Konkreter Fix:**
+**Concrete Fix:**
 ```swift
-// In ProgressionCalcEngine.calculate(): UserDefaults-Zeile entfernen
+// In ProgressionCalcEngine.calculate(): remove the UserDefaults line
 static func calculate(input: Input) -> Output {
     return computeProgression(input)
 }
 
-// In WorkoutSessionManager.finishSession(): nach Aufruf hinzufügen
+// In WorkoutSessionManager.finishSession(): add after the call
 let result = ProgressionCalcEngine.calculate(input: progressionInput)
 UserDefaults.standard.set(Date(), forKey: "lastProgression")
 ```
 
-**Aufwand:** ~10 Min
-**Risiko:** Niedrig
-**Diskussion erwünscht:** Nein
+**Effort:** ~10 min
+**Risk:** Low
+**Discussion Wanted:** No
 ````
 
 ---
 
-## Datei-Schluss (Pflicht)
+## File Footer (mandatory)
 
-Am Ende der Review-Datei:
+At the end of the review file:
 
 ```markdown
 ---
 
-## Statistik
+## Statistics
 
-- Gelesene Dateien: {n}
-- Untersuchte Zeilen (gesamt): {n}
-- Findings pro 1.000 Zeilen: {n}
-- Reviewer-Laufzeit: {falls bekannt}
+- Files read: {n}
+- Lines examined (total): {n}
+- Findings per 1,000 lines: {n}
+- Reviewer runtime: {if known}
 
-## Nächste Schritte
+## Next Steps
 
-Für `motioncore-developer`:
-- Empfohlene Fix-Reihenfolge: {Liste der IDs in sinnvoller Reihenfolge}
-- Cluster, die zusammen gefixt werden sollten: {ID-Gruppen}
-- Findings, die manuelles Testen brauchen: {Liste}
+For `motioncore-developer`:
+- Recommended fix order: {list of IDs in a sensible order}
+- Clusters to fix together: {ID groups}
+- Findings that need manual testing: {list}
 
-Für Bartosz (Diskussion):
-- Issues mit "Diskussion erwünscht: Ja": {Liste der IDs}
+For Bartosz (discussion):
+- Issues with "Discussion Wanted: Yes": {list of IDs}
 ```

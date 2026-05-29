@@ -36,7 +36,15 @@ final class WatchSessionManager: NSObject, ObservableObject {
     @Published private(set) var elapsedTime: TimeInterval = 0
 
     /// Aktiver WatchWorkoutManager — nil wenn kein Health-Tracking läuft
-    @Published private(set) var workoutManager: WatchWorkoutManager?
+    @Published private(set) var workoutManager: WatchWorkoutManager? {
+        didSet {
+            // Inner ObservableObject-Änderungen (HR/Kalorien) nach außen weiterreichen,
+            // damit SwiftUI-Views, die WatchSessionManager beobachten, neu rendern.
+            // Muss im didSet stehen, weil workoutManager mehrfach neu zugewiesen wird.
+            workoutManagerObservation = workoutManager?.objectWillChange
+                .sink { [weak self] in self?.objectWillChange.send() }
+        }
+    }
 
     // MARK: - Published State (Live-Timer)
 
@@ -55,6 +63,8 @@ final class WatchSessionManager: NSObject, ObservableObject {
 
     private var heartbeatTimer: Timer?
     private var localTimer: Timer?
+    private var workoutManagerObservation: AnyCancellable?
+    private var isTearingDown: Bool = false
 
     // MARK: - Init
 
@@ -119,16 +129,20 @@ extension WatchSessionManager: WCSessionDelegate {
                 self.liveElapsedSeconds = elapsed
             }
 
-            // Rest-Timer-State aus iPhone-Nachricht auslesen
-            if let resting = message[WatchStateKey.isResting] as? Bool {
-                self.isResting = resting
+            // Rest-Timer-State NUR aus State-Messages auslesen (workoutState immer vorhanden)
+            // Lifecycle-Messages (startHealthTracking, stop, pause etc.) tragen workoutState NICHT
+            // und dürfen restEndDate/isResting nicht überschreiben
+            let isStateMessage = message[WatchStateKey.workoutState] != nil
+            if isStateMessage {
+                self.isResting = message[WatchStateKey.isResting] as? Bool ?? false
+                if let endInterval = message[WatchStateKey.restEndDate] as? TimeInterval {
+                    self.restEndDate = Date(timeIntervalSinceReferenceDate: endInterval)
+                } else {
+                    // State-Message ohne restEndDate → Timer beendet oder nicht aktiv
+                    self.restEndDate = nil
+                }
             }
-            if let endInterval = message[WatchStateKey.restEndDate] as? TimeInterval {
-                self.restEndDate = Date(timeIntervalSinceReferenceDate: endInterval)
-            } else if !(message[WatchStateKey.isResting] as? Bool ?? false) {
-                // isResting = false ohne restEndDate → Timer abgelaufen oder nicht aktiv
-                self.restEndDate = nil
-            }
+            // Lifecycle-Messages (ohne workoutState-Key) lassen restEndDate/isResting unverändert
 
             // Lokaler Timer je nach Workout-State starten oder stoppen
             if self.workoutState == .active {
@@ -145,7 +159,7 @@ extension WatchSessionManager: WCSessionDelegate {
             // aber workoutState noch nicht .idle — Idle kommt als separate Nachricht vom iPhone)
             let isStoppingNow = message[WatchWorkoutLifecycleKey.stopHealthTracking] != nil
                              || message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil
-            if self.workoutState != .idle && self.workoutManager == nil && !isStoppingNow {
+            if self.workoutState != .idle && self.workoutManager == nil && !isStoppingNow && !self.isTearingDown {
                 let manager = WatchWorkoutManager()
                 self.workoutManager = manager
                 Task {
@@ -183,7 +197,7 @@ extension WatchSessionManager: WCSessionDelegate {
 
     /// Empfängt Nachrichten vom iPhone mit replyHandler (Request/Response)
     func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
-        // Snapshot-Anforderung mit sofortiger Antwort via replyHandler
+        // Snapshot-Anforderung benötigt eine echte Antwort — direkt behandeln und early return
         if message[WatchWorkoutLifecycleKey.requestSnapshot] != nil {
             DispatchQueue.main.async { [weak self] in
                 guard let self, let manager = self.workoutManager else {
@@ -198,10 +212,13 @@ extension WatchSessionManager: WCSessionDelegate {
                 combined[WatchExerciseSnapshotKey.exerciseSnapshot] = true
                 replyHandler(combined)
             }
-        } else {
-            // Alle anderen Nachrichten mit leerem Reply quittieren
-            replyHandler([:])
+            return
         }
+
+        // Alle anderen Nachrichten über den bestehenden No-Reply-Pfad verarbeiten
+        // (ein Pfad für Lifecycle + State-Logik, Reply mit leerem Dict quittieren)
+        self.session(session, didReceiveMessage: message)
+        replyHandler([:])
     }
 }
 
@@ -214,6 +231,7 @@ extension WatchSessionManager {
 
         // Health-Tracking starten (F1: Auth automatisch beim ersten Start)
         if message[WatchWorkoutLifecycleKey.startHealthTracking] != nil {
+            isTearingDown = false
             if let existing = workoutManager {
                 workoutManager = nil
                 stopHeartbeatTimer()
@@ -242,6 +260,7 @@ extension WatchSessionManager {
 
         // Health-Tracking beenden und in Apple Health speichern
         if message[WatchWorkoutLifecycleKey.stopHealthTracking] != nil {
+            isTearingDown = true
             guard let manager = workoutManager else { return }
             stopHeartbeatTimer()
             Task {
@@ -252,6 +271,7 @@ extension WatchSessionManager {
 
         // Health-Tracking verwerfen (kein Apple-Health-Eintrag)
         if message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil {
+            isTearingDown = true
             let manager = workoutManager
             workoutManager = nil
             stopHeartbeatTimer()
