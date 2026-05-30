@@ -48,6 +48,8 @@ enum WatchWorkoutLifecycleKey {
     static let resumeHealthTracking  = "resumeHealthTracking"
     static let exerciseTransition    = "exerciseTransition"
     static let requestSnapshot       = "requestHealthSnapshot"
+    /// Eindeutige ID jedes Lifecycle-Commands — ermöglicht Deduplizierung auf der Watch
+    static let lifecycleCommandID    = "lifecycleCommandID"
 }
 
 // MARK: - Heartbeat Keys

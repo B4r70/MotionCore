@@ -66,6 +66,21 @@ enum WatchAppGroup {
     }
 }
 
+// MARK: - Desired Health State (für Reconcile auf der Watch)
+
+/// Key für den gewünschten Health-State im applicationContext
+enum WatchDesiredHealthStateKey {
+    static let desiredHealthState = "desiredHealthState"
+}
+
+/// Gewünschter Health-State — wird via updateApplicationContext als Reconcile-Anker gesetzt
+enum WatchDesiredHealthState: String {
+    case idle
+    case active
+    case finished
+    case discarded
+}
+
 // MARK: - App Group UserDefaults Keys (für Complications)
 
 /// Keys für Complications-Daten in der App Group

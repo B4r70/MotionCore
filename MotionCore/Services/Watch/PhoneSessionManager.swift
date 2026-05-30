@@ -125,6 +125,7 @@ final class PhoneSessionManager: NSObject, ObservableObject {
 
     /// Startet das Health-Tracking auf der Watch.
     func sendStartHealthTracking() {
+        updateDesiredHealthState(.active)
         sendLifecycleMessage([WatchWorkoutLifecycleKey.startHealthTracking: true])
         DispatchQueue.main.async {
             self.isWatchTrackingActive = true
@@ -133,7 +134,8 @@ final class PhoneSessionManager: NSObject, ObservableObject {
 
     /// Beendet das Health-Tracking und speichert das Workout in Apple Health.
     func sendStopHealthTracking() {
-        sendLifecycleMessage([WatchWorkoutLifecycleKey.stopHealthTracking: true])
+        updateDesiredHealthState(.finished)
+        sendGuaranteedLifecycle([WatchWorkoutLifecycleKey.stopHealthTracking: true])
         DispatchQueue.main.async {
             self.isWatchTrackingActive = false
         }
@@ -141,7 +143,8 @@ final class PhoneSessionManager: NSObject, ObservableObject {
 
     /// Verwirft das Health-Tracking ohne Speicherung in Apple Health.
     func sendDiscardHealthTracking() {
-        sendLifecycleMessage([WatchWorkoutLifecycleKey.discardHealthTracking: true])
+        updateDesiredHealthState(.discarded)
+        sendGuaranteedLifecycle([WatchWorkoutLifecycleKey.discardHealthTracking: true])
         DispatchQueue.main.async {
             self.isWatchTrackingActive = false
             self.resetHealthData()
@@ -245,6 +248,45 @@ final class PhoneSessionManager: NSObject, ObservableObject {
         liveMaxHR = 0
         liveActiveCalories = 0
         lastExerciseSnapshot = nil
+    }
+
+    /// Sendet eine Lifecycle-Nachricht mit garantierter Zustellung.
+    /// Strategie: sendMessage (sofort, falls reachable) + transferUserInfo (garantiert, FIFO, Background).
+    /// transferUserInfo schließt die Drop-bei-Unreachable-Lücke von sendLifecycleMessage.
+    private func sendGuaranteedLifecycle(_ message: [String: Any]) {
+        guard WCSession.default.activationState == .activated else {
+            print("PhoneSessionManager: Session nicht aktiviert, Lifecycle-Message verworfen.")
+            return
+        }
+
+        // Unique Command-ID für Deduplizierung auf der Watch
+        var payload = message
+        payload[WatchWorkoutLifecycleKey.lifecycleCommandID] = UUID().uuidString
+
+        // Schnellpfad: sendMessage wenn Watch erreichbar (minimiert Auto-Save-Fenster)
+        if WCSession.default.isReachable {
+            WCSession.default.sendMessage(payload, replyHandler: nil) { error in
+                print("PhoneSessionManager: Fehler beim Senden der garantierten Lifecycle-Message: \(error.localizedDescription)")
+            }
+        }
+
+        // Garantierter Hintergrundpfad: transferUserInfo — immer, unabhängig von Erreichbarkeit
+        _ = WCSession.default.transferUserInfo(payload)
+    }
+
+    /// Setzt den gewünschten Health-State im applicationContext der Watch.
+    /// Der applicationContext ist persistent — die Watch liest ihn bei jedem Wake für Reconciliation.
+    /// WICHTIG: Nur bei echten Zustands-Transitionen aufrufen — NICHT in sendIdleState(),
+    /// um .finished/.discarded nicht zu überschreiben.
+    func updateDesiredHealthState(_ state: WatchDesiredHealthState) {
+        guard WCSession.default.activationState == .activated else { return }
+        do {
+            try WCSession.default.updateApplicationContext(
+                [WatchDesiredHealthStateKey.desiredHealthState: state.rawValue]
+            )
+        } catch {
+            print("PhoneSessionManager: updateApplicationContext fehlgeschlagen: \(error.localizedDescription)")
+        }
     }
 
     /// Sendet eine Lifecycle-Nachricht an die Watch (fire-and-forget).

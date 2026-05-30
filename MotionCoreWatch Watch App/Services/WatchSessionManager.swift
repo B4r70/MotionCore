@@ -14,6 +14,10 @@ import Foundation
 import WatchConnectivity
 import Combine
 import HealthKit
+import os // TEMP PROBE (Step 6b)
+
+// TEMP PROBE (Step 6b) — entfernen nach Delivery-Verifikation
+private let discardProbeLog = Logger(subsystem: "MotionCoreWatch", category: "DiscardProbe")
 
 // MARK: - Watch Session Manager
 
@@ -66,6 +70,17 @@ final class WatchSessionManager: NSObject, ObservableObject {
     private var workoutManagerObservation: AnyCancellable?
     private var isTearingDown: Bool = false
 
+    // MARK: - Private Properties (Desired-State + Idempotenz)
+
+    /// Letzter bekannter Desired-State des iPhones — autoritativ für Reconcile.
+    /// Startwert .active: bewahrt das legitime Self-Healing beim Relaunch.
+    private var lastDesiredHealthState: WatchDesiredHealthState = .active
+
+    /// Bereits verarbeitete Command-IDs (String = UUID.uuidString).
+    /// Begrenzt auf ~20 Einträge — älteste werden verdrängt wenn voll.
+    private var processedCommandIDs: [String] = []
+    private static let processedCommandIDsLimit = 20
+
     // MARK: - Init
 
     private override init() {
@@ -103,6 +118,14 @@ extension WatchSessionManager: WCSessionDelegate {
         if let error {
             print("WatchSessionManager: Aktivierung fehlgeschlagen: \(error.localizedDescription)")
         }
+        // Desired-State aus zuletzt empfangenem applicationContext wiederherstellen.
+        // Fällt sauber auf .active zurück wenn kein Wert vorhanden (Legacy / erster Launch).
+        if let raw = WCSession.default.receivedApplicationContext[WatchDesiredHealthStateKey.desiredHealthState] as? String,
+           let state = WatchDesiredHealthState(rawValue: raw) {
+            DispatchQueue.main.async { self.lastDesiredHealthState = state }
+        }
+        // Reconcile nach Aktivierung — schließt Fenster bei App-Relaunch mit laufender Session
+        DispatchQueue.main.async { self.reconcileHealthStateIfNeeded() }
     }
 
     /// Empfängt State-Updates und Lifecycle-Kommandos vom iPhone
@@ -157,9 +180,12 @@ extension WatchSessionManager: WCSessionDelegate {
             // Self-Healing: Workout aktiv aber kein Health-Tracking läuft → auto-starten
             // Guard: nicht bei Stop/Discard auslösen (workoutManager ist dort gerade nil gesetzt worden,
             // aber workoutState noch nicht .idle — Idle kommt als separate Nachricht vom iPhone)
+            // Desired-State-Guard: ein verspätetes active-Push darf eine bereits verworfene/beendete
+            // Session nicht reaktivieren — lastDesiredHealthState ist die Autorität.
             let isStoppingNow = message[WatchWorkoutLifecycleKey.stopHealthTracking] != nil
                              || message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil
-            if self.workoutState != .idle && self.workoutManager == nil && !isStoppingNow && !self.isTearingDown {
+            if self.workoutState != .idle && self.workoutManager == nil && !isStoppingNow && !self.isTearingDown
+                && self.lastDesiredHealthState == .active {
                 let manager = WatchWorkoutManager()
                 self.workoutManager = manager
                 Task {
@@ -188,9 +214,12 @@ extension WatchSessionManager: WCSessionDelegate {
                 }
             }
 
-            // liveElapsedSeconds auf 0 zurücksetzen wenn Workout endet
+            // liveElapsedSeconds + isTearingDown zurücksetzen wenn Workout endet
             if self.workoutState == .idle {
                 self.liveElapsedSeconds = 0
+                // isTearingDown-Reset: bei .idle ist die Session sauber beendet.
+                // Schutz vor ungewollter Reaktivierung obliegt jetzt dem Desired-State-Guard.
+                self.isTearingDown = false
             }
         }
     }
@@ -220,6 +249,32 @@ extension WatchSessionManager: WCSessionDelegate {
         self.session(session, didReceiveMessage: message)
         replyHandler([:])
     }
+
+    /// Empfängt via transferUserInfo gesendete Lifecycle-Kommandos (garantierte Zustellung, FIFO).
+    /// Leitet an den bestehenden No-Reply-Pfad weiter — Dedup via lifecycleCommandID greift dort.
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+        discardProbeLog.notice("🔬PROBE didReceiveUserInfo fired — isReachable=\(WCSession.default.isReachable) keys=\(Array(userInfo.keys))") // TEMP PROBE (Step 6b)
+        // Dispatch auf Main + gemeinsamer Pfad — handleHealthLifecycle + Dedup gelten uniform
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.session(session, didReceiveMessage: userInfo)
+        }
+    }
+
+    /// Empfängt den neuesten applicationContext vom iPhone — enthält den Desired-Health-State.
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
+        discardProbeLog.notice("🔬PROBE didReceiveApplicationContext — desired=\(String(describing: applicationContext[WatchDesiredHealthStateKey.desiredHealthState]))") // TEMP PROBE (Step 6b)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            // Desired-State aktualisieren
+            if let raw = applicationContext[WatchDesiredHealthStateKey.desiredHealthState] as? String,
+               let state = WatchDesiredHealthState(rawValue: raw) {
+                self.lastDesiredHealthState = state
+            }
+            // Reconcile auslösen — ggf. verwaiste Session bereinigen
+            self.reconcileHealthStateIfNeeded()
+        }
+    }
 }
 
 // MARK: - Health Tracking Lifecycle
@@ -228,6 +283,20 @@ extension WatchSessionManager {
 
     /// Verarbeitet Health-Lifecycle-Nachrichten vom iPhone.
     private func handleHealthLifecycle(message: [String: Any]) {
+
+        // Idempotenz-Guard: Lifecycle-Commands mit lifecycleCommandID nur einmal ausführen.
+        // State-only-Messages tragen keine lifecycleCommandID → Guard greift nicht (gewollt).
+        if let commandID = message[WatchWorkoutLifecycleKey.lifecycleCommandID] as? String {
+            if processedCommandIDs.contains(commandID) {
+                // Bereits verarbeitet (z.B. doppelte Zustellung via sendMessage + transferUserInfo)
+                return
+            }
+            // Eintragen — ältesten Eintrag verdrängen wenn Limit erreicht
+            if processedCommandIDs.count >= WatchSessionManager.processedCommandIDsLimit {
+                processedCommandIDs.removeFirst()
+            }
+            processedCommandIDs.append(commandID)
+        }
 
         // Health-Tracking starten (F1: Auth automatisch beim ersten Start)
         if message[WatchWorkoutLifecycleKey.startHealthTracking] != nil {
@@ -272,6 +341,7 @@ extension WatchSessionManager {
         // Health-Tracking verwerfen (kein Apple-Health-Eintrag)
         if message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil {
             isTearingDown = true
+            discardProbeLog.notice("🔬PROBE handleHealthLifecycle → discard branch executed (via message/userInfo)") // TEMP PROBE (Step 6b)
             let manager = workoutManager
             workoutManager = nil
             stopHeartbeatTimer()
@@ -354,6 +424,45 @@ extension WatchSessionManager {
         var snapshot = manager.currentSnapshot()
         snapshot[WatchHealthKey.healthUpdate] = true
         sendSnapshotToPhone(snapshot)
+    }
+
+    // MARK: - Reconcile
+
+    /// Gleicht eine ggf. verwaiste HKWorkoutSession mit dem gewünschten Desired-State ab.
+    /// Muss auf dem Main-Thread aufgerufen werden — berührt @Published-Properties und Timer.
+    /// Aufrufstellen: activationDidCompleteWith, didReceiveApplicationContext, scenePhase .active.
+    func reconcileHealthStateIfNeeded() {
+        discardProbeLog.notice("🔬PROBE reconcile called — desired=\(self.lastDesiredHealthState.rawValue) hasSession=\(self.workoutManager != nil)") // TEMP PROBE (Step 6b)
+        // Nur wenn eine aktive Session existiert — sonst nichts zu tun
+        guard let manager = workoutManager else { return }
+
+        switch lastDesiredHealthState {
+
+        case .discarded:
+            // iPhone hat Verwerfen angewiesen — Session verwerfen (kein Health-Eintrag)
+            workoutManager = nil
+            stopHeartbeatTimer()
+            isTearingDown = false
+            discardProbeLog.notice("🔬PROBE reconcile → DISCARD executed") // TEMP PROBE (Step 6b)
+            Task { await manager.discardWorkout() }
+
+        case .finished:
+            // iPhone hat Beenden angewiesen — Session speichern (Stop-Kommando war gedroppt)
+            // NICHT verwerfen — der User wollte das Workout in Apple Health haben.
+            workoutManager = nil
+            stopHeartbeatTimer()
+            discardProbeLog.notice("🔬PROBE reconcile → FINISH(save) executed") // TEMP PROBE (Step 6b)
+            Task { await manager.endWorkout() }
+
+        case .active:
+            // Alles korrekt — Session läuft wie gewünscht
+            break
+
+        case .idle:
+            // Sollte mit laufender Session nicht auftreten — konservativ nichts tun,
+            // kein stiller Datenverlust durch einen Fehlzustand
+            break
+        }
     }
 
     // MARK: - Snapshot senden
