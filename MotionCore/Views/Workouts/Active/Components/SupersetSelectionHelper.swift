@@ -32,8 +32,9 @@ struct SupersetSelectionHelper {
     }
 
     /// Anzahl der Übungen die theoretisch in ein Superset überführt werden könnten.
+    /// Schließt Übungen die bereits in einem Superset sind explizit aus.
     var eligibleCount: Int {
-        (0..<groupedSets.count).filter { isEligible(at: $0) }.count
+        (0..<groupedSets.count).filter { isEligible(at: $0) && !isInOtherSuperset(at: $0) }.count
     }
 
     /// Gibt true zurück wenn die übergebenen Indizes lückenlos aufeinanderfolgen.
@@ -47,6 +48,6 @@ struct SupersetSelectionHelper {
     func canCreateSuperset(from indices: Set<Int>) -> Bool {
         guard indices.count >= 2, indices.count <= 5 else { return false }
         guard isContiguous(indices) else { return false }
-        return indices.allSatisfy { isEligible(at: $0) }
+        return indices.allSatisfy { isEligible(at: $0) && !isInOtherSuperset(at: $0) }
     }
 }

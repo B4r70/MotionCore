@@ -285,22 +285,26 @@ extension StrengthSession {
 
 extension StrengthSession {
 
-    /// Erstellt ein neues Superset aus den übergebenen Gruppen-Indizes
-    /// (0-basiert, bezogen auf groupedSets).
+    /// Erstellt ein neues Superset aus den übergebenen groupKeys.
     /// Voraussetzungen:
-    ///   - Mindestens 2, maximal 5 Indizes
-    ///   - Alle Indizes lückenlos aufeinanderfolgend
-    ///   - Keine der gewählten Übungen hat completed Sets
-    /// Passt restSeconds an: alle Sätze außer dem letzten Satz der letzten
-    /// Übung pro Runde werden auf 0 gesetzt.
+    ///   - Mindestens 2, maximal 5 Keys
+    ///   - Alle Keys lückenlos aufeinanderfolgend in groupedSets
+    ///   - Keine der gewählten Übungen hat completed Sets oder bestehendes Superset
+    /// Passt restSeconds an: alle Übungen außer der letzten bekommen restSeconds = 0.
     /// Kein context.save() — übernimmt der Aufrufer.
-    func createSuperset(fromGroupIndices indices: [Int]) {
+    func createSuperset(fromGroupKeys keys: [String]) {
         let groups = groupedSets
-        let sorted = indices.sorted()
+        // groupKey-Lookup: stabile Identität statt fragile Int-Indizes
+        let sorted = keys.compactMap { key in
+            groups.firstIndex { $0.first?.groupKey == key }
+        }.sorted()
 
         // Vorbedingungen prüfen
+        guard sorted.count == keys.count else { return }        // alle Keys gefunden
         guard sorted.count >= 2, sorted.count <= 5 else { return }
-        guard sorted.allSatisfy({ $0 >= 0 && $0 < groups.count }) else { return }
+
+        // Keine bereits bestehenden Supersets in den gewählten Gruppen
+        guard sorted.allSatisfy({ groups[$0].allSatisfy { $0.supersetGroupId == nil } }) else { return }
 
         // Lückenlosigkeit
         let isContiguous = zip(sorted, sorted.dropFirst()).allSatisfy { $1 - $0 == 1 }

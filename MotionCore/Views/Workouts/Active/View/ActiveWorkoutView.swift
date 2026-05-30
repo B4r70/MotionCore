@@ -727,12 +727,14 @@ struct ActiveWorkoutView: View {
     // =========================================================================
 
     private func createSupersetFromSelection() {
-        let indices = Array(selectedGroupIndicesForSuperset)
-        session.createSuperset(fromGroupIndices: indices)
+        // Indizes → stabile groupKeys vor dem API-Aufruf (Watch-Sync kann Indizes
+        // zwischen Snapshot und Live-groupedSets verschieben)
+        let cached = setManager.cachedGroupedSets
+        let keys = Array(selectedGroupIndicesForSuperset)
+            .compactMap { cached[safe: $0]?.first?.groupKey }
+        session.createSuperset(fromGroupKeys: keys)
 
-        Task { @MainActor in
-            try? context.save()
-        }
+        try? context.save()
 
         // Cache-Refresh — sonst zeigt ExercisesOverviewCard alte Daten
         setManager.rebuildGroupedCaches()
@@ -750,9 +752,7 @@ struct ActiveWorkoutView: View {
     private func removeFromSupersetAtIndex(_ index: Int) {
         session.removeFromSuperset(groupAt: index)
 
-        Task { @MainActor in
-            try? context.save()
-        }
+        try? context.save()
 
         setManager.rebuildGroupedCaches()
         setManager.refreshSetCaches()
@@ -953,8 +953,6 @@ struct ActiveWorkoutView: View {
             currentExerciseIndex: setManager.cachedCurrentExerciseIndex,
             selectedExerciseKey: exerciseNav.selectedExerciseKey,
             prSetIDs: prSetIDs,
-            isSupersetSelectionMode: $isSupersetSelectionMode,
-            selectedGroupIndicesForSuperset: $selectedGroupIndicesForSuperset,
             onAddExercise: { showAddExerciseSheet = true },
             onSelectExercise: { key in
                 exerciseNav.selectExercise(key: key)
@@ -968,10 +966,12 @@ struct ActiveWorkoutView: View {
                 Task { @MainActor in try? context.save() }
                 hapticGenerator.impactOccurred()
             },
+            onRetroRIR: { set in rirRetroSet = set },
             onRemoveFromSuperset: { index in
                 removeFromSupersetAtIndex(index)
             },
-            onRetroRIR: { set in rirRetroSet = set }
+            isSupersetSelectionMode: $isSupersetSelectionMode,
+            selectedGroupIndicesForSuperset: $selectedGroupIndicesForSuperset
         )
     }
 

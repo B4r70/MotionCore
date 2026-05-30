@@ -628,7 +628,7 @@ private struct ExerciseOverviewRow: View {
         }
         // Kontextmenü unconditional — Inhalt conditional (verhindert HStack-Kollaps)
         .contextMenu {
-            if isSupersetMember {
+            if isSupersetMember && !isSupersetSelectionMode {
                 Button("Aus Superset entfernen", systemImage: "link.badge.minus") {
                     onRemoveFromSuperset()
                 }
