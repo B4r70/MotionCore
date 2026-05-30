@@ -86,12 +86,12 @@ HKWorkoutSession-Recovery für App-Neustart-Fall (Step 7, gated hinter Phase-B-D
 - [x] Step 4 — `didReceiveUserInfo` + `didReceiveApplicationContext`; gemeinsame Verarbeitung; Desired-State cachen
 - [x] Step 5 — `processedCommandIDs`-Dedup; isTearingDown-Reset bei .idle; Self-Healing-Guard um Desired-State
 - [x] Step 6 — `reconcileHealthStateIfNeeded()` (verzweigt nach Desired-State: discarded→discard, finished→save) + scenePhase/activation-Aufruf
-- [ ] **Step 6b — DELIVERY-PROBE (Gate, Advisor-Pflicht):** On-Device beweisen, dass `transferUserInfo` bei `isReachable==false` + laufender HKWorkoutSession den `didReceiveUserInfo` im Hintergrund auslöst, OHNE dass der User die Watch-App öffnet. Tragende Annahme: die laufende Session hält die Watch-App ~22 Min im Background am Leben → didReceiveUserInfo feuert. **Ergebnis bestimmt die Gewichtung:** feuert es → transferUserInfo ist Primärmechanismus, Reconcile = Backstop. Feuert es nur im Foreground → Reconcile-on-Wake wird Primär. **Erst nach dieser Probe Step 7 bauen.**
-- [ ] Step 7 — HKWorkoutSession-Recovery (gated hinter Step 6b; least-testable, erfordert echten App-Kill mid-session → zuletzt). **→ Build beide Targets**
+- [x] **Step 6b — DELIVERY-PROBE: ✅ BESTANDEN 2026-05-30.** On-Device bewiesen: `🔬PROBE didReceiveUserInfo fired — isReachable=false keys=[lifecycleCommandID, discardHealthTracking]` → transferUserInfo trägt im Hintergrund bei nicht erreichbarer Uhr. Zusätzlich `didReceiveApplicationContext — desired=discarded` → `reconcile → DISCARD executed`. Beide Garantie-Kanäle tragen. Verdikt: **transferUserInfo = Primär, Reconcile = Backstop.** Kein „Another session is starting" im sauberen Lauf (war Reinstall-Artefakt). Step 7 = belt-and-suspenders, gegen Multi-Session-Race weiterhin sinnvoll.
+- [x] Step 7 — HKWorkoutSession-Recovery (gated hinter Step 6b; least-testable, erfordert echten App-Kill mid-session → zuletzt). **→ Build beide Targets**
 
 ### Phase C — Orphan-Pfade iPhone → STOPP-Gate C (End-to-End)
-- [ ] Step 8 — onDisappear/Discard-Dismiss: nach Verwerfen Desired-State auf `discarded`/`idle` setzen (kein stale `active`). **handlePausedExit NICHT anfassen** (Pause bleibt nicht-terminal, OQ2).
-- [ ] Step 9 — Discard-Alert: synchrones `isWatchTrackingActive=false` muss vor `cancelWorkout()` greifen. **→ End-to-End Test-Matrix**
+- [x] Step 8 (weggelassen — onDisappear würde .finished/.discarded überschreiben; alle Exit-Pfade setzen Desired-State bereits vor dismiss) — onDisappear/Discard-Dismiss: nach Verwerfen Desired-State auf `discarded`/`idle` setzen (kein stale `active`). **handlePausedExit NICHT anfassen** (Pause bleibt nicht-terminal, OQ2).
+- [x] Step 9 (kein Fix nötig — resetHealthData() setzt isWatchTrackingActive synchron vor cancelWorkout(), kein Race) — Discard-Alert: synchrones `isWatchTrackingActive=false` muss vor `cancelWorkout()` greifen. **→ End-to-End Test-Matrix**
 
 ## Manuelle Verifikation
 - [ ] Build MotionCore + MotionCoreWatch ohne neue Warnings

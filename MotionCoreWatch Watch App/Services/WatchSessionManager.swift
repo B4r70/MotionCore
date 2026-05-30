@@ -14,10 +14,6 @@ import Foundation
 import WatchConnectivity
 import Combine
 import HealthKit
-import os // TEMP PROBE (Step 6b)
-
-// TEMP PROBE (Step 6b) — entfernen nach Delivery-Verifikation
-private let discardProbeLog = Logger(subsystem: "MotionCoreWatch", category: "DiscardProbe")
 
 // MARK: - Watch Session Manager
 
@@ -253,7 +249,6 @@ extension WatchSessionManager: WCSessionDelegate {
     /// Empfängt via transferUserInfo gesendete Lifecycle-Kommandos (garantierte Zustellung, FIFO).
     /// Leitet an den bestehenden No-Reply-Pfad weiter — Dedup via lifecycleCommandID greift dort.
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
-        discardProbeLog.notice("🔬PROBE didReceiveUserInfo fired — isReachable=\(WCSession.default.isReachable) keys=\(Array(userInfo.keys))") // TEMP PROBE (Step 6b)
         // Dispatch auf Main + gemeinsamer Pfad — handleHealthLifecycle + Dedup gelten uniform
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -263,7 +258,6 @@ extension WatchSessionManager: WCSessionDelegate {
 
     /// Empfängt den neuesten applicationContext vom iPhone — enthält den Desired-Health-State.
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
-        discardProbeLog.notice("🔬PROBE didReceiveApplicationContext — desired=\(String(describing: applicationContext[WatchDesiredHealthStateKey.desiredHealthState]))") // TEMP PROBE (Step 6b)
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             // Desired-State aktualisieren
@@ -341,7 +335,6 @@ extension WatchSessionManager {
         // Health-Tracking verwerfen (kein Apple-Health-Eintrag)
         if message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil {
             isTearingDown = true
-            discardProbeLog.notice("🔬PROBE handleHealthLifecycle → discard branch executed (via message/userInfo)") // TEMP PROBE (Step 6b)
             let manager = workoutManager
             workoutManager = nil
             stopHeartbeatTimer()
@@ -432,36 +425,46 @@ extension WatchSessionManager {
     /// Muss auf dem Main-Thread aufgerufen werden — berührt @Published-Properties und Timer.
     /// Aufrufstellen: activationDidCompleteWith, didReceiveApplicationContext, scenePhase .active.
     func reconcileHealthStateIfNeeded() {
-        discardProbeLog.notice("🔬PROBE reconcile called — desired=\(self.lastDesiredHealthState.rawValue) hasSession=\(self.workoutManager != nil)") // TEMP PROBE (Step 6b)
-        // Nur wenn eine aktive Session existiert — sonst nichts zu tun
-        guard let manager = workoutManager else { return }
+        // Wenn eine bekannte Session existiert: direkt handeln
+        if let manager = workoutManager {
+            switch lastDesiredHealthState {
 
-        switch lastDesiredHealthState {
+            case .discarded:
+                // iPhone hat Verwerfen angewiesen — Session verwerfen (kein Health-Eintrag)
+                workoutManager = nil
+                stopHeartbeatTimer()
+                isTearingDown = false
+                Task { await manager.discardWorkout() }
 
-        case .discarded:
-            // iPhone hat Verwerfen angewiesen — Session verwerfen (kein Health-Eintrag)
-            workoutManager = nil
-            stopHeartbeatTimer()
-            isTearingDown = false
-            discardProbeLog.notice("🔬PROBE reconcile → DISCARD executed") // TEMP PROBE (Step 6b)
-            Task { await manager.discardWorkout() }
+            case .finished:
+                // iPhone hat Beenden angewiesen — Session speichern (Stop-Kommando war gedroppt)
+                // NICHT verwerfen — der User wollte das Workout in Apple Health haben.
+                workoutManager = nil
+                stopHeartbeatTimer()
+                Task { await manager.endWorkout() }
 
-        case .finished:
-            // iPhone hat Beenden angewiesen — Session speichern (Stop-Kommando war gedroppt)
-            // NICHT verwerfen — der User wollte das Workout in Apple Health haben.
-            workoutManager = nil
-            stopHeartbeatTimer()
-            discardProbeLog.notice("🔬PROBE reconcile → FINISH(save) executed") // TEMP PROBE (Step 6b)
-            Task { await manager.endWorkout() }
+            case .active:
+                // Alles korrekt — Session läuft wie gewünscht
+                break
 
-        case .active:
-            // Alles korrekt — Session läuft wie gewünscht
-            break
+            case .idle:
+                // Sollte mit laufender Session nicht auftreten — konservativ nichts tun,
+                // kein stiller Datenverlust durch einen Fehlzustand
+                break
+            }
+            return
+        }
 
-        case .idle:
-            // Sollte mit laufender Session nicht auftreten — konservativ nichts tun,
-            // kein stiller Datenverlust durch einen Fehlzustand
-            break
+        // Kein bekannter workoutManager — Recovery-Versuch wenn terminaler State aktiv
+        // (deckt App-Kill-Szenario ab: HealthKit-Daemon hält Session, workoutManager ist nil)
+        if lastDesiredHealthState == .discarded || lastDesiredHealthState == .finished {
+            Task {
+                if lastDesiredHealthState == .discarded {
+                    await WatchWorkoutManager.recoverAndDiscard()
+                }
+                // .finished + nil workoutManager: watchOS hat die Session wahrscheinlich bereits
+                // automatisch gespeichert (App-Kill) — kein weiterer Eingriff nötig
+            }
         }
     }
 

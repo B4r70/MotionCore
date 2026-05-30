@@ -157,6 +157,26 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
         await MainActor.run { self.cleanup() }
     }
 
+    /// Sucht nach laufenden HKWorkoutSessions (z.B. nach App-Kill) und verwirft sie.
+    /// Nur aufrufen wenn der Desired-State discarded/finished ist — nicht routinemäßig.
+    ///
+    /// API-Note: `recoverActiveWorkoutSession()` gibt eine einzelne `HKWorkoutSession?` zurück
+    /// (kein Tuple — der Builder wird via `session.associatedWorkoutBuilder()` geholt).
+    static func recoverAndDiscard() async {
+        let healthStore = HKHealthStore()
+        do {
+            // Gibt nil zurück wenn keine wiederherstellbare Session existiert
+            guard let session = try await healthStore.recoverActiveWorkoutSession() else { return }
+            let builder = session.associatedWorkoutBuilder()
+            print("WatchWorkoutManager: verwaiste Session gefunden (Recovery) — verwerfen")
+            session.end()
+            do { try await builder.endCollection(at: Date()) } catch {}
+            builder.discardWorkout()
+        } catch {
+            print("WatchWorkoutManager: recoverActiveWorkoutSession fehlgeschlagen: \(error.localizedDescription)")
+        }
+    }
+
     /// Markiert eine Übungs-Transition — setzt pro-Übung-Tracking zurück.
     func markExerciseTransition() {
         heartRateSamplesForExercise = []
