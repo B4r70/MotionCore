@@ -1,0 +1,9 @@
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
+**/*.pdf
+**/*.xcassets/**
+**/Archive/**
+**/exercises_seed*.json
