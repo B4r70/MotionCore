@@ -107,37 +107,7 @@ Configs update automatically before each commit via `caliber refresh`.
 If the pre-commit hook is not set up, run `/setup-caliber` to configure everything automatically.
 <!-- /caliber:managed:sync -->
 
-## GBrain Configuration (configured by /setup-gbrain)
-- Mode: local-stdio
-- Engine: pglite
-- Config file: ~/.gbrain/config.json (mode 0600)
-- Setup date: 2026-05-29
-- MCP registered: yes (user scope)
-- Embedding provider: none (no API key / Ollama) — keyword/full-text search works, semantic + symbol search disabled until an embedding provider is configured
-- Artifacts sync: off
-- Current repo policy: read-write (git.barto.cloud/barto/motioncore)
-
-## GBrain Search Guidance (configured by /sync-gbrain)
+## GBrain
 <!-- gstack-gbrain-search-guidance:start -->
-
-GBrain is set up on this machine (local PGLite). The agent should prefer gbrain
-over Grep when the question is semantic or when you don't know the exact
-identifier yet. Indexed corpus available via the `gbrain` CLI / `mcp__gbrain__*`:
-- This repo's markdown docs (registered read-write; 109 pages imported).
-
-Prefer gbrain when:
-- "Where is X handled?" / semantic intent, no exact string yet:
-    `gbrain search "<terms>"` or `gbrain query "<question>"`
-- "What did we decide last time?" / past plans, concepts, docs:
-    `gbrain search "<terms>"`
-
-Note: embeddings are NOT yet generated (no embedding provider configured), so
-`gbrain search` currently runs keyword/full-text matching only. Semantic ranking
-and `gbrain code-def`/`code-refs`/`code-callers` activate once an embedding
-provider (Voyage/OpenAI API key, or local Ollama) is set and `gbrain embed --stale`
-has run. Until then, Grep remains the right tool for exact code-symbol lookups.
-
-Grep is still right for known exact strings, regex, multiline patterns, and
-file globs. Run `/sync-gbrain` to force-refresh, `/sync-gbrain --full` for full reindex.
-
+Local PGLite, corpus: markdown docs (109 pages), repo: read-write. No embedding provider → keyword-only (no semantic ranking). Prefer gbrain for semantic/unknown-identifier queries, grep for exact strings/regex. `/sync-gbrain` to refresh.
 <!-- gstack-gbrain-search-guidance:end -->
