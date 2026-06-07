@@ -44,6 +44,9 @@ struct WatchActiveWorkoutView: View {
             if watchSession.isResting, let endDate = watchSession.restEndDate {
                 // Rest-Timer-Anzeige: Pause-Countdown statt Satz-Info
                 restView(endDate: endDate)
+            } else if watchSession.isCountdown, let endDate = watchSession.countdownEndDate {
+                // Übungs-Countdown: read-only, kein Abschließen-Button
+                countdownView(endDate: endDate)
             } else {
                 // Normale Trainings-Anzeige
                 workoutView
@@ -112,6 +115,31 @@ struct WatchActiveWorkoutView: View {
         .buttonStyle(.bordered)
         .tint(Color.green)
         .disabled(watchSession.workoutState == .paused)
+    }
+
+    /// Übungs-Countdown — read-only, kein Abschließen-Button
+    @ViewBuilder
+    private func countdownView(endDate: Date) -> some View {
+        Text(watchSession.exerciseName.isEmpty ? "Übung" : watchSession.exerciseName)
+            .font(.headline)
+            .lineLimit(2)
+            .minimumScaleFactor(0.7)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+        // Countdown via Date-Anker — kein sekündlicher Sync nötig, kein Aufwärtszählen nach Ablauf
+        Text(timerInterval: Date()...endDate, countsDown: true)
+            .font(.system(.title2, design: .monospaced).bold())
+            .foregroundStyle(Color.green)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .monospacedDigit()
+
+        Text("Satz \(watchSession.setIndex + 1)/\(watchSession.totalSets)  ·  Übung \(watchSession.exerciseIndex + 1)/\(watchSession.totalExercises)")
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+        Spacer(minLength: 2)
+        // Kein Abschließen-Button — read-only (Zeit-Satz wird nur über iPhone abgeschlossen)
     }
 
     /// Pause-Anzeige mit Countdown und "Überspringen"-Button

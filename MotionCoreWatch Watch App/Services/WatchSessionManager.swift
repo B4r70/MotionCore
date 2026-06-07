@@ -59,6 +59,14 @@ final class WatchSessionManager: NSObject, ObservableObject {
     /// Absolutes Enddatum des Rest-Timers (für Date-Anchor-Countdown in der Watch-UI)
     @Published private(set) var restEndDate: Date?
 
+    // MARK: - Published State (Übungs-Countdown)
+
+    /// Gibt an ob gerade ein Übungs-Countdown auf dem iPhone läuft
+    @Published private(set) var isCountdown: Bool = false
+
+    /// Absolutes Enddatum des Übungs-Countdowns (Date-Anker für Watch-UI)
+    @Published private(set) var countdownEndDate: Date?
+
     // MARK: - Private Properties (Heartbeat + lokaler Timer)
 
     private var heartbeatTimer: Timer?
@@ -159,6 +167,14 @@ extension WatchSessionManager: WCSessionDelegate {
                 } else {
                     // State-Message ohne restEndDate → Timer beendet oder nicht aktiv
                     self.restEndDate = nil
+                }
+
+                // Übungs-Countdown-State auslesen
+                self.isCountdown = message[WatchStateKey.isCountdown] as? Bool ?? false
+                if let endInterval = message[WatchStateKey.countdownEndDate] as? TimeInterval {
+                    self.countdownEndDate = Date(timeIntervalSinceReferenceDate: endInterval)
+                } else {
+                    self.countdownEndDate = nil
                 }
             }
             // Lifecycle-Messages (ohne workoutState-Key) lassen restEndDate/isResting unverändert

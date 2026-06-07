@@ -37,6 +37,7 @@ final class LiveActivityCtrl {
     private weak var sessionManager: ActiveSessionManager?
     private weak var restTimer: RestTimerManager?
     @ObservationIgnored private var setManager: SetManager?
+    @ObservationIgnored private weak var countdown: ExerciseCountdownManager?
 
     // MARK: - Init
 
@@ -49,12 +50,14 @@ final class LiveActivityCtrl {
         sessionManager: ActiveSessionManager,
         restTimer: RestTimerManager,
         setManager: SetManager,
+        countdown: ExerciseCountdownManager,
         setCompleted: AnyPublisher<ExerciseSet, Never>
     ) {
         self.session = session
         self.sessionManager = sessionManager
         self.restTimer = restTimer
         self.setManager = setManager
+        self.countdown = countdown
 
         cancellables.removeAll()
 
@@ -165,7 +168,10 @@ final class LiveActivityCtrl {
                 restStartDate: nil,
                 restEndDate: nil,
                 completedSets: 0,
-                totalSets: 0
+                totalSets: 0,
+                isExerciseCountdown: false,
+                countdownStartDate: nil,
+                countdownEndDate: nil
             )
         }
 
@@ -182,6 +188,16 @@ final class LiveActivityCtrl {
             return count > 0 ? count : nil
         }()
 
+        // Countdown-State für LiveActivity bestimmen
+        let countdownActive = (countdown?.isRunning == true)
+            && (countdown?.isPaused == false)
+            && (countdown?.isFinished == false)
+        let cdEndDate = countdownActive ? countdown?.endDate : nil
+        let cdStartDate: Date? = cdEndDate.flatMap { end -> Date? in
+            guard let secs = countdown?.targetSeconds, secs > 0 else { return nil }
+            return end.addingTimeInterval(-Double(secs))
+        }
+
         return WorkoutActivityAttributes.ContentState(
             workoutStartDate: workoutStartDate,
             isPaused: sessionManager.isPaused,
@@ -193,7 +209,10 @@ final class LiveActivityCtrl {
             restEndDate: restTimer.isResting ? restTimer.restEndDate : nil,
             completedSets: session.completedSets,
             totalSets: session.totalSets,
-            totalSetsForCurrentExercise: setsForCurrentExercise
+            totalSetsForCurrentExercise: setsForCurrentExercise,
+            isExerciseCountdown: countdownActive,
+            countdownStartDate: cdStartDate,
+            countdownEndDate: cdEndDate
         )
     }
 

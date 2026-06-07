@@ -75,7 +75,9 @@ final class PhoneSessionManager: NSObject, ObservableObject {
         totalExercises: Int,
         elapsedTime: TimeInterval,
         isResting: Bool = false,
-        restEndDate: Date? = nil
+        restEndDate: Date? = nil,
+        isCountdown: Bool = false,
+        countdownEndDate: Date? = nil
     ) {
         guard WCSession.default.activationState == .activated,
               WCSession.default.isReachable else {
@@ -97,6 +99,12 @@ final class PhoneSessionManager: NSObject, ObservableObject {
         // restEndDate nur mitsenden wenn ein Timer läuft
         if let restEndDate {
             message[WatchStateKey.restEndDate] = restEndDate.timeIntervalSinceReferenceDate
+        }
+
+        // Übungs-Countdown-State mitsenden
+        message[WatchStateKey.isCountdown] = isCountdown
+        if let countdownEndDate {
+            message[WatchStateKey.countdownEndDate] = countdownEndDate.timeIntervalSinceReferenceDate
         }
 
         WCSession.default.sendMessage(message, replyHandler: nil) { error in

@@ -42,6 +42,11 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
         // Sätze für die aktuelle Übung (für "Satz X/Y" Anzeige)
         public var totalSetsForCurrentExercise: Int?
 
+        // Übungs-Countdown (read-only — Watch und LiveActivity zeigen ihn, schließen nicht ab)
+        public var isExerciseCountdown: Bool
+        public var countdownStartDate: Date?
+        public var countdownEndDate: Date?
+
         // MARK: - Public initializer
 
         public init(
@@ -55,7 +60,10 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
             restEndDate: Date? = nil,
             completedSets: Int,
             totalSets: Int,
-            totalSetsForCurrentExercise: Int? = nil
+            totalSetsForCurrentExercise: Int? = nil,
+            isExerciseCountdown: Bool = false,
+            countdownStartDate: Date? = nil,
+            countdownEndDate: Date? = nil
         ) {
             self.workoutStartDate = workoutStartDate
             self.isPaused = isPaused
@@ -68,6 +76,9 @@ public struct WorkoutActivityAttributes: ActivityAttributes {
             self.completedSets = completedSets
             self.totalSets = totalSets
             self.totalSetsForCurrentExercise = totalSetsForCurrentExercise
+            self.isExerciseCountdown = isExerciseCountdown
+            self.countdownStartDate = countdownStartDate
+            self.countdownEndDate = countdownEndDate
         }
     }
 

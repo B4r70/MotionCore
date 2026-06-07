@@ -30,6 +30,7 @@ final class WatchBridge {
     private weak var restTimer: RestTimerManager?
     @ObservationIgnored private var setManager: SetManager?
     @ObservationIgnored private var exerciseNav: ExerciseNav?
+    @ObservationIgnored private weak var countdown: ExerciseCountdownManager?
 
     // MARK: - Init
 
@@ -43,6 +44,7 @@ final class WatchBridge {
         restTimer: RestTimerManager,
         setManager: SetManager,
         exerciseNav: ExerciseNav,
+        countdown: ExerciseCountdownManager,
         setCompleted: AnyPublisher<ExerciseSet, Never>
     ) {
         self.session = session
@@ -50,6 +52,7 @@ final class WatchBridge {
         self.restTimer = restTimer
         self.setManager = setManager
         self.exerciseNav = exerciseNav
+        self.countdown = countdown
 
         cancellables.removeAll()
 
@@ -82,6 +85,14 @@ final class WatchBridge {
         // statt "Satz N+1/N" zeigt (L1-Watch-007).
         let displaySetIndex = nextOpenIdx ?? max(0, totalInGroup - 1)
 
+        // Countdown-State für Watch bestimmen
+        let currentIsTimeBased = setManager.cachedCurrentSet?.isTimeBased ?? false
+        let cdActive = currentIsTimeBased
+            && (countdown?.isRunning == true)
+            && (countdown?.isPaused == false)
+            && (countdown?.isFinished == false)
+        let cdEndDate = cdActive ? countdown?.endDate : nil
+
         PhoneSessionManager.shared.sendWorkoutState(
             state: state,
             exerciseName: currentExName,
@@ -91,7 +102,9 @@ final class WatchBridge {
             totalExercises: grouped.count,
             elapsedTime: TimeInterval(sessionManager.elapsedSeconds),
             isResting: restTimer.isResting,
-            restEndDate: restTimer.isResting ? restTimer.restEndDate : nil
+            restEndDate: restTimer.isResting ? restTimer.restEndDate : nil,
+            isCountdown: cdActive,
+            countdownEndDate: cdEndDate
         )
     }
 
@@ -119,6 +132,8 @@ final class WatchBridge {
                 .sorted { $0.setNumber < $1.setNumber }
                 .first { !$0.isCompleted }
             if let set = openSet {
+                // Zeit-basierte Sätze nur über das iPhone abschließen (Watch ist read-only)
+                guard !set.isTimeBased else { return }
                 setManager.completeSet(set)
             }
 

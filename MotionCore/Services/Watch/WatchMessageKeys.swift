@@ -30,6 +30,10 @@ enum WatchStateKey {
     static let isResting      = "isResting"
     /// Absolutes Enddatum des Rest-Timers als TimeInterval (Date.timeIntervalSinceReferenceDate)
     static let restEndDate    = "restEndDate"
+    /// Gibt an ob gerade ein Übungs-Countdown auf dem iPhone läuft
+    static let isCountdown    = "isCountdown"
+    /// Absolutes Enddatum des Übungs-Countdowns als TimeInterval
+    static let countdownEndDate = "countdownEndDate"
 }
 
 /// Mögliche Werte für workoutState

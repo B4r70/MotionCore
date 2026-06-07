@@ -67,6 +67,19 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                                 .font(.title2.bold().monospacedDigit())
                                 .foregroundStyle(restTimerColor(for: context))
                         }
+                    } else if context.state.isExerciseCountdown,
+                              let start = context.state.countdownStartDate,
+                              let end = context.state.countdownEndDate {
+                            // ÜBUNGS-COUNTDOWN (erweitert)
+                        VStack(spacing: 2) {
+                            Text("Übung")
+                                .font(.caption2)
+                                .foregroundStyle(countdownTimerColor(for: context))
+
+                            Text(timerInterval: start...end, countsDown: true)
+                                .font(.title2.bold().monospacedDigit())
+                                .foregroundStyle(countdownTimerColor(for: context))
+                        }
                     } else {
                             // AKTIV-MODUS (erweitert)
                         VStack(spacing: 2) {
@@ -133,6 +146,17 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                     Image(systemName: "pause.circle.fill")
                         .foregroundStyle(Color.orange)
                         .font(.body)
+                } else if context.state.isExerciseCountdown {
+                        // ÜBUNGS-COUNTDOWN: Timer-Icon + Satz-Fortschritt
+                    HStack(spacing: 6) {
+                        Image(systemName: "timer")
+                            .foregroundStyle(Color.green)
+                            .font(.body)
+
+                        Text("\(context.state.completedSets)/\(context.state.totalSets)")
+                            .font(.caption.bold().monospacedDigit())
+                            .foregroundStyle(Color.white)
+                    }
                 } else {
                         // AKTIV-MODUS: Icon + Satz-Fortschritt
                     HStack(spacing: 6) {
@@ -156,6 +180,14 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                     Text(timerInterval: start...end, countsDown: true)
                         .font(.caption.bold().monospacedDigit())
                         .foregroundStyle(restTimerColor(for: context))
+                        .contentTransition(.numericText())
+                } else if context.state.isExerciseCountdown,
+                          let start = context.state.countdownStartDate,
+                          let end = context.state.countdownEndDate {
+                        // ÜBUNGS-COUNTDOWN: Farbiger Countdown
+                    Text(timerInterval: start...end, countsDown: true)
+                        .font(.caption.bold().monospacedDigit())
+                        .foregroundStyle(countdownTimerColor(for: context))
                         .contentTransition(.numericText())
                 } else if context.state.isPaused {
                         // WORKOUT PAUSIERT
@@ -229,6 +261,19 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         Text(timerInterval: start...end, countsDown: true)
                             .font(.title.bold().monospacedDigit())
                             .foregroundStyle(restTimerColor(for: context))
+                    }
+                } else if context.state.isExerciseCountdown,
+                          let start = context.state.countdownStartDate,
+                          let end = context.state.countdownEndDate {
+                        // ÜBUNGS-COUNTDOWN
+                    VStack(spacing: 4) {
+                        Text("Übung")
+                            .font(.caption)
+                            .foregroundStyle(countdownTimerColor(for: context))
+
+                        Text(timerInterval: start...end, countsDown: true)
+                            .font(.title.bold().monospacedDigit())
+                            .foregroundStyle(countdownTimerColor(for: context))
                     }
                 } else {
                         // AKTIV-MODUS
@@ -348,6 +393,16 @@ struct MotionCoreWidgetsLiveActivity: Widget {
         }
 
         return endDate.timeIntervalSinceNow <= 10 && endDate.timeIntervalSinceNow > 0
+    }
+
+    /// Farblogik für den Übungs-Countdown: grün → gelb bei ≤60s → rot bei ≤10s
+    private func countdownTimerColor(for context: ActivityViewContext<WorkoutActivityAttributes>) -> Color {
+        guard context.state.isExerciseCountdown,
+              let endDate = context.state.countdownEndDate else { return .green }
+        let remaining = endDate.timeIntervalSinceNow
+        if remaining <= 10 { return .red }
+        if remaining <= 60 { return .yellow }
+        return .green
     }
 }
 
