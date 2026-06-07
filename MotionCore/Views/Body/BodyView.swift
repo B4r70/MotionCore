@@ -123,7 +123,7 @@ struct BodyView: View {
                 score: viewModel.readinessScore
             )
         case .trend:
-            BodyRecoveryTrendCard()
+            BodyRecoveryTrendCard(trend: viewModel.recoveryTrend)
         }
     }
 

@@ -40,13 +40,18 @@ struct MuscleRecoveryCalcEngine {
 
     // MARK: - Haupt-Analyse
 
-    /// Berechnet Erholungsstatus aller Muskelgruppen aus den letzten 14 Tagen
-    static func analyze(sessions: [StrengthSession]) -> MuscleRecoveryAnalysis {
-        let now = Date()
+    /// Berechnet Erholungsstatus aller Muskelgruppen aus den letzten 14 Tagen.
+    /// referenceDate ist der Analyse-Stichtag (Standard: jetzt). Rückwirkende Aufrufe
+    /// durch RecoveryTrendCalcEngine übergeben einen vergangenen Stichtag.
+    static func analyze(
+        sessions: [StrengthSession],
+        referenceDate: Date = Date()
+    ) -> MuscleRecoveryAnalysis {
+        let now = referenceDate
         let cutoff = now.addingTimeInterval(-Double(timeframeDays) * 86400)
 
-        // 1. Nur abgeschlossene Sessions im Zeitfenster
-        let relevantSessions = sessions.filter { $0.isCompleted && $0.date >= cutoff }
+        // 1. Nur abgeschlossene Sessions im Zeitfenster (kein Zukunftswissen)
+        let relevantSessions = sessions.filter { $0.isCompleted && $0.date >= cutoff && $0.date <= now }
 
         // 2. Fatigue und letztes Trainingsdatum pro DetailedMuscle akkumulieren
         var fatigueByMuscle: [DetailedMuscle: Double] = [:]

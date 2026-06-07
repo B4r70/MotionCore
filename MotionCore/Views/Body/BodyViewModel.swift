@@ -20,6 +20,7 @@ final class BodyViewModel {
     // MARK: - Öffentliche Properties
 
     private(set) var recoveryAnalysis: MuscleRecoveryAnalysis?
+    private(set) var recoveryTrend: [TrendPoint] = []
     private(set) var readinessFactors: [ReadinessFactor] = []
     private(set) var recommendation: RecoveryRecommendation = .empty
     private(set) var readinessScore: Int? = nil
@@ -42,6 +43,7 @@ final class BodyViewModel {
         } else {
             recommendation = .empty
         }
+        recoveryTrend = RecoveryTrendCalcEngine.trend(sessions: sessions)
     }
 
     /// Lädt die Readiness-Faktoren analog zur ReadinessDetailView-Logik
