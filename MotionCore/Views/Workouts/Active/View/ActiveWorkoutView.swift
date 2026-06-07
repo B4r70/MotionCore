@@ -706,7 +706,7 @@ struct ActiveWorkoutView: View {
             WidgetSnapshotPublisher.publish(allSessions: allSessions)
 
             Task {
-                let success = await SupabaseSessionService.shared.upload(session)
+                let success = await SupabaseSessionService.shared.upload(session, readiness: currentSessionReadiness)
                 if success {
                     await MainActor.run {
                         session.syncedToSupabase = true

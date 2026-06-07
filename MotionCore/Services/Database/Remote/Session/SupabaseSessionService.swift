@@ -29,9 +29,9 @@ final class SupabaseSessionService {
 
     // MARK: - StrengthSession
 
-    /// Lädt eine StrengthSession inkl. aller ExerciseSets nach Supabase hoch.
+    /// Lädt eine StrengthSession inkl. aller ExerciseSets und optional SessionReadiness nach Supabase hoch.
     @discardableResult
-    func upload(_ session: StrengthSession) async -> Bool {
+    func upload(_ session: StrengthSession, readiness: SessionReadiness? = nil) async -> Bool {
         do {
             let dto = SupabaseStrengthSessionDTO(
                 id: session.sessionUUID,
@@ -126,7 +126,25 @@ final class SupabaseSessionService {
                 try await client.upsert(endpoint: "exercise_ratings", body: ratingDTOs)
             }
 
-            print("✅ StrengthSession \(session.sessionUUID) hochgeladen (\(setDTOs.count) Sets, \(ratingDTOs.count) Ratings)")
+            // SessionReadiness mitsynchen (falls vorhanden)
+            if let readiness {
+                let readinessDTO = SupabaseSessionReadinessDTO(
+                    id: readiness.id,
+                    sessionUuid: readiness.sessionUUID,
+                    capturedAt: readiness.capturedAt,
+                    hrvScore: readiness.hrvScore,
+                    sleepScore: readiness.sleepScore,
+                    restingHRScore: readiness.restingHRScore,
+                    activityScore: readiness.activityScore,
+                    userEnergyLevel: readiness.userEnergyLevel,
+                    userStressLevel: readiness.userStressLevelRaw,
+                    overallScore: readiness.overallScore,
+                    isCalibrating: readiness.isCalibrating
+                )
+                try await client.upsert(endpoint: "session_readiness", body: readinessDTO)
+            }
+
+            print("✅ StrengthSession \(session.sessionUUID) hochgeladen (\(setDTOs.count) Sets, \(ratingDTOs.count) Ratings\(readiness != nil ? ", Readiness" : ""))")
             return true
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (StrengthSession): \(error.localizedDescription)")

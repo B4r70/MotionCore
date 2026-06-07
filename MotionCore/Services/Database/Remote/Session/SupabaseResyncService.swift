@@ -38,8 +38,13 @@ final class SupabaseResyncService {
             )
         )) ?? []
 
+        let allReadiness = (try? context.fetch(FetchDescriptor<SessionReadiness>())) ?? []
+
         for session in strengthSessions {
-            let success = await SupabaseSessionService.shared.upload(session)
+            let readiness = session.sessionReadinessID.flatMap { rid in
+                allReadiness.first { $0.id == rid }
+            }
+            let success = await SupabaseSessionService.shared.upload(session, readiness: readiness)
             if success {
                 session.needsSupabaseResync = false
                 didChange = true
