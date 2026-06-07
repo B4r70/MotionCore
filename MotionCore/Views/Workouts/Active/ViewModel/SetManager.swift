@@ -111,8 +111,9 @@ final class SetManager {
 
     func recomputeSessionVolume() {
         guard let session else { return }
+        // Zeitbasierte Sätze (weight=0, reps=0) aus Volumen-Berechnung ausschließen
         cachedSessionVolume = session.safeExerciseSets
-            .filter { $0.isCompleted }
+            .filter { $0.isCompleted && !$0.isTimeBased }
             .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
     }
 
@@ -246,6 +247,8 @@ final class SetManager {
     // MARK: - Smart-Progression Helpers
 
     func isLastWorkSet(of set: ExerciseSet) -> Bool {
+        // Zeitbasierte Sätze brauchen kein RIR-Flag — Guard verhindert ungewolltes Sheet
+        guard !set.isTimeBased else { return false }
         guard set.setKind == .work, let session else { return false }
         let workSets = session.safeExerciseSets.filter {
             $0.groupKey == set.groupKey && $0.setKind == .work

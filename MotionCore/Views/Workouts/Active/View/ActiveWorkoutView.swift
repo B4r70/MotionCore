@@ -53,11 +53,17 @@ struct ActiveWorkoutView: View {
     @State private var cachedExerciseRatings: [String: ExerciseQualityRating] = [:]
 
     @StateObject private var restTimerManager = RestTimerManager()
+    /// Countdown-Manager für zeitbasierte Übungs-Sätze (Phase C — Verdrahtung in Phase D)
+    @StateObject private var exerciseCountdownManager = ExerciseCountdownManager()
     @ObservedObject private var phoneSession = PhoneSessionManager.shared
 
     @State private var showCancelHealthAlert = false
     @State private var rirSheetSet: ExerciseSet? = nil
     @State private var rirRetroSet: ExerciseSet? = nil
+
+    /// Merkt sich ob der Übungs-Countdown vor einer Session-Pause lief,
+    /// damit er beim Resume nur dann fortgesetzt wird, wenn er nicht manuell pausiert war.
+    @State private var wasRunningBeforeSessionPause: Bool = false
 
     @State private var currentReadinessModifier: Double = 1.0
     @State private var currentSessionReadiness: SessionReadiness? = nil
@@ -102,9 +108,17 @@ struct ActiveWorkoutView: View {
         Dictionary(uniqueKeysWithValues: studioEquipments.map { ($0.id, $0) })
     }
 
+    /// Hilfsproperty damit der Compiler den Typ in .onChange separat auflösen kann.
+    private var currentSetPersistentID: PersistentIdentifier? {
+        setManager.cachedCurrentSet?.persistentModelID
+    }
+
     // MARK: - Body
 
-    var body: some View {
+    // MARK: - Base View (ZStack + Navigation + onAppear)
+
+    /// ZStack, Toolbar und onAppear ausgelagert damit der Compiler body separat type-checkt.
+    private var baseView: some View {
         ZStack {
             AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
 
@@ -192,6 +206,11 @@ struct ActiveWorkoutView: View {
                 }
             }
 
+            // ExerciseCountdownManager: Haptik beim Ablauf des Übungs-Countdowns
+            exerciseCountdownManager.onFinished = {
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+            }
+
             // Initialer Cache-Aufbau
             setManager.rebuildGroupedCaches()
             setManager.refreshSetCaches()
@@ -211,115 +230,111 @@ struct ActiveWorkoutView: View {
                 PhoneSessionManager.shared.sendHeartbeatEnabled(true)
             }
         }
+    }
 
-        // =====================================================================
-        // MARK: - Combine Publisher Handler
-        // =====================================================================
+    // MARK: - Reactive View (onReceive + onChange + onDisappear)
 
-        .onReceive(setManager.setCompleted) { completedSet in
-            Task { @MainActor in try? context.save() }
-            PhoneSessionManager.shared.sendRequestSnapshot()
-            completionHapticMedium.impactOccurred()
-            // Smart-Fill nach Satz-Abschluss aktualisieren
-            smartFill?.recordSetCompletion(
-                completedSet: completedSet,
-                exercise: setManager.resolveExercise(for: completedSet.groupKey)
-            )
-            prefillSmartSuggestionsIfNeeded()
-        }
-        .onReceive(setManager.restShouldStart) { secs in
-            restTimerManager.start(seconds: secs)
-        }
-        .onReceive(setManager.rirSheetShouldShow) { set in
-            rirSheetSet = set
-        }
-        .onReceive(setManager.prDetected) { set, name, oneRM in
-            prSetIDs.insert(set.persistentModelID)
-            prBannerExercise = name
-            prBannerOneRM = oneRM
-            Task {
-                try? await Task.sleep(for: .seconds(3))
-                withAnimation(.easeOut) { prBannerExercise = nil }
+    /// Publisher- und onChange-Handler ausgelagert damit body nur Alerts + Sheets enthält.
+    private var reactiveView: some View {
+        baseView
+            .onReceive(setManager.setCompleted) { completedSet in
+                Task { @MainActor in try? context.save() }
+                PhoneSessionManager.shared.sendRequestSnapshot()
+                completionHapticMedium.impactOccurred()
+                smartFill?.recordSetCompletion(
+                    completedSet: completedSet,
+                    exercise: setManager.resolveExercise(for: completedSet.groupKey)
+                )
+                prefillSmartSuggestionsIfNeeded()
             }
-        }
-
-        // =====================================================================
-        // MARK: - onChange Handler
-        // =====================================================================
-
-        .onChange(of: restTimerManager.isResting) { _, _ in
-            liveActivity.syncDebounced(saveResume: saveResumeState)
-            watchBridge.sendState()
-        }
-        .onChange(of: session.completedSets) { _, _ in
-            setManager.rebuildGroupedCaches()
-            setManager.refreshSetCaches()
-            setManager.recomputeSessionVolume()
-            liveActivity.syncDebounced(saveResume: saveResumeState)
-            watchBridge.sendState()
-        }
-        .onChange(of: exerciseListRefreshID) { _, _ in
-            setManager.rebuildGroupedCaches()
-            setManager.refreshSetCaches()
-            let allKeys = Set(setManager.cachedGroupedSets.compactMap { $0.first?.groupKey })
-            for key in allKeys {
-                setManager.refreshLastSessionReference(for: key)
+            .onReceive(setManager.restShouldStart) { secs in
+                restTimerManager.start(seconds: secs)
             }
-        }
-        .onChange(of: exerciseNav.selectedExerciseKey) { oldValue, newValue in
-            setManager.refreshSetCaches()
-            sessionManager.setSelectedExerciseKey(newValue)
-            liveActivity.syncDebounced(saveResume: saveResumeState)
-            watchBridge.sendState()
-
-            // ExerciseMetrics für vorherige Übung speichern, dann Transition senden
-            saveCurrentExerciseMetrics(forKey: oldValue)
-            PhoneSessionManager.shared.sendExerciseTransition()
-
-            // Smart-Fill: Prefill für neue Übung anstoßen
-            prefillSmartSuggestionsIfNeeded()
-
-            // Letzte-Session-Referenz für neue Übung auffrischen
-            if let key = newValue {
-                setManager.refreshLastSessionReference(for: key)
+            .onReceive(setManager.rirSheetShouldShow) { set in
+                rirSheetSet = set
             }
-        }
-        .onChange(of: sessionManager.isPaused) { _, isPaused in
-            liveActivity.syncDebounced(saveResume: saveResumeState)
-            watchBridge.sendState()
-            if isPaused {
-                PhoneSessionManager.shared.sendPauseHealthTracking()
-            } else {
-                PhoneSessionManager.shared.sendResumeHealthTracking()
+            .onReceive(setManager.prDetected) { set, name, oneRM in
+                prSetIDs.insert(set.persistentModelID)
+                prBannerExercise = name
+                prBannerOneRM = oneRM
+                Task {
+                    try? await Task.sleep(for: .seconds(3))
+                    withAnimation(.easeOut) { prBannerExercise = nil }
+                }
             }
-        }
-        // Smart-Progression: Flag-Hygiene nach Add-Set / Delete-Set
-        .onChange(of: session.safeExerciseSets.count) { _, _ in
-            let groupKeys = Set(session.safeExerciseSets.map { $0.groupKey })
-            for key in groupKeys {
-                setManager.cleanupLastSetFlag(for: key)
-            }
-            Task { @MainActor in try? context.save() }
-            if let retroSet = setManager.retroRIRCandidate(for: exerciseNav.selectedExerciseKey) {
-                rirRetroSet = retroSet
-            }
-        }
-
-        // Foreground-Handler für Rest-Timer
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            restTimerManager.handleForegroundReturn()
-            if restTimerManager.isResting {
+            .onChange(of: restTimerManager.isResting) { _, _ in
                 liveActivity.syncDebounced(saveResume: saveResumeState)
+                watchBridge.sendState()
             }
-        }
-        .onDisappear {
-            restTimerManager.cleanup()
-            liveActivity.cancelDebounce()
-            saveResumeState()
-            PhoneSessionManager.shared.onAction = nil
-            PhoneSessionManager.shared.onWatchBecameReachable = nil
-            PhoneSessionManager.shared.sendIdleState()
-        }
+            .onChange(of: session.completedSets) { _, _ in
+                setManager.rebuildGroupedCaches()
+                setManager.refreshSetCaches()
+                setManager.recomputeSessionVolume()
+                liveActivity.syncDebounced(saveResume: saveResumeState)
+                watchBridge.sendState()
+            }
+            .onChange(of: exerciseListRefreshID) { _, _ in
+                setManager.rebuildGroupedCaches()
+                setManager.refreshSetCaches()
+                let allKeys = Set(setManager.cachedGroupedSets.compactMap { $0.first?.groupKey })
+                for key in allKeys {
+                    setManager.refreshLastSessionReference(for: key)
+                }
+            }
+            .onChange(of: exerciseNav.selectedExerciseKey) { oldValue, newValue in
+                setManager.refreshSetCaches()
+                sessionManager.setSelectedExerciseKey(newValue)
+                liveActivity.syncDebounced(saveResume: saveResumeState)
+                watchBridge.sendState()
+                saveCurrentExerciseMetrics(forKey: oldValue)
+                PhoneSessionManager.shared.sendExerciseTransition()
+                prefillSmartSuggestionsIfNeeded()
+                if let key = newValue {
+                    setManager.refreshLastSessionReference(for: key)
+                }
+            }
+            .onChange(of: sessionManager.isPaused) { _, isPaused in
+                handleSessionPauseChange(isPaused: isPaused)
+            }
+            .onChange(of: exerciseCountdownManager.isRunning) { _, _ in
+                // Countdown gestartet oder gestoppt → LiveActivity und Watch sofort aktualisieren
+                liveActivity.syncDebounced(saveResume: nil)
+                watchBridge.sendState()
+            }
+            .onChange(of: session.safeExerciseSets.count) { _, _ in
+                let groupKeys = Set(session.safeExerciseSets.map { $0.groupKey })
+                for key in groupKeys { setManager.cleanupLastSetFlag(for: key) }
+                Task { @MainActor in try? context.save() }
+                if let retroSet = setManager.retroRIRCandidate(for: exerciseNav.selectedExerciseKey) {
+                    rirRetroSet = retroSet
+                }
+            }
+            .background {
+                Color.clear.onChange(of: currentSetPersistentID) { _, _ in
+                    handleCountdownSetChange()
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                restTimerManager.handleForegroundReturn()
+                exerciseCountdownManager.handleForegroundReturn()
+                if restTimerManager.isResting {
+                    liveActivity.syncDebounced(saveResume: saveResumeState)
+                }
+            }
+            .onDisappear {
+                restTimerManager.cleanup()
+                exerciseCountdownManager.cleanup()
+                liveActivity.cancelDebounce()
+                saveResumeState()
+                PhoneSessionManager.shared.onAction = nil
+                PhoneSessionManager.shared.onWatchBecameReachable = nil
+                PhoneSessionManager.shared.sendIdleState()
+            }
+    }
+
+    // body enthält nur reactiveView + Alerts + Sheets (drei separate Typ-Check-Ausdrücke).
+    var body: some View {
+        reactiveView
         .alert("Training läuft noch", isPresented: $showCancelAlert) {
             Button("Pausieren") { handlePauseAndExit() }
             Button("Verwerfen", role: .destructive) { cancelWorkout() }
@@ -507,6 +522,7 @@ struct ActiveWorkoutView: View {
             restTimer: restTimerManager,
             setManager: setManager,
             exerciseNav: exerciseNav,
+            countdown: exerciseCountdownManager,
             setCompleted: setManager.setCompleted.eraseToAnyPublisher()
         )
         liveActivity.configure(
@@ -514,11 +530,20 @@ struct ActiveWorkoutView: View {
             sessionManager: sessionManager,
             restTimer: restTimerManager,
             setManager: setManager,
+            countdown: exerciseCountdownManager,
             setCompleted: setManager.setCompleted.eraseToAnyPublisher()
         )
 
         // Key validieren (nach configure, da cachedGroupedSets jetzt befüllt)
         exerciseNav.validateSelectedKey(against: setManager.cachedGroupedSets)
+
+        // Übungs-Countdown wiederherstellen — nur wenn setUUID zum aktuellen Satz passt
+        if let resumeState = SessionResumeStore.load(),
+           resumeState.sessionID == session.sessionUUID.uuidString,
+           let snapshot = resumeState.exerciseCountdown,
+           snapshot.setUUID == setManager.cachedCurrentSet?.setUUID {
+            exerciseCountdownManager.restore(from: snapshot)
+        }
 
         // SmartFill initialisieren
         if smartFill == nil {
@@ -821,6 +846,7 @@ struct ActiveWorkoutView: View {
             restStartDate: restTimerManager.isResting ? restTimerManager.restStartDate : nil,
             restEndDate: restTimerManager.isResting ? restTimerManager.restEndDate : nil,
             selectedExerciseKey: exerciseNav.selectedExerciseKey,
+            exerciseCountdown: exerciseCountdownManager.snapshot(),
             updatedAt: Date()
         )
         SessionResumeStore.save(state)
@@ -924,6 +950,7 @@ struct ActiveWorkoutView: View {
                 isEngineSuggestion: smartFill?.isSuggestionActive(for: activeSet) ?? false,
                 isReadinessReduced: smartFill?.isReadinessReduced(for: activeSet) ?? false,
                 lastSessionReference: setManager.lastSessionReference(for: activeSet),
+                countdown: exerciseCountdownManager,
                 selectedSetForEdit: $selectedSetForEdit,
                 onComplete: { set in setManager.completeSet(set) }
             )
@@ -997,6 +1024,43 @@ struct ActiveWorkoutView: View {
                 createSupersetFromSelection()
             }
         )
+    }
+
+    // MARK: - Countdown Helpers
+
+    /// Setzt den Countdown auf den neuen Satz oder räumt ihn auf.
+    /// Ausgelagert damit der Compiler .onChange separat type-checken kann.
+    private func handleCountdownSetChange() {
+        guard let set = setManager.cachedCurrentSet else {
+            exerciseCountdownManager.cleanup()
+            return
+        }
+        if set.isTimeBased {
+            // Laufenden Countdown für denselben Satz nicht resetten
+            guard exerciseCountdownManager.currentSetUUID != set.setUUID else { return }
+            exerciseCountdownManager.reset(to: set.duration, setUUID: set.setUUID)
+        }
+        // Kein cleanup bei Weight-Set — laufender Countdown für einen Time-Satz darf weiterlaufen
+    }
+
+    /// Session-Pause/-Resume inklusive Countdown-Kopplung (R4).
+    /// Ausgelagert damit die onChange-Chain kürzer bleibt.
+    private func handleSessionPauseChange(isPaused: Bool) {
+        liveActivity.syncDebounced(saveResume: saveResumeState)
+        watchBridge.sendState()
+        if isPaused {
+            // Merken ob Countdown lief — vor pause(), das isRunning zurücksetzt
+            wasRunningBeforeSessionPause = exerciseCountdownManager.isRunning && !exerciseCountdownManager.isPaused
+            exerciseCountdownManager.pause()
+            PhoneSessionManager.shared.sendPauseHealthTracking()
+        } else {
+            // Countdown nur fortsetzen wenn er vor der Session-Pause aktiv war
+            if wasRunningBeforeSessionPause {
+                exerciseCountdownManager.resume()
+            }
+            wasRunningBeforeSessionPause = false
+            PhoneSessionManager.shared.sendResumeHealthTracking()
+        }
     }
 }
 

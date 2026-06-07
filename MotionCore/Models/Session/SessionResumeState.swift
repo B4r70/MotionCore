@@ -27,5 +27,9 @@ struct SessionResumeState: Codable {
 
     let selectedExerciseKey: String?
 
+    /// Zustand des Übungs-Countdowns beim letzten Speichern.
+    /// nil = kein laufender Countdown (idle). Fehlende Felder beim Dekodieren → nil (rückwärtskompatibel).
+    let exerciseCountdown: ExerciseCountdownSnapshot?
+
     let updatedAt: Date
 }

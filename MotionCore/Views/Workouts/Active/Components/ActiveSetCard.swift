@@ -28,6 +28,8 @@ struct ActiveSetCard: View {
     var isReadinessReduced: Bool = false
         // 2c. Historische Referenz aus letzter Session (nil = keine Anzeige)
     var lastSessionReference: LastSessionReferenceCalcEngine.Reference? = nil
+        // 2d. Countdown-Manager für zeitbasierte Sätze (nil = Weight-Satz)
+    @ObservedObject var countdown: ExerciseCountdownManager
         // 3. Bindings
     @Binding var selectedSetForEdit: ExerciseSet?
         // 4. Actions
@@ -43,241 +45,292 @@ struct ActiveSetCard: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            HStack(spacing: 16) {
-                // Anzeige des Übungs-Darstellung sofern vorhanden
-                ExerciseVideoView.forSet(
-                    set,
-                    size: 80
-                )
-                .fixedSize(
-                    horizontal: true,
-                    vertical: true
-                )
+        if set.isTimeBased {
+            timeBasedContent
+        } else {
+            weightBasedContent
+        }
+    }
 
-                VStack(alignment: .leading, spacing: 4) {
-                    if set.setKind != .work {
-                        Text(set.setKind.description.uppercased())
-                            .font(.caption.bold())
-                            .foregroundStyle(set.setKind.color)
-                    }
+    // MARK: - Geteilter Header
 
-                    Text(set.exerciseName)
-                        .font(.title2.bold())
-                        .foregroundStyle(.primary)
+    /// Kopfzeile mit Thumbnail, Übungsname, Satznummer, Badges und Aktions-Icons.
+    /// Wird von beiden Zweigen (Weight + Time) verwendet.
+    private var cardHeader: some View {
+        HStack(spacing: 16) {
+            // Übungs-Thumbnail
+            ExerciseVideoView.forSet(
+                set,
+                size: 80
+            )
+            .fixedSize(
+                horizontal: true,
+                vertical: true
+            )
 
-                    HStack(spacing: 6) {
-                        Text("Satz \(set.setNumber) von \(setsForCurrentExercise)")
-                            .font(.subheadline)
+            VStack(alignment: .leading, spacing: 4) {
+                if set.setKind != .work {
+                    Text(set.setKind.description.uppercased())
+                        .font(.caption.bold())
+                        .foregroundStyle(set.setKind.color)
+                }
+
+                Text(set.exerciseName)
+                    .font(.title2.bold())
+                    .foregroundStyle(.primary)
+
+                HStack(spacing: 6) {
+                    Text("Satz \(set.setNumber) von \(setsForCurrentExercise)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    // B1: Vorschlag-Badge (sichtbar solange isEngineSuggestion == true)
+                    if isEngineSuggestion {
+                        Text("Vorschlag")
+                            .font(.caption2)
                             .foregroundStyle(.secondary)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(.secondary.opacity(0.15), in: Capsule())
+                    }
 
-                        // B1: Vorschlag-Badge (sichtbar solange isEngineSuggestion == true)
-                        if isEngineSuggestion {
-                            Text("Vorschlag")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(.secondary.opacity(0.15), in: Capsule())
-                        }
-
-                        // B2: Readiness-Badge (sichtbar wenn Gewicht wegen Tagesform reduziert)
-                        if isReadinessReduced {
-                            ReadinessReducedBadge()
-                        }
+                    // B2: Readiness-Badge (sichtbar wenn Gewicht wegen Tagesform reduziert)
+                    if isReadinessReduced {
+                        ReadinessReducedBadge()
                     }
                 }
-
-                Spacer()
-                // Quick-Config aufrufen (Icon) — nur wenn Closure gesetzt
-                if let onOpenQuickConfig {
-                    Button(action: onOpenQuickConfig) {
-                        Image(systemName: "gearshape")
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 32, height: 32)
-                            .background(.ultraThinMaterial, in: Circle())
-                    }
-                    .buttonStyle(.plain)
-                }
-                // Übungsanleitung aufrufen (Icon)
-                Button {
-                    showInstructionsSheet = true
-                } label: {
-                    Image(systemName: "figure.run.square.stack")
-                        .font(.headline)
-                        .foregroundStyle(Color.blue)
-                        .padding(10)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().fill(Color.white.opacity(0.06)))
-                }
-                .opacity(hasInstructions ? 1.0 : 0.35)
-                .disabled(!hasInstructions)
-                .accessibilityLabel("Übungsanleitung anzeigen")
             }
 
-            // Superset-Rotations-Tracker
-            if let exerciseNames = supersetExerciseNames {
-                VStack(alignment: .leading, spacing: 6) {
-                    // Kopfzeile: Icon + Runden-Info
-                    HStack(spacing: 6) {
-                        Image(systemName: "bolt.fill")
-                            .font(.caption.bold())
-                            .foregroundStyle(Color.green)
-                        Text("Superset – Runde \(supersetCurrentRound)/\(supersetTotalRounds)")
-                            .font(.caption.bold())
-                            .foregroundStyle(Color.green)
-                        Spacer()
-                    }
+            Spacer()
+            // Quick-Config aufrufen (Icon) — nur wenn Closure gesetzt
+            if let onOpenQuickConfig {
+                Button(action: onOpenQuickConfig) {
+                    Image(systemName: "gearshape")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 32, height: 32)
+                        .background(.ultraThinMaterial, in: Circle())
+                }
+                .buttonStyle(.plain)
+            }
+            // Übungsanleitung aufrufen (Icon)
+            Button {
+                showInstructionsSheet = true
+            } label: {
+                Image(systemName: "figure.run.square.stack")
+                    .font(.headline)
+                    .foregroundStyle(Color.blue)
+                    .padding(10)
+                    .background(.ultraThinMaterial, in: Circle())
+                    .overlay(Circle().fill(Color.white.opacity(0.06)))
+            }
+            .opacity(hasInstructions ? 1.0 : 0.35)
+            .disabled(!hasInstructions)
+            .accessibilityLabel("Übungsanleitung anzeigen")
+        }
+    }
 
-                    // Übungs-Dots: aktiv (grüner Punkt), abgeschlossen (Haken), ausstehend (leerer Kreis)
-                    HStack(spacing: 8) {
-                        ForEach(Array(exerciseNames.enumerated()), id: \.offset) { idx, name in
-                            HStack(spacing: 4) {
-                                // Dot-Indikator
-                                ZStack {
-                                    if idx == supersetCurrentIndex {
-                                        // Aktive Übung in dieser Runde
-                                        Circle()
-                                            .fill(Color.green)
-                                            .frame(width: 8, height: 8)
-                                    } else if idx < supersetCurrentIndex {
-                                        // In dieser Runde bereits abgeschlossen
-                                        Image(systemName: "checkmark")
-                                            .font(.system(size: 7, weight: .bold))
-                                            .foregroundStyle(Color.green)
-                                    } else {
-                                        // Noch ausstehend in dieser Runde
-                                        Circle()
-                                            .stroke(Color.green.opacity(0.5), lineWidth: 1.5)
-                                            .frame(width: 8, height: 8)
-                                    }
+    /// Superset-Rotations-Tracker — wird von beiden Zweigen angezeigt wenn aktiv.
+    @ViewBuilder
+    private var supersetTracker: some View {
+        if let exerciseNames = supersetExerciseNames {
+            VStack(alignment: .leading, spacing: 6) {
+                // Kopfzeile: Icon + Runden-Info
+                HStack(spacing: 6) {
+                    Image(systemName: "bolt.fill")
+                        .font(.caption.bold())
+                        .foregroundStyle(Color.green)
+                    Text("Superset – Runde \(supersetCurrentRound)/\(supersetTotalRounds)")
+                        .font(.caption.bold())
+                        .foregroundStyle(Color.green)
+                    Spacer()
+                }
+
+                // Übungs-Dots: aktiv (grüner Punkt), abgeschlossen (Haken), ausstehend (leerer Kreis)
+                HStack(spacing: 8) {
+                    ForEach(Array(exerciseNames.enumerated()), id: \.offset) { idx, name in
+                        HStack(spacing: 4) {
+                            // Dot-Indikator
+                            ZStack {
+                                if idx == supersetCurrentIndex {
+                                    // Aktive Übung in dieser Runde
+                                    Circle()
+                                        .fill(Color.green)
+                                        .frame(width: 8, height: 8)
+                                } else if idx < supersetCurrentIndex {
+                                    // In dieser Runde bereits abgeschlossen
+                                    Image(systemName: "checkmark")
+                                        .font(.system(size: 7, weight: .bold))
+                                        .foregroundStyle(Color.green)
+                                } else {
+                                    // Noch ausstehend in dieser Runde
+                                    Circle()
+                                        .stroke(Color.green.opacity(0.5), lineWidth: 1.5)
+                                        .frame(width: 8, height: 8)
                                 }
-                                .frame(width: 10)
-
-                                // Übungsname (kurz abschneiden)
-                                Text(name)
-                                    .font(.caption2)
-                                    .foregroundStyle(idx == supersetCurrentIndex ? .primary : .secondary)
-                                    .lineLimit(1)
                             }
+                            .frame(width: 10)
 
-                            // Trennpfeil zwischen Übungen
-                            if idx < exerciseNames.count - 1 {
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 7))
+                            // Übungsname (kurz abschneiden)
+                            Text(name)
+                                .font(.caption2)
+                                .foregroundStyle(idx == supersetCurrentIndex ? .primary : .secondary)
+                                .lineLimit(1)
+                        }
+
+                        // Trennpfeil zwischen Übungen
+                        if idx < exerciseNames.count - 1 {
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 7))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
+            .background(Color.green.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+        }
+    }
+
+    /// Sheet-Modifier wird von beiden Zweigen über den jeweiligen .glassCard() angehängt.
+    private func withInstructionsSheet<V: View>(_ view: V) -> some View {
+        view
+            .onChange(of: showInstructionsSheet) { _, isShown in
+                if !isShown { isEditingInstructions = false }
+            }
+            .sheet(isPresented: $showInstructionsSheet) {
+                ZStack {
+                    AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                        .ignoresSafeArea()
+
+                    ScrollView {
+                        if let exercise {
+                            ExerciseInstructionsCard(
+                                exercise: exercise,
+                                isEditing: $isEditingInstructions,
+                                showsHeader: true,
+                                wrapContentInGlassCard: true,
+                                initiallyExpanded: true
+                            )
+                            .padding()
+                        } else {
+                            VStack(spacing: 12) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .font(.title2)
+                                    .foregroundStyle(.secondary)
+
+                                Text("Übungsdetails nicht verfügbar")
+                                    .font(.headline)
+
+                                Text("Die Verknüpfung zur Übung fehlt.")
+                                    .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
+                            .padding()
+                            .frame(maxWidth: .infinity, minHeight: 240)
                         }
                     }
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 8)
-                .background(Color.green.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
+    }
 
-            GlassDivider()
+    // MARK: - Weight-Zweig (unverändert gegenüber dem Original)
 
-            HStack(spacing: 24) {
-                VStack(spacing: 4) {
-                    Text(set.weight > 0 ? String(format: "%.2f", set.weight) : "0.00")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
-                        .foregroundStyle(set.weight > 0 ? .primary : .secondary)
+    private var weightBasedContent: some View {
+        withInstructionsSheet(
+            VStack(spacing: 20) {
+                cardHeader
 
-                    Text(set.weight > 0 ? "kg" : "Körpergewicht")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity)
+                supersetTracker
 
-                Rectangle()
-                    .fill(Color.primary.opacity(0.2))
-                    .frame(width: 1, height: 50)
+                GlassDivider()
 
-                VStack(spacing: 4) {
-                    Text("\(set.reps)")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
-                        .foregroundStyle(.primary)
+                HStack(spacing: 24) {
+                    VStack(spacing: 4) {
+                        Text(set.weight > 0 ? String(format: "%.2f", set.weight) : "0.00")
+                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .foregroundStyle(set.weight > 0 ? .primary : .secondary)
 
-                    Text("Wdh.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-            }
-
-            // Dezente Referenz-Zeile: Werte aus letzter Session (nur wenn >= 2 Saetze abwichen)
-            if let ref = lastSessionReference {
-                Text("Letztes Mal: \(ref.reps) Wdh. × \(formattedLastWeight(ref))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            Button {
-                selectedSetForEdit = set
-            } label: {
-                Label("Anpassen", systemImage: "pencil")
-                    .font(.subheadline)
-                    .foregroundStyle(Color.blue)
-            }
-
-            .glassDivider()
-
-            Button {
-                onComplete(set)
-            } label: {
-                HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                    Text("Satz abschließen")
-                        .font(.headline)
-                }
-                .foregroundStyle(Color.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
-            }
-        }
-        .glassCard()
-        // Edit-Mode Reset beim Schließen
-        .onChange(of: showInstructionsSheet) { _, isShown in
-            if !isShown { isEditingInstructions = false }
-        }
-        .sheet(isPresented: $showInstructionsSheet) {
-            ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-                    .ignoresSafeArea()
-
-                ScrollView {
-                    if let exercise {
-                        ExerciseInstructionsCard(
-                            exercise: exercise,
-                            isEditing: $isEditingInstructions,
-                            showsHeader: true,
-                            wrapContentInGlassCard: true,
-                            initiallyExpanded: true
-                        )
-                        .padding()
-                    } else {
-                        VStack(spacing: 12) {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .font(.title2)
-                                .foregroundStyle(.secondary)
-
-                            Text("Übungsdetails nicht verfügbar")
-                                .font(.headline)
-
-                            Text("Die Verknüpfung zur Übung fehlt.")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity, minHeight: 240)
+                        Text(set.weight > 0 ? "kg" : "Körpergewicht")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
+                    .frame(maxWidth: .infinity)
+
+                    Rectangle()
+                        .fill(Color.primary.opacity(0.2))
+                        .frame(width: 1, height: 50)
+
+                    VStack(spacing: 4) {
+                        Text("\(set.reps)")
+                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+
+                        Text("Wdh.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+
+                // Dezente Referenz-Zeile: Werte aus letzter Session (nur wenn >= 2 Saetze abwichen)
+                if let ref = lastSessionReference {
+                    Text("Letztes Mal: \(ref.reps) Wdh. × \(formattedLastWeight(ref))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Button {
+                    selectedSetForEdit = set
+                } label: {
+                    Label("Anpassen", systemImage: "pencil")
+                        .font(.subheadline)
+                        .foregroundStyle(Color.blue)
+                }
+
+                .glassDivider()
+
+                Button {
+                    onComplete(set)
+                } label: {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Satz abschließen")
+                            .font(.headline)
+                    }
+                    .foregroundStyle(Color.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
                 }
             }
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
-        }
+            .glassCard()
+        )
+    }
+
+    // MARK: - Time-Zweig
+
+    /// Eingebetteter Time-Inhalt — ausgelagert nach ActiveTimeSetContent (Zeilenlimit).
+    private var timeBasedContent: some View {
+        withInstructionsSheet(
+            VStack(spacing: 20) {
+                cardHeader
+
+                supersetTracker
+
+                GlassDivider()
+
+                ActiveTimeSetContent(
+                    set: set,
+                    countdown: countdown,
+                    onComplete: onComplete
+                )
+            }
+            .glassCard()
+        )
     }
 
     // Nur anzeigen, wenn Übungsanleitungen vorhanden sind

@@ -422,9 +422,12 @@ struct StrengthDetailView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Text(formatVolume(exerciseVolume(sets)))
-                        .font(.caption.bold())
-                        .foregroundStyle(Color.green)
+                    // Volumen nur anzeigen wenn mindestens ein Weight-Satz vorhanden
+                    if !sets.allSatisfy(\.isTimeBased) {
+                        Text(formatVolume(exerciseVolume(sets)))
+                            .font(.caption.bold())
+                            .foregroundStyle(Color.green)
+                    }
                 }
 
                 // Rollback-Button (nur wenn vorheriges Arbeitsgewicht bekannt)
@@ -475,18 +478,23 @@ struct StrengthDetailView: View {
 
                         Spacer()
 
-                        // Gewicht × Reps
-                        HStack(spacing: 4) {
-                            if set.weight > 0 {
-                                Text(String(format: "%.1f kg", set.weight))
-                                    .font(.subheadline.bold())
-
-                                Text("×")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Text("\(set.reps) Wdh.")
+                        // Gewicht × Reps (Weight) oder Ist-Zeit (Time)
+                        if set.isTimeBased {
+                            Text(formatSetDuration(set.duration))
                                 .font(.subheadline.bold())
+                        } else {
+                            HStack(spacing: 4) {
+                                if set.weight > 0 {
+                                    Text(String(format: "%.1f kg", set.weight))
+                                        .font(.subheadline.bold())
+
+                                    Text("×")
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                Text("\(set.reps) Wdh.")
+                                    .font(.subheadline.bold())
+                            }
                         }
 
                         // RPE (falls vorhanden)
@@ -512,7 +520,8 @@ struct StrengthDetailView: View {
     }
 
     private func exerciseVolume(_ sets: [ExerciseSet]) -> Double {
-        sets.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
+        // Time-Sätze tragen kein Volumen bei (weight=0, reps=0)
+        sets.filter { !$0.isTimeBased }.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
     }
 
     private func rpeColor(_ rpe: Int) -> Color {
@@ -636,6 +645,13 @@ struct StrengthDetailView: View {
             let mins = minutes % 60
             return mins > 0 ? "\(hours)h \(mins)m" : "\(hours)h"
         }
+    }
+
+    /// Formatiert Ist-Zeit eines Time-Satzes in Sekunden als mm:ss Min
+    private func formatSetDuration(_ seconds: Int) -> String {
+        let m = seconds / 60
+        let s = seconds % 60
+        return s == 0 ? "\(m):00 Min" : String(format: "%d:%02d Min", m, s)
     }
 
     private func formatVolume(_ volume: Double) -> String {
