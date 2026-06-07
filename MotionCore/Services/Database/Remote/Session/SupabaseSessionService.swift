@@ -95,7 +95,9 @@ final class SupabaseSessionService {
                     rpe: set.rpe,
                     notes: set.notes,
                     isLastSetOfExercise: set.isLastSetOfExercise,
-                    rpeRecorded: set.rpeRecorded
+                    rpeRecorded: set.rpeRecorded,
+                    // Tracking-Modus aus dem Rohwert übernehmen (weight/time)
+                    trackingMode: set.trackingModeRaw
                 )
             }
 

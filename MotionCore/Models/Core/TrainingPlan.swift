@@ -95,35 +95,10 @@ final class TrainingPlan {
         session.sourceTrainingPlan = self
         session.start()  // Direkt starten
 
-        // Template-Sets kopieren (sortiert nach sortOrder)
+        // Template-Sets klonen (sortiert nach sortOrder) — cloneForSession übernimmt alle Felder
+        // inkl. trackingMode, isUnilateralSnapshot, notes, supersetGroupId korrekt
         for templateSet in safeTemplateSets.sorted(by: { $0.sortOrder < $1.sortOrder }) {
-            let newSet = ExerciseSet(
-                exerciseName: templateSet.exerciseName,
-                exerciseNameSnapshot: templateSet.exerciseNameSnapshot,
-                exerciseUUIDSnapshot: ExerciseSet.resolveSnapshot(
-                    existing: templateSet.exerciseUUIDSnapshot,
-                    exercise: templateSet.exercise
-                ),
-                exerciseMediaAssetName: templateSet.exerciseMediaAssetName,
-                setNumber: templateSet.setNumber,
-                weight: templateSet.weight,
-                weightPerSide: templateSet.weightPerSide,
-                reps: templateSet.reps,
-                duration: templateSet.duration,
-                distance: templateSet.distance,
-                restSeconds: templateSet.restSeconds,
-                setKind: templateSet.setKind,
-                isCompleted: false,
-                rpe: 0,
-                notes: "",
-                targetRepsMin: templateSet.targetRepsMin,
-                targetRepsMax: templateSet.targetRepsMax,
-                targetRIR: templateSet.targetRIR,
-                groupId: templateSet.groupId,
-                sortOrder: templateSet.sortOrder,  // NEU: Sortierung uebernehmen
-                supersetGroupId: templateSet.supersetGroupId
-            )
-            newSet.exercise = templateSet.exercise
+            let newSet = templateSet.cloneForSession()
             session.addSet(newSet)
         }
         return session

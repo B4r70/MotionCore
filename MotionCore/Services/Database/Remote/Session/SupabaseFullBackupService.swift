@@ -450,7 +450,8 @@ final class SupabaseFullBackupService: ObservableObject {
                     rpe: set.rpe,
                     notes: set.notes,
                     isLastSetOfExercise: set.isLastSetOfExercise,
-                    rpeRecorded: set.rpeRecorded
+                    rpeRecorded: set.rpeRecorded,
+                    trackingMode: set.trackingMode.rawValue
                 )
             }
 
@@ -656,7 +657,8 @@ final class SupabaseFullBackupService: ObservableObject {
                 rpe: set.rpe,
                 notes: set.notes,
                 isLastSetOfExercise: set.isLastSetOfExercise,
-                rpeRecorded: set.rpeRecorded
+                rpeRecorded: set.rpeRecorded,
+                trackingMode: set.trackingMode.rawValue
             )
         }
 

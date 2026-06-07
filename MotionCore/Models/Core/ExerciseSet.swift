@@ -53,6 +53,20 @@ final class ExerciseSet {
     var supersetGroupId: String? = nil           // nil = normaler Satz, gleicher Wert = Superset-Gruppe
     var sortOrder: Int = 0                       // Sortierung innerhalb des Plans
 
+    // MARK: - Tracking-Modus (weight = Standard / time = zeitbasiert)
+
+    /// Persistierter Rohwert — SwiftData lightweight migration: Default "weight"
+    var trackingModeRaw: String = "weight"
+
+    /// Typisierter Tracking-Modus
+    var trackingMode: SetTrackingMode {
+        get { SetTrackingMode(rawValue: trackingModeRaw) ?? .weight }
+        set { trackingModeRaw = newValue.rawValue }
+    }
+
+    /// True für zeitbasierte Sätze (z. B. Rudern 5 Min) — schließt Volumen-Berechnung aus
+    var isTimeBased: Bool { trackingMode == .time }
+
     // MARK: - Set-Status
 
     var setKindRaw: String = "work"              // Satztyp (work/warmup/drop/amrap)
@@ -180,6 +194,7 @@ final class ExerciseSet {
         distance: Double = 0.0,
         restSeconds: Int = 90,
         setKind: SetKind = .work,
+        trackingMode: SetTrackingMode = .weight,
         isCompleted: Bool = false,
         rpe: Int = 0,
         notes: String = "",
@@ -205,6 +220,7 @@ final class ExerciseSet {
         self.distance = distance
         self.restSeconds = restSeconds
         self.setKindRaw = setKind.rawValue
+        self.trackingModeRaw = trackingMode.rawValue
         self.isCompleted = isCompleted
         self.rpe = rpe
         self.notes = notes
@@ -241,6 +257,7 @@ extension ExerciseSet {
             distance: distance,
             restSeconds: restSeconds,
             setKind: setKind,
+            trackingMode: trackingMode,  // Tracking-Modus für Plan-Bearbeitung erhalten
             isCompleted: isCompleted,
             rpe: rpe,
             notes: notes,
@@ -297,6 +314,7 @@ extension ExerciseSet {
             distance: distance,
             restSeconds: restSeconds,
             setKind: setKind,
+            trackingMode: trackingMode,  // Tracking-Modus aus Template übernehmen
             isCompleted: false,          // sinnvoll: neue Sets sind erstmal nicht abgeschlossen
             rpe: 0,                      // neutral starten
             notes: notes,                // optional: kannst du auch "" setzen

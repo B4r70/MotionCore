@@ -117,8 +117,10 @@ final class StrengthSession {
     }
 
     var totalVolume: Double {
+        // Time-Sätze fließen nicht ins Volumen (kein Gewicht × Reps-Konzept)
         safeExerciseSets.reduce(0.0) { sum, set in
-            sum + (set.weight * Double(set.reps))
+            guard !set.isTimeBased else { return sum }
+            return sum + (set.weight * Double(set.reps))
         }
     }
 

@@ -268,6 +268,8 @@ struct ExerciseSetExportItem: Codable {
     // Rückwärtskompatibilität für alte Exporte
     let exerciseId: String? // Alt: wird zu exerciseUUIDSnapshot gemappt
     let isWarmup: Bool? // Alt: wird zu setKind gemappt
+    // Tracking-Modus: nil = "weight" (rückwärtskompatibel), "time" = zeitbasiert
+    let trackingMode: String?
 }
 
 // MARK: Mapper
@@ -297,7 +299,9 @@ extension ExerciseSet {
             groupId: groupId.isEmpty ? nil : groupId,
             // Rückwärtskompatibilität: Nicht mehr verwendet beim Export
             exerciseId: nil,
-            isWarmup: nil
+            isWarmup: nil,
+            // Weight ist der Standard — kompakter Export (nil = .weight)
+            trackingMode: trackingMode == .time ? trackingMode.rawValue : nil
         )
     }
 
@@ -316,6 +320,9 @@ extension ExerciseSet {
         // UUID-Snapshot: Neu oder aus altem exerciseId-Feld
         let resolvedUUID = e.exerciseUUIDSnapshot ?? e.exerciseId ?? ""
 
+        // Tracking-Modus: nil im Export bedeutet .weight (Rückwärtskompatibilität)
+        let resolvedTrackingMode = e.trackingMode.flatMap { SetTrackingMode(rawValue: $0) } ?? .weight
+
         return ExerciseSet(
             exerciseName: e.exerciseName,
             exerciseNameSnapshot: e.exerciseNameSnapshot ?? e.exerciseName,
@@ -330,6 +337,7 @@ extension ExerciseSet {
             distance: e.distance ?? 0.0,
             restSeconds: e.restSeconds ?? 90,
             setKind: resolvedSetKind,
+            trackingMode: resolvedTrackingMode,
             isCompleted: e.isCompleted,
             rpe: e.rpe ?? 0,
             notes: e.notes ?? "",

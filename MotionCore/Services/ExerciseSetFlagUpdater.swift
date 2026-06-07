@@ -23,6 +23,8 @@ enum ExerciseSetFlagUpdater {
             .sorted { $0.setNumber < $1.setNumber }
 
         workSets.forEach { $0.isLastSetOfExercise = false }
-        workSets.last?.isLastSetOfExercise = true
+        // Nur für Weight-Sätze — zeitbasierte Sätze brauchen kein RIR-Flag
+        let lastWeightWorkSet = workSets.filter { !$0.isTimeBased }.last
+        lastWeightWorkSet?.isLastSetOfExercise = true
     }
 }

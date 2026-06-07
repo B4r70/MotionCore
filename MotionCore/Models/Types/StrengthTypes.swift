@@ -12,6 +12,23 @@
 //
 import Foundation
 
+// MARK: - Tracking-Modus eines Satzes (Gewicht vs. Zeit)
+
+enum SetTrackingMode: String, Codable, CaseIterable, Identifiable {
+    case weight = "weight"  // Standard: Gewicht × Wiederholungen
+    case time   = "time"    // Zeitbasiert: Dauer in Sekunden
+
+    var id: String { rawValue }
+
+    /// Deutsches Anzeigelabel
+    var description: String {
+        switch self {
+        case .weight: return "Gewicht"
+        case .time:   return "Zeit"
+        }
+    }
+}
+
 // MARK: - Subjektive Qualitätsbewertung pro Übung
 
 enum ExerciseQualityRating: String, Codable, CaseIterable, Identifiable {
