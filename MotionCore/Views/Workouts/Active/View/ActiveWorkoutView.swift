@@ -67,6 +67,7 @@ struct ActiveWorkoutView: View {
 
     @State private var currentReadinessModifier: Double = 1.0
     @State private var currentSessionReadiness: SessionReadiness? = nil
+    @State private var readinessTask: Task<Void, Never>?
     @State private var selectedReadinessForDetail: SessionReadiness? = nil
     @State private var quickConfigExercise: Exercise? = nil
 
@@ -565,7 +566,7 @@ struct ActiveWorkoutView: View {
         let captureSession = session
         let captureContext = context
         let takesCardio = appSettings.takesCardioMedication
-        Task { @MainActor in
+        readinessTask = Task { @MainActor in
             let modifier = await SessionReadinessService.captureReadiness(
                 for: captureSession,
                 context: captureContext,
@@ -706,6 +707,7 @@ struct ActiveWorkoutView: View {
             WidgetSnapshotPublisher.publish(allSessions: allSessions)
 
             Task {
+                await readinessTask?.value
                 let success = await SupabaseSessionService.shared.upload(session, readiness: currentSessionReadiness)
                 if success {
                     await MainActor.run {

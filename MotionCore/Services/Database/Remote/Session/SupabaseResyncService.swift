@@ -38,19 +38,21 @@ final class SupabaseResyncService {
             )
         )) ?? []
 
-        let allReadiness = (try? context.fetch(FetchDescriptor<SessionReadiness>())) ?? []
+        if !strengthSessions.isEmpty {
+            let readinessIndex = Dictionary(
+                uniqueKeysWithValues: ((try? context.fetch(FetchDescriptor<SessionReadiness>())) ?? []).map { ($0.id, $0) }
+            )
 
-        for session in strengthSessions {
-            let readiness = session.sessionReadinessID.flatMap { rid in
-                allReadiness.first { $0.id == rid }
-            }
-            let success = await SupabaseSessionService.shared.upload(session, readiness: readiness)
-            if success {
-                session.needsSupabaseResync = false
-                didChange = true
-                print("🔄 StrengthSession re-synced: \(session.sessionUUID)")
-            } else {
-                print("⚠️ StrengthSession re-sync fehlgeschlagen: \(session.sessionUUID)")
+            for session in strengthSessions {
+                let readiness = session.sessionReadinessID.flatMap { readinessIndex[$0] }
+                let success = await SupabaseSessionService.shared.upload(session, readiness: readiness)
+                if success {
+                    session.needsSupabaseResync = false
+                    didChange = true
+                    print("🔄 StrengthSession re-synced: \(session.sessionUUID)")
+                } else {
+                    print("⚠️ StrengthSession re-sync fehlgeschlagen: \(session.sessionUUID)")
+                }
             }
         }
 

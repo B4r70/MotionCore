@@ -32,124 +32,129 @@ final class SupabaseSessionService {
     /// Lädt eine StrengthSession inkl. aller ExerciseSets und optional SessionReadiness nach Supabase hoch.
     @discardableResult
     func upload(_ session: StrengthSession, readiness: SessionReadiness? = nil) async -> Bool {
-        do {
-            let dto = SupabaseStrengthSessionDTO(
-                id: session.sessionUUID,
-                date: session.date,
-                duration: session.duration,
-                calories: session.calories,
-                bodyWeight: session.bodyWeight,
-                heartRate: session.heartRate,
-                maxHeartRate: session.maxHeartRate,
-                notes: session.notes,
-                workoutTypeRaw: session.workoutTypeRaw,
-                intensityRaw: session.intensityRaw,
-                perceivedExertion: session.perceivedExertion,
-                energyLevelBefore: session.energyLevelBefore,
-                isCompleted: session.isCompleted,
-                isLiveSession: session.isLiveSession,
-                startedAt: session.startedAt,
-                completedAt: session.completedAt,
-                deviceSource: session.deviceSource,
-                healthKitWorkoutUUID: session.healthKitWorkoutUUID,
-                sourceTrainingPlanId: session.sourceTrainingPlan?.planUUID,
-                sessionQualityScore: session.sessionQualityScore,
-                sessionReadinessId: session.sessionReadinessID
-            )
+        // Alle @Model-Properties synchron vor dem ersten await in DTOs kopieren
+        let dto = SupabaseStrengthSessionDTO(
+            id: session.sessionUUID,
+            date: session.date,
+            duration: session.duration,
+            calories: session.calories,
+            bodyWeight: session.bodyWeight,
+            heartRate: session.heartRate,
+            maxHeartRate: session.maxHeartRate,
+            notes: session.notes,
+            workoutTypeRaw: session.workoutTypeRaw,
+            intensityRaw: session.intensityRaw,
+            perceivedExertion: session.perceivedExertion,
+            energyLevelBefore: session.energyLevelBefore,
+            isCompleted: session.isCompleted,
+            isLiveSession: session.isLiveSession,
+            startedAt: session.startedAt,
+            completedAt: session.completedAt,
+            deviceSource: session.deviceSource,
+            healthKitWorkoutUUID: session.healthKitWorkoutUUID,
+            sourceTrainingPlanId: session.sourceTrainingPlan?.planUUID,
+            sessionQualityScore: session.sessionQualityScore,
+            sessionReadinessId: session.sessionReadinessID
+        )
 
+        let sessionUUIDString = session.sessionUUID.uuidString
+
+        let setDTOs = session.safeExerciseSets.map { set in
+            SupabaseExerciseSetDTO(
+                id: set.setUUID,
+                sessionId: session.sessionUUID,
+                trainingPlanId: set.trainingPlan?.planUUID,
+                exerciseNameSnapshot: set.exerciseNameSnapshot.isEmpty ? set.exerciseName : set.exerciseNameSnapshot,
+                exerciseUUIDSnapshot: set.exerciseUUIDSnapshot,
+                exerciseMediaAssetName: set.exerciseMediaAssetName,
+                isUnilateralSnapshot: set.isUnilateralSnapshot,
+                setNumber: set.setNumber,
+                weight: set.weight,
+                weightPerSide: set.weightPerSide,
+                reps: set.reps,
+                duration: set.duration,
+                distance: set.distance,
+                restSeconds: set.restSeconds,
+                targetRepsMin: set.targetRepsMin,
+                targetRepsMax: set.targetRepsMax,
+                targetRIR: set.targetRIR,
+                groupId: set.groupId,
+                supersetGroupId: set.supersetGroupId,
+                sortOrder: set.sortOrder,
+                setKindRaw: set.setKindRaw,
+                isCompleted: set.isCompleted,
+                rpe: set.rpe,
+                notes: set.notes,
+                isLastSetOfExercise: set.isLastSetOfExercise,
+                rpeRecorded: set.rpeRecorded,
+                trackingMode: set.trackingModeRaw
+            )
+        }
+
+        let ratingDTOs = session.safeExerciseRatings.map { r in
+            SupabaseExerciseRatingDTO(
+                id: r.ratingUUID,
+                sessionId: session.sessionUUID,
+                exerciseGroupKey: r.exerciseGroupKey,
+                exerciseNameSnapshot: r.exerciseNameSnapshot,
+                rating: r.ratingRaw,
+                ratedAt: r.ratedAt
+            )
+        }
+
+        let readinessDTO: SupabaseSessionReadinessDTO? = readiness.map { r in
+            SupabaseSessionReadinessDTO(
+                id: r.id,
+                sessionUuid: r.sessionUUID,
+                capturedAt: r.capturedAt,
+                hrvScore: r.hrvScore,
+                sleepScore: r.sleepScore,
+                restingHRScore: r.restingHRScore,
+                activityScore: r.activityScore,
+                userEnergyLevel: r.userEnergyLevel,
+                userStressLevel: r.userStressLevelRaw,
+                overallScore: r.overallScore,
+                isCalibrating: r.isCalibrating
+            )
+        }
+
+        // Ab hier nur noch DTOs (Value-Types) — kein @Model-Zugriff nach await
+        do {
             try await client.upsert(endpoint: "strength_sessions", body: dto)
 
-            // Alte Sets löschen, dann neue einfügen.
-            // Bewusst: Zwischen DELETE und INSERT existiert ein kurzes Inkonsistenzfenster.
-            // Da Supabase sekundäre Persistenz ist (CloudKit ist primär), ist das akzeptabel –
-            // ein erneuter Upload beim nächsten Session-Abschluss würde es korrigieren.
             try await client.deleteWhere(
                 endpoint: "exercise_sets",
-                filter: "session_id=eq.\(session.sessionUUID.uuidString)"
+                filter: "session_id=eq.\(sessionUUIDString)"
             )
-
-            let setDTOs = session.safeExerciseSets.map { set in
-                SupabaseExerciseSetDTO(
-                    id: set.setUUID,
-                    sessionId: session.sessionUUID,
-                    trainingPlanId: set.trainingPlan?.planUUID,
-                    exerciseNameSnapshot: set.exerciseNameSnapshot.isEmpty ? set.exerciseName : set.exerciseNameSnapshot,
-                    exerciseUUIDSnapshot: set.exerciseUUIDSnapshot,
-                    exerciseMediaAssetName: set.exerciseMediaAssetName,
-                    isUnilateralSnapshot: set.isUnilateralSnapshot,
-                    setNumber: set.setNumber,
-                    weight: set.weight,
-                    weightPerSide: set.weightPerSide,
-                    reps: set.reps,
-                    duration: set.duration,
-                    distance: set.distance,
-                    restSeconds: set.restSeconds,
-                    targetRepsMin: set.targetRepsMin,
-                    targetRepsMax: set.targetRepsMax,
-                    targetRIR: set.targetRIR,
-                    groupId: set.groupId,
-                    supersetGroupId: set.supersetGroupId,
-                    sortOrder: set.sortOrder,
-                    setKindRaw: set.setKindRaw,
-                    isCompleted: set.isCompleted,
-                    rpe: set.rpe,
-                    notes: set.notes,
-                    isLastSetOfExercise: set.isLastSetOfExercise,
-                    rpeRecorded: set.rpeRecorded,
-                    // Tracking-Modus aus dem Rohwert übernehmen (weight/time)
-                    trackingMode: set.trackingModeRaw
-                )
-            }
 
             if !setDTOs.isEmpty {
                 try await client.upsert(endpoint: "exercise_sets", body: setDTOs)
             }
 
-            // Alte Ratings löschen, neue einfügen (analog zu Sets)
             try await client.deleteWhere(
                 endpoint: "exercise_ratings",
-                filter: "session_id=eq.\(session.sessionUUID.uuidString)"
+                filter: "session_id=eq.\(sessionUUIDString)"
             )
-
-            let ratingDTOs = session.safeExerciseRatings.map { r in
-                SupabaseExerciseRatingDTO(
-                    id: r.ratingUUID,
-                    sessionId: session.sessionUUID,
-                    exerciseGroupKey: r.exerciseGroupKey,
-                    exerciseNameSnapshot: r.exerciseNameSnapshot,
-                    rating: r.ratingRaw,
-                    ratedAt: r.ratedAt
-                )
-            }
 
             if !ratingDTOs.isEmpty {
                 try await client.upsert(endpoint: "exercise_ratings", body: ratingDTOs)
             }
-
-            // SessionReadiness mitsynchen (falls vorhanden)
-            if let readiness {
-                let readinessDTO = SupabaseSessionReadinessDTO(
-                    id: readiness.id,
-                    sessionUuid: readiness.sessionUUID,
-                    capturedAt: readiness.capturedAt,
-                    hrvScore: readiness.hrvScore,
-                    sleepScore: readiness.sleepScore,
-                    restingHRScore: readiness.restingHRScore,
-                    activityScore: readiness.activityScore,
-                    userEnergyLevel: readiness.userEnergyLevel,
-                    userStressLevel: readiness.userStressLevelRaw,
-                    overallScore: readiness.overallScore,
-                    isCalibrating: readiness.isCalibrating
-                )
-                try await client.upsert(endpoint: "session_readiness", body: readinessDTO)
-            }
-
-            print("✅ StrengthSession \(session.sessionUUID) hochgeladen (\(setDTOs.count) Sets, \(ratingDTOs.count) Ratings\(readiness != nil ? ", Readiness" : ""))")
-            return true
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (StrengthSession): \(error.localizedDescription)")
             return false
         }
+
+        // Readiness in eigenem try/catch — Fehler tankt nicht den Session-Upload
+        if let readinessDTO {
+            do {
+                try await client.upsert(endpoint: "session_readiness", body: readinessDTO)
+            } catch {
+                print("⚠️ SessionReadiness Upload fehlgeschlagen (wird beim nächsten Resync nachgeholt): \(error.localizedDescription)")
+            }
+        }
+
+        print("✅ StrengthSession \(dto.id) hochgeladen (\(setDTOs.count) Sets, \(ratingDTOs.count) Ratings\(readinessDTO != nil ? ", Readiness" : ""))")
+        return true
     }
 
     // MARK: - CardioSession

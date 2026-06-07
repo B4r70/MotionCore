@@ -88,13 +88,13 @@ final class SupabaseMigrationService: ObservableObject {
         }
 
         // Readiness-Snapshots vorladen für Strength-Session-Zuordnung
-        let allReadiness = (try? context.fetch(FetchDescriptor<SessionReadiness>())) ?? []
+        let readinessIndex: [UUID: SessionReadiness] = strengthSessions.isEmpty ? [:] : Dictionary(
+            uniqueKeysWithValues: ((try? context.fetch(FetchDescriptor<SessionReadiness>())) ?? []).map { ($0.id, $0) }
+        )
 
         // Sequenzieller Upload (schützt vor Rate-Limit beim Anon-Key)
         for session in strengthSessions {
-            let readiness = session.sessionReadinessID.flatMap { rid in
-                allReadiness.first { $0.id == rid }
-            }
+            let readiness = session.sessionReadinessID.flatMap { readinessIndex[$0] }
             let success = await SupabaseSessionService.shared.upload(session, readiness: readiness)
             if success {
                 session.syncedToSupabase = true
