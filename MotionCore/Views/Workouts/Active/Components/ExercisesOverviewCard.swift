@@ -223,12 +223,21 @@ struct ExercisesOverviewCard: View {
         .glassCard()
         .onAppear {
             if expandedExerciseKey == nil {
-                expandedExerciseKey = selectedExerciseKey
+                expandedExerciseKey = selectedExerciseKey ?? groupedSets.first?.first?.groupKey
             }
         }
-        .onChange(of: selectedExerciseKey) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.25)) {
-                expandedExerciseKey = newValue
+        // groupedSets kommt nach onAppear — Expand nachholen wenn Cache spät ankommt
+        .onChange(of: groupedSets.first?.first?.groupKey) { _, newKey in
+            if expandedExerciseKey == nil {
+                expandedExerciseKey = selectedExerciseKey ?? newKey
+            }
+        }
+        .onChange(of: selectedExerciseKey) { oldValue, newValue in
+            // Nur folgen wenn keine abweichende manuelle Auswahl offen ist
+            if expandedExerciseKey == oldValue || expandedExerciseKey == nil {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    expandedExerciseKey = newValue
+                }
             }
         }
         .onChange(of: isSortMode) { _, newValue in
@@ -459,14 +468,13 @@ private struct ExerciseOverviewExpandedDetail: View {
         HStack {
             Text("Satz \(set.setNumber)")
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
 
             Spacer()
 
             Text(formatSetValue(set))
                 .font(.caption)
-                .foregroundStyle(set.isCompleted ? .primary : .secondary)
-                .opacity(set.isCompleted ? 1.0 : 0.5)
+                .foregroundStyle(set.isCompleted ? Color.primary : Color.primary.opacity(0.6))
 
             if set.isLastSetOfExercise && !set.rpeRecorded, let callback = onRetroRIR {
                 Button {
@@ -489,6 +497,10 @@ private struct ExerciseOverviewExpandedDetail: View {
     }
 
     private func formatSetValue(_ set: ExerciseSet) -> String {
+        // Zeitbasierte Sätze: Dauer in mm:ss statt Gewicht × Wiederholungen
+        if set.isTimeBased {
+            return formatDuration(set.duration)
+        }
         let weightStr: String
         if set.weight == set.weight.rounded() {
             weightStr = String(format: "%.0f", set.weight)
@@ -496,6 +508,13 @@ private struct ExerciseOverviewExpandedDetail: View {
             weightStr = String(format: "%.1f", set.weight)
         }
         return "\(weightStr) kg × \(set.reps) Wdh."
+    }
+
+    /// Formatiert Sekunden als „m:ss Min" (z. B. 300 → „5:00 Min", 75 → „1:15 Min")
+    private func formatDuration(_ seconds: Int) -> String {
+        let m = seconds / 60
+        let s = seconds % 60
+        return s == 0 ? "\(m):00 Min" : String(format: "%d:%02d Min", m, s)
     }
 }
 
@@ -657,7 +676,7 @@ private struct ExerciseOverviewRow: View {
                 } else {
                     Text("\(completedCount)/\(sets.count)")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.primary)
                 }
 
                 if !isCurrentExercise && !isSortMode && !isSupersetSelectionMode {
