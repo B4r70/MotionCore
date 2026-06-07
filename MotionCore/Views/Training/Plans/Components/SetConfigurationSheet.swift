@@ -60,7 +60,10 @@ struct SetConfigurationSheet: View {
             targetRIR: &_targetRIR,
             workSetKind: &_workSetKind,
             includeWarmup: &_includeWarmup,
-            warmupSets: &_warmupSets
+            warmupSets: &_warmupSets,
+            trackingMode: &_trackingMode,
+            durationSeconds: &_durationSeconds,
+            paceNote: &_paceNote
         )
 
         // targetRIR: falls keine initialSets vorhanden, exercise.targetRIR als Default
@@ -97,7 +100,10 @@ struct SetConfigurationSheet: View {
             targetRIR: &_targetRIR,
             workSetKind: &_workSetKind,
             includeWarmup: &_includeWarmup,
-            warmupSets: &_warmupSets
+            warmupSets: &_warmupSets,
+            trackingMode: &_trackingMode,
+            durationSeconds: &_durationSeconds,
+            paceNote: &_paceNote
         )
     }
 
@@ -112,11 +118,16 @@ struct SetConfigurationSheet: View {
     @State private var targetRIR: Int = 2
     @State private var workSetKind: SetKind = .work
 
+    // MARK: Tracking-Modus (weight / time)
+    @State private var trackingMode: SetTrackingMode = .weight
+    @State private var durationSeconds: Int = 300
+    @State private var paceNote: String = ""
+
     @State private var incrementTimer: Timer?
 
     enum FocusedField { case sets, reps, weight }
 
-    // MARK: - NEU: Bootstrap Helper (initialSets -> @State)
+    // MARK: - Bootstrap Helper (initialSets -> @State)
     private static func bootstrapState(
         initialSets: [ExerciseSet]?,
         isUnilateral: Bool,
@@ -127,7 +138,10 @@ struct SetConfigurationSheet: View {
         targetRIR: inout State<Int>,
         workSetKind: inout State<SetKind>,
         includeWarmup: inout State<Bool>,
-        warmupSets: inout State<Int>
+        warmupSets: inout State<Int>,
+        trackingMode: inout State<SetTrackingMode>,
+        durationSeconds: inout State<Int>,
+        paceNote: inout State<String>
     ) {
         guard let sets = initialSets, !sets.isEmpty else {
             targetWeight = State(initialValue: 0)
@@ -138,6 +152,9 @@ struct SetConfigurationSheet: View {
             workSetKind = State(initialValue: .work)
             includeWarmup = State(initialValue: false)
             warmupSets = State(initialValue: 1)
+            trackingMode = State(initialValue: .weight)
+            durationSeconds = State(initialValue: 300)
+            paceNote = State(initialValue: "")
             return
         }
 
@@ -161,6 +178,17 @@ struct SetConfigurationSheet: View {
 
         includeWarmup = State(initialValue: warmupCount > 0)
         warmupSets = State(initialValue: max(warmupCount, 1))
+
+        // Tracking-Modus aus erstem Work-Set ableiten
+        let derivedMode = workSets.first?.trackingMode ?? .weight
+        trackingMode = State(initialValue: derivedMode)
+
+        // Dauer aus erstem zeitbasierten Work-Set, falls vorhanden
+        let firstTimeWork = workSets.first(where: { $0.isTimeBased })
+        durationSeconds = State(initialValue: firstTimeWork?.duration ?? 300)
+
+        // Pace-Notiz aus erstem zeitbasierten Work-Set
+        paceNote = State(initialValue: firstTimeWork?.notes ?? "")
     }
 
     // MARK: - Body
@@ -258,7 +286,16 @@ struct SetConfigurationSheet: View {
                 .font(.title3.bold())
                 .foregroundStyle(.primary)
 
-            // Arbeitssätze
+            // Tracking-Modus: Gewicht oder Zeit
+            Picker("Modus", selection: $trackingMode) {
+                Text(SetTrackingMode.weight.description).tag(SetTrackingMode.weight)
+                Text(SetTrackingMode.time.description).tag(SetTrackingMode.time)
+            }
+            .pickerStyle(.segmented)
+
+            GlassDivider.compact
+
+            // Arbeitssätze — immer sichtbar
             VStack(alignment: .leading, spacing: 8) {
                 Text("Arbeitssätze")
                     .font(.headline)
@@ -299,162 +336,195 @@ struct SetConfigurationSheet: View {
                 .frame(maxWidth: .infinity)
             }
 
-            GlassDivider.compact
+            // Gewichts-Modus: Reps, Gewicht, Aufwärmsätze, Ziel-RIR
+            if trackingMode == .weight {
+                GlassDivider.compact
 
-            // Reps
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Wiederholungen pro Satz")
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-
-                HStack(spacing: 12) {
-                    Button { decreaseReps(by: 1) } label: {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.blue)
-                    }
-                    .simultaneousGesture(
-                        LongPressGesture(minimumDuration: 0.35)
-                            .onEnded { _ in startContinuousAdjustment(field: .reps, increment: false) }
-                    )
-                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
-                        if !pressing { stopContinuousAdjustment() }
-                    }, perform: {})
-
-                    Text("\(targetReps)")
-                        .font(.system(size: 48, weight: .bold, design: .rounded))
-                        .frame(width: 100)
-                        .contentTransition(.numericText())
-
-                    Button { increaseReps(by: 1) } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.blue)
-                    }
-                    .simultaneousGesture(
-                        LongPressGesture(minimumDuration: 0.35)
-                            .onEnded { _ in startContinuousAdjustment(field: .reps, increment: true) }
-                    )
-                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
-                        if !pressing { stopContinuousAdjustment() }
-                    }, perform: {})
-                }
-                .frame(maxWidth: .infinity)
-            }
-
-            GlassDivider.compact
-
-            // Gewicht
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(displayIsUnilateral ? "Gewicht pro Seite (kg)" : "Zielgewicht (kg)")
+                // Reps
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Wiederholungen pro Satz")
                         .font(.headline)
                         .foregroundStyle(.primary)
 
-                    if displayIsUnilateral {
-                        Text("2×")
-                            .font(.caption.bold())
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.orange.opacity(0.2))
-                            .foregroundStyle(Color.orange)
-                            .clipShape(Capsule())
+                    HStack(spacing: 12) {
+                        Button { decreaseReps(by: 1) } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color.blue)
+                        }
+                        .simultaneousGesture(
+                            LongPressGesture(minimumDuration: 0.35)
+                                .onEnded { _ in startContinuousAdjustment(field: .reps, increment: false) }
+                        )
+                        .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                            if !pressing { stopContinuousAdjustment() }
+                        }, perform: {})
+
+                        Text("\(targetReps)")
+                            .font(.system(size: 48, weight: .bold, design: .rounded))
+                            .frame(width: 100)
+                            .contentTransition(.numericText())
+
+                        Button { increaseReps(by: 1) } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color.blue)
+                        }
+                        .simultaneousGesture(
+                            LongPressGesture(minimumDuration: 0.35)
+                                .onEnded { _ in startContinuousAdjustment(field: .reps, increment: true) }
+                        )
+                        .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                            if !pressing { stopContinuousAdjustment() }
+                        }, perform: {})
                     }
+                    .frame(maxWidth: .infinity)
                 }
 
-                HStack(spacing: 12) {
-                    Button { decreaseWeight(by: 0.25) } label: {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.blue)
-                    }
-                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
-                        if pressing { startAutoRepeatWeight(increment: false) }
-                        else { stopContinuousAdjustment() }
-                    }, perform: {})
+                GlassDivider.compact
 
-                    if displayIsUnilateral && targetWeight > 0 {
-                        HStack(spacing: 6) {
-                            Text("2 ×")
-                                .font(.title2)
+                // Gewicht
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text(displayIsUnilateral ? "Gewicht pro Seite (kg)" : "Zielgewicht (kg)")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+
+                        if displayIsUnilateral {
+                            Text("2×")
+                                .font(.caption.bold())
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.orange.opacity(0.2))
                                 .foregroundStyle(Color.orange)
-                            Text(String(format: "%.2f", targetWeight))
-                                .font(.system(size: 48, weight: .bold, design: .rounded))
+                                .clipShape(Capsule())
                         }
-                        .frame(width: 150)
-                        .contentTransition(.numericText())
-                    } else {
-                        Text(targetWeight > 0 ? String(format: "%.2f", targetWeight) : "–")
-                            .font(.system(size: 48, weight: .bold, design: .rounded))
+                    }
+
+                    HStack(spacing: 12) {
+                        Button { decreaseWeight(by: 0.25) } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color.blue)
+                        }
+                        .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                            if pressing { startAutoRepeatWeight(increment: false) }
+                            else { stopContinuousAdjustment() }
+                        }, perform: {})
+
+                        if displayIsUnilateral && targetWeight > 0 {
+                            HStack(spacing: 6) {
+                                Text("2 ×")
+                                    .font(.title2)
+                                    .foregroundStyle(Color.orange)
+                                Text(String(format: "%.2f", targetWeight))
+                                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                            }
                             .frame(width: 150)
                             .contentTransition(.numericText())
-                    }
+                        } else {
+                            Text(targetWeight > 0 ? String(format: "%.2f", targetWeight) : "–")
+                                .font(.system(size: 48, weight: .bold, design: .rounded))
+                                .frame(width: 150)
+                                .contentTransition(.numericText())
+                        }
 
-                    Button { increaseWeight(by: 0.25) } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.blue)
+                        Button { increaseWeight(by: 0.25) } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color.blue)
+                        }
+                        .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
+                            if pressing { startAutoRepeatWeight(increment: true) }
+                            else { stopContinuousAdjustment() }
+                        }, perform: {})
                     }
-                    .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
-                        if pressing { startAutoRepeatWeight(increment: true) }
-                        else { stopContinuousAdjustment() }
-                    }, perform: {})
-                }
-                .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity)
 
-                if displayIsUnilateral {
-                    if targetWeight > 0 {
-                        Text("Gesamt: \(String(format: "%.2f", targetWeight * 2)) kg (beide Seiten)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                    if displayIsUnilateral {
+                        if targetWeight > 0 {
+                            Text("Gesamt: \(String(format: "%.2f", targetWeight * 2)) kg (beide Seiten)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("Gewicht einer Kurzhantel/Seite eingeben")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     } else {
-                        Text("Gewicht einer Kurzhantel/Seite eingeben")
+                        Text("0 = Körpergewicht oder später festlegen")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                } else {
-                    Text("0 = Körpergewicht oder später festlegen")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                }
+
+                GlassDivider.compact
+
+                Toggle(isOn: $includeWarmup) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Aufwärmsätze hinzufügen")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                        Text("Leichtere Sätze vor den Arbeitssätzen")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .tint(Color.blue)
+
+                if includeWarmup {
+                    HStack {
+                        Text("Anzahl Aufwärmsätze")
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Picker("", selection: $warmupSets) {
+                            ForEach(1...3, id: \.self) { num in
+                                Text("\(num)").tag(num)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(width: 150)
+                    }
                 }
             }
 
-            GlassDivider.compact
+            // Zeit-Modus: Übungsdauer + Pace-Notiz
+            if trackingMode == .time {
+                GlassDivider.compact
 
-            Toggle(isOn: $includeWarmup) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Aufwärmsätze hinzufügen")
+                SetDurationSection(durationSeconds: $durationSeconds)
+
+                GlassDivider.compact
+
+                // Pace-Notizfeld (Freitext, z. B. „2:50/500m, 8 km/h …")
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Pace / Geschwindigkeit")
                         .font(.headline)
                         .foregroundStyle(.primary)
-                    Text("Leichtere Sätze vor den Arbeitssätzen")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .tint(Color.blue)
 
-            if includeWarmup {
-                HStack {
-                    Text("Anzahl Aufwärmsätze")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Picker("", selection: $warmupSets) {
-                        ForEach(1...3, id: \.self) { num in
-                            Text("\(num)").tag(num)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .frame(width: 150)
+                    TextField("z. B. 2:50/500m, 8 km/h …", text: $paceNote, axis: .vertical)
+                        .lineLimit(2...4)
+                        .textFieldStyle(.plain)
+                        .padding(12)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        )
                 }
             }
 
             GlassDivider.compact
 
+            // Pausenzeit — immer sichtbar
             SetRestTimeSection(restSeconds: $restSeconds)
 
-            GlassDivider.compact
+            // Ziel-RIR — nur im Gewichts-Modus
+            if trackingMode == .weight {
+                GlassDivider.compact
 
-            SetTargetRIRSection(targetRIR: $targetRIR)
+                SetTargetRIRSection(targetRIR: $targetRIR)
+            }
         }
         .glassCard()
     }
@@ -465,57 +535,82 @@ struct SetConfigurationSheet: View {
                 .font(.title3.bold())
                 .foregroundStyle(.primary)
 
-            VStack(spacing: 8) {
-                if includeWarmup {
-                    ForEach(1...warmupSets, id: \.self) { setNum in
+            if trackingMode == .weight {
+                // Gewichts-Modus: Standard-Vorschau mit Reps × Gewicht
+                VStack(spacing: 8) {
+                    if includeWarmup {
+                        ForEach(1...warmupSets, id: \.self) { setNum in
+                            SetPreviewRow(
+                                setNumber: setNum,
+                                reps: targetReps,
+                                weight: calculateWarmupWeight(setNum),
+                                setKind: .warmup,
+                                restSeconds: 60,
+                                targetRIR: 4,
+                                isUnilateral: displayIsUnilateral
+                            )
+                        }
+                    }
+
+                    ForEach(1...numberOfSets, id: \.self) { setNum in
                         SetPreviewRow(
-                            setNumber: setNum,
+                            setNumber: (includeWarmup ? warmupSets : 0) + setNum,
                             reps: targetReps,
-                            weight: calculateWarmupWeight(setNum),
-                            setKind: .warmup,
-                            restSeconds: 60,
-                            targetRIR: 4,
+                            weight: targetWeight,
+                            setKind: workSetKind,
+                            restSeconds: restSeconds,
+                            targetRIR: targetRIR,
                             isUnilateral: displayIsUnilateral
                         )
                     }
                 }
 
-                ForEach(1...numberOfSets, id: \.self) { setNum in
-                    SetPreviewRow(
-                        setNumber: (includeWarmup ? warmupSets : 0) + setNum,
-                        reps: targetReps,
-                        weight: targetWeight,
-                        setKind: workSetKind,
-                        restSeconds: restSeconds,
-                        targetRIR: targetRIR,
-                        isUnilateral: displayIsUnilateral
-                    )
-                }
-            }
-
-            VStack(spacing: 8) {
-                HStack {
-                    Label("\(totalSetsCount) Sätze", systemImage: "number.circle.fill")
-                    Spacer()
-                    Label("\(totalSetsCount * targetReps) Wdh. gesamt", systemImage: "repeat.circle.fill")
-                }
-
-                HStack {
-                    Label(formatRestTime(restSeconds), systemImage: "timer")
-                    Spacer()
-                    Label("RIR \(targetRIR)", systemImage: "flame.fill")
-                }
-
-                if displayIsUnilateral && targetWeight > 0 {
+                VStack(spacing: 8) {
                     HStack {
-                        Label("Gesamtgewicht: \(String(format: "%.1f", targetWeight * 2)) kg", systemImage: "scalemass.fill")
-                            .foregroundStyle(Color.orange)
+                        Label("\(totalSetsCount) Sätze", systemImage: "number.circle.fill")
                         Spacer()
+                        Label("\(totalSetsCount * targetReps) Wdh. gesamt", systemImage: "repeat.circle.fill")
+                    }
+
+                    HStack {
+                        Label(formatRestTime(restSeconds), systemImage: "timer")
+                        Spacer()
+                        Label("RIR \(targetRIR)", systemImage: "flame.fill")
+                    }
+
+                    if displayIsUnilateral && targetWeight > 0 {
+                        HStack {
+                            Label("Gesamtgewicht: \(String(format: "%.1f", targetWeight * 2)) kg", systemImage: "scalemass.fill")
+                                .foregroundStyle(Color.orange)
+                            Spacer()
+                        }
                     }
                 }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            } else {
+                // Zeit-Modus: Sätze × Dauer-Anzeige
+                VStack(spacing: 8) {
+                    ForEach(1...numberOfSets, id: \.self) { setNum in
+                        TimeSetPreviewRow(
+                            setNumber: setNum,
+                            durationSeconds: durationSeconds,
+                            restSeconds: restSeconds,
+                            paceNote: paceNote
+                        )
+                    }
+                }
+
+                VStack(spacing: 8) {
+                    HStack {
+                        Label("\(numberOfSets) Sätze", systemImage: "number.circle.fill")
+                        Spacer()
+                        Label(formatRestTime(restSeconds), systemImage: "timer")
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
         }
         .glassCard()
     }
@@ -586,47 +681,62 @@ struct SetConfigurationSheet: View {
         var sets: [ExerciseSet] = []
         var setNumber = 1
 
-        if includeWarmup {
-            for i in 1...warmupSets {
-                let warmupWeight = calculateWarmupWeight(i)
+        if trackingMode == .time {
+            // Zeit-Zweig: N Work-Sets mit duration, weight=0, reps=0
+            for _ in 1...numberOfSets {
+                let set = makeSet(setNumber: setNumber, weight: 0, reps: 0)
+                set.duration = durationSeconds
+                set.setKind = .work
+                set.restSeconds = restSeconds
+                set.trackingMode = .time
+                set.notes = paceNote
+                sets.append(set)
+                setNumber += 1
+            }
+        } else {
+            // Gewichts-Zweig — byte-identisch mit ursprünglichem Code
+            if includeWarmup {
+                for i in 1...warmupSets {
+                    let warmupWeight = calculateWarmupWeight(i)
 
+                    let set = makeSet(
+                        setNumber: setNumber,
+                        weight: displayIsUnilateral ? warmupWeight * 2 : warmupWeight,
+                        reps: targetReps
+                    )
+
+                    if displayIsUnilateral { set.weightPerSide = warmupWeight }
+
+                    set.setKind = .warmup
+                    set.restSeconds = 60
+                    set.targetRIR = 4
+
+                    sets.append(set)
+                    setNumber += 1
+                }
+            }
+
+            for _ in 1...numberOfSets {
                 let set = makeSet(
                     setNumber: setNumber,
-                    weight: displayIsUnilateral ? warmupWeight * 2 : warmupWeight,
+                    weight: displayIsUnilateral ? targetWeight * 2 : targetWeight,
                     reps: targetReps
                 )
 
-                if displayIsUnilateral { set.weightPerSide = warmupWeight }
+                if displayIsUnilateral { set.weightPerSide = targetWeight }
 
-                set.setKind = .warmup
-                set.restSeconds = 60
-                set.targetRIR = 4
+                set.setKind = workSetKind
+                set.restSeconds = restSeconds
+                set.targetRIR = targetRIR
 
                 sets.append(set)
                 setNumber += 1
             }
-        }
 
-        for _ in 1...numberOfSets {
-            let set = makeSet(
-                setNumber: setNumber,
-                weight: displayIsUnilateral ? targetWeight * 2 : targetWeight,
-                reps: targetReps
-            )
-
-            if displayIsUnilateral { set.weightPerSide = targetWeight }
-
-            set.setKind = workSetKind
-            set.restSeconds = restSeconds
-            set.targetRIR = targetRIR
-
-            sets.append(set)
-            setNumber += 1
-        }
-
-        // targetRIR auf Exercise schreiben
-        if let ex = exercise {
-            ex.targetRIR = targetRIR
+            // targetRIR auf Exercise schreiben
+            if let ex = exercise {
+                ex.targetRIR = targetRIR
+            }
         }
 
         onSave(sets)
@@ -707,6 +817,62 @@ struct SetConfigurationSheet: View {
     private func hapticFeedback() {
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
+    }
+}
+
+// MARK: - Time Set Preview Row
+private struct TimeSetPreviewRow: View {
+    let setNumber: Int
+    let durationSeconds: Int
+    let restSeconds: Int
+    let paceNote: String
+
+    var body: some View {
+        HStack {
+            HStack(spacing: 6) {
+                Text("A")
+                    .font(.caption.bold())
+                    .frame(width: 20, height: 20)
+                    .background(SetKind.work.color.opacity(0.2))
+                    .foregroundStyle(SetKind.work.color)
+                    .clipShape(Circle())
+
+                Text("Satz \(setNumber)")
+                    .font(.subheadline)
+            }
+
+            Spacer()
+
+            HStack(spacing: 4) {
+                Image(systemName: "stopwatch")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Text(formatDuration(durationSeconds))
+                    .font(.subheadline.bold())
+                    .monospacedDigit()
+            }
+
+            if !paceNote.isEmpty {
+                Text(paceNote)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .padding(.leading, 4)
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(SetKind.work.color.opacity(0.1))
+        )
+    }
+
+    private func formatDuration(_ seconds: Int) -> String {
+        let mins = seconds / 60
+        let secs = seconds % 60
+        return String(format: "%d:%02d Min", mins, secs)
     }
 }
 
