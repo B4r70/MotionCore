@@ -23,6 +23,11 @@ struct ActiveTimeSetContent: View {
     @ObservedObject var countdown: ExerciseCountdownManager
     let onComplete: (ExerciseSet) -> Void
 
+    /// Abschließen nur wenn pausiert oder abgelaufen — nicht im Idle und nicht bei laufendem Countdown
+    private var canComplete: Bool {
+        countdown.isPaused || countdown.isFinished
+    }
+
     var body: some View {
         Group {
             // Ring + Mono-Ziffern — Countdown-State für Label und Farblogik übergeben
@@ -62,13 +67,11 @@ struct ActiveTimeSetContent: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(
-                    (countdown.isRunning && !countdown.isPaused && !countdown.isFinished)
-                        ? Color.green.opacity(0.4)
-                        : Color.green,
+                    canComplete ? Color.green : Color.green.opacity(0.4),
                     in: RoundedRectangle(cornerRadius: 16)
                 )
             }
-            .disabled(countdown.isRunning && !countdown.isPaused && !countdown.isFinished)
+            .disabled(!canComplete)
         }
     }
 

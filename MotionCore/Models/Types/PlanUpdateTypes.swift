@@ -32,6 +32,8 @@ struct ExerciseSetSnapshot: Codable {
     var sortOrder: Int
     var groupId: String
     var supersetGroupId: String?
+    var trackingMode: SetTrackingMode = .weight
+    var duration: Int = 0
 }
 
 // MARK: - Plan-Update Änderungstyp

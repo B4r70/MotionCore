@@ -175,8 +175,10 @@ final class SetManager {
             return
         }
 
-        // Rest-Timer starten
-        restShouldStart.send(set.restSeconds)
+        // Rest-Timer nur für Weight-Sätze — Time-Sätze haben implizite Pause
+        if !set.isTimeBased {
+            restShouldStart.send(set.restSeconds)
+        }
 
         // RIR-Sheet beim letzten Work-Set
         if set.isLastSetOfExercise {

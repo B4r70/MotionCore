@@ -118,8 +118,8 @@ final class ActiveWorkoutSmartFillViewModel {
         // Suggestion-Flag räumen — Satz abgeschlossen, Suggestion nicht mehr aktiv
         suggestionFlags[completedSet.setUUID.uuidString] = false
 
-        // Lazy-State-Creation: nur für Work-Sets und nur wenn Exercise bekannt
-        guard let exercise, completedSet.setKindRaw == "work" else { return }
+        // Lazy-State-Creation: nur für Weight-Work-Sets und nur wenn Exercise bekannt
+        guard let exercise, completedSet.setKindRaw == "work", !completedSet.isTimeBased else { return }
         repository.createIfMissing(
             exerciseGroupKey: completedSet.groupKey,
             workingWeight: completedSet.weight,

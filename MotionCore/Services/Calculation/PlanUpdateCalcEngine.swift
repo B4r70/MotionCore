@@ -262,7 +262,9 @@ struct PlanUpdateCalcEngine {
                         restSeconds: set.restSeconds,
                         sortOrder: set.sortOrder,
                         groupId: set.groupId,
-                        supersetGroupId: set.supersetGroupId
+                        supersetGroupId: set.supersetGroupId,
+                        trackingMode: set.trackingMode,
+                        duration: set.duration
                     )
                 }
 

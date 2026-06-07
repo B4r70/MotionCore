@@ -126,8 +126,8 @@ struct WatchActiveWorkoutView: View {
             .minimumScaleFactor(0.7)
             .frame(maxWidth: .infinity, alignment: .leading)
 
-        // Countdown via Date-Anker — kein sekündlicher Sync nötig, kein Aufwärtszählen nach Ablauf
-        Text(timerInterval: Date()...endDate, countsDown: true)
+        // Countdown via Date-Anker — max() verhindert Crash bei verspäteter WCSession-Nachricht
+        Text(timerInterval: Date()...max(Date().addingTimeInterval(1), endDate), countsDown: true)
             .font(.system(.title2, design: .monospaced).bold())
             .foregroundStyle(Color.green)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -150,8 +150,8 @@ struct WatchActiveWorkoutView: View {
             .foregroundStyle(Color.orange)
             .frame(maxWidth: .infinity, alignment: .leading)
 
-        // Countdown via Date-Anchor — kein sekündlicher Sync nötig, kein Aufwärtszählen nach Ablauf
-        Text(timerInterval: Date()...endDate, countsDown: true)
+        // max() verhindert Crash bei verspäteter WCSession-Nachricht
+        Text(timerInterval: Date()...max(Date().addingTimeInterval(1), endDate), countsDown: true)
             .font(.system(.title2, design: .monospaced).bold())
             .foregroundStyle(Color.orange)
             .frame(maxWidth: .infinity, alignment: .leading)

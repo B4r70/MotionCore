@@ -271,7 +271,8 @@ struct SetEditSheet: View {
             isUnilateralSnapshot: set.isUnilateralSnapshot, setNumber: nextSetNumber,
             weight: set.weight, weightPerSide: set.weightPerSide, reps: set.reps,
             duration: set.duration, distance: set.distance, restSeconds: set.restSeconds,
-            setKind: .work, isCompleted: false, rpe: 0, notes: "",
+            setKind: .work, trackingMode: set.trackingMode,
+            isCompleted: false, rpe: 0, notes: "",
             targetRepsMin: set.targetRepsMin, targetRepsMax: set.targetRepsMax,
             targetRIR: set.targetRIR, groupId: set.groupId, sortOrder: set.sortOrder
         )

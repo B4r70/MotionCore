@@ -58,7 +58,9 @@ struct SessionSyncUndoService {
                     restSeconds: set.restSeconds,
                     sortOrder: set.sortOrder,
                     groupId: set.groupId,
-                    supersetGroupId: set.supersetGroupId
+                    supersetGroupId: set.supersetGroupId,
+                    trackingMode: set.trackingMode,
+                    duration: set.duration
                 )
             }
 
@@ -120,8 +122,10 @@ struct SessionSyncUndoService {
                 weight: snapshot.weight,
                 weightPerSide: snapshot.weightPerSide,
                 reps: snapshot.reps,
+                duration: snapshot.duration,
                 restSeconds: snapshot.restSeconds,
                 setKind: snapshot.setKind,
+                trackingMode: snapshot.trackingMode,
                 isCompleted: false,
                 targetRepsMin: snapshot.targetRepsMin,
                 targetRepsMax: snapshot.targetRepsMax,

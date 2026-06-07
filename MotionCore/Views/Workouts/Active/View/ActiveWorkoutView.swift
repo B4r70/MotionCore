@@ -298,7 +298,7 @@ struct ActiveWorkoutView: View {
             }
             .onChange(of: exerciseCountdownManager.isRunning) { _, _ in
                 // Countdown gestartet oder gestoppt → LiveActivity und Watch sofort aktualisieren
-                liveActivity.syncDebounced(saveResume: nil)
+                liveActivity.syncDebounced(saveResume: saveResumeState)
                 watchBridge.sendState()
             }
             .onChange(of: session.safeExerciseSets.count) { _, _ in
