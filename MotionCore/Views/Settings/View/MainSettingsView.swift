@@ -154,6 +154,7 @@ struct MainSettingsView: View {
             // MARK: - Debug — Readiness (nur im DEBUG-Build)
             #if DEBUG
             DebugReadinessSection(baselines: allBaselines)
+            DebugMuscleFatigueSection()
             #endif
 
             // MARK: - App Information

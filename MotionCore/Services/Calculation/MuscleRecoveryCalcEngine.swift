@@ -31,6 +31,17 @@ struct MuscleRecoveryCalcEngine {
     /// Halbwertszeit des exponentiellen Decays in Tagen
     static let decayHalfLifeDays: Double = 7.0
 
+    /// Sättigungsgrenze der akkumulierten Fatigue, ab der der Erholungs-Startpunkt ~0% beträgt.
+    /// Domain-korrigierter Startwert (8.0 statt Konzept-4.0); Kalibrierung folgt nach realen Sessions.
+    static let fatigueSaturation: Double = 8.0
+
+    /// Volumen-Sättigungsparameter für die exponentielle Normalisierungskurve (kg·Reps).
+    static let volumeSaturation: Double = 600.0
+
+    /// Lasthebelfaktor für Körpergewicht-Übungen (weight = 0).
+    /// 0.50 als Erwartungswert über das BW-Übungs-Spektrum (Konzept-korrigiert von 0.35).
+    static let bodyweightLeverage: Double = 0.50
+
     // MARK: - Ausgabe-Reihenfolge
 
     /// Feste Anzeigereihenfolge der Muskelgruppen
@@ -109,7 +120,12 @@ struct MuscleRecoveryCalcEngine {
             let hoursSince = now.timeIntervalSince(lastTrained) / 3600.0
             let baseHours = baseRecoveryHours[muscle.parentGroup] ?? 48.0
             let adjusted = baseHours * fatigueMultiplier(totalFatigue)
-            let recoveryPercent = min(100.0, (hoursSince / adjusted) * 100.0)
+
+            // Fatigue bestimmt den Tiefpunkt (Startdefizit); Zeit füllt ihn auf
+            let initialDeficit = min(totalFatigue / Self.fatigueSaturation, 1.0)
+            let timeRecovered = min(1.0, hoursSince / adjusted)
+            let recoveryFraction = (1.0 - initialDeficit) + initialDeficit * timeRecovered
+            let recoveryPercent = min(100.0, recoveryFraction * 100.0)
 
             detailedScores.append(DetailedMuscleRecovery(
                 id: muscle.rawValue,
@@ -225,16 +241,16 @@ struct MuscleRecoveryCalcEngine {
         return max(0.5, min(1.5, 1.5 - Double(rir) * 0.25))
     }
 
-    /// Normalisiertes Volumen eines Satzes (0.0–1.0)
+    /// Normalisiertes Volumen eines Satzes (0.0–1.0, Sättigungskurve)
     private static func normalizedVolume(
         weight: Double,
         reps: Int,
         sessionBodyWeight: Double
     ) -> Double {
-        // Körpergewicht als Fallback für Bodyweight-Übungen
-        let effectiveWeight = weight > 0 ? weight : (sessionBodyWeight > 0 ? sessionBodyWeight : 70.0)
+        // Körpergewicht-Fallback mit Lasthebel für Bodyweight-Übungen
+        let effectiveWeight = weight > 0 ? weight : (sessionBodyWeight > 0 ? sessionBodyWeight : 70.0) * bodyweightLeverage
         let raw = effectiveWeight * Double(reps)
-        return min(1.0, raw / 500.0)
+        return 1.0 - exp(-raw / Self.volumeSaturation)
     }
 
     /// Erholungszeitverlängerung basierend auf akkumulierter Fatigue (0.8–1.5)
