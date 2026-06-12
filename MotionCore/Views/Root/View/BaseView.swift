@@ -65,24 +65,7 @@ struct BaseView: View {
     @Query(filter: #Predicate<StrengthSession> { $0.isCompleted }, sort: \StrengthSession.date, order: .reverse)
     private var completedSessionsForWidget: [StrengthSession]
 
-    // MARK: Vorabeinstellungen Farbgebung Tabbar
     init() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground()
-
-        appearance.stackedLayoutAppearance.selected.iconColor = .systemBlue
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor.systemBlue,
-        ]
-
-        appearance.stackedLayoutAppearance.normal.iconColor = .systemGray
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: UIColor.systemGray,
-        ]
-
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-
         // MARK: Navigation-Bar-Blur beim Scrollen
         // Ohne Blur-Background schiebt sich Karteninhalt beim Scrollen unscharf
         // hinter den (custom) HeaderView und kollidiert mit dem Titeltext.
@@ -230,6 +213,9 @@ struct BaseView: View {
             }
             .tag(Tab.training)
         }
+        // Selektierte Tab-Farbe wie zuvor (systemBlue), ohne UIKit-Appearance-Proxy —
+        // der zwingt seit iOS 26 den Legacy-Rendering-Pfad und kollidiert mit Liquid Glass.
+        .tint(.blue)
         // MARK: - Sheets
 
         // Workout-Typ Auswahl
