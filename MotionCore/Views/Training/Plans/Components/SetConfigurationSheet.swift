@@ -50,21 +50,7 @@ struct SetConfigurationSheet: View {
         self.onSave = onSave
 
         // NEU: gemeinsame Initialisierung der @State Werte
-        Self.bootstrapState(
-            initialSets: initialSets,
-            isUnilateral: exercise.isUnilateral,
-            numberOfSets: &_numberOfSets,
-            targetReps: &_targetReps,
-            targetWeight: &_targetWeight,
-            restSeconds: &_restSeconds,
-            targetRIR: &_targetRIR,
-            workSetKind: &_workSetKind,
-            includeWarmup: &_includeWarmup,
-            warmupSets: &_warmupSets,
-            trackingMode: &_trackingMode,
-            durationSeconds: &_durationSeconds,
-            paceNote: &_paceNote
-        )
+        bootstrapState(initialSets: initialSets, isUnilateral: exercise.isUnilateral)
 
         // targetRIR: falls keine initialSets vorhanden, exercise.targetRIR als Default
         if initialSets == nil || initialSets!.isEmpty {
@@ -90,21 +76,7 @@ struct SetConfigurationSheet: View {
         self.onSave = onSave
 
         // NEU: gemeinsame Initialisierung der @State Werte
-        Self.bootstrapState(
-            initialSets: initialSets,
-            isUnilateral: isUnilateral,
-            numberOfSets: &_numberOfSets,
-            targetReps: &_targetReps,
-            targetWeight: &_targetWeight,
-            restSeconds: &_restSeconds,
-            targetRIR: &_targetRIR,
-            workSetKind: &_workSetKind,
-            includeWarmup: &_includeWarmup,
-            warmupSets: &_warmupSets,
-            trackingMode: &_trackingMode,
-            durationSeconds: &_durationSeconds,
-            paceNote: &_paceNote
-        )
+        bootstrapState(initialSets: initialSets, isUnilateral: isUnilateral)
     }
 
     // MARK: - State
@@ -128,67 +100,55 @@ struct SetConfigurationSheet: View {
     enum FocusedField { case sets, reps, weight }
 
     // MARK: - Bootstrap Helper (initialSets -> @State)
-    private static func bootstrapState(
-        initialSets: [ExerciseSet]?,
-        isUnilateral: Bool,
-        numberOfSets: inout State<Int>,
-        targetReps: inout State<Int>,
-        targetWeight: inout State<Double>,
-        restSeconds: inout State<Int>,
-        targetRIR: inout State<Int>,
-        workSetKind: inout State<SetKind>,
-        includeWarmup: inout State<Bool>,
-        warmupSets: inout State<Int>,
-        trackingMode: inout State<SetTrackingMode>,
-        durationSeconds: inout State<Int>,
-        paceNote: inout State<String>
-    ) {
+    // Mutating statt inout-Parameter: zwölf gleichzeitige inout-Borrows auf
+    // self verletzen die Exclusivity-Regel (Compiler-Error ab Xcode 27 Beta).
+    private mutating func bootstrapState(initialSets: [ExerciseSet]?, isUnilateral: Bool) {
         guard let sets = initialSets, !sets.isEmpty else {
-            targetWeight = State(initialValue: 0)
-            numberOfSets = State(initialValue: 3)
-            targetReps = State(initialValue: 10)
-            restSeconds = State(initialValue: 90)
-            targetRIR = State(initialValue: 2)
-            workSetKind = State(initialValue: .work)
-            includeWarmup = State(initialValue: false)
-            warmupSets = State(initialValue: 1)
-            trackingMode = State(initialValue: .weight)
-            durationSeconds = State(initialValue: 300)
-            paceNote = State(initialValue: "")
+            _targetWeight = State(initialValue: 0)
+            _numberOfSets = State(initialValue: 3)
+            _targetReps = State(initialValue: 10)
+            _restSeconds = State(initialValue: 90)
+            _targetRIR = State(initialValue: 2)
+            _workSetKind = State(initialValue: .work)
+            _includeWarmup = State(initialValue: false)
+            _warmupSets = State(initialValue: 1)
+            _trackingMode = State(initialValue: .weight)
+            _durationSeconds = State(initialValue: 300)
+            _paceNote = State(initialValue: "")
             return
         }
 
         let workSets = sets.filter { $0.setKind == .work }
         let warmupCount = sets.filter { $0.setKind == .warmup }.count
 
-        numberOfSets = State(initialValue: max(workSets.count, 1))
-        targetReps = State(initialValue: workSets.first?.reps ?? 10)
+        _numberOfSets = State(initialValue: max(workSets.count, 1))
+        _targetReps = State(initialValue: workSets.first?.reps ?? 10)
 
         let firstWork = workSets.first
         // Hinweis: weightPerSide ist bei dir Double (nicht optional)
         if isUnilateral, (firstWork?.weightPerSide ?? 0) > 0 {
-            targetWeight = State(initialValue: firstWork?.weightPerSide ?? 0)
+            _targetWeight = State(initialValue: firstWork?.weightPerSide ?? 0)
         } else {
-            targetWeight = State(initialValue: firstWork?.weight ?? 0)
+            _targetWeight = State(initialValue: firstWork?.weight ?? 0)
         }
 
-        restSeconds = State(initialValue: firstWork?.restSeconds ?? 90)
-        targetRIR = State(initialValue: firstWork?.targetRIR ?? 2)
-        workSetKind = State(initialValue: firstWork?.setKind ?? .work)
+        _restSeconds = State(initialValue: firstWork?.restSeconds ?? 90)
+        _targetRIR = State(initialValue: firstWork?.targetRIR ?? 2)
+        _workSetKind = State(initialValue: firstWork?.setKind ?? .work)
 
-        includeWarmup = State(initialValue: warmupCount > 0)
-        warmupSets = State(initialValue: max(warmupCount, 1))
+        _includeWarmup = State(initialValue: warmupCount > 0)
+        _warmupSets = State(initialValue: max(warmupCount, 1))
 
         // Tracking-Modus aus erstem Work-Set ableiten
         let derivedMode = workSets.first?.trackingMode ?? .weight
-        trackingMode = State(initialValue: derivedMode)
+        _trackingMode = State(initialValue: derivedMode)
 
         // Dauer aus erstem zeitbasierten Work-Set, falls vorhanden
         let firstTimeWork = workSets.first(where: { $0.isTimeBased })
-        durationSeconds = State(initialValue: firstTimeWork?.duration ?? 300)
+        _durationSeconds = State(initialValue: firstTimeWork?.duration ?? 300)
 
         // Pace-Notiz aus erstem zeitbasierten Work-Set
-        paceNote = State(initialValue: firstTimeWork?.notes ?? "")
+        _paceNote = State(initialValue: firstTimeWork?.notes ?? "")
     }
 
     // MARK: - Body
