@@ -130,12 +130,31 @@ final class HealthBaselineUpdateService {
 
     private func fetchOrCreate(_ type: HealthMetricType) -> HealthBaseline {
         let raw = type.rawValue
-        if let existing = (try? context.fetch(FetchDescriptor<HealthBaseline>()))?.first(where: { $0.metricTypeRaw == raw }) {
-            return existing
+        let matches = ((try? context.fetch(FetchDescriptor<HealthBaseline>())) ?? [])
+            .filter { $0.metricTypeRaw == raw }
+
+        if matches.isEmpty {
+            let baseline = HealthBaseline(metricType: type)
+            context.insert(baseline)
+            return baseline
         }
-        let baseline = HealthBaseline(metricType: type)
-        context.insert(baseline)
-        return baseline
+
+        // Tie-Break: kleinste id (UUID-String, alphabetisch) behalten — CloudKit-konvergent
+        let sorted = matches.sorted { $0.id.uuidString < $1.id.uuidString }
+        let keeper = sorted[0]
+        for duplicate in sorted.dropFirst() {
+            context.delete(duplicate)
+        }
+        return keeper
+    }
+
+    /// Bereinigt alle Duplikate für alle HealthMetricType-Fälle einmalig.
+    /// Tie-Break: kleinste id (UUID-String) behalten. Muss vor forceUpdate aufgerufen werden.
+    func consolidateDuplicateBaselines() {
+        for type in HealthMetricType.allCases {
+            _ = fetchOrCreate(type)
+        }
+        try? context.save()
     }
 
     private func statistics(_ values: [Double]) -> (mean: Double, stdDev: Double) {

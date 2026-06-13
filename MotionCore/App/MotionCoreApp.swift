@@ -115,6 +115,8 @@ struct MotionCoreApp: App {
                     DefaultStudioSeeder.seedIfNeeded(context: context)
                     // 4. ExerciseProgressionStates für alle Bestandspläne sicherstellen (Backfill für alte Imports)
                     backfillProgressionStates(context: context)
+                    // 5. Readiness-Baseline-Migration v1: Dedup + HRV/RHR-Fenster-Neukalibrierung (einmalig)
+                    await runReadinessMigrationV1IfNeeded(context: context)
                 }
                 .onChange(of: scenePhase) { _, newPhase in
                     guard newPhase == .active else { return }
@@ -172,4 +174,24 @@ struct MotionCoreApp: App {
         )
         pendingRestoreInfo = nil
     }
+
+    /// Flag-guarded Einmal-Migration: Baseline-Duplikate bereinigen + HRV/RHR-Baselines
+    /// auf 00:00–10:00-Fenster neukalibrieren. Beides unter einem Flag.
+    @MainActor
+    private func runReadinessMigrationV1IfNeeded(context: ModelContext) async {
+        let flagKey = "readinessWindowMigrationV1Done"
+        guard !UserDefaults.standard.bool(forKey: flagKey) else { return }
+
+        let service = HealthBaselineUpdateService(healthKit: .shared, context: context)
+        let takesCardioMedication = AppSettings.shared.takesCardioMedication
+
+        // 1. Duplikate zuerst bereinigen (saubere Basis für forceUpdate)
+        service.consolidateDuplicateBaselines()
+
+        // 2. Baselines mit neuer Fenster-Logik neukalibrieren (forceUpdate umgeht today-Check)
+        await service.forceUpdate(takesCardioMedication: takesCardioMedication)
+
+        UserDefaults.standard.set(true, forKey: flagKey)
+    }
+
 }
