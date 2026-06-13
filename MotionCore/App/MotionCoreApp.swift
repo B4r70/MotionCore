@@ -120,6 +120,8 @@ struct MotionCoreApp: App {
                 }
                 .onChange(of: scenePhase) { _, newPhase in
                     guard newPhase == .active else { return }
+                    // Migration-Task übernimmt das initiale forceUpdate — erst danach normal updaten
+                    guard UserDefaults.standard.bool(forKey: "readinessWindowMigrationV1Done") else { return }
                     let context = sharedModelContainer.mainContext
                     let takesCardioMedication = appSettings.takesCardioMedication
                     Task {
