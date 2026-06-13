@@ -48,11 +48,12 @@ final class HealthBaselineUpdateService {
         _ = await healthKit.requestAuthorization()
         let windowDays = takesCardioMedication ? 42 : 28
 
-        await updateMetric(.hrv) {
-            try await self.healthKit.hrvSamples(daysBack: windowDays)
+        // HRV und RHR: Tagesmittel 00:00–10:00 Ortszeit — identische Fenster-Logik wie Messwert
+        await updateWindowedMetric(.hrv, windowDays: windowDays) { date in
+            try await self.healthKit.windowedHRV(forDate: date)
         }
-        await updateMetric(.restingHR) {
-            try await self.healthKit.restingHRSamples(daysBack: windowDays)
+        await updateWindowedMetric(.restingHR, windowDays: windowDays) { date in
+            try await self.healthKit.windowedRestingHR(forDate: date)
         }
         await updateMetric(.activity) {
             // Aktive Energie: Tagessummen über windowDays aufsammeln
@@ -80,6 +81,31 @@ final class HealthBaselineUpdateService {
         baseline.rollingMean = mean
         baseline.rollingStdDev = stdDev
         baseline.sampleCount = arr.count
+        baseline.lastUpdated = Date()
+    }
+
+    /// Berechnet Baseline aus tagesweise gefensterten Werten (ein Wert pro Tag über windowDays Tage).
+    /// Stellt sicher dass Messwert-Fenster und Baseline-Fenster identisch sind.
+    private func updateWindowedMetric(
+        _ type: HealthMetricType,
+        windowDays: Int,
+        fetchDay: (Date) async throws -> Double?
+    ) async {
+        let cal = Calendar.current
+        var values: [Double] = []
+        for offset in 1...windowDays {
+            guard let day = cal.date(byAdding: .day, value: -offset, to: cal.startOfDay(for: Date())) else { continue }
+            if let value = try? await fetchDay(day) {
+                values.append(value)
+            }
+        }
+        guard !values.isEmpty else { return }
+        let (mean, stdDev) = statistics(values)
+        guard mean.isFinite, stdDev.isFinite else { return }
+        let baseline = fetchOrCreate(type)
+        baseline.rollingMean = mean
+        baseline.rollingStdDev = stdDev
+        baseline.sampleCount = values.count
         baseline.lastUpdated = Date()
     }
 

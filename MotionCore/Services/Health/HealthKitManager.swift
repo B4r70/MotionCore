@@ -599,6 +599,65 @@ extension HealthKitManager {
         }
     }
 
+    // MARK: - Gefensterte Tageswerte (00:00–10:00 Ortszeit)
+
+    /// Mittelwert aller Samples eines bestimmten Tages im Zeitfenster startHour–endHour (Ortszeit).
+    /// Gibt nil zurück wenn keine Samples im Fenster vorhanden sind.
+    func windowedDailyMean(
+        type: HKQuantityType,
+        unit: HKUnit,
+        forDate date: Date,
+        startHour: Int = 0,
+        endHour: Int = 10
+    ) async throws -> Double? {
+        let calendar = Calendar.current
+        let dayStart = calendar.startOfDay(for: date)
+        guard
+            let windowStart = calendar.date(byAdding: .hour, value: startHour, to: dayStart),
+            let windowEnd   = calendar.date(byAdding: .hour, value: endHour,   to: dayStart)
+        else { return nil }
+
+        let predicate = HKQuery.predicateForSamples(withStart: windowStart, end: windowEnd, options: .strictStartDate)
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: nil
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: HealthKitManagerError.queryFailed(error))
+                    return
+                }
+                guard let samples = samples as? [HKQuantitySample], !samples.isEmpty else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                let values = samples.map { $0.quantity.doubleValue(for: unit) }
+                let mean = values.reduce(0, +) / Double(values.count)
+                continuation.resume(returning: mean)
+            }
+            healthStore.execute(query)
+        }
+    }
+
+    /// HRV (SDNN in ms) als Mittelwert 00:00–10:00 Ortszeit für einen bestimmten Tag.
+    func windowedHRV(forDate date: Date) async throws -> Double? {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
+            throw HealthKitManagerError.notAuthorized
+        }
+        return try await windowedDailyMean(type: type, unit: HKUnit.secondUnit(with: .milli), forDate: date)
+    }
+
+    /// Ruhepuls (bpm) als Mittelwert 00:00–10:00 Ortszeit für einen bestimmten Tag.
+    func windowedRestingHR(forDate date: Date) async throws -> Double? {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .restingHeartRate) else {
+            throw HealthKitManagerError.notAuthorized
+        }
+        return try await windowedDailyMean(type: type, unit: HKUnit.count().unitDivided(by: .minute()), forDate: date)
+    }
+
     // Hilfsmethode: Tagesdurchschnitt pro Quantity-Typ über N Tage
     private func dailySamples(type: HKQuantityType, unit: HKUnit, daysBack: Int) async throws -> [Date: Double] {
         let calendar = Calendar.current

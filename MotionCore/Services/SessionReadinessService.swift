@@ -35,12 +35,13 @@ enum SessionReadinessService {
         }
 
         // Heutige HealthKit-Werte holen (Fehler = nil, kein Crash)
-        // .max(by:) wählt deterministisch den aktuellsten Tag statt non-deterministisch .values.first
-        let hrv      = try? await HealthKitManager.shared.hrvSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
-        let sleep    = try? await HealthKitManager.shared.sleepDuration(forNightEnding: Date())
-        let restHR   = try? await HealthKitManager.shared.restingHRSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
+        // Fenster 00:00–10:00 Ortszeit — eliminiert Tageszeit-Drift bei HRV und Ruhepuls
+        let today    = Date()
+        let hrv      = try? await HealthKitManager.shared.windowedHRV(forDate: today)
+        let sleep    = try? await HealthKitManager.shared.sleepDuration(forNightEnding: today)
+        let restHR   = try? await HealthKitManager.shared.windowedRestingHR(forDate: today)
         let activity = try? await HealthKitManager.shared.activeEnergy(
-            forDate: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+            forDate: Calendar.current.date(byAdding: .day, value: -1, to: today) ?? today
         )
 
         let input = ReadinessCalcEngine.Input(
@@ -93,12 +94,13 @@ enum SessionReadinessService {
         }
 
         // Heutige HealthKit-Werte holen (Fehler = nil, kein Crash)
-        // .max(by:) wählt deterministisch den aktuellsten Tag statt non-deterministisch .values.first
-        let hrv      = try? await HealthKitManager.shared.hrvSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
-        let sleep    = try? await HealthKitManager.shared.sleepDuration(forNightEnding: Date())
-        let restHR   = try? await HealthKitManager.shared.restingHRSamples(daysBack: 1).max(by: { $0.key < $1.key })?.value
+        // Fenster 00:00–10:00 Ortszeit — eliminiert Tageszeit-Drift bei HRV und Ruhepuls
+        let today    = Date()
+        let hrv      = try? await HealthKitManager.shared.windowedHRV(forDate: today)
+        let sleep    = try? await HealthKitManager.shared.sleepDuration(forNightEnding: today)
+        let restHR   = try? await HealthKitManager.shared.windowedRestingHR(forDate: today)
         let activity = try? await HealthKitManager.shared.activeEnergy(
-            forDate: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+            forDate: Calendar.current.date(byAdding: .day, value: -1, to: today) ?? today
         )
 
         let input = ReadinessCalcEngine.Input(
