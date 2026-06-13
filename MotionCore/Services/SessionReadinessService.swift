@@ -154,8 +154,8 @@ enum SessionReadinessService {
     // Rekonstruiert den ungefähren Rohmesswert aus dem gespeicherten normierten Score
     private static func scoreToApproximateValue(_ normalized: Double?, baseline: HealthBaseline?, higherIsBetter: Bool) -> Double? {
         guard let n = normalized, let b = baseline else { return nil }
-        // normalisiert = (z + 2) / 4  →  z = n * 4 - 2
-        let z = higherIsBetter ? (n * 4.0 - 2.0) : (2.0 - n * 4.0)
+        // normalisiert = (z + 1.5) / 3  →  z = n * 3 - 1.5
+        let z = higherIsBetter ? (n * 3.0 - 1.5) : (1.5 - n * 3.0)
         return b.rollingMean + z * b.rollingStdDev
     }
 }

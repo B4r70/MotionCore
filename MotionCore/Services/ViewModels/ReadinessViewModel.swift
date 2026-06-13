@@ -59,7 +59,8 @@ final class ReadinessViewModel {
         var result: [ReadinessFactor] = []
 
         func desc(_ norm: Double, _ higherIsBetter: Bool) -> String {
-            let z = higherIsBetter ? (norm * 4.0 - 2.0) : (2.0 - norm * 4.0)
+            // Invers zu (z+1.5)/3.0
+            let z = higherIsBetter ? (norm * 3.0 - 1.5) : (1.5 - norm * 3.0)
             switch z {
             case let z where z > 1.5:  return "deutlich über Baseline"
             case let z where z > 0.5:  return "leicht über Baseline"
@@ -92,7 +93,8 @@ final class ReadinessViewModel {
 
     private func sleepDescription(normalized: Double, baseline: HealthBaseline?) -> String {
         guard let b = baseline else { return "normal" }
-        let z = normalized * 4.0 - 2.0
+        // Invers zu (z+1.5)/3.0 (sleep ist higherIsBetter:true)
+        let z = normalized * 3.0 - 1.5
         let approxHours = b.rollingMean + z * b.rollingStdDev
         switch approxHours {
         case let h where h < 5:  return "sehr wenig"

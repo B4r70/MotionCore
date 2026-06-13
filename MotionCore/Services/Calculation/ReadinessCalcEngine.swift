@@ -185,13 +185,14 @@ struct ReadinessCalcEngine {
         guard let v = value, let b = baseline, b.sampleCount >= 14 else { return nil }
         guard b.rollingStdDev > 0.01 else { return 0.5 } // stdDev ≈ 0 → neutral
         let z = (v - b.rollingMean) / b.rollingStdDev
-        let raw = higherIsBetter ? (z + 2.0) / 4.0 : (-z + 2.0) / 4.0
+        // Mapping: z=0 → 0.5, z=+1.5 → 1.0, z=-1.5 → 0.0 (vorher ±2.0/4.0)
+        let raw = higherIsBetter ? (z + 1.5) / 3.0 : (-z + 1.5) / 3.0
         return min(max(raw, 0.0), 1.0)
     }
 
     private static func valueDescription(for normalized: Double, higherIsBetter: Bool) -> String {
-        // Konvertierung zurück in z-Score-Raum für Beschreibung
-        let z = higherIsBetter ? (normalized * 4.0 - 2.0) : (2.0 - normalized * 4.0)
+        // Konvertierung zurück in z-Score-Raum für Beschreibung (invers zu (z+1.5)/3.0)
+        let z = higherIsBetter ? (normalized * 3.0 - 1.5) : (1.5 - normalized * 3.0)
         switch z {
         case let z where z > 1.5:  return "deutlich über Baseline"
         case let z where z > 0.5:  return "leicht über Baseline"
