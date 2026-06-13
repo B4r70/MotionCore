@@ -23,10 +23,10 @@ enum ReadinessLabel: String {
 
     static func from(score: Int) -> ReadinessLabel {
         switch score {
-        case 0..<30:    return .veryLow
-        case 30..<50:   return .low
-        case 50..<70:   return .normal
-        case 70..<85:   return .good
+        case 0..<25:    return .veryLow
+        case 25..<42:   return .low
+        case 42..<65:   return .normal
+        case 65..<82:   return .good
         default:        return .excellent
         }
     }
