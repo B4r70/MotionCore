@@ -50,6 +50,7 @@ final class HealthBaseline {
     // MARK: - Initialisierung
 
     init(metricType: HealthMetricType = .hrv) {
+        self.id = UUID()
         self.metricTypeRaw = metricType.rawValue
     }
 }
