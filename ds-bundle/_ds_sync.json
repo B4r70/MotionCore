@@ -1,0 +1,13 @@
+{
+  "shape": "static",
+  "components": [
+    "Foundations/Colors",
+    "Foundations/Typography",
+    "Components/MCChip",
+    "Components/MCHeroRing",
+    "Components/MCMiniRing",
+    "Components/MCFactorBar",
+    "Components/MCSparkline"
+  ],
+  "version": 1
+}

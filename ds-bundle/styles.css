@@ -1,0 +1,44 @@
+/* MotionCore Design Tokens
+   Source: MCColorPalette.swift, AppTheme.swift
+   Dark-native (iOS dark mode)
+*/
+
+:root {
+  /* ── Semantic Colors ── */
+  --mc-energy:       #F5B400;              /* Readiness / Energie     */
+  --mc-energy-soft:  rgba(245,180,0,0.18);
+  --mc-energy-ink:   rgba(245,180,0,0.85);
+
+  --mc-body:         #5CC63F;              /* Muskel / Erholung       */
+  --mc-body-soft:    rgba(92,198,63,0.18);
+  --mc-body-ink:     rgba(92,198,63,0.85);
+
+  --mc-stat:         #2E6DF0;              /* Statistik / Volumen     */
+  --mc-stat-soft:    rgba(46,109,240,0.18);
+  --mc-stat-ink:     rgba(46,109,240,0.85);
+
+  --mc-streak:       #FF6B4A;              /* Serien / Motivation     */
+  --mc-streak-soft:  rgba(255,107,74,0.18);
+  --mc-streak-ink:   rgba(255,107,74,0.85);
+
+  /* ── Surfaces ── */
+  --bg-app:          #1C1C1E;              /* iOS system background   */
+  --bg-surface:      rgba(255,255,255,0.08); /* ultraThinMaterial      */
+  --border:          rgba(255,255,255,0.08); /* primary.opacity(0.08)  */
+
+  /* ── Text ── */
+  --text-primary:    #FFFFFF;
+  --text-secondary:  rgba(255,255,255,0.55);
+  --text-tertiary:   rgba(255,255,255,0.30);
+
+  /* ── Spacing (8pt grid) ── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-6:  24px;
+
+  /* ── Shapes ── */
+  --r-pill: 9999px;
+  --r-card: 16px;
+}

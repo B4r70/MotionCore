@@ -1,0 +1,83 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1C1C1E;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    padding: 24px;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  /* MCChip — aus MCChip.swift
+     HStack(spacing:8) { icon + VStack { value · label } }
+     .padding(.horizontal, 12) .padding(.vertical, 8)
+     .background(Capsule().fill(.ultraThinMaterial))
+     .overlay(Capsule().strokeBorder(.primary.opacity(0.08), lineWidth: 0.5))
+  */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 9999px;
+    border: 0.5px solid rgba(255,255,255,0.08);
+  }
+  .icon {
+    font-size: 15px;
+    line-height: 1;
+    width: 16px;
+    text-align: center;
+  }
+  .chip-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.3px;
+  }
+  .chip-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 1px;
+  }
+</style>
+</head>
+<body>
+  <!-- Readiness / Energy (mcEnergy #F5B400) -->
+  <div class="chip">
+    <span class="icon" style="color:#F5B400">⚡</span>
+    <div>
+      <div class="chip-value">78</div>
+      <div class="chip-label">Bereitschaft</div>
+    </div>
+  </div>
+
+  <!-- Resting HR / Streak (mcStreak #FF6B4A) -->
+  <div class="chip">
+    <span class="icon" style="color:#FF6B4A">♥</span>
+    <div>
+      <div class="chip-value">62 bpm</div>
+      <div class="chip-label">Ruhepuls</div>
+    </div>
+  </div>
+
+  <!-- Streak / Stat (mcStat #2E6DF0) -->
+  <div class="chip">
+    <span class="icon" style="color:#2E6DF0">🔥</span>
+    <div>
+      <div class="chip-value">12</div>
+      <div class="chip-label">Tage Serie</div>
+    </div>
+  </div>
+</body>
+</html>

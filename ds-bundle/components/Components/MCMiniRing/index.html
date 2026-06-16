@@ -1,0 +1,78 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1C1C1E;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    padding: 20px 24px;
+    width: 300px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  /*
+    MCMiniRing — aus MCMiniRing.swift
+    ZStack {
+      Circle().stroke(ringColor.opacity(0.2), lw:6)
+      Circle().trim().stroke(ringColor, lw:6, -90°)
+      VStack { value (size*0.26 bold) · label (size*0.15 secondary) }
+    }
+    .frame(62, 62) default
+    ringColor = tint ?? recoveryColor(percent:)
+      — 0–30%  → mcStreak (#FF6B4A)
+      — 30–65% → mcEnergy (#F5B400)
+      — 65–100%→ mcBody   (#5CC63F)
+  */
+</style>
+</head>
+<body>
+
+  <!-- 0% — low recovery → mcStreak -->
+  <!-- r=25 (31-6/2=28, use 25 for vis margin), C=2π×25≈157.1 -->
+  <svg width="62" height="62" viewBox="0 0 62 62">
+    <circle cx="31" cy="31" r="25" fill="none" stroke="rgba(255,107,74,0.2)" stroke-width="6"/>
+    <circle cx="31" cy="31" r="25" fill="none" stroke="#FF6B4A" stroke-width="6"
+      stroke-dasharray="0 157.1" stroke-linecap="round" transform="rotate(-90 31 31)"/>
+    <text x="31" y="27" text-anchor="middle" dominant-baseline="middle"
+      font-family="-apple-system,system-ui,sans-serif"
+      font-size="16" font-weight="700" fill="#fff" font-variant-numeric="tabular-nums">0</text>
+    <text x="31" y="40" text-anchor="middle"
+      font-family="-apple-system,system-ui,sans-serif"
+      font-size="9" fill="rgba(255,255,255,0.55)">Brust</text>
+  </svg>
+
+  <!-- 55% — medium recovery → mcEnergy -->
+  <!-- C=157.1, 55%→86.4 -->
+  <svg width="62" height="62" viewBox="0 0 62 62">
+    <circle cx="31" cy="31" r="25" fill="none" stroke="rgba(245,180,0,0.2)" stroke-width="6"/>
+    <circle cx="31" cy="31" r="25" fill="none" stroke="#F5B400" stroke-width="6"
+      stroke-dasharray="86.4 70.7" stroke-linecap="round" transform="rotate(-90 31 31)"/>
+    <text x="31" y="27" text-anchor="middle" dominant-baseline="middle"
+      font-family="-apple-system,system-ui,sans-serif"
+      font-size="16" font-weight="700" fill="#fff" font-variant-numeric="tabular-nums">55</text>
+    <text x="31" y="40" text-anchor="middle"
+      font-family="-apple-system,system-ui,sans-serif"
+      font-size="9" fill="rgba(255,255,255,0.55)">Rücken</text>
+  </svg>
+
+  <!-- 92% — high recovery → mcBody -->
+  <!-- C=157.1, 92%→144.5 -->
+  <svg width="62" height="62" viewBox="0 0 62 62">
+    <circle cx="31" cy="31" r="25" fill="none" stroke="rgba(92,198,63,0.2)" stroke-width="6"/>
+    <circle cx="31" cy="31" r="25" fill="none" stroke="#5CC63F" stroke-width="6"
+      stroke-dasharray="144.5 12.6" stroke-linecap="round" transform="rotate(-90 31 31)"/>
+    <text x="31" y="27" text-anchor="middle" dominant-baseline="middle"
+      font-family="-apple-system,system-ui,sans-serif"
+      font-size="16" font-weight="700" fill="#fff" font-variant-numeric="tabular-nums">92</text>
+    <text x="31" y="40" text-anchor="middle"
+      font-family="-apple-system,system-ui,sans-serif"
+      font-size="9" fill="rgba(255,255,255,0.55)">Beine</text>
+  </svg>
+
+</body>
+</html>

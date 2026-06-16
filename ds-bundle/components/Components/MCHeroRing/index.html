@@ -1,0 +1,78 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1C1C1E;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    padding: 24px;
+    width: 380px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+  }
+  /*
+    MCHeroRing — aus MCHeroRing.swift
+    ZStack {
+      Circle().fill(tint.opacity(0.08))          — glow bg
+      Circle().stroke(tint.opacity(0.2), lw:13)  — track
+      Circle().trim().stroke(tint, lw:13)         — progress, -90°
+      VStack { value (size*0.28 bold rounded) · label (size*0.1) · sub (size*0.09) }
+    }
+    .frame(width: size, height: size)  — default 170
+  */
+</style>
+</head>
+<body>
+
+  <!-- 78% mcBody (green) — "Bereit / Erholung" -->
+  <svg width="170" height="170" viewBox="0 0 170 170">
+    <!-- Glow background -->
+    <circle cx="85" cy="85" r="85" fill="rgba(92,198,63,0.08)"/>
+    <!-- Track ring -->
+    <circle cx="85" cy="85" r="72" fill="none" stroke="rgba(92,198,63,0.2)" stroke-width="13"/>
+    <!-- Progress ring: C=2π×72≈452.4, 78%→352.9 -->
+    <circle cx="85" cy="85" r="72" fill="none"
+      stroke="#5CC63F" stroke-width="13"
+      stroke-dasharray="352.9 99.5"
+      stroke-linecap="round"
+      transform="rotate(-90 85 85)"/>
+    <!-- Center text -->
+    <text x="85" y="80" text-anchor="middle"
+      font-family="-apple-system,BlinkMacSystemFont,'SF Pro Rounded',system-ui,sans-serif"
+      font-size="48" font-weight="700" fill="#5CC63F" dominant-baseline="middle">78</text>
+    <text x="85" y="102" text-anchor="middle"
+      font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif"
+      font-size="17" font-weight="500" fill="rgba(255,255,255,0.55)">Bereit</text>
+    <text x="85" y="119" text-anchor="middle"
+      font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif"
+      font-size="15" fill="rgba(255,255,255,0.30)">Erholung</text>
+  </svg>
+
+  <!-- 45% mcEnergy (yellow) — "Readiness" — size=140 -->
+  <svg width="140" height="140" viewBox="0 0 140 140">
+    <!-- Glow background -->
+    <circle cx="70" cy="70" r="70" fill="rgba(245,180,0,0.08)"/>
+    <!-- Track ring: r=57 (70-13/2) -->
+    <circle cx="70" cy="70" r="57" fill="none" stroke="rgba(245,180,0,0.2)" stroke-width="13"/>
+    <!-- Progress: C=2π×57≈358.1, 45%→161.2 -->
+    <circle cx="70" cy="70" r="57" fill="none"
+      stroke="#F5B400" stroke-width="13"
+      stroke-dasharray="161.2 196.9"
+      stroke-linecap="round"
+      transform="rotate(-90 70 70)"/>
+    <!-- Center text -->
+    <text x="70" y="66" text-anchor="middle"
+      font-family="-apple-system,BlinkMacSystemFont,'SF Pro Rounded',system-ui,sans-serif"
+      font-size="39" font-weight="700" fill="#F5B400" dominant-baseline="middle">45</text>
+    <text x="70" y="85" text-anchor="middle"
+      font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif"
+      font-size="14" font-weight="500" fill="rgba(255,255,255,0.55)">Readiness</text>
+  </svg>
+
+</body>
+</html>

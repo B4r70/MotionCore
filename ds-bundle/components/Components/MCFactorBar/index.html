@@ -1,0 +1,97 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1C1C1E;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    padding: 20px 24px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /*
+    MCFactorBar — aus MCFactorBar.swift
+    VStack(alignment:.leading, spacing:4) {
+      HStack { label(caption medium) · Spacer() · subLabel(caption tabular secondary) }
+      GeometryReader { ZStack(alignment:.leading) {
+        Capsule().fill(.secondary.opacity(0.18))
+        Capsule().fill(color).frame(width: geo.size.width * value)
+      }}.frame(height: 6)
+    }
+  */
+  .factor {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .factor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .factor-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+  }
+  .factor-sub {
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255,255,255,0.55);
+  }
+  .track {
+    position: relative;
+    height: 6px;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.18);
+    overflow: hidden;
+  }
+  .fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    border-radius: 9999px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Schlafqualität 20% mcStreak -->
+  <div class="factor">
+    <div class="factor-header">
+      <span class="factor-label">Schlafqualität</span>
+      <span class="factor-sub">Niedrig</span>
+    </div>
+    <div class="track">
+      <div class="fill" style="width:20%; background:#FF6B4A"></div>
+    </div>
+  </div>
+
+  <!-- HRV 55% mcEnergy -->
+  <div class="factor">
+    <div class="factor-header">
+      <span class="factor-label">HRV</span>
+      <span class="factor-sub">Mittel</span>
+    </div>
+    <div class="track">
+      <div class="fill" style="width:55%; background:#F5B400"></div>
+    </div>
+  </div>
+
+  <!-- Muskel-Erholung 90% mcBody -->
+  <div class="factor">
+    <div class="factor-header">
+      <span class="factor-label">Muskel-Erholung</span>
+      <span class="factor-sub">Hoch</span>
+    </div>
+    <div class="track">
+      <div class="fill" style="width:90%; background:#5CC63F"></div>
+    </div>
+  </div>
+
+</body>
+</html>

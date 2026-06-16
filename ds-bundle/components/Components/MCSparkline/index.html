@@ -1,0 +1,77 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1C1C1E;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    padding: 20px 24px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /*
+    MCSparkline — aus MCSparkline.swift
+    Canvas { linePath + fillPath (color.opacity(0.18)) }
+    stroke: 1.5px, lineCap/Join round
+    default frame: 70×24, preview uses 120×36
+  */
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .row-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    width: 70px;
+    flex-shrink: 0;
+  }
+  svg polyline { fill: none; }
+  svg polygon  { stroke: none; }
+</style>
+</head>
+<body>
+
+  <!-- Aufsteigend — mcBody green -->
+  <!-- data=[10,20,35,42,55,70,85] min=10 max=85 range=75 in 120×36 -->
+  <div class="row">
+    <span class="row-label">Aufsteigend</span>
+    <svg width="120" height="36" viewBox="0 0 120 36">
+      <polygon points="0,36 20,31.2 40,24 60,20.6 80,14.4 100,7.2 120,0 120,36 0,36"
+        fill="rgba(92,198,63,0.18)"/>
+      <polyline points="0,36 20,31.2 40,24 60,20.6 80,14.4 100,7.2 120,0"
+        stroke="#5CC63F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- Volatil — mcEnergy yellow -->
+  <!-- data=[60,30,75,20,90,45,65] min=20 max=90 range=70 -->
+  <!-- x: 0,20,40,60,80,100,120  y: 15.4,30.9,7.7,36,0,23.1,12.9 -->
+  <div class="row">
+    <span class="row-label">Volatil</span>
+    <svg width="120" height="36" viewBox="0 0 120 36">
+      <polygon points="0,15.4 20,30.9 40,7.7 60,36 80,0 100,23.1 120,12.9 120,36 0,36"
+        fill="rgba(245,180,0,0.18)"/>
+      <polyline points="0,15.4 20,30.9 40,7.7 60,36 80,0 100,23.1 120,12.9"
+        stroke="#F5B400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- Absturz — mcStreak orange, kein Fill -->
+  <!-- data=[80,75,70,40,20,10,5] min=5 max=80 range=75 -->
+  <!-- y: 0,2.4,4.8,19.2,28.8,33.6,36 -->
+  <div class="row">
+    <span class="row-label">Absturz</span>
+    <svg width="120" height="36" viewBox="0 0 120 36">
+      <polyline points="0,0 20,2.4 40,4.8 60,19.2 80,28.8 100,33.6 120,36"
+        stroke="#FF6B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+</body>
+</html>

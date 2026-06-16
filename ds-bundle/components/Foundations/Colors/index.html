@@ -1,0 +1,62 @@
+<!-- @dsCard group="Foundations" -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1C1C1E;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+    padding: 24px;
+    width: 360px;
+  }
+  h2 { color: #fff; font-size: 14px; font-weight: 600; letter-spacing: -0.2px; margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .swatch {
+    border-radius: 12px;
+    padding: 14px 12px 12px;
+  }
+  .name  { font-size: 13px; font-weight: 600; }
+  .hex   { font-size: 11px; font-family: 'SF Mono', Menlo, monospace; margin-top: 2px; opacity: 0.75; }
+  .role  { font-size: 10px; margin-top: 5px; opacity: 0.6; }
+  .dark  { color: rgba(0,0,0,0.85); }
+  .light { color: rgba(255,255,255,0.9); }
+</style>
+</head>
+<body>
+  <h2>Semantische Farben</h2>
+  <div class="grid">
+    <div class="swatch dark" style="background:#F5B400">
+      <div class="name">mcEnergy</div>
+      <div class="hex">#F5B400</div>
+      <div class="role">Readiness · Energie</div>
+    </div>
+    <div class="swatch dark" style="background:#5CC63F">
+      <div class="name">mcBody</div>
+      <div class="hex">#5CC63F</div>
+      <div class="role">Muskel · Erholung</div>
+    </div>
+    <div class="swatch light" style="background:#2E6DF0">
+      <div class="name">mcStat</div>
+      <div class="hex">#2E6DF0</div>
+      <div class="role">Statistik · Volumen</div>
+    </div>
+    <div class="swatch dark" style="background:#FF6B4A">
+      <div class="name">mcStreak</div>
+      <div class="hex">#FF6B4A</div>
+      <div class="role">Serien · Motivation</div>
+    </div>
+  </div>
+  <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+    <div style="background:rgba(255,255,255,0.08); border:0.5px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 10px;">
+      <div style="color:#fff; font-size:11px; font-weight:600">bg-surface</div>
+      <div style="color:rgba(255,255,255,0.45); font-size:10px; margin-top:2px">ultraThinMaterial</div>
+    </div>
+    <div style="background:#1C1C1E; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 10px;">
+      <div style="color:#fff; font-size:11px; font-weight:600">bg-app</div>
+      <div style="color:rgba(255,255,255,0.45); font-size:10px; margin-top:2px">#1C1C1E</div>
+    </div>
+  </div>
+</body>
+</html>
