@@ -267,6 +267,9 @@ struct ActiveWorkoutView: View {
                 liveActivity.syncDebounced(saveResume: saveResumeState)
                 watchBridge.sendState()
             }
+            .onChange(of: restTimerManager.restEndDate) { _, _ in
+                watchBridge.sendState()
+            }
             .onChange(of: session.completedSets) { _, _ in
                 setManager.rebuildGroupedCaches()
                 setManager.refreshSetCaches()
@@ -384,7 +387,10 @@ struct ActiveWorkoutView: View {
             RIRInputSheet(
                 restTimerManager: restTimerManager,
                 targetSeconds: set.restSeconds,
-                onAdjustRest: { delta in restTimerManager.adjust(delta: delta) },
+                onAdjustRest: { delta in
+                    restTimerManager.adjust(delta: delta)
+                    liveActivity.syncDebounced(saveResume: saveResumeState)
+                },
                 onSelectRIR: { rir in
                     if rir == 4 { set.rpe = 6 } else { set.rpe = 10 - rir }
                     set.rpeRecorded = true

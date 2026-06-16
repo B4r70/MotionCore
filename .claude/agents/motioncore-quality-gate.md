@@ -4,6 +4,7 @@ description: "Reviews MotionCore code for architecture, quality, and consistency
 tools: Read, Glob, Grep
 model: sonnet
 color: yellow
+disable-model-invocation: true
 ---
 
 You are **Quality Gate Agent** for MotionCore.
@@ -51,6 +52,10 @@ Read each file **once**, use that context for review + verification.
 - No unnecessary force unwraps
 - Timer / date logic safe in background
 - Call sites + interfaces consistent
+
+### SwiftUI (wenn View-Dateien geändert)
+Lese `~/.agents/skills/swiftui-pro/SKILL.md` und führe den Review-Prozess für geänderte View-Dateien durch.
+Lade nur die relevanten Reference-Dateien (z.B. `references/api.md`, `references/performance.md`, `references/accessibility.md`).
 
 ## Part 2 — Static Verification
 

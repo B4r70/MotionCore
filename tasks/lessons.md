@@ -189,3 +189,39 @@ Do not add generic notes from unrelated projects.
   guard newWeight > state.workingWeight else { return noProgress }
   return Output(shouldAutoProgress: true, newWeight: newWeight, ...)
   ```
+
+### Watch ClosedRange Crash — Date()...endDate Guard
+
+- Added: 2026-06-07
+- Trigger: `Text(timerInterval: Date()...endDate, countsDown: true)` in WatchActiveWorkoutView
+- Symptom: Watch-App crasht wenn endDate in der Vergangenheit liegt (ClosedRange verlangt lowerBound ≤ upperBound)
+- Root Cause: WCSession-Nachrichten können verzögert ankommen. Zwischen Senden und Rendern kann endDate bereits abgelaufen sein.
+- Rule: **Immer `max(Date().addingTimeInterval(1), endDate)` verwenden** wenn endDate aus einer externen Quelle kommt (WCSession, Notification). Gilt für alle `Text(timerInterval:)` Aufrufe mit dynamischem endDate.
+- Applies To: `WatchActiveWorkoutView.swift` (countdownView + restView), potenziell auch `MotionCoreWidgetsLiveActivity.swift`
+
+### ExerciseSetSnapshot — neue Felder immer mitsynchronisieren
+
+- Added: 2026-06-07
+- Trigger: `trackingMode` zu ExerciseSet hinzugefügt, aber ExerciseSetSnapshot vergessen
+- Symptom: Plan-Sync/Undo verliert den Tracking-Modus — Time-Übungen werden nach Roundtrip zu Weight-Übungen
+- Root Cause: ExerciseSetSnapshot ist eine manuelle Kopie von ExerciseSet-Feldern. Neue Felder in ExerciseSet werden nicht automatisch in den Snapshot übernommen.
+- Rule: **Bei jedem neuen Feld auf ExerciseSet auch ExerciseSetSnapshot + alle 3 Erstellungsorte (SessionPlanSyncCalcEngine, PlanUpdateCalcEngine, SessionSyncUndoService) + Undo-Restore aktualisieren.** Grep nach `ExerciseSetSnapshot(` um alle Sites zu finden.
+- Applies To: `PlanUpdateTypes.swift`, `SessionPlanSyncCalcEngine.swift`, `PlanUpdateCalcEngine.swift`, `SessionSyncUndoService.swift`
+
+### handleCountdownSetChange — laufenden Timer nicht killen bei Übungswechsel
+
+- Added: 2026-06-07
+- Trigger: User wechselt während laufendem Time-Countdown zu einer anderen Übung
+- Symptom: Timer-Display friert ein (Timer invalidiert, aber isRunning/endDate bleiben gesetzt); oder Countdown wird komplett resettet
+- Root Cause: `handleCountdownSetChange()` rief `cleanup()` bei Weight-Sets und `reset()` ohne UUID-Guard bei Time-Sets
+- Rule: **(1)** Kein `cleanup()` bei Weight-Set wenn Countdown für anderen Satz läuft. **(2)** Guard `currentSetUUID != set.setUUID` vor `reset()` — selber Satz = noop. Timer-Loop darf nur durch explizite User-Aktion (Start/Pause/Resume) oder Set-Completion gestoppt werden.
+- Applies To: `ActiveWorkoutView.swift` — `handleCountdownSetChange()`
+
+### Button-disabled-Predicate — alle States abdecken, nicht nur den aktiven
+
+- Added: 2026-06-07
+- Trigger: `.disabled(countdown.isRunning && !isPaused && !isFinished)` — schützt nur vor Tap während Countdown läuft
+- Symptom: „Satz abschließen" im Idle-Zustand (vor Start) tappbar → schreibt duration=0 in den Satz
+- Root Cause: Predicate deckt nur den „Running"-State ab, nicht den „Idle"-State. Button ist in 3 von 4 States enabled.
+- Rule: **Disabled-Prädikate positiv formulieren (wann DARF getappt werden), nicht negativ (wann nicht).** `canComplete = isPaused || isFinished` ist klarer und sicherer als das Gegenteil aufzuzählen.
+- Applies To: `ActiveTimeSetContent.swift`

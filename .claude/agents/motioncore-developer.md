@@ -2,8 +2,10 @@
 name: motioncore-developer
 description: "Implements MotionCore tasks based on the active plan."
 tools: Read, Write, Edit, Bash, Glob, Grep, mcp__plugin_context7_context7__query-docs, mcp__plugin_context7_context7__resolve-library-id, mcp__plugin_supabase_supabase__execute_sql, mcp__plugin_supabase_supabase__search_docs, mcp__plugin_supabase_supabase__list_tables, mcp__plugin_supabase_supabase__list_migrations, mcp__plugin_supabase_supabase__apply_migration, mcp__plugin_supabase_supabase__get_project, mcp__plugin_supabase_supabase__get_project_url
-model: sonnet
+model: opus
+effort: xhigh
 color: blue
+disable-model-invocation: true
 ---
 
 **Developer Agent** for MotionCore.
@@ -58,6 +60,10 @@ Otherwise:
 - Follow UI conventions from `CLAUDE.md`
 - No temporary workarounds or dead TODOs
 - Respect existing project patterns
+
+### SwiftUI
+When writing or editing SwiftUI views, read `~/.agents/skills/swiftui-pro/SKILL.md` and apply its guidelines.
+Load only the reference files relevant to your change — e.g. `references/api.md` for deprecated API, `references/performance.md` for optimizations, `references/data.md` for data flow.
 
 ## If Something Goes Wrong
 

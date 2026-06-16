@@ -1,117 +1,132 @@
-# Realistischere Muskel-Erholungsberechnung (v1.1)
+# Readiness-Score Bugfix v1.1
 
-**Complexity:** Medium
+**Complexity:** Large
 
-> Konzept: `Documentation/Concepts/MotionCore_Muscle Recovery Adaption_Concept.md` (v1.1). Bei Detailfragen zu Formel-Herleitung und Beispielwerten das Konzept konsultieren.
+> Bezug: `Documentation/Concepts/MotionCore_Readiness_Bugfix_Concept.md` (Claude-Code-Instruction mit STOPP-Gates) und `MotionCore_Readiness_Correcture_Concept.md` (Ursachenanalyse, 5 Befunde).
+> **Implementierungsreihenfolge laut Instruction: B → C → A → D → E** (nach Hebel/Risiko).
+> Profil: Cardio-Medikation = Ja → Gewichtung HRV 25 / Schlaf 40 / Ruhepuls 15 / Aktivität 15, Baseline-Fenster 42 Tage.
+> **Grundregel: Ein Commit pro Phase. Nach JEDER Phase Build verifizieren (grün/rot). Bei rot stoppen.**
 
 ## Summary
 
-Die Muskel-Erholung fällt heute nach jedem Training auf ~0%, unabhängig von Härte/Dauer, und Bodyweight-Übungen erzeugen wegen des `70.0`-Fallbacks die maximal mögliche Volumen-Fatigue. Drei zusammenhängende, reine Änderungen in `MuscleRecoveryCalcEngine` beheben das: Fatigue bestimmt den Tiefpunkt (Startwert) statt nur die Erholungsdauer, der harte Volumen-Cap wird durch eine glatte Sättigungskurve ersetzt, und der Körpergewicht-Fallback wird mit einem Lasthebelfaktor gedämpft. Plus eine DEBUG-Sektion in den Einstellungen, die die Roh-Fatigue pro Muskel anzeigt — Grundlage für die spätere Konstanten-Kalibrierung. Keine API-, DTO-, Schema- oder Signatur-Änderung.
+Der Readiness-Score überschreitet produktiv nie ~50 Punkte und zeigt dauerhaft "Etwas müde heute". Ursache ist ein Bündel von 4 Code-Befunden plus 1 Verifikationsfrage. Ziel: Score realistisch um ~55–60 zentrieren, "normal" als Erwartungswert-Label, Tageszeit-Drift eliminieren, Baseline-Duplikate bereinigen. Wert: Der Kern-Indikator der App wird wieder aussagekräftig und steuert Trainingsempfehlungen korrekt.
 
 ## Scope
 
 **Included**
-- `MuscleRecoveryCalcEngine`: neue Recovery-Formel mit `initialDeficit` (3.1)
-- `MuscleRecoveryCalcEngine`: `normalizedVolume` als Sättigungskurve statt hartem Clip (3.2)
-- `MuscleRecoveryCalcEngine`: Bodyweight-Lasthebel `bodyweightLeverage = 0.35` auf Körpergewicht-Fallback (3.3-A)
-- Zwei neue Konstanten: `fatigueSaturation = 8.0` (Domain-korrigiert, s.u.), `volumeSaturation = 600.0`
-- Bodyweight-Lasthebel `bodyweightLeverage = 0.50` (Domain-korrigiert, s.u.)
+- Phase B: Z-Score-Mapping rezentrieren `(z+2.0)/4.0` → `(z+1.5)/3.0` inkl. aller 4 inversen Rückrechnungs-Stellen.
+- Phase C: Label-Grenzen verschieben (NUR `ReadinessLabel.from(score:)`).
+- Phase A: HRV/Ruhepuls auf konsistentes Messfenster 00:00–10:00 Ortszeit (Messwert UND Baseline) + retroaktive Baseline-Neukalibrierung.
+- Phase D: Baseline-Duplikate deterministisch bereinigen (fetchOrCreate + Einmal-Migration).
+- Phase E: Schlaf-Verifikation (KEIN Code, kein Developer-Schritt).
 
-> **Domain-Korrektur (motioncore-fitness-expert, vom User bestätigt):** Die Konzept-Werte `fatigueSaturation = 4.0` und `bodyweightLeverage = 0.35` saturieren zu früh bzw. unterschätzen große BW-Verbundübungen. Implementiert werden **`fatigueSaturation = 8.0`** (differenziert den realen 5–14-Satz-Bereich statt alles auf ~0% zu quetschen) und **`bodyweightLeverage = 0.50`** (Erwartungswert über BW-Spektrum statt Crunch-spezifisch). Befund: `tasks/domain/muscle_recovery_adaption_validation.md`. Bleiben provisorische Startwerte für die spätere DEBUG-Kalibrierung.
-- Neue DEBUG-Settings-Sektion: Roh-Fatigue (`totalFatigueScore`) pro Muskel, read-only
-
-**Explizit ausgeschlossen**
-- **3.3-B (Pro-Übung-Lasthebel aus Exercise-DB):** zurückgestellt bis zur Exercise-Data-Quality-Initiative → siehe Backlog
-- **Konstanten-Kalibrierung (Konzept-Phase 4):** separater Durchlauf nach 2–3 realen Sessions. Die Konstanten shippen bewusst provisorisch; finale Werte folgen aus den geloggten Realdaten.
-- Set-Count-basierte Fatigue (überschneidet sich mit Volume-Landmarks-Feature) — Konzept §6
-- `targetRIR`-Fallback-Intensität für nicht-erfasste Sätze — Konzept §6
-- Keine Änderung an `MuscleRecoveryTypes.swift`, `RecoveryTrendCalcEngine.swift`, DTOs, Supabase-Schema, UI der bestehenden Recovery-Views
+**Explicitly excluded**
+- Modifier-Schwellen (0.85/0.92/1.00/1.05) — bleiben unverändert (siehe Phase C Constraint).
+- Optionaler `+0.05`-Optimismus-Anker — erst nach Daten-Check (Phase F), NICHT jetzt.
+- `sleepDuration(forNightEnding:)`-Aggregation — laut Concept korrekt, kein Fix.
+- `higherIsBetter`-Lesart von `activityYesterday` — separates Thema.
+- 459-Rows-Aufblähung von `session_readiness` (`computeLive` persistiert?) — separates Konzept, nur notiert.
+- Phase F (Gesamt-SQL-Verifikation nach 5–7 Tagen) — nicht Teil der Implementierung.
 
 ## Affected Files
 
-- `MotionCore/Services/Calculation/MuscleRecoveryCalcEngine.swift` — Kern aller drei Formel-Änderungen + zwei neue Konstanten
-- `MotionCore/Views/Settings/View/DebugMuscleFatigueSection.swift` — **NEU** — DEBUG-Sektion (analog `DebugReadinessSection.swift`), eigene `@Query StrengthSession`, listet `analyze().detailedScores` als Muskel→`totalFatigueScore`
-- `MotionCore/Views/Settings/View/MainSettingsView.swift` — `DebugMuscleFatigueSection()` im bestehenden `#if DEBUG`-Block (L154–157, neben `DebugReadinessSection`)
+- `MotionCore/Services/Calculation/ReadinessCalcEngine.swift` — Phase B: `normalizedScore` + `valueDescription`. Modifier-Switch NICHT anfassen.
+- `MotionCore/Services/SessionReadinessService.swift` — Phase B: `scoreToApproximateValue`. Phase A: `.max(by:)`-Ersatz in `captureReadiness` + `computeLive`.
+- `MotionCore/Services/ViewModels/ReadinessViewModel.swift` — Phase B: `desc` + `sleepDescription`. Modifier-Switch NICHT anfassen.
+- `MotionCore/Services/Calculation/ReadinessTypes.swift` — Phase C: NUR `ReadinessLabel.from(score:)`.
+- `MotionCore/Services/Health/HealthKitManager.swift` — Phase A: neue Fenster-Methode + zwei Wrapper.
+- `MotionCore/Services/Health/HealthBaselineUpdateService.swift` — Phase A: HRV/RHR-Baseline auf Fenster-Logik. Phase D: `fetchOrCreate` Dedup + Migrations-Methode.
+- `MotionCore/App/MotionCoreApp.swift` — Phase A+D: Flag-guarded Einmal-Migration im `.task`.
 
-**Geprüft, keine Änderung nötig:**
-- `MuscleRecoveryTypes.swift` — `totalFatigueScore` existiert bereits auf `DetailedMuscleRecovery` (L23)
-- `RecoveryTrendCalcEngine.swift` — nutzt `analyze` unverändert
-- `SupabaseMuscleRecoverySnapshot.swift` — persistiert nur berechnete Recovery-Werte, kein Fatigue-Feld → kein Schema-Impact
-
-## Exakte Codestellen (verifiziert)
-
-- **Neue Konstanten:** Block `// MARK: - Konstanten` (L17–32), neben `decayHalfLifeDays` (L31–32). `import Foundation` (L13) deckt `exp()` ab — kein neuer Import.
-- **`normalizedVolume`:** L228–238. `effectiveWeight` L235, Rückgabe `return min(1.0, raw / 500.0)` L237 → wird ersetzt.
-- **Recovery-Formel:** L108–112. Insert vor/an L112 (`let recoveryPercent = min(100.0, (hoursSince / adjusted) * 100.0)`).
-- **`fatigueMultiplier` (L240–244):** **bleibt unverändert.** Das hartkodierte `5.0` (L242) ist ein eigener Knopf (Refill-Dauer) und darf NICHT mit dem neuen `fatigueSaturation = 4.0` (Start-Defizit) zusammengeführt/„harmonisiert" werden.
+**Single-Sourcing bestätigt:**
+- `ReadinessLabel.from(score:)` ist die EINZIGE Label-Schwellen-Quelle. `ReadinessCalcEngine`, `ReadinessViewModel.label`, `ReadinessCard` delegieren alle dorthin → Phase C = 1-Stellen-Änderung.
 
 ## Risks
 
-- **Trend-Form ändert sich rückwirkend (erwartet, keine Regression):** `RecoveryTrendCalcEngine` rekonstruiert den 14-Tage-Body-Tab-Verlauf über `analyze`. Nach diesem Ship sieht die historische Kurve anders aus (höhere Tiefpunkte bei leichten Sessions, differenziertere Werte). Das ist beabsichtigtes Verhalten, nicht zu jagen.
-- **Provisorische Konstanten:** `fatigueSaturation`/`volumeSaturation` sind Bauchgefühl-Startwerte. Bewusst akzeptiert — Kalibrierung ist separate Phase, dafür die DEBUG-Sektion.
-- **`fatigueMultiplier`-5.0-Falle:** siehe oben — Refactor-Versuchung „beide auf 4.0 vereinheitlichen" wäre ein Fehler.
-- **Mathematik:** `recoveryFraction ≤ 1.0` immer (`initialDeficit ∈ [0,1]`, `timeRecovered ∈ [0,1]`), `adjusted > 0` immer, gelistete Muskeln haben stets `totalFatigue > 0` → kein degenerierter Fall, kein zusätzlicher Guard nötig.
+- **Inverse-Mapping-Inkonsistenz (Phase B, load-bearing):** `scoreToApproximateValue` rechnet `n*4-2` invers zu `(z+2)/4`. Beide Richtungen synchron auf `(z+1.5)/3` / `n*3-1.5` umstellen — sonst driftet `refineWithUserInput` bei jedem Round-Trip nach oben.
+- **Mess-↔Baseline-Fenster-Mismatch (Phase A):** Messwert und Baseline MÜSSEN dieselbe Fenster-Methode nutzen, sonst systematischer Bias.
+- **Baseline gegen alte Baseline nach Umstellung (Phase A):** Retroaktive Neuberechnung (flag-guarded) beim App-Start löst das sofort.
+- **CloudKit-Race bei Dedup (Phase D):** Tie-Break über kleinste `id` (UUID-String) für geräteübergreifende Konvergenz.
+- **Regression Trainings-Modifier (Phase C):** Modifier-Switches in Engine + ViewModel NICHT anfassen.
 
 ## Implementation Steps
 
-### Phase 1 — Konstanten + `normalizedVolume` (3.2 + 3.3-A)
+### Phase B — Mapping rezentrieren (Befund 1) — Commit 1
 
-- [x] **1.1** Zwei `static let`-Konstanten im `// MARK: - Konstanten`-Block ergänzen: `fatigueSaturation: Double = 8.0`, `volumeSaturation: Double = 600.0` (jeweils mit Doc-Kommentar; Doc-Kommentar bei `fatigueSaturation` vermerkt: Domain-korrigierter Startwert, Kalibrierung folgt)
-- [x] **1.2** `normalizedVolume` (L228–238) umbauen: `bodyweightLeverage = 0.50` auf den Körpergewicht-Fallback anwenden (`effectiveWeight = weight > 0 ? weight : (sessionBodyWeight > 0 ? sessionBodyWeight : 70.0) * bodyweightLeverage`); Rückgabe `return 1.0 - exp(-raw / Self.volumeSaturation)` statt `min(1.0, raw / 500.0)`
-- [x] **1.3** `fatigueMultiplier` (L240–244) NICHT anfassen — visuell bestätigt, `5.0` unverändert
+- [x] **B.1** `ReadinessCalcEngine.normalizedScore`: `(z + 2.0) / 4.0` → `(z + 1.5) / 3.0` und `(-z + 2.0) / 4.0` → `(-z + 1.5) / 3.0`
+- [x] **B.2** `ReadinessCalcEngine.valueDescription`: inverse Rückrechnung `n*4-2` / `2-n*4` → `n*3-1.5` / `1.5-n*3`
+- [x] **B.3** `SessionReadinessService.scoreToApproximateValue`: `n * 4.0 - 2.0` / `2.0 - n * 4.0` → `n * 3.0 - 1.5` / `1.5 - n * 3.0`. Kommentar anpassen.
+- [x] **B.4** `ReadinessViewModel.desc`: `(norm * 4.0 - 2.0)` / `(2.0 - norm * 4.0)` → `(norm * 3.0 - 1.5)` / `(1.5 - norm * 3.0)`
+- [x] **B.5** `ReadinessViewModel.sleepDescription`: `normalized * 4.0 - 2.0` → `normalized * 3.0 - 1.5`
+- [x] **B.6 NICHT ändern:** Modifier-Switch `ReadinessCalcEngine`. Optimismus-Anker `+0.05` NICHT einbauen.
+- [x] **STOPP-Gate B:** Build grün ✓. z=+1 → norm=(1+1.5)/3=0.833 → score=**83** ✓ (vorher 75). Commit: fd18073
 
-> **STOPP-Gate 1:** Build grün (`Cmd+B`).
+### Phase C — Label-Grenzen verschieben (Befund 3) — Commit 2
 
-### Phase 2 — Recovery-Formel (3.1)
+- [x] **C.1** `ReadinessTypes.swift`, `ReadinessLabel.from(score:)`: `0..<30` → `0..<25` (veryLow), `30..<50` → `25..<42` (low), `50..<70` → `42..<65` (normal), `70..<85` → `65..<82` (good), excellent ab 82.
+- [x] **C.2 CONSTRAINT:** Modifier-Schwellen in `ReadinessCalcEngine` (0/30/50/85 → 0.85/0.92/1.00/1.05) und `ReadinessViewModel.modifier` BEWUSST UNVERÄNDERT. Label-Grenzen = kosmetisch; Modifier-Grenzen = funktional — getrennt halten.
+- [x] **STOPP-Gate C:** Build grün ✓. NUR `ReadinessTypes.swift` geändert ✓. Beide Modifier-Switches unverändert ✓. Score 45 → 42..<65 → `.normal` ✓. Commit: bf7c40b
 
-- [x] **2.1** In `analyze` (L108–112) die Recovery-Berechnung ersetzen: `initialDeficit = min(totalFatigue / Self.fatigueSaturation, 1.0)`, `timeRecovered = min(1.0, hoursSince / adjusted)`, `recoveryFraction = (1.0 - initialDeficit) + initialDeficit * timeRecovered`, `recoveryPercent = min(100.0, recoveryFraction * 100.0)`. `adjusted` (L111, via `fatigueMultiplier`) bleibt als Refill-Dauer-Steuerung erhalten.
+### Phase A — HRV/Ruhepuls konsistentes Messfenster (Befund 2) — Commit 3
 
-> **STOPP-Gate 2:** Build grün. Spot-Check Konzept §3.1: `totalFatigue = 0.5` → Start ~87%; `totalFatigue ≥ 4` → Start ~0%.
+- [x] **A.1** `HealthKitManager`: neue Methode `windowedDailyMean(type:unit:forDate:startHour:endHour:)` — Mittelwert aller Samples 00:00–10:00 Ortszeit.
+- [x] **A.2** Zwei Wrapper: `windowedHRV(forDate:)` (SDNN, ms) und `windowedRestingHR(forDate:)` (bpm).
+- [x] **A.3** `SessionReadinessService.captureReadiness` UND `computeLive`: `.max(by:)`-Aufrufe für `hrv` und `restHR` durch Fenster-Wrapper ersetzen (beide Stellen).
+- [x] **A.4 KRITISCH** `HealthBaselineUpdateService`: HRV/RHR-Baseline-Berechnung auf dieselbe Fenster-Logik umstellen (Tagesmittel 00:00–10:00 pro Tag im 42-Tage-Fenster) via `updateWindowedMetric`.
+- [x] **A.5** `MotionCoreApp`: Flag-guarded Einmal-Migration (`UserDefaults` "readinessWindowMigrationV1Done") — `forceUpdate` aufrufen für retroaktive HRV/RHR-Baseline-Neukalibrierung. Zusammen mit D-Migration unter EINEM Flag.
+- [x] **STOPP-Gate A:** Build grün ✓. Strukturell: festes 00:00–10:00-Fenster gibt denselben Tagesmittelwert unabhängig von der Tageszeit zurück (kein Drift durch .max(by:) auf partielle Buckets mehr). Commit: c535e5a
 
-### Phase 3 — DEBUG-Sektion: Roh-Fatigue pro Muskel (Kalibrier-Grundlage)
+### Phase D — Baseline-Duplikate bereinigen (Befund 5) — Commit 4
 
-- [x] **3.1** Neue Datei `DebugMuscleFatigueSection.swift` (`#if DEBUG`, analog `DebugReadinessSection.swift`): eigene `@Query(sort: \StrengthSession.date, order: .reverse) var sessions`, ruft `MuscleRecoveryCalcEngine.analyze(sessions:)` einmal auf, listet `detailedScores` als read-only Zeilen `muscle.displayName → totalFatigueScore` (z.B. 2 Dezimalstellen), absteigend sortiert; Footer-Hinweis auf Kalibrierungs-Zweck. Keine Controls.
-- [x] **3.2** `DebugMuscleFatigueSection()` in `MainSettingsView` im bestehenden `#if DEBUG`-Block neben `DebugReadinessSection` eingehängt
-- [x] **3.3** `#Preview` mit `PreviewData.sharedContainer` + `AppSettings.shared`
+- [x] **D.1** `HealthBaselineUpdateService.fetchOrCreate`: bei mehreren Treffern pro `metricTypeRaw` die Row mit kleinster `id` (UUID-String) behalten, alle anderen per `context.delete()` entfernen.
+- [x] **D.2** `consolidateDuplicateBaselines()`: alle `HealthMetricType.allCases` durchgehen, Duplikate bereinigen, `context.save()`. Flag-guarded zusammen mit A.5 in `MotionCoreApp`.
+- [x] **STOPP-Gate D:** Build grün ✓. SQL-Verifikation nach nächstem Sync ausstehend (erfordert Gerät + Supabase-Stream).
 
-> **STOPP-Gate 3:** Build grün. DEBUG-Build: Einstellungen zeigen Fatigue-Liste mit plausiblen Werten.
+### Phase E — Schlaf-Baseline verifizieren (Befund 4) — MANUELL (kein Code-Schritt)
 
-### Backlog (NICHT in diesem Durchlauf umsetzen)
+> Reine manuelle Verifikation. Kein Commit, keine Änderung.
 
-- **3.3-B — Pro-Übung-Lasthebel:** `bodyweightLoadFactor`-Feld in `motioncore.exercises`, in `normalizedVolume` statt Pauschal-`0.35` nutzen. Erfordert Schema-Erweiterung + Datenpflege. Erst zusammen mit der Exercise-Data-Quality-Initiative.
-- **Kalibrierung (Konzept-Phase 4):** Nach 2–3 realen Sessions die DEBUG-Werte prüfen — harte Sessions sollten `≥ fatigueSaturation` erreichen, leichte deutlich darunter — dann `fatigueSaturation`/`volumeSaturation` nachjustieren.
+- [ ] **E.1** Für eine bekannte Nacht den `sleepDuration(forNightEnding:)`-Wert in der App ausgeben (Debug-Log).
+- [ ] **E.2** Mit Apple-Health-Detailansicht derselben Nacht vergleichen (reine asleep-Dauer, NICHT Bettzeit).
+- [ ] **E.3** Bei echter Diskrepanz (>30 min): neuen Befund dokumentieren. Sonst Befund 4 schließen.
+- [ ] **STOPP-Gate E:** Vergleichswert App vs. Apple Health melden. Entscheidung Bug ja/nein.
 
 ## Manual Verification
 
-- [x] Xcode Build `Cmd+B` grün nach jeder Phase
-- [ ] **Leichtes Mini-Workout (2 Sätze):** trainierte Gruppe fällt nur leicht (~80–90%), nicht auf 0%
-- [ ] **Hartes Workout (viele/schwere Sätze):** trainierte Gruppe weiterhin nahe 0%
-- [ ] **Bodyweight-Übung (Crunch o.ä., `weight = 0`):** Volumen-Beitrag plausibel < 1.0, nicht mehr maximal
-- [ ] **DEBUG-Sektion:** Einstellungen → Fatigue-Liste rendert, Werte differenzieren zwischen Muskeln
-- [ ] **Body-Tab-Trend:** Kurve rendert weiterhin (Form darf sich ändern — erwartet), keine Crashs/NaN
-- [ ] **Bestehende Recovery-Views:** `MuscleRecoveryDetailView` + Donut rendern unverändert, keine NaN-Prozente
+- [ ] Xcode build nach JEDER Phase grün — bei rot stoppen
+- [ ] Phase B: `refineWithUserInput`-Round-Trip driftet nicht (Score nach Energie/Stress-Input bleibt plausibel)
+- [ ] Phase B: `BodyReadinessFactorsCard` Previews rendern
+- [ ] Phase C: Score 45 zeigt "Normale Tagesform" statt "Etwas müde heute"
+- [ ] Phase A: Simulator/Gerät — Score morgens ≈ Score nachmittags (±3 overall)
+- [ ] Phase A: HRV/RHR-Baseline-mean nach Migration plausibel (Debug-Section)
+- [ ] Phase D: genau 4 Baselines in Debug-Section; Supabase-SQL = 0 Duplikat-Zeilen nach Stream
 
 ## Open Questions
 
-Keine blockierenden. Provisorische Konstanten sind by-design; finale Werte folgen aus der separaten Kalibrierungs-Phase mit den DEBUG-Daten.
-
-## Rejected Alternatives
-
-- **In-Engine `#if DEBUG print` der Roh-Fatigue:** verworfen. `analyze` läuft 14× pro Body-Tab-Trend-Render → Konsolen-Spam bei jedem Render, und braucht angeschlossenes Xcode. Das untergräbt das eigentliche Ziel (Fatigue nach realen Gym-Sessions on-device ablesen). Die opt-in DEBUG-Settings-Sektion liest dieselben Werte on-demand, spamfrei, ohne Xcode.
+- **Migrations-Flag:** `UserDefaults` (gerätelokal, kein Sync) — kein appweiter Sync des Flags gewünscht?
+- **Gate-A-Toleranz:** ±3 Punkte ist Plausibilitäts-, keine statistisch harte Grenze (n=2 reiner Vormittag) — akzeptabel?
 
 ---
 
 ## Fortschritt
 
-**2026-06-09**
+**2026-06-13**
 
-Abgeschlossene Schritte: 1.1, 1.2, 1.3, 2.1, 3.1, 3.2, 3.3
+**Abgeschlossene Schritte:** B.1–B.6, C.1–C.2, A.1–A.5, D.1–D.2 (Phase E ist Manuell, kein Code)
 
-Geänderte Dateien:
-- `MotionCore/Services/Calculation/MuscleRecoveryCalcEngine.swift` — drei neue `static let` (`fatigueSaturation`, `volumeSaturation`, `bodyweightLeverage`), `normalizedVolume` auf Sättigungskurve + BW-Leverage, Recovery-Formel mit `initialDeficit`/`timeRecovered`/`recoveryFraction`
-- `MotionCore/Views/Settings/View/DebugMuscleFatigueSection.swift` — NEU, `#if DEBUG`, `@Query StrengthSession`, listet Fatigue absteigend, Preview mit `PreviewData.sharedContainer`
-- `MotionCore/Views/Settings/View/MainSettingsView.swift` — `DebugMuscleFatigueSection()` im `#if DEBUG`-Block
+**Commits:**
+- `fd18073` fix(readiness): recenter z-score mapping to ±1.5σ for better score spread (Phase B)
+- `bf7c40b` fix(readiness): shift label boundaries to center 'normal' around expected value (Phase C)
+- `5385886` fix(readiness): use fixed 00-10h window for HRV/RHR to remove time-of-day drift (Phase A)
+- `684587d` fix(readiness): deduplicate baseline rows deterministically via smallest UUID (Phase D)
 
-Build-Status: grün nach jeder Phase (Phase 1, 2, 3)
+**Geänderte Dateien:**
+- `MotionCore/Services/Calculation/ReadinessCalcEngine.swift` — B.1, B.2
+- `MotionCore/Services/SessionReadinessService.swift` — B.3, A.3
+- `MotionCore/Services/ViewModels/ReadinessViewModel.swift` — B.4, B.5
+- `MotionCore/Services/Calculation/ReadinessTypes.swift` — C.1
+- `MotionCore/Services/Health/HealthKitManager.swift` — A.1, A.2
+- `MotionCore/Services/Health/HealthBaselineUpdateService.swift` — A.4, D.1, D.2
+- `MotionCore/App/MotionCoreApp.swift` — A.5, D (Migration-Flag)
 
-Verbleibend: Manuelle Verifikation (Trainer-Tests), Kalibrierung nach realen Sessions (separater Durchlauf)
+**Offen:** Phase E (manuelle Verifikation), Supabase-SQL nach nächstem Stream (Gate D)

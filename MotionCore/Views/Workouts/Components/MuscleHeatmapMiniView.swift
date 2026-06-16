@@ -100,6 +100,16 @@ struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
         loadContent(in: webView)
     }
 
+    // Pinnt die WebView an den von SwiftUI vorgeschlagenen Frame. Ohne dieses
+    // Override fällt SwiftUI auf die contentSize der WKWebView zurück, die nach
+    // dem async `loadHTMLString` (viewport: width=device-width) volle Gerätebreite
+    // annimmt — beim ersten Layout-Pass breiter als der Card-Container, wodurch das
+    // umschließende ScrollView ungewollt horizontal scrollbar wird.
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: WKWebView, context: Context) -> CGSize? {
+        let resolved = proposal.replacingUnspecifiedDimensions()
+        return CGSize(width: resolved.width, height: resolved.height)
+    }
+
     private func loadContent(in webView: WKWebView) {
         guard
             let svgURL = Bundle.main.url(forResource: "Muscles_Heatmap", withExtension: "svg"),

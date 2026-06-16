@@ -1,0 +1,25 @@
+{
+  "projectId": "1570610680191346529",
+  "projectName": "projects/1570610680191346529",
+  "title": "MotionCore",
+  "projectType": "PROJECT_DESIGN",
+  "visibility": "PRIVATE",
+  "createdAt": "2026-06-12",
+  "designSystem": {
+    "assetId": "64bc27e6bb954a04be4985b412626f77",
+    "source": ".stitch/DESIGN.md",
+    "name": "MotionCore",
+    "deviceType": "MOBILE",
+    "summary": "Liquid-Glass-Fitness-Dashboard: frosted-glass Cards (Radius 22pt) über diagonalem Dreifarb-Gradient (Light #F0F7FF→#9BD2FF, Dark #050814→#0E1A36); Domänen-Akzente Energie-Gelb #F5B400, Vital-Grün #5CC63F, Statistik-Blau #2E6DF0, Streak-Koralle #FF6B4A; SF Pro / SF Pro Rounded"
+  },
+  "screens": [
+    {
+      "id": "16640673680850415868",
+      "sourceScreen": "projects/1570610680191346529/screens/16640673680850415868",
+      "type": "DESIGN_MD_UPLOAD",
+      "description": "Hochgeladene DESIGN.md (Quelle des Design-Systems)",
+      "width": 390,
+      "height": 884
+    }
+  ]
+}

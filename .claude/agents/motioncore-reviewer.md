@@ -71,6 +71,12 @@ before the fix lands (e.g. `ActiveWorkoutView.swift`). It lets the
 developer detect stale line references. Omit it otherwise — the global
 header commit is the default reference.
 
+## SwiftUI review (apply when scope includes View files)
+
+Read `~/.agents/skills/swiftui-pro/SKILL.md` and run its review process for SwiftUI files.
+Load only the reference files relevant to the files under review — do not load all 9 references for every file.
+swiftui-pro findings use the same severity scale and finding format as other findings in this review.
+
 ## Watch-target conventions (apply when scope is Watch)
 
 - Watch: sole HealthKit writer (workout sessions, heart rate samples, active calories). iPhone reads via HKHealthStore queries, does NOT write workout data when a Watch is paired and active.
