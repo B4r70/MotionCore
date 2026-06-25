@@ -136,7 +136,7 @@ extension View {
             Text("Ende")
                 .padding()
         }
-        .glassCard()
+        .card()
         .padding()
     }
 }

@@ -82,7 +82,7 @@ struct MCHeroRing: View {
             value: 78,
             label: "Bereit",
             subText: "Erholung",
-            tint: MCColor.mcBody
+            tint: Theme.success
         )
 
         MCHeroRing(
@@ -90,7 +90,7 @@ struct MCHeroRing: View {
             label: "Readiness",
             subText: nil,
             size: 140,
-            tint: MCColor.mcEnergy
+            tint: Theme.accent
         )
     }
     .padding()

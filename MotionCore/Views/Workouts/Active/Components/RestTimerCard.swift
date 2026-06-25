@@ -95,7 +95,7 @@ struct RestTimerCard: View {
                 .background(.blue, in: RoundedRectangle(cornerRadius: 16))
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Ring-Timer

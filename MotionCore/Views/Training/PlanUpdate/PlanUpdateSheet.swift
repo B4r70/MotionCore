@@ -108,7 +108,7 @@ struct PlanUpdateSheet: View {
             Spacer()
         }
         .padding()
-        .glassCard()
+        .card()
     }
 
     // MARK: - Sektion

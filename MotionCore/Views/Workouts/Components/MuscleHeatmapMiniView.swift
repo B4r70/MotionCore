@@ -36,7 +36,7 @@ struct MuscleHeatmapMiniView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .padding()
-        .glassCard()
+        .card()
         .task(id: session.persistentModelID) {
             trainedRegionIds = computeTrainedRegionIds()
         }

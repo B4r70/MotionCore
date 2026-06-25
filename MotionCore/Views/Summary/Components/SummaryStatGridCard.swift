@@ -46,7 +46,7 @@ struct SummaryStatGridCard: View {
                 title: "Kalorien",
                 value: "\(totalCalories)",
                 unit: "kcal",
-                tint: MCColor.mcStreak,
+                tint: Theme.warning,
                 trend: caloriesTrend
             )
             SparkStatCard(

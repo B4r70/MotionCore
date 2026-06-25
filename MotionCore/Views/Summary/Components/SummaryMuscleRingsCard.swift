@@ -34,7 +34,7 @@ struct SummaryMuscleRingsCard: View {
                 ringGrid
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Header

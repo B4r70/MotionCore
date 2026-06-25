@@ -26,7 +26,7 @@ struct SetDurationSection: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "stopwatch")
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
 
                 Text("Übungsdauer")
                     .font(.headline)
@@ -36,7 +36,7 @@ struct SetDurationSection: View {
 
                 Text(formatDuration(durationSeconds))
                     .font(.headline.monospacedDigit())
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
             }
 
             // Preset-Buttons in 3-Spalten-Grid
@@ -51,11 +51,11 @@ struct SetDurationSection: View {
                             .padding(.vertical, 10)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(durationSeconds == seconds ? Color.blue.opacity(0.2) : Color.clear)
+                                    .fill(durationSeconds == seconds ? Theme.accent.opacity(0.2) : Color.clear)
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(durationSeconds == seconds ? Color.blue : Color.white.opacity(0.2), lineWidth: 1)
+                                    .stroke(durationSeconds == seconds ? Theme.accent : Color.white.opacity(0.2), lineWidth: 1)
                             )
                     }
                     .foregroundStyle(durationSeconds == seconds ? .blue : .primary)
@@ -69,7 +69,7 @@ struct SetDurationSection: View {
                 } label: {
                     Image(systemName: "minus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                 }
 
                 Spacer()
@@ -85,7 +85,7 @@ struct SetDurationSection: View {
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                 }
             }
         }

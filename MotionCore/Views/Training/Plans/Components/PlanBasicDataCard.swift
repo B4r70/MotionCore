@@ -40,7 +40,7 @@ struct PlanBasicDataCard: View {
             // Aktiv-Status
             activeToggle
         }
-        .glassCard()
+        .card()
     }
     
     // MARK: - Subviews

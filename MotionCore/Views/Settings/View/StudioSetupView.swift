@@ -60,7 +60,7 @@ struct StudioSetupView: View {
                             StudioEquipmentRow(equipment: eq)
                         }
                         .buttonStyle(.plain)
-                        .glassCard()
+                        .card()
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                     }

@@ -62,7 +62,7 @@ struct BodyMeasurementsRatioCard: View {
                     .frame(height: 40)
             }
         }
-        .glassCard()
+        .card()
     }
 
     private var formattedValue: String {

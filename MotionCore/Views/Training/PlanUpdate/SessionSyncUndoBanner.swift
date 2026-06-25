@@ -73,7 +73,7 @@ struct SessionSyncUndoBanner: View {
             }
         }
         .padding()
-        .glassCard()
+        .card()
     }
 
     // MARK: - Hilfseigenschaften

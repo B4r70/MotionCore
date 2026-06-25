@@ -568,7 +568,7 @@ struct ExercisePrimaryMuscleGroupsSection: View {
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 6)
                                         .background(.blue.opacity(0.2))
-                                        .foregroundStyle(Color.blue)
+                                        .foregroundStyle(Theme.accent)
                                         .clipShape(Capsule())
                                 }
                             }
@@ -674,7 +674,7 @@ struct ExerciseDetailedPrimaryMusclesSection: View {
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 6)
                                         .background(.blue.opacity(0.2))
-                                        .foregroundStyle(Color.blue)
+                                        .foregroundStyle(Theme.accent)
                                         .clipShape(Capsule())
                                 }
                             }
@@ -816,7 +816,7 @@ struct ExerciseMovementPatternSection: View {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: movementPattern.icon)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
 
                     Text(movementPattern.description)
                         .foregroundStyle(.primary)
@@ -851,7 +851,7 @@ struct ExerciseBodyPositionSection: View {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: bodyPosition.icon)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
 
                     Text(bodyPosition.description)
                         .foregroundStyle(.primary)
@@ -947,7 +947,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMin > 1 { repRangeMin -= 1 }
                         } label: {
                             Image(systemName: "minus.circle.fill")
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
 
                         Text("\(repRangeMin)")
@@ -958,7 +958,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMin < repRangeMax - 1 { repRangeMin += 1 }
                         } label: {
                             Image(systemName: "plus.circle.fill")
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                     }
                 }
@@ -978,7 +978,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMax > repRangeMin + 1 { repRangeMax -= 1 }
                         } label: {
                             Image(systemName: "minus.circle.fill")
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
 
                         Text("\(repRangeMax)")
@@ -989,7 +989,7 @@ struct ExerciseRepRangeSection: View {
                             if repRangeMax < 50 { repRangeMax += 1 }
                         } label: {
                             Image(systemName: "plus.circle.fill")
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                     }
                 }
@@ -1043,7 +1043,7 @@ struct SetRestTimeSection: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "timer")
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
 
                 Text("Pausenzeit")
                     .font(.headline)
@@ -1053,7 +1053,7 @@ struct SetRestTimeSection: View {
 
                 Text(formatTime(restSeconds))
                     .font(.headline.monospacedDigit())
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
             }
 
             // Preset-Buttons
@@ -1068,11 +1068,11 @@ struct SetRestTimeSection: View {
                             .padding(.vertical, 10)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(restSeconds == seconds ? Color.blue.opacity(0.2) : Color.clear)
+                                    .fill(restSeconds == seconds ? Theme.accent.opacity(0.2) : Color.clear)
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(restSeconds == seconds ? Color.blue : Color.white.opacity(0.2), lineWidth: 1)
+                                    .stroke(restSeconds == seconds ? Theme.accent : Color.white.opacity(0.2), lineWidth: 1)
                             )
                     }
                     .foregroundStyle(restSeconds == seconds ? .blue : .primary)
@@ -1086,7 +1086,7 @@ struct SetRestTimeSection: View {
                 } label: {
                     Image(systemName: "minus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                 }
 
                 Spacer()
@@ -1102,7 +1102,7 @@ struct SetRestTimeSection: View {
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                 }
             }
         }
@@ -1142,7 +1142,7 @@ struct SetTargetRIRSection: View {
             case 1: return Color.orange
             case 2: return Color.yellow
             case 3: return Color.green
-            default: return Color.blue
+            default: return Theme.accent
         }
     }
 

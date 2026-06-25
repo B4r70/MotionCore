@@ -61,7 +61,7 @@ struct BodyRecoveryListCard: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Zeilenaufbau

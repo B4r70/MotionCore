@@ -39,7 +39,7 @@ struct EmptyState: View {
 
                 Image(systemName: icon) /* *EDIT* Variable statt hardcoded */
                     .font(.system(size: 50))
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
             }
             .shadow(color: .black.opacity(0.1), radius: 20)
 

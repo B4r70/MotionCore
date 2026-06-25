@@ -106,7 +106,7 @@ struct ReadinessDetailView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 24)
-        .glassCard()
+        .card()
     }
 
     // MARK: - Faktoren-Section
@@ -127,7 +127,7 @@ struct ReadinessDetailView: View {
                     }
                 }
             }
-            .glassCard()
+            .card()
         }
     }
 
@@ -184,7 +184,7 @@ struct ReadinessDetailView: View {
                     .pickerStyle(.segmented)
                 }
             }
-            .glassCard()
+            .card()
         }
     }
 
@@ -234,7 +234,7 @@ struct ReadinessDetailView: View {
                     requiredSamples: requiredSamples
                 )
             }
-            .glassCard()
+            .card()
         }
     }
 

@@ -112,7 +112,7 @@ struct HealthMetricProgressCard: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .glassCard()
+        .card()
     }
 
     // Formatierung der Werte mit Einheit

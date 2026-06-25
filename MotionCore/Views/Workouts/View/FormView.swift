@@ -110,7 +110,7 @@ struct FormView: View {
                         // MARK: Belastungsintensität
                         IntensitySelectionSection(intensity: $workout.intensity)
                     }
-                    .glassCard()
+                    .card()
                     .padding(.horizontal)
                     .padding(.top, 16)
                 }

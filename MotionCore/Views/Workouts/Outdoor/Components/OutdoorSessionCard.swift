@@ -146,7 +146,7 @@ struct OutdoorSessionCard: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 }
 

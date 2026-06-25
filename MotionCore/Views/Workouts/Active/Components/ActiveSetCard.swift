@@ -193,7 +193,7 @@ struct ActiveSetCard: View {
         }
     }
 
-    /// Sheet-Modifier wird von beiden Zweigen über den jeweiligen .glassCard() angehängt.
+    /// Sheet-Modifier wird von beiden Zweigen über den jeweiligen .card() angehängt.
     private func withInstructionsSheet<V: View>(_ view: V) -> some View {
         view
             .onChange(of: showInstructionsSheet) { _, isShown in
@@ -307,7 +307,7 @@ struct ActiveSetCard: View {
                     .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
                 }
             }
-            .glassCard()
+            .card()
         )
     }
 
@@ -329,7 +329,7 @@ struct ActiveSetCard: View {
                     onComplete: onComplete
                 )
             }
-            .glassCard()
+            .card()
         )
     }
 

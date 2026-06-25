@@ -36,7 +36,7 @@ struct StatisticDeviceCard: View {
                 .padding(.vertical, 5)
             }
         }
-        .glassCard()
+        .card()
     }
 }
 

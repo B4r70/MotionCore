@@ -59,7 +59,7 @@ struct SummaryMuscleHeatmapCard: View {
             }
         }
         .padding()
-        .glassCard()
+        .card()
     }
 }
 

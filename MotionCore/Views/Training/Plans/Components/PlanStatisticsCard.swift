@@ -72,7 +72,7 @@ struct PlanStatisticsCard: View {
                 color: Color.green
             )
         }
-        .glassCard()
+        .card()
     }
     
     // MARK: - Subviews
@@ -154,7 +154,7 @@ struct PlanStatisticsDetailCard: View {
                 detailStatItem(value: formatVolume(totalVolume), label: "Volumen (kg)", icon: "scalemass.fill", color: Color.green)
             }
         }
-        .glassCard()
+        .card()
     }
     
     private func detailStatItem(value: String, label: String, icon: String, color: Color) -> some View {

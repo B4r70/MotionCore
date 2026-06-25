@@ -28,7 +28,7 @@ struct BodyCompositeScoreCard: View {
         ZStack {
             // Subtiler radialer Farbakzent im Hintergrund
             RadialGradient(
-                colors: [MCColor.mcBody.opacity(0.15), .clear],
+                colors: [Theme.success.opacity(0.15), .clear],
                 center: .leading,
                 startRadius: 20,
                 endRadius: 180
@@ -39,7 +39,7 @@ struct BodyCompositeScoreCard: View {
                     value: recoveryPercent,
                     label: "Bereit",
                     subText: nil,
-                    tint: MCColor.mcBody
+                    tint: Theme.success
                 )
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -62,7 +62,7 @@ struct BodyCompositeScoreCard: View {
                             onStartWorkoutTap()
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(MCColor.mcBody)
+                        .tint(Theme.success)
                         .font(.caption)
                     } else {
                         Text("Noch keine Empfehlung verfügbar")
@@ -74,7 +74,7 @@ struct BodyCompositeScoreCard: View {
                 Spacer(minLength: 0)
             }
         }
-        .glassCard()
+        .card()
     }
 }
 

@@ -57,7 +57,7 @@ struct PlanUpdateBanner: View {
                 .buttonStyle(.plain)
             }
             .padding()
-            .glassCard()
+            .card()
         }
         .buttonStyle(.plain)
     }

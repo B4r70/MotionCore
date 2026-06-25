@@ -62,6 +62,6 @@ struct StatisticDonutChart: View {
             }
             .padding([.horizontal, .bottom]) // Fügt horizontalen und unteren Abstand zum Inhalt hinzu
         }
-        .glassCard()
+        .card()
     }
 }
