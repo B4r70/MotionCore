@@ -20,19 +20,19 @@ struct StrengthVolumeChart: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("Volumen-Trend")
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
                 Spacer()
                 Text("kg")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.body)
+                    .foregroundStyle(Theme.textSecondary)
             }
             .padding()
 
             if data.isEmpty {
                 Text("Noch keine Daten vorhanden")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.body)
+                    .foregroundStyle(Theme.textSecondary)
                     .frame(maxWidth: .infinity, minHeight: 200)
                     .multilineTextAlignment(.center)
             } else {
@@ -41,13 +41,7 @@ struct StrengthVolumeChart: View {
                         x: .value("Datum", point.trendDate, unit: .day),
                         y: .value("Volumen", point.trendValue)
                     )
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.blue, .purple],
-                            startPoint: .bottom,
-                            endPoint: .top
-                        )
-                    )
+                    .foregroundStyle(Theme.series[0])
                     .cornerRadius(4)
                 }
                 .frame(minHeight: 220)

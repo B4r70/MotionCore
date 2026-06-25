@@ -28,16 +28,16 @@ struct StatisticDeviceRow: View {
                 Image(systemName: device.symbol)
                     .foregroundStyle(device.tint)
                 Text(device.description)
-                    .font(.subheadline)
+                    .font(AppFont.body)
                 Spacer()
                 Text("\(count)")
-                    .font(.subheadline.bold())
+                    .font(AppFont.body.bold())
             }
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color.gray.opacity(0.2))
+                        .fill(Theme.surfaceSunken)
 
                     Capsule()
                         .fill(device.tint)

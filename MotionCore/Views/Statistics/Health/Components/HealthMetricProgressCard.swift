@@ -58,11 +58,12 @@ struct HealthMetricProgressCard: View {
             VStack(spacing: 4) {
                 Text(formatValue(currentValue))
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(isOverTarget ? Color.green : .primary)
+                    .monospacedDigit()
+                    .foregroundStyle(isOverTarget ? Theme.success : Theme.textPrimary)
 
                 Text(title)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
                 // Fortschrittsbalken
@@ -71,20 +72,12 @@ struct HealthMetricProgressCard: View {
                     ZStack(alignment: .leading) {
                             // Hintergrund
                         Capsule()
-                            .fill(Color.gray.opacity(0.2))
+                            .fill(Theme.surfaceSunken)
                             .frame(height: 12)
 
                             // Fortschritt
                         Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: isOverTarget
-                                    ? [.green, Color.mint]
-                                    : [color.opacity(0.7), color],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
+                            .fill(isOverTarget ? Theme.success : color)
                             .frame(width: geometry.size.width * percentage, height: 12)
                             .animation(.spring(response: 0.6), value: percentage)
                     }
@@ -94,21 +87,21 @@ struct HealthMetricProgressCard: View {
                     // Label unter dem Balken
                 HStack {
                     Text("0")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textSecondary)
 
                     Spacer()
 
                     Text("Ziel: \(formatValue(targetValue))")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
             // Prozentwert (optional)
             if showPercentage {
                 Text(String(format: "%.0f%%", percentage * 100))
-                    .font(.caption.bold())
-                    .foregroundStyle(isOverTarget ? Color.green : color)
+                    .font(AppFont.callout.bold())
+                    .foregroundStyle(isOverTarget ? Theme.success : color)
             }
         }
         .frame(maxWidth: .infinity)

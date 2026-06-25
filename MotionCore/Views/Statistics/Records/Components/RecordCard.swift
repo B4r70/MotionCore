@@ -30,10 +30,10 @@ struct RecordCard: View {
 
                 VStack(spacing: 4) {
                     Text(title)
-                        .font(.headline)
+                        .font(AppFont.headline)
                     Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
 
@@ -53,28 +53,28 @@ struct RecordCard: View {
                     icon: .system("flame.fill"),
                     label: "Kalorien",
                     value: "\(allWorkouts.calories) kcal",
-                    color: Color.orange
+                    color: Theme.warning
                 )
                 // Dauer des Workouts
                 RecordDetailRow(
                     icon: .system("clock.fill"),
                     label: "Dauer",
                     value: "\(allWorkouts.duration) min",
-                    color: .blue
+                    color: Theme.series[0]
                 )
                 // Zurückgelegte Distanz
                 RecordDetailRow(
                     icon: .system("arrow.left.and.right"),
                     label: "Distanz",
                     value: String(format: "%.2f km", allWorkouts.distance),
-                    color: Color.green
+                    color: Theme.success
                 )
                 // Datum des Workouts
                 RecordDetailRow(
                     icon: .system("calendar"),
                     label: "Datum",
                     value: allWorkouts.date.formatted(AppFormatters.dateGermanShort),
-                    color: .purple
+                    color: Theme.series[2]
                 )
             }
         }
@@ -100,19 +100,20 @@ struct RecordGridCard: View {
                     // Wert (Record Value) in groß
                     Text(recordValue)
                         .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .monospacedDigit()
                         .minimumScaleFactor(0.7)
                         .lineLimit(1)
 
                     // Titel der Metrik
                     Text(metricTitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textSecondary)
                         .multilineTextAlignment(.center)
 
                     // Datum des Rekords (kompakt)
                     Text(bestWorkout.date.formatted(AppFormatters.dateGermanShort))
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textTertiary)
                 }
                 // Stellt sicher, dass dieser VStack das Zentrum der Kachel einnimmt
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

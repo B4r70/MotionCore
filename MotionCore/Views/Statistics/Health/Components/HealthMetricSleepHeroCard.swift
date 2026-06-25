@@ -35,19 +35,19 @@ struct HealthMetricSleepHeroCard: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Schlafanalyse")
-                            .font(.headline)
-                            .foregroundStyle(.primary)
+                            .font(AppFont.headline)
+                            .foregroundStyle(Theme.textPrimary)
 
                         Text(formattedDate)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                     Spacer()
 
                     // Expand/Collapse Icon
                     Image(systemName: "chevron.down.circle.fill")
-                        .font(.title2)
-                        .foregroundStyle(.indigo)
+                        .font(AppFont.title)
+                        .foregroundStyle(Theme.accent)
                         .rotationEffect(.degrees(isExpanded ? 180 : 0))
                 }
 
@@ -55,22 +55,23 @@ struct HealthMetricSleepHeroCard: View {
                 VStack(spacing: 8) {
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Image(systemName: "bed.double.fill")
-                            .foregroundStyle(.indigo)
-                            .font(.title2)
+                            .foregroundStyle(Theme.accent)
+                            .font(AppFont.title)
 
                         Text(sleepSummary.formattedTotal)
                             .font(.system(size: 34, weight: .bold, design: .rounded))
-                            .foregroundStyle(.primary)
+                            .monospacedDigit()
+                            .foregroundStyle(Theme.textPrimary)
                     }
 
                     HStack(spacing: 8) {
                         Image(systemName: "moon.zzz.fill")
-                            .font(.caption)
-                            .foregroundStyle(.indigo)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.accent)
 
                         Text("Gesamtschlafzeit")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.body.weight(.medium))
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
             }
@@ -81,7 +82,7 @@ struct HealthMetricSleepHeroCard: View {
                 VStack(spacing: 16) {
                     // Divider
                     Rectangle()
-                        .fill(Color.gray.opacity(colorScheme == .light ? 0.2 : 0.3))
+                        .fill(Theme.line)
                         .frame(height: 1)
                         .padding(.horizontal, 20)
 
@@ -90,7 +91,7 @@ struct HealthMetricSleepHeroCard: View {
                         if let inBed = sleepSummary.inBedMinutes {
                             phaseRow(
                                 icon: "bed.double.circle.fill",
-                                color: .blue,
+                                color: Theme.series[0],
                                 title: "Im Bett",
                                 minutes: inBed,
                                 percent: Double(sleepSummary.totalMinutes) > 0
@@ -125,7 +126,7 @@ struct HealthMetricSleepHeroCard: View {
                                 ZStack(alignment: .leading) {
                                     // Background track (wie bei Calories)
                                     RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color.gray.opacity(colorScheme == .light ? 0.15 : 0.25))
+                                        .fill(Theme.surfaceSunken)
                                         .frame(width: totalWidth)
 
                                     // Segmente füllen 100% (normalisiert)
@@ -154,8 +155,8 @@ struct HealthMetricSleepHeroCard: View {
                                             .fill(color(for: phase.name))
                                             .frame(width: 6, height: 6)
                                         Text(phase.name)
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
+                                            .font(AppFont.caption)
+                                            .foregroundStyle(Theme.textSecondary)
                                     }
                                 }
                             }
@@ -202,25 +203,25 @@ struct HealthMetricSleepHeroCard: View {
                 .frame(width: SleepProgressBar.iconColumnWidth, alignment: .leading)
 
             Text(title)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(AppFont.body)
+                .foregroundStyle(Theme.textSecondary)
 
             Spacer()
 
             VStack(alignment: .trailing, spacing: 2) {
                 Text(formattedMinutes(minutes))
-                    .font(.subheadline.weight(.semibold))
+                    .font(AppFont.body.weight(.semibold))
 
                 if let percent {
                     if isEfficiencyRow {
                             // z. B. 88% Schlaf-Effizienz
                         Text("\(Int(percent * 100))% Effizienz")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.caption)
+                            .foregroundStyle(Theme.textSecondary)
                     } else {
                         Text("\(Int(percent * 100))%")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.caption)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
             }
@@ -241,15 +242,15 @@ struct HealthMetricSleepHeroCard: View {
     private func color(for sleepStageName: String) -> Color {
         switch sleepStageName.lowercased() {
             case "rem":
-                return .purple
+                return Theme.series[2]
             case "tiefschlaf", "deep":
-                return .blue
+                return Theme.series[0]
             case "kernschlaf", "core":
-                return .indigo
+                return Theme.accent
             case "wach", "awake":
-                return Color.orange
+                return Theme.warning
             default:
-                return Color.gray
+                return Theme.textTertiary
         }
     }
 }

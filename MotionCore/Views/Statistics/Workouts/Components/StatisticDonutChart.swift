@@ -23,7 +23,8 @@ struct StatisticDonutChart: View {
 
                 // 1. Titel (ist jetzt Teil des Hintergrunds)
             Text(title)
-                .font(.headline)
+                .font(AppFont.headline)
+                .foregroundStyle(Theme.textPrimary)
                 .padding(.horizontal, 4)
                 .padding(.top, 4)
 
@@ -39,22 +40,26 @@ struct StatisticDonutChart: View {
                     .cornerRadius(5)
                     .foregroundStyle(by: .value("Kategorie", item.label))
                 }
+                .chartForegroundStyleScale(range: Theme.series)
                 .frame(height: 200)
 
                     // Dynamische Legende (Top 4)
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(data.prefix(4)) { item in
+                VStack(alignment: .leading, spacing: Space.s2) {
+                    ForEach(Array(data.prefix(4).enumerated()), id: \.element.id) { idx, item in
                         HStack {
                             Circle()
-                                .fill(Color.gray.opacity(0.5))
+                                .fill(Theme.series[idx % Theme.series.count])
                                 .frame(width: 8, height: 8)
                             Text(item.label)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(AppFont.callout)
+                                .foregroundStyle(Theme.textSecondary)
                                 .lineLimit(1)
                             Spacer()
                             Text("\(item.value)")
-                                .font(.caption.bold())
+                                .font(AppFont.callout)
+                                .fontWeight(.bold)
+                                .monospacedDigit()
+                                .foregroundStyle(Theme.textPrimary)
                         }
                     }
                 }

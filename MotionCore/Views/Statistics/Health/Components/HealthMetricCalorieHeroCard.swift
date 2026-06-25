@@ -26,15 +26,15 @@ struct HealthMetricHeroCard: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Kalorienbilanz")
-                                .font(.headline)
-                                .foregroundStyle(.primary)
+                                .font(AppFont.headline)
+                                .foregroundStyle(Theme.textPrimary)
                         }
                         Spacer()
 
                         // Expand/Collapse Icon
                         Image(systemName: "chevron.down.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.blue)
+                            .font(AppFont.title)
+                            .foregroundStyle(Theme.accent)
                             .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     }
 
@@ -43,26 +43,27 @@ struct HealthMetricHeroCard: View {
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
                             Text(calorieBalance.isDeficit ? "+" : "-")
                                 .font(.system(size: 35, weight: .semibold))
-                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
+                                .foregroundStyle(calorieBalance.isDeficit ? Theme.success : Theme.danger)
 
                             Text("\(abs(calorieBalance.balance))")
                                 .font(.system(size: 40, weight: .bold, design: .rounded))
-                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
+                                .monospacedDigit()
+                                .foregroundStyle(calorieBalance.isDeficit ? Theme.success : Theme.danger)
 
                             Text("kcal")
-                                .font(.title3)
-                                .foregroundStyle(.secondary)
+                                .font(AppFont.title)
+                                .foregroundStyle(Theme.textSecondary)
                                 .padding(.leading, 4)
                         }
 
                         HStack(spacing: 8) {
                             Image(systemName: calorieBalance.isDeficit ? "arrow.down.circle.fill" : "arrow.up.circle.fill")
-                                .font(.caption)
-                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
+                                .font(AppFont.callout)
+                                .foregroundStyle(calorieBalance.isDeficit ? Theme.success : Theme.danger)
 
                             Text(calorieBalance.isDeficit ? "Kaloriendefizit" : "Kalorienüberschuss")
-                                .font(.subheadline.weight(.medium))
-                                .foregroundStyle(calorieBalance.isDeficit ? Color.green : Color.red)
+                                .font(AppFont.body.weight(.medium))
+                                .foregroundStyle(calorieBalance.isDeficit ? Theme.success : Theme.danger)
                         }
                     }
                 }
@@ -73,7 +74,7 @@ struct HealthMetricHeroCard: View {
                 VStack(spacing: 16) {
                     // Divider
                     Rectangle()
-                        .fill(Color.gray.opacity(colorScheme == .light ? 0.2 : 0.3))
+                        .fill(Theme.line)
                         .frame(height: 1)
                         .padding(.horizontal, 20)
 
@@ -82,60 +83,60 @@ struct HealthMetricHeroCard: View {
                         HStack {
                             HStack(spacing: 8) {
                                 Image(systemName: "fork.knife.circle.fill")
-                                    .foregroundStyle(Color.green)
+                                    .foregroundStyle(Theme.success)
 
                                 Text("Aufnahme")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                                    .font(AppFont.body)
+                                    .foregroundStyle(Theme.textSecondary)
                             }
                             Spacer()
                             Text("\(calorieBalance.consumedCalories) kcal")
-                                .font(.subheadline.weight(.semibold))
+                                .font(AppFont.body.weight(.semibold))
                         }
                         // Grundumsatz
                         HStack {
                             HStack(spacing: 8) {
                                 Image(systemName: "flame.circle.fill")
-                                    .foregroundStyle(Color.orange)
+                                    .foregroundStyle(Theme.warning)
 
                                 Text("Grundumsatz")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                                    .font(AppFont.body)
+                                    .foregroundStyle(Theme.textSecondary)
                             }
                             Spacer()
                             Text("\(calorieBalance.basalEnergy) kcal")
-                                .font(.subheadline.weight(.semibold))
+                                .font(AppFont.body.weight(.semibold))
                         }
                         // Aktive Kalorien
                         HStack {
                             HStack(spacing: 8) {
                                 Image(systemName: "figure.run.circle.fill")
-                                    .foregroundStyle(Color.blue)
+                                    .foregroundStyle(Theme.series[0])
 
                                 Text("Aktivität")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                                    .font(AppFont.body)
+                                    .foregroundStyle(Theme.textSecondary)
                             }
                             Spacer()
                             Text("\(calorieBalance.activeEnergy) kcal")
-                                .font(.subheadline.weight(.semibold))
+                                .font(AppFont.body.weight(.semibold))
                         }
                         // Trennlinie
                         Rectangle()
-                            .fill(Color.gray.opacity(colorScheme == .light ? 0.15 : 0.25))
+                            .fill(Theme.line)
                             .frame(height: 0.5)
 
                         // Gesamtverbrauch
                         HStack {
                             HStack(spacing: 8) {
                                 Image(systemName: "sum")
-                                    .foregroundStyle(.purple)
+                                    .foregroundStyle(Theme.series[2])
                                 Text("Gesamtverbrauch")
-                                    .font(.subheadline.weight(.medium))
+                                    .font(AppFont.body.weight(.medium))
                             }
                             Spacer()
                             Text("\(calorieBalance.totalBurned) kcal")
-                                .font(.subheadline.weight(.bold))
+                                .font(AppFont.body.weight(.bold))
                         }
                     }
                     .padding(.horizontal, 20)
@@ -146,28 +147,11 @@ struct HealthMetricHeroCard: View {
                             ZStack(alignment: .leading) {
                                 // Hintergrund (Gesamtverbrauch)
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [
-                                                Color.orange.opacity(0.3),
-                                                Color.purple.opacity(0.3)
-                                            ],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
+                                    .fill(Theme.warning.opacity(0.15))
 
                                 // Verbrauchte Kalorien
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(
-                                        LinearGradient(
-                                            colors: calorieBalance.consumedPercentage > 1.0
-                                                ? [Color.red.opacity(0.7), Color.red]
-                                                : [Color.green.opacity(0.7), Color.green],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
+                                    .fill(calorieBalance.consumedPercentage > 1.0 ? Theme.danger : Theme.success)
                                     .frame(width: geometry.size.width * min(calorieBalance.consumedPercentage, 1.0))
                             }
                         }
@@ -177,28 +161,28 @@ struct HealthMetricHeroCard: View {
                         HStack {
                             HStack(spacing: 4) {
                                 Circle()
-                                    .fill(Color.green)
+                                    .fill(Theme.success)
                                     .frame(width: 8, height: 8)
 
                                 Text("Aufnahme")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
+                                    .font(AppFont.caption)
+                                    .foregroundStyle(Theme.textSecondary)
                             }
                             Spacer()
 
                             Text("\(Int(calorieBalance.consumedPercentage * 100))%")
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(calorieBalance.consumedPercentage > 1.0 ? Color.red : Color.green)
+                                .font(AppFont.caption.weight(.semibold))
+                                .foregroundStyle(calorieBalance.consumedPercentage > 1.0 ? Theme.danger : Theme.success)
                             Spacer()
 
                             HStack(spacing: 4) {
                                 Circle()
-                                    .fill(Color.orange)
+                                    .fill(Theme.warning)
                                     .frame(width: 8, height: 8)
 
                                 Text("Verbrauch")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
+                                    .font(AppFont.caption)
+                                    .foregroundStyle(Theme.textSecondary)
                             }
                         }
                     }
@@ -224,7 +208,7 @@ struct HealthMetricHeroCard: View {
 extension CalorieBalance {
     // Farbe für die Bilanz-Anzeige
     var statusColor: Color {
-        isDeficit ? Color.green : Color.red
+        isDeficit ? Theme.success : Theme.danger
     }
 }
 

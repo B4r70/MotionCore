@@ -27,7 +27,7 @@ struct StatisticIntensityRow: View {
             HStack(spacing: 2) {
                 ForEach(0 ..< summary.intensity.rawValue, id: \.self) { _ in
                     Image(systemName: "star.fill")
-                        .font(.caption2)
+                        .font(AppFont.caption)
                 }
             }
             .frame(width: 60, alignment: .leading)
@@ -36,7 +36,7 @@ struct StatisticIntensityRow: View {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color.gray.opacity(0.2))
+                        .fill(Theme.surfaceSunken)
 
                     Capsule()
                         .fill(summary.intensity.color)
@@ -47,7 +47,7 @@ struct StatisticIntensityRow: View {
 
             // Count
             Text("\(summary.count)")
-                .font(.caption.bold())
+                .font(AppFont.callout.bold())
                 .frame(width: 30, alignment: .trailing)
         }
     }

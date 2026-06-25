@@ -65,7 +65,7 @@ struct HealthMetricView: View {
                                     Double(appSettings.userBodyHeight) / 100.0
                                 )
                             ),
-                            color: .indigo
+                            color: Theme.accent
                         )
 
                             // Körpergewicht des Benutzers
@@ -73,7 +73,7 @@ struct HealthMetricView: View {
                             icon: .system("figure"),
                             title: "Körpergewicht",
                             valueView: Text(String(format: "%.1f kg", calcHealthMetrics.userBodyWeight ?? 0.0)),
-                            color: Color.gray
+                            color: Theme.textTertiary
                         )
                             // Geschlecht des Benutzers
                         HealthMetricGridCard(
@@ -88,7 +88,7 @@ struct HealthMetricView: View {
                             icon: .system("flame.fill"), // Beispiel-Icon
                             title: "Alter",
                             valueView: Text(String(format: "%d Jahre", appSettings.userAge)),
-                            color: Color.red // Kann nach Belieben angepasst werden
+                            color: Theme.danger
                         )
 
                             // Letzte Herzfrequenz (aus HealthKit)
@@ -98,7 +98,7 @@ struct HealthMetricView: View {
                             valueView: Text(
                                 healthKitManager.latestHeartRate.map { String(format: "%.0f bpm", $0) } ?? "-"
                             ),
-                            color: Color.red
+                            color: Theme.danger
                         )
                             // Body-Mass-Index (BMI)
                         HealthMetricGridCard(
@@ -107,7 +107,7 @@ struct HealthMetricView: View {
                             valueView: Text(
                                 String(format: "%.2f", calcHealthMetrics.userBodyMassIndex ?? 0.0)
                             ),
-                            color: .blue // Kann nach Belieben angepasst werden
+                            color: Theme.series[0]
                         )
                     }
                         // Kalorienbilanz als Übersicht
@@ -139,7 +139,7 @@ struct HealthMetricView: View {
                         currentValue: Double(healthKitManager.activeBurnedCalories ?? 0),
                         targetValue: Double(appSettings.dailyActiveCalorieGoal),
                         unit: "kcal",
-                        color: Color.orange,
+                        color: Theme.warning,
                         showPercentage: true
                     )
 
@@ -150,7 +150,7 @@ struct HealthMetricView: View {
                         currentValue: Double(healthKitManager.latestStepCount ?? 0),
                         targetValue: Double(appSettings.dailyStepsGoal),
                         unit: "Schritte",
-                        color: .cyan,
+                        color: Theme.series[1],
                         showPercentage: true
                     )
                         // Hier kannst du später weitere Cards hinzufügen
