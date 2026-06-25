@@ -39,7 +39,7 @@ struct StrengthSessionCard: View {
             // Footer mit Intensität
             footerSection
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Header

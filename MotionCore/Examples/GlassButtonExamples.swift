@@ -135,7 +135,7 @@ struct GlassButtonExamples: View {
          }
      }
  }
- .glassCard()
+ .card()
  
 */
 

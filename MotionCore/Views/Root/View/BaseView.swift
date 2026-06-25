@@ -215,7 +215,7 @@ struct BaseView: View {
         }
         // Selektierte Tab-Farbe wie zuvor (systemBlue), ohne UIKit-Appearance-Proxy —
         // der zwingt seit iOS 26 den Legacy-Rendering-Pfad und kollidiert mit Liquid Glass.
-        .tint(.blue)
+        .tint(Theme.accent)
         // MARK: - Sheets
 
         // Workout-Typ Auswahl

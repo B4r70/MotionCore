@@ -63,19 +63,19 @@ struct MCChip: View {
             icon: Image(systemName: "bolt.fill"),
             value: "78",
             label: "Bereitschaft",
-            tint: MCColor.mcEnergy
+            tint: Theme.accent
         )
         MCChip(
             icon: Image(systemName: "heart.fill"),
             value: "62 bpm",
             label: "Ruhepuls",
-            tint: MCColor.mcStreak
+            tint: Theme.warning
         )
         MCChip(
             icon: Image(systemName: "flame.fill"),
             value: "12",
             label: "Tage Serie",
-            tint: MCColor.mcStat
+            tint: Theme.series[0]
         )
     }
     .padding()

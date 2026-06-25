@@ -67,7 +67,7 @@ struct AutoProgressionInsightCard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCard()
+        .card()
     }
 
     private var header: some View {

@@ -104,7 +104,7 @@ struct MuscleHeatmapView: View {
             }
         }
         .padding()
-        .glassCard()
+        .card()
     }
 
     // MARK: - Vernachlässigte Muskeln
@@ -145,7 +145,7 @@ struct MuscleHeatmapView: View {
             }
         }
         .padding()
-        .glassCard()
+        .card()
     }
 
     // MARK: - Top Muskeln
@@ -177,7 +177,7 @@ struct MuscleHeatmapView: View {
             }
         }
         .padding()
-        .glassCard()
+        .card()
     }
 }
 

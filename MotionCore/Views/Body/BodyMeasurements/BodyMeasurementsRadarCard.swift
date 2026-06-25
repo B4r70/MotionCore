@@ -40,7 +40,7 @@ struct BodyMeasurementsRadarCard: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .glassCard()
+        .card()
     }
 }
 
@@ -98,8 +98,8 @@ private struct RadarCanvas: View {
                     if i == 0 { prevPath.move(to: p) } else { prevPath.addLine(to: p) }
                 }
                 prevPath.closeSubpath()
-                ctx.fill(prevPath, with: .color(MCColor.mcBody.opacity(0.15)))
-                ctx.stroke(prevPath, with: .color(MCColor.mcBody.opacity(0.50)), style: StrokeStyle(lineWidth: 1.5))
+                ctx.fill(prevPath, with: .color(Theme.success.opacity(0.15)))
+                ctx.stroke(prevPath, with: .color(Theme.success.opacity(0.50)), style: StrokeStyle(lineWidth: 1.5))
             }
 
             // 4. Aktuelles Polygon (obere Schicht)
@@ -109,8 +109,8 @@ private struct RadarCanvas: View {
                 if i == 0 { currPath.move(to: p) } else { currPath.addLine(to: p) }
             }
             currPath.closeSubpath()
-            ctx.fill(currPath, with: .color(MCColor.mcBody.opacity(0.30)))
-            ctx.stroke(currPath, with: .color(MCColor.mcBody.opacity(0.70)), style: StrokeStyle(lineWidth: 2))
+            ctx.fill(currPath, with: .color(Theme.success.opacity(0.30)))
+            ctx.stroke(currPath, with: .color(Theme.success.opacity(0.70)), style: StrokeStyle(lineWidth: 2))
         }
         .overlay(alignment: .center) {
             // Achsen-Labels als SwiftUI-Text-Overlays über dem Canvas

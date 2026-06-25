@@ -102,7 +102,9 @@ struct MotionCoreApp: App {
             BaseView()
                 .environmentObject(appSettings)
                 .environmentObject(activeSessionManager)
-                .preferredColorScheme(appSettings.appTheme.colorScheme)
+                // Redesign Calm 2026: bis AP 11 fest auf Hell gepinnt (vorhersehbarer
+                // Übergang). AP 11 stellt auf appSettings.appTheme.colorScheme zurück.
+                .preferredColorScheme(.light)
                 .handleSessionLifecycle()
                 .onAppear { checkForActiveSession() }
                 .task {

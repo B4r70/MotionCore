@@ -100,7 +100,7 @@ struct ExerciseQuickConfigSheet: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .glassCard()
+        .card()
     }
 
     private func infoRow(label: String, value: String) -> some View {
@@ -134,7 +134,7 @@ struct ExerciseQuickConfigSheet: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity)
-            .glassCard()
+            .card()
         }
         .buttonStyle(.plain)
     }

@@ -33,7 +33,7 @@ struct StatisticCard<ValueContent: View>: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .glassCard()
+        .card()
     }
 }
 
@@ -62,6 +62,6 @@ struct StatisticGridCard<ValueContent: View>: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120) // EINHEITLICHE HÖHE
-        .glassCard()
+        .card()
     }
 }

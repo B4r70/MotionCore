@@ -68,7 +68,7 @@ struct BodyMeasurementsCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(Rectangle())
         .onTapGesture { onTap() }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Hilfsfunktionen

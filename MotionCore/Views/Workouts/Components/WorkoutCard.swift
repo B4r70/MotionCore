@@ -112,6 +112,6 @@ struct WorkoutCard: View {
                 Spacer()
             }
         }
-        .glassCard()
+        .card()
     }
 }

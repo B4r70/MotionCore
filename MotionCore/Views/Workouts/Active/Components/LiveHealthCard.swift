@@ -59,7 +59,7 @@ struct LiveHealthCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding()
-            .glassCard()
+            .card()
     }
 }
 

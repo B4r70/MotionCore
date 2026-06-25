@@ -131,7 +131,7 @@ struct SessionPlanSyncSheet: View {
             Spacer()
         }
         .padding()
-        .glassCard()
+        .card()
     }
 
     // MARK: - Sektion

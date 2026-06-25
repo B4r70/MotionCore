@@ -220,7 +220,7 @@ struct ExercisesOverviewCard: View {
                 }
             }
         }
-        .glassCard()
+        .card()
         .onAppear {
             if expandedExerciseKey == nil {
                 expandedExerciseKey = selectedExerciseKey ?? groupedSets.first?.first?.groupKey

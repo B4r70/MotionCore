@@ -54,6 +54,6 @@ struct StrengthVolumeChart: View {
                 .padding()
             }
         }
-        .glassCard()
+        .card()
     }
 }

@@ -49,7 +49,7 @@ struct PlanImportSchemaMismatchBanner: View {
             .buttonStyle(.plain)
         }
         .padding()
-        .glassCard()
+        .card()
     }
 }
 

@@ -100,7 +100,7 @@ struct KeyboardToolbarModifier: ViewModifier {
                     } label: {
                         Text("Fertig")
                             .font(.body.weight(.semibold))
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Theme.accent)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
                     }

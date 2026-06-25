@@ -45,7 +45,7 @@ struct SummaryWeekStrip: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 }
 

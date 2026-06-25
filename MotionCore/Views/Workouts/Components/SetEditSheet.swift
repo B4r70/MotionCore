@@ -55,7 +55,7 @@ struct SetEditSheet: View {
                         VStack(alignment: .leading, spacing: 0) {
                             SetRestTimeSection(restSeconds: $restSeconds)
                         }
-                        .glassCard()
+                        .card()
                     }
                     .padding(.horizontal)
                     .padding(.top, 16)
@@ -100,7 +100,7 @@ struct SetEditSheet: View {
                 .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
             }
         }
-        .glassCard()
+        .card()
     }
 
     private var weightCard: some View {
@@ -152,7 +152,7 @@ struct SetEditSheet: View {
                 .padding(.top, 4)
             }
         }
-        .glassCard()
+        .card()
     }
 
     private var repsCard: some View {
@@ -176,7 +176,7 @@ struct SetEditSheet: View {
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { p in if !p { stopTimer() } }, perform: {})
             }
         }
-        .glassCard()
+        .card()
     }
 
     private var setCountCard: some View {
@@ -203,7 +203,7 @@ struct SetEditSheet: View {
             }
             Text("für \(set.exerciseName)").font(.caption).foregroundStyle(.secondary)
         }
-        .glassCard()
+        .card()
     }
 
     // Gibt das verknüpfte StudioEquipment zurück, falls die Übung eines referenziert

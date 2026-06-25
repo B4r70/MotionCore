@@ -75,19 +75,19 @@ struct MCFactorBar: View {
             label: "Schlafqualität",
             subLabel: "Niedrig",
             value: 0.2,
-            color: MCColor.mcStreak
+            color: Theme.warning
         )
         MCFactorBar(
             label: "HRV",
             subLabel: "Mittel",
             value: 0.55,
-            color: MCColor.mcEnergy
+            color: Theme.accent
         )
         MCFactorBar(
             label: "Muskel-Erholung",
             subLabel: "Hoch",
             value: 0.9,
-            color: MCColor.mcBody
+            color: Theme.success
         )
     }
     .padding()

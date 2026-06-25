@@ -81,7 +81,7 @@ struct MuscleRecoveryDetailView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 24)
-        .glassCard()
+        .card()
     }
 
     // MARK: - Gruppen-Liste
@@ -116,7 +116,7 @@ struct MuscleRecoveryDetailView: View {
                     }
                 }
             }
-            .glassCard()
+            .card()
         }
     }
 

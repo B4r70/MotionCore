@@ -62,6 +62,6 @@ struct WorkoutCompletedCard: View {
                 .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
             }
         }
-        .glassCard()
+        .card()
     }
 }
