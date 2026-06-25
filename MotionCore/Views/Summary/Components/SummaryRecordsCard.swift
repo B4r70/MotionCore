@@ -29,7 +29,7 @@ struct SummaryRecordsCard: View {
             if let highest = highestCaloriesBurn {
                 SummaryRecordRow(
                     icon: "flame.fill",
-                    iconColor: Color.orange,
+                    iconColor: Theme.warning,
                     title: "Höchster Kalorienverbrauch",
                     value: "\(highest.session.calories) kcal",
                     subtitle: "\(highest.type.description) • \(highest.session.date.formatted(AppFormatters.dateGermanShort))",
@@ -40,7 +40,7 @@ struct SummaryRecordsCard: View {
             if let longest = longestWorkout {
                 SummaryRecordRow(
                     icon: "clock.fill",
-                    iconColor: .purple,
+                    iconColor: Theme.series[0],
                     title: "Längstes Workout",
                     value: "\(longest.session.duration) Min",
                     subtitle: "\(longest.type.description) • \(longest.session.date.formatted(AppFormatters.dateGermanShort))",
@@ -50,7 +50,7 @@ struct SummaryRecordsCard: View {
 
             SummaryRecordRow(
                 icon: "trophy.fill",
-                iconColor: Color.yellow,
+                iconColor: Theme.warning,
                 title: "Längste Streak",
                 value: "\(longestStreak) Tage",
                 subtitle: "Aufeinanderfolgende Trainingstage",

@@ -23,7 +23,7 @@ struct SummaryActivityCalendar: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Space.s3) {
             // Monats-Navigation
             monthNavigation
 
@@ -47,14 +47,14 @@ struct SummaryActivityCalendar: View {
                 changeMonth(by: -1)
             } label: {
                 Image(systemName: "chevron.left")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Spacer()
 
             Text(displayedMonth, format: .dateTime.month(.wide).year())
-                .font(.subheadline)
-                .fontWeight(.semibold)
+                .font(AppFont.headline)
+                .foregroundStyle(Theme.textPrimary)
 
             Spacer()
 
@@ -62,7 +62,7 @@ struct SummaryActivityCalendar: View {
                 changeMonth(by: 1)
             } label: {
                 Image(systemName: "chevron.right")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
             .disabled(isCurrentMonth)
         }
@@ -76,8 +76,8 @@ struct SummaryActivityCalendar: View {
         HStack(spacing: 0) {
             ForEach(weekdayNames, id: \.self) { name in
                 Text(name)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textSecondary)
                     .frame(maxWidth: .infinity)
             }
         }
@@ -127,9 +127,11 @@ struct SummaryActivityCalendar: View {
         VStack(spacing: 2) {
             Text(value)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(Theme.textPrimary)
             Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity)
     }
@@ -159,14 +161,14 @@ private struct CalendarDayCell: View {
     private var backgroundColor: Color {
         switch day.workoutCount {
         case 0:  return .clear
-        case 1:  return Color(hex: "#C9E6FF")
-        case 2:  return Color(hex: "#9BD2FF")
-        default: return Color(hex: "#3B82F6")
+        case 1:  return Theme.accent.opacity(0.30)
+        case 2:  return Theme.accent.opacity(0.60)
+        default: return Theme.accent
         }
     }
 
     private var textColor: Color {
-        day.workoutCount >= 2 ? .white : .primary
+        day.workoutCount >= 2 ? Color.white : Theme.accentPress
     }
 
     var body: some View {
@@ -177,13 +179,14 @@ private struct CalendarDayCell: View {
 
             if day.isToday {
                 RoundedRectangle(cornerRadius: 6)
-                    .stroke(Color.blue, lineWidth: 1.5)
+                    .stroke(Theme.accent, lineWidth: 1.5)
                     .frame(maxWidth: .infinity, minHeight: 28, maxHeight: 28)
             }
 
             Text("\(Calendar.current.component(.day, from: day.date))")
                 .font(.system(size: 11, weight: day.isToday ? .bold : .regular))
-                .foregroundStyle(day.workoutCount > 0 ? textColor : .secondary)
+                .monospacedDigit()
+                .foregroundStyle(day.workoutCount > 0 ? textColor : Theme.textSecondary)
         }
     }
 }

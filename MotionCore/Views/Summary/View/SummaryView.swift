@@ -132,7 +132,7 @@ struct SummaryView: View {
             readinessIsCalibrating: latestSessionReadiness?.isCalibrating ?? false,
             recoveryPercent: Int(viewModel.recoveryAnalysis?.overallRecoveryPercent ?? 0),
             currentStreak: viewModel.currentStreak,
-            nextStreakMilestone: viewModel.nextStreakMilestone,
+            averageHeartRate: viewModel.filteredAverageHeartRate,
             recommendation: viewModel.recommendation,
             onStartWorkoutTap: onStartWorkoutTap
         )
@@ -272,20 +272,21 @@ struct SummaryView: View {
     // MARK: - Header
 
     private var dashboardHeader: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: Space.s1) {
             Text(greetingText)
-                .font(.title2.bold())
-                .foregroundStyle(.primary)
+                .font(AppFont.title)
+                .tracking(-0.5)
+                .foregroundStyle(Theme.textPrimary)
                 .accessibilityAddTraits(.isHeader)
 
             Text(formattedDate)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
-        .padding(.top, 12)
-        .padding(.bottom, 8)
+        .padding(.top, Space.s3)
+        .padding(.bottom, Space.s2)
     }
 
     private static let dateFormatter: DateFormatter = {

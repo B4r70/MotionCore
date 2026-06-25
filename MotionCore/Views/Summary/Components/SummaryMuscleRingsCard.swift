@@ -5,8 +5,7 @@
 // Datei . . . . : SummaryMuscleRingsCard.swift                                     /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 25.04.2026                                                       /
-// Beschreibung  : Grid mit MCMiniRings für jede Muskelgruppe aus der               /
-//                 MuscleRecoveryAnalysis                                            /
+// Beschreibung  : Grid mit ProgressRings je Muskelgruppe (RecoveryAnalysis)        /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -25,7 +24,7 @@ struct SummaryMuscleRingsCard: View {
     // MARK: Body
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Space.s3) {
             header
             if analysis.muscleGroupScores.isEmpty {
                 EmptyState()
@@ -42,11 +41,12 @@ struct SummaryMuscleRingsCard: View {
     private var header: some View {
         HStack {
             Text("Trainierte Muskeln")
-                .font(.headline)
+                .font(AppFont.headline)
+                .foregroundStyle(Theme.textPrimary)
             Spacer()
             Text("Ø \(Int(analysis.overallRecoveryPercent))% bereit")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
                 .monospacedDigit()
         }
     }
@@ -56,17 +56,31 @@ struct SummaryMuscleRingsCard: View {
     private var ringGrid: some View {
         LazyVGrid(
             columns: Array(repeating: GridItem(.flexible()), count: 4),
-            spacing: 12
+            spacing: Space.s3
         ) {
             ForEach(analysis.muscleGroupScores, id: \.muscleGroup) { group in
-                MCMiniRing(
-                    value: Int(group.recoveryPercent),
-                    label: group.displayName
+                ProgressRing(
+                    progress: group.recoveryPercent / 100.0,
+                    size: 62,
+                    stroke: 6,
+                    tint: recoveryTint(group.recoveryPercent),
+                    centerValue: "\(Int(group.recoveryPercent))",
+                    centerLabel: group.displayName
                 )
                 .onTapGesture {
                     onMuscleTap()
                 }
             }
+        }
+    }
+
+    // MARK: - Erholungs-Farbe (eine Leitfarbe je Erholungsstufe)
+
+    private func recoveryTint(_ percent: Double) -> Color {
+        switch percent {
+        case 85...:   return Theme.success
+        case 50..<85: return Theme.warning
+        default:      return Theme.danger
         }
     }
 }

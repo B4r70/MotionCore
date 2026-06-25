@@ -23,9 +23,9 @@ struct SummaryWeekStrip: View {
     // MARK: - Body
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: Space.s2) {
             // Wochentag-Labels und Tages-Kreise
-            HStack(spacing: 8) {
+            HStack(spacing: Space.s2) {
                 ForEach(days) { day in
                     DayCircle(day: day)
                 }
@@ -39,8 +39,8 @@ struct SummaryWeekStrip: View {
                     }
                 } label: {
                     Image(systemName: showCalendar ? "chevron.up" : "chevron.down")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textSecondary)
                         .padding(6)
                 }
             }
@@ -66,18 +66,18 @@ private struct DayCircle: View {
 
     private var fillColor: Color {
         switch day.workoutCount {
-        case 0:  return Color.secondary.opacity(0.12)
-        case 1:  return Color(hex: "#C9E6FF")
-        case 2:  return Color(hex: "#9BD2FF")
-        default: return Color(hex: "#3B82F6")
+        case 0:  return Theme.surfaceSunken
+        case 1:  return Theme.accent.opacity(0.30)
+        case 2:  return Theme.accent.opacity(0.60)
+        default: return Theme.accent
         }
     }
 
     var body: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: Space.s1) {
             Text(weekdayLetter)
-                .font(.system(size: 10))
-                .foregroundStyle(.secondary)
+                .font(AppFont.eyebrow)
+                .foregroundStyle(Theme.textTertiary)
 
             ZStack {
                 // Hintergrund-Kreis
@@ -88,7 +88,7 @@ private struct DayCircle: View {
                 // Pulsierender Rand für heute
                 if day.isToday {
                     Circle()
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(Theme.accent, lineWidth: 2)
                         .frame(width: 32, height: 32)
                         .scaleEffect(pulsing ? 1.2 : 1.0)
                         .opacity(pulsing ? 0.0 : 1.0)
@@ -97,8 +97,10 @@ private struct DayCircle: View {
                 // Workouts-Text (nur wenn > 0)
                 if day.workoutCount > 0 {
                     Text("\(day.workoutCount)")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(day.workoutCount >= 2 ? .white : Color(hex: "#1D4ED8"))
+                        .font(AppFont.caption)
+                        .fontWeight(.bold)
+                        .monospacedDigit()
+                        .foregroundStyle(day.workoutCount >= 2 ? Color.white : Theme.accentPress)
                 }
             }
         }

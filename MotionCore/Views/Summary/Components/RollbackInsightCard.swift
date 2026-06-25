@@ -66,7 +66,7 @@ struct RollbackInsightCard: View {
     private var header: some View {
         HStack(spacing: 10) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundStyle(.orange)
+                .foregroundStyle(Theme.warning)
                 .font(.title3)
             Text("Rollback vorgeschlagen")
                 .font(.headline)
@@ -98,7 +98,7 @@ struct RollbackInsightCard: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(.orange)
+                .tint(Theme.warning)
             }
 
             // Sekundäre Aktionen
