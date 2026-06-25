@@ -41,14 +41,16 @@ struct ActiveTimeSetContent: View {
             // Pace-Chip aus set.notes (nur sichtbar wenn vorhanden)
             if !set.notes.isEmpty {
                 Text(set.notes)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .background(.ultraThinMaterial, in: Capsule())
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
+                    .padding(.horizontal, Space.s3)
+                    .padding(.vertical, Space.s1)
+                    .background(Theme.surfaceSunken, in: Capsule())
             }
 
-            GlassDivider()
+            Rectangle()
+                .fill(Theme.lineSoft)
+                .frame(height: 1)
 
             // Primär-Toggle: Start / Pause / Fortsetzen
             countdownToggleButton
@@ -58,19 +60,9 @@ struct ActiveTimeSetContent: View {
                 set.duration = countdown.elapsedSeconds
                 onComplete(set)
             } label: {
-                HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                    Text("Satz abschließen")
-                        .font(.headline)
-                }
-                .foregroundStyle(Color.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(
-                    canComplete ? Color.green : Color.green.opacity(0.4),
-                    in: RoundedRectangle(cornerRadius: 16)
-                )
+                Label("Satz abschließen", systemImage: "checkmark")
             }
+            .buttonStyle(.mcPrimary)
             .disabled(!canComplete)
         }
     }
@@ -84,22 +76,24 @@ struct ActiveTimeSetContent: View {
         if countdown.isFinished {
             // Abgelaufen → „Fertig", kein Neustart möglich
             Label("Fertig", systemImage: "checkmark.circle")
-                .font(.subheadline.bold())
-                .foregroundStyle(Color.secondary)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(Color.secondary.opacity(0.1), in: Capsule())
+                .font(AppFont.callout)
+                .fontWeight(.bold)
+                .foregroundStyle(Theme.textSecondary)
+                .padding(.horizontal, Space.s5)
+                .padding(.vertical, Space.s2)
+                .background(Theme.surfaceSunken, in: Capsule())
         } else if !countdown.isRunning && !countdown.isPaused {
             // Idle → Start
             Button {
                 countdown.start(seconds: set.duration, setUUID: set.setUUID)
             } label: {
                 Label("Start", systemImage: "play.fill")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(Color.green)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(Color.green.opacity(0.15), in: Capsule())
+                    .font(AppFont.callout)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Theme.success)
+                    .padding(.horizontal, Space.s5)
+                    .padding(.vertical, Space.s2)
+                    .background(Theme.success.opacity(0.15), in: Capsule())
             }
         } else if countdown.isRunning {
             // Läuft → Pause
@@ -107,11 +101,12 @@ struct ActiveTimeSetContent: View {
                 countdown.pause()
             } label: {
                 Label("Pause", systemImage: "pause.fill")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(Color.orange)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(Color.orange.opacity(0.15), in: Capsule())
+                    .font(AppFont.callout)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Theme.warning)
+                    .padding(.horizontal, Space.s5)
+                    .padding(.vertical, Space.s2)
+                    .background(Theme.warning.opacity(0.15), in: Capsule())
             }
         } else if countdown.isPaused {
             // Pausiert → Fortsetzen
@@ -119,11 +114,12 @@ struct ActiveTimeSetContent: View {
                 countdown.resume()
             } label: {
                 Label("Fortsetzen", systemImage: "play.fill")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(Color.blue)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(Color.blue.opacity(0.15), in: Capsule())
+                    .font(AppFont.callout)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Theme.accent)
+                    .padding(.horizontal, Space.s5)
+                    .padding(.vertical, Space.s2)
+                    .background(Theme.accent.opacity(0.15), in: Capsule())
             }
         }
     }

@@ -24,15 +24,16 @@ struct ExerciseCountdownTimerView: View {
     var isPaused: Bool = false
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Space.s3) {
             // Kontextabhängiges Label — unterscheidbar von „Pause"-Timer
             Text(statusLabel)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .fontWeight(.medium)
+                .foregroundStyle(Theme.textSecondary)
 
             ringTimer
         }
-        .padding(.top, 8)
+        .padding(.top, Space.s2)
     }
 
     // MARK: - Ring-Timer
@@ -41,7 +42,7 @@ struct ExerciseCountdownTimerView: View {
         ZStack {
             // Hintergrund-Ring
             Circle()
-                .stroke(Color.primary.opacity(0.1), lineWidth: 12)
+                .stroke(Theme.surfaceSunken, lineWidth: 12)
 
             // Fortschritts-Ring
             Circle()
@@ -56,7 +57,7 @@ struct ExerciseCountdownTimerView: View {
             // Mono-Ziffern in der Mitte
             Text(formattedTime)
                 .font(.system(size: 48, weight: .bold, design: .monospaced))
-                .foregroundStyle(isRunning || isPaused ? timerColor : .secondary)
+                .foregroundStyle(isRunning || isPaused ? timerColor : Theme.textTertiary)
                 .contentTransition(.numericText())
                 .monospacedDigit()
         }
@@ -80,13 +81,13 @@ struct ExerciseCountdownTimerView: View {
 
     /// Farblogik: neutral vor Start, grün > 60 s, gelb 10–60 s, rot ≤ 10 s
     private var timerColor: Color {
-        guard isRunning || isPaused else { return .secondary }
+        guard isRunning || isPaused else { return Theme.textTertiary }
         if remainingSeconds > 60 {
-            return .green
+            return Theme.success
         } else if remainingSeconds > 10 {
-            return .yellow
+            return Theme.warning
         } else {
-            return .red
+            return Theme.danger
         }
     }
 
@@ -102,7 +103,7 @@ struct ExerciseCountdownTimerView: View {
 
 #Preview("Übungs-Countdown — Zustände") {
     ZStack {
-        AnimatedBackground(showAnimatedBlob: true)
+        Theme.surfaceApp.ignoresSafeArea()
 
         VStack(spacing: 32) {
             // Idle — vor Start

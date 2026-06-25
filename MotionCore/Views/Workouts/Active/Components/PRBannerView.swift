@@ -4,8 +4,8 @@
 // Abschnitt . . : Aktive Workouts                                                  /
 // Datei . . . . : PRBannerView.swift                                               /
 // Autor . . . . : Bartosz Stryjewski                                               /
-// Erstellt am . : 2026-03-03                                                       /
-// Beschreibung  : Banner-Overlay für neuen persönlichen Rekord                     /
+// Erstellt am . : 03.03.2026                                                       /
+// Beschreibung  : Banner-Overlay für neuen persönlichen Rekord (§4.3)              /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -17,33 +17,39 @@ struct PRBannerView: View {
     let oneRM: Double
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Space.s3) {
+            // Runder Icon-Chip (Ø 38, amber-soft)
             Image(systemName: "crown.fill")
-                .font(.title2)
-                .foregroundStyle(Color.yellow)
+                .font(AppFont.headline)
+                .foregroundStyle(Theme.warning)
+                .frame(width: 38, height: 38)
+                .background(Theme.warning.opacity(0.12), in: Circle())
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: Space.s1) {
                 Text("Neuer PR!")
-                    .font(.headline.bold())
-                    .foregroundStyle(.primary)
-
-                Text("\(exerciseName) — \(String(format: "%.1f", oneRM)) kg 1RM")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Text("\(exerciseName) · \(String(format: "%.1f", oneRM)) kg 1RM")
+                    .font(AppFont.callout)
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Spacer()
+
+            Badge(text: "Rekord", style: .solid, color: Theme.warning)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.yellow.opacity(0.5), lineWidth: 1.5)
+        .padding(Space.s4)
+        .background(
+            Theme.warning.opacity(0.10),
+            in: RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
         )
-        .shadow(color: Color.yellow.opacity(0.2), radius: 8, x: 0, y: 4)
-        .padding(.horizontal, 16)
-        .padding(.top, 8)
+        .overlay(
+            RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
+                .stroke(Theme.warning.opacity(0.35), lineWidth: 1)
+        )
+        .padding(.horizontal, Space.s4)
+        .padding(.top, Space.s2)
     }
 }
 
@@ -51,8 +57,7 @@ struct PRBannerView: View {
 
 #Preview("PR Banner") {
     ZStack {
-        Color.black.opacity(0.3).ignoresSafeArea()
-
+        Theme.surfaceApp.ignoresSafeArea()
         VStack {
             PRBannerView(exerciseName: "Bankdrücken", oneRM: 102.5)
             Spacer()

@@ -24,22 +24,26 @@ struct CompactRestTimerView: View {
         return 1.0 - Double(restTimerManager.remainingSeconds) / Double(targetSeconds)
     }
 
+    // Einfarbiger Ring mit Schwellen (≤10s danger, ≤30s warning, sonst accent)
+    private var ringColor: Color {
+        let r = restTimerManager.remainingSeconds
+        if r <= 10 { return Theme.danger }
+        if r <= 30 { return Theme.warning }
+        return Theme.accent
+    }
+
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: Space.s2) {
             ZStack {
                 // Hintergrund-Ring
                 Circle()
-                    .stroke(.primary.opacity(0.1), lineWidth: 8)
+                    .stroke(Theme.surfaceSunken, lineWidth: 8)
 
-                // Fortschritts-Ring
+                // Fortschritts-Ring (einfarbig, kein Gradient)
                 Circle()
                     .trim(from: 0, to: progress)
                     .stroke(
-                        LinearGradient(
-                            colors: [.blue, .purple],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
+                        ringColor,
                         style: StrokeStyle(lineWidth: 8, lineCap: .round)
                     )
                     .rotationEffect(.degrees(-90))
@@ -49,32 +53,33 @@ struct CompactRestTimerView: View {
                 Text(formatRestTime(restTimerManager.remainingSeconds))
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .monospacedDigit()
+                    .foregroundStyle(Theme.textPrimary)
                     .contentTransition(.numericText())
             }
             .frame(width: 130, height: 130)
 
             // ±15s Anpassungs-Buttons
-            HStack(spacing: 16) {
+            HStack(spacing: Space.s4) {
                 Button {
                     onAdjust(-15)
                 } label: {
                     Label("15s", systemImage: "minus.circle.fill")
                         .labelStyle(.iconOnly)
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.title)
+                        .foregroundStyle(Theme.textSecondary)
                 }
 
                 Text("±15s")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textSecondary)
 
                 Button {
                     onAdjust(15)
                 } label: {
                     Label("15s", systemImage: "plus.circle.fill")
                         .labelStyle(.iconOnly)
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.title)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
         }

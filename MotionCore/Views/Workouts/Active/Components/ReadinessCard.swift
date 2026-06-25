@@ -34,31 +34,31 @@ struct ReadinessCard: View {
         Button(action: onTap) {
             HStack(spacing: 14) {
                 Image(systemName: isCalibrating ? "clock.badge.questionmark" : label.systemIcon)
-                    .font(.title2)
-                    .foregroundStyle(isCalibrating ? .yellow : label.color)
+                    .font(AppFont.title)
+                    .foregroundStyle(isCalibrating ? Theme.warning : label.color) // .warning = Kalibrierung; label.color = Domänen-Enum (AP 9)
                     .frame(width: 32)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(isCalibrating ? "Kalibriere noch" : label.localizedTitle)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
+                        .font(AppFont.body.weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
 
                     if isCalibrating {
                         Text("Sammle Tagesform-Daten")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textSecondary)
                     } else {
                         Text("Readiness: \(score)/100")
-                            .font(.caption.monospacedDigit())
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout.monospacedDigit())
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textTertiary)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

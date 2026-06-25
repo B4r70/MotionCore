@@ -26,44 +26,45 @@ struct ActiveWorkoutSupersetActionBar: View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(selectedCount) Übung\(selectedCount == 1 ? "" : "en") ausgewählt")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(.primary)
+                    .font(AppFont.body.bold())
+                    .foregroundStyle(Theme.textPrimary)
 
                 if hasGap {
                     Text("Nur aufeinanderfolgende Übungen")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.warning)
                 } else if selectedCount < 2 {
                     Text("Mindestens 2 für ein Superset")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textSecondary)
                 } else {
                     Text("Superset erstellen")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
 
             Spacer()
 
+            // "Abbrechen" — Ghost-Stil (kein maxWidth: .infinity, passt in HStack)
             Button {
                 onCancel()
             } label: {
                 Text("Abbrechen")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
             }
+            .buttonStyle(.mcGhost)
 
+            // "Superset" — kompakte Kapsel; .mcPrimary nicht nutzbar (maxWidth: .infinity bricht HStack-Layout)
             Button {
                 onCreate()
             } label: {
                 Text("Superset")
-                    .font(.subheadline.bold())
+                    .font(AppFont.body.bold())
                     .foregroundStyle(Color.white)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
                     .background(
-                        canCreate ? Color.blue : Color.blue.opacity(0.3),
+                        canCreate ? Theme.accent : Theme.accent.opacity(0.3),
                         in: Capsule()
                     )
             }
@@ -71,10 +72,10 @@ struct ActiveWorkoutSupersetActionBar: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 20))
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.white.opacity(0.2), lineWidth: 0.8)
+                .stroke(Theme.lineSoft, lineWidth: 0.8)
         )
         .shadow(color: .black.opacity(0.2), radius: 12, x: 0, y: 4)
     }

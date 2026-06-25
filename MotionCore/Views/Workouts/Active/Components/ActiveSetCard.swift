@@ -57,41 +57,38 @@ struct ActiveSetCard: View {
     /// Kopfzeile mit Thumbnail, Übungsname, Satznummer, Badges und Aktions-Icons.
     /// Wird von beiden Zweigen (Weight + Time) verwendet.
     private var cardHeader: some View {
-        HStack(spacing: 16) {
-            // Übungs-Thumbnail
+        HStack(spacing: Space.s4) {
+            // Übungs-Thumbnail (64×64, §4.4)
             ExerciseVideoView.forSet(
                 set,
-                size: 80
+                size: 64
             )
             .fixedSize(
                 horizontal: true,
                 vertical: true
             )
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: Space.s1) {
                 if set.setKind != .work {
-                    Text(set.setKind.description.uppercased())
-                        .font(.caption.bold())
+                    Text(set.setKind.description)
+                        .font(AppFont.eyebrow)
+                        .textCase(.uppercase)
+                        .tracking(0.6)
                         .foregroundStyle(set.setKind.color)
                 }
 
                 Text(set.exerciseName)
-                    .font(.title2.bold())
-                    .foregroundStyle(.primary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
 
-                HStack(spacing: 6) {
+                HStack(spacing: Space.s2) {
                     Text("Satz \(set.setNumber) von \(setsForCurrentExercise)")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textSecondary)
 
                     // B1: Vorschlag-Badge (sichtbar solange isEngineSuggestion == true)
                     if isEngineSuggestion {
-                        Text("Vorschlag")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(.secondary.opacity(0.15), in: Capsule())
+                        Badge(text: "Vorschlag", style: .soft, color: Theme.textSecondary)
                     }
 
                     // B2: Readiness-Badge (sichtbar wenn Gewicht wegen Tagesform reduziert)
@@ -106,10 +103,10 @@ struct ActiveSetCard: View {
             if let onOpenQuickConfig {
                 Button(action: onOpenQuickConfig) {
                     Image(systemName: "gearshape")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .frame(width: 32, height: 32)
-                        .background(.ultraThinMaterial, in: Circle())
+                        .font(AppFont.body)
+                        .foregroundStyle(Theme.textSecondary)
+                        .frame(width: 36, height: 36)
+                        .background(Theme.surfaceSunken, in: Circle())
                 }
                 .buttonStyle(.plain)
             }
@@ -118,11 +115,10 @@ struct ActiveSetCard: View {
                 showInstructionsSheet = true
             } label: {
                 Image(systemName: "figure.run.square.stack")
-                    .font(.headline)
-                    .foregroundStyle(Color.blue)
-                    .padding(10)
-                    .background(.ultraThinMaterial, in: Circle())
-                    .overlay(Circle().fill(Color.white.opacity(0.06)))
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 36, height: 36)
+                    .background(Theme.surfaceSunken, in: Circle())
             }
             .opacity(hasInstructions ? 1.0 : 0.35)
             .disabled(!hasInstructions)
@@ -134,38 +130,36 @@ struct ActiveSetCard: View {
     @ViewBuilder
     private var supersetTracker: some View {
         if let exerciseNames = supersetExerciseNames {
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: Space.s2) {
                 // Kopfzeile: Icon + Runden-Info
-                HStack(spacing: 6) {
+                HStack(spacing: Space.s1) {
                     Image(systemName: "bolt.fill")
-                        .font(.caption.bold())
-                        .foregroundStyle(Color.green)
-                    Text("Superset – Runde \(supersetCurrentRound)/\(supersetTotalRounds)")
-                        .font(.caption.bold())
-                        .foregroundStyle(Color.green)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.success)
+                    Text("Superset · Runde \(supersetCurrentRound)/\(supersetTotalRounds)")
+                        .font(AppFont.caption)
+                        .fontWeight(.bold)
+                        .foregroundStyle(Theme.success)
                     Spacer()
                 }
 
-                // Übungs-Dots: aktiv (grüner Punkt), abgeschlossen (Haken), ausstehend (leerer Kreis)
-                HStack(spacing: 8) {
+                // Übungs-Dots: aktiv (Punkt), abgeschlossen (Haken), ausstehend (leerer Kreis)
+                HStack(spacing: Space.s2) {
                     ForEach(Array(exerciseNames.enumerated()), id: \.offset) { idx, name in
-                        HStack(spacing: 4) {
+                        HStack(spacing: Space.s1) {
                             // Dot-Indikator
                             ZStack {
                                 if idx == supersetCurrentIndex {
-                                    // Aktive Übung in dieser Runde
                                     Circle()
-                                        .fill(Color.green)
+                                        .fill(Theme.success)
                                         .frame(width: 8, height: 8)
                                 } else if idx < supersetCurrentIndex {
-                                    // In dieser Runde bereits abgeschlossen
                                     Image(systemName: "checkmark")
                                         .font(.system(size: 7, weight: .bold))
-                                        .foregroundStyle(Color.green)
+                                        .foregroundStyle(Theme.success)
                                 } else {
-                                    // Noch ausstehend in dieser Runde
                                     Circle()
-                                        .stroke(Color.green.opacity(0.5), lineWidth: 1.5)
+                                        .stroke(Theme.success.opacity(0.5), lineWidth: 1.5)
                                         .frame(width: 8, height: 8)
                                 }
                             }
@@ -173,8 +167,8 @@ struct ActiveSetCard: View {
 
                             // Übungsname (kurz abschneiden)
                             Text(name)
-                                .font(.caption2)
-                                .foregroundStyle(idx == supersetCurrentIndex ? .primary : .secondary)
+                                .font(AppFont.caption)
+                                .foregroundStyle(idx == supersetCurrentIndex ? Theme.textPrimary : Theme.textSecondary)
                                 .lineLimit(1)
                         }
 
@@ -182,14 +176,14 @@ struct ActiveSetCard: View {
                         if idx < exerciseNames.count - 1 {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 7))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textTertiary)
                         }
                     }
                 }
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(Color.green.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+            .padding(.horizontal, Space.s3)
+            .padding(.vertical, Space.s2)
+            .background(Theme.success.opacity(0.09), in: RoundedRectangle(cornerRadius: Radius.md))
         }
     }
 
@@ -241,37 +235,41 @@ struct ActiveSetCard: View {
 
     private var weightBasedContent: some View {
         withInstructionsSheet(
-            VStack(spacing: 20) {
+            VStack(spacing: Space.s5) {
                 cardHeader
 
                 supersetTracker
 
-                GlassDivider()
+                Rectangle()
+                    .fill(Theme.lineSoft)
+                    .frame(height: 1)
 
-                HStack(spacing: 24) {
-                    VStack(spacing: 4) {
+                HStack(spacing: Space.s6) {
+                    VStack(spacing: Space.s1) {
                         Text(set.weight > 0 ? String(format: "%.2f", set.weight) : "0.00")
                             .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(set.weight > 0 ? .primary : .secondary)
+                            .monospacedDigit()
+                            .foregroundStyle(set.weight > 0 ? Theme.textPrimary : Theme.textSecondary)
 
                         Text(set.weight > 0 ? "kg" : "Körpergewicht")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                     .frame(maxWidth: .infinity)
 
                     Rectangle()
-                        .fill(Color.primary.opacity(0.2))
+                        .fill(Theme.line)
                         .frame(width: 1, height: 50)
 
-                    VStack(spacing: 4) {
+                    VStack(spacing: Space.s1) {
                         Text("\(set.reps)")
                             .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(.primary)
+                            .monospacedDigit()
+                            .foregroundStyle(Theme.textPrimary)
 
                         Text("Wdh.")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -279,32 +277,25 @@ struct ActiveSetCard: View {
                 // Dezente Referenz-Zeile: Werte aus letzter Session (nur wenn >= 2 Saetze abwichen)
                 if let ref = lastSessionReference {
                     Text("Letztes Mal: \(ref.reps) Wdh. × \(formattedLastWeight(ref))")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textTertiary)
                 }
 
-                Button {
-                    selectedSetForEdit = set
-                } label: {
-                    Label("Anpassen", systemImage: "pencil")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.blue)
-                }
-
-                .glassDivider()
-
-                Button {
-                    onComplete(set)
-                } label: {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                        Text("Satz abschließen")
-                            .font(.headline)
+                // Aktionen: Anpassen (sekundär) + Satz abschließen (primär, voll Akzent)
+                HStack(spacing: Space.s3) {
+                    Button {
+                        selectedSetForEdit = set
+                    } label: {
+                        Label("Anpassen", systemImage: "slider.horizontal.3")
                     }
-                    .foregroundStyle(Color.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
+                    .buttonStyle(.mcSecondary)
+
+                    Button {
+                        onComplete(set)
+                    } label: {
+                        Label("Satz abschließen", systemImage: "checkmark")
+                    }
+                    .buttonStyle(.mcPrimary)
                 }
             }
             .card()
@@ -316,12 +307,14 @@ struct ActiveSetCard: View {
     /// Eingebetteter Time-Inhalt — ausgelagert nach ActiveTimeSetContent (Zeilenlimit).
     private var timeBasedContent: some View {
         withInstructionsSheet(
-            VStack(spacing: 20) {
+            VStack(spacing: Space.s5) {
                 cardHeader
 
                 supersetTracker
 
-                GlassDivider()
+                Rectangle()
+                    .fill(Theme.lineSoft)
+                    .frame(height: 1)
 
                 ActiveTimeSetContent(
                     set: set,

@@ -5,7 +5,7 @@
 // Datei . . . . : ActiveWorkoutStatus.swift                                        /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 05.01.2026                                                       /
-// Beschreibung  : Aktives Workout (Status View)                                    /
+// Beschreibung  : Status-Header (Timer/Volumen/Saetze + Balken + Live-Chips)       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -15,11 +15,15 @@ import SwiftUI
 // Watch-Verbindungsstatus für den ⌚-Indikator in der Status-Bar
 enum WatchConnectionState {
     case hidden         // Kein Icon (Watch-Tracking nicht aktiv)
-    case connected      // Verbunden (blau)
-    case activeTracking // Aktives HR-Tracking (grün + Puls-Animation)
+    case connected      // Verbunden (Akzent)
+    case activeTracking // Aktives HR-Tracking (Erfolg)
     case disconnected   // Verbindung unterbrochen (grau)
 }
 
+// MARK: - ActiveWorkoutStatus (Calm 2026 · §4.1)
+
+/// Status-Header: drei Spalten (Timer · Volumen · Sätze), einfarbiger Fortschritts-
+/// balken und Live-Health-Chip-Zeile (HR · Kalorien · Watch-LIVE).
 struct ActiveWorkoutStatus: View {
     let isPaused: Bool
     let formattedElapsedTime: String
@@ -27,119 +31,173 @@ struct ActiveWorkoutStatus: View {
     let totalSets: Int
     let progress: Double
     let sessionVolume: Double
-    let planTitle: String?          // Optional: Plan-Name als Badge
+    var currentHR: Double = 0
+    var activeCalories: Double = 0
+    let planTitle: String?
     var watchConnectionState: WatchConnectionState = .hidden
 
-    // Puls-Animation für activeTracking
-    @State private var watchPulse: Bool = false
+    // Große Zahlen: SF Pro Rounded Bold 22, tabular (§2).
+    private let metricFont = Font.system(size: 22, weight: .bold, design: .rounded)
 
-    var body: some View {
-        VStack(spacing: 12) {
-            HStack(alignment: .top) {
-                // Timer (links)
-                VStack(spacing: 2) {
-                    HStack(spacing: 6) {
-                        // Watch-Indikator (nur wenn nicht hidden)
-                        watchIndicator
-
-                        Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
-                            .foregroundStyle(isPaused ? Color.orange : .blue)
-                        Text(formattedElapsedTime)
-                            .font(.title3.bold().monospacedDigit())
-                            .foregroundStyle(.primary)
-                    }
-                    if isPaused {
-                        Text("Pausiert")
-                            .font(.caption2)
-                            .foregroundStyle(Color.orange)
-                    }
-                    // Plan-Badge: nur anzeigen wenn Workout aus einem Plan stammt
-                    if let title = planTitle {
-                        Text(title)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                // Volumen (Mitte) — nur anzeigen wenn > 0
-                if sessionVolume > 0 {
-                    VStack(spacing: 2) {
-                        Text(formattedVolume)
-                            .font(.title3.bold())
-                            .foregroundStyle(.primary)
-                        Text("Volumen")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .transition(.scale.combined(with: .opacity))
-                }
-
-                // Sätze (rechts)
-                VStack(spacing: 2) {
-                    Text("\(completedSets)/\(totalSets)")
-                        .font(.title3.bold())
-                        .foregroundStyle(.primary)
-                    Text("Sätze")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            }
-            .animation(.easeInOut(duration: 0.3), value: sessionVolume > 0)
-
-            // Fortschrittsbalken
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.primary.opacity(0.1))
-                        .frame(height: 8)
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(
-                            LinearGradient(
-                                colors: [.blue, Color.green],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .frame(width: geo.size.width * max(0, min(1, progress)), height: 8)
-                        .animation(.easeInOut, value: progress)
-                }
-            }
-            .frame(height: 8)
-        }
-        .padding()
-        .background(.ultraThinMaterial)
+    private var showLiveChips: Bool {
+        currentHR > 0 || activeCalories > 0 || watchConnectionState != .hidden
     }
 
-    // MARK: - Watch-Indikator
+    var body: some View {
+        VStack(spacing: Space.s3) {
+            metricRow
+            progressBar
+            if showLiveChips { liveChipsRow }
+        }
+        .padding(.top, Space.s1)
+        .padding(.horizontal, Space.s5)
+        .padding(.bottom, Space.s4)
+        .background(Theme.surfaceApp)
+    }
+
+    // MARK: - Metrik-Zeile (3 Spalten)
+
+    private var metricRow: some View {
+        HStack(alignment: .top) {
+            // Timer (links)
+            VStack(alignment: .leading, spacing: Space.s1) {
+                HStack(spacing: Space.s1) {
+                    Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
+                        .foregroundStyle(isPaused ? Theme.warning : Theme.accent)
+                    Text(formattedElapsedTime)
+                        .font(metricFont)
+                        .monospacedDigit()
+                        .foregroundStyle(Theme.textPrimary)
+                }
+                if let eyebrow = timerEyebrow {
+                    Text(eyebrow)
+                        .font(AppFont.eyebrow)
+                        .textCase(.uppercase)
+                        .tracking(0.6)
+                        .foregroundStyle(isPaused ? Theme.warning : Theme.textTertiary)
+                        .lineLimit(1)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            // Volumen (Mitte) — nur > 0
+            if sessionVolume > 0 {
+                VStack(spacing: Space.s1) {
+                    Text(formattedVolume)
+                        .font(metricFont)
+                        .monospacedDigit()
+                        .foregroundStyle(Theme.textPrimary)
+                    eyebrow("Volumen")
+                }
+                .frame(maxWidth: .infinity)
+                .transition(.scale.combined(with: .opacity))
+            }
+
+            // Sätze (rechts)
+            VStack(spacing: Space.s1) {
+                Text("\(completedSets)/\(totalSets)")
+                    .font(metricFont)
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textPrimary)
+                eyebrow("Sätze")
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+        .animation(.easeInOut(duration: 0.24), value: sessionVolume > 0)
+    }
+
+    private var timerEyebrow: String? {
+        if isPaused { return "Pausiert" }
+        return planTitle
+    }
+
+    private func eyebrow(_ text: String) -> some View {
+        Text(text)
+            .font(AppFont.eyebrow)
+            .textCase(.uppercase)
+            .tracking(0.6)
+            .foregroundStyle(Theme.textTertiary)
+    }
+
+    // MARK: - Fortschrittsbalken (einfarbig, kein Gradient)
+
+    private var progressBar: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Theme.surfaceSunken).frame(height: 6)
+                Capsule()
+                    .fill(Theme.accent)
+                    .frame(width: geo.size.width * max(0, min(1, progress)), height: 6)
+                    .animation(.easeOut(duration: 0.36), value: progress)
+            }
+        }
+        .frame(height: 6)
+    }
+
+    // MARK: - Live-Health-Chips
+
+    private var liveChipsRow: some View {
+        HStack(spacing: Space.s2) {
+            if currentHR > 0 {
+                metricPill(icon: "heart.fill", iconColor: Theme.danger,
+                           value: "\(Int(currentHR))", unit: "bpm")
+            }
+            if activeCalories > 0 {
+                metricPill(icon: "flame.fill", iconColor: Theme.warning,
+                           value: "\(Int(activeCalories))", unit: "kcal")
+            }
+            Spacer()
+            watchLivePill
+        }
+    }
+
+    private func metricPill(icon: String, iconColor: Color, value: String, unit: String) -> some View {
+        HStack(spacing: Space.s1) {
+            Image(systemName: icon)
+                .font(AppFont.caption)
+                .foregroundStyle(iconColor)
+            Text(value)
+                .font(AppFont.callout)
+                .fontWeight(.semibold)
+                .monospacedDigit()
+                .foregroundStyle(Theme.textPrimary)
+            Text(unit)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.textTertiary)
+        }
+        .padding(.horizontal, Space.s3)
+        .frame(height: 30)
+        .background(Capsule().fill(Theme.surfaceCard))
+        .overlay(Capsule().stroke(Theme.line, lineWidth: 1))
+    }
 
     @ViewBuilder
-    private var watchIndicator: some View {
+    private var watchLivePill: some View {
         switch watchConnectionState {
         case .hidden:
             EmptyView()
         case .activeTracking:
-            Image(systemName: "applewatch")
-                .font(.caption2)
-                .foregroundStyle(Color.green)
-                .scaleEffect(watchPulse ? 1.2 : 1.0)
-                .animation(
-                    .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
-                    value: watchPulse
-                )
-                .onAppear { watchPulse = true }
+            watchPill(text: "Live", color: Theme.success)
         case .connected:
-            Image(systemName: "applewatch")
-                .font(.caption2)
-                .foregroundStyle(Color.blue)
+            watchPill(text: "Watch", color: Theme.accent)
         case .disconnected:
-            Image(systemName: "applewatch")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+            watchPill(text: "Watch", color: Theme.textTertiary)
         }
+    }
+
+    private func watchPill(text: String, color: Color) -> some View {
+        HStack(spacing: Space.s1) {
+            Image(systemName: "applewatch")
+                .font(AppFont.caption)
+            Text(text)
+                .font(AppFont.eyebrow)
+                .textCase(.uppercase)
+                .tracking(0.6)
+        }
+        .foregroundStyle(color)
+        .padding(.horizontal, Space.s3)
+        .frame(height: 30)
+        .background(Capsule().fill(color.opacity(0.12)))
     }
 
     // MARK: - Formatierung
@@ -155,19 +213,23 @@ struct ActiveWorkoutStatus: View {
 
 // MARK: - Preview
 
-#Preview("Mit Plan") {
+#Preview("Mit Plan + Live") {
     ActiveWorkoutStatus(
         isPaused: false,
-        formattedElapsedTime: "12:34",
-        completedSets: 3,
-        totalSets: 8,
-        progress: 0.375,
-        sessionVolume: 1450,
-        planTitle: "Push Day A"
+        formattedElapsedTime: "24:18",
+        completedSets: 6,
+        totalSets: 14,
+        progress: 6.0 / 14.0,
+        sessionVolume: 4300,
+        currentHR: 138,
+        activeCalories: 214,
+        planTitle: "Push Day A",
+        watchConnectionState: .activeTracking
     )
+    .background(Theme.surfaceApp)
 }
 
-#Preview("Ohne Plan / Pausiert") {
+#Preview("Pausiert / ohne Live") {
     ActiveWorkoutStatus(
         isPaused: true,
         formattedElapsedTime: "05:00",
@@ -177,4 +239,5 @@ struct ActiveWorkoutStatus: View {
         sessionVolume: 0,
         planTitle: nil
     )
+    .background(Theme.surfaceApp)
 }

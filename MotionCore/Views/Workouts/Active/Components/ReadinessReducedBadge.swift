@@ -26,18 +26,18 @@ import SwiftUI
 /// `isReadinessReduced` = `smartFill?.isReadinessReduced(for: activeSet) ?? false`
 struct ReadinessReducedBadge: View {
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: Space.s1) {
             Image(systemName: "moon.fill")
-                .font(.caption2)
-                .foregroundStyle(Color.yellow)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.warning)
 
             Text("Readiness reduziert")
-                .font(.caption2)
-                .foregroundStyle(Color.yellow)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.warning)
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 2)
-        .background(Color.yellow.opacity(0.15), in: Capsule())
+        .padding(.horizontal, Space.s2)
+        .padding(.vertical, Space.s1)
+        .background(Theme.warning.opacity(0.15), in: Capsule())
     }
 }
 
@@ -47,8 +47,8 @@ struct ReadinessReducedBadge: View {
 
         HStack(spacing: 6) {
             Text("Satz 1 von 3")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(AppFont.body)
+                .foregroundStyle(Theme.textSecondary)
 
             ReadinessReducedBadge()
         }
