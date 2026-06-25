@@ -216,6 +216,8 @@ struct BaseView: View {
         // Selektierte Tab-Farbe wie zuvor (systemBlue), ohne UIKit-Appearance-Proxy —
         // der zwingt seit iOS 26 den Legacy-Rendering-Pfad und kollidiert mit Liquid Glass.
         .tint(Theme.accent)
+        // Calm 2026: gefrostete TabBar (SwiftUI-nativ, kein Appearance-Proxy).
+        .frostedTabBar()
         // MARK: - Sheets
 
         // Workout-Typ Auswahl
