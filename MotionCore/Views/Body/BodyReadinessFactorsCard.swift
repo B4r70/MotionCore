@@ -37,13 +37,13 @@ struct BodyReadinessFactorsCard: View {
             // Header
             HStack {
                 Text("Tagesform-Faktoren")
-                    .font(.headline)
+                    .font(AppFont.headline)
                 Spacer()
                 if let score {
                     Text("Score \(score)/100")
-                        .font(.caption)
+                        .font(AppFont.callout)
                         .monospacedDigit()
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
 
@@ -51,11 +51,11 @@ struct BodyReadinessFactorsCard: View {
                 EmptyState()
             } else {
                 ForEach(factors, id: \.name) { factor in
-                    MCFactorBar(
+                    FactorBar(
                         label: factor.name,
                         subLabel: factor.valueDescription,
                         value: factor.normalizedScore,
-                        color: tintForScore(factor.normalizedScore)
+                        tint: tintForScore(factor.normalizedScore)
                     )
                 }
             }

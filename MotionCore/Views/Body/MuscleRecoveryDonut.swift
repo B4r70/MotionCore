@@ -12,11 +12,23 @@
 //
 import SwiftUI
 
+// MARK: - recoveryTint
+
+/// Theme-Token-Erholungsfarbe: grün (≥85 %), amber (≥50 %), rot (<50 %).
+/// Liegt in dieser Datei zur Wahrung des Datei-Scopes; idealerweise neben
+/// `recoveryColor` in MuscleRecoveryUI.swift.
+func recoveryTint(_ p: Double) -> Color {
+    if p >= 85 { return Theme.success }
+    if p >= 50 { return Theme.warning }
+    return Theme.danger
+}
+
 // MARK: - MuscleRecoveryDonut
 
 /// Kreisring-Visualisierung für einen einzelnen Muskelgruppen-Erholungs-Score.
-/// Trainierte Muskeln zeigen farbigen Fortschrittsring (rot → grün via recoveryColor).
-/// Untrainierte Muskeln zeigen einen grauen vollen Ring.
+/// Trainierte Muskeln zeigen farbigen Fortschrittsring (recoveryTint, Theme-Tokens).
+/// Untrainierte Muskeln zeigen einen gedämpften Ring (Theme.textTertiary).
+/// Init-Signatur (percent/wasTrained/label/size) unverändert.
 struct MuscleRecoveryDonut: View {
 
     /// Erholungsprozent 0–100
@@ -28,51 +40,18 @@ struct MuscleRecoveryDonut: View {
     /// Außendurchmesser des Donuts in Points
     let size: CGFloat
 
-    // Linienstärke relativ zur Größe
+    // Linienstärke relativ zur Größe (an ProgressRing stroke: weitergegeben)
     private var lineWidth: CGFloat { size * 0.13 }
 
-    // Trimm-Endpunkt: 0.0–1.0
-    private var trimEnd: CGFloat { CGFloat(min(max(percent / 100.0, 0.0), 1.0)) }
-
     var body: some View {
-        VStack(spacing: 4) {
-            ZStack {
-                // Hintergrundring (immer voller Kreis)
-                Circle()
-                    .stroke(
-                        Color.secondary.opacity(wasTrained ? 0.2 : 0.3),
-                        lineWidth: lineWidth
-                    )
-
-                // Vordergrundring (nur bei trainierten Muskeln farbig)
-                if wasTrained {
-                    Circle()
-                        .trim(from: 0, to: trimEnd)
-                        .stroke(
-                            recoveryColor(percent: percent),
-                            style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                        )
-                        // Startpunkt oben (–90°)
-                        .rotationEffect(.degrees(-90))
-                }
-
-                // Innere Beschriftung
-                VStack(spacing: 1) {
-                    Text("\(Int(percent.rounded()))")
-                        .font(.system(size: size * 0.22, weight: .bold, design: .rounded))
-                        .foregroundStyle(wasTrained ? recoveryColor(percent: percent) : .secondary)
-                        .minimumScaleFactor(0.7)
-                        .lineLimit(1)
-
-                    Text(label)
-                        .font(.system(size: size * 0.14))
-                        .foregroundStyle(.secondary)
-                        .minimumScaleFactor(0.6)
-                        .lineLimit(1)
-                }
-            }
-            .frame(width: size, height: size)
-        }
+        ProgressRing(
+            progress: percent / 100.0,
+            size: size,
+            stroke: lineWidth,
+            tint: wasTrained ? recoveryTint(percent) : Theme.textTertiary,
+            centerValue: "\(Int(percent.rounded()))",
+            centerLabel: label
+        )
     }
 }
 

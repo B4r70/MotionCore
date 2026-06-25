@@ -57,6 +57,7 @@ struct MuscleRecoveryDetailView: View {
                 }
             }
         }
+        .calmSheet()
     }
 
     // MARK: - Header
@@ -71,12 +72,12 @@ struct MuscleRecoveryDetailView: View {
             )
 
             Text("Muskel-Erholung")
-                .font(.title3)
+                .font(AppFont.title)
                 .fontWeight(.semibold)
 
             Text("Letzte 14 Tage • \(Int(analysis.overallRecoveryPercent.rounded()))% erholt")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(AppFont.body)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
@@ -89,7 +90,7 @@ struct MuscleRecoveryDetailView: View {
     private var groupListSection: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Muskelgruppen")
-                .font(.headline)
+                .font(AppFont.headline)
                 .padding(.horizontal, 4)
 
             VStack(spacing: 0) {
@@ -147,30 +148,30 @@ private struct MuscleGroupRow: View {
                     // Name + relative Zeit
                     VStack(alignment: .leading, spacing: 2) {
                         Text(group.displayName)
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(group.wasTrainedInTimeframe ? .primary : .secondary)
+                            .font(AppFont.body.weight(.medium))
+                            .foregroundStyle(group.wasTrainedInTimeframe ? Theme.textPrimary : Theme.textSecondary)
 
                         Text(relativeTimeString(from: group.lastTrainedDate))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textSecondary)
                     }
 
                     Spacer()
 
                     // Erholungsprozent rechts
                     Text("\(Int(group.recoveryPercent.rounded()))%")
-                        .font(.subheadline.weight(.semibold))
+                        .font(AppFont.body.weight(.semibold))
                         .foregroundStyle(
                             group.wasTrainedInTimeframe
-                                ? recoveryColor(percent: group.recoveryPercent)
-                                : .secondary
+                                ? recoveryTint(group.recoveryPercent)
+                                : Theme.textSecondary
                         )
 
                     // Aufklapp-Chevron (nur bei trainierten Gruppen mit Details)
                     if group.wasTrainedInTimeframe && !group.muscleDetails.isEmpty {
                         Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
                 .padding(.horizontal, 4)
@@ -222,14 +223,14 @@ private struct DetailedMuscleRow: View {
                 .frame(width: 60)
 
             Text(detail.displayName)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
 
             Spacer()
 
             Text("\(Int(detail.recoveryPercent.rounded()))%")
-                .font(.caption.weight(.medium))
-                .foregroundStyle(recoveryColor(percent: detail.recoveryPercent))
+                .font(AppFont.callout.weight(.medium))
+                .foregroundStyle(recoveryTint(detail.recoveryPercent))
         }
         .padding(.horizontal, 4)
         .padding(.vertical, 6)

@@ -26,7 +26,7 @@ struct BodyRecoveryTrendCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Erholungs-Trend · 14 Tage")
-                .font(.headline)
+                .font(AppFont.headline)
 
             if RecoveryTrendCalcEngine.isEmpty(trend) || trend.count < 2 {
                 EmptyState()
@@ -53,22 +53,19 @@ struct BodyRecoveryTrendCard: View {
                 x: .value("Datum", point.trendDate, unit: .day),
                 y: .value("Erholung", point.trendValue)
             )
-            .foregroundStyle(
-                LinearGradient(
-                    colors: [Theme.success.opacity(0.25), .clear],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
+            .foregroundStyle(Theme.success.opacity(0.15))
             .interpolationMethod(.catmullRom)
         }
         .chartYScale(domain: 0...100)
         .chartYAxis {
             AxisMarks(values: [0, 50, 100]) { value in
                 AxisGridLine()
+                    .foregroundStyle(Theme.chartGrid)
                 AxisValueLabel {
                     if let v = value.as(Int.self) {
                         Text("\(v)%")
+                            .font(AppFont.caption)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
             }
@@ -76,6 +73,7 @@ struct BodyRecoveryTrendCard: View {
         .chartXAxis {
             AxisMarks(values: .stride(by: .day, count: 3)) { _ in
                 AxisGridLine()
+                    .foregroundStyle(Theme.chartGrid)
                 AxisValueLabel(format: .dateTime.day().month(.abbreviated))
             }
         }

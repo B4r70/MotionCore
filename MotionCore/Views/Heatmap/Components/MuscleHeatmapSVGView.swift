@@ -67,9 +67,9 @@ struct MuscleHeatmapSVGView: UIViewRepresentable {
         html, body { width: 100%; height: 100%; background: transparent; }
         svg { width: 100%; height: 100%; display: block; }
         g[id] { cursor: pointer; }
-        svg path { 
-            fill: #A6A9AD !important;
-            stroke: none !important; 
+        svg path {
+            fill: #E1EEF7 !important;
+            stroke: none !important;
         }
         #front_borders path, #rear_borders path {
             fill: none !important; 

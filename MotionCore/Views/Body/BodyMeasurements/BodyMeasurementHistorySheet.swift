@@ -71,6 +71,7 @@ struct BodyMeasurementHistorySheet: View {
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
         }
+        .calmSheet([.medium, .large])
         .sheet(item: $editTrigger) { trigger in
             BodyMeasurementEntrySheet(editingMeasurement: trigger.measurement)
                 .environmentObject(AppSettings.shared)
@@ -92,7 +93,7 @@ struct BodyMeasurementHistorySheet: View {
             Spacer()
             if let v = measurement[keyPath: keyPath] {
                 Text("\(String(format: "%.1f", v)) \(unit)")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
     }

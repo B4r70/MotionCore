@@ -175,7 +175,7 @@ struct BodyMeasurementEntrySheet: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button { dismiss() } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
@@ -186,6 +186,7 @@ struct BodyMeasurementEntrySheet: View {
                 }
             }
         }
+        .calmSheet([.medium, .large])
     }
 
     // MARK: - Aktionen

@@ -40,13 +40,12 @@ struct BodyMeasurementEntrySlide: View {
             // SF-Symbol
             Image(systemName: iconSystemName)
                 .font(.system(size: 80))
-                .foregroundStyle(.tint)
+                .foregroundStyle(Theme.accent)
                 .symbolRenderingMode(.hierarchical)
 
             // Titel
             Text(title)
-                .font(.title2)
-                .bold()
+                .font(AppFont.title)
 
             // Toggle "Beide Seiten" — nur wenn Binding vorhanden
             if let bothSides {
@@ -74,8 +73,8 @@ struct BodyMeasurementEntrySlide: View {
                 secondValue?.wrappedValue = nil
                 onSkip()
             }
-            .font(.footnote)
-            .foregroundStyle(.secondary)
+            .font(AppFont.callout)
+            .foregroundStyle(Theme.textSecondary)
         }
         .padding(.horizontal, 24)
         .toolbar {
@@ -114,13 +113,14 @@ struct BodyMeasurementEntrySlide: View {
             TextField("0.0", text: $primaryText)
                 .keyboardType(.decimalPad)
                 .font(.system(size: 64, weight: .light, design: .rounded))
+                .monospacedDigit()
                 .multilineTextAlignment(.center)
                 .focused($primaryFocused)
                 .frame(minWidth: 120)
 
             Text(unit)
-                .font(.title3)
-                .foregroundStyle(.secondary)
+                .font(AppFont.title)
+                .foregroundStyle(Theme.textSecondary)
 
             HoldButton(systemName: "plus.circle.fill", font: .title) { step in
                 let result = stepUp(value ?? 0, by: step)
@@ -137,8 +137,8 @@ struct BodyMeasurementEntrySlide: View {
             // Linke Spalte
             VStack(spacing: 8) {
                 Text(bothSidesLabels?.0 ?? "Links")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
 
                 HStack(spacing: 8) {
                     HoldButton(systemName: "minus.circle.fill", font: .title3) { step in
@@ -150,6 +150,7 @@ struct BodyMeasurementEntrySlide: View {
                     TextField("0.0", text: $secondaryText)
                         .keyboardType(.decimalPad)
                         .font(.system(size: 40, weight: .light, design: .rounded))
+                        .monospacedDigit()
                         .multilineTextAlignment(.center)
                         .focused($secondaryFocused)
                         .frame(minWidth: 80)
@@ -163,14 +164,14 @@ struct BodyMeasurementEntrySlide: View {
             }
 
             Text(unit)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
 
             // Rechte Spalte
             VStack(spacing: 8) {
                 Text(bothSidesLabels?.1 ?? "Rechts")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
 
                 HStack(spacing: 8) {
                     HoldButton(systemName: "minus.circle.fill", font: .title3) { step in
@@ -182,6 +183,7 @@ struct BodyMeasurementEntrySlide: View {
                     TextField("0.0", text: $primaryText)
                         .keyboardType(.decimalPad)
                         .font(.system(size: 40, weight: .light, design: .rounded))
+                        .monospacedDigit()
                         .multilineTextAlignment(.center)
                         .focused($primaryFocused)
                         .frame(minWidth: 80)

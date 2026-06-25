@@ -25,17 +25,16 @@ struct BodyAvoidCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("HEUTE MEIDEN")
-                .font(.caption2)
-                .fontWeight(.semibold)
+                .font(AppFont.eyebrow)
                 .foregroundStyle(Theme.warning)
 
             Text(recommendation.avoidTitle)
-                .font(.headline)
+                .font(AppFont.headline)
 
             if !recommendation.avoidReason.isEmpty {
                 Text(recommendation.avoidReason)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
