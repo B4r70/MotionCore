@@ -19,20 +19,14 @@ struct TrainingPlanCard: View {
     // kannst du hier Fortschritt berechnen.
     private var progress: Double { 0.0 }
 
+    // Status-Icon je Fortschritt
     private var statusIcon: String {
         progress >= 1.0 ? "checkmark.circle.fill" : "clock.fill"
     }
 
+    // Status-Farbe: Erfolg → success, ausstehend → warning
     private var statusColor: Color {
-        progress >= 1.0 ? Color.green : Color.orange
-    }
-
-    private var planAccent: Color {
-        switch plan.planType {
-            case .cardio: return Color.green
-            case .strength: return Color.red
-            default: return .primary
-        }
+        progress >= 1.0 ? Theme.success : Theme.warning
     }
 
     // Anzahl der einzigartigen Übungen im Plan
@@ -56,32 +50,31 @@ struct TrainingPlanCard: View {
         VStack(alignment: .leading, spacing: 16) {
 
             HStack {
+                // Buchstaben-Tile: Initial des Plans auf weicher Typ-Tönung
                 ZStack {
-                    Circle()
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 50, height: 50)
+                    RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                        .fill(plan.planType.calmTileBackground)
+                        .frame(width: 46, height: 46)
 
-                    IconType(
-                        icon: .system(plan.planType.icon),
-                        color: planAccent,
-                        size: 24
-                    )
+                    Text(String(plan.title.prefix(1)).uppercased())
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .foregroundStyle(plan.planType.calmTint)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(plan.title)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
+                        .font(AppFont.headline)
+                        .foregroundStyle(Theme.textPrimary)
 
                     if !plan.planDescription.isEmpty {
                         Text(plan.planDescription)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.caption)
+                            .foregroundStyle(Theme.textSecondary)
                             .lineLimit(2)
                     } else {
                         Text(plan.planType.description)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.caption)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
 
@@ -92,9 +85,11 @@ struct TrainingPlanCard: View {
                     .foregroundStyle(statusColor)
             }
 
-            .glassDivider(paddingTop: 12, paddingBottom: 8)
+            Divider()
+                .padding(.top, 12)
+                .padding(.bottom, 8)
 
-            // Statistiken (Übungen, Sätze & Volumen)
+            // Statistiken (Übungen, Sätze & Volumen) — neutrale Metrik-Farbe series[0]
             LazyVGrid(
                 columns: [
                     GridItem(.flexible()),
@@ -108,104 +103,107 @@ struct TrainingPlanCard: View {
                     HStack(spacing: 4) {
                         Image(systemName: "dumbbell.fill")
                             .font(.caption2)
-                            .foregroundStyle(planAccent)
+                            .foregroundStyle(Theme.series[0])
 
                         Text("\(exerciseCount)")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.series[0])
                     }
 
                     Text("Übungen")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
 
-                    // Sätze
+                // Sätze
                 VStack(spacing: 4) {
                     HStack(spacing: 4) {
                         Image(systemName: "number.circle.fill")
                             .font(.caption2)
-                            .foregroundStyle(planAccent)
+                            .foregroundStyle(Theme.series[0])
 
                         Text("\(totalSets)")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.series[0])
                     }
 
                     Text("Sätze")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
 
-                    // Volumen
+                // Volumen
                 VStack(spacing: 4) {
                     HStack(spacing: 4) {
                         Image(systemName: "scalemass.fill")
                             .font(.caption2)
-                            .foregroundStyle(planAccent)
+                            .foregroundStyle(Theme.series[0])
 
                         Text(formatVolume(totalVolume))
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.series[0])
                     }
 
                     Text("Volumen")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
             }
 
-            .glassDivider(paddingTop: 12, paddingBottom: 8)
-
+            Divider()
+                .padding(.top, 12)
+                .padding(.bottom, 8)
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Start")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     Spacer()
                     Text(plan.startDate.formatted(AppFormatters.dateGermanLong))
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
                 }
 
                 if let end = plan.endDate {
                     HStack {
                         Text("Ende")
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                         Spacer()
                         Text(end.formatted(AppFormatters.dateGermanLong))
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
                     }
                 }
 
                 HStack {
                     Text("Status")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     Spacer()
                     HStack(spacing: 6) {
                         Image(systemName: plan.isActive ? "checkmark.circle.fill" : "pause.circle.fill")
-                            .foregroundStyle(plan.isActive ? Color.green : .secondary)
+                            .foregroundStyle(plan.isActive ? Theme.success : Theme.textTertiary)
                         Text(plan.isActive ? "Aktiv" : "Inaktiv")
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
                             .font(.subheadline.weight(.semibold))
                     }
                 }
             }
 
-            .glassDivider(paddingTop: 12, paddingBottom: 8)
+            Divider()
+                .padding(.top, 12)
+                .padding(.bottom, 8)
 
             HStack(spacing: 12) {
                 Button {
@@ -214,25 +212,20 @@ struct TrainingPlanCard: View {
                     HStack {
                         Image(systemName: progress > 0 ? "play.circle.fill" : "play.fill")
                         Text(progress > 0 ? "Fortsetzen" : "Starten")
-                            .font(.subheadline.weight(.semibold))
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .background(planAccent)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+                .buttonStyle(.mcSecondary)
 
                 Image(systemName: "chevron.right")
                     .font(.title3)
-                    .foregroundStyle(planAccent)
+                    .foregroundStyle(Theme.accent)
                     .frame(width: 44, height: 44)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Circle())
+                    .background(Theme.accentSoft, in: Circle())
             }
         }
         .card()
     }
+
     // Formatiert das Volumen (kg)
     private func formatVolume(_ volume: Double) -> String {
         if volume <= 0 {
@@ -241,6 +234,24 @@ struct TrainingPlanCard: View {
             return String(format: "%.1fk", volume / 1000)
         } else {
             return String(format: "%.0f", volume)
+        }
+    }
+}
+
+// MARK: - Preview
+
+#Preview("Plan-Karte") {
+    ZStack {
+        Theme.surfaceApp.ignoresSafeArea()
+
+        ScrollView {
+            VStack(spacing: Space.s4) {
+                TrainingPlanCard(plan: TrainingPlan(title: "Push Day", planType: .strength))
+                TrainingPlanCard(plan: TrainingPlan(title: "Laufen", planType: .cardio))
+                TrainingPlanCard(plan: TrainingPlan(title: "Wanderung", planType: .outdoor))
+                TrainingPlanCard(plan: TrainingPlan(title: "Mixed Training", planType: .mixed))
+            }
+            .padding(Space.s4)
         }
     }
 }

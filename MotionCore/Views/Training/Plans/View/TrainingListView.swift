@@ -15,7 +15,6 @@ import SwiftUI
 
 struct TrainingListView: View {
 
-    @EnvironmentObject private var appSettings: AppSettings
     @EnvironmentObject private var planImportManager: PlanImportManager
     @Environment(\.modelContext) private var modelContext
 
@@ -26,7 +25,7 @@ struct TrainingListView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -62,7 +61,7 @@ struct TrainingListView: View {
         }
         .floatingActionButton(
             icon: .system("plus.circle.fill"),
-            color: .primary
+            color: Theme.textPrimary
         ) {
             // Draft erzeugen
             draftPlan = TrainingPlan()
@@ -81,7 +80,6 @@ struct TrainingListView: View {
 #Preview("Workout Plans") {
     NavigationStack {
         TrainingListView()
-            .environmentObject(AppSettings.shared)
             .environmentObject(PlanImportManager())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
