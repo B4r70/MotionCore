@@ -21,66 +21,36 @@ struct FilterChip: View {
     let isSelected: Bool
     let action: () -> Void
 
-    @Environment(\.colorScheme) private var colorScheme
-
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 8) {
+            HStack(spacing: Space.s2) {
                 if let icon {
                     IconType(icon: icon,
-                             color: isSelected ? .blue : .blue,
+                             color: isSelected ? Color.white : Theme.textSecondary,
                              size: 14)
                 }
 
                 Text(title)
-                    .font(.subheadline.weight(isSelected ? .semibold : .regular))
+                    .font(AppFont.callout)
+                    .fontWeight(isSelected ? .semibold : .medium)
 
                 // Count Badge
                 Text("\(count)")
                     .font(.caption2.weight(.bold))
-                    .foregroundStyle(isSelected ? .white : .secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
+                    .foregroundStyle(isSelected ? Color.white : Theme.textSecondary)
+                    .padding(.horizontal, Space.s2)
+                    .padding(.vertical, 2)
                     .background {
                         Capsule()
-                            .fill(isSelected ? Theme.accent.opacity(0.5) : Color.gray.opacity(0.2))
+                            .fill(isSelected ? Color.white.opacity(0.25) : Theme.surfaceSunken)
                     }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            // Liquid-Glass Hintergrund
-            .background(
-                Capsule()
-                    .fill(
-                        Color.white.opacity(
-                            colorScheme == .light ? 0.20 : 0.08
-                        )
-                    )
-            )
-            .background(
-                isSelected
-                    ? (colorScheme == .light ? .ultraThinMaterial : .thinMaterial)
-                    : (colorScheme == .light ? .thinMaterial : .ultraThinMaterial),
-                in: Capsule()
-            )
-            .overlay {
-                Capsule()
-                    .stroke(
-                        isSelected
-                            ? Theme.accent.opacity(0.5)
-                            : Color.white.opacity(colorScheme == .light ? 0.45 : 0.30),
-                        lineWidth: isSelected ? 1.5 : 0.8
-                    )
-            }
-            .shadow(
-                color: isSelected
-                    ? Theme.accent.opacity(0.2)
-                    : Color.black.opacity(colorScheme == .light ? 0.05 : 0.55),
-                radius: colorScheme == .light ? 8 : 12,
-                x: 0,
-                y: 4
-            )
-            .foregroundStyle(isSelected ? .primary : .secondary)
+            .foregroundStyle(isSelected ? Color.white : Theme.textSecondary)
+            .padding(.horizontal, Space.s3)
+            .padding(.vertical, Space.s2)
+            // Calm 2026: voller Akzent aktiv, surfaceCard + Hairline inaktiv (kein Glas)
+            .background(Capsule().fill(isSelected ? Theme.accent : Theme.surfaceCard))
+            .overlay(Capsule().stroke(Theme.line, lineWidth: isSelected ? 0 : 1))
         }
         .buttonStyle(.plain)
     }
