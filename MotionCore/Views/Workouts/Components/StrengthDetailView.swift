@@ -58,10 +58,12 @@ struct StrengthDetailView: View {
                 .padding(.horizontal)
                 .padding(.top, 16)
                 .padding(.bottom, 40)
-                // Inhalt fest auf die Viewport-Breite klemmen (äußerster Modifier) —
-                // verhindert, dass die LazyVGrid (statisticsCard) den ScrollView-Inhalt
-                // breiter als den Screen aufzieht und so horizontales Scrollen entsteht.
-                .frame(maxWidth: .infinity)
+                // Inhalt auf EXAKT die Scroll-Container-Breite zwingen (nicht maxWidth:.infinity,
+                // das den Frame auf die zu breite Ideal-Breite eines Kindes wachsen lässt) und
+                // Überstand clippen — sonst zieht ein überbreites Kind (WKWebView-Heatmap /
+                // Statistik-Grid) den Inhalt breiter als den Screen → horizontales Scrollen.
+                .containerRelativeFrame(.horizontal)
+                .clipped()
             }
             .scrollIndicators(.hidden)
         }

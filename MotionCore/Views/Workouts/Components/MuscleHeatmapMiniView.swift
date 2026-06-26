@@ -31,9 +31,17 @@ struct MuscleHeatmapMiniView: View {
                 Spacer()
             }
 
-            MuscleHeatmapMiniSVGView(trainedRegionIds: trainedRegionIds)
-                .frame(height: 200)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+            // Heatmap-WebView hart auf die Container-Breite klemmen: Die WKWebView nimmt
+            // nach dem async loadHTMLString (viewport=device-width) sonst volle Gerätebreite
+            // an — breiter als die schmalere Card → der umschließende vertikale ScrollView
+            // (StrengthDetailView) wird horizontal scrollbar. sizeThatFits allein genügt
+            // nicht; GeometryReader fixiert die Breite definitiv.
+            GeometryReader { geo in
+                MuscleHeatmapMiniSVGView(trainedRegionIds: trainedRegionIds)
+                    .frame(width: geo.size.width, height: 200)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+            .frame(height: 200)
         }
         .padding()
         .card()
