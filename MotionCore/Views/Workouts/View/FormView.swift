@@ -46,7 +46,7 @@ struct FormView: View {
     var body: some View {
         ZStack {
             // Hintergrund
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
                 .hideKeyboardOnTap()
 
             ScrollView {
@@ -56,7 +56,7 @@ struct FormView: View {
                         // Titel
                         Text("Workout-Daten")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         // MARK: Datum
                         DateInputSection(date: $workout.date)
@@ -153,8 +153,8 @@ struct FormView: View {
 
                     dismiss()
                 } label: {
-                    IconType(icon: .system("checkmark"), color: .blue, size: 16)
-                        .glassButton(size: 36, accentColor: .blue)
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(Theme.accent)
                 }
             }
 
@@ -165,8 +165,8 @@ struct FormView: View {
                         dismissKeyboard() 
                         showDeleteAlert = true
                     } label: {
-                        IconType(icon: .system("trash"), color: Color.red, size: 16)
-                            .glassButton(size: 36, accentColor: Color.red)
+                        Image(systemName: "trash")
+                            .foregroundStyle(Theme.danger)
                     }
                 }
             }

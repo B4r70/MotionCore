@@ -31,7 +31,7 @@ struct StrengthDetailView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -83,7 +83,7 @@ struct StrengthDetailView: View {
                     showDeleteAlert = true
                 } label: {
                     Image(systemName: "trash")
-                        .foregroundStyle(Color.red)
+                        .foregroundStyle(Theme.danger)
                 }
             }
         }
@@ -139,22 +139,22 @@ struct StrengthDetailView: View {
             HStack {
                 ZStack {
                     Circle()
-                        .fill(.ultraThinMaterial)
+                        .fill(Theme.accentSoft)
                         .frame(width: 50, height: 50)
 
                     Image(systemName: "dumbbell.fill")
                         .font(.title3)
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.accent)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(session.date.formatted(AppFormatters.dateGermanLong))
                         .font(.title3.bold())
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     Text(session.date.formatted(AppFormatters.timeGermanLong))
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
 
                 Spacer()
@@ -162,24 +162,24 @@ struct StrengthDetailView: View {
                 // Status Badge
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color.green)
+                        .foregroundStyle(Theme.success)
                     Text("Abgeschlossen")
                         .font(.caption.bold())
-                        .foregroundStyle(Color.green)
+                        .foregroundStyle(Theme.success)
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
-                .background(Color.green.opacity(0.15), in: Capsule())
+                .background(Theme.success.opacity(0.15), in: Capsule())
             }
 
             // Plan-Name (falls vorhanden)
             if let planName = session.planName {
                 HStack(spacing: 8) {
                     Image(systemName: "doc.text.fill")
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                     Text(planName)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
             Divider()
@@ -188,10 +188,10 @@ struct StrengthDetailView: View {
             HStack {
                 Label {
                     Text(session.workoutType.displayName)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
                 } icon: {
                     Image(systemName: session.workoutType.icon)
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.accent)
                 }
 
                 Spacer()
@@ -199,10 +199,10 @@ struct StrengthDetailView: View {
                 if session.duration > 0 {
                     Label {
                         Text(formatDuration(session.duration))
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
                     } icon: {
                         Image(systemName: "clock.fill")
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Theme.series[0])
                     }
                 }
             }
@@ -217,69 +217,69 @@ struct StrengthDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Statistiken")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             LazyVGrid(columns: [
                 GridItem(.flexible()),
                 GridItem(.flexible()),
                 GridItem(.flexible())
             ], spacing: 16) {
-                // Übungen
+                // Übungen — neutrale Kennzahl → series[0]
                 statisticItem(
                     value: "\(session.exercisesPerformed)",
                     label: "Übungen",
                     icon: "dumbbell.fill",
-                    color: Color.orange
+                    color: Theme.series[0]
                 )
 
-                // Sätze
+                // Sätze — neutrale Kennzahl → series[0]
                 statisticItem(
                     value: "\(session.totalSets)",
                     label: "Sätze",
                     icon: "number.circle.fill",
-                    color: .purple
+                    color: Theme.series[0]
                 )
 
-                // Volumen
+                // Volumen — neutrale Kennzahl → series[0]
                 statisticItem(
                     value: formatVolume(session.totalVolume),
                     label: "Volumen",
                     icon: "scalemass.fill",
-                    color: Color.green
+                    color: Theme.series[0]
                 )
 
-                // Wiederholungen
+                // Wiederholungen — neutrale Kennzahl → series[0]
                 statisticItem(
                     value: "\(totalReps)",
                     label: "Wdh. gesamt",
                     icon: "repeat.circle.fill",
-                    color: .blue
+                    color: Theme.series[0]
                 )
 
-                // Kalorien
+                // Kalorien → warning
                 statisticItem(
                     value: session.calories > 0 ? "\(session.calories)" : "–",
                     label: "kcal",
                     icon: "flame.fill",
-                    color: Color.red
+                    color: Theme.warning
                 )
 
-                // Herzfrequenz
+                // Herzfrequenz → danger
                 statisticItem(
                     value: session.heartRate > 0 ? "\(session.heartRate)" : "–",
                     label: "Ø bpm",
                     icon: "heart.fill",
-                    color: .pink
+                    color: Theme.danger
                 )
             }
 
             // Intensität
-            .glassDivider()
+            Divider()
 
             HStack {
                 Text("Belastung")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                 Spacer()
 
@@ -290,13 +290,13 @@ struct StrengthDetailView: View {
                             .foregroundStyle(
                                 index < session.intensity.rawValue
                                 ? session.intensity.color
-                                : Color.gray.opacity(0.3)
+                                : Theme.line
                             )
                     }
 
                     Text(session.intensity.description)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                         .padding(.leading, 4)
                 }
             }
@@ -308,7 +308,7 @@ struct StrengthDetailView: View {
                 HStack {
                     Text("Bewertungen")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                     Spacer()
 
@@ -337,10 +337,10 @@ struct StrengthDetailView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "chart.bar.doc.horizontal")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     Text("Session-Qualität: \(score)/100")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
         }
@@ -355,11 +355,11 @@ struct StrengthDetailView: View {
 
             Text(value)
                 .font(.title2.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             Text(label)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity)
     }
@@ -374,7 +374,7 @@ struct StrengthDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Übungen")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             ForEach(Array(session.groupedSets.enumerated()), id: \.offset) { index, sets in
                 if let firstSet = sets.first {
@@ -403,7 +403,7 @@ struct StrengthDetailView: View {
                     .font(.caption.bold())
                     .foregroundStyle(Color.white)
                     .frame(width: 24, height: 24)
-                    .background(Circle().fill(Color.blue))
+                    .background(Circle().fill(Theme.accent))
 
                 if let exercise {
                     ExerciseVideoView.forExercise(exercise, size: 44)
@@ -413,7 +413,7 @@ struct StrengthDetailView: View {
 
                 Text(name)
                     .font(.headline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 // Bewertungs-Badge (falls vorhanden)
                 if let rating {
@@ -426,13 +426,13 @@ struct StrengthDetailView: View {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text("\(sets.count) Sätze")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                     // Volumen nur anzeigen wenn mindestens ein Weight-Satz vorhanden
                     if !sets.allSatisfy(\.isTimeBased) {
                         Text(formatVolume(exerciseVolume(sets)))
                             .font(.caption.bold())
-                            .foregroundStyle(Color.green)
+                            .foregroundStyle(Theme.series[0])
                     }
                 }
 
@@ -445,7 +445,7 @@ struct StrengthDetailView: View {
                     } label: {
                         Image(systemName: "arrow.uturn.backward.circle")
                             .font(.title3)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Theme.warning)
                     }
                     .accessibilityLabel("Arbeitsgewicht zurücksetzen")
                 }
@@ -457,7 +457,7 @@ struct StrengthDetailView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .font(.title3)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
             }
@@ -469,7 +469,7 @@ struct StrengthDetailView: View {
                         // Satz-Nummer
                         Text("Satz \(set.setNumber)")
                             .font(.caption)
-                            .foregroundStyle(set.setKind == .warmup ? Color.orange : .secondary)
+                            .foregroundStyle(set.setKind == .warmup ? Theme.warning : Theme.textSecondary)
                             .frame(width: 60, alignment: .leading)
 
                         // SetKind Badge
@@ -495,7 +495,7 @@ struct StrengthDetailView: View {
                                         .font(.subheadline.bold())
 
                                     Text("×")
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(Theme.textSecondary)
                                 }
 
                                 Text("\(set.reps) Wdh.")
@@ -517,7 +517,7 @@ struct StrengthDetailView: View {
                     .padding(.horizontal, 10)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.primary.opacity(0.03))
+                            .fill(Theme.textPrimary.opacity(0.03))
                     )
                 }
             }
@@ -532,11 +532,11 @@ struct StrengthDetailView: View {
 
     private func rpeColor(_ rpe: Int) -> Color {
         switch rpe {
-        case 1...5: return Color.green
-        case 6...7: return Color.yellow
-        case 8...9: return Color.orange
-        case 10: return Color.red
-        default: return Color.gray
+        case 1...5: return Theme.success
+        case 6...7: return Theme.series[3]
+        case 8...9: return Theme.warning
+        case 10: return Theme.danger
+        default: return Theme.textTertiary
         }
     }
 
@@ -546,11 +546,11 @@ struct StrengthDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Label("Notizen", systemImage: "note.text")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             Text(session.notes)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .card()
@@ -576,8 +576,8 @@ struct StrengthDetailView: View {
                     }
                     .padding(.vertical, 14)
                     .padding(.horizontal, 14)
-                    .background(Color.purple.opacity(0.15))
-                    .foregroundStyle(Color.purple)
+                    .background(Theme.accentSoft)
+                    .foregroundStyle(Theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             }
@@ -597,8 +597,8 @@ struct StrengthDetailView: View {
                     }
                     .padding(.vertical, 14)
                     .padding(.horizontal, 14)
-                    .background(Color.blue.opacity(0.15))
-                    .foregroundStyle(Color.blue)
+                    .background(Theme.accentSoft)
+                    .foregroundStyle(Theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             }
@@ -618,8 +618,8 @@ struct StrengthDetailView: View {
                     }
                     .padding(.vertical, 14)
                     .padding(.horizontal, 14)
-                    .background(Color.green.opacity(0.15))
-                    .foregroundStyle(Color.green)
+                    .background(Theme.accentSoft)
+                    .foregroundStyle(Theme.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             }

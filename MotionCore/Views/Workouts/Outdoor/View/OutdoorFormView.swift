@@ -16,7 +16,6 @@ import SwiftUI
 struct OutdoorFormView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
 
     let mode: FormMode
 
@@ -50,7 +49,8 @@ struct OutdoorFormView: View {
     var body: some View {
         ZStack {
             // Hintergrund
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp
+                .ignoresSafeArea()
                 .hideKeyboardOnTap()
 
             ScrollView {
@@ -60,7 +60,7 @@ struct OutdoorFormView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Route")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         OutdoorRouteNameSection(
                             routeName: $session.routeName,
@@ -87,7 +87,7 @@ struct OutdoorFormView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Leistungsdaten")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         OutdoorDurationSection(
                             duration: $session.duration,
@@ -145,7 +145,7 @@ struct OutdoorFormView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Bewertung")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         OutdoorWeatherSection(
                             weatherCondition: $session.weatherCondition,
@@ -172,7 +172,7 @@ struct OutdoorFormView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Notizen")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         TextEditor(text: $session.notes)
                             .frame(minHeight: 80)
@@ -195,8 +195,8 @@ struct OutdoorFormView: View {
                     dismissKeyboard()
                     saveSession()
                 } label: {
-                    IconType(icon: .system("checkmark"), color: .blue, size: 16)
-                        .glassButton(size: 36, accentColor: .blue)
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(Theme.success)
                 }
             }
 
@@ -207,8 +207,8 @@ struct OutdoorFormView: View {
                         dismissKeyboard()
                         showDeleteAlert = true
                     } label: {
-                        IconType(icon: .system("trash"), color: Color.red, size: 16)
-                            .glassButton(size: 36, accentColor: Color.red)
+                        Image(systemName: "trash")
+                            .foregroundStyle(Theme.danger)
                     }
                 }
             }
@@ -223,7 +223,7 @@ struct OutdoorFormView: View {
                     } label: {
                         Image(systemName: "chevron.up")
                             .font(.body.weight(.medium))
-                            .foregroundStyle(canNavigatePrevious ? .primary : .secondary)
+                            .foregroundStyle(canNavigatePrevious ? Theme.textPrimary : Theme.textSecondary)
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
                     }
@@ -234,13 +234,13 @@ struct OutdoorFormView: View {
                     } label: {
                         Image(systemName: "chevron.down")
                             .font(.body.weight(.medium))
-                            .foregroundStyle(canNavigateNext ? .primary : .secondary)
+                            .foregroundStyle(canNavigateNext ? Theme.textPrimary : Theme.textSecondary)
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
                     }
                     .disabled(!canNavigateNext)
                 }
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 8))
 
                 Spacer()
 
@@ -251,7 +251,7 @@ struct OutdoorFormView: View {
                 } label: {
                     Text("Fertig")
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.success)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                 }
@@ -372,6 +372,5 @@ struct OutdoorFormView: View {
     return NavigationStack {
         OutdoorFormView(mode: .add, session: session)
             .modelContainer(PreviewData.sharedContainer)
-            .environmentObject(AppSettings.shared)
     }
 }
