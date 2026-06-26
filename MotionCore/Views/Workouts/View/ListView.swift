@@ -132,7 +132,8 @@ struct ListView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            // Flache Seitenfläche (Calm 2026 — kein AnimatedBackground)
+            Theme.surfaceApp.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 // Workout-Typ Segmented Control
@@ -166,39 +167,20 @@ struct ListView: View {
     // MARK: - Workout-Typ Selector
 
     private var workoutTypeSelector: some View {
-        HStack(spacing: 8) {
+        // Calm-2026 Chip-Reihe (AP-1-Baustein) statt glasigem Segmented Control
+        HStack(spacing: Space.s2) {
             ForEach(WorkoutTypeFilter.allCases) { type in
-                Button {
+                Chip(
+                    title: type.rawValue,
+                    systemImage: type.icon,
+                    isSelected: selectedWorkoutType == type
+                ) {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         selectedWorkoutType = type
                     }
-                } label: {
-                    Image(systemName: type.icon)
-                        .font(.subheadline.weight(.medium))
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        selectedWorkoutType == type
-                        ? Color.blue.opacity(0.2)
-                        : Color.clear
-                    )
-                    .foregroundStyle(
-                        selectedWorkoutType == type
-                        ? .blue
-                        : .secondary
-                    )
-                    .clipShape(Capsule())
                 }
-                .buttonStyle(.plain)
             }
         }
-        .padding(4)
-        .background(.ultraThinMaterial, in: Capsule())
-        .overlay(
-            Capsule()
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-        )
     }
 
     // MARK: - Aktive Workouts Section
@@ -207,13 +189,14 @@ struct ListView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack {
+                // Amber-Punkt (Calm 2026: Theme.warning)
                 Circle()
-                    .fill(Color.orange)
+                    .fill(Theme.warning)
                     .frame(width: 8, height: 8)
 
                 Text("Laufende Trainings")
                     .font(.headline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Spacer()
             }

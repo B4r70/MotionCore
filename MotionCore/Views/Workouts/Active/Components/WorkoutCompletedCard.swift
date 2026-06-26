@@ -18,20 +18,21 @@ struct WorkoutCompletedCard: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            // Trophy: Theme.warning (Amber) für Erfolgs-Akzent
             Image(systemName: "trophy.fill")
                 .font(.system(size: 60))
-                .foregroundStyle(Color.yellow)
+                .foregroundStyle(Theme.warning)
 
             Text("Alle Sätze abgeschlossen!")
                 .font(.title2.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             Text("Großartige Arbeit! Du kannst das Training jetzt beenden oder weitere Übungen hinzufügen.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
 
-            // ✅ NEU: Weitere Übung Button
+            // Sekundäre Aktion: Übung hinzufügen
             if let onAddExercise {
                 Button {
                     onAddExercise()
@@ -39,28 +40,21 @@ struct WorkoutCompletedCard: View {
                     HStack {
                         Image(systemName: "plus.circle.fill")
                         Text("Weitere Übung")
-                            .font(.headline)
                     }
-                    .foregroundStyle(Color.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(.blue, in: RoundedRectangle(cornerRadius: 16))
                 }
+                .buttonStyle(.mcSecondary)
             }
 
+            // Primäre Aktion: Training beenden
             Button {
                 onFinishWorkout()
             } label: {
                 HStack {
                     Image(systemName: "flag.checkered")
                     Text("Training beenden")
-                        .font(.headline)
                 }
-                .foregroundStyle(Color.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
             }
+            .buttonStyle(.mcPrimary)
         }
         .card()
     }

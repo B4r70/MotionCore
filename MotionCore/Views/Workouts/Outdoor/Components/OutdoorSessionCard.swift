@@ -20,16 +20,8 @@ struct OutdoorSessionCard: View {
 
             // MARK: - Header
             HStack(spacing: 12) {
-                // Aktivitaets-Icon
-                ZStack {
-                    Circle()
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 44, height: 44)
-
-                    Image(systemName: session.outdoorActivity.icon)
-                        .font(.title3)
-                        .foregroundStyle(session.outdoorActivity.tint)
-                }
+                // Aktivitaets-Icon — einheitliches Tile je Workout-Typ
+                WorkoutTypeIconTile(type: .outdoor, systemImage: session.outdoorActivity.icon)
 
                 // Datum und Routenname
                 VStack(alignment: .leading, spacing: 2) {
@@ -66,35 +58,35 @@ struct OutdoorSessionCard: View {
                 GridItem(.flexible()),
                 GridItem(.flexible())
             ], spacing: 12) {
-                // Dauer
+                // Dauer — neutrale Zeitmetrik
                 StatBubble(
                     icon: .system("clock.fill"),
                     value: "\(session.duration) min",
-                    color: .blue
+                    color: Theme.series[0]
                 )
 
-                // Distanz
+                // Distanz — neutrale Streckenmetrik
                 StatBubble(
                     icon: .system("arrow.left.and.right"),
                     value: String(format: "%.1f km", session.distance),
-                    color: Color.green
+                    color: Theme.series[0]
                 )
 
-                // Durchschnittsgeschwindigkeit (nur wenn vorhanden)
+                // Durchschnittsgeschwindigkeit (nur wenn vorhanden) — neutrale Tempoemetrik
                 if session.averageSpeed > 0 {
                     StatBubble(
                         icon: .system("speedometer"),
                         value: String(format: "%.1f km/h", session.averageSpeed),
-                        color: Color.orange
+                        color: Theme.series[0]
                     )
                 }
 
-                // Hoehenmeter (nur wenn vorhanden)
+                // Hoehenmeter (nur wenn vorhanden) — neutrale Hoehenmetrik
                 if session.elevationGain > 0 {
                     StatBubble(
                         icon: .system("mountain.2"),
                         value: "\(Int(session.elevationGain)) m",
-                        color: Color.mint
+                        color: Theme.series[0]
                     )
                 }
             }
@@ -132,13 +124,14 @@ struct OutdoorSessionCard: View {
                         .font(.caption2)
                         .foregroundStyle(.primary)
 
+                    // Sterne neutral — kein Ampel-Ton, ruhige Skala
                     ForEach(0..<5) { index in
                         Image(systemName: index < session.intensity.rawValue ? "star.fill" : "star")
                             .font(.caption2)
                             .foregroundStyle(
                                 index < session.intensity.rawValue
-                                ? session.intensity.color
-                                : Color.gray.opacity(0.3)
+                                ? Theme.textSecondary
+                                : Theme.line
                             )
                     }
 
@@ -168,5 +161,5 @@ struct OutdoorSessionCard: View {
     )
     return OutdoorSessionCard(session: session)
         .padding()
-        .background(Color(.systemGroupedBackground))
+        .background(Theme.surfaceApp)
 }

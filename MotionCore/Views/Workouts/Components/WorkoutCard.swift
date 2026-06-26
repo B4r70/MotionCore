@@ -21,16 +21,8 @@ struct WorkoutCard: View {
         VStack(alignment: .leading, spacing: 12) {
             // Header mit Device Badge
             HStack {
-                // Device Icon mit Glas-Effekt
-                ZStack {
-                    Circle()
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 44, height: 44)
-
-                    Image(systemName: allWorkouts.cardioDevice.symbol)
-                        .font(.title3)
-                        .foregroundStyle(allWorkouts.cardioDevice.tint)
-                }
+                // Cardio-Icon-Tile — einheitliches Tile je Workout-Typ
+                WorkoutTypeIconTile(type: .cardio, systemImage: allWorkouts.cardioDevice.symbol)
                 // Anzeige Datum und Uhrzeit
                 VStack(alignment: .leading, spacing: 2) {
                         // Datum
@@ -48,7 +40,7 @@ struct WorkoutCard: View {
                 // Training Program Icon
                 Image(systemName: allWorkouts.trainingProgram.symbol)
                     .font(.title3)
-                    .foregroundStyle(allWorkouts.trainingProgram.tint)
+                    .foregroundStyle(Theme.textSecondary)
             }
             .glassDivider(paddingTop: 5, paddingBottom: 2)
 
@@ -58,46 +50,46 @@ struct WorkoutCard: View {
                 GridItem(.flexible()),
                 GridItem(.flexible()),
             ], spacing: 12) {
-                // Workout-Dauer
+                // Workout-Dauer — neutrale Zeitmetrik
                 StatBubble(
                     icon: .system("clock.fill"),
                     value: allWorkouts.durationFormatted,
-                    color: .blue
+                    color: Theme.series[0]
                 )
-                // Workout-Distanz
+                // Workout-Distanz — neutrale Streckenmetrik
                 StatBubble(
                     icon: .system("arrow.left.and.right"),
                     value: allWorkouts.distanceFormatted,
-                    color: Color.green
+                    color: Theme.series[0]
                 )
-                // Workout-Geschwindigkeit
+                // Workout-Geschwindigkeit — neutrale Tempoemetrik
                 StatBubble(
                     icon: .system("gauge.with.dots.needle.67percent"),
                     value: allWorkouts.averageSpeedFormatted,
-                    color: Color.orange
+                    color: Theme.series[0]
                 )
-                // Workout-Herzfrequenz (Durchschnitt)
+                // Workout-Herzfrequenz (Durchschnitt) — Puls → danger
                 StatBubble(
                     icon: .system("heart.fill"),
                     value: allWorkouts.heartRateFormatted,
-                    color: Color.red
+                    color: Theme.danger
                 )
-                // Workout-Kalorien
+                // Workout-Kalorien — Energie → warning
                 StatBubble(
                     icon: .system("flame.fill"),
                     value: allWorkouts.caloriesFormatted,
-                    color: Color.orange
+                    color: Theme.warning
                 )
-                // Workout-METS
+                // Workout-METS — neutrale Aktivitätsmetrik
                 StatBubble(
                     icon: .system("bolt.fill"),
                     value: allWorkouts.metsFormatted,
-                    color: Color.yellow
+                    color: Theme.series[0]
                 )
             }
             .glassDivider(paddingTop: 15, paddingBottom: 2)
 
-            // Intensity Stars
+            // Intensity Stars — neutral, kein Ampel-Ton
             HStack(spacing: 4) {
                 Text("Belastung:")
                     .font(.caption2)
@@ -106,7 +98,7 @@ struct WorkoutCard: View {
                 ForEach(0 ..< 5) { index in
                     Image(systemName: index < allWorkouts.intensity.rawValue ? "star.fill" : "star")
                         .font(.caption2)
-                        .foregroundStyle(index < allWorkouts.intensity.rawValue ? allWorkouts.intensity.color : Color.gray.opacity(0.3))
+                        .foregroundStyle(index < allWorkouts.intensity.rawValue ? Theme.textSecondary : Theme.line)
                 }
 
                 Spacer()

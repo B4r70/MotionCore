@@ -14,8 +14,7 @@ import SwiftUI
 
 struct NewWorkoutSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
-    
+
     // Callbacks für die Auswahl
     var onCardioSelected: () -> Void
     var onStrengthSelected: () -> Void
@@ -23,17 +22,18 @@ struct NewWorkoutSheet: View {
     
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-            
+            // Flache Seitenfläche (Calm 2026 — kein AnimatedBackground)
+            Theme.surfaceApp.ignoresSafeArea()
+
             VStack(spacing: 20) {
                 // Header
                 VStack(spacing: 8) {
                     Text("Neues Training")
-                        .font(.title2.bold())
-                    
+                        .font(AppFont.title)
+
                     Text("Wähle den Trainingstyp")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.body)
+                        .foregroundStyle(Theme.textSecondary)
                 }
                 .padding(.top, 32)
 
@@ -43,25 +43,25 @@ struct NewWorkoutSheet: View {
                         icon: "figure.strengthtraining.traditional",
                         title: "Krafttraining",
                         subtitle: "Trainingsplan auswählen",
-                        color: Color.orange
+                        color: WorkoutType.strength.calmIconTint
                     ) {
                         onStrengthSelected()
                     }
-                    
+
                     WorkoutTypeButton(
                         icon: "figure.elliptical",
                         title: "Cardio",
                         subtitle: "Ausdauertraining erfassen",
-                        color: Color.green
+                        color: WorkoutType.cardio.calmIconTint
                     ) {
                         onCardioSelected()
                     }
-                    
+
                     WorkoutTypeButton(
                         icon: "figure.outdoor.cycle",
                         title: "E-Bike Tour",
                         subtitle: "E-Bike Tour erfassen",
-                        color: .teal
+                        color: WorkoutType.outdoor.calmIconTint
                     ) {
                         onOutdoorSelected()
                     }
@@ -91,16 +91,16 @@ private struct WorkoutTypeButton: View {
                 // Icon
                 Image(systemName: icon)
                     .font(.title)
-                    .foregroundStyle(isDisabled ? .secondary : color)
+                    .foregroundStyle(isDisabled ? Theme.textSecondary : color)
                     .frame(width: 50)
-                
+
                 // Text
                 VStack(alignment: .leading, spacing: 2) {
                     HStack {
                         Text(title)
-                            .font(.headline)
-                            .foregroundStyle(isDisabled ? .secondary : .primary)
-                        
+                            .font(AppFont.headline)
+                            .foregroundStyle(isDisabled ? Theme.textSecondary : Theme.textPrimary)
+
                         if isDisabled {
                             Text("Bald")
                                 .font(.caption2)
@@ -108,24 +108,23 @@ private struct WorkoutTypeButton: View {
                                 .foregroundStyle(Color.white)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.secondary.opacity(0.5), in: Capsule())
+                                .background(Theme.textTertiary, in: Capsule())
                         }
                     }
-                    
+
                     Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textSecondary)
                 }
-                
+
                 Spacer()
-                
+
                 // Chevron
                 Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textTertiary)
             }
-            .padding()
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+            .card(padding: Space.s4)
         }
         .buttonStyle(.plain)
         .disabled(isDisabled)
@@ -141,5 +140,4 @@ private struct WorkoutTypeButton: View {
         onStrengthSelected: { print("Strength") },
         onOutdoorSelected: { print("Outdoor") }
     )
-    .environmentObject(AppSettings.shared)
 }
