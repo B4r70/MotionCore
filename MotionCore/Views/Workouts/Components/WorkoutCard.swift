@@ -42,7 +42,7 @@ struct WorkoutCard: View {
                     .font(.title3)
                     .foregroundStyle(Theme.textSecondary)
             }
-            .glassDivider(paddingTop: 5, paddingBottom: 2)
+            Divider().padding(.top, 5).padding(.bottom, 2)
 
             // Stats Grid mit Icons
             LazyVGrid(columns: [
@@ -87,7 +87,7 @@ struct WorkoutCard: View {
                     color: Theme.series[0]
                 )
             }
-            .glassDivider(paddingTop: 15, paddingBottom: 2)
+            Divider().padding(.top, 15).padding(.bottom, 2)
 
             // Intensity Stars — neutral, kein Ampel-Ton
             HStack(spacing: 4) {

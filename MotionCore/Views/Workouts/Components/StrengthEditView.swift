@@ -16,21 +16,21 @@ import SwiftUI
 
 struct StrengthEditView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
-    
+
     @Bindable var session: StrengthSession
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-                
+                Theme.surfaceApp.ignoresSafeArea()
+
                 ScrollView {
                     VStack(spacing: 20) {
                         // Grunddaten
                         VStack(alignment: .leading, spacing: 16) {
                             Text("Grunddaten")
                                 .font(.title3.bold())
+                                .foregroundStyle(Theme.textPrimary)
                             
                             // Datum
                             DatePicker(
@@ -88,12 +88,13 @@ struct StrengthEditView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Notizen")
                                 .font(.title3.bold())
-                            
+                                .foregroundStyle(Theme.textPrimary)
+
                             TextField("Notizen zum Training...", text: $session.notes, axis: .vertical)
                                 .lineLimit(3...6)
                                 .textFieldStyle(.plain)
                                 .padding(12)
-                                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md))
                         }
                         .card()
                     }
@@ -119,7 +120,7 @@ struct StrengthEditView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "checkmark")
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Theme.accent)
                     }
                 }
             }

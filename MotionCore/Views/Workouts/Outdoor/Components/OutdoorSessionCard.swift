@@ -50,7 +50,7 @@ struct OutdoorSessionCard: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .glassDivider(paddingTop: 4, paddingBottom: 2)
+            Divider().padding(.top, 4).padding(.bottom, 2)
 
             // MARK: - Metriken-Grid
             LazyVGrid(columns: [
@@ -93,7 +93,7 @@ struct OutdoorSessionCard: View {
 
             // MARK: - Route-Zeile (nur wenn Start oder Ziel vorhanden)
             if !session.startLocation.isEmpty || !session.endLocation.isEmpty {
-                GlassDivider.tight
+                Divider()
 
                 HStack(spacing: 6) {
                     Image(systemName: "mappin")
@@ -117,7 +117,7 @@ struct OutdoorSessionCard: View {
 
             // MARK: - Intensitaets-Stars (nur wenn gesetzt)
             if session.intensity != .none {
-                GlassDivider.tight
+                Divider()
 
                 HStack(spacing: 4) {
                     Text("Belastung:")

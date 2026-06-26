@@ -22,12 +22,12 @@ struct StrengthSessionCard: View {
             // Header
             headerSection
 
-            .glassDivider()
+            Divider()
 
             // Statistiken
             statsGrid
 
-            .glassDivider()
+            Divider()
 
             // Übungen-Übersicht
             exercisesPreview
