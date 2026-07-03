@@ -30,12 +30,13 @@ struct PlanUpdateChangeRow: View {
 
     var body: some View {
         Toggle(isOn: $change.isSelected) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: Space.s1) {
                 Text(change.exerciseName)
-                    .font(.headline)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Text(changeDetailText)
-                    .font(.subheadline)
+                    .font(AppFont.callout)
                     .foregroundStyle(changeDetailColor)
             }
         }
@@ -77,15 +78,20 @@ struct PlanUpdateChangeRow: View {
     private var changeDetailColor: Color {
         switch change.changeType {
         case .weightUpdate(let from, let to):
-            return to > from ? Color.green : .secondary
+            // Erhöhung = positiv (Akzent), Reduzierung = neutral
+            return to > from ? Theme.accent : Theme.textSecondary
         case .setCountUpdate(let from, let to):
-            return to > from ? Color.green : .secondary
+            // Erhöhung = positiv (Akzent), Reduzierung = neutral
+            return to > from ? Theme.accent : Theme.textSecondary
         case .exerciseAdded:
-            return .blue
+            // Hinzugefügt/neu → success
+            return Theme.success
         case .exerciseSkipped:
-            return Color.orange
+            // Übersprungen → warning
+            return Theme.warning
         case .exerciseRemoved:
-            return Color.red
+            // Entfernt → danger
+            return Theme.danger
         }
     }
 }
@@ -118,11 +124,14 @@ struct PlanUpdateChangeRow: View {
         isSelected: false
     )
 
-    VStack(spacing: 12) {
-        PlanUpdateChangeRow(change: $weightChange)
-        PlanUpdateChangeRow(change: $setCountChange)
-        PlanUpdateChangeRow(change: $newExercise)
-        PlanUpdateChangeRow(change: $skipped)
+    ScrollView {
+        VStack(spacing: Space.s3) {
+            PlanUpdateChangeRow(change: $weightChange)
+            PlanUpdateChangeRow(change: $setCountChange)
+            PlanUpdateChangeRow(change: $newExercise)
+            PlanUpdateChangeRow(change: $skipped)
+        }
+        .padding(Space.s4)
     }
-    .padding()
+    .background(Theme.surfaceApp.ignoresSafeArea())
 }

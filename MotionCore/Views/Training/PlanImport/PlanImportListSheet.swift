@@ -55,45 +55,36 @@ private struct PlanImportListRow: View {
         PlanType(rawValue: dto.planType) ?? .mixed
     }
 
-    private var planAccentColor: Color {
-        switch planType {
-        case .strength: return .orange
-        case .cardio:   return .blue
-        case .outdoor:  return .green
-        case .mixed:    return .purple
-        }
-    }
-
     var body: some View {
         HStack(spacing: 12) {
             // Plan-Type Icon
             ZStack {
                 Circle()
-                    .fill(.ultraThinMaterial)
+                    .fill(planType.calmTileBackground)
                     .frame(width: 44, height: 44)
                 Image(systemName: planType.icon)
                     .font(.title3)
-                    .foregroundStyle(planAccentColor)
+                    .foregroundStyle(planType.calmTint)
             }
 
             // Texte
             VStack(alignment: .leading, spacing: 4) {
                 Text(dto.title)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
 
                 // Plan-Type Badge + Übungen/Sätze
                 HStack(spacing: 8) {
                     Text(planType.description)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(planAccentColor)
+                        .font(AppFont.caption.weight(.semibold))
+                        .foregroundStyle(planType.calmTint)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(planAccentColor.opacity(0.12), in: Capsule())
+                        .background(planType.calmTileBackground, in: Capsule())
 
                     Text("\(dto.exerciseCount) Übungen · \(dto.setCount) Sätze")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
 
@@ -101,11 +92,11 @@ private struct PlanImportListRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textTertiary)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .card(padding: 0)
         .padding(.vertical, 4)
     }
 }
@@ -133,4 +124,5 @@ private struct PlanImportListRow: View {
 
     return PlanImportListSheet()
         .environmentObject(manager)
+        .background(Theme.surfaceApp.ignoresSafeArea())
 }

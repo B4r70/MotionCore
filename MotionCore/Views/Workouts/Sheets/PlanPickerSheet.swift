@@ -15,7 +15,6 @@ import SwiftData
 
 struct PlanPickerSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
 
     @Query(sort: \TrainingPlan.title) private var trainingPlans: [TrainingPlan]
 
@@ -30,7 +29,8 @@ struct PlanPickerSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                // Calm-2026: einheitliche App-Hintergrundfläche
+                Theme.surfaceApp.ignoresSafeArea()
 
                 VStack(spacing: 0) {
                     if strengthPlans.isEmpty {
@@ -68,14 +68,15 @@ struct PlanPickerSheet: View {
 
             Image(systemName: "doc.text.magnifyingglass")
                 .font(.system(size: 50))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
 
             Text("Keine Trainingspläne")
                 .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
 
             Text("Erstelle zuerst einen Trainingsplan\nim Training-Tab.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
 
             Spacer()
@@ -90,32 +91,24 @@ private struct PlanRow: View {
     let plan: TrainingPlan
     let action: () -> Void
 
-    private var planColor: Color {
-        switch plan.planType {
-        case .strength: return Color.orange
-        case .cardio: return Color.green
-        case .outdoor: return .blue
-        case .mixed: return .purple
-        }
-    }
-
     var body: some View {
         Button(action: action) {
             HStack(spacing: 16) {
+                // Icon-Tile: Typ-spezifische Calm-2026-Farben
                 ZStack {
                     Circle()
-                        .fill(planColor.opacity(0.2))
+                        .fill(plan.planType.calmTileBackground)
                         .frame(width: 50, height: 50)
 
                     Image(systemName: plan.planType.icon)
                         .font(.title2)
-                        .foregroundStyle(planColor)
+                        .foregroundStyle(plan.planType.calmTint)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(plan.title)
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
                         .lineLimit(1)
 
                     HStack(spacing: 12) {
@@ -126,19 +119,19 @@ private struct PlanRow: View {
                         Label("\(sets.count) Sets", systemImage: "list.number")
                     }
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
                 }
 
                 Spacer()
 
+                // Play-Icon: Erfolgsfarbe (semantisch: Starten = positiv)
                 Image(systemName: "play.circle.fill")
                     .font(.title)
-                    .foregroundStyle(Color.green)
+                    .foregroundStyle(Theme.success)
             }
-            .padding()
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
+        .card()
     }
 }
 
@@ -147,7 +140,10 @@ private struct PlanRow: View {
 #Preview {
     @Previewable @State var selected: TrainingPlan? = nil
 
-    PlanPickerSheet(selectedPlan: $selected)
-        .modelContainer(PreviewData.sharedContainer)
-        .environmentObject(AppSettings.shared)
+    ZStack {
+        Theme.surfaceApp.ignoresSafeArea()
+
+        PlanPickerSheet(selectedPlan: $selected)
+            .modelContainer(PreviewData.sharedContainer)
+    }
 }

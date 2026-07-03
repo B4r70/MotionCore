@@ -98,7 +98,7 @@ struct ExercisePickerView: View {
     private var searchBar: some View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
 
             TextField("Übung suchen...", text: $searchText)
                 .textFieldStyle(.plain)
@@ -108,15 +108,15 @@ struct ExercisePickerView: View {
                     searchText = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
         }
         .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md))
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+            RoundedRectangle(cornerRadius: Radius.md)
+                .stroke(Theme.line, lineWidth: 1)
         )
     }
 
@@ -197,7 +197,7 @@ struct ExercisePickerView: View {
         VStack(spacing: 16) {
             Image(systemName: showOnlyFavorites ? "star" : "magnifyingglass")
                 .font(.system(size: 40))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
 
             Text(showOnlyFavorites ? "Keine favorisierten Übungen" : "Keine Übungen gefunden")
                 .font(.headline)
@@ -206,11 +206,11 @@ struct ExercisePickerView: View {
                  ? "Markiere eine Übung mit dem Stern, um sie hier zu sehen"
                  : "Versuche es mit anderen Filtern")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
         }
-        .padding(32)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .padding(Space.s8)
+        .card(padding: 0)
     }
 }
 
@@ -226,20 +226,20 @@ struct ExercisePickerRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name)
                     .font(.headline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 HStack(spacing: 8) {
                     Label(exercise.equipment.description, systemImage: exercise.equipment.icon)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                     if let primaryMuscle = exercise.primaryMuscles.first {
                         Text(primaryMuscle.description)
                             .font(.caption)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(.blue.opacity(0.2))
-                            .foregroundStyle(Color.blue)
+                            .background(Theme.accentSoft)
+                            .foregroundStyle(Theme.accent)
                             .clipShape(Capsule())
                     }
                 }
@@ -249,13 +249,9 @@ struct ExercisePickerRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption)
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(Theme.textTertiary)
         }
-        .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-        )
+        .padding(Space.s3)
+        .card(padding: 0)
     }
 }

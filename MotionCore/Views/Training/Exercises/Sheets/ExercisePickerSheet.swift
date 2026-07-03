@@ -16,20 +16,16 @@ import SwiftUI
 
 struct ExercisePickerSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
 
     let onSelect: (Exercise) -> Void
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
-
-                ExercisePickerView { exercise in
-                    onSelect(exercise)
-                    dismiss()
-                }
+            ExercisePickerView { exercise in
+                onSelect(exercise)
+                dismiss()
             }
+            .background(Theme.surfaceApp.ignoresSafeArea())
             .navigationTitle("Übung wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -47,5 +43,4 @@ struct ExercisePickerSheet: View {
     ExercisePickerSheet { exercise in
         print("Selected: \(exercise.name)")
     }
-    .environmentObject(AppSettings.shared)
 }

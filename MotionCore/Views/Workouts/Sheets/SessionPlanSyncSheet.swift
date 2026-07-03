@@ -51,6 +51,7 @@ struct SessionPlanSyncSheet: View {
                         sectionView(
                             title: "Neue Übungen",
                             icon: "plus.circle.fill",
+                            color: Theme.success,
                             indices: addedIndices
                         )
                     }
@@ -61,6 +62,7 @@ struct SessionPlanSyncSheet: View {
                         sectionView(
                             title: "Geänderte Werte",
                             icon: "arrow.up.arrow.down.circle.fill",
+                            color: Theme.accent,
                             indices: structuralIndices
                         )
                     }
@@ -71,6 +73,7 @@ struct SessionPlanSyncSheet: View {
                         sectionView(
                             title: "Nicht trainiert",
                             icon: "minus.circle.fill",
+                            color: Theme.textSecondary,
                             indices: removedIndices
                         )
                     }
@@ -96,7 +99,7 @@ struct SessionPlanSyncSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button { applySelected() } label: {
                         Image(systemName: "checkmark")
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(selectedCount == 0 ? Theme.textTertiary : Theme.accent)
                     }
                     .disabled(selectedCount == 0)
                     .fontWeight(.semibold)
@@ -118,14 +121,15 @@ struct SessionPlanSyncSheet: View {
         HStack(spacing: 12) {
             Image(systemName: "arrow.triangle.2.circlepath")
                 .font(.title2)
-                .foregroundStyle(Color.blue)
+                .foregroundStyle(Theme.accent)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Direkter Session-Vergleich")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
                 Text("\(selectedCount) von \(changes.count) Änderungen ausgewählt")
                     .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
             }
 
             Spacer()
@@ -136,11 +140,11 @@ struct SessionPlanSyncSheet: View {
 
     // MARK: - Sektion
 
-    private func sectionView(title: String, icon: String, indices: [Int]) -> some View {
+    private func sectionView(title: String, icon: String, color: Color, indices: [Int]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Label(title, systemImage: icon)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(color)
                 .padding(.horizontal, 4)
 
             ForEach(indices, id: \.self) { idx in
@@ -155,12 +159,13 @@ struct SessionPlanSyncSheet: View {
         VStack(spacing: 12) {
             Image(systemName: "checkmark.circle.fill")
                 .font(.largeTitle)
-                .foregroundStyle(Color.green)
+                .foregroundStyle(Theme.success)
             Text("Plan und Session stimmen überein")
                 .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
             Text("Es gibt keine Unterschiede zwischen dieser Session und deinem Plan.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
         }
         .padding(32)

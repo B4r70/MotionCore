@@ -23,17 +23,17 @@ struct PlanImportSchemaMismatchBanner: View {
             // Icon
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.title2)
-                .foregroundStyle(Color.orange)
+                .foregroundStyle(Theme.warning)
 
             // Texte
             VStack(alignment: .leading, spacing: 2) {
                 Text("Trainingsplan-Import übersprungen — bitte App aktualisieren.")
                     .font(.headline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Text("Web nutzt ein neueres Plan-Format als diese App-Version.")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Spacer()
@@ -42,7 +42,7 @@ struct PlanImportSchemaMismatchBanner: View {
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
                     .padding(8)
                     .contentShape(Rectangle())
             }
@@ -56,7 +56,8 @@ struct PlanImportSchemaMismatchBanner: View {
 // MARK: - Preview
 
 #Preview("Schema Mismatch Banner") {
-    VStack {
+    ZStack {
+        Theme.surfaceApp.ignoresSafeArea()
         PlanImportSchemaMismatchBanner(
             onDismiss: { print("Banner geschlossen") }
         )

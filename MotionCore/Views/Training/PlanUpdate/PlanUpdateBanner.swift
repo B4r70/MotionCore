@@ -26,17 +26,17 @@ struct PlanUpdateBanner: View {
                 // Icon
                 Image(systemName: "sparkles")
                     .font(.title2)
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
 
                 // Texte
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Smart Plan-Update")
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     Text(subtitleText)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
 
                 Spacer()
@@ -44,13 +44,13 @@ struct PlanUpdateBanner: View {
                 // Chevron
                 Image(systemName: "chevron.right")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                 // X-Button zum Verwerfen
                 Button(action: onDismiss) {
                     Image(systemName: "xmark")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                         .padding(8)
                         .contentShape(Rectangle())
                 }
@@ -99,12 +99,15 @@ struct PlanUpdateBanner: View {
         analyzedSessionDates: []
     )
 
-    VStack {
-        PlanUpdateBanner(
-            proposal: proposal,
-            onTap: { print("Banner getippt") },
-            onDismiss: { print("Banner verworfen") }
-        )
-        .padding()
+    ZStack {
+        Theme.surfaceApp.ignoresSafeArea()
+        VStack {
+            PlanUpdateBanner(
+                proposal: proposal,
+                onTap: { print("Banner getippt") },
+                onDismiss: { print("Banner verworfen") }
+            )
+            .padding()
+        }
     }
 }

@@ -28,15 +28,6 @@ struct PlanImportPreviewSheet: View {
         PlanType(rawValue: dto.planType) ?? .mixed
     }
 
-    private var planAccentColor: Color {
-        switch planType {
-        case .strength: return .orange
-        case .cardio:   return .blue
-        case .outdoor:  return .green
-        case .mixed:    return .purple
-        }
-    }
-
     /// Eindeutige Exercise-Namen aus dem Payload (für die Subliste)
     private var exerciseNames: [String] {
         var seen = Set<String>()
@@ -60,23 +51,23 @@ struct PlanImportPreviewSheet: View {
                     HStack(spacing: 8) {
                         Label(planType.description, systemImage: planType.icon)
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(planAccentColor)
+                            .foregroundStyle(planType.calmTint)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
-                            .background(planAccentColor.opacity(0.12), in: Capsule())
+                            .background(planType.calmTileBackground, in: Capsule())
 
                         Spacer()
 
                         Text("Quelle: \(dto.source)")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
 
                     // Beschreibung
                     if !dto.planDescription.isEmpty {
                         Text(dto.planDescription)
                             .font(.body)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
@@ -84,11 +75,11 @@ struct PlanImportPreviewSheet: View {
                     HStack(spacing: 16) {
                         Label("\(dto.exerciseCount) Übungen", systemImage: "dumbbell.fill")
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
 
                         Label("\(dto.setCount) Sätze", systemImage: "number.circle.fill")
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
 
                     // Exercise-Name-Subliste (kompakt)
@@ -96,22 +87,22 @@ struct PlanImportPreviewSheet: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Übungen")
                                 .font(.caption.weight(.semibold))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                                 .padding(.bottom, 2)
 
                             ForEach(exerciseNames, id: \.self) { name in
                                 HStack(spacing: 8) {
                                     Image(systemName: "circle.fill")
                                         .font(.system(size: 5))
-                                        .foregroundStyle(planAccentColor)
+                                        .foregroundStyle(planType.calmTint)
                                     Text(name)
                                         .font(.subheadline)
-                                        .foregroundStyle(.primary)
+                                        .foregroundStyle(Theme.textPrimary)
                                 }
                             }
                         }
                         .padding()
-                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md))
                     }
 
                     // Buttons
@@ -119,13 +110,8 @@ struct PlanImportPreviewSheet: View {
                         // Primär: Übernehmen
                         Button(action: onAccept) {
                             Label("Übernehmen", systemImage: "checkmark.circle.fill")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(planAccentColor)
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
                         }
+                        .buttonStyle(.mcPrimary)
 
                         // Sekundär: Ablehnen
                         Button(action: onReject) {
@@ -133,9 +119,8 @@ struct PlanImportPreviewSheet: View {
                                 .font(.subheadline.weight(.semibold))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 12)
-                                .background(Color.red.opacity(0.12))
-                                .foregroundStyle(Color.red)
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .background(Theme.danger.opacity(0.12), in: RoundedRectangle(cornerRadius: Radius.md))
+                                .foregroundStyle(Theme.danger)
                         }
 
                         // Tertiär: Später
@@ -144,7 +129,7 @@ struct PlanImportPreviewSheet: View {
                                 .font(.subheadline)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 12)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                         }
                     }
                 }
