@@ -77,7 +77,7 @@ struct TemplateSetCard<Trailing: View>: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(exerciseName)
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     HStack(spacing: 12) {
                         Label("\(sets.count) Sätze", systemImage: "number.circle")
@@ -87,17 +87,17 @@ struct TemplateSetCard<Trailing: View>: View {
                         }
                     }
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
                 }
 
                 // Superset-Badge nur wenn die Übung Teil eines Supersets ist
                 if isInSuperset {
                     Image(systemName: "link")
                         .font(.caption.bold())
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.success)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 3)
-                        .background(Color.blue.opacity(0.15), in: Capsule())
+                        .background(Theme.success.opacity(0.15), in: Capsule())
                 }
 
                 Spacer()
@@ -128,7 +128,7 @@ struct TemplateSetCard<Trailing: View>: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .font(.title3)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
 
@@ -144,48 +144,48 @@ struct TemplateSetCard<Trailing: View>: View {
                     HStack {
                         Text("Aufwärmen")
                             .font(.caption.bold())
-                            .foregroundStyle(Color.orange)
+                            .foregroundStyle(Theme.warning)
 
                         Spacer()
 
                         Text(warmupSummary)
                             .font(.caption)
-                            .foregroundStyle(Color.orange)
+                            .foregroundStyle(Theme.warning)
                     }
                     .padding(.vertical, 6)
                     .padding(.horizontal, 10)
-                    .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+                    .background(Theme.warning.opacity(0.1), in: RoundedRectangle(cornerRadius: Radius.sm))
                 }
 
                 // Arbeitssätze
                 HStack {
                     Text("Arbeitssätze")
                         .font(.caption.bold())
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
 
                     Spacer()
 
                     Text(workingSummary)
                         .font(.caption)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.series[0])
                 }
                 .padding(.vertical, 6)
                 .padding(.horizontal, 10)
-                .background(Color.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+                .background(Theme.accent.opacity(0.1), in: RoundedRectangle(cornerRadius: Radius.sm))
 
                 // Pause und RIR Info
                 if let firstWork = workingSets.first {
                     HStack(spacing: 16) {
                         Label(formatRestTime(firstWork.restSeconds), systemImage: "timer")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
 
                         Spacer()
 
                         HStack(spacing: 4) {
                             Text("RIR")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
 
                             Text("\(firstWork.targetRIR)")
                                 .font(.caption.bold())
@@ -262,12 +262,13 @@ struct TemplateSetCard<Trailing: View>: View {
     }
 
     private func rirColor(for rir: Int) -> Color {
+        // RIR-Effort-Skala: niedrig=hart→danger, mittel→warning/series[3], hoch=leicht→success
         switch rir {
-        case 0: return Color.red
-        case 1: return Color.orange
-        case 2: return Color.yellow
-        case 3: return Color.green
-        default: return .blue
+        case 0: return Theme.danger
+        case 1: return Theme.warning
+        case 2: return Theme.series[3]
+        case 3: return Theme.success
+        default: return Theme.success
         }
     }
 }
@@ -299,7 +300,7 @@ extension TemplateSetCard where Trailing == EmptyView {
 
 #Preview("Template Set Card") {
     ZStack {
-        AnimatedBackground(showAnimatedBlob: true)
+        Theme.surfaceApp.ignoresSafeArea()
 
         VStack(spacing: 16) {
             TemplateSetCard(
@@ -330,5 +331,4 @@ extension TemplateSetCard where Trailing == EmptyView {
         }
         .padding()
     }
-    .environmentObject(AppSettings.shared)
 }

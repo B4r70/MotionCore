@@ -17,16 +17,7 @@ struct PlanActionsSection: View {
     let onStartWorkout: () -> Void
     let onDuplicate: () -> Void
     let onDelete: () -> Void
-    
-    private var accentColor: Color {
-        switch plan.planType {
-        case .cardio: return .blue
-        case .strength: return Color.orange
-        case .outdoor: return Color.green
-        case .mixed: return .purple
-        }
-    }
-    
+
     private var canStartWorkout: Bool {
         !plan.safeTemplateSets.isEmpty
     }
@@ -42,14 +33,14 @@ struct PlanActionsSection: View {
                     Text("Füge zuerst Übungen zum Plan hinzu.")
                         .font(.subheadline)
                 }
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 14)
                 .padding(.horizontal, 14)
-                .background(Color.secondary.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .background(Theme.surfaceSunken)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
             }
-            
+
             // Plan bearbeiten
             editPlanButton
 
@@ -60,9 +51,9 @@ struct PlanActionsSection: View {
             deletePlanButton
         }
     }
-    
+
     // MARK: - Subviews
-    
+
     private var startWorkoutButton: some View {
         Button {
             onStartWorkout()
@@ -70,19 +61,13 @@ struct PlanActionsSection: View {
             HStack {
                 Image(systemName: "play.fill")
                 Text("Training starten")
-                    .font(.subheadline.weight(.semibold))
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.subheadline.weight(.semibold))
             }
-            .padding(.vertical, 14)
-            .padding(.horizontal, 14)
-            .background(Color.green.opacity(0.15))
-            .foregroundStyle(Color.green)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
         }
+        .buttonStyle(.mcPrimary)
     }
-    
+
     private var editPlanButton: some View {
         NavigationLink {
             TrainingFormView(mode: .edit, plan: plan)
@@ -97,13 +82,14 @@ struct PlanActionsSection: View {
             }
             .padding(.vertical, 14)
             .padding(.horizontal, 14)
-            .background(accentColor.opacity(0.15))
-            .foregroundStyle(accentColor)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            // Akzentton des Plan-Typs als weiche Fläche
+            .background(plan.planType.calmTileBackground)
+            .foregroundStyle(plan.planType.calmTint)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
         }
         .buttonStyle(.plain)
     }
-    
+
     private var duplicatePlanButton: some View {
         Button {
             onDuplicate()
@@ -116,9 +102,9 @@ struct PlanActionsSection: View {
             }
             .padding(.vertical, 14)
             .padding(.horizontal, 14)
-            .background(Color.blue.opacity(0.12))
-            .foregroundStyle(Color.blue)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .background(Theme.accentSoft)
+            .foregroundStyle(Theme.accent)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
         }
     }
 
@@ -134,9 +120,9 @@ struct PlanActionsSection: View {
             }
             .padding(.vertical, 14)
             .padding(.horizontal, 14)
-            .background(Color.red.opacity(0.12))
-            .foregroundStyle(Color.red)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .background(Theme.danger.opacity(0.12))
+            .foregroundStyle(Theme.danger)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
         }
     }
 }
@@ -149,7 +135,7 @@ struct PlanActionRow: View {
     let color: Color
     let showChevron: Bool
     let action: () -> Void
-    
+
     init(
         title: String,
         icon: String,
@@ -163,7 +149,7 @@ struct PlanActionRow: View {
         self.showChevron = showChevron
         self.action = action
     }
-    
+
     var body: some View {
         Button {
             action()
@@ -182,7 +168,7 @@ struct PlanActionRow: View {
             .padding(.horizontal, 14)
             .background(color.opacity(0.15))
             .foregroundStyle(color)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
         }
     }
 }
@@ -191,8 +177,8 @@ struct PlanActionRow: View {
 
 #Preview("Plan Actions Section") {
     ZStack {
-        AnimatedBackground(showAnimatedBlob: true)
-        
+        Theme.surfaceApp.ignoresSafeArea()
+
         VStack(spacing: 20) {
             // Mit Übungen
             PlanActionsSection(
@@ -202,7 +188,7 @@ struct PlanActionRow: View {
                 onDelete: { print("Delete") }
             )
             .padding(.horizontal)
-            
+
             Divider()
 
             // Einzelne Action Rows
@@ -210,18 +196,17 @@ struct PlanActionRow: View {
                 PlanActionRow(
                     title: "Duplizieren",
                     icon: "doc.on.doc",
-                    color: .blue
+                    color: Theme.accent
                 ) { print("Duplicate") }
-                
+
                 PlanActionRow(
                     title: "Teilen",
                     icon: "square.and.arrow.up",
-                    color: .purple,
+                    color: Theme.series[2],
                     showChevron: false
                 ) { print("Share") }
             }
             .padding(.horizontal)
         }
     }
-    .environmentObject(AppSettings.shared)
 }

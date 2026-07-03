@@ -14,76 +14,76 @@ import SwiftUI
 
 struct PlanBasicDataCard: View {
     @Bindable var plan: TrainingPlan
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             // Titel
             Text("Trainingsplan-Daten")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             // Plan-Titel
             titleField
-            
+
             // Beschreibung
             descriptionField
-            
+
             // Plan-Typ
             planTypePicker
-            
+
             // Startdatum
             startDatePicker
-            
+
             // Enddatum (Optional)
             endDateSection
-            
+
             // Aktiv-Status
             activeToggle
         }
         .card()
     }
-    
+
     // MARK: - Subviews
-    
+
     private var titleField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Titel")
                 .font(.headline)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             TextField("z.B. Push Day A", text: $plan.title)
                 .textFieldStyle(.plain)
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                    RoundedRectangle(cornerRadius: Radius.md)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
         }
     }
-    
+
     private var descriptionField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Beschreibung (optional)")
                 .font(.headline)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             TextField("Ziele, Details...", text: $plan.planDescription, axis: .vertical)
                 .textFieldStyle(.plain)
                 .lineLimit(3...6)
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                    RoundedRectangle(cornerRadius: Radius.md)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
         }
     }
-    
+
     private var planTypePicker: some View {
         HStack {
             Text("Plan-Typ")
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             Spacer()
 
@@ -97,16 +97,17 @@ struct PlanBasicDataCard: View {
             } label: {
                 HStack(spacing: 4) {
                     Text(plan.planType.description)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
+                    // Akzentfarbe aus dem gewählten Plan-Typ
                     Image(systemName: "chevron.up.chevron.down")
                         .font(.caption2)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(plan.planType.calmTint)
                 }
             }
         }
     }
-    
+
     private var startDatePicker: some View {
         DatePicker(
             "Startdatum",
@@ -114,9 +115,9 @@ struct PlanBasicDataCard: View {
             displayedComponents: [.date]
         )
         .environment(\.locale, Locale(identifier: "de_DE"))
-        .tint(.primary)
+        .tint(Theme.accent)
     }
-    
+
     private var endDateSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Toggle(isOn: Binding(
@@ -130,9 +131,9 @@ struct PlanBasicDataCard: View {
                 }
             )) {
                 Text("Enddatum festlegen")
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
             }
-            .tint(Color.blue)
+            .tint(Theme.accent)
 
             if plan.endDate != nil {
                 DatePicker(
@@ -144,22 +145,22 @@ struct PlanBasicDataCard: View {
                     displayedComponents: [.date]
                 )
                 .environment(\.locale, Locale(identifier: "de_DE"))
-                .tint(.primary)
+                .tint(Theme.accent)
             }
         }
     }
-    
+
     private var activeToggle: some View {
         Toggle(isOn: $plan.isActive) {
             HStack(spacing: 8) {
                 Image(systemName: plan.isActive ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(plan.isActive ? Color.green : .secondary)
+                    .foregroundStyle(plan.isActive ? Theme.success : Theme.textSecondary)
 
                 Text("Plan ist aktiv")
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
             }
         }
-        .tint(Color.green)
+        .tint(Theme.success)
     }
 }
 
@@ -167,12 +168,11 @@ struct PlanBasicDataCard: View {
 
 #Preview("Plan Basic Data Card") {
     ZStack {
-        AnimatedBackground(showAnimatedBlob: true)
-        
+        Theme.surfaceApp.ignoresSafeArea()
+
         ScrollView {
             PlanBasicDataCard(plan: TrainingPlan(title: "Push Day A"))
                 .padding()
         }
     }
-    .environmentObject(AppSettings.shared)
 }
