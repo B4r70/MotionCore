@@ -42,7 +42,7 @@ struct TrainingFormView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
                 .hideKeyboardOnTap()
 
             ScrollView {
@@ -123,8 +123,8 @@ struct TrainingFormView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .confirmationAction) {
             Button { save() } label: {
-                IconType(icon: .system("checkmark"), color: .blue, size: 16)
-                    .glassButton(size: 36, accentColor: .blue)
+                Image(systemName: "checkmark")
+                    .foregroundStyle(Theme.accent)
             }
             .disabled(plan.title.isEmpty)
         }
@@ -135,8 +135,8 @@ struct TrainingFormView: View {
                     dismissKeyboard()
                     showDeleteAlert = true
                 } label: {
-                    IconType(icon: .system("trash"), color: Color.red, size: 16)
-                        .glassButton(size: 36, accentColor: Color.red)
+                    Image(systemName: "trash")
+                        .foregroundStyle(Theme.danger)
                 }
             }
         }
@@ -250,6 +250,7 @@ struct TrainingFormView: View {
         TrainingFormView(mode: .add, plan: TrainingPlan())
             .environmentObject(AppSettings.shared)
     }
+    .modelContainer(PreviewData.sharedContainer)
 }
 
 #Preview("Training Form - Edit") {
@@ -257,4 +258,5 @@ struct TrainingFormView: View {
         TrainingFormView(mode: .edit, plan: TrainingPlan(title: "Push Day A", planType: .strength))
             .environmentObject(AppSettings.shared)
     }
+    .modelContainer(PreviewData.sharedContainer)
 }

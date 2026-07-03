@@ -46,13 +46,13 @@ struct DetailedMusclePicker: View {
                         } label: {
                             HStack {
                                 Text(muscle.displayName)
-                                    .foregroundStyle(.primary)
+                                    .foregroundStyle(Theme.textPrimary)
 
                                 Spacer()
 
                                 if selectedMuscles.contains(muscle) {
                                     Image(systemName: "checkmark")
-                                        .foregroundStyle(Color.blue)
+                                        .foregroundStyle(Theme.accent)
                                 }
                             }
                         }
@@ -68,7 +68,7 @@ struct DetailedMusclePicker: View {
                     dismiss()
                 } label: {
                     Image(systemName: "checkmark")
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                 }
             }
         }

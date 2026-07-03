@@ -16,7 +16,6 @@ import SwiftData
 struct LocalExerciseSearchView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
 
     // Callback: Der Aufrufer entscheidet was nach der Auswahl passiert
     let onSelect: (Exercise) -> Void
@@ -86,7 +85,7 @@ struct LocalExerciseSearchView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                Theme.surfaceApp.ignoresSafeArea()
 
                 VStack(spacing: 0) {
                     Spacer().frame(height: 8)
@@ -136,7 +135,7 @@ struct LocalExerciseSearchView: View {
             // Eingabefeld
             HStack {
                 Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                 TextField("Übungsname eingeben...", text: $searchText)
                     .textFieldStyle(.plain)
@@ -147,16 +146,12 @@ struct LocalExerciseSearchView: View {
                         searchText = ""
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
             }
             .padding(12)
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-            )
+            .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md))
 
             // Filter-Button
             Button {
@@ -164,13 +159,9 @@ struct LocalExerciseSearchView: View {
             } label: {
                 Image(systemName: hasActiveFilters ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
                     .font(.title2)
-                    .foregroundStyle(hasActiveFilters ? .blue : .secondary)
+                    .foregroundStyle(hasActiveFilters ? Theme.accent : Theme.textSecondary)
                     .padding(12)
-                    .background(.ultraThinMaterial, in: Circle())
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-                    )
+                    .background(Theme.surfaceSunken, in: Circle())
             }
         }
     }
@@ -195,8 +186,8 @@ struct LocalExerciseSearchView: View {
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(.ultraThinMaterial, in: Capsule())
-                    .overlay(Capsule().stroke(Color.blue, lineWidth: 1))
+                    .background(Theme.surfaceSunken, in: Capsule())
+                    .overlay(Capsule().stroke(Theme.accent, lineWidth: 1))
                 }
 
                 if let primary = selectedPrimaryMuscle {
@@ -215,8 +206,8 @@ struct LocalExerciseSearchView: View {
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(.ultraThinMaterial, in: Capsule())
-                    .overlay(Capsule().stroke(Color.green, lineWidth: 1))
+                    .background(Theme.surfaceSunken, in: Capsule())
+                    .overlay(Capsule().stroke(Theme.success, lineWidth: 1))
                 }
 
                 if let sub = selectedSubMuscle {
@@ -234,8 +225,8 @@ struct LocalExerciseSearchView: View {
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(.ultraThinMaterial, in: Capsule())
-                    .overlay(Capsule().stroke(Color.green.opacity(0.6), lineWidth: 1))
+                    .background(Theme.surfaceSunken, in: Capsule())
+                    .overlay(Capsule().stroke(Theme.success.opacity(0.6), lineWidth: 1))
                 }
             }
             .padding(.horizontal)
@@ -301,7 +292,7 @@ private struct LocalExerciseSearchRow: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(exercise.name)
                     .font(.headline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 HStack(spacing: 8) {
                     // Primären Muskel anzeigen
@@ -313,7 +304,7 @@ private struct LocalExerciseSearchRow: View {
                                 .font(.caption)
                                 .lineLimit(1)
                         }
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     }
 
                     // Equipment anzeigen
@@ -324,7 +315,7 @@ private struct LocalExerciseSearchRow: View {
                             .font(.caption)
                             .lineLimit(1)
                     }
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                     // Schwierigkeitsgrad anzeigen
                     HStack(spacing: 4) {
@@ -333,7 +324,7 @@ private struct LocalExerciseSearchRow: View {
                         Text(exercise.difficulty.description)
                             .font(.caption)
                     }
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
                 }
             }
 
@@ -341,14 +332,9 @@ private struct LocalExerciseSearchRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption)
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(Theme.textTertiary)
         }
-        .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-        )
+        .card(padding: 12)
     }
 }
 
@@ -358,6 +344,5 @@ private struct LocalExerciseSearchRow: View {
     LocalExerciseSearchView { exercise in
         print("Ausgewählt: \(exercise.name)")
     }
-    .environmentObject(AppSettings.shared)
     .modelContainer(PreviewData.sharedContainer)
 }

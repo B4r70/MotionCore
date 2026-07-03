@@ -109,7 +109,7 @@ struct ExerciseListView: View {
     var body: some View {
         ZStack {
             // Hintergrund
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 // MARK: Statistik-Badge
@@ -162,7 +162,7 @@ struct ExerciseListView: View {
                                         systemImage: exercise.isArchived ? "tray.and.arrow.up" : "archivebox"
                                     )
                                 }
-                                .tint(Color.orange)
+                                .tint(Theme.warning)
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 // Favorit-Toggle
@@ -174,7 +174,7 @@ struct ExerciseListView: View {
                                         systemImage: exercise.isFavorite ? "star.slash" : "star.fill"
                                     )
                                 }
-                                .tint(Color.yellow)
+                                .tint(Theme.success)
                             }
                         }
                     }
@@ -190,7 +190,7 @@ struct ExerciseListView: View {
         }
         .floatingActionButton(
             icon: .system("plus"),
-            color: .primary
+            color: Theme.textPrimary
         ) {
             showingAddExercise = true
         }
@@ -226,15 +226,15 @@ struct ExerciseListView: View {
             HStack(spacing: 6) {
                 Image(systemName: "dumbbell.fill")
                     .font(.caption)
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
 
                 Text("\(allExercises.count)")
                     .font(.headline.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Text("Gesamt")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Divider()
@@ -244,15 +244,15 @@ struct ExerciseListView: View {
             HStack(spacing: 6) {
                 Image(systemName: "person.fill")
                     .font(.caption)
-                    .foregroundStyle(Color.green)
+                    .foregroundStyle(Theme.accent)
 
                 Text("\(userExercises.count)")
                     .font(.headline.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Text("Eigene")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Divider()
@@ -262,30 +262,30 @@ struct ExerciseListView: View {
             HStack(spacing: 6) {
                 Image(systemName: "bookmark.fill")
                     .font(.caption)
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.accent)
 
                 Text("\(systemExercises.count)")
                     .font(.headline.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Text("System")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal, Space.s4)
+        .padding(.vertical, Space.s3)
+        .background(Theme.surfaceCard, in: RoundedRectangle(cornerRadius: Radius.md))
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+            RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                .stroke(Theme.line, lineWidth: 1)
         )
     }
 
     private var searchBar: some View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
 
             TextField("Übung suchen...", text: $searchText)
                 .textFieldStyle(.plain)
@@ -295,16 +295,12 @@ struct ExerciseListView: View {
                     searchText = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
         }
-        .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-        )
+        .padding(Space.s3)
+        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md))
     }
 
     // FilterBar: Toggle-Buttons + Trichter-Button
@@ -320,7 +316,7 @@ struct ExerciseListView: View {
                 Image(systemName: hasActiveDetailFilters
                       ? "line.3.horizontal.decrease.circle.fill"
                       : "line.3.horizontal.decrease.circle")
-                    .foregroundStyle(hasActiveDetailFilters ? Color.blue : Color.secondary)
+                    .foregroundStyle(hasActiveDetailFilters ? Theme.accent : Theme.textSecondary)
                     .font(.title3)
             }
         }
@@ -361,12 +357,12 @@ struct ExerciseListView: View {
         VStack(spacing: 20) {
             ZStack {
                 Circle()
-                    .fill(.ultraThinMaterial)
+                    .fill(Theme.surfaceSunken)
                     .frame(width: 120, height: 120)
 
                 Image(systemName: "dumbbell.fill")
                     .font(.system(size: 50))
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
             }
             .shadow(color: .black.opacity(0.1), radius: 20)
 
@@ -376,20 +372,17 @@ struct ExerciseListView: View {
 
                 Text(getEmptyStateMessage())
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
                     .multilineTextAlignment(.center)
             }
         }
         .padding(40)
-        .background {
-            RoundedRectangle(cornerRadius: 30)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.1), radius: 20)
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: 30)
-                .stroke(.white.opacity(0.2), lineWidth: 1)
-        }
+        .background(Theme.surfaceCard)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.xl, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: Radius.xl, style: .continuous)
+                .stroke(Theme.line, lineWidth: 1)
+        )
     }
 
     // MARK: - Helper Functions
@@ -444,16 +437,16 @@ private struct FilterToggleButton: View {
                 Text(label)
                     .font(.caption.bold())
             }
-            .foregroundStyle(isActive ? .white : .secondary)
+            .foregroundStyle(isActive ? Color.white : Theme.textSecondary)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(
                 Capsule()
-                    .fill(isActive ? Color.blue : Color.clear)
+                    .fill(isActive ? Theme.accent : Color.clear)
             )
             .overlay(
                 Capsule()
-                    .stroke(isActive ? Color.blue : Color.secondary.opacity(0.4), lineWidth: 1)
+                    .stroke(isActive ? Theme.accent : Theme.line, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)
@@ -470,16 +463,17 @@ private struct ActiveFilterTag: View {
         HStack(spacing: 4) {
             Text(label)
                 .font(.caption)
+                .foregroundStyle(Theme.accent)
             Button(action: onRemove) {
                 Image(systemName: "xmark.circle.fill")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
-        .background(.ultraThinMaterial, in: Capsule())
-        .overlay(Capsule().stroke(Color.blue.opacity(0.5), lineWidth: 1))
+        .background(Theme.accentSoft, in: Capsule())
+        .overlay(Capsule().stroke(Theme.accent, lineWidth: 1))
     }
 }
 

@@ -19,7 +19,6 @@ struct ExerciseFormView: View {
     let mode: FormMode
 
     @Bindable var exercise: Exercise
-    @EnvironmentObject private var appSettings: AppSettings
     var showDeleteButton: Bool = true
 
     // Lösch-Bestätigung
@@ -47,7 +46,8 @@ struct ExerciseFormView: View {
     var body: some View {
         ZStack {
             // Hintergrund
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp
+                .ignoresSafeArea()
                 .hideKeyboardOnTap()
 
             ScrollView {
@@ -56,7 +56,7 @@ struct ExerciseFormView: View {
                         // Titel
                         Text("Übungsdaten")
                             .font(.title3.bold())
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         // MARK: Name
                         ExerciseNameSection(name: $exercise.name)
@@ -115,6 +115,7 @@ struct ExerciseFormView: View {
 
                         Text("Smart Progression")
                             .font(.headline)
+                            .foregroundStyle(Theme.textPrimary)
                             .padding(.top, 8)
 
                         ExerciseStudioEquipmentSection(studioEquipmentID: $exercise.studioEquipmentID)
@@ -165,8 +166,8 @@ struct ExerciseFormView: View {
                     try? context.save()
                     dismiss()
                 } label: {
-                    IconType(icon: .system("checkmark"), color: .blue, size: 16)
-                        .glassButton(size: 36, accentColor: .blue)
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(Theme.accent)
                 }
                 .disabled(exercise.name.trimmingCharacters(in: .whitespaces).isEmpty)
             }
@@ -178,8 +179,8 @@ struct ExerciseFormView: View {
                         dismissKeyboard()
                         showDeleteAlert = true
                     } label: {
-                        IconType(icon: .system("trash"), color: Color.red, size: 16)
-                            .glassButton(size: 36, accentColor: Color.red)
+                        Image(systemName: "trash")
+                            .foregroundStyle(Theme.danger)
                     }
                 }
             }

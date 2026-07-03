@@ -22,7 +22,7 @@ struct ExerciseAPIView: View {
             // Header
             HStack {
                 Image(systemName: "info.circle.fill")
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
 
                 Text("Übungsdaten")
                     .font(.headline)
@@ -46,25 +46,25 @@ struct ExerciseAPIView: View {
                     HStack {
                         Image(systemName: "play.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(.purple)
+                            .foregroundStyle(Theme.accent)
 
                         VStack(alignment: .leading) {
                             Text("Video abspielen")
                                 .font(.subheadline)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(Theme.textPrimary)
                             Text("MP4")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                         }
 
                         Spacer()
 
                         Image(systemName: "chevron.right")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                     .padding()
-                    .background(Color.purple.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(Theme.accentSoft)
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.md))
                 }
                 .sheet(isPresented: $showVideoPlayer) {
                     VideoPlayerSheet(url: url, title: exercise.name)
@@ -76,11 +76,11 @@ struct ExerciseAPIView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Beschreibung", systemImage: "text.alignleft")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                     Text(overview)
                         .font(.subheadline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
                 }
             }
 
@@ -89,13 +89,13 @@ struct ExerciseAPIView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Trainingstipps", systemImage: "lightbulb.fill")
                         .font(.subheadline.bold())
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.warning)
 
                     ForEach(tips, id: \.self) { tip in
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.caption)
-                                .foregroundStyle(Color.green)
+                                .foregroundStyle(Theme.success)
                             Text(tip)
                                 .font(.caption)
                         }
@@ -108,13 +108,13 @@ struct ExerciseAPIView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Variationen", systemImage: "arrow.triangle.branch")
                         .font(.subheadline.bold())
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
 
                     ForEach(variations, id: \.self) { variation in
                         HStack(alignment: .top, spacing: 8) {
                             Image(systemName: "circle.fill")
                                 .font(.system(size: 6))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                                 .padding(.top, 6)
                             Text(variation)
                                 .font(.caption)
@@ -127,7 +127,7 @@ struct ExerciseAPIView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Label("Kenndaten", systemImage: "info.circle")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                 DetailRow(label: "Kategorie", value: exercise.category.description)
                 DetailRow(label: "Equipment", value: exercise.equipment.description)
@@ -147,8 +147,8 @@ private struct SystemBadge: View {
             .font(.caption2)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color.blue.opacity(0.15))
-            .foregroundStyle(.blue)
+            .background(Theme.accentSoft)
+            .foregroundStyle(Theme.accent)
             .clipShape(Capsule())
     }
 }
@@ -162,11 +162,11 @@ private struct DetailRow: View {
         HStack {
             Text(label)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
             Spacer()
             Text(value)
                 .font(.caption)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
                 .multilineTextAlignment(.trailing)
                 .lineLimit(2)
         }

@@ -31,13 +31,13 @@ struct MuscleGroupPicker: View {
                 } label: {
                     HStack {
                         Text(muscle.description)
-                            .foregroundStyle(.primary)
-                        
+                            .foregroundStyle(Theme.textPrimary)
+
                         Spacer()
-                        
+
                         if selectedMuscles.contains(muscle) {
                             Image(systemName: "checkmark")
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                     }
                 }
@@ -47,7 +47,7 @@ struct MuscleGroupPicker: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
+                Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Theme.accent) }
             }
         }
     }
