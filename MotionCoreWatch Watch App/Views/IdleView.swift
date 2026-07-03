@@ -31,13 +31,14 @@ struct IdleView: View {
             // Streak-Anzeige
             HStack(spacing: 6) {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.warning)
                 VStack(alignment: .leading, spacing: 0) {
                     Text("\(streakCount)")
-                        .font(.title2.bold())
+                        .font(.system(.title2, design: .rounded).bold())
+                        .monospacedDigit()
                     Text("Streak")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
                 Spacer()
             }
@@ -49,13 +50,14 @@ struct IdleView: View {
                 HStack {
                     Text("Diese Woche")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     Spacer()
                     Text("\(weeklyCount)/\(weeklyGoal)")
                         .font(.caption.bold())
+                        .monospacedDigit()
                 }
                 ProgressView(value: Double(weeklyCount), total: Double(weeklyGoal))
-                    .tint(Color.blue)
+                    .tint(Theme.accentHover)
             }
 
             Spacer(minLength: 4)
@@ -63,7 +65,7 @@ struct IdleView: View {
             // Status
             Text("Kein Workout aktiv")
                 .font(.caption2)
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(Theme.textTertiary)
         }
         .padding()
     }

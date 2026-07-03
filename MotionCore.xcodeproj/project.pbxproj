@@ -115,6 +115,7 @@
 			membershipExceptions = (
 				Services/Watch/WatchHealthDataTypes.swift,
 				Services/Watch/WatchMessageKeys.swift,
+				Views/Shared/Redesign/Theme.swift,
 			);
 			target = 4ECC81722F5B4C2F004A3D66 /* MotionCoreWatch Watch App */;
 		};

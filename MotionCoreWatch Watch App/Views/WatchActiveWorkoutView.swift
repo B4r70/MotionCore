@@ -21,8 +21,9 @@ struct WatchActiveWorkoutView: View {
             // Timer + Pause-Button
             HStack {
                 Text(formattedTime)
-                    .font(.system(.title3, design: .monospaced).bold())
-                    .foregroundStyle(watchSession.workoutState == .paused ? Color.orange : .primary)
+                    .font(.system(.title3, design: .rounded).bold())
+                    .monospacedDigit()
+                    .foregroundStyle(watchSession.workoutState == .paused ? Theme.warning : Theme.textPrimary)
                 Spacer()
                 Button {
                     guard !isPauseLocked else { return }
@@ -38,7 +39,7 @@ struct WatchActiveWorkoutView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(isPauseLocked)
-                .foregroundStyle(watchSession.workoutState == .paused ? Color.orange : .secondary)
+                .foregroundStyle(watchSession.workoutState == .paused ? Theme.warning : Theme.textSecondary)
             }
 
             if watchSession.isResting, let endDate = watchSession.restEndDate {
@@ -69,34 +70,36 @@ struct WatchActiveWorkoutView: View {
 
         Text("Satz \(watchSession.setIndex + 1)/\(watchSession.totalSets)  ·  Übung \(watchSession.exerciseIndex + 1)/\(watchSession.totalExercises)")
             .font(.caption2)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Theme.textSecondary)
             .frame(maxWidth: .infinity, alignment: .leading)
 
         // HR + Kalorien
         HStack(spacing: 0) {
             HStack(spacing: 4) {
                 Image(systemName: "heart.fill")
-                    .foregroundStyle(Color.red)
+                    .foregroundStyle(Theme.danger)
                     .font(.caption2)
                 let hr = watchSession.workoutManager?.currentHeartRate ?? 0
                 Text(hr > 0 ? "\(Int(hr))" : "–")
-                    .font(.system(.caption, design: .monospaced).bold())
+                    .font(.system(.caption, design: .rounded).bold())
+                    .monospacedDigit()
                 Text("bpm")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
             HStack(spacing: 4) {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.warning)
                     .font(.caption2)
                 let cal = watchSession.workoutManager?.activeCalories ?? 0
                 Text(cal > 0 ? "\(Int(cal))" : "–")
-                    .font(.system(.caption, design: .monospaced).bold())
+                    .font(.system(.caption, design: .rounded).bold())
+                    .monospacedDigit()
                 Text("kcal")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -113,7 +116,7 @@ struct WatchActiveWorkoutView: View {
                 .padding(.vertical, 6)
         }
         .buttonStyle(.bordered)
-        .tint(Color.green)
+        .tint(Theme.accent)
         .disabled(watchSession.workoutState == .paused)
     }
 
@@ -128,14 +131,14 @@ struct WatchActiveWorkoutView: View {
 
         // Countdown via Date-Anker — max() verhindert Crash bei verspäteter WCSession-Nachricht
         Text(timerInterval: Date()...max(Date().addingTimeInterval(1), endDate), countsDown: true)
-            .font(.system(.title2, design: .monospaced).bold())
-            .foregroundStyle(Color.green)
+            .font(.system(.title2, design: .rounded).bold())
+            .foregroundStyle(Theme.accentHover)
             .frame(maxWidth: .infinity, alignment: .leading)
             .monospacedDigit()
 
         Text("Satz \(watchSession.setIndex + 1)/\(watchSession.totalSets)  ·  Übung \(watchSession.exerciseIndex + 1)/\(watchSession.totalExercises)")
             .font(.caption2)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Theme.textSecondary)
             .frame(maxWidth: .infinity, alignment: .leading)
 
         Spacer(minLength: 2)
@@ -147,13 +150,13 @@ struct WatchActiveWorkoutView: View {
     private func restView(endDate: Date) -> some View {
         Text("Pause")
             .font(.headline)
-            .foregroundStyle(Color.orange)
+            .foregroundStyle(Theme.warning)
             .frame(maxWidth: .infinity, alignment: .leading)
 
         // max() verhindert Crash bei verspäteter WCSession-Nachricht
         Text(timerInterval: Date()...max(Date().addingTimeInterval(1), endDate), countsDown: true)
-            .font(.system(.title2, design: .monospaced).bold())
-            .foregroundStyle(Color.orange)
+            .font(.system(.title2, design: .rounded).bold())
+            .foregroundStyle(Theme.warning)
             .frame(maxWidth: .infinity, alignment: .leading)
             .monospacedDigit()
 
@@ -169,7 +172,7 @@ struct WatchActiveWorkoutView: View {
                 .padding(.vertical, 6)
         }
         .buttonStyle(.bordered)
-        .tint(Color.orange)
+        .tint(Theme.warning)
     }
 
     // MARK: - Formatierung
