@@ -140,7 +140,7 @@ private struct BodyMeasurementHeroCard: View {
                         x: .value("Datum", item.0),
                         y: .value(type.unit, item.1)
                     )
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Theme.accent)
                 }
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
@@ -188,15 +188,15 @@ private struct DeltaPill: View {
                 .foregroundStyle(pillColor)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
-                .background(.ultraThinMaterial, in: Capsule())
+                .background(Theme.surfaceSunken, in: Capsule())
         }
     }
 
     private var pillColor: Color {
         switch trend.direction {
-        case .up:              return .green
-        case .down:            return .red
-        case .stable, .unknown: return .secondary
+        case .up:              return Theme.success
+        case .down:            return Theme.danger
+        case .stable, .unknown: return Theme.textSecondary
         }
     }
 }
