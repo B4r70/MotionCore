@@ -53,7 +53,7 @@ struct SupabaseFullBackupSection: View {
                 // Abgeschlossen – grüne Zusammenfassung
                 VStack(alignment: .leading, spacing: 6) {
                     Label("Backup erfolgreich abgeschlossen", systemImage: "checkmark.circle.fill")
-                        .foregroundStyle(Color.green)
+                        .foregroundStyle(Theme.success)
 
                     Group {
                         summaryRow(label: "Übungen", count: stats.exerciseMeta)
@@ -79,7 +79,7 @@ struct SupabaseFullBackupSection: View {
                 // Fehler – rote Meldung + Retry-Button
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Backup fehlgeschlagen", systemImage: "exclamationmark.circle.fill")
-                        .foregroundStyle(Color.red)
+                        .foregroundStyle(Theme.danger)
 
                     Text(error)
                         .font(.caption)
