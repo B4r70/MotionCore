@@ -12,7 +12,7 @@
 //
 import SwiftUI
 
-    // Glassmorphic Empty State
+    // Calm 2026 Empty State — getoenter Icon-Kreis in einer Karte
 struct EmptyState: View {
     /* *EDIT* Parameter hinzugefügt für Flexibilität */
     let icon: String
@@ -31,37 +31,28 @@ struct EmptyState: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: Space.s5) {
             ZStack {
                 Circle()
-                    .fill(.ultraThinMaterial)
+                    .fill(Theme.accentWash)
                     .frame(width: 120, height: 120)
 
-                Image(systemName: icon) /* *EDIT* Variable statt hardcoded */
+                Image(systemName: icon)
                     .font(.system(size: 50))
                     .foregroundStyle(Theme.accent)
             }
-            .shadow(color: .black.opacity(0.1), radius: 20)
 
-            VStack(spacing: 8) {
-                Text(title) /* *EDIT* Variable statt hardcoded */
-                    .font(.title2.bold())
+            VStack(spacing: Space.s2) {
+                Text(title)
+                    .font(AppFont.title)
+                    .foregroundStyle(Theme.textPrimary)
 
-                Text(message) /* *EDIT* Variable statt hardcoded */
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center) /* *NEW* Für mehrzeilige Texte */
+                Text(message)
+                    .font(AppFont.body)
+                    .foregroundStyle(Theme.textSecondary)
+                    .multilineTextAlignment(.center)
             }
         }
-        .padding(40)
-        .background {
-            RoundedRectangle(cornerRadius: 30)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.1), radius: 20)
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: 30)
-                .stroke(.white.opacity(0.2), lineWidth: 1)
-        }
+        .card(padding: Space.s8)
     }
 }

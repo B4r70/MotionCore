@@ -20,7 +20,7 @@ struct InfoRow: View {
     var body: some View {
         HStack {
             Text(title)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
             Spacer()
             Text(value)
                 .fontWeight(.medium)

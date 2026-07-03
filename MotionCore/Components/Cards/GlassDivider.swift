@@ -5,7 +5,7 @@
 // Datei . . . . : GlassDivider.swift                                               /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 16.11.2025                                                       /
-// Beschreibung  : Zentrale Bereitstellung für Liquid-Glass-Effekt bei Trennlinien  /
+// Beschreibung  : Zentrale duenne Hairline-Trennlinie (Calm 2026, Theme.line)       /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -18,7 +18,6 @@ import SwiftUI
 // Kann überall wie `Divider()` verwendet werden:
 
 struct GlassDivider: View {
-    @Environment(\.colorScheme) private var colorScheme
 
     // Konfiguration
     let lineHeight: CGFloat
@@ -36,18 +35,10 @@ struct GlassDivider: View {
     }
 
     var body: some View {
-        Color.clear
-            .frame(height: 1)
-            .background(
-                colorScheme == .light ? .thinMaterial : .ultraThinMaterial
-            )
-            .overlay(
-                Rectangle()
-                    .frame(height: lineHeight)
-                    .foregroundStyle(
-                        Color.gray.opacity(colorScheme == .light ? 0.35 : 0.50)
-                    )
-            )
+        // Calm 2026: feine Theme.line-Hairline (adaptiv Light/Dark ueber Asset-Colorset)
+        Rectangle()
+            .fill(Theme.line)
+            .frame(height: lineHeight)
             .padding(.vertical, paddingVertical)
             .padding(.horizontal, paddingHorizontal)
     }
@@ -101,7 +92,7 @@ extension View {
 
 #Preview("GlassDivider Varianten") {
     ZStack {
-        AnimatedBackground(showAnimatedBlob: true)
+        Theme.surfaceApp
 
         VStack(spacing: 0) {
             Text("Standard")
