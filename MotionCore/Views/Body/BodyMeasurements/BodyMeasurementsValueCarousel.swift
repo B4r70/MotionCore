@@ -117,7 +117,7 @@ private struct BodyMeasurementHeroCard: View {
             // Header
             HStack(alignment: .top) {
                 Text(type.title)
-                    .font(.headline)
+                    .font(AppFont.headline)
                 Spacer()
                 DeltaPill(trend: trend, unit: type.unit)
             }
@@ -126,9 +126,10 @@ private struct BodyMeasurementHeroCard: View {
             HStack(alignment: .lastTextBaseline, spacing: 4) {
                 Text(formattedValue)
                     .font(.system(size: 56, weight: .light, design: .rounded))
+                    .monospacedDigit()
                 Text(type.unit)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Spacer(minLength: 0)
@@ -147,15 +148,15 @@ private struct BodyMeasurementHeroCard: View {
                 .frame(height: 50)
             } else {
                 Text("Mehr Daten nötig")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textSecondary)
                     .frame(height: 50)
             }
 
             // Footer
             Text(footerText)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.textSecondary)
         }
         .padding(16)
         .card()
@@ -184,7 +185,7 @@ private struct DeltaPill: View {
         if let delta = trend.absoluteDelta {
             let sign = delta >= 0 ? "+" : ""
             Text("\(sign)\(String(format: "%.1f", delta)) \(unit)")
-                .font(.caption2.weight(.semibold))
+                .font(AppFont.caption.weight(.semibold))
                 .foregroundStyle(pillColor)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
@@ -194,8 +195,8 @@ private struct DeltaPill: View {
 
     private var pillColor: Color {
         switch trend.direction {
-        case .up:              return Theme.success
-        case .down:            return Theme.danger
+        case .up:               return Theme.success
+        case .down:             return Theme.danger
         case .stable, .unknown: return Theme.textSecondary
         }
     }
