@@ -18,7 +18,6 @@ struct StudioSetupView: View {
     // MARK: - Environment
 
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var appSettings: AppSettings
 
     // MARK: - Query
 
@@ -43,7 +42,7 @@ struct StudioSetupView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
 
             if equipmentList.isEmpty {
                 EmptyState(

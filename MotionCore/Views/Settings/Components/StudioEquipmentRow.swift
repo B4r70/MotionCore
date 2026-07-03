@@ -45,8 +45,8 @@ struct StudioEquipmentRow: View {
                     .font(.caption2.bold())
                     .padding(.horizontal, 7)
                     .padding(.vertical, 3)
-                    .background(Capsule().fill(Color.accentColor.opacity(0.15)))
-                    .foregroundStyle(Color.accentColor)
+                    .background(Capsule().fill(Theme.accent.opacity(0.15)))
+                    .foregroundStyle(Theme.accent)
             }
         }
         .padding(.vertical, 4)
