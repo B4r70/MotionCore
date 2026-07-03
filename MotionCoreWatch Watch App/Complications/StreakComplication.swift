@@ -60,13 +60,13 @@ struct StreakComplicationEntryView: View {
                     .font(.system(.body, design: .rounded).bold())
             } icon: {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.warning)
             }
             .labelStyle(.titleAndIcon)
         case .accessoryCircular:
             VStack(spacing: 2) {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.warning)
                     .font(.caption)
                 Text("\(entry.streakCount)")
                     .font(.system(.title3, design: .rounded).bold())

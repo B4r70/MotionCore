@@ -59,7 +59,7 @@ struct WeeklyProgressEntryView: View {
         case .accessoryCircular:
             Gauge(value: Double(entry.workoutCount), in: 0...Double(max(entry.workoutGoal, 1))) {
                 Image(systemName: "dumbbell.fill")
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accentHover)
             } currentValueLabel: {
                 Text("\(entry.workoutCount)")
                     .font(.system(.caption, design: .rounded).bold())
@@ -69,17 +69,17 @@ struct WeeklyProgressEntryView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     Image(systemName: "dumbbell.fill")
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accentHover)
                         .font(.caption)
                     Text("Workouts")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     Spacer()
                     Text("\(entry.workoutCount)/\(entry.workoutGoal)")
                         .font(.caption.bold())
                 }
                 ProgressView(value: Double(entry.workoutCount), total: Double(max(entry.workoutGoal, 1)))
-                    .tint(Color.blue)
+                    .tint(Theme.accentHover)
             }
         default:
             Text("\(entry.workoutCount)/\(entry.workoutGoal)")
