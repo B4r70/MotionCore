@@ -18,21 +18,20 @@ struct WorkoutCompletedCard: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            // Trophy: Theme.warning (Amber) für Erfolgs-Akzent
             Image(systemName: "trophy.fill")
                 .font(.system(size: 60))
                 .foregroundStyle(Theme.warning)
 
             Text("Alle Sätze abgeschlossen!")
-                .font(.title2.bold())
+                .font(AppFont.title)
                 .foregroundStyle(Theme.textPrimary)
 
             Text("Großartige Arbeit! Du kannst das Training jetzt beenden oder weitere Übungen hinzufügen.")
-                .font(.subheadline)
+                .font(AppFont.body)
                 .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
 
-            // Sekundäre Aktion: Übung hinzufügen
+            // Weitere Übung Button
             if let onAddExercise {
                 Button {
                     onAddExercise()
@@ -45,7 +44,6 @@ struct WorkoutCompletedCard: View {
                 .buttonStyle(.mcSecondary)
             }
 
-            // Primäre Aktion: Training beenden
             Button {
                 onFinishWorkout()
             } label: {
