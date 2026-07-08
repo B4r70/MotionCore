@@ -53,6 +53,6 @@ struct StrengthRecordGridCard: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .frame(minHeight: record.exerciseName != nil ? 140 : 120)
-        .glassCard()
+        .card()
     }
 }

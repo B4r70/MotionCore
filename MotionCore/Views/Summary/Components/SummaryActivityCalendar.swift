@@ -36,7 +36,7 @@ struct SummaryActivityCalendar: View {
             // Statistik-Zeile
             statsRow
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Monats-Navigation

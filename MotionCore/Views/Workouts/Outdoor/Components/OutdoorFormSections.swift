@@ -249,6 +249,6 @@ private struct OutdoorRouteNamePreviewWrapper: View {
             Text("Route").font(.title3.bold())
             OutdoorRouteNameSection(routeName: $routeName, date: $date, focusedField: $focus)
         }
-        .glassCard()
+        .card()
     }
 }

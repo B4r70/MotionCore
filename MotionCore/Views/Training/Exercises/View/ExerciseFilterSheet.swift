@@ -156,7 +156,7 @@ struct ExerciseFilterSheet: View {
                     }
                 }
             }
-            .glassCard()
+            .card()
         }
     }
 
@@ -205,7 +205,7 @@ struct ExerciseFilterSheet: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Equipment Section
@@ -242,7 +242,7 @@ struct ExerciseFilterSheet: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Muscle Group Section
@@ -284,7 +284,7 @@ struct ExerciseFilterSheet: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Helpers

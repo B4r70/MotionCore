@@ -28,6 +28,6 @@ struct TypeBreakdownCard: View {
                 WorkoutTypeRow(summary: summary)
             }
         }
-        .glassCard()
+        .card()
     }
 }

@@ -38,7 +38,7 @@ struct SummaryXPCard: View {
                 recentGainsSection
             }
         }
-        .glassCard()
+        .card()
         .task {
             withAnimation(.easeOut(duration: 0.9).delay(0.2)) {
                 progressVisible = true

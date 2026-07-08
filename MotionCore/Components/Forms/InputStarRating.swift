@@ -20,7 +20,7 @@ struct InputStarRating: View {
         HStack(spacing: 8) {
             ForEach(Intensity.allCases.filter { $0 != .none }, id: \.self) { level in
                 Image(systemName: level.rawValue <= rating.rawValue ? "star.fill" : "star")
-                    .foregroundColor(level.rawValue <= rating.rawValue ? Color.yellow : Color.gray)
+                    .foregroundColor(level.rawValue <= rating.rawValue ? Theme.warning : Theme.textTertiary)
                     .font(.system(size: 20))
                     .onTapGesture { rating = level }
                     .accessibilityLabel(level.description)

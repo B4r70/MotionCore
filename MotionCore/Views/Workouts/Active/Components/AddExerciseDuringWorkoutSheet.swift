@@ -134,7 +134,7 @@ struct AddExerciseDuringWorkoutSheet: View {
 
             Spacer()
         }
-        .glassCard()
+        .card()
     }
 
     private var setConfigurationCard: some View {
@@ -316,7 +316,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                 .pickerStyle(.menu)
             }
         }
-        .glassCard()
+        .card()
     }
 
         // MARK: - Hilfsvariable für unilateral

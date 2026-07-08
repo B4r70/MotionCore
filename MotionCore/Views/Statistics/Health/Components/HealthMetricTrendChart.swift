@@ -52,6 +52,6 @@ struct HealthMetricTrendChart: View {
             .frame(minHeight: 250)
             .padding()
         }
-        .glassCard()
+        .card()
     }
 }

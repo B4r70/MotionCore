@@ -93,7 +93,7 @@ struct TrainingDetailView: View {
                             }
                         }
                         .padding()
-                        .glassCard()
+                        .card()
                         .padding(.horizontal)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }

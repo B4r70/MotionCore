@@ -25,9 +25,9 @@ struct BodyReadinessFactorsCard: View {
 
     // Puffer von ~0.03 um jede Schwelle verhindert Farb-Flip bei minimaler Float-Variation
     private func tintForScore(_ value: Double) -> Color {
-        if value >= 0.72 { return MCColor.mcBody }
-        if value >= 0.37 { return MCColor.mcEnergy }
-        return MCColor.mcStreak
+        if value >= 0.72 { return Theme.success }
+        if value >= 0.37 { return Theme.accent }
+        return Theme.warning
     }
 
     // MARK: - Body
@@ -60,7 +60,7 @@ struct BodyReadinessFactorsCard: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 }
 

@@ -201,7 +201,7 @@ struct PlanExercisesSection: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 32)
-        .glassCard()
+        .card()
         .padding(.horizontal)
     }
 

@@ -82,7 +82,7 @@ struct StrengthEditView: View {
                                 .pickerStyle(.menu)
                             }
                         }
-                        .glassCard()
+                        .card()
                         
                         // Notizen
                         VStack(alignment: .leading, spacing: 12) {
@@ -95,7 +95,7 @@ struct StrengthEditView: View {
                                 .padding(12)
                                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
                         }
-                        .glassCard()
+                        .card()
                     }
                     .padding()
                 }

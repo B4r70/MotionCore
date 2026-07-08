@@ -80,7 +80,7 @@ struct OutdoorFormView: View {
                             focusedField: $focusedField
                         )
                     }
-                    .glassCard()
+                    .card()
                     .padding(.horizontal)
 
                     // MARK: GlassCard 2: Leistungsdaten
@@ -138,7 +138,7 @@ struct OutdoorFormView: View {
                             focusedField: $focusedField
                         )
                     }
-                    .glassCard()
+                    .card()
                     .padding(.horizontal)
 
                     // MARK: GlassCard 3: Bewertung
@@ -165,7 +165,7 @@ struct OutdoorFormView: View {
 
                         OutdoorIntensitySection(intensity: $session.intensity)
                     }
-                    .glassCard()
+                    .card()
                     .padding(.horizontal)
 
                     // MARK: GlassCard 4: Notizen
@@ -178,7 +178,7 @@ struct OutdoorFormView: View {
                             .frame(minHeight: 80)
                             .scrollContentBackground(.hidden)
                     }
-                    .glassCard()
+                    .card()
                     .padding(.horizontal)
                 }
                 .padding(.top, 16)

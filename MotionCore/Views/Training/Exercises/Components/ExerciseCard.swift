@@ -149,7 +149,7 @@ struct ExerciseCard: View {
                 .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
             }
         }
-        .glassCard()
+        .card()
         .overlay(alignment: .topTrailing) {
             if !exercise.isSystemExercise {
                 Image(systemName: "person.fill")

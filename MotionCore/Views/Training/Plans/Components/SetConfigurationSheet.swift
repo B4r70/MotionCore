@@ -237,7 +237,7 @@ struct SetConfigurationSheet: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     private var setsConfigurationCard: some View {
@@ -486,7 +486,7 @@ struct SetConfigurationSheet: View {
                 SetTargetRIRSection(targetRIR: $targetRIR)
             }
         }
-        .glassCard()
+        .card()
     }
 
     private var previewCard: some View {
@@ -572,7 +572,7 @@ struct SetConfigurationSheet: View {
                 .foregroundStyle(.secondary)
             }
         }
-        .glassCard()
+        .card()
     }
 
     private func formatRestTime(_ seconds: Int) -> String {

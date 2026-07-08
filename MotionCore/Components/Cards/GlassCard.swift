@@ -63,6 +63,8 @@ private struct GlassCardModifier: ViewModifier {
 }
 
 extension View {
+    // Calm 2026: durch `.card()` (DESIGN.md §5) ersetzt; finale Entfernung in AP 11.
+    @available(*, deprecated, message: "Calm 2026: stattdessen .card() verwenden (DESIGN.md §5).")
     func glassCard() -> some View {
         self.modifier(GlassCardModifier())
     }

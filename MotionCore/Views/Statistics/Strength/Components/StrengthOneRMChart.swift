@@ -109,6 +109,6 @@ struct StrengthOneRMChart: View {
                 selectedExercise = first
             }
         }
-        .glassCard()
+        .card()
     }
 }

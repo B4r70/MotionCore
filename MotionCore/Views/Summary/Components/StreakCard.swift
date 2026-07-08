@@ -95,7 +95,7 @@ struct StreakCard: View {
                 }
             }
         }
-        .glassCard()
+        .card()
         .task {
             guard currentStreak > 0 else { return }
             // Einmaliger Glow-Effekt beim Erscheinen

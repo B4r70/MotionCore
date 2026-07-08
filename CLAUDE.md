@@ -16,6 +16,9 @@ iOS fitness app: SwiftUI, SwiftData, Swift Charts, HealthKit, ActivityKit, Supab
 - `App/AppSchema.swift` is the single source for the SwiftData model schema — add new models there
 - See `.claude/skills/swift-standards/SKILL.md` for standards
 
+## UI/Design
+Siehe **`DESIGN.md`** (verbindliches Design-System, Calm 2026) — nur `Theme.*`/`AppFont.*`/`.card()` + die Bausteine aus AP 1, Akzent ist `Theme.accent` (#2C6BCB), kein Glas/Blobs, eine Leitfarbe pro Kennzahl, Dark Mode über die Asset-Catalog-Colorsets.
+
 ## Critical Gotchas (⚠️ NOT OBVIOUS FROM CODE)
 
 ### Supabase CodingKeys Trap

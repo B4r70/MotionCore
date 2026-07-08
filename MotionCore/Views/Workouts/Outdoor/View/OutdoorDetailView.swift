@@ -191,7 +191,7 @@ struct OutdoorDetailView: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Leistungsdaten Card
@@ -252,7 +252,7 @@ struct OutdoorDetailView: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Bewertungs-Card
@@ -314,7 +314,7 @@ struct OutdoorDetailView: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Notizen-Card
@@ -330,7 +330,7 @@ struct OutdoorDetailView: View {
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Loeschen

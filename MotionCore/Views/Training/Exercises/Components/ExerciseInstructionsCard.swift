@@ -279,7 +279,7 @@ private struct InstructionsContainerStyle: ViewModifier {
 
     func body(content: Content) -> some View {
         Group {
-            if enabled { content.glassCard() } else { content }
+            if enabled { content.card() } else { content }
         }
     }
 }

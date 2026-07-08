@@ -139,7 +139,7 @@ struct ExerciseFormView: View {
                             ExerciseAPIView(exercise: exercise)
                         }
                     }
-                    .glassCard()
+                    .card()
                     .padding(.horizontal)
                     .padding(.top, 16)
                 }

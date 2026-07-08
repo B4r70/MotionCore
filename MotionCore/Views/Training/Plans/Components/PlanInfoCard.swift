@@ -41,7 +41,7 @@ struct PlanInfoCard: View {
             // Datum-Informationen
             dateSection
         }
-        .glassCard()
+        .card()
     }
     
     // MARK: - Subviews

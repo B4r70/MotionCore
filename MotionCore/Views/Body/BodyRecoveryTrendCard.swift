@@ -35,7 +35,7 @@ struct BodyRecoveryTrendCard: View {
             }
         }
         .frame(minHeight: 140)
-        .glassCard()
+        .card()
     }
 
     // MARK: - Subviews
@@ -46,7 +46,7 @@ struct BodyRecoveryTrendCard: View {
                 x: .value("Datum", point.trendDate, unit: .day),
                 y: .value("Erholung", point.trendValue)
             )
-            .foregroundStyle(MCColor.mcBody)
+            .foregroundStyle(Theme.success)
             .interpolationMethod(.catmullRom)
 
             AreaMark(
@@ -55,7 +55,7 @@ struct BodyRecoveryTrendCard: View {
             )
             .foregroundStyle(
                 LinearGradient(
-                    colors: [MCColor.mcBody.opacity(0.25), .clear],
+                    colors: [Theme.success.opacity(0.25), .clear],
                     startPoint: .top,
                     endPoint: .bottom
                 )

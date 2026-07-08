@@ -43,7 +43,7 @@ struct PlanUpdateChangeRow: View {
         // Übersprungene Übungen sind rein informativ — Toggle nur für aktive Änderungen schaltbar
         .disabled(isInfoOnly)
         .padding()
-        .glassCard()
+        .card()
     }
 
     // MARK: - Hilfseigenschaften

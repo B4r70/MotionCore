@@ -27,7 +27,7 @@ struct BodyAvoidCard: View {
             Text("HEUTE MEIDEN")
                 .font(.caption2)
                 .fontWeight(.semibold)
-                .foregroundStyle(MCColor.mcStreak)
+                .foregroundStyle(Theme.warning)
 
             Text(recommendation.avoidTitle)
                 .font(.headline)
@@ -39,10 +39,10 @@ struct BodyAvoidCard: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCard()
+        .card()
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .fill(MCColor.mcStreakSoft)
+                .fill(Theme.warning.opacity(0.10))
                 .allowsHitTesting(false)
         )
     }

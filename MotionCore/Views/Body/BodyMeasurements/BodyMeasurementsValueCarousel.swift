@@ -158,7 +158,7 @@ private struct BodyMeasurementHeroCard: View {
                 .foregroundStyle(.secondary)
         }
         .padding(16)
-        .glassCard()
+        .card()
     }
 
     // MARK: - Hilfsfunktionen

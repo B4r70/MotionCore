@@ -202,7 +202,7 @@ struct StrengthDetailView: View {
             }
             .font(.subheadline)
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Statistiken Card
@@ -338,7 +338,7 @@ struct StrengthDetailView: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     private func statisticItem(value: String, label: String, icon: String, color: Color) -> some View {
@@ -386,7 +386,7 @@ struct StrengthDetailView: View {
                 }
             }
         }
-        .glassCard()
+        .card()
     }
 
     private func exerciseDetailCard(name: String, mediaAssetName: String, sets: [ExerciseSet], index: Int, exercise: Exercise?, rating: ExerciseQualityRating?) -> some View {
@@ -547,7 +547,7 @@ struct StrengthDetailView: View {
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCard()
+        .card()
     }
 
     // MARK: - Aktionen Section

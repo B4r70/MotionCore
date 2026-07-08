@@ -79,21 +79,21 @@ struct MCSparkline: View {
         // Aufsteigend
         MCSparkline(
             data: [10, 20, 35, 42, 55, 70, 85],
-            color: MCColor.mcBody
+            color: Theme.success
         )
         .frame(width: 120, height: 36)
 
         // Zufällig / volatil
         MCSparkline(
             data: [60, 30, 75, 20, 90, 45, 65],
-            color: MCColor.mcEnergy
+            color: Theme.accent
         )
         .frame(width: 120, height: 36)
 
         // Absturz
         MCSparkline(
             data: [80, 75, 70, 40, 20, 10, 5],
-            color: MCColor.mcStreak,
+            color: Theme.warning,
             showFill: false
         )
         .frame(width: 120, height: 36)

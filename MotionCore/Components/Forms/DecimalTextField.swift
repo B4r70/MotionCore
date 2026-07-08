@@ -120,7 +120,7 @@ struct DecimalTextField: View {
                     Text("kg").foregroundStyle(.secondary)
                 }
             }
-            .glassCard()
+            .card()
         }
         .padding()
     }

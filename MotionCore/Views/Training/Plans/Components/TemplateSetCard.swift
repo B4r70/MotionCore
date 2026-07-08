@@ -200,7 +200,7 @@ struct TemplateSetCard<Trailing: View>: View {
                 }
             }
         }
-        .glassCard()
+        .card()
         .alert("Übung entfernen?", isPresented: $showDeleteConfirm) {
             Button("Abbrechen", role: .cancel) {}
             Button("Entfernen", role: .destructive) {

@@ -36,7 +36,7 @@ struct SummaryCommandHero: View {
                 todayTrainingBlock
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Metric Row (3 Spalten)
@@ -60,7 +60,7 @@ struct SummaryCommandHero: View {
             Text(readinessIsCalibrating ? "—" : "\(readinessScore ?? 0)")
                 .font(.title.bold())
                 .monospacedDigit()
-                .foregroundStyle(MCColor.mcEnergy)
+                .foregroundStyle(Theme.accent)
             Text(readinessIsCalibrating
                  ? "Kalibrierung läuft"
                  : (readinessLabel?.localizedTitle ?? "Keine Daten"))
@@ -71,7 +71,7 @@ struct SummaryCommandHero: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(10)
-        .background(MCColor.mcEnergySoft, in: RoundedRectangle(cornerRadius: 10))
+        .background(Theme.accentWash, in: RoundedRectangle(cornerRadius: 10))
     }
 
     // MARK: - Erholung-Card
@@ -85,14 +85,14 @@ struct SummaryCommandHero: View {
             Text("\(recoveryPercent)%")
                 .font(.title.bold())
                 .monospacedDigit()
-                .foregroundStyle(MCColor.mcBody)
+                .foregroundStyle(Theme.success)
             Text(recoveryLabel(for: recoveryPercent))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(10)
-        .background(MCColor.mcBodySoft, in: RoundedRectangle(cornerRadius: 10))
+        .background(Theme.success.opacity(0.09), in: RoundedRectangle(cornerRadius: 10))
     }
 
     // MARK: - Streak-Card
@@ -106,7 +106,7 @@ struct SummaryCommandHero: View {
             Text("\(currentStreak) d")
                 .font(.title.bold())
                 .monospacedDigit()
-                .foregroundStyle(MCColor.mcStreak)
+                .foregroundStyle(Theme.warning)
             if let milestone = nextStreakMilestone {
                 let distance = milestone.rawValue - currentStreak
                 Text("\(distance) bis \(milestone.rawValue) d")
@@ -114,7 +114,7 @@ struct SummaryCommandHero: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                 ProgressView(value: milestoneProgress(milestone))
-                    .tint(MCColor.mcStreak)
+                    .tint(Theme.warning)
             } else {
                 Text("Kein nächster Meilenstein")
                     .font(.caption)
@@ -124,7 +124,7 @@ struct SummaryCommandHero: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(10)
-        .background(MCColor.mcStreakSoft, in: RoundedRectangle(cornerRadius: 10))
+        .background(Theme.warning.opacity(0.10), in: RoundedRectangle(cornerRadius: 10))
     }
 
     // MARK: - "Heute trainieren"-Block
@@ -132,7 +132,7 @@ struct SummaryCommandHero: View {
     private var todayTrainingBlock: some View {
         HStack(spacing: 10) {
             Image(systemName: "dumbbell.fill")
-                .foregroundStyle(MCColor.mcStat)
+                .foregroundStyle(Theme.series[0])
             VStack(alignment: .leading, spacing: 1) {
                 Text(recommendation.recommendedTitle)
                     .font(.subheadline)
@@ -145,12 +145,12 @@ struct SummaryCommandHero: View {
             Spacer()
             Button("Start", action: onStartWorkoutTap)
                 .buttonStyle(.bordered)
-                .tint(MCColor.mcStat)
+                .tint(Theme.series[0])
                 .font(.caption)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
-        .background(MCColor.mcStatSoft, in: RoundedRectangle(cornerRadius: 8))
+        .background(Theme.series[0].opacity(0.10), in: RoundedRectangle(cornerRadius: 8))
     }
 
     // MARK: - Hilfsfunktionen

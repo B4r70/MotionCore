@@ -231,7 +231,7 @@ struct TrainingPlanCard: View {
                     .clipShape(Circle())
             }
         }
-        .glassCard()
+        .card()
     }
     // Formatiert das Volumen (kg)
     private func formatVolume(_ volume: Double) -> String {

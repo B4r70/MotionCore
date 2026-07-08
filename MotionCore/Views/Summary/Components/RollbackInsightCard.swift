@@ -58,7 +58,7 @@ struct RollbackInsightCard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCard()
+        .card()
     }
 
     // MARK: - Header

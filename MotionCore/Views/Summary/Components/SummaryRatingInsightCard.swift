@@ -35,7 +35,7 @@ struct SummaryRatingInsightCard: View {
                 insightRow(insight)
             }
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Insight-Zeile

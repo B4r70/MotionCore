@@ -57,7 +57,7 @@ struct SummaryRecordsCard: View {
                 isNew: false
             )
         }
-        .glassCard()
+        .card()
     }
 
     // MARK: - Hilfsmethode

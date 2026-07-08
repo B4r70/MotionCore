@@ -43,7 +43,7 @@ struct FilterChip: View {
                     .padding(.vertical, 4)
                     .background {
                         Capsule()
-                            .fill(isSelected ? Color.blue.opacity(0.5) : Color.gray.opacity(0.2))
+                            .fill(isSelected ? Theme.accent.opacity(0.5) : Color.gray.opacity(0.2))
                     }
             }
             .padding(.horizontal, 16)
@@ -67,14 +67,14 @@ struct FilterChip: View {
                 Capsule()
                     .stroke(
                         isSelected
-                            ? Color.blue.opacity(0.5)
+                            ? Theme.accent.opacity(0.5)
                             : Color.white.opacity(colorScheme == .light ? 0.45 : 0.30),
                         lineWidth: isSelected ? 1.5 : 0.8
                     )
             }
             .shadow(
                 color: isSelected
-                    ? Color.blue.opacity(0.2)
+                    ? Theme.accent.opacity(0.2)
                     : Color.black.opacity(colorScheme == .light ? 0.05 : 0.55),
                 radius: colorScheme == .light ? 8 : 12,
                 x: 0,

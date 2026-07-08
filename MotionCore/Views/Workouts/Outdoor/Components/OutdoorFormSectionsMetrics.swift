@@ -321,6 +321,6 @@ private struct OutdoorMetricsPreviewWrapper: View {
             Divider()
             OutdoorBodyWeightSection(bodyWeight: $weight, focusedField: $focus)
         }
-        .glassCard()
+        .card()
     }
 }

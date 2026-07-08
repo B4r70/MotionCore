@@ -78,7 +78,7 @@ struct RecordCard: View {
                 )
             }
         }
-        .glassCard()
+        .card()
     }
 }
 
@@ -127,6 +127,6 @@ struct RecordGridCard: View {
             }
             // Einheitliche Größe und Card-Style
             .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120)
-            .glassCard()
+            .card()
         }
     }
