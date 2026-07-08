@@ -29,25 +29,25 @@ struct ExerciseCard: View {
                     HStack {
                         Text(exercise.name)
                             .font(.headline)
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         if exercise.isFavorite {
                             Image(systemName: "star.fill")
                                 .font(.caption)
-                                .foregroundStyle(Color.yellow)
+                                .foregroundStyle(Theme.success)
                         }
 
                         // Unilateral Badge
                         if exercise.isUnilateral {
                             Image(systemName: "hand.raised.fingers.spread.fill")
                                 .font(.caption)
-                                .foregroundStyle(Color.orange)
+                                .foregroundStyle(Theme.accent)
                         }
                             // Video verfügbar Badge
                         if exercise.videoPath != nil {
                             Image(systemName: "play.circle.fill")
                                 .font(.caption)
-                                .foregroundStyle(.purple)
+                                .foregroundStyle(Theme.accent)
                         }
                     }
 
@@ -60,7 +60,7 @@ struct ExerciseCard: View {
                             Image(systemName: exercise.category.icon)
                                 .font(.caption2)
                         }
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                         Label {
                             Text(exercise.equipment.description)
@@ -69,7 +69,7 @@ struct ExerciseCard: View {
                             Image(systemName: exercise.equipment.icon)
                                 .font(.caption2)
                         }
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     }
 
                     // Bewegungsmuster & Position
@@ -81,7 +81,7 @@ struct ExerciseCard: View {
                             Image(systemName: exercise.movementPattern.icon)
                                 .font(.caption2)
                         }
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                         Label {
                             Text(exercise.bodyPosition.description)
@@ -90,7 +90,7 @@ struct ExerciseCard: View {
                             Image(systemName: exercise.bodyPosition.icon)
                                 .font(.caption2)
                         }
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     }
 
                     // Muskelgruppen
@@ -102,8 +102,8 @@ struct ExerciseCard: View {
                                         .font(.caption2)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 4)
-                                        .background(.blue.opacity(0.2))
-                                        .foregroundStyle(Color.blue)
+                                        .background(Theme.accentSoft)
+                                        .foregroundStyle(Theme.accent)
                                         .clipShape(Capsule())
                                 }
 
@@ -127,7 +127,7 @@ struct ExerciseCard: View {
                     ForEach(0..<exercise.difficulty.stars, id: \.self) { _ in
                         Image(systemName: "star.fill")
                             .font(.caption2)
-                            .foregroundStyle(Color(exercise.difficulty.color))
+                            .foregroundStyle(difficultyColor)
                     }
                 }
             }
@@ -137,16 +137,16 @@ struct ExerciseCard: View {
                 HStack(spacing: 6) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.caption)
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.warning)
 
                     Text(exercise.cautionNote)
                         .font(.caption)
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.warning)
                         .lineLimit(2)
                 }
                 .padding(8)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+                .background(Theme.warning.opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
             }
         }
         .card()
@@ -156,20 +156,31 @@ struct ExerciseCard: View {
                     .font(.caption2)
                     .foregroundStyle(.white)
                     .padding(5)
-                    .background(Color.green.opacity(0.85), in: Circle())
+                    .background(Theme.success, in: Circle())
                     .padding(8)
             }
         }
     }
 
     // Trainingstyp-Farbe basierend auf Rep-Range
+    // Schwellen behalten, nur Rückgabe-Farben → Theme-Skala
     private var trainingTypeColor: Color {
         switch exercise.repRangeMax {
-        case 1...3: return Color.red
-        case 4...6: return Color.orange
-        case 7...12: return .blue
-        case 13...20: return Color.green
-        default: return .teal
+        case 1...3:   return Theme.danger       // Maximalstärke (hart/wenig)
+        case 4...6:   return Theme.warning      // Kraft/Power (mittel-hart)
+        case 7...12:  return Theme.series[0]    // Hypertrophie (mittel)
+        case 13...20: return Theme.success      // Ausdauer (leicht/viel)
+        default:      return Theme.series[1]    // Sehr hohe Wiederholungen
+        }
+    }
+
+    // Schwierigkeitsgrad → Theme-Farbe (Schwellen behalten)
+    private var difficultyColor: Color {
+        switch exercise.difficulty {
+        case .beginner:     return Theme.success    // leicht
+        case .intermediate: return Theme.warning    // mittel
+        case .advanced:     return Theme.series[3]  // hart (Amber)
+        case .expert:       return Theme.danger     // sehr hart
         }
     }
 }

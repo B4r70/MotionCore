@@ -15,7 +15,6 @@ import SwiftUI
 struct SetConfigurationSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var appSettings: AppSettings
 
     // Quelle 1: aus Library
     private let exercise: Exercise?
@@ -155,7 +154,8 @@ struct SetConfigurationSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                // Calm-2026: ruhiger App-Hintergrund statt AnimatedBackground
+                Theme.surfaceApp.ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: 20) {
@@ -178,8 +178,11 @@ struct SetConfigurationSheet: View {
 
                 ToolbarItem(placement: .confirmationAction) {
                     Button { saveSets() } label: {
-                        IconType(icon: .system("checkmark"), color: .blue, size: 16)
-                            .glassButton(size: 36, accentColor: .blue)
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 36, height: 36)
+                            .background(Theme.accent, in: Circle())
                     }
                 }
             }
@@ -201,12 +204,12 @@ struct SetConfigurationSheet: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(displayName)
                     .font(.title3.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 if let ex = exercise {
                     Label(ex.equipment.description, systemImage: ex.equipment.icon)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                     if !ex.primaryMuscles.isEmpty {
                         HStack(spacing: 6) {
@@ -215,8 +218,8 @@ struct SetConfigurationSheet: View {
                                     .font(.caption2)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
-                                    .background(.blue.opacity(0.2))
-                                    .foregroundStyle(Color.blue)
+                                    .background(Theme.accent.opacity(0.2))
+                                    .foregroundStyle(Theme.accent)
                                     .clipShape(Capsule())
                             }
                         }
@@ -233,7 +236,7 @@ struct SetConfigurationSheet: View {
                 } label: {
                     Image(systemName: "arrow.right.circle")
                         .font(.title2)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                 }
             }
         }
@@ -244,7 +247,7 @@ struct SetConfigurationSheet: View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Konfiguration")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             // Tracking-Modus: Gewicht oder Zeit
             Picker("Modus", selection: $trackingMode) {
@@ -253,19 +256,19 @@ struct SetConfigurationSheet: View {
             }
             .pickerStyle(.segmented)
 
-            GlassDivider.compact
+            Divider()
 
             // Arbeitssätze — immer sichtbar
             VStack(alignment: .leading, spacing: 8) {
                 Text("Arbeitssätze")
                     .font(.headline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 HStack(spacing: 12) {
                     Button { decreaseSets(by: 1) } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Theme.accent)
                     }
                     .simultaneousGesture(
                         LongPressGesture(minimumDuration: 0.35)
@@ -283,7 +286,7 @@ struct SetConfigurationSheet: View {
                     Button { increaseSets(by: 1) } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Theme.accent)
                     }
                     .simultaneousGesture(
                         LongPressGesture(minimumDuration: 0.35)
@@ -298,19 +301,19 @@ struct SetConfigurationSheet: View {
 
             // Gewichts-Modus: Reps, Gewicht, Aufwärmsätze, Ziel-RIR
             if trackingMode == .weight {
-                GlassDivider.compact
+                Divider()
 
                 // Reps
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Wiederholungen pro Satz")
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     HStack(spacing: 12) {
                         Button { decreaseReps(by: 1) } label: {
                             Image(systemName: "minus.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                         .simultaneousGesture(
                             LongPressGesture(minimumDuration: 0.35)
@@ -328,7 +331,7 @@ struct SetConfigurationSheet: View {
                         Button { increaseReps(by: 1) } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                         .simultaneousGesture(
                             LongPressGesture(minimumDuration: 0.35)
@@ -341,22 +344,22 @@ struct SetConfigurationSheet: View {
                     .frame(maxWidth: .infinity)
                 }
 
-                GlassDivider.compact
+                Divider()
 
                 // Gewicht
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text(displayIsUnilateral ? "Gewicht pro Seite (kg)" : "Zielgewicht (kg)")
                             .font(.headline)
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
 
                         if displayIsUnilateral {
                             Text("2×")
                                 .font(.caption.bold())
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.orange.opacity(0.2))
-                                .foregroundStyle(Color.orange)
+                                .background(Theme.warning.opacity(0.2))
+                                .foregroundStyle(Theme.warning)
                                 .clipShape(Capsule())
                         }
                     }
@@ -365,7 +368,7 @@ struct SetConfigurationSheet: View {
                         Button { decreaseWeight(by: 0.25) } label: {
                             Image(systemName: "minus.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                         .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
                             if pressing { startAutoRepeatWeight(increment: false) }
@@ -376,7 +379,7 @@ struct SetConfigurationSheet: View {
                             HStack(spacing: 6) {
                                 Text("2 ×")
                                     .font(.title2)
-                                    .foregroundStyle(Color.orange)
+                                    .foregroundStyle(Theme.warning)
                                 Text(String(format: "%.2f", targetWeight))
                                     .font(.system(size: 48, weight: .bold, design: .rounded))
                             }
@@ -392,7 +395,7 @@ struct SetConfigurationSheet: View {
                         Button { increaseWeight(by: 0.25) } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                         .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
                             if pressing { startAutoRepeatWeight(increment: true) }
@@ -405,37 +408,37 @@ struct SetConfigurationSheet: View {
                         if targetWeight > 0 {
                             Text("Gesamt: \(String(format: "%.2f", targetWeight * 2)) kg (beide Seiten)")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                         } else {
                             Text("Gewicht einer Kurzhantel/Seite eingeben")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                         }
                     } else {
                         Text("0 = Körpergewicht oder später festlegen")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
 
-                GlassDivider.compact
+                Divider()
 
                 Toggle(isOn: $includeWarmup) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Aufwärmsätze hinzufügen")
                             .font(.headline)
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
                         Text("Leichtere Sätze vor den Arbeitssätzen")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
-                .tint(Color.blue)
+                .tint(Theme.accent)
 
                 if includeWarmup {
                     HStack {
                         Text("Anzahl Aufwärmsätze")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                         Spacer()
                         Picker("", selection: $warmupSets) {
                             ForEach(1...3, id: \.self) { num in
@@ -450,38 +453,38 @@ struct SetConfigurationSheet: View {
 
             // Zeit-Modus: Übungsdauer + Pace-Notiz
             if trackingMode == .time {
-                GlassDivider.compact
+                Divider()
 
                 SetDurationSection(durationSeconds: $durationSeconds)
 
-                GlassDivider.compact
+                Divider()
 
                 // Pace-Notizfeld (Freitext, z. B. „2:50/500m, 8 km/h …")
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Pace / Geschwindigkeit")
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     TextField("z. B. 2:50/500m, 8 km/h …", text: $paceNote, axis: .vertical)
                         .lineLimit(2...4)
                         .textFieldStyle(.plain)
                         .padding(12)
-                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                            RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                                .stroke(Theme.line, lineWidth: 1)
                         )
                 }
             }
 
-            GlassDivider.compact
+            Divider()
 
             // Pausenzeit — immer sichtbar
             SetRestTimeSection(restSeconds: $restSeconds)
 
             // Ziel-RIR — nur im Gewichts-Modus
             if trackingMode == .weight {
-                GlassDivider.compact
+                Divider()
 
                 SetTargetRIRSection(targetRIR: $targetRIR)
             }
@@ -493,7 +496,7 @@ struct SetConfigurationSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Vorschau")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             if trackingMode == .weight {
                 // Gewichts-Modus: Standard-Vorschau mit Reps × Gewicht
@@ -541,13 +544,13 @@ struct SetConfigurationSheet: View {
                     if displayIsUnilateral && targetWeight > 0 {
                         HStack {
                             Label("Gesamtgewicht: \(String(format: "%.1f", targetWeight * 2)) kg", systemImage: "scalemass.fill")
-                                .foregroundStyle(Color.orange)
+                                .foregroundStyle(Theme.warning)
                             Spacer()
                         }
                     }
                 }
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
             } else {
                 // Zeit-Modus: Sätze × Dauer-Anzeige
                 VStack(spacing: 8) {
@@ -569,7 +572,7 @@ struct SetConfigurationSheet: View {
                     }
                 }
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
             }
         }
         .card()
@@ -806,7 +809,7 @@ private struct TimeSetPreviewRow: View {
             HStack(spacing: 4) {
                 Image(systemName: "stopwatch")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                 Text(formatDuration(durationSeconds))
                     .font(.subheadline.bold())
@@ -816,7 +819,7 @@ private struct TimeSetPreviewRow: View {
             if !paceNote.isEmpty {
                 Text(paceNote)
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
                     .lineLimit(1)
                     .padding(.leading, 4)
             }
@@ -858,7 +861,7 @@ private struct SetPreviewRow: View {
 
                 Text("Satz \(setNumber)")
                     .font(.subheadline)
-                    .foregroundStyle(setKind == .warmup ? Color.orange : .primary)
+                    .foregroundStyle(setKind == .warmup ? Theme.warning : Theme.textPrimary)
             }
 
             Spacer()
@@ -868,13 +871,13 @@ private struct SetPreviewRow: View {
                     .font(.subheadline.bold())
 
                 Text("×")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                 if isUnilateral && weight > 0 {
                     HStack(spacing: 2) {
                         Text("2×")
                             .font(.caption)
-                            .foregroundStyle(Color.orange)
+                            .foregroundStyle(Theme.warning)
                         Text(String(format: "%.1f kg", weight))
                             .font(.subheadline.bold())
                     }
@@ -900,13 +903,14 @@ private struct SetPreviewRow: View {
         )
     }
 
+    // RIR-Effort-Skala: niedrig=hart → danger, mittel → warning, leicht/hoch → success
     private var rirColor: Color {
         switch targetRIR {
-        case 0: return Color.red
-        case 1: return Color.orange
-        case 2: return Color.yellow
-        case 3: return Color.green
-        default: return .blue
+        case 0:    return Theme.danger
+        case 1:    return Theme.danger
+        case 2:    return Theme.warning
+        case 3:    return Theme.success
+        default:   return Theme.success
         }
     }
 }

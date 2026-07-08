@@ -23,42 +23,42 @@ struct SetDurationSection: View {
     private let presets = [30, 60, 120, 180, 300]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Space.s3) {
             HStack {
                 Image(systemName: "stopwatch")
                     .foregroundStyle(Theme.accent)
 
                 Text("Übungsdauer")
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Spacer()
 
                 Text(formatDuration(durationSeconds))
-                    .font(.headline.monospacedDigit())
+                    .font(AppFont.headline.monospacedDigit())
                     .foregroundStyle(Theme.accent)
             }
 
             // Preset-Buttons in 3-Spalten-Grid
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: Space.s2), count: 3), spacing: Space.s2) {
                 ForEach(presets, id: \.self) { seconds in
                     Button {
                         durationSeconds = seconds
                     } label: {
                         Text(formatDuration(seconds))
-                            .font(.subheadline)
+                            .font(AppFont.callout)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
                             .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(durationSeconds == seconds ? Theme.accent.opacity(0.2) : Color.clear)
+                                RoundedRectangle(cornerRadius: Radius.sm)
+                                    .fill(durationSeconds == seconds ? Theme.accentSoft : Theme.surfaceSunken)
                             )
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(durationSeconds == seconds ? Theme.accent : Color.white.opacity(0.2), lineWidth: 1)
+                                RoundedRectangle(cornerRadius: Radius.sm)
+                                    .stroke(durationSeconds == seconds ? Theme.accent : Theme.line, lineWidth: 1)
                             )
                     }
-                    .foregroundStyle(durationSeconds == seconds ? .blue : .primary)
+                    .foregroundStyle(durationSeconds == seconds ? Theme.accent : Theme.textPrimary)
                 }
             }
 
@@ -75,8 +75,8 @@ struct SetDurationSection: View {
                 Spacer()
 
                 Text("±15 Sek.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textSecondary)
 
                 Spacer()
 

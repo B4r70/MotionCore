@@ -35,7 +35,7 @@ struct TrainingDetailView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -79,17 +79,17 @@ struct TrainingDetailView: View {
                     if let message = duplicateToastMessage {
                         HStack(spacing: 10) {
                             Image(systemName: "doc.on.doc.fill")
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                             Text(message)
                                 .font(.subheadline)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(Theme.textPrimary)
                             Spacer()
                             Button {
                                 duplicateToastMessage = nil
                             } label: {
                                 Image(systemName: "xmark")
                                     .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(Theme.textSecondary)
                             }
                         }
                         .padding()

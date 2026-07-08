@@ -67,7 +67,7 @@ struct ExerciseInstructionsCard: View {
 
             if isExpanded {
                 if showsHeader {
-                    GlassDivider()
+                    Divider()
                 }
 
                 instructionsContent
@@ -94,7 +94,7 @@ struct ExerciseInstructionsCard: View {
         } label: {
             HStack {
                 Image(systemName: "list.bullet.clipboard")
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
 
                 Text("Anleitung")
                     .font(.headline)
@@ -113,7 +113,7 @@ struct ExerciseInstructionsCard: View {
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.1))
+                        .background(Theme.accentWash)
                         .clipShape(Capsule())
                 }
 
@@ -180,7 +180,7 @@ struct ExerciseInstructionsCard: View {
                         } label: {
                             Text("Bearbeiten")
                                 .font(.caption)
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                     }
                 }
@@ -193,7 +193,7 @@ struct ExerciseInstructionsCard: View {
                             .foregroundStyle(Color.white)
                             .frame(width: 24, height: 24)
                             .background(
-                                Circle().fill(Color.blue.gradient)
+                                Circle().fill(Theme.accent)
                             )
 
                         Text(step)
@@ -213,7 +213,7 @@ struct ExerciseInstructionsCard: View {
                     Text("Anleitung hinzufügen")
                 }
                 .font(.subheadline)
-                .foregroundStyle(Color.blue)
+                .foregroundStyle(Theme.accent)
             }
         }
     }
@@ -236,11 +236,11 @@ struct ExerciseInstructionsCard: View {
                 TextEditor(text: $editedInstructions)
                     .frame(minHeight: 150)
                     .padding(8)
-                    .background(Color(.systemGray6))
+                    .background(Theme.surfaceSunken)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                            .stroke(Theme.line, lineWidth: 1)
                     )
 
                 if !instructionSteps.isEmpty {
@@ -305,7 +305,7 @@ struct ExerciseInstructionsPreview: View {
         if !previewText.isEmpty {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "list.bullet.clipboard")
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
                     .imageScale(.medium)
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -361,7 +361,7 @@ struct ExerciseInstructionsPreview: View {
                 initiallyExpanded: true
             )
 
-            // Embedded-like preview: no header, no extra card wrapper
+            // Eingebettete Variante: kein Header, kein zusätzlicher Card-Wrapper
             ExerciseInstructionsCard(
                 exercise: Exercise(
                     name: "Plank",
@@ -372,8 +372,7 @@ struct ExerciseInstructionsPreview: View {
                 showsHeader: false,
                 wrapContentInGlassCard: false
             )
-            .padding()
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+            .card()
         }
         .padding()
     }

@@ -34,42 +34,45 @@ struct PlanUpdateSheet: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: Space.s4) {
                     // Header-Card
                     headerCard
 
-                    // Strukturelle Änderungen (Gewicht, Satzanzahl)
+                    // Strukturelle Änderungen (Gewicht, Satzanzahl) — Akzentfarbe (Info/geändert)
                     let structuralChanges = structuralIndices
                     if !structuralChanges.isEmpty {
                         sectionView(
                             title: "Strukturelle Änderungen",
                             icon: "arrow.up.arrow.down",
+                            color: Theme.accent,
                             indices: structuralChanges
                         )
                     }
 
-                    // Neue Übungen
+                    // Neue Übungen — Erfolg/hinzugefügt
                     let newExerciseChanges = newExerciseIndices
                     if !newExerciseChanges.isEmpty {
                         sectionView(
                             title: "Neue Übungen",
                             icon: "plus.circle",
+                            color: Theme.success,
                             indices: newExerciseChanges
                         )
                     }
 
-                    // Übersprungene Übungen (nur Info)
+                    // Übersprungene Übungen (nur Info) — Warnung
                     let skippedChanges = skippedIndices
                     if !skippedChanges.isEmpty {
                         sectionView(
                             title: "Übersprungene Übungen",
                             icon: "eye.slash",
+                            color: Theme.warning,
                             indices: skippedChanges
                         )
                     }
                 }
                 .padding(.horizontal)
-                .padding(.vertical, 16)
+                .padding(.vertical, Space.s4)
             }
             .scrollIndicators(.hidden)
             .navigationTitle("Plan-Update")
@@ -80,7 +83,7 @@ struct PlanUpdateSheet: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button { applyChanges() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
+                    Button { applyChanges() } label: { Image(systemName: "checkmark").foregroundStyle(Theme.accent) }
                     .disabled(selectedCount == 0)
                     .fontWeight(.semibold)
                 }
@@ -91,18 +94,19 @@ struct PlanUpdateSheet: View {
     // MARK: - Header-Card
 
     private var headerCard: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Space.s3) {
             Image(systemName: "sparkles")
                 .font(.title2)
-                .foregroundStyle(Color.blue)
+                .foregroundStyle(Theme.accent)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: Space.s1) {
                 Text("Vorschlag basierend auf \(proposal.analyzedSessionCount) Sessions")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
 
                 Text("\(selectedCount) von \(changes.count) Änderungen ausgewählt")
-                    .font(.headline)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
             }
 
             Spacer()
@@ -113,12 +117,12 @@ struct PlanUpdateSheet: View {
 
     // MARK: - Sektion
 
-    private func sectionView(title: String, icon: String, indices: [Int]) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private func sectionView(title: String, icon: String, color: Color, indices: [Int]) -> some View {
+        VStack(alignment: .leading, spacing: Space.s2) {
             Label(title, systemImage: icon)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 4)
+                .font(AppFont.callout)
+                .foregroundStyle(color)
+                .padding(.horizontal, Space.s1)
 
             ForEach(indices, id: \.self) { idx in
                 PlanUpdateChangeRow(change: $changes[idx])

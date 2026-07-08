@@ -102,7 +102,7 @@ struct PlanExercisesSection: View {
         HStack {
             Text("Übungen")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             Spacer()
 
@@ -119,7 +119,7 @@ struct PlanExercisesSection: View {
                         } label: {
                             Image(systemName: "bolt")
                                 .font(.title2)
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                         .opacity(isEditing ? 0 : 1)
                         .scaleEffect(isEditing ? 0.5 : 1)
@@ -130,7 +130,7 @@ struct PlanExercisesSection: View {
                         Button { onAdd() } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(Color.blue)
+                                .foregroundStyle(Theme.accent)
                         }
                         .opacity(isEditing ? 0 : 1)
                         .scaleEffect(isEditing ? 0.5 : 1)
@@ -144,7 +144,7 @@ struct PlanExercisesSection: View {
                     } label: {
                         Image(systemName: isEditing ? "checkmark.circle.fill" : "arrow.up.arrow.down.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(isEditing ? Color.green : .blue)
+                            .foregroundStyle(isEditing ? Theme.success : Theme.accent)
                             .contentTransition(.symbolEffect(.replace))
                     }
                 }
@@ -155,7 +155,7 @@ struct PlanExercisesSection: View {
                     } label: {
                         Text("Bearbeiten")
                             .font(.subheadline)
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Theme.accent)
                     }
                 }
             }
@@ -169,15 +169,15 @@ struct PlanExercisesSection: View {
         VStack(spacing: 16) {
             Image(systemName: "dumbbell.fill")
                 .font(.system(size: 40))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
 
             Text("Noch keine Übungen")
                 .font(.headline)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             Text("Füge Übungen hinzu, um deinen\nTrainingsplan zu erstellen")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
 
             if mode == .form, let onAdd = onAddExercise {
@@ -187,7 +187,7 @@ struct PlanExercisesSection: View {
                         .foregroundStyle(Color.white)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
-                        .background(.blue, in: Capsule())
+                        .background(Theme.accent, in: Capsule())
                 }
             } else if mode == .detail {
                 NavigationLink {
@@ -195,7 +195,7 @@ struct PlanExercisesSection: View {
                 } label: {
                     Text("Übungen hinzufügen")
                         .font(.subheadline.bold())
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.accent)
                 }
             }
         }
@@ -256,10 +256,10 @@ struct PlanExercisesSection: View {
                                 HStack {
                                     Text(supersetLabel(for: size))
                                         .font(.caption.bold())
-                                        .foregroundStyle(Color.blue)
+                                        .foregroundStyle(Theme.accent)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 3)
-                                        .background(Color.blue.opacity(0.12), in: Capsule())
+                                        .background(Theme.accentSoft, in: Capsule())
                                     Spacer()
                                 }
                                 .padding(.bottom, 4)
@@ -297,7 +297,7 @@ struct PlanExercisesSection: View {
                 ) {
                     Image(systemName: "line.3.horizontal")
                         .font(.title3)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                         .frame(width: 36, height: 36)
                 }
                 .shadow(color: .black.opacity(0.25), radius: 10, x: 0, y: 4)
@@ -340,7 +340,7 @@ struct PlanExercisesSection: View {
                         // Superset-Folgemitglied: kein Drag (werden als Block verschoben)
                         Image(systemName: "link")
                             .font(.title3)
-                            .foregroundStyle(.blue.opacity(0.5))
+                            .foregroundStyle(Theme.accent.opacity(0.5))
                             .frame(width: 36, height: 36)
                     } else {
                         dragHandleView(index: index)
@@ -370,7 +370,7 @@ struct PlanExercisesSection: View {
                 Group {
                     if isInSuperset && !isSupersetSelectionMode {
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.green.opacity(0.08))
+                            .fill(Theme.success.opacity(0.08))
                             .allowsHitTesting(false)
                     }
                 }
@@ -381,7 +381,7 @@ struct PlanExercisesSection: View {
                     if isSupersetSelectionMode {
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(
-                                isSelected ? Color.blue : Color.clear,
+                                isSelected ? Theme.accent : Color.clear,
                                 lineWidth: 2
                             )
                             .background(
@@ -389,7 +389,7 @@ struct PlanExercisesSection: View {
                                     .fill(
                                         alreadyInSuperset
                                             ? Color.black.opacity(0.25)
-                                            : (isSelected ? Color.blue.opacity(0.08) : Color.clear)
+                                            : (isSelected ? Theme.accentWash : Color.clear)
                                     )
                             )
                     }
@@ -400,7 +400,7 @@ struct PlanExercisesSection: View {
                 if isSupersetSelectionMode && isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.title3)
-                        .foregroundStyle(.white, .blue)
+                        .foregroundStyle(.white, Theme.accent)
                         .padding(8)
                         .transition(.scale.combined(with: .opacity))
                 }
@@ -410,7 +410,7 @@ struct PlanExercisesSection: View {
                 if isSupersetSelectionMode && alreadyInSuperset && !isSelected {
                     Image(systemName: "link.circle.fill")
                         .font(.title3)
-                        .foregroundStyle(.white, Color.blue.opacity(0.5))
+                        .foregroundStyle(.white, Theme.accent.opacity(0.5))
                         .padding(8)
                 }
             }
@@ -436,7 +436,7 @@ struct PlanExercisesSection: View {
     private func dragHandleView(index: Int) -> some View {
         Image(systemName: "line.3.horizontal")
             .font(.title3)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Theme.textSecondary)
             .frame(width: 36, height: 36)
             .contentShape(Rectangle())
             .gesture(
@@ -484,11 +484,11 @@ struct PlanExercisesSection: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(selectedGroupIndicesForSuperset.count) Übungen ausgewählt")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Text("Mindestens 2 für ein Superset")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Spacer()
@@ -502,7 +502,7 @@ struct PlanExercisesSection: View {
             } label: {
                 Text("Abbrechen")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             // Superset erstellen
@@ -521,8 +521,8 @@ struct PlanExercisesSection: View {
                     .padding(.vertical, 8)
                     .background(
                         selectedGroupIndicesForSuperset.count >= 2
-                            ? Color.blue
-                            : Color.blue.opacity(0.3),
+                            ? Theme.accent
+                            : Theme.accentSoft,
                         in: Capsule()
                     )
             }
@@ -530,11 +530,7 @@ struct PlanExercisesSection: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.white.opacity(0.2), lineWidth: 0.8)
-        )
+        .card(padding: 0)
         .shadow(color: .black.opacity(0.2), radius: 12, x: 0, y: 4)
     }
 
@@ -681,11 +677,11 @@ struct ExerciseDetailRow: View {
                 .font(.caption.bold())
                 .foregroundStyle(Color.white)
                 .frame(width: 24, height: 24)
-                .background(Circle().fill(Color.blue))
+                .background(Circle().fill(Theme.accent))
             if isInSuperset {
                 Image(systemName: "link")
                     .font(.caption2)
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.success)
             }
             // Anzeige MP4 Übungsdurchführung — bevorzugt die verknüpfte Exercise (Remote Poster/Video)
             if let exercise = sets.first?.exercise {
@@ -697,18 +693,18 @@ struct ExerciseDetailRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(exerciseName)
                     .font(.subheadline.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 HStack(spacing: 12) {
                     if let firstWorkingSet = workingSets.first {
                         Text("\(workingSets.count) x \(firstWorkingSet.reps)")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
 
                         if firstWorkingSet.weight > 0 {
                             Text("@ \(String(format: "%.1f", firstWorkingSet.weight)) kg")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                         }
                     }
 
@@ -717,8 +713,8 @@ struct ExerciseDetailRow: View {
                             .font(.caption2)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color.orange.opacity(0.2))
-                            .foregroundStyle(Color.orange)
+                            .background(Theme.warning.opacity(0.15))
+                            .foregroundStyle(Theme.warning)
                             .clipShape(Capsule())
                     }
                 }
@@ -727,11 +723,7 @@ struct ExerciseDetailRow: View {
             Spacer()
         }
         .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
-        )
+        .card(padding: 0)
     }
 }
 
@@ -739,7 +731,7 @@ struct ExerciseDetailRow: View {
 
 #Preview("Plan Exercises Section - Form Mode") {
     ZStack {
-        AnimatedBackground(showAnimatedBlob: true)
+        Theme.surfaceApp.ignoresSafeArea()
 
         ScrollView {
             PlanExercisesSection(
@@ -751,13 +743,12 @@ struct ExerciseDetailRow: View {
             )
         }
     }
-    .environmentObject(AppSettings.shared)
 }
 
 #Preview("Plan Exercises Section - Detail Mode") {
     NavigationStack {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: true)
+            Theme.surfaceApp.ignoresSafeArea()
 
             ScrollView {
                 PlanExercisesSection(
@@ -767,5 +758,4 @@ struct ExerciseDetailRow: View {
             }
         }
     }
-    .environmentObject(AppSettings.shared)
 }

@@ -29,16 +29,16 @@ struct SessionSyncUndoBanner: View {
             HStack(spacing: 10) {
                 Image(systemName: "clock.arrow.circlepath")
                     .font(.title3)
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.warning)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Plan-Sync rückgängig machen?")
                         .font(.headline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     Text(subtitleText)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
 
                 Spacer()
@@ -52,10 +52,10 @@ struct SessionSyncUndoBanner: View {
                 } label: {
                     Text("Rückgängig")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.warning)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color.orange.opacity(0.15), in: RoundedRectangle(cornerRadius: 10))
+                        .background(Theme.warning.opacity(0.15), in: RoundedRectangle(cornerRadius: Radius.sm))
                 }
 
                 // Verwerfen-Button
@@ -65,10 +65,10 @@ struct SessionSyncUndoBanner: View {
                 } label: {
                     Text("Verwerfen")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color.secondary.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+                        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: Radius.sm))
                 }
             }
         }
