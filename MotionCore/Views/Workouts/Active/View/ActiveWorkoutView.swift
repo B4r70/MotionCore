@@ -121,7 +121,7 @@ struct ActiveWorkoutView: View {
     /// ZStack, Toolbar und onAppear ausgelagert damit der Compiler body separat type-checkt.
     private var baseView: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            AnimatedBackground()
 
             VStack(spacing: 0) {
                 ActiveWorkoutStatus(

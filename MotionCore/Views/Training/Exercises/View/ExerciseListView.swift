@@ -189,8 +189,7 @@ struct ExerciseListView: View {
             }
         }
         .floatingActionButton(
-            icon: .system("plus"),
-            color: Theme.textPrimary
+            icon: .system("plus")
         ) {
             showingAddExercise = true
         }

@@ -195,7 +195,7 @@ struct ActiveSetCard: View {
             }
             .sheet(isPresented: $showInstructionsSheet) {
                 ZStack {
-                    AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                    AnimatedBackground()
                         .ignoresSafeArea()
 
                     ScrollView {

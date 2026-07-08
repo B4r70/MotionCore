@@ -30,7 +30,7 @@ struct StatsAndRecordsView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            AnimatedBackground()
 
             VStack(spacing: 0) {
                 // Segmented Control

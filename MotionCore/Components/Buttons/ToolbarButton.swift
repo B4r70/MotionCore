@@ -5,19 +5,21 @@
 // Datei . . . . : ToolbarButton.swift                                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 22.10.2025                                                       /
-// Beschreibung  : Toolbar-Button für unterschiedliche Darstellungen im Display     /
+// Beschreibung  : Toolbar-Icon-Button (Calm 2026, accent auf surfaceCard-Kreis)    /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
 import SwiftUI
 
-// Glass Button (für Toolbar)
+// Calm 2026: accent-Icon auf solidem surfaceCard-Kreis mit Theme.line-Hairline.
 struct ToolbarButton: View {
     let icon: IconTypes
-    
+
     var body: some View {
-        IconType(icon: icon, color: .primary, size: 14)
-            .glassButton(size: 36, accentColor: .primary)
+        IconType(icon: icon, color: Theme.accent, size: 14)
+            .frame(width: 36, height: 36)
+            .background(Theme.surfaceCard, in: Circle())
+            .overlay(Circle().stroke(Theme.line, lineWidth: 1))
     }
 }

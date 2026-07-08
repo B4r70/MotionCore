@@ -21,12 +21,6 @@ class AppSettings: ObservableObject {
 
     // MARK: Anzeigedefaults in AppSettings
 
-    // Anzeigedefaults: Animationen anzeigen
-    @Published var showAnimatedBlob: Bool {
-        didSet {
-            UserDefaults.standard.set(showAnimatedBlob, forKey: "display.showAnimatedBlob")
-        }
-    }
     // Anzeigedefaults: Erscheinungsbild der App
     @Published var appTheme: AppTheme {
         didSet {
@@ -314,9 +308,6 @@ class AppSettings: ObservableObject {
     // MARK: - Init
     private init() {
         let defaults = UserDefaults.standard
-
-        // Display: Animierter Hintergrund
-        showAnimatedBlob = defaults.bool(forKey: "display.showAnimatedBlob")
 
         // Display: Theme aus UserDefaults laden (oder .system, wenn nichts gesetzt)
         if let raw = defaults.string(forKey: "display.appTheme"),
