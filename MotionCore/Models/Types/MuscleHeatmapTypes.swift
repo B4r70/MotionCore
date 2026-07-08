@@ -24,22 +24,33 @@ enum HeatLevel: Int, CaseIterable, Comparable {
         lhs.rawValue < rhs.rawValue
     }
 
-    // Heatmap Farbe
-    var color: Color {
-        switch self {
-        case .none:     return Color(hex: "#E1EEF7")   // Calm 2026 Light-Skala (sky → accent)
-        case .low:      return Color(hex: "#BBD8EC")
-        case .medium:   return Color(hex: "#3A8FC9")
-        case .high:     return Color(hex: "#2C6BCB")
-        }
+    // Heatmap Farbe (SwiftUI) — schema-abhängig, teilt die Skala mit hexColor.
+    var color: Color { color(for: .light) }
+
+    func color(for scheme: ColorScheme) -> Color {
+        Color(hex: hexColor(for: scheme))
     }
 
-    var hexColor: String {
-        switch self {
-        case .none:     return "#E1EEF7"   // Calm 2026 Light-Skala (sky → accent); Dark-Skala in AP 11
-        case .low:      return "#BBD8EC"
-        case .medium:   return "#3A8FC9"
-        case .high:     return "#2C6BCB"
+    var hexColor: String { hexColor(for: .light) }
+
+    /// Hex-String für die SVG-CSS-Injection, schema-abhängig.
+    /// Light = sky → accent (heller Grund); Dark = gedämpft → heller Akzent (dunkler Grund).
+    func hexColor(for scheme: ColorScheme) -> String {
+        switch scheme {
+        case .dark:
+            switch self {
+            case .none:   return "#222C37"   // surfaceSunken-dark: nicht trainiert, unauffällig
+            case .low:    return "#2E4E70"
+            case .medium: return "#3A7CDC"   // accentHover
+            case .high:   return "#6BB0E8"   // heller Akzent-Ton für „viel"
+            }
+        default:
+            switch self {
+            case .none:   return "#E1EEF7"   // Calm 2026 Light-Skala (sky → accent)
+            case .low:    return "#BBD8EC"
+            case .medium: return "#3A8FC9"
+            case .high:   return "#2C6BCB"
+            }
         }
     }
 
@@ -145,10 +156,10 @@ struct MuscleHeatmapAnalysis {
         regionData[svgRegionId]
     }
 
-    /// CSS für SVG-Injection (dynamische Einfärbung der Muskelgruppen)
-    var svgStylesCSS: String {
+    /// CSS für SVG-Injection (dynamische Einfärbung der Muskelgruppen), schema-abhängig.
+    func svgStylesCSS(for scheme: ColorScheme) -> String {
         regionData.map { svgId, data in
-            "#\(svgId) path { fill: \(data.heatLevel.hexColor) !important; }"
+            "#\(svgId) path { fill: \(data.heatLevel.hexColor(for: scheme)) !important; }"
         }.joined(separator: "\n")
     }
 }

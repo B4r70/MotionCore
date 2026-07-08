@@ -18,6 +18,10 @@ struct MuscleHeatmapSVGView: UIViewRepresentable {
     let analysis: MuscleHeatmapAnalysis
     var onRegionTap: ((String) -> Void)?
 
+    // Farbschema explizit durchgereicht: die Heatmap folgt dem SwiftUI-Scheme
+    // (= AppTheme-Umschalter), nicht der System-Auflösung der WKWebView.
+    @Environment(\.colorScheme) private var colorScheme
+
     func makeCoordinator() -> Coordinator {
         Coordinator(onRegionTap: onRegionTap)
     }
@@ -57,7 +61,12 @@ struct MuscleHeatmapSVGView: UIViewRepresentable {
     }
 
     private func buildHTML(svgContent: String) -> String {
-        """
+        // Scheme-abhängige Basiswerte (nicht via @media, damit die Heatmap dem
+        // SwiftUI-Scheme folgt, nicht dem System — konsistent mit dem Umschalter).
+        let isDark = colorScheme == .dark
+        let defaultFill = isDark ? "#222C37" : "#E1EEF7"
+        let borderStroke = isDark ? "#AAAAAA" : "#666666"
+        return """
         <!DOCTYPE html>
         <html>
         <head>
@@ -68,18 +77,15 @@ struct MuscleHeatmapSVGView: UIViewRepresentable {
         svg { width: 100%; height: 100%; display: block; }
         g[id] { cursor: pointer; }
         svg path {
-            fill: #E1EEF7 !important;
+            fill: \(defaultFill) !important;
             stroke: none !important;
         }
         #front_borders path, #rear_borders path {
-            fill: none !important; 
-            stroke: #666666; 
-            stroke-width: 0.8px; 
+            fill: none !important;
+            stroke: \(borderStroke);
+            stroke-width: 0.8px;
         }
-        @media (prefers-color-scheme: dark) {
-            #front_borders path, #rear_borders path { stroke: #AAAAAA; }
-        }
-        \(analysis.svgStylesCSS)
+        \(analysis.svgStylesCSS(for: colorScheme))
         </style>
         </head>
         <body>

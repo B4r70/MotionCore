@@ -14,6 +14,8 @@ import SwiftUI
 
 struct MuscleHeatmapLegend: View {
 
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -33,7 +35,7 @@ struct MuscleHeatmapLegend: View {
                 HStack(spacing: 3) {
                     ForEach(HeatLevel.allCases.filter { $0 != .none }, id: \.rawValue) { level in
                         RoundedRectangle(cornerRadius: 3)
-                            .fill(level.color)
+                            .fill(level.color(for: colorScheme))
                             .frame(height: 14)
                     }
                 }
