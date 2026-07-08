@@ -24,12 +24,12 @@ struct StatisticTrendChart: View {
                 // Titelzeile und Ausgabeeinheit
             HStack {
                 Text(title)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
                 Spacer()
                 Text(yLabel)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.body)
+                    .foregroundStyle(Theme.textSecondary)
             }
             .padding()
 
@@ -41,6 +41,7 @@ struct StatisticTrendChart: View {
                 )
                 .interpolationMethod(.catmullRom)
                 .lineStyle(.init(lineWidth: 2.5))
+                .foregroundStyle(Theme.accent)
 
                 PointMark(
                     x: .value("Datum", point.trendDate),
@@ -48,6 +49,14 @@ struct StatisticTrendChart: View {
                 )
                 .symbol(.circle)
                 .symbolSize(45)
+                .foregroundStyle(Theme.accent)
+            }
+            .chartYAxis {
+                AxisMarks {
+                    AxisGridLine().foregroundStyle(Theme.chartGrid)
+                    AxisTick()
+                    AxisValueLabel()
+                }
             }
             .frame(minHeight: 250)
             .padding()

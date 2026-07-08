@@ -25,10 +25,11 @@ struct HealthMetricCard<ValueContent: View>: View {
             VStack(spacing: 8) {
                 valueView
                     .font(.system(size: 40, weight: .bold))
+                    .monospacedDigit()
 
                 Text(title)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
         .frame(maxWidth: .infinity)
@@ -52,10 +53,11 @@ struct HealthMetricGridCard<ValueContent: View>: View {
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
                 .font(.system(size: 26, weight: .bold, design: .rounded))
+                .monospacedDigit()
 
             Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, minHeight: 120, maxHeight: 120)

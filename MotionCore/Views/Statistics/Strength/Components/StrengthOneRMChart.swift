@@ -23,12 +23,12 @@ struct StrengthOneRMChart: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("1RM-Progression")
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
                 Spacer()
                 Text("kg (est.)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.body)
+                    .foregroundStyle(Theme.textSecondary)
             }
             .padding([.horizontal, .top])
 
@@ -42,16 +42,16 @@ struct StrengthOneRMChart: View {
                 } label: {
                     HStack {
                         Text(selectedExercise.isEmpty ? "Übung wählen" : selectedExercise)
-                            .font(.subheadline)
-                            .foregroundStyle(selectedExercise.isEmpty ? .secondary : .primary)
+                            .font(AppFont.body)
+                            .foregroundStyle(selectedExercise.isEmpty ? Theme.textSecondary : Theme.textPrimary)
                         Spacer()
                         Image(systemName: "chevron.up.chevron.down")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 8)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                    .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 10))
                     .padding(.horizontal)
                 }
             }
@@ -60,8 +60,8 @@ struct StrengthOneRMChart: View {
 
             if oneRMData.isEmpty {
                 Text(selectedExercise.isEmpty ? "Bitte Übung wählen" : "Keine Daten für diese Übung")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.body)
+                    .foregroundStyle(Theme.textSecondary)
                     .frame(maxWidth: .infinity, minHeight: 180)
                     .multilineTextAlignment(.center)
             } else {
@@ -72,7 +72,7 @@ struct StrengthOneRMChart: View {
                     )
                     .interpolationMethod(.catmullRom)
                     .lineStyle(.init(lineWidth: 2.5))
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.accent)
 
                     PointMark(
                         x: .value("Datum", point.trendDate),
@@ -80,20 +80,14 @@ struct StrengthOneRMChart: View {
                     )
                     .symbol(.circle)
                     .symbolSize(45)
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.accent)
 
                     AreaMark(
                         x: .value("Datum", point.trendDate),
                         y: .value("1RM", point.trendValue)
                     )
                     .interpolationMethod(.catmullRom)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [Color.orange.opacity(0.3), Color.orange.opacity(0.0)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
+                    .foregroundStyle(Theme.accent.opacity(0.15))
                 }
                 .frame(minHeight: 220)
                 .padding()

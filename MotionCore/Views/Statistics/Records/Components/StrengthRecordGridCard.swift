@@ -28,28 +28,29 @@ struct StrengthRecordGridCard: View {
             // Rekordwert in groß
             Text(record.formattedValue)
                 .font(.system(size: 20, weight: .bold, design: .rounded))
+                .monospacedDigit()
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)
 
             // Titel der Metrik
             Text(metricTitle)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
 
             // Optionaler Übungsname (bei Set-Level-Rekorden)
             if let exerciseName = record.exerciseName {
                 Text(exerciseName)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textTertiary)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
 
             // Datum des Rekords
             Text(record.session.date.formatted(AppFormatters.dateGermanShort))
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.textTertiary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .frame(minHeight: record.exerciseName != nil ? 140 : 120)

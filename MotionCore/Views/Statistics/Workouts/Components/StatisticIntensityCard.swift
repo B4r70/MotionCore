@@ -27,7 +27,7 @@ struct StatisticIntensityCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Workouts je Belastungsintensität")
-                .font(.headline)
+                .font(AppFont.headline)
                 .padding(.horizontal, 4)
 
             VStack(spacing: 8) {

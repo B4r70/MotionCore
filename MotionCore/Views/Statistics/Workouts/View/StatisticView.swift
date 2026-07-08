@@ -141,7 +141,7 @@ struct StatisticView: View {
                 icon: .system("figure.run"),
                 title: "Gesamt Workouts",
                 valueView: Text("\(viewModel.totalWorkoutsAll)"),
-                color: .blue
+                color: Theme.series[0]
             )
 
             // 2. Gesamt Kalorien (alle Typen)
@@ -149,7 +149,7 @@ struct StatisticView: View {
                 icon: .system("flame.fill"),
                 title: "Gesamt Kalorien",
                 valueView: Text("\(viewModel.totalCaloriesAll)"),
-                color: Color.orange
+                color: Theme.warning
             )
 
             // 3. Gesamt Volumen (Kraft)
@@ -157,7 +157,7 @@ struct StatisticView: View {
                 icon: .system("scalemass.fill"),
                 title: "Gesamt Volumen",
                 valueView: Text(formattedVolume(viewModel.totalStrengthVolume)),
-                color: .purple
+                color: Theme.series[2]
             )
 
             // 4. Ø Herzfrequenz (alle Typen)
@@ -165,7 +165,7 @@ struct StatisticView: View {
                 icon: .system("heart.fill"),
                 title: "⌀ Herzfrequenz",
                 valueView: Text("\(viewModel.averageHeartRateAll) bpm"),
-                color: Color.red
+                color: Theme.danger
             )
 
             // 5. Gesamt Sets (Kraft)
@@ -173,7 +173,7 @@ struct StatisticView: View {
                 icon: .system("list.number"),
                 title: "Gesamt Sets",
                 valueView: Text("\(viewModel.totalStrengthSets)"),
-                color: .teal
+                color: Theme.series[1]
             )
 
             // 6. Ø Volumen/Session (Kraft)
@@ -181,7 +181,7 @@ struct StatisticView: View {
                 icon: .system("chart.bar.fill"),
                 title: "⌀ Volumen/Session",
                 valueView: Text(formattedVolume(viewModel.averageStrengthVolumePerSession)),
-                color: .indigo
+                color: Theme.accent
             )
 
             // 7. Ø Dauer (alle Typen)
@@ -189,7 +189,7 @@ struct StatisticView: View {
                 icon: .system("clock.fill"),
                 title: "⌀ Dauer",
                 valueView: Text("\(viewModel.averageDurationAll) min"),
-                color: .cyan
+                color: Theme.series[4]
             )
 
             // 8. Ø METs (Cardio-spezifisch)
@@ -197,7 +197,7 @@ struct StatisticView: View {
                 icon: .system("bolt.fill"),
                 title: "⌀ METs",
                 valueView: Text(String(format: "%.1f", viewModel.averageMETS)),
-                color: Color.yellow
+                color: Theme.series[3]
             )
 
             // 9. Gesamt Strecke (Cardio + Outdoor)
@@ -205,7 +205,7 @@ struct StatisticView: View {
                 icon: .system("arrow.left.and.right"),
                 title: "Gesamt Strecke",
                 valueView: Text(String(format: "%.2f km", viewModel.totalDistanceAll)),
-                color: Color.green
+                color: Theme.success
             )
         }
     }
@@ -262,9 +262,9 @@ struct StatisticView: View {
                 valueView: ShowStarRating(
                     starRating: viewModel.averageIntensity,
                     starMaxRating: Intensity.maxRating,
-                    starColor: Color.orange
+                    starColor: Theme.warning
                 ),
-                color: .cyan
+                color: Theme.series[1]
             )
 
             // Ø Kaloriendichte
@@ -272,7 +272,7 @@ struct StatisticView: View {
                 icon: .system("flame.fill"),
                 title: "⌀ Kaloriendichte",
                 valueView: Text(String(format: "%.3f", viewModel.averageCaloricDensity)),
-                color: .purple
+                color: Theme.series[2]
             )
 
             // Geräte-Verteilung
@@ -299,7 +299,7 @@ struct StatisticView: View {
                     icon: .system("figure.outdoor.cycle"),
                     title: "Touren",
                     valueView: Text("\(viewModel.outdoorTourCount)"),
-                    color: Color.green
+                    color: Theme.success
                 )
 
                 // Gesamtdistanz
@@ -307,7 +307,7 @@ struct StatisticView: View {
                     icon: .system("arrow.left.and.right"),
                     title: "Gesamtdistanz",
                     valueView: Text(String(format: "%.1f km", viewModel.outdoorTotalDistance)),
-                    color: .blue
+                    color: Theme.series[0]
                 )
 
                 // Höhenmeter gesamt
@@ -315,7 +315,7 @@ struct StatisticView: View {
                     icon: .system("mountain.2"),
                     title: "Höhenmeter",
                     valueView: Text(String(format: "%.0f m", viewModel.outdoorTotalElevation)),
-                    color: .brown
+                    color: Theme.series[2]
                 )
 
                 // Längste Tour
@@ -323,7 +323,7 @@ struct StatisticView: View {
                     icon: .system("flag.fill"),
                     title: "Längste Tour",
                     valueView: Text(String(format: "%.1f km", viewModel.outdoorLongestTourDistance)),
-                    color: .teal
+                    color: Theme.series[1]
                 )
             }
         }
@@ -348,7 +348,7 @@ struct StatisticView: View {
                                     icon: .system("figure.run.circle.fill"),
                                     title: "Aktive Kalorien (heute)",
                                     valueView: Text("\(activeCalories) kcal"),
-                                    color: Color.orange
+                                    color: Theme.warning
                                 )
                             }
 
