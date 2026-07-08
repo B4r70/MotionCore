@@ -27,6 +27,7 @@ struct ProgressRing: View {
     var centerSubText: String? = nil
 
     @State private var animatedProgress: Double = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var hasCenter: Bool {
         centerValue != nil || centerLabel != nil || centerSubText != nil
@@ -67,12 +68,12 @@ struct ProgressRing: View {
         }
         .frame(width: size, height: size)
         .onAppear {
-            withAnimation(.easeOut(duration: 0.36)) {
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.36)) {
                 animatedProgress = max(0, min(1, progress))
             }
         }
         .onChange(of: progress) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.24)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.24)) {
                 animatedProgress = max(0, min(1, newValue))
             }
         }

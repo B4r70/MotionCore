@@ -19,6 +19,8 @@ struct SummaryMuscleHeatmapCard: View {
 
     let analysis: MuscleHeatmapAnalysis
 
+    @Environment(\.colorScheme) private var colorScheme
+
     // MARK: - Body
 
     var body: some View {
@@ -42,7 +44,7 @@ struct SummaryMuscleHeatmapCard: View {
             }
 
             // SVG Heatmap mit vollem CSS-Heatmap-Farbspektrum
-            MuscleHeatmapMiniSVGView(svgStylesCSS: analysis.svgStylesCSS)
+            MuscleHeatmapMiniSVGView(svgStylesCSS: analysis.svgStylesCSS(for: colorScheme))
                 .frame(height: 180)
                 .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
 
@@ -67,10 +69,12 @@ struct SummaryMuscleHeatmapCard: View {
 private struct MuscleTag: View {
     let region: MuscleHeatData
 
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         HStack(spacing: Space.s1) {
             Circle()
-                .fill(region.heatLevel.color)
+                .fill(region.heatLevel.color(for: colorScheme))
                 .frame(width: 8, height: 8)
 
             Text(region.displayName)

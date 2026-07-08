@@ -60,8 +60,7 @@ struct TrainingListView: View {
             }
         }
         .floatingActionButton(
-            icon: .system("plus.circle.fill"),
-            color: Theme.textPrimary
+            icon: .system("plus.circle.fill")
         ) {
             // Draft erzeugen
             draftPlan = TrainingPlan()

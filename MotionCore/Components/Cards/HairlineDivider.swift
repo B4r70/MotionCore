@@ -2,7 +2,7 @@
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : UI-Design                                                        /
-// Datei . . . . : GlassDivider.swift                                               /
+// Datei . . . . : HairlineDivider.swift                                               /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 16.11.2025                                                       /
 // Beschreibung  : Zentrale duenne Hairline-Trennlinie (Calm 2026, Theme.line)       /
@@ -13,11 +13,11 @@
 import SwiftUI
 
 
-// MARK: - GlassDivider View (wie Divider() verwendbar)
+// MARK: - HairlineDivider View (wie Divider() verwendbar)
 // Eigenständige View für horizontale Trennlinien im Glass-Stil.
 // Kann überall wie `Divider()` verwendet werden:
 
-struct GlassDivider: View {
+struct HairlineDivider: View {
 
     // Konfiguration
     let lineHeight: CGFloat
@@ -45,28 +45,28 @@ struct GlassDivider: View {
 }
 
 // MARK: - Kompakte Varianten
-extension GlassDivider {
+extension HairlineDivider {
     // Kompakter Divider ohne vertikales Padding
-    static var compact: GlassDivider {
-        GlassDivider(paddingVertical: 0)
+    static var compact: HairlineDivider {
+        HairlineDivider(paddingVertical: 0)
     }
 
     // Divider mit wenig Abstand
-    static var tight: GlassDivider {
-        GlassDivider(paddingVertical: 6)
+    static var tight: HairlineDivider {
+        HairlineDivider(paddingVertical: 6)
     }
 
     // Divider mit viel Abstand
-    static var loose: GlassDivider {
-        GlassDivider(paddingVertical: 20)
+    static var loose: HairlineDivider {
+        HairlineDivider(paddingVertical: 20)
     }
 }
 
 // MARK: - View Extension (Modifier-Variante)
 // Modifier-Variante für bestehenden Code.
-// Fügt einen GlassDivider unterhalb der View ein:
+// Fügt einen HairlineDivider unterhalb der View ein:
 extension View {
-    func glassDivider(
+    func hairlineDivider(
         paddingTop: CGFloat = 12,
         paddingBottom: CGFloat = 12,
         paddingHorizontal: CGFloat = 0
@@ -77,7 +77,7 @@ extension View {
             Spacer()
                 .frame(height: paddingTop)
 
-            GlassDivider(
+            HairlineDivider(
                 paddingVertical: 0,
                 paddingHorizontal: paddingHorizontal
             )
@@ -90,7 +90,7 @@ extension View {
 
     // MARK: - Preview
 
-#Preview("GlassDivider Varianten") {
+#Preview("HairlineDivider Varianten") {
     ZStack {
         Theme.surfaceApp
 
@@ -98,31 +98,31 @@ extension View {
             Text("Standard")
                 .padding()
 
-            GlassDivider()
+            HairlineDivider()
 
             Text("Compact")
                 .padding()
 
-            GlassDivider.compact
+            HairlineDivider.compact
 
             Text("Tight")
                 .padding()
 
-            GlassDivider.tight
+            HairlineDivider.tight
 
             Text("Loose")
                 .padding()
 
-            GlassDivider.loose
+            HairlineDivider.loose
 
             Text("Custom")
                 .padding()
 
-            GlassDivider(lineHeight: 2, paddingVertical: 8, paddingHorizontal: 20)
+            HairlineDivider(lineHeight: 2, paddingVertical: 8, paddingHorizontal: 20)
 
             Text("Als Modifier")
                 .padding()
-                .glassDivider()
+                .hairlineDivider()
 
             Text("Ende")
                 .padding()

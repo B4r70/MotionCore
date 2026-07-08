@@ -37,7 +37,7 @@ struct RecordCard: View {
                 }
             }
 
-            .glassDivider(paddingTop: 15, paddingBottom: 2, paddingHorizontal: 0)
+            .hairlineDivider(paddingTop: 15, paddingBottom: 2, paddingHorizontal: 0)
 
             // Workout Details
             VStack(alignment: .leading, spacing: 12) {

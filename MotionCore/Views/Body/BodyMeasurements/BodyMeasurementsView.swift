@@ -40,7 +40,7 @@ struct BodyMeasurementsView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            AnimatedBackground()
 
             if measurements.isEmpty {
                 BodyMeasurementsEmptyState {
@@ -82,7 +82,7 @@ struct BodyMeasurementsView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 80)
                 }
-                .floatingActionButton(icon: .system("plus"), color: .primary) {
+                .floatingActionButton(icon: .system("plus")) {
                     entryTrigger = EntrySheetTrigger(measurement: todayMeasurement)
                 }
             }

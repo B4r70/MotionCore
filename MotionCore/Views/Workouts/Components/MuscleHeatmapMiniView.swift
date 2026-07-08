@@ -82,6 +82,9 @@ struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
     // Variante 2: Vollständige CSS-Styles aus MuscleHeatmapAnalysis (Heatmap-Farbskala)
     private let svgStylesCSS: String?
 
+    // Farbschema explizit durchgereicht (folgt dem SwiftUI-Scheme, nicht dem System).
+    @Environment(\.colorScheme) private var colorScheme
+
     // Initializer für einfache binäre Einfärbung (bestehend)
     init(trainedRegionIds: Set<String>) {
         self.trainedRegionIds = trainedRegionIds
@@ -130,13 +133,19 @@ struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
     }
 
     private func buildHTML(svgContent: String) -> String {
+        // Scheme-abhängige Basiswerte (folgt dem SwiftUI-Scheme, nicht via @media).
+        let isDark = colorScheme == .dark
+        let defaultFill = isDark ? "#222C37" : "#E1EEF7"
+        let borderStroke = isDark ? "#AAAAAA" : "#666666"
+        let trainedFill = isDark ? "#3A7CDC" : "#2C6BCB"   // accentHover in Dark
+
         // CSS aus übergebenem String oder aus trainedRegionIds generieren
         let css: String
         if let styles = svgStylesCSS {
             css = styles
         } else if let regions = trainedRegionIds {
             css = regions.map { regionId in
-                "#\(regionId) path { fill: #2C6BCB !important; }"
+                "#\(regionId) path { fill: \(trainedFill) !important; }"
             }.joined(separator: "\n")
         } else {
             css = ""
@@ -151,12 +160,8 @@ struct MuscleHeatmapMiniSVGView: UIViewRepresentable {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: transparent; }
         svg { width: 100%; height: 100%; display: block; }
-        svg path { fill: #E1EEF7 !important; stroke: none !important; }
-        #front_borders path, #rear_borders path { fill: none !important; stroke: #666666; stroke-width: 0.8px; }
-        @media (prefers-color-scheme: dark) {
-            svg path { fill: #4B5563 !important; }
-            #front_borders path, #rear_borders path { stroke: #AAAAAA; }
-        }
+        svg path { fill: \(defaultFill) !important; stroke: none !important; }
+        #front_borders path, #rear_borders path { fill: none !important; stroke: \(borderStroke); stroke-width: 0.8px; }
         \(css)
         </style>
         </head>

@@ -140,8 +140,7 @@ struct BaseView: View {
                     }
                 }
                 .floatingActionButton(
-                    icon: .system("plus"),
-                    color: .primary
+                    icon: .system("plus")
                 ) {
                     showingWorkoutPicker = true
                 }

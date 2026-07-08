@@ -27,6 +27,12 @@ struct SummaryCommandHero: View {
     let recommendation: RecoveryRecommendation
     let onStartWorkoutTap: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
+
+    // Akzent-Füllung des Tagesform-Rings: in Dark accentHover (Kontrast der
+    // Ring-Füllung gegen den surfaceSunken-Track, DESIGN.md §11).
+    private var ringTint: Color { colorScheme == .dark ? Theme.accentHover : Theme.accent }
+
     // MARK: Body
 
     var body: some View {
@@ -45,7 +51,7 @@ struct SummaryCommandHero: View {
                     progress: ringProgress,
                     size: 104,
                     stroke: 9,
-                    tint: Theme.accent,
+                    tint: ringTint,
                     centerValue: readinessIsCalibrating ? "—" : "\(readinessScore ?? 0)",
                     centerLabel: "Tagesform"
                 )

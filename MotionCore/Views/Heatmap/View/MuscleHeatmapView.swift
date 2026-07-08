@@ -24,6 +24,7 @@ struct MuscleHeatmapView: View {
     // MARK: - Environment & State
 
     @EnvironmentObject private var appSettings: AppSettings
+    @Environment(\.colorScheme) private var colorScheme
     @State private var timeframe: SummaryTimeframe = .month
     @State private var viewModel = MuscleHeatmapViewModel()
     @State private var selectedRegion: MuscleHeatData?
@@ -32,7 +33,7 @@ struct MuscleHeatmapView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            AnimatedBackground()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -131,7 +132,7 @@ struct MuscleHeatmapView: View {
                 ForEach(regions.prefix(5)) { region in
                     HStack {
                         RoundedRectangle(cornerRadius: 3)
-                            .fill(region.heatLevel.color)
+                            .fill(region.heatLevel.color(for: colorScheme))
                             .frame(width: 10, height: 10)
                         Text(region.displayName)
                             .font(AppFont.body)
@@ -170,7 +171,7 @@ struct MuscleHeatmapView: View {
                 ForEach(regions) { region in
                     HStack {
                         RoundedRectangle(cornerRadius: 3)
-                            .fill(region.heatLevel.color)
+                            .fill(region.heatLevel.color(for: colorScheme))
                             .frame(width: 10, height: 10)
                         Text(region.displayName)
                             .font(AppFont.body)

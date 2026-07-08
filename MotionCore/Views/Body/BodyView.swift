@@ -55,7 +55,7 @@ struct BodyView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            AnimatedBackground()
 
             ScrollView {
                 VStack(spacing: 16) {

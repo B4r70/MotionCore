@@ -461,7 +461,7 @@ struct ExerciseInstructionSection: View {
             .buttonStyle(.plain)
 
             if isInlineExpanded {
-                GlassDivider()
+                HairlineDivider()
 
                 // Embedded: no extra header + no extra glassCard wrapper (du bist ja schon in einer Card)
                 ExerciseInstructionsCard(

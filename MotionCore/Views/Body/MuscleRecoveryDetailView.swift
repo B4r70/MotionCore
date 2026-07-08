@@ -36,7 +36,7 @@ struct MuscleRecoveryDetailView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                AnimatedBackground()
                     .ignoresSafeArea()
 
                 ScrollView {
