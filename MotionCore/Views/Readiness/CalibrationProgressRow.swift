@@ -6,7 +6,7 @@
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 24.04.2026                                                       /
 // Beschreibung  : Zeigt den Kalibrierungs-Fortschritt einer einzelnen Metrik      /
-//                 (gesammelte Tage vs. benötigte Tage) mit gelbem ProgressView    /
+//                 (gesammelte Tage vs. benoetigte Tage) mit ProgressView          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -42,16 +42,16 @@ struct CalibrationProgressRow: View {
                 if isComplete {
                     Label("Bereit", systemImage: "checkmark.circle.fill")
                         .font(.caption)
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Theme.success)
                 } else {
                     Text("\(sampleCount)/\(requiredSamples) Tage")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
 
             ProgressView(value: progress)
-                .tint(isComplete ? .green : .yellow)
+                .tint(isComplete ? Theme.success : Theme.accent)
         }
         .padding(.vertical, 4)
     }

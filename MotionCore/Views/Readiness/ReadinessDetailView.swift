@@ -43,7 +43,7 @@ struct ReadinessDetailView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                Theme.surfaceApp
                     .ignoresSafeArea()
 
                 ScrollView {
@@ -90,22 +90,18 @@ struct ReadinessDetailView: View {
     // MARK: - Score-Header
 
     private var scoreHeader: some View {
-        VStack(spacing: 8) {
-            Image(systemName: viewModel.label.systemIcon)
-                .font(.system(size: 44))
-                .foregroundStyle(viewModel.label.color)
-
-            Text("\(viewModel.score)")
-                .font(.system(size: 56, weight: .bold, design: .rounded))
-                .foregroundStyle(viewModel.label.color)
-
-            Text(viewModel.label.localizedTitle)
-                .font(.title3)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.center)
+        // Tagesform-Ring (AP-1 ProgressRing) — Füllung + Zahl in der Label-Farbe,
+        // konsistent mit dem Tagesform-Ring auf der Übersicht.
+        VStack(spacing: 0) {
+            ProgressRing(
+                progress: Double(viewModel.score) / 100,
+                tint: viewModel.label.color,
+                centerValue: "\(viewModel.score)",
+                centerLabel: viewModel.label.localizedTitle
+            )
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
+        .padding(.vertical, Space.s4)
         .card()
     }
 
@@ -194,13 +190,13 @@ struct ReadinessDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Kalibrierung läuft", systemImage: "clock.badge")
                 .font(.headline)
-                .foregroundStyle(.yellow)
+                .foregroundStyle(Theme.warning)
                 .padding(.horizontal, 4)
 
             VStack(alignment: .leading, spacing: 12) {
                 Text("MotionCore sammelt noch Gesundheitsdaten, um deine persönliche Baseline zu ermitteln. Nach etwa 14 Tagen steht dein personalisierter Readiness-Score bereit.")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Theme.textSecondary)
 
                 Divider()
 

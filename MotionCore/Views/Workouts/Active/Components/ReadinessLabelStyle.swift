@@ -15,11 +15,11 @@ import SwiftUI
 extension ReadinessLabel {
     var color: Color {
         switch self {
-        case .veryLow:   return .red
-        case .low:       return .orange
-        case .normal:    return .yellow
-        case .good:      return .green
-        case .excellent: return .green
+        case .veryLow:   return Theme.danger
+        case .low:       return Theme.warning
+        case .normal:    return Theme.warning
+        case .good:      return Theme.success
+        case .excellent: return Theme.success
         }
     }
 

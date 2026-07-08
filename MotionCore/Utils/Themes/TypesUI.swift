@@ -52,9 +52,9 @@ extension ExerciseQualityRating {
     // Farbe der Bewertungsstufe
     var color: Color {
         switch self {
-        case .poor:    return Color.red
-        case .neutral: return Color.orange
-        case .good:    return Color.green
+        case .poor:    return Theme.danger
+        case .neutral: return Theme.warning
+        case .good:    return Theme.success
         }
     }
 }

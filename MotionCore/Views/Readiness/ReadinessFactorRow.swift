@@ -17,37 +17,27 @@ struct ReadinessFactorRow: View {
     let factor: ReadinessFactor
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(factor.name)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                Spacer()
-                Text("\(factor.weightPercent) %")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            Text(factor.valueDescription)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-            ProgressView(value: factor.normalizedScore)
-                .progressViewStyle(.linear)
-                .tint(tintColor(for: factor.normalizedScore))
-                .frame(height: 4)
-        }
-        .padding(.vertical, 4)
+        // Faktor-Balken (AP-1-Baustein): Name links, Wert + Gewicht rechts,
+        // einfarbige Füllung nach Qualitäts-Ramp.
+        FactorBar(
+            label: factor.name,
+            subLabel: "\(factor.valueDescription) · \(factor.weightPercent) %",
+            value: factor.normalizedScore,
+            tint: tintColor(for: factor.normalizedScore)
+        )
+        .padding(.vertical, Space.s1)
     }
 
     // MARK: - Hilfsmethoden
 
+    /// Qualitäts-Ramp auf Status-Token (kein Regenbogen): niedrig → danger,
+    /// mittel → warning, hoch → success.
     private func tintColor(for score: Double) -> Color {
         switch score {
-        case 0.0..<0.35: return .red
-        case 0.35..<0.50: return .orange
-        case 0.50..<0.75: return .yellow
-        default:          return .green
+        case 0.0..<0.35:  return Theme.danger
+        case 0.35..<0.50: return Theme.warning
+        case 0.50..<0.75: return Theme.warning
+        default:          return Theme.success
         }
     }
 }

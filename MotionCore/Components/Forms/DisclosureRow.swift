@@ -20,8 +20,8 @@ struct DisclosureRow<Content: View>: View {
     let content: () -> Content
     let valueColor: Color
 
-    // NEUER Initializer, der valueColor standardmäßig auf .secondary setzt
-    init(title: String, value: String?, isExpanded: Binding<Bool>, valueColor: Color = .primary, @ViewBuilder content: @escaping () -> Content) {
+    // Initializer, der valueColor standardmäßig auf Theme.textPrimary setzt
+    init(title: String, value: String?, isExpanded: Binding<Bool>, valueColor: Color = Theme.textPrimary, @ViewBuilder content: @escaping () -> Content) {
         self.title = title
         self.value = value
         self._isExpanded = isExpanded
