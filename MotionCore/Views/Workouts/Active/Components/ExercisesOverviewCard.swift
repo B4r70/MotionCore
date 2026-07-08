@@ -47,6 +47,10 @@ struct ExercisesOverviewCard: View {
         return cardHeights.values.reduce(0, +) / CGFloat(cardHeights.count)
     }
 
+    private var completedGroupCount: Int {
+        groupedSets.filter { sets in sets.allSatisfy { $0.isCompleted } }.count
+    }
+
     private let cardSpacing: CGFloat = 12
 
     private func isSupersetMember(at index: Int) -> Bool {
@@ -158,7 +162,7 @@ struct ExercisesOverviewCard: View {
                                     if isSupersetMember(at: index) {
                                         Image(systemName: "link")
                                             .font(.system(size: 15))
-                                            .foregroundStyle(.blue.opacity(0.5))
+                                            .foregroundStyle(Theme.success.opacity(0.5))
                                             .frame(width: 36, height: 36)
                                             .padding(.trailing, 4)
                                     } else {
@@ -209,7 +213,7 @@ struct ExercisesOverviewCard: View {
                     .overlay(alignment: .trailing) {
                         Image(systemName: "line.3.horizontal")
                             .font(.system(size: 15))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                             .frame(width: 36, height: 36)
                             .padding(.trailing, 4)
                     }
@@ -264,9 +268,18 @@ struct ExercisesOverviewCard: View {
 
     private var header: some View {
         HStack {
-            Text("Übersicht")
-                .font(.title3.bold())
-                .foregroundStyle(.primary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Übungen")
+                    .font(AppFont.title)
+                    .tracking(-0.5)
+                    .foregroundStyle(Theme.textPrimary)
+
+                Text("\(completedGroupCount) von \(groupedSets.count) erledigt")
+                    .font(AppFont.eyebrow)
+                    .textCase(.uppercase)
+                    .tracking(0.6)
+                    .foregroundStyle(Theme.textTertiary)
+            }
 
             Spacer()
 
@@ -277,8 +290,8 @@ struct ExercisesOverviewCard: View {
                         onAddExercise()
                     } label: {
                         Label("Übung", systemImage: "plus.circle.fill")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(Color.blue)
+                            .font(AppFont.body.weight(.medium))
+                            .foregroundStyle(Theme.accent)
                     }
                 }
 
@@ -290,8 +303,8 @@ struct ExercisesOverviewCard: View {
                         }
                     } label: {
                         Image(systemName: "bolt")
-                            .font(.title3)
-                            .foregroundStyle(Color.blue)
+                            .font(AppFont.headline)
+                            .foregroundStyle(Theme.accent)
                     }
                     .opacity(eligibleExerciseCount >= 2 ? 1.0 : 0.4)
                     .disabled(eligibleExerciseCount < 2)
@@ -309,8 +322,8 @@ struct ExercisesOverviewCard: View {
                             ? "checkmark.circle.fill"
                             : "arrow.up.arrow.down.circle.fill"
                         )
-                        .font(.title2)
-                        .foregroundStyle(isSortMode ? Color.green : .blue)
+                        .font(AppFont.title)
+                        .foregroundStyle(isSortMode ? Theme.success : Theme.accent)
                         .contentTransition(.symbolEffect(.replace))
                     }
                 }
@@ -324,7 +337,7 @@ struct ExercisesOverviewCard: View {
     private func dragHandleView(index: Int) -> some View {
         Image(systemName: "line.3.horizontal")
             .font(.system(size: 15))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Theme.textSecondary)
             .frame(width: 36, height: 36)
             .padding(.trailing, 4)
             .contentShape(Rectangle())
@@ -441,13 +454,13 @@ private struct ExerciseOverviewExpandedDetail: View {
     var body: some View {
         VStack(spacing: 0) {
             Divider()
-                .background(Color.primary.opacity(0.05))
+                .background(Theme.lineSoft)
                 .padding(.bottom, 8)
 
             if sets.isEmpty {
                 Text("Keine Sätze konfiguriert")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 8)
             } else {
@@ -464,30 +477,30 @@ private struct ExerciseOverviewExpandedDetail: View {
     private func setDetailRow(set: ExerciseSet) -> some View {
         HStack {
             Text("Satz \(set.setNumber)")
-                .font(.caption)
-                .foregroundStyle(.primary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textPrimary)
 
             Spacer()
 
             Text(formatSetValue(set))
-                .font(.caption)
-                .foregroundStyle(set.isCompleted ? Color.primary : Color.primary.opacity(0.6))
+                .font(AppFont.callout)
+                .foregroundStyle(set.isCompleted ? Theme.textPrimary : Theme.textSecondary)
 
             if set.isLastSetOfExercise && !set.rpeRecorded, let callback = onRetroRIR {
                 Button {
                     callback(set)
                 } label: {
                     Image(systemName: "pencil.and.outline")
-                        .font(.caption)
-                        .foregroundStyle(Color.blue)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.accent)
                 }
                 .buttonStyle(.plain)
                 .padding(.leading, 4)
             }
 
             Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle.dashed")
-                .font(.caption)
-                .foregroundStyle(set.isCompleted ? Color.green : Color.secondary.opacity(0.5))
+                .font(AppFont.callout)
+                .foregroundStyle(set.isCompleted ? Theme.success : Theme.textTertiary)
                 .padding(.leading, 4)
         }
         .frame(maxWidth: .infinity)
@@ -556,7 +569,7 @@ private struct ExerciseOverviewRow: View {
                 // Vertikale Superset-Linie links
             VStack(spacing: 0) {
                 Rectangle()
-                    .fill(Color.blue.opacity(0.6))
+                    .fill(Theme.success.opacity(0.6))
                     .frame(width: 2)
                     .frame(maxHeight: .infinity)
                     .opacity(hasSupersetAbove ? 1 : 0)
@@ -564,12 +577,12 @@ private struct ExerciseOverviewRow: View {
                 if hasSupersetAbove || hasSupersetBelow {
                     Image(systemName: "link")
                         .font(.system(size: 8, weight: .bold))
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.success)
                         .padding(.vertical, 2)
                 }
 
                 Rectangle()
-                    .fill(Color.blue.opacity(0.6))
+                    .fill(Theme.success.opacity(0.6))
                     .frame(width: 2)
                     .frame(maxHeight: .infinity)
                     .opacity(hasSupersetBelow ? 1 : 0)
@@ -594,11 +607,11 @@ private struct ExerciseOverviewRow: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(backgroundColor)
         )
-        // Blauer Border wenn im Selection-Modus ausgewählt
+        // Akzent-Border wenn im Selection-Modus ausgewählt
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(
-                    isSupersetSelectionMode && isSelectedForSuperset ? Color.blue : Color.clear,
+                    isSupersetSelectionMode && isSelectedForSuperset ? Theme.accent : Color.clear,
                     lineWidth: 2
                 )
         )
@@ -609,18 +622,18 @@ private struct ExerciseOverviewRow: View {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 18))
                         .foregroundStyle(Color.white)
-                        .background(Color.blue, in: Circle())
+                        .background(Theme.accent, in: Circle())
                         .padding(6)
                 } else if isInOtherSuperset {
                     Image(systemName: "link.circle.fill")
                         .font(.system(size: 18))
                         .foregroundStyle(Color.white)
-                        .background(Color.blue.opacity(0.6), in: Circle())
+                        .background(Theme.success.opacity(0.6), in: Circle())
                         .padding(6)
                 } else if !isEligibleForSuperset {
                     Image(systemName: "lock.fill")
                         .font(.system(size: 14))
-                        .foregroundStyle(Color.secondary)
+                        .foregroundStyle(Theme.textTertiary)
                         .padding(8)
                 }
             }
@@ -656,24 +669,24 @@ private struct ExerciseOverviewRow: View {
     private var topLine: some View {
         HStack {
             Text("\(index). \(name)")
-                .font(.subheadline.bold())
-                .foregroundStyle(isCurrentExercise ? .blue : .primary)
+                .font(AppFont.body.bold())
+                .foregroundStyle(isCurrentExercise ? Theme.accent : Theme.textPrimary)
 
             Spacer()
 
             HStack(spacing: 4) {
                 if hasPR {
                     Image(systemName: "crown.fill")
-                        .font(.caption)
-                        .foregroundStyle(Color.yellow)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.warning)
                 }
                 if isAllCompleted {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(Color.green)
+                        .foregroundStyle(Theme.success)
                 } else {
                     Text("\(completedCount)/\(sets.count)")
-                        .font(.caption)
-                        .foregroundStyle(.primary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textPrimary)
                 }
 
                 if !isCurrentExercise && !isSortMode && !isSupersetSelectionMode {
@@ -681,16 +694,16 @@ private struct ExerciseOverviewRow: View {
                         onSelectAsActive()
                     } label: {
                         Image(systemName: "play.circle.fill")
-                            .font(.title3)
-                            .foregroundStyle(.blue)
+                            .font(AppFont.headline)
+                            .foregroundStyle(Theme.accent)
                     }
                     .buttonStyle(.plain)
                     .padding(.leading, 4)
                 }
 
                 Image(systemName: "chevron.down")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
                     .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     .animation(.easeInOut(duration: 0.2), value: isExpanded)
                     .opacity(isSortMode ? 0 : 1)
@@ -703,12 +716,12 @@ private struct ExerciseOverviewRow: View {
         HStack(spacing: 6) {
             ForEach(sets, id: \.persistentModelID) { set in
                 Circle()
-                    .fill(set.isCompleted ? Color.green : Color.primary.opacity(0.2))
+                    .fill(set.isCompleted ? Theme.success : Theme.surfaceSunken)
                     .frame(width: 12, height: 12)
                     .overlay {
                         if set.setKind == .warmup {
                             Circle()
-                                .stroke(Color.orange, lineWidth: 2)
+                                .stroke(Theme.warning, lineWidth: 2) // Warmup-Indikator (amber)
                         }
                     }
             }
@@ -718,9 +731,9 @@ private struct ExerciseOverviewRow: View {
 
     private var backgroundColor: Color {
         if isPressed {
-            return Color.red.opacity(0.15)
+            return Theme.danger.opacity(0.15)
         } else if isCurrentExercise {
-            return Color.blue.opacity(0.1)
+            return Theme.accentSoft
         } else {
             return Color.clear
         }

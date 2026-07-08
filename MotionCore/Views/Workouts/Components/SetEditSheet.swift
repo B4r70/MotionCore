@@ -45,7 +45,7 @@ struct SetEditSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                Theme.surfaceApp.ignoresSafeArea()
                 ScrollView {
                     VStack(spacing: 20) {
                         exerciseInfoCard
@@ -70,10 +70,11 @@ struct SetEditSheet: View {
                     Button { dismiss() } label: { Image(systemName: "chevron.left") }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button { saveChanges(); dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
+                    Button { saveChanges(); dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Theme.accent) }
                 }
             }
             .onDisappear { stopTimer() }
+            .calmSheet([.medium, .large])
         }
     }
 
@@ -84,20 +85,20 @@ struct SetEditSheet: View {
             HStack {
                 ExerciseVideoView.forSet(set, size: 60)
                 VStack(alignment: .leading) {
-                    Text(set.exerciseName).font(.headline)
-                    Text("Satz \(set.setNumber)").font(.subheadline).foregroundStyle(.secondary)
+                    Text(set.exerciseName).font(AppFont.headline).foregroundStyle(Theme.textPrimary)
+                    Text("Satz \(set.setNumber)").font(AppFont.callout).foregroundStyle(Theme.textSecondary)
                 }
                 Spacer()
             }
             // CautionNote aus verknüpfter Übung
             if let note = set.exercise?.cautionNote, !note.isEmpty {
-                HStack(alignment: .top, spacing: 8) {
+                HStack(alignment: .top, spacing: Space.s2) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(Color.orange).font(.caption)
-                    Text(note).font(.caption).foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.warning).font(AppFont.callout)
+                    Text(note).font(AppFont.callout).foregroundStyle(Theme.warning)
                 }
-                .padding(.horizontal, 12).padding(.vertical, 8)
-                .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+                .padding(.horizontal, Space.s3).padding(.vertical, Space.s2)
+                .background(Theme.warning.opacity(0.10), in: RoundedRectangle(cornerRadius: Radius.sm))
             }
         }
         .card()
@@ -106,11 +107,10 @@ struct SetEditSheet: View {
     private var weightCard: some View {
         VStack(spacing: 12) {
             HStack {
-                Text(set.isUnilateralSnapshot ? "Gewicht pro Seite (kg)" : "Gewicht (kg)").font(.headline)
+                Text(set.isUnilateralSnapshot ? "Gewicht pro Seite (kg)" : "Gewicht (kg)")
+                    .font(AppFont.headline).foregroundStyle(Theme.textPrimary)
                 if set.isUnilateralSnapshot {
-                    Text("2×").font(.caption.bold())
-                        .padding(.horizontal, 6).padding(.vertical, 2)
-                        .background(Color.orange.opacity(0.2)).foregroundStyle(Color.orange).clipShape(Capsule())
+                    Badge(text: "2×", style: .soft, color: Theme.warning)
                 }
                 Spacer()
             }
@@ -122,15 +122,19 @@ struct SetEditSheet: View {
 
                 // Bilateral-Anzeige bei unilateralen Übungen
                 if set.isUnilateralSnapshot && weight > 0 {
-                    HStack(spacing: 6) {
-                        Text("2 ×").font(.title2).foregroundStyle(Color.orange)
+                    HStack(spacing: Space.s1) {
+                        Text("2 ×").font(AppFont.title).foregroundStyle(Theme.warning)
                         Text(String(format: "%.2f", weight / 2))
                             .font(.system(size: 40, weight: .bold, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(Theme.textPrimary)
                     }
                     .frame(width: 250).contentTransition(.numericText())
                 } else {
                     Text(String(format: "%.2f", weight))
                         .font(.system(size: 48, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(Theme.textPrimary)
                         .frame(width: 250).contentTransition(.numericText())
                 }
 
@@ -141,7 +145,7 @@ struct SetEditSheet: View {
             }
             if set.isUnilateralSnapshot && weight > 0 {
                 Text("Gesamt: \(String(format: "%.2f", weight)) kg (beide Seiten)")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(AppFont.callout).foregroundStyle(Theme.textSecondary)
             }
 
             // Feintuning-Chips: nur sichtbar wenn Equipment mit intermediateIncrements verknüpft
@@ -157,7 +161,7 @@ struct SetEditSheet: View {
 
     private var repsCard: some View {
         VStack(spacing: 12) {
-            Text("Wiederholungen").font(.headline).frame(maxWidth: .infinity, alignment: .leading)
+            Text("Wiederholungen").font(AppFont.headline).foregroundStyle(Theme.textPrimary).frame(maxWidth: .infinity, alignment: .leading)
             HStack {
                 makeStepButton(systemName: "minus.circle.fill", disabled: reps <= 1) {
                     if reps > 1 { reps -= 1; haptic() }
@@ -168,6 +172,8 @@ struct SetEditSheet: View {
 
                 Text("\(reps)")
                     .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textPrimary)
                     .frame(width: 250).contentTransition(.numericText())
 
                 makeStepButton(systemName: "plus.circle.fill") { reps += 1; haptic() }
@@ -181,7 +187,7 @@ struct SetEditSheet: View {
 
     private var setCountCard: some View {
         VStack(spacing: 12) {
-            Text("Anzahl Sätze").font(.headline).frame(maxWidth: .infinity, alignment: .leading)
+            Text("Anzahl Sätze").font(AppFont.headline).foregroundStyle(Theme.textPrimary).frame(maxWidth: .infinity, alignment: .leading)
             HStack {
                 // 0.3s Intervall schützt SwiftData vor zu schnellen Writes
                 makeStepButton(systemName: "minus.circle.fill", disabled: setCount <= 1) {
@@ -194,6 +200,8 @@ struct SetEditSheet: View {
 
                 Text("\(setCount)")
                     .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textPrimary)
                     .frame(width: 250).contentTransition(.numericText())
 
                 makeStepButton(systemName: "plus.circle.fill") { setCount += 1; handleSetCountChange() }
@@ -201,7 +209,7 @@ struct SetEditSheet: View {
                         .onEnded { _ in startAutoRepeat(interval: 0.3) { setCount += 1; handleSetCountChange() } })
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { p in if !p { stopTimer() } }, perform: {})
             }
-            Text("für \(set.exerciseName)").font(.caption).foregroundStyle(.secondary)
+            Text("für \(set.exerciseName)").font(AppFont.callout).foregroundStyle(Theme.textSecondary)
         }
         .card()
     }
@@ -222,7 +230,7 @@ struct SetEditSheet: View {
         Button(action: action) {
             Image(systemName: systemName)
                 .font(.title)
-                .foregroundStyle(disabled ? Color.gray : .blue)
+                .foregroundStyle(disabled ? Theme.textTertiary : Theme.accent)
         }
         .disabled(disabled)
     }

@@ -131,6 +131,8 @@ struct ActiveWorkoutView: View {
                     totalSets: session.totalSets,
                     progress: session.progress,
                     sessionVolume: setManager.cachedSessionVolume,
+                    currentHR: phoneSession.liveCurrentHR,
+                    activeCalories: phoneSession.liveActiveCalories,
                     planTitle: session.sourceTrainingPlan?.title,
                     watchConnectionState: phoneSession.isWatchTrackingActive ? .activeTracking : .hidden
                 )
@@ -437,16 +439,16 @@ struct ActiveWorkoutView: View {
                 toggleTimer()
             } label: {
                 Image(systemName: sessionManager.isPaused ? "play.fill" : "pause.fill")
-                    .font(.title2)
-                    .foregroundStyle(.primary)
+                    .font(AppFont.title)
+                    .foregroundStyle(Theme.textPrimary)
                     .frame(width: 56, height: 56)
                     .background(
-                        sessionManager.isPaused ? Color.green.opacity(0.2) : Color.primary.opacity(0.1),
+                        sessionManager.isPaused ? Theme.success.opacity(0.15) : Theme.surfaceSunken,
                         in: Circle()
                     )
                     .overlay(
                         Circle()
-                            .stroke(sessionManager.isPaused ? Color.green : Color.clear, lineWidth: 2)
+                            .stroke(sessionManager.isPaused ? Theme.success : Color.clear, lineWidth: 2)
                     )
             }
 
@@ -462,13 +464,13 @@ struct ActiveWorkoutView: View {
                 HStack {
                     Image(systemName: "flag.checkered")
                     Text("Beenden")
-                        .font(.headline)
+                        .font(AppFont.headline)
                 }
                 .foregroundStyle(Color.white)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 16)
+                .padding(.horizontal, Space.s6)
+                .padding(.vertical, Space.s4)
                 .background(
-                    session.allSetsCompleted ? Color.green : Color.orange,
+                    session.allSetsCompleted ? Theme.success : Theme.warning,
                     in: Capsule()
                 )
             }
@@ -888,14 +890,6 @@ struct ActiveWorkoutView: View {
                 selectedReadinessForDetail = currentSessionReadiness
             }
 
-            if phoneSession.isWatchTrackingActive {
-                LiveHealthCard(
-                    currentHR: phoneSession.liveCurrentHR,
-                    averageHR: phoneSession.liveAverageHR,
-                    maxHR: phoneSession.liveMaxHR,
-                    activeCalories: phoneSession.liveActiveCalories
-                )
-            }
             exercisesOverview
         }
         .animation(.easeInOut, value: restTimerManager.isResting)

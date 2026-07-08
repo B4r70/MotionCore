@@ -23,18 +23,18 @@ struct ExerciseCompletedCard: View {
         VStack(spacing: 20) {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 60))
-                .foregroundStyle(Color.green)
+                .foregroundStyle(Theme.success)
 
             if let exerciseName {
                 Text("Übung \"\(exerciseName)\" abgeschlossen!")
-                    .font(.title2.bold())
-                    .foregroundStyle(.primary)
+                    .font(AppFont.title)
+                    .foregroundStyle(Theme.textPrimary)
                     .multilineTextAlignment(.center)
             }
 
             Text("Wähle die nächste Übung aus der Liste unten.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(AppFont.body)
+                .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
 
             // Bewertungskarte — nur anzeigen wenn ein GroupKey vorhanden ist
@@ -60,13 +60,9 @@ struct ExerciseCompletedCard: View {
                 HStack {
                     Image(systemName: "arrow.right.circle.fill")
                     Text("Nächste Übung")
-                        .font(.headline)
                 }
-                .foregroundStyle(Color.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(.blue, in: RoundedRectangle(cornerRadius: 16))
             }
+            .buttonStyle(.mcPrimary)
         }
         .card()
     }

@@ -5,7 +5,7 @@
 // Datei . . . . : RestTimerCard.swift                                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 01.01.2026                                                       /
-// Beschreibung  : Großer Pause-Timer zwischen Sätzen                               /
+// Beschreibung  : Pausen-Timer inline (Ring + Schwellen, einfarbig) — §4.2         /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -26,139 +26,115 @@ struct RestTimerCard: View {
     let supersetNextRoundNames: [String]?
 
     var body: some View {
-        VStack(spacing: 24) {
-            // "Pause" Label
+        VStack(spacing: Space.s6) {
             Text("Pause")
-                .font(.title2.bold())
-                .foregroundStyle(.secondary)
+                .font(AppFont.headline)
+                .foregroundStyle(Theme.textSecondary)
 
-            // Kreisförmiger Ring-Timer
             ringTimer
-
-            // Zeitanpassung
             adjustButtons
+            nextInfo
 
-            // Nächster Satz / Nächste Runde Info
-            if let names = supersetNextRoundNames, !names.isEmpty {
-                // Superset: Nächste Runde anzeigen
-                VStack(spacing: 6) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "bolt.fill")
-                            .font(.caption.bold())
-                            .foregroundStyle(Color.green)
-                        Text("Nächste Runde")
-                            .font(.caption.bold())
-                            .foregroundStyle(Color.green)
-                    }
-                    HStack(spacing: 4) {
-                        ForEach(Array(names.enumerated()), id: \.offset) { idx, name in
-                            if idx > 0 {
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 8))
-                                    .foregroundStyle(.secondary)
-                            }
-                            Text(name)
-                                .font(.caption)
-                                .foregroundStyle(.primary)
-                                .lineLimit(1)
-                        }
-                    }
-                }
-            } else if let exerciseName = nextExerciseName,
-               let setNumber = nextSetNumber,
-               let totalSets = totalSetsForExercise {
-                VStack(spacing: 4) {
-                    Text(exerciseName)
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.primary)
-                    Text("Nächster: Satz \(setNumber) von \(totalSets)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            } else {
-                Text("Nächster Satz bereit in \(remainingSeconds) Sekunden")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-
-            // Skip Button
             Button(action: onSkip) {
-                HStack {
-                    Image(systemName: "forward.fill")
-                    Text("Pause überspringen")
-                        .font(.headline)
-                }
-                .foregroundStyle(Color.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(.blue, in: RoundedRectangle(cornerRadius: 16))
+                Label("Pause überspringen", systemImage: "forward.fill")
             }
+            .buttonStyle(.mcPrimary)
         }
         .card()
     }
 
-    // MARK: - Ring-Timer
+    // MARK: - Ring-Timer (einfarbig, Schwellen)
 
     private var ringTimer: some View {
         ZStack {
-            // Hintergrund-Ring
             Circle()
-                .stroke(Color.primary.opacity(0.1), lineWidth: 14)
-
-            // Fortschritts-Ring
+                .stroke(Theme.surfaceSunken, lineWidth: 13)
             Circle()
                 .trim(from: 0, to: progress)
-                .stroke(
-                    LinearGradient(
-                        colors: progressGradientColors,
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    style: StrokeStyle(lineWidth: 14, lineCap: .round)
-                )
+                .stroke(ringColor, style: StrokeStyle(lineWidth: 13, lineCap: .round))
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 1.0), value: remainingSeconds)
-
-            // Zahl in der Mitte
             Text(formatRestTime(remainingSeconds))
-                .font(.system(size: 72, weight: .bold, design: .rounded))
-                .foregroundStyle(remainingSeconds > 10 ? Color.primary : Color.orange)
+                .font(.system(size: 60, weight: .bold, design: .rounded))
                 .monospacedDigit()
+                .foregroundStyle(Theme.textPrimary)
                 .contentTransition(.numericText())
         }
         .frame(width: 210, height: 210)
+    }
+
+    // MARK: - Nächster-Satz / Superset-Info
+
+    @ViewBuilder
+    private var nextInfo: some View {
+        if let names = supersetNextRoundNames, !names.isEmpty {
+            VStack(spacing: Space.s2) {
+                HStack(spacing: Space.s1) {
+                    Image(systemName: "bolt.fill")
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.success)
+                    Text("Nächste Runde")
+                        .font(AppFont.caption)
+                        .fontWeight(.bold)
+                        .foregroundStyle(Theme.success)
+                }
+                HStack(spacing: Space.s1) {
+                    ForEach(Array(names.enumerated()), id: \.offset) { idx, name in
+                        if idx > 0 {
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 8))
+                                .foregroundStyle(Theme.textTertiary)
+                        }
+                        Text(name)
+                            .font(AppFont.callout)
+                            .foregroundStyle(Theme.textPrimary)
+                            .lineLimit(1)
+                    }
+                }
+            }
+        } else if let exerciseName = nextExerciseName,
+                  let setNumber = nextSetNumber,
+                  let totalSets = totalSetsForExercise {
+            VStack(spacing: Space.s1) {
+                Text(exerciseName)
+                    .font(AppFont.body)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Theme.textPrimary)
+                Text("Nächster: Satz \(setNumber) von \(totalSets)")
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
+            }
+        } else {
+            Text("Nächster Satz bereit in \(remainingSeconds) Sekunden")
+                .font(AppFont.body)
+                .foregroundStyle(Theme.textSecondary)
+                .multilineTextAlignment(.center)
+        }
     }
 
     // MARK: - Zeitanpassung
 
     private var adjustButtons: some View {
         HStack {
-            Button {
-                onAdjust(-15)
-            } label: {
-                Label("−15s", systemImage: "minus.circle.fill")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(.ultraThinMaterial, in: Capsule())
-            }
-
+            adjustPill(amount: -15, label: "−15s", icon: "minus.circle.fill")
             Spacer()
-
-            Button {
-                onAdjust(15)
-            } label: {
-                Label("+15s", systemImage: "plus.circle.fill")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(.ultraThinMaterial, in: Capsule())
-            }
+            adjustPill(amount: 15, label: "+15s", icon: "plus.circle.fill")
         }
-        .padding(.horizontal, 8)
+        .padding(.horizontal, Space.s2)
+    }
+
+    private func adjustPill(amount: Int, label: String, icon: String) -> some View {
+        Button {
+            onAdjust(amount)
+        } label: {
+            Label(label, systemImage: icon)
+                .font(AppFont.callout)
+                .fontWeight(.bold)
+                .foregroundStyle(Theme.textSecondary)
+                .padding(.horizontal, Space.s3)
+                .padding(.vertical, Space.s2)
+                .background(Theme.surfaceSunken, in: Capsule())
+        }
     }
 
     // MARK: - Berechnete Properties
@@ -168,22 +144,15 @@ struct RestTimerCard: View {
         return min(1.0, Double(remainingSeconds) / Double(targetSeconds))
     }
 
-    private var progressGradientColors: [Color] {
-        if remainingSeconds > 30 {
-            return [.blue, Color.green]
-        } else if remainingSeconds > 10 {
-            return [.green, Color.orange]
-        } else {
-            return [.orange, Color.red]
-        }
+    // ≤10s rot, ≤30s amber, sonst Akzent (kein Gradient)
+    private var ringColor: Color {
+        if remainingSeconds <= 10 { return Theme.danger }
+        if remainingSeconds <= 30 { return Theme.warning }
+        return Theme.accent
     }
 
-    // MARK: - Hilfsfunktionen
-
     private func formatRestTime(_ seconds: Int) -> String {
-        if seconds < 60 {
-            return "\(seconds)s"
-        }
+        if seconds < 60 { return "\(seconds)s" }
         let mins = seconds / 60
         let secs = seconds % 60
         return String(format: "%d:%02d", mins, secs)
@@ -191,45 +160,30 @@ struct RestTimerCard: View {
 }
 
 // MARK: - Preview
+
 #Preview("Rest Timer Card") {
     ZStack {
-        AnimatedBackground(showAnimatedBlob: true)
-
+        Theme.surfaceApp.ignoresSafeArea()
         VStack(spacing: 20) {
             RestTimerCard(
-                remainingSeconds: 90,
-                targetSeconds: 90,
-                onSkip: {},
-                onAdjust: { _ in },
-                nextExerciseName: "Bankdrücken",
-                nextSetNumber: 3,
-                totalSetsForExercise: 4,
+                remainingSeconds: 90, targetSeconds: 90,
+                onSkip: {}, onAdjust: { _ in },
+                nextExerciseName: "Bankdrücken", nextSetNumber: 3, totalSetsForExercise: 4,
                 supersetNextRoundNames: nil
             )
-
             RestTimerCard(
-                remainingSeconds: 45,
-                targetSeconds: 60,
-                onSkip: {},
-                onAdjust: { _ in },
-                nextExerciseName: nil,
-                nextSetNumber: nil,
-                totalSetsForExercise: nil,
+                remainingSeconds: 25, targetSeconds: 60,
+                onSkip: {}, onAdjust: { _ in },
+                nextExerciseName: nil, nextSetNumber: nil, totalSetsForExercise: nil,
                 supersetNextRoundNames: ["Crunches", "Beinheben", "Russian Twist"]
             )
-
             RestTimerCard(
-                remainingSeconds: 5,
-                targetSeconds: 90,
-                onSkip: {},
-                onAdjust: { _ in },
-                nextExerciseName: nil,
-                nextSetNumber: nil,
-                totalSetsForExercise: nil,
+                remainingSeconds: 5, targetSeconds: 90,
+                onSkip: {}, onAdjust: { _ in },
+                nextExerciseName: nil, nextSetNumber: nil, totalSetsForExercise: nil,
                 supersetNextRoundNames: nil
             )
         }
         .padding()
     }
-    .environmentObject(AppSettings.shared)
 }
