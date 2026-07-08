@@ -27,7 +27,7 @@ struct OutdoorDetailView: View {
 
     var body: some View {
         ZStack {
-            AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+            Theme.surfaceApp.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -68,7 +68,7 @@ struct OutdoorDetailView: View {
                     showDeleteAlert = true
                 } label: {
                     Image(systemName: "trash")
-                        .foregroundStyle(Color.red)
+                        .foregroundStyle(Theme.danger)
                 }
             }
         }
@@ -96,7 +96,7 @@ struct OutdoorDetailView: View {
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill(.ultraThinMaterial)
+                        .fill(Theme.surfaceSunken)
                         .frame(width: 50, height: 50)
 
                     Image(systemName: session.outdoorActivity.icon)
@@ -107,11 +107,11 @@ struct OutdoorDetailView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(session.date.formatted(AppFormatters.dateWithWeekday))
                         .font(.title3.bold())
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     Text(session.outdoorActivity.description)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
 
                 Spacer()
@@ -119,74 +119,74 @@ struct OutdoorDetailView: View {
 
             // Routenname (wenn vorhanden)
             if !session.routeName.isEmpty {
-                GlassDivider.tight
+                Divider()
 
                 HStack(spacing: 8) {
                     Image(systemName: "road.lanes")
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Theme.series[0])
                         .font(.subheadline)
                     Text(session.routeName)
                         .font(.subheadline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
                 }
             }
 
             // Startadresse (wenn vorhanden)
             if !session.startLocation.isEmpty {
-                GlassDivider.tight
+                Divider()
 
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "mappin")
-                        .foregroundStyle(Color.green)
+                        .foregroundStyle(Theme.series[0])
                         .font(.subheadline)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Start")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                         Text(session.startLocation)
                             .font(.subheadline)
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
                     }
                 }
             }
 
             // Zieladresse (wenn vorhanden)
             if !session.endLocation.isEmpty {
-                GlassDivider.tight
+                Divider()
 
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "mappin.and.ellipse")
-                        .foregroundStyle(Color.red)
+                        .foregroundStyle(Theme.series[0])
                         .font(.subheadline)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Ziel")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                         Text(session.endLocation)
                             .font(.subheadline)
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(Theme.textPrimary)
                     }
                 }
             }
 
             // Wetter (wenn bekannt)
             if session.weatherCondition != .unknown {
-                GlassDivider.tight
+                Divider()
 
                 HStack(spacing: 8) {
                     Image(systemName: session.weatherCondition.icon)
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.series[0])
                         .font(.subheadline)
                     Text(session.weatherCondition.description)
                         .font(.subheadline)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     if let temp = session.temperature {
                         Text("·")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                         Text(String(format: "%.0f °C", temp))
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
             }
@@ -200,7 +200,7 @@ struct OutdoorDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Leistungsdaten")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -211,35 +211,35 @@ struct OutdoorDetailView: View {
                 StatBubble(
                     icon: .system("clock.fill"),
                     value: "\(session.duration) min",
-                    color: .blue
+                    color: Theme.series[0]
                 )
 
                 // Distanz
                 StatBubble(
                     icon: .system("arrow.left.and.right"),
                     value: String(format: "%.1f km", session.distance),
-                    color: Color.green
+                    color: Theme.series[0]
                 )
 
                 // Kalorien
                 StatBubble(
                     icon: .system("flame.fill"),
                     value: "\(session.calories) kcal",
-                    color: Color.orange
+                    color: Theme.warning
                 )
 
                 // Hoehenmeter
                 StatBubble(
                     icon: .system("mountain.2"),
                     value: "\(Int(session.elevationGain)) m",
-                    color: Color.mint
+                    color: Theme.series[0]
                 )
 
                 // Geschwindigkeit
                 StatBubble(
                     icon: .system("speedometer"),
                     value: String(format: "%.1f km/h", session.averageSpeed),
-                    color: .purple
+                    color: Theme.series[0]
                 )
 
                 // Herzfrequenz (nur wenn vorhanden)
@@ -247,7 +247,7 @@ struct OutdoorDetailView: View {
                     StatBubble(
                         icon: .system("heart.fill"),
                         value: "\(session.heartRate) bpm",
-                        color: Color.red
+                        color: Theme.danger
                     )
                 }
             }
@@ -261,20 +261,20 @@ struct OutdoorDetailView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Bewertung")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             // RPE
             if let rpe = session.perceivedExertion {
                 HStack {
                     Label("RPE", systemImage: "gauge.with.dots.needle.67percent")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     Spacer()
                     Text("\(rpe) / 10")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
                 }
-                GlassDivider.tight
+                Divider()
             }
 
             // Energielevel
@@ -282,13 +282,13 @@ struct OutdoorDetailView: View {
                 HStack {
                     Label("Energie vor Tour", systemImage: "bolt.fill")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                     Spacer()
                     Text("\(energy) / 5")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
                 }
-                GlassDivider.tight
+                Divider()
             }
 
             // Intensitaets-Stars
@@ -296,7 +296,7 @@ struct OutdoorDetailView: View {
                 HStack(spacing: 4) {
                     Text("Belastung")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                     Spacer()
 
@@ -307,7 +307,7 @@ struct OutdoorDetailView: View {
                                 .foregroundStyle(
                                     index < session.intensity.rawValue
                                     ? session.intensity.color
-                                    : Color.gray.opacity(0.3)
+                                    : Theme.line
                                 )
                         }
                     }
@@ -323,11 +323,11 @@ struct OutdoorDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Notizen")
                 .font(.title3.bold())
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
             Text(session.notes)
                 .font(.body)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .card()

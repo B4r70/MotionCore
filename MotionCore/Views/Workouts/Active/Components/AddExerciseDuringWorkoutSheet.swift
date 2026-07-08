@@ -17,7 +17,6 @@ import SwiftData
 struct AddExerciseDuringWorkoutSheet: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appSettings: AppSettings
 
     @Bindable var session: StrengthSession
     let onComplete: () -> Void
@@ -32,7 +31,7 @@ struct AddExerciseDuringWorkoutSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AnimatedBackground(showAnimatedBlob: appSettings.showAnimatedBlob)
+                Theme.surfaceApp.ignoresSafeArea()
 
                 if let exercise = selectedExercise {
                         // Schritt 2: Sets konfigurieren
@@ -113,20 +112,20 @@ struct AddExerciseDuringWorkoutSheet: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(exercise.name)
                     .font(.title3.bold())
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 HStack(spacing: 8) {
                     Label(exercise.equipment.description, systemImage: exercise.equipment.icon)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
 
                     if let primaryMuscle = exercise.primaryMuscles.first {
                         Text(primaryMuscle.description)
                             .font(.caption)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(.blue.opacity(0.2))
-                            .foregroundStyle(Color.blue)
+                            .background(Theme.accentSoft)
+                            .foregroundStyle(Theme.accent)
                             .clipShape(Capsule())
                     }
                 }
@@ -141,14 +140,14 @@ struct AddExerciseDuringWorkoutSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Set-Konfiguration")
                 .font(.headline)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
 
-                .glassDivider()
+                Divider()
 
                 // Anzahl Sets
             HStack {
                 Text("Anzahl Sets")
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Spacer()
 
@@ -156,7 +155,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { decreaseSets() } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(numberOfSets > 1 ? .blue : Color.gray)
+                            .foregroundStyle(numberOfSets > 1 ? Theme.accent : Theme.textTertiary)
                     }
                     .disabled(numberOfSets <= 1)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -172,7 +171,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { increaseSets() } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(numberOfSets < 10 ? .blue : Color.gray)
+                            .foregroundStyle(numberOfSets < 10 ? Theme.accent : Theme.textTertiary)
                     }
                     .disabled(numberOfSets >= 10)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -182,21 +181,21 @@ struct AddExerciseDuringWorkoutSheet: View {
                 }
             }
 
-            .glassDivider()
+            Divider()
 
                 // Gewicht mit +/- Buttons und LongPress
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text(isSelectedExerciseUnilateral ? "Gewicht pro Seite (kg)" : "Gewicht (kg)")
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     if isSelectedExerciseUnilateral {
                         Text("2×")
                             .font(.caption.bold())
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color.orange.opacity(0.2))
-                            .foregroundStyle(Color.orange)
+                            .background(Theme.warning.opacity(0.2))
+                            .foregroundStyle(Theme.warning)
                             .clipShape(Capsule())
                     }
                 }
@@ -205,7 +204,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { decreaseWeight() } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(defaultWeight > 0 ? .blue : Color.gray)
+                            .foregroundStyle(defaultWeight > 0 ? Theme.accent : Theme.textTertiary)
                     }
                     .disabled(defaultWeight <= 0)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -219,7 +218,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                         HStack(spacing: 4) {
                             Text("2×")
                                 .font(.title3)
-                                .foregroundStyle(Color.orange)
+                                .foregroundStyle(Theme.warning)
                             Text(String(format: "%.2f", defaultWeight))
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                         }
@@ -235,7 +234,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { increaseWeight() } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Theme.accent)
                     }
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
                         if pressing { startContinuousAdjustment(field: .weight, increment: true) }
@@ -247,25 +246,25 @@ struct AddExerciseDuringWorkoutSheet: View {
                     if defaultWeight > 0 {
                         Text("Gesamt: \(String(format: "%.2f", defaultWeight * 2)) kg")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     } else {
                         Text("Gewicht einer Seite eingeben")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 } else {
                     Text("0 = Körpergewicht")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
 
-            .glassDivider()
+            Divider()
 
                 // Wiederholungen
             HStack {
                 Text("Wiederholungen")
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Spacer()
 
@@ -273,7 +272,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { decreaseReps() } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(defaultReps > 1 ? .blue : Color.gray)
+                            .foregroundStyle(defaultReps > 1 ? Theme.accent : Theme.textTertiary)
                     }
                     .disabled(defaultReps <= 1)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -289,7 +288,7 @@ struct AddExerciseDuringWorkoutSheet: View {
                     Button { increaseReps() } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(defaultReps < 50 ? .blue : Color.gray)
+                            .foregroundStyle(defaultReps < 50 ? Theme.accent : Theme.textTertiary)
                     }
                     .disabled(defaultReps >= 50)
                     .onLongPressGesture(minimumDuration: 0.35, pressing: { pressing in
@@ -299,12 +298,12 @@ struct AddExerciseDuringWorkoutSheet: View {
                 }
             }
 
-            .glassDivider()
+            Divider()
 
                 // Pausenzeit
             HStack {
                 Text("Pause (Sek.)")
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Theme.textPrimary)
 
                 Spacer()
 
@@ -429,7 +428,7 @@ struct AddExerciseDuringWorkoutSheet: View {
             .foregroundStyle(Color.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(.blue, in: RoundedRectangle(cornerRadius: 16))
+            .background(Theme.accent, in: RoundedRectangle(cornerRadius: Radius.lg))
         }
     }
 

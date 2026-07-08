@@ -10,7 +10,7 @@
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
 //
-import SwiftUI
+import Foundation
 
 // MARK: - Outdoor-Aktivität
 
@@ -55,19 +55,7 @@ enum OutdoorActivity: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    var tint: Color {
-        switch self {
-        case .cycling:      return .blue
-        case .roadBike:     return .purple
-        case .mountainBike: return .brown
-        case .eBike:        return Color.green
-        case .running:      return Color.orange
-        case .trailRunning: return Color.red
-        case .hiking:       return Color.mint
-        case .walking:      return .teal
-        case .other:        return Color.gray
-        }
-    }
+    // `tint` lebt jetzt als UI-Extension in TypesUI.swift (Theme-konform, kollabiert auf success).
 }
 
 // MARK: - Wetterbedingungen

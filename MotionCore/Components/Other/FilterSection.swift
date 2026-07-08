@@ -42,18 +42,17 @@ struct FilterSection: View {
             }
         } label: {
             ZStack {
-                // Filter-Icon mit Glass-Effekt
+                // Calm 2026: ruhiger Icon-Button (surfaceCard + Hairline) statt Glas
                 IconType(
                     icon: .system("line.3.horizontal.decrease.circle"),
-                    color: isFiltered ? .blue : .primary,
-                    size: 14
+                    color: isFiltered ? Theme.accent : Theme.textSecondary,
+                    size: 16
                 )
-                .glassButton(
-                    size: 36,
-                    accentColor: isFiltered ? .blue : .primary
-                )
+                .frame(width: 36, height: 36)
+                .background(Circle().fill(Theme.surfaceCard))
+                .overlay(Circle().stroke(Theme.line, lineWidth: 1))
 
-                // Blauer Punkt wenn Filter aktiv (rechts oben)
+                // Akzent-Punkt wenn Filter aktiv (rechts oben)
                 if isFiltered {
                     Circle()
                         .fill(Theme.accent)

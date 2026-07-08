@@ -127,3 +127,32 @@ extension CardioDevice {
         }
     }
 }
+
+// MARK: WorkoutType — ruhiger Typ-Ton für das Icon-Tile (ein Ton je Workout-Typ)
+
+extension WorkoutType {
+    // Weiche Tönung hinter dem Icon-Tile der Session-Karte.
+    var calmTileBackground: Color {
+        switch self {
+        case .strength: Theme.accent.opacity(0.14)
+        case .outdoor:  Theme.success.opacity(0.14)
+        case .cardio:   Theme.series[1].opacity(0.14)
+        }
+    }
+
+    // Gesättigter Icon-Ton im Tile (ein Ton je Typ).
+    var calmIconTint: Color {
+        switch self {
+        case .strength: Theme.accent
+        case .outdoor:  Theme.success
+        case .cardio:   Theme.series[1]
+        }
+    }
+}
+
+// MARK: OutdoorActivity — Typ-Ton kollabiert (Aktivität nur über SF-Symbol unterschieden)
+
+extension OutdoorActivity {
+    // Ein ruhiger Ton für alle Outdoor-Aktivitäten; Unterscheidung läuft über das Symbol.
+    var tint: Color { Theme.success }
+}

@@ -23,15 +23,16 @@ struct StatBubble: View {
 
             Text(value)
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(.primary)
+                .monospacedDigit()
+                .foregroundStyle(Theme.textPrimary)
                 .minimumScaleFactor(0.8)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
         .background {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(.thinMaterial)
+            RoundedRectangle(cornerRadius: Radius.md)
+                .fill(Theme.surfaceSunken)
         }
     }
 }
