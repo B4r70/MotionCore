@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------/
 // # MotionCore                                                                     /
 // ---------------------------------------------------------------------------------/
-// Abschnitt . . : Zusammenfassung                                                  /
+// Abschnitt . . : Views / Summary / Components                                     /
 // Datei . . . . : SummaryXPCard.swift                                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
-// Erstellt am . : 2026-04-02                                                       /
+// Erstellt am . : 02.04.2026                                                       /
 // Beschreibung  : XP- und Rang-Card mit animiertem Fortschrittsbalken              /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
@@ -21,18 +21,15 @@ struct SummaryXPCard: View {
 
     @State private var progressVisible: Bool = false
 
+    // Rang-Farbe ist data-driven (Gamification-Palette), bleibt Color(hex:) — Einzelfall.
+    private var rankColor: Color { Color(hex: xpLevel.rank.colorHex) }
+
     // MARK: - Body
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-
-            // Rang + Level Kopfzeile
+        VStack(alignment: .leading, spacing: Space.s4) {
             headerSection
-
-            // Fortschrittsbalken
             progressBarSection
-
-            // Letzte XP-Gewinne
             if !recentGains.isEmpty {
                 Divider().opacity(0.4)
                 recentGainsSection
@@ -40,7 +37,7 @@ struct SummaryXPCard: View {
         }
         .card()
         .task {
-            withAnimation(.easeOut(duration: 0.9).delay(0.2)) {
+            withAnimation(.easeOut(duration: 0.36).delay(0.2)) {
                 progressVisible = true
             }
         }
@@ -49,81 +46,69 @@ struct SummaryXPCard: View {
     // MARK: - Kopfzeile
 
     private var headerSection: some View {
-        HStack(spacing: 16) {
-            // Rang-Badge groß
+        HStack(spacing: Space.s4) {
             ZStack {
                 Circle()
-                    .fill(Color(hex: xpLevel.rank.colorHex).opacity(0.15))
+                    .fill(rankColor.opacity(0.15))
                     .frame(width: 60, height: 60)
-
                 Image(systemName: xpLevel.rank.icon)
                     .font(.system(size: 26))
-                    .foregroundStyle(Color(hex: xpLevel.rank.colorHex))
+                    .foregroundStyle(rankColor)
             }
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: Space.s1) {
                 Text(xpLevel.rank.displayName)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Color(hex: xpLevel.rank.colorHex))
-
+                    .font(AppFont.headline)
+                    .foregroundStyle(rankColor)
                 Text("Level \(xpLevel.level)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
+                    .font(AppFont.body)
+                    .foregroundStyle(Theme.textSecondary)
                 Text("\(xpLevel.totalXP) XP gesamt")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .font(AppFont.callout)
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textTertiary)
             }
 
             Spacer()
 
-            // Nächstes Level
             if !xpLevel.isMaxLevel {
-                VStack(alignment: .trailing, spacing: 2) {
+                VStack(alignment: .trailing, spacing: Space.s1) {
                     Text("→ Level \(xpLevel.level + 1)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textSecondary)
                     Text("\(xpLevel.xpRequiredForNextLevel - (xpLevel.totalXP - xpLevel.xpForCurrentLevel)) XP")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
+                        .font(AppFont.caption)
+                        .monospacedDigit()
+                        .foregroundStyle(Theme.textTertiary)
                 }
             }
         }
     }
 
-    // MARK: - Fortschrittsbalken
+    // MARK: - Fortschrittsbalken (einfarbig, kein Gradient)
 
     private var progressBarSection: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: Space.s2) {
             HStack {
                 Text("Fortschritt zum nächsten Level")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
                 Spacer()
                 Text(String(format: "%.0f%%", xpLevel.progressToNextLevel * 100))
-                    .font(.caption)
+                    .font(AppFont.callout)
                     .fontWeight(.semibold)
-                    .foregroundStyle(Color(hex: xpLevel.rank.colorHex))
+                    .monospacedDigit()
+                    .foregroundStyle(rankColor)
             }
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 5)
-                        .fill(Color.secondary.opacity(0.15))
+                        .fill(Theme.surfaceSunken)
                         .frame(height: 10)
 
                     RoundedRectangle(cornerRadius: 5)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(hex: "#C9E6FF"),
-                                    Color(hex: xpLevel.rank.colorHex)
-                                ],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .fill(rankColor)
                         .frame(
                             width: progressVisible
                                 ? geo.size.width * CGFloat(xpLevel.progressToNextLevel)
@@ -139,33 +124,34 @@ struct SummaryXPCard: View {
     // MARK: - Letzte XP-Gewinne
 
     private var recentGainsSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Space.s2) {
             Text("Letzte XP-Gewinne")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
 
             ForEach(recentGains) { gain in
                 HStack {
                     Image(systemName: "bolt.fill")
-                        .font(.caption2)
-                        .foregroundStyle(Color.yellow)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.warning)
                         .frame(width: 14)
 
                     Text(gain.description)
-                        .font(.caption)
+                        .font(AppFont.callout)
                         .lineLimit(1)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.textPrimary)
 
                     Spacer()
 
                     Text("+\(gain.xpAmount) XP")
-                        .font(.caption)
+                        .font(AppFont.callout)
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color(hex: xpLevel.rank.colorHex))
+                        .monospacedDigit()
+                        .foregroundStyle(rankColor)
 
                     Text(gain.date.formatted(.dateTime.day().month()))
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textTertiary)
                         .frame(width: 40, alignment: .trailing)
                 }
             }
@@ -177,22 +163,17 @@ struct SummaryXPCard: View {
 
 #Preview("SummaryXPCard") {
     let level = XPLevel(
-        level: 8,
-        totalXP: 4200,
-        xpForCurrentLevel: 3600,
-        xpRequiredForNextLevel: 2250,
-        rank: .athlet,
-        progressToNextLevel: 0.27
+        level: 8, totalXP: 4200, xpForCurrentLevel: 3600,
+        xpRequiredForNextLevel: 2250, rank: .athlet, progressToNextLevel: 0.27
     )
-
     let gains: [XPGain] = [
         XPGain(description: "Krafttraining", xpAmount: 165, date: Date().addingTimeInterval(-86400)),
         XPGain(description: "Laufen", xpAmount: 145, date: Date().addingTimeInterval(-2 * 86400)),
         XPGain(description: "Krafttraining", xpAmount: 172, date: Date().addingTimeInterval(-4 * 86400)),
         XPGain(description: "E-Bike Tour", xpAmount: 195, date: Date().addingTimeInterval(-6 * 86400))
     ]
-
-    SummaryXPCard(xpLevel: level, recentGains: gains)
+    return SummaryXPCard(xpLevel: level, recentGains: gains)
         .padding()
+        .background(Theme.surfaceApp)
         .environmentObject(AppSettings.shared)
 }

@@ -30,27 +30,27 @@ struct SummaryMuscleHeatmapCard: View {
     // MARK: - Card-Inhalt
 
     private var cardContent: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Space.s3) {
             // Überschrift
             HStack {
                 Image(systemName: "figure.strengthtraining.traditional")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.accent)
                 Text("Trainierte Muskeln")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
                 Spacer()
             }
 
             // SVG Heatmap mit vollem CSS-Heatmap-Farbspektrum
             MuscleHeatmapMiniSVGView(svgStylesCSS: analysis.svgStylesCSS)
                 .frame(height: 180)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
 
             // Top-Muskelgruppen-Tags (max. 3)
             let topRegions = Array(analysis.topRegions.prefix(3))
             if !topRegions.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
+                    HStack(spacing: Space.s2) {
                         ForEach(topRegions) { region in
                             MuscleTag(region: region)
                         }
@@ -58,7 +58,6 @@ struct SummaryMuscleHeatmapCard: View {
                 }
             }
         }
-        .padding()
         .card()
     }
 }
@@ -69,18 +68,18 @@ private struct MuscleTag: View {
     let region: MuscleHeatData
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: Space.s1) {
             Circle()
                 .fill(region.heatLevel.color)
                 .frame(width: 8, height: 8)
 
             Text(region.displayName)
-                .font(.caption2)
-                .foregroundStyle(.primary)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.textPrimary)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(.ultraThinMaterial)
+        .padding(.horizontal, Space.s2)
+        .padding(.vertical, Space.s1)
+        .background(Theme.surfaceSunken)
         .clipShape(Capsule())
     }
 }

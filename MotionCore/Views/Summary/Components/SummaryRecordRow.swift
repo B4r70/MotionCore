@@ -25,7 +25,7 @@ struct SummaryRecordRow: View {
     var isNew: Bool = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Space.s3) {
             Image(systemName: icon)
                 .foregroundStyle(iconColor)
                 .frame(width: 24)
@@ -33,33 +33,28 @@ struct SummaryRecordRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Text(title)
-                        .font(.subheadline)
+                        .font(AppFont.body)
                         .fontWeight(.medium)
+                        .foregroundStyle(Theme.textPrimary)
 
                     // "Neu!"-Badge bei frischem Rekord
                     if isNew {
-                        Text("Neu!")
-                            .font(.caption2)
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.white)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.orange)
-                            .clipShape(Capsule())
+                        Badge(text: "Neu!", style: .solid, color: Theme.warning)
                     }
                 }
 
                 Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             Spacer()
 
             Text(value)
-                .font(.subheadline)
-                .fontWeight(.bold)
+                .font(AppFont.headline)
+                .monospacedDigit()
+                .foregroundStyle(Theme.textPrimary)
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, Space.s1)
     }
 }

@@ -32,14 +32,14 @@ struct AutoProgressionDetailsView: View {
                         Spacer()
                         Text("+\(formatWeight(s.amount)) kg")
                             .font(.caption)
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Theme.success)
                     }
 
                     Button("Nur diese Übung zurücksetzen") {
                         onUndoOne(s.state)
                     }
                     .buttonStyle(.bordered)
-                    .tint(.orange)
+                    .tint(Theme.warning)
                 }
                 .padding(.vertical, 4)
             }

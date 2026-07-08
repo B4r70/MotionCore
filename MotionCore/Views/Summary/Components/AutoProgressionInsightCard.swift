@@ -61,7 +61,7 @@ struct AutoProgressionInsightCard: View {
 
                 Button("Rückgängig", action: onUndo)
                     .buttonStyle(.bordered)
-                    .tint(.orange)
+                    .tint(Theme.warning)
                     .frame(maxWidth: .infinity)
             }
         }
@@ -73,7 +73,7 @@ struct AutoProgressionInsightCard: View {
     private var header: some View {
         HStack(spacing: 10) {
             Image(systemName: "arrow.up.circle.fill")
-                .foregroundStyle(.green)
+                .foregroundStyle(Theme.success)
                 .font(.title3)
             Text("Arbeitsgewichte erhöht")
                 .font(.headline)

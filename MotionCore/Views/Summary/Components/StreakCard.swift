@@ -33,11 +33,11 @@ struct StreakCard: View {
             if let milestone = streakMilestone {
                 HStack(spacing: 6) {
                     Image(systemName: milestone.icon)
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.warning)
                     Text(milestone.text)
-                        .font(.caption)
+                        .font(AppFont.callout)
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Theme.warning)
                     Spacer()
                 }
                 .padding(.horizontal, 4)
@@ -48,7 +48,7 @@ struct StreakCard: View {
             HStack(spacing: 20) {
                 streakItem(
                     icon: "flame.fill",
-                    iconColor: currentStreak > 0 ? Color.orange : .secondary,
+                    iconColor: currentStreak > 0 ? Theme.warning : Theme.textSecondary,
                     value: "\(currentStreak)",
                     label: "Tage Streak"
                 )
@@ -57,7 +57,7 @@ struct StreakCard: View {
                     Group {
                         if currentStreak > 0 {
                             Circle()
-                                .fill(Color.orange.opacity(glowActive ? 0 : 0.2))
+                                .fill(Theme.warning.opacity(glowActive ? 0 : 0.2))
                                 .scaleEffect(glowActive ? 1.6 : 1.0)
                         }
                     }
@@ -68,7 +68,7 @@ struct StreakCard: View {
 
                 streakItem(
                     icon: "calendar",
-                    iconColor: .blue,
+                    iconColor: Theme.series[0],
                     value: "\(workoutsThisWeek)",
                     label: "Diese Woche"
                 )
@@ -77,7 +77,7 @@ struct StreakCard: View {
 
                 streakItem(
                     icon: "chart.line.uptrend.xyaxis",
-                    iconColor: Color.green,
+                    iconColor: Theme.success,
                     value: String(format: "%.1f", averagePerWeek),
                     label: "⌀ / Woche"
                 )

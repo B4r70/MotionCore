@@ -23,7 +23,7 @@ struct SummaryRatingInsightCard: View {
             HStack(spacing: 8) {
                 Image(systemName: "chart.bar.xaxis")
                     .font(.headline)
-                    .foregroundStyle(Color.purple)
+                    .foregroundStyle(Theme.accent)
 
                 Text("Übungs-Insights")
                     .font(.headline)
@@ -73,8 +73,8 @@ struct SummaryRatingInsightCard: View {
 
     private func insightColor(_ type: RatingInsightCalcEngine.InsightType) -> Color {
         switch type {
-        case .struggling: return Color.red
-        case .thriving:   return Color.green
+        case .struggling: return Theme.danger
+        case .thriving:   return Theme.success
         }
     }
 

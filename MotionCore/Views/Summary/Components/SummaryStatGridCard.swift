@@ -5,11 +5,11 @@
 // Datei . . . . : SummaryStatGridCard.swift                                        /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 25.04.2026                                                       /
-// Beschreibung  : 2×2 Statistik-Grid mit Sparkline-Slot und Delta-Anzeige         /
+// Beschreibung  : 2x2 Statistik-Grid mit Sparkline-Slot und Delta-Anzeige          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
-
+//
 import SwiftUI
 
 // MARK: - SummaryStatGridCard
@@ -31,14 +31,14 @@ struct SummaryStatGridCard: View {
     var body: some View {
         LazyVGrid(
             columns: [GridItem(.flexible()), GridItem(.flexible())],
-            spacing: 12
+            spacing: Space.s3
         ) {
             SparkStatCard(
                 icon: "figure.strengthtraining.traditional",
                 title: "Workouts",
                 value: "\(totalWorkouts)",
                 unit: "Einheiten",
-                tint: .purple,
+                tint: Theme.accent,
                 trend: nil
             )
             SparkStatCard(
@@ -54,7 +54,7 @@ struct SummaryStatGridCard: View {
                 title: "Trainingszeit",
                 value: formattedDuration,
                 unit: "",
-                tint: .purple,
+                tint: Theme.series[0],
                 trend: durationTrend
             )
             SparkStatCard(
@@ -62,7 +62,7 @@ struct SummaryStatGridCard: View {
                 title: "Ø Herzfrequenz",
                 value: averageHeartRate > 0 ? "\(averageHeartRate)" : "—",
                 unit: averageHeartRate > 0 ? "bpm" : "",
-                tint: .red,
+                tint: Theme.danger,
                 trend: nil
             )
         }
@@ -81,17 +81,17 @@ private struct SparkStatCard: View {
     let trend: TrendComparison?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: Space.s1) {
 
             // Header-Zeile: Icon + optionaler Delta-Text
             HStack(alignment: .firstTextBaseline) {
                 Image(systemName: icon)
                     .foregroundStyle(tint)
-                    .font(.caption)
+                    .font(AppFont.caption)
                 Spacer()
                 if let t = trend {
                     Text(formattedDelta(t))
-                        .font(.caption2)
+                        .font(AppFont.caption)
                         .monospacedDigit()
                         .foregroundStyle(deltaColor(t))
                 }
@@ -99,24 +99,22 @@ private struct SparkStatCard: View {
 
             // Hauptwert
             Text(value)
-                .font(.title2.bold())
+                .font(AppFont.title)
                 .monospacedDigit()
-                .foregroundStyle(.primary)
+                .foregroundStyle(Theme.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
 
             // Einheit + Bezeichnung
             Text(unit.isEmpty ? title : "\(unit)  \(title)")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+                .font(AppFont.caption)
+                .foregroundStyle(Theme.textSecondary)
                 .lineLimit(1)
 
-            // Sparkline-Slot
-            // TODO: 7-Tage-Series einbinden wenn TrendCalcEngine.timeSeries existiert
-            MCSparkline(data: [], color: tint)
+            // Sparkline-Slot (leer bis 7-Tage-Series verfügbar — Logik außerhalb AP 2)
+            Sparkline(data: [], color: tint)
         }
-        .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .card(padding: Space.s3)
     }
 
     // MARK: - Delta-Hilfsfunktionen
@@ -134,10 +132,10 @@ private struct SparkStatCard: View {
 
     private func deltaColor(_ trend: TrendComparison) -> Color {
         switch trend.trend {
-        case .up:      return .green
-        case .down:    return .red
-        case .stable:  return .secondary
-        case .unknown: return .secondary
+        case .up:      return Theme.success
+        case .down:    return Theme.danger
+        case .stable:  return Theme.textSecondary
+        case .unknown: return Theme.textSecondary
         }
     }
 }
@@ -152,24 +150,16 @@ private struct SparkStatCard: View {
             formattedDuration: "8h 30m",
             averageHeartRate: 138,
             volumeTrend: TrendComparison(
-                currentValue: 48000,
-                previousValue: 42000,
-                percentageChange: 14.3,
-                trend: .up
+                currentValue: 48000, previousValue: 42000, percentageChange: 14.3, trend: .up
             ),
             caloriesTrend: TrendComparison(
-                currentValue: 4800,
-                previousValue: 5200,
-                percentageChange: -7.7,
-                trend: .down
+                currentValue: 4800, previousValue: 5200, percentageChange: -7.7, trend: .down
             ),
             durationTrend: TrendComparison(
-                currentValue: 30600,
-                previousValue: 30600,
-                percentageChange: 0.0,
-                trend: .stable
+                currentValue: 30600, previousValue: 30600, percentageChange: 0.0, trend: .stable
             )
         )
         .padding()
     }
+    .background(Theme.surfaceApp)
 }
