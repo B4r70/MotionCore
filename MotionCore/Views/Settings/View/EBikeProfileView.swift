@@ -184,14 +184,14 @@ struct EBikeProfileView: View {
                         appSettings.eBikePurchaseDate = nil
                         showPurchaseDatePicker = false
                     }
-                    .foregroundStyle(Color.red)
+                    .foregroundStyle(Theme.danger)
                     .font(.callout)
                 } else {
                     Button("Setzen") {
                         appSettings.eBikePurchaseDate = Date()
                         showPurchaseDatePicker = true
                     }
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
                     .font(.callout)
                 }
             }
@@ -231,14 +231,14 @@ struct EBikeProfileView: View {
                         appSettings.eBikeLastMaintenanceDate = nil
                         showLastMaintenancePicker = false
                     }
-                    .foregroundStyle(Color.red)
+                    .foregroundStyle(Theme.danger)
                     .font(.callout)
                 } else {
                     Button("Setzen") {
                         appSettings.eBikeLastMaintenanceDate = Date()
                         showLastMaintenancePicker = true
                     }
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(Theme.accent)
                     .font(.callout)
                 }
             }
@@ -271,11 +271,11 @@ struct EBikeProfileView: View {
     private var maintenanceBanner: some View {
         HStack(spacing: 10) {
             Image(systemName: "wrench.and.screwdriver.fill")
-                .foregroundStyle(Color.orange)
+                .foregroundStyle(Theme.warning)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Wartung empfohlen")
                     .font(.subheadline.bold())
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.warning)
                 Text("Das Wartungsintervall wurde überschritten.")
                     .font(.caption)
                     .foregroundStyle(.secondary)

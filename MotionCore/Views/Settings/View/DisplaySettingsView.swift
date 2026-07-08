@@ -36,21 +36,6 @@ struct DisplaySettingsView: View {
                 Text("Erscheinungsbild")
             }
 
-            // MARK: Animierter Hintergrund
-            Section {
-                Toggle(isOn: $appSettings.showAnimatedBlob) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Animierter Hintergrund")
-                            .font(.body)
-                        Text("Zeigt einen animierten Blob-Effekt im Hintergrund.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            } header: {
-                Text("Specials")
-            }
-
             // MARK: Übungsvideos
             Section {
                 Toggle(isOn: $appSettings.showExerciseVideos) {

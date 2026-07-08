@@ -102,7 +102,7 @@ struct WorkoutSettingsView: View {
                 Toggle(isOn: $appSettings.enableRestTimerHaptic) {
                     HStack {
                         Image(systemName: "hand.tap.fill")
-                            .foregroundStyle(Color.orange)
+                            .foregroundStyle(Theme.accent)
                         Text("Haptic Feedback")
                     }
                 }

@@ -119,13 +119,13 @@ struct DebugReadinessSection: View {
                         in: 0...100,
                         step: 1
                     )
-                    .tint(.orange)
+                    .tint(Theme.warning)
                 }
             }
 
         } header: {
             Label("Debug — Readiness", systemImage: "ant")
-                .foregroundStyle(.orange)
+                .foregroundStyle(Theme.warning)
         } footer: {
             Text("Nur im Debug-Build sichtbar. Score-Override ersetzt den echten Readiness-Score in der Card und im ProgressionCalcEngine.")
                 .font(.caption)

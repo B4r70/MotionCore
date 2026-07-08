@@ -53,7 +53,7 @@ struct DebugMuscleFatigueSection: View {
             }
         } header: {
             Label("Debug — Muskel-Fatigue", systemImage: "ant")
-                .foregroundStyle(.orange)
+                .foregroundStyle(Theme.warning)
         } footer: {
             Text("Roh-Fatigue pro Muskel (letzte 14 Tage, expon. Decay). Kalibrierungsgrundlage für fatigueSaturation/volumeSaturation. Harte Sessions sollten ≥ \(String(format: "%.0f", MuscleRecoveryCalcEngine.fatigueSaturation)) erreichen.")
                 .font(.caption)
