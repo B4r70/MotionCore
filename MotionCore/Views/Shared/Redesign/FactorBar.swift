@@ -23,6 +23,7 @@ struct FactorBar: View {
     var tint: Color = Theme.accent
 
     @State private var animatedValue: Double = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.s1) {
@@ -51,12 +52,12 @@ struct FactorBar: View {
             .frame(height: 6)
         }
         .onAppear {
-            withAnimation(.easeOut(duration: 0.36)) {
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.36)) {
                 animatedValue = max(0, min(1, value))
             }
         }
         .onChange(of: value) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.24)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.24)) {
                 animatedValue = max(0, min(1, newValue))
             }
         }
