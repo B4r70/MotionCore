@@ -25,54 +25,47 @@ struct BodyCompositeScoreCard: View {
     // MARK: - Body
 
     var body: some View {
-        ZStack {
-            // Subtiler radialer Farbakzent im Hintergrund
-            RadialGradient(
-                colors: [Theme.success.opacity(0.15), .clear],
-                center: .leading,
-                startRadius: 20,
-                endRadius: 180
+        HStack(spacing: Space.s5) {
+            // Zentrierter Erholungs-Ring (kein Gradient-Wash mehr)
+            ProgressRing(
+                progress: Double(recoveryPercent) / 100.0,
+                size: 140,
+                stroke: 11,
+                tint: Theme.success,
+                centerValue: "\(recoveryPercent)",
+                centerLabel: "Erholt"
             )
 
-            HStack(spacing: 16) {
-                MCHeroRing(
-                    value: recoveryPercent,
-                    label: "Bereit",
-                    subText: nil,
-                    tint: Theme.success
-                )
+            VStack(alignment: .leading, spacing: Space.s2) {
+                Text("Bereit für")
+                    .font(AppFont.eyebrow)
+                    .textCase(.uppercase)
+                    .tracking(0.6)
+                    .foregroundStyle(Theme.textTertiary)
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Bereit für")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                Text(recommendation.recommendedTitle)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
 
-                    Text(recommendation.recommendedTitle)
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
-
+                if !recommendation.recommendedGroups.isEmpty {
                     Text("\(recommendation.recommendedGroups.count) Gruppen erholt")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
                         .monospacedDigit()
+                        .foregroundStyle(Theme.textSecondary)
 
-                    if !recommendation.recommendedGroups.isEmpty {
-                        Button("Heute trainieren →") {
-                            onStartWorkoutTap()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(Theme.success)
-                        .font(.caption)
-                    } else {
-                        Text("Noch keine Empfehlung verfügbar")
-                            .font(.caption)
-                            .foregroundStyle(.tertiary)
-                    }
+                    Button("Training starten", action: onStartWorkoutTap)
+                        .buttonStyle(.mcPrimary)
+                        .padding(.top, Space.s1)
+                } else {
+                    Text("Noch keine Empfehlung verfügbar")
+                        .font(AppFont.callout)
+                        .foregroundStyle(Theme.textTertiary)
                 }
-
-                Spacer(minLength: 0)
             }
+
+            Spacer(minLength: 0)
         }
         .card()
     }

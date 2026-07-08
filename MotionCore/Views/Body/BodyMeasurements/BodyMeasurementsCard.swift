@@ -29,17 +29,17 @@ struct BodyMeasurementsCard: View {
             // Header
             HStack {
                 Text("Körpermaße")
-                    .font(.headline)
+                    .font(AppFont.headline)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
             }
 
             // Sub-Header
             Text(subHeaderText)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
 
             // Mini-Sparklines (nur wenn Daten vorhanden)
             if !measurements.isEmpty {
@@ -103,27 +103,27 @@ private struct MiniSparklinePanel: View {
 
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
 
-            // Sparkline — MCSparkline erwartet [Double] und Color
+            // Sparkline — Sparkline erwartet [Double] und Color
             if yValues.count >= 2 {
-                MCSparkline(data: yValues, color: .accentColor, showFill: false)
+                Sparkline(data: yValues, color: Theme.accent, showFill: false)
                     .frame(height: 30)
             } else {
                 Rectangle()
-                    .fill(Color.secondary.opacity(0.2))
+                    .fill(Theme.textSecondary.opacity(0.2))
                     .frame(height: 30)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
             }
 
             if let current = trend.currentValue {
                 Text(String(format: "%.1f \(unit)", current))
-                    .font(.caption2.bold())
+                    .font(AppFont.caption.bold())
             } else {
                 Text("–")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
         .frame(maxWidth: .infinity)

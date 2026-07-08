@@ -28,7 +28,7 @@ struct BodyMeasurementsRatioCard: View {
             // Header
             HStack(alignment: .top) {
                 Text(title)
-                    .font(.headline)
+                    .font(AppFont.headline)
                 Spacer()
                 RatioDeltaPill(trend: trend)
             }
@@ -36,12 +36,13 @@ struct BodyMeasurementsRatioCard: View {
             // Großer Ratio-Wert (2 Nachkommastellen)
             Text(formattedValue)
                 .font(.system(size: 36, weight: .light, design: .rounded))
+                .monospacedDigit()
                 .frame(maxWidth: .infinity, alignment: .center)
 
             // Beschreibung
             Text(description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
 
             // Sparkline
             if sparklineData.count >= 2 {
@@ -50,15 +51,15 @@ struct BodyMeasurementsRatioCard: View {
                         x: .value("Datum", item.0),
                         y: .value("Ratio", item.1)
                     )
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Theme.accent)
                 }
                 .chartXAxis(.hidden)
                 .chartYAxis(.hidden)
                 .frame(height: 40)
             } else {
                 Text("Mehr Daten nötig")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textSecondary)
                     .frame(height: 40)
             }
         }
@@ -81,19 +82,19 @@ private struct RatioDeltaPill: View {
         if let delta = trend.absoluteDelta {
             let sign = delta >= 0 ? "+" : ""
             Text("\(sign)\(String(format: "%.2f", delta))")
-                .font(.caption2.weight(.semibold))
+                .font(AppFont.caption.weight(.semibold))
                 .foregroundStyle(pillColor)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
-                .background(.ultraThinMaterial, in: Capsule())
+                .background(Theme.surfaceSunken, in: Capsule())
         }
     }
 
     private var pillColor: Color {
         switch trend.direction {
-        case .up:               return .green
-        case .down:             return .red
-        case .stable, .unknown: return .secondary
+        case .up:               return Theme.success
+        case .down:             return Theme.danger
+        case .stable, .unknown: return Theme.textSecondary
         }
     }
 }

@@ -27,7 +27,7 @@ struct BodyMeasurementsRadarCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Körpermaße im Vergleich")
-                .font(.headline)
+                .font(AppFont.headline)
 
             TimeframePicker(selection: $timeframe)
 
@@ -36,8 +36,8 @@ struct BodyMeasurementsRadarCard: View {
 
             if data.previousPolygon == nil {
                 Text("Mehr Daten für Vergleich nötig")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.caption)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
         .card()
@@ -79,7 +79,7 @@ private struct RadarCanvas: View {
                     if i == 0 { ringPath.move(to: p) } else { ringPath.addLine(to: p) }
                 }
                 ringPath.closeSubpath()
-                ctx.stroke(ringPath, with: .color(.secondary.opacity(0.15)), lineWidth: 0.5)
+                ctx.stroke(ringPath, with: .color(Theme.chartGrid), lineWidth: 0.5)
             }
 
             // 2. Achsen-Speichen
@@ -87,7 +87,7 @@ private struct RadarCanvas: View {
                 var spokePath = Path()
                 spokePath.move(to: center)
                 spokePath.addLine(to: point(value: 1.0, axis: i))
-                ctx.stroke(spokePath, with: .color(.secondary.opacity(0.15)), lineWidth: 0.5)
+                ctx.stroke(spokePath, with: .color(Theme.chartGrid), lineWidth: 0.5)
             }
 
             // 3. Vergleichs-Polygon (untere Schicht)
@@ -126,8 +126,8 @@ private struct RadarCanvas: View {
                     let y = center.y + sin(angle) * labelRadius
 
                     Text(data.axes[i].label)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textSecondary)
                         .position(x: x, y: y)
                 }
             }

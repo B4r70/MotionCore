@@ -73,14 +73,16 @@ struct MuscleHeatmapView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "figure.strengthtraining.traditional")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.accent)
                 Text("Muskelaktivität")
-                    .font(.headline)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
                 Spacer()
                 if let analysis = viewModel.analysis {
                     Text("\(analysis.totalSets) Sets")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(AppFont.callout)
+                        .monospacedDigit()
+                        .foregroundStyle(Theme.textSecondary)
                 }
             }
 
@@ -95,8 +97,8 @@ struct MuscleHeatmapView: View {
                 MuscleHeatmapLegend()
                     .padding(.top, 4)
             } else {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.ultraThinMaterial)
+                RoundedRectangle(cornerRadius: Radius.md)
+                    .fill(Theme.surfaceSunken)
                     .frame(height: 400)
                     .overlay {
                         ProgressView()
@@ -113,13 +115,16 @@ struct MuscleHeatmapView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.warning)
                 Text("Vernachlässigte Muskeln")
-                    .font(.headline)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
                 Spacer()
                 Text("\(regions.count)")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(Color.orange)
+                    .font(AppFont.body)
+                    .fontWeight(.bold)
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.warning)
             }
 
             VStack(spacing: 8) {
@@ -129,16 +134,16 @@ struct MuscleHeatmapView: View {
                             .fill(region.heatLevel.color)
                             .frame(width: 10, height: 10)
                         Text(region.displayName)
-                            .font(.subheadline)
+                            .font(AppFont.body)
                         Spacer()
                         if let days = region.daysSinceLastTrained {
                             Text("vor \(days) Tagen")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(AppFont.callout)
+                                .foregroundStyle(Theme.textSecondary)
                         } else {
                             Text("Nie trainiert")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(AppFont.callout)
+                                .foregroundStyle(Theme.textSecondary)
                         }
                     }
                 }
@@ -154,9 +159,10 @@ struct MuscleHeatmapView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "flame.fill")
-                    .foregroundStyle(Color.red)
+                    .foregroundStyle(Theme.warning)
                 Text("Meist trainiert")
-                    .font(.headline)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
                 Spacer()
             }
 
@@ -167,11 +173,11 @@ struct MuscleHeatmapView: View {
                             .fill(region.heatLevel.color)
                             .frame(width: 10, height: 10)
                         Text(region.displayName)
-                            .font(.subheadline)
+                            .font(AppFont.body)
                         Spacer()
                         Text("\(region.totalSets) Sets · \(region.frequencyFormatted)")
                             .font(.caption.bold())
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
             }
@@ -209,7 +215,7 @@ private struct MuscleDetailSheet: View {
                     Section("Muskeln") {
                         ForEach(data.contributingMuscles) { muscle in
                             Text(muscle.displayName)
-                                .font(.subheadline)
+                                .font(AppFont.body)
                         }
                     }
                 }
@@ -222,18 +228,18 @@ private struct MuscleDetailSheet: View {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(entry.sessionDate, style: .date)
-                                            .font(.subheadline)
+                                            .font(AppFont.body)
                                             .fontWeight(.semibold)
                                         if let plan = entry.planName {
                                             Text(plan)
-                                                .font(.caption)
-                                                .foregroundStyle(.secondary)
+                                                .font(AppFont.callout)
+                                                .foregroundStyle(Theme.textSecondary)
                                         }
                                     }
                                     Spacer()
                                     Text(entry.sessionDate, style: .time)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                        .font(AppFont.callout)
+                                        .foregroundStyle(Theme.textSecondary)
                                 }
 
                                 // Übungen
@@ -241,16 +247,16 @@ private struct MuscleDetailSheet: View {
                                     HStack(alignment: .top) {
                                         VStack(alignment: .leading, spacing: 2) {
                                             Text(exercise.exerciseName)
-                                                .font(.caption)
-                                                .foregroundStyle(exercise.isPrimary ? .primary : .secondary)
+                                                .font(AppFont.callout)
+                                                .foregroundStyle(exercise.isPrimary ? Theme.textPrimary : Theme.textSecondary)
                                             Text(exerciseSummary(exercise))
-                                                .font(.caption2)
-                                                .foregroundStyle(.secondary)
+                                                .font(AppFont.caption)
+                                                .foregroundStyle(Theme.textSecondary)
                                         }
                                         Spacer()
                                         Text(volumeFormatted(exercise.totalVolume))
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
+                                            .font(AppFont.caption)
+                                            .foregroundStyle(Theme.textSecondary)
                                     }
                                 }
                             }
@@ -263,7 +269,7 @@ private struct MuscleDetailSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Color.blue) }
+                    Button { dismiss() } label: { Image(systemName: "checkmark").foregroundStyle(Theme.accent) }
                 }
             }
             .task(id: data.svgRegionId) {

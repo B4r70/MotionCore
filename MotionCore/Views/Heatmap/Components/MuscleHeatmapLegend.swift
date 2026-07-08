@@ -18,17 +18,17 @@ struct MuscleHeatmapLegend: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Image(systemName: "chart.bar.fill")
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Theme.accent)
                 Text("Trainingsintensität")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(AppFont.headline)
+                    .foregroundStyle(Theme.textPrimary)
             }
 
             // Trainingsintensitätsskala in blau
             HStack(spacing: 8) {
                 Text("Wenig")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
 
                 HStack(spacing: 3) {
                     ForEach(HeatLevel.allCases.filter { $0 != .none }, id: \.rawValue) { level in
@@ -39,8 +39,8 @@ struct MuscleHeatmapLegend: View {
                 }
 
                 Text("Viel")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
     }

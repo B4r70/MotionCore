@@ -27,19 +27,19 @@ enum HeatLevel: Int, CaseIterable, Comparable {
     // Heatmap Farbe
     var color: Color {
         switch self {
-        case .none:     return Color.gray.opacity(0.3)
-        case .low:      return Color(hex: "#93C5FD")   // vorher #60A5FA
-        case .medium:   return Color(hex: "#3B82F6")
-        case .high:     return Color(hex: "#1D4ED8")
+        case .none:     return Color(hex: "#E1EEF7")   // Calm 2026 Light-Skala (sky → accent)
+        case .low:      return Color(hex: "#BBD8EC")
+        case .medium:   return Color(hex: "#3A8FC9")
+        case .high:     return Color(hex: "#2C6BCB")
         }
     }
 
     var hexColor: String {
         switch self {
-        case .none:     return "#A6A9AD"
-        case .low:      return "#93C5FD"               // vorher #60A5FA
-        case .medium:   return "#3B82F6"
-        case .high:     return "#1D4ED8"
+        case .none:     return "#E1EEF7"   // Calm 2026 Light-Skala (sky → accent); Dark-Skala in AP 11
+        case .low:      return "#BBD8EC"
+        case .medium:   return "#3A8FC9"
+        case .high:     return "#2C6BCB"
         }
     }
 

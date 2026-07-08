@@ -43,7 +43,7 @@ struct BodyRecoveryListCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Muskelgruppen")
-                .font(.headline)
+                .font(AppFont.headline)
 
             if sortedGroups.isEmpty {
                 EmptyState()
@@ -71,21 +71,21 @@ struct BodyRecoveryListCard: View {
         HStack(alignment: .center, spacing: 12) {
             // Prozentwert
             Text("\(Int(group.recoveryPercent))%")
-                .font(.title3.bold())
+                .font(AppFont.title)
                 .monospacedDigit()
-                .foregroundStyle(recoveryColor(percent: group.recoveryPercent))
+                .foregroundStyle(recoveryTint(group.recoveryPercent))
                 .frame(width: 52, alignment: .leading)
 
             // Name + Fortschrittsbalken
             VStack(alignment: .leading, spacing: 3) {
                 Text(group.displayName)
-                    .font(.subheadline)
+                    .font(AppFont.body)
 
-                MCFactorBar(
+                FactorBar(
                     label: "",
                     subLabel: nil,
                     value: group.recoveryPercent / 100.0,
-                    color: recoveryColor(percent: group.recoveryPercent)
+                    tint: recoveryTint(group.recoveryPercent)
                 )
                 .frame(height: 6)
             }
@@ -95,8 +95,8 @@ struct BodyRecoveryListCard: View {
             // Relative Zeit (optional)
             if let time = relativeTime(for: group) {
                 Text(time)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(AppFont.callout)
+                    .foregroundStyle(Theme.textSecondary)
             }
         }
     }

@@ -37,17 +37,17 @@ struct BodyTabSwitch: View {
                     }
                 } label: {
                     Text(tab.rawValue)
-                        .font(.subheadline)
+                        .font(AppFont.body)
                         .fontWeight(selectedTab == tab ? .semibold : .regular)
-                        .foregroundStyle(selectedTab == tab ? .primary : .secondary)
+                        // Aktiver Tab: weißer Text auf Akzentfläche (deliberate raw .white per spec)
+                        .foregroundStyle(selectedTab == tab ? .white : Theme.textSecondary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
                         .background(
                             Group {
                                 if selectedTab == tab {
                                     Capsule()
-                                        .fill(.white)
-                                        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+                                        .fill(Theme.accent)
                                 }
                             }
                         )
@@ -56,7 +56,7 @@ struct BodyTabSwitch: View {
             }
         }
         .padding(3)
-        .background(.ultraThinMaterial, in: Capsule())
+        .background(Theme.surfaceSunken, in: Capsule())
     }
 }
 
