@@ -36,6 +36,8 @@ struct ActiveWorkoutStatus: View {
     let planTitle: String?
     var watchConnectionState: WatchConnectionState = .hidden
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     // Große Zahlen: SF Pro Rounded Bold 22, tabular (§2).
     private let metricFont = Font.system(size: 22, weight: .bold, design: .rounded)
 
@@ -103,7 +105,7 @@ struct ActiveWorkoutStatus: View {
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .animation(.easeInOut(duration: 0.24), value: sessionVolume > 0)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.24), value: sessionVolume > 0)
     }
 
     private var timerEyebrow: String? {
@@ -128,7 +130,7 @@ struct ActiveWorkoutStatus: View {
                 Capsule()
                     .fill(Theme.accent)
                     .frame(width: geo.size.width * max(0, min(1, progress)), height: 6)
-                    .animation(.easeOut(duration: 0.36), value: progress)
+                    .animation(reduceMotion ? nil : .easeOut(duration: 0.36), value: progress)
             }
         }
         .frame(height: 6)

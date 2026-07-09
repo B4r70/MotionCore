@@ -157,18 +157,23 @@ struct SummaryActivityCalendar: View {
 
 private struct CalendarDayCell: View {
     let day: ActivityDay
+    @Environment(\.colorScheme) private var scheme
 
+    // Heat-Tint scheme-aware: in Light gegen Weiß, in Dark gegen die dunkle Fläche
+    // kompositiert — dieselbe Opazität ergäbe sonst in einem der Schemata zu wenig Kontrast.
     private var backgroundColor: Color {
         switch day.workoutCount {
         case 0:  return .clear
-        case 1:  return Theme.accent.opacity(0.30)
-        case 2:  return Theme.accent.opacity(0.60)
+        case 1:  return Theme.accent.opacity(scheme == .dark ? 0.45 : 0.16)
+        case 2:  return Theme.accent.opacity(scheme == .dark ? 0.70 : 0.30)
         default: return Theme.accent
         }
     }
 
+    // WCAG-AA in beiden Schemata: heller Tint → dunkler Text, dunkler Tint/solid → weiß.
     private var textColor: Color {
-        day.workoutCount >= 2 ? Color.white : Theme.accentPress
+        if day.workoutCount >= 3 { return Color.white }
+        return scheme == .dark ? Color.white : Theme.accentPress
     }
 
     var body: some View {
