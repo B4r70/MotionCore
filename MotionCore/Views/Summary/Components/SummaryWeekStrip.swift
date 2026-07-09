@@ -56,6 +56,7 @@ private struct DayCircle: View {
     let day: ActivityDay
 
     @State private var pulsing: Bool = false
+    @Environment(\.colorScheme) private var scheme
 
     private var weekdayLetter: String {
         let formatter = DateFormatter()
@@ -64,13 +65,21 @@ private struct DayCircle: View {
         return formatter.string(from: day.date)
     }
 
+    // Heat-Tint scheme-aware (siehe CalendarDayCell): gleiche Opazität hielte sonst
+    // in einem Schema den WCAG-AA-Kontrast des Zählers nicht.
     private var fillColor: Color {
         switch day.workoutCount {
         case 0:  return Theme.surfaceSunken
-        case 1:  return Theme.accent.opacity(0.30)
-        case 2:  return Theme.accent.opacity(0.60)
+        case 1:  return Theme.accent.opacity(scheme == .dark ? 0.45 : 0.16)
+        case 2:  return Theme.accent.opacity(scheme == .dark ? 0.70 : 0.30)
         default: return Theme.accent
         }
+    }
+
+    // WCAG-AA: heller Tint → dunkler Text, dunkler Tint/solid → weiß.
+    private var countTextColor: Color {
+        if day.workoutCount >= 3 { return Color.white }
+        return scheme == .dark ? Color.white : Theme.accentPress
     }
 
     var body: some View {
@@ -100,7 +109,7 @@ private struct DayCircle: View {
                         .font(AppFont.caption)
                         .fontWeight(.bold)
                         .monospacedDigit()
-                        .foregroundStyle(day.workoutCount >= 2 ? Color.white : Theme.accentPress)
+                        .foregroundStyle(countTextColor)
                 }
             }
         }

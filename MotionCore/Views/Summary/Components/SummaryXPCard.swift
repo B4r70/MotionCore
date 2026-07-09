@@ -20,6 +20,7 @@ struct SummaryXPCard: View {
     let recentGains: [XPGain]
 
     @State private var progressVisible: Bool = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     // Rang-Farbe ist data-driven (Gamification-Palette), bleibt Color(hex:) — Einzelfall.
     private var rankColor: Color { Color(hex: xpLevel.rank.colorHex) }
@@ -37,7 +38,7 @@ struct SummaryXPCard: View {
         }
         .card()
         .task {
-            withAnimation(.easeOut(duration: 0.36).delay(0.2)) {
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.36).delay(0.2)) {
                 progressVisible = true
             }
         }

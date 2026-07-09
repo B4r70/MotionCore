@@ -282,10 +282,10 @@ struct ExerciseNameSection: View {
             TextField("z.B. Bankdrücken", text: $name)
                 .textFieldStyle(.plain)
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
         }
     }
@@ -305,10 +305,10 @@ struct ExerciseDescriptionSection: View {
                 .textFieldStyle(.plain)
                 .lineLimit(3...6)
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
         }
     }
@@ -474,10 +474,10 @@ struct ExerciseInstructionSection: View {
             }
         }
         .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                .stroke(Theme.line, lineWidth: 0.8)
         )
     }
 
@@ -491,10 +491,10 @@ struct ExerciseInstructionSection: View {
         }
         .buttonStyle(.plain)
         .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                .stroke(Theme.line, lineWidth: 0.8)
         )
         .sheet(isPresented: $showSheet) {
             ScrollView {
@@ -582,10 +582,10 @@ struct ExercisePrimaryMuscleGroupsSection: View {
                         .foregroundStyle(.secondary)
                 }
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
             }
         }
@@ -635,10 +635,10 @@ struct ExerciseSecondaryMuscleGroupsSection: View {
                         .foregroundStyle(.secondary)
                 }
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
             }
         }
@@ -690,10 +690,10 @@ struct ExerciseDetailedPrimaryMusclesSection: View {
                         .foregroundStyle(.secondary)
                 }
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
             }
         }
@@ -745,10 +745,10 @@ struct ExerciseDetailedSecondaryMusclesSection: View {
                         .foregroundStyle(.secondary)
                 }
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
             }
         }
@@ -768,10 +768,10 @@ struct ExerciseMediaAssetSection: View {
             TextField("z.B. bench_press", text: $mediaAssetName)
                 .textFieldStyle(.plain)
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.3), lineWidth: 0.8)
+                        .stroke(Theme.line, lineWidth: 0.8)
                 )
         }
     }
@@ -1024,7 +1024,7 @@ struct ExerciseCautionNoteSection: View {
                 .lineLimit(2...4)
                 .textFieldStyle(.plain)
                 .padding(12)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.surfaceSunken, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color.orange.opacity(0.3), lineWidth: 0.8)
@@ -1072,7 +1072,7 @@ struct SetRestTimeSection: View {
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(restSeconds == seconds ? Theme.accent : Color.white.opacity(0.2), lineWidth: 1)
+                                    .stroke(restSeconds == seconds ? Theme.accent : Theme.line, lineWidth: 1)
                             )
                     }
                     .foregroundStyle(restSeconds == seconds ? .blue : .primary)
@@ -1183,7 +1183,7 @@ struct SetTargetRIRSection: View {
                             )
                             .overlay(
                                 Circle()
-                                    .stroke(targetRIR == rir ? rirColorFor(rir) : Color.white.opacity(0.2), lineWidth: 2)
+                                    .stroke(targetRIR == rir ? rirColorFor(rir) : Theme.line, lineWidth: 2)
                             )
                     }
                     .foregroundStyle(targetRIR == rir ? rirColorFor(rir) : .primary)
@@ -1236,7 +1236,7 @@ struct SetKindSelectionSection: View {
                         )
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(setKind == kind ? kind.color : Color.white.opacity(0.2), lineWidth: 1)
+                                .stroke(setKind == kind ? kind.color : Theme.line, lineWidth: 1)
                         )
                     }
                     .foregroundStyle(setKind == kind ? kind.color : .primary)
