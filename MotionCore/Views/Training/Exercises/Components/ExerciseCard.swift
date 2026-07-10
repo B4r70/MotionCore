@@ -112,8 +112,8 @@ struct ExerciseCard: View {
                                     .font(.caption2)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
-                                    .background(trainingTypeColor.opacity(0.2))
-                                    .foregroundStyle(trainingTypeColor)
+                                    .background(repRangeColor(exercise.repRangeMax).opacity(0.2))
+                                    .foregroundStyle(repRangeColor(exercise.repRangeMax))
                                     .clipShape(Capsule())
                             }
                         }
@@ -162,17 +162,6 @@ struct ExerciseCard: View {
         }
     }
 
-    // Trainingstyp-Farbe basierend auf Rep-Range
-    // Schwellen behalten, nur Rückgabe-Farben → Theme-Skala
-    private var trainingTypeColor: Color {
-        switch exercise.repRangeMax {
-        case 1...3:   return Theme.danger       // Maximalstärke (hart/wenig)
-        case 4...6:   return Theme.warning      // Kraft/Power (mittel-hart)
-        case 7...12:  return Theme.series[0]    // Hypertrophie (mittel)
-        case 13...20: return Theme.success      // Ausdauer (leicht/viel)
-        default:      return Theme.series[1]    // Sehr hohe Wiederholungen
-        }
-    }
 
     // Schwierigkeitsgrad → Theme-Farbe (Schwellen behalten)
     private var difficultyColor: Color {

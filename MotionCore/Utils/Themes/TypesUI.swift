@@ -156,3 +156,41 @@ extension OutdoorActivity {
     // Ein ruhiger Ton für alle Outdoor-Aktivitäten; Unterscheidung läuft über das Symbol.
     var tint: Color { Theme.success }
 }
+
+// MARK: - Trend-Richtung → Farbe (zentral; ersetzt pillColor/deltaColor-Duplikate)
+
+extension TrendDirection {
+    /// up = success, down = danger, stabil/unbekannt = neutral.
+    var trendColor: Color {
+        switch self {
+        case .up:               return Theme.success
+        case .down:             return Theme.danger
+        case .stable, .unknown: return Theme.textSecondary
+        }
+    }
+}
+
+// MARK: - RIR (Reps in Reserve) → Effort-Farbe (kanonisch, monoton)
+
+/// RIR 0/1 = am/nahe Muskelversagen → danger, 2 → warning, 3+ = leicht → success.
+/// Eine Quelle für SetConfigurationSheet, TemplateSetCard und den RIR-Picker.
+func rirColor(_ rir: Int) -> Color {
+    switch rir {
+    case 0, 1: return Theme.danger
+    case 2:    return Theme.warning
+    default:   return Theme.success
+    }
+}
+
+// MARK: - Wiederholungsbereich (repRangeMax) → Trainingstyp-Farbe
+
+/// 1–3 Maximalstärke · 4–6 Kraft · 7–12 Hypertrophie · 13–20 Ausdauer · 20+ Kraftausdauer.
+func repRangeColor(_ repRangeMax: Int) -> Color {
+    switch repRangeMax {
+    case 1...3:   return Theme.danger
+    case 4...6:   return Theme.warning
+    case 7...12:  return Theme.series[0]
+    case 13...20: return Theme.success
+    default:      return Theme.series[1]
+    }
+}

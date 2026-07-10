@@ -73,16 +73,6 @@ struct SummaryMuscleRingsCard: View {
             }
         }
     }
-
-    // MARK: - Erholungs-Farbe (eine Leitfarbe je Erholungsstufe)
-
-    private func recoveryTint(_ percent: Double) -> Color {
-        switch percent {
-        case 85...:   return Theme.success
-        case 50..<85: return Theme.warning
-        default:      return Theme.danger
-        }
-    }
 }
 
 // MARK: - Preview

@@ -40,6 +40,11 @@ enum Theme {
     static let accentSoft  = Color("accentSoft")          // weiche Fläche
     static var accentWash: Color { accent.opacity(0.08) } // 7–13 % Tönung
 
+    /// Akzent im Dark Mode aufgehellt (accentHover), sonst Standard-accent.
+    static func accentAdaptive(_ scheme: ColorScheme) -> Color {
+        scheme == .dark ? accentHover : accent
+    }
+
     // Status / Domäne
     static let success = Color("success")   // Erfolg · Erholung · Body
     static let warning = Color("warning")   // Streak · Rekorde · Kalorien (Amber)

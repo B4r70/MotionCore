@@ -891,8 +891,8 @@ private struct SetPreviewRow: View {
                 .font(.caption2)
                 .padding(.horizontal, 6)
                 .padding(.vertical, 2)
-                .background(rirColor.opacity(0.2))
-                .foregroundStyle(rirColor)
+                .background(rirColor(targetRIR).opacity(0.2))
+                .foregroundStyle(rirColor(targetRIR))
                 .clipShape(Capsule())
         }
         .padding(.vertical, 8)
@@ -903,16 +903,6 @@ private struct SetPreviewRow: View {
         )
     }
 
-    // RIR-Effort-Skala: niedrig=hart → danger, mittel → warning, leicht/hoch → success
-    private var rirColor: Color {
-        switch targetRIR {
-        case 0:    return Theme.danger
-        case 1:    return Theme.danger
-        case 2:    return Theme.warning
-        case 3:    return Theme.success
-        default:   return Theme.success
-        }
-    }
 }
 
 private extension Double {
