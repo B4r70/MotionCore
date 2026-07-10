@@ -905,15 +905,6 @@ struct ExerciseRepRangeSection: View {
         }
     }
 
-    private var trainingTypeColor: Color {
-        switch repRangeMax {
-        case 1...3: return Color.red
-        case 4...6: return Color.orange
-        case 7...12: return .blue
-        case 13...20: return Color.green
-        default: return .teal
-        }
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -929,8 +920,8 @@ struct ExerciseRepRangeSection: View {
                     .font(.caption.bold())
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
-                    .background(trainingTypeColor.opacity(0.2))
-                    .foregroundStyle(trainingTypeColor)
+                    .background(repRangeColor(repRangeMax).opacity(0.2))
+                    .foregroundStyle(repRangeColor(repRangeMax))
                     .clipShape(Capsule())
             }
 
@@ -1136,16 +1127,6 @@ struct SetTargetRIRSection: View {
         }
     }
 
-    private var rirColor: Color {
-        switch targetRIR {
-            case 0: return Color.red
-            case 1: return Color.orange
-            case 2: return Color.yellow
-            case 3: return Color.green
-            default: return Theme.accent
-        }
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -1159,8 +1140,8 @@ struct SetTargetRIRSection: View {
                     .font(.caption)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
-                    .background(rirColor.opacity(0.2))
-                    .foregroundStyle(rirColor)
+                    .background(rirColor(targetRIR).opacity(0.2))
+                    .foregroundStyle(rirColor(targetRIR))
                     .clipShape(Capsule())
             }
 
@@ -1179,29 +1160,20 @@ struct SetTargetRIRSection: View {
                             .frame(width: 44, height: 44)
                             .background(
                                 Circle()
-                                    .fill(targetRIR == rir ? rirColorFor(rir).opacity(0.2) : Color.clear)
+                                    .fill(targetRIR == rir ? rirColor(rir).opacity(0.2) : Color.clear)
                             )
                             .overlay(
                                 Circle()
-                                    .stroke(targetRIR == rir ? rirColorFor(rir) : Theme.line, lineWidth: 2)
+                                    .stroke(targetRIR == rir ? rirColor(rir) : Theme.line, lineWidth: 2)
                             )
                     }
-                    .foregroundStyle(targetRIR == rir ? rirColorFor(rir) : .primary)
+                    .foregroundStyle(targetRIR == rir ? rirColor(rir) : .primary)
                 }
             }
             .frame(maxWidth: .infinity)
         }
     }
 
-    private func rirColorFor(_ rir: Int) -> Color {
-        switch rir {
-        case 0: return Color.red
-        case 1: return Color.orange
-        case 2: return Color.yellow
-        case 3: return Color.green
-        default: return .blue
-        }
-    }
 }
 
 // MARK: - Set Kind Selection Section

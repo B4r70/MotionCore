@@ -38,7 +38,7 @@ struct SecondaryButtonStyle: ButtonStyle {
         var body: some View {
             configuration.label
                 .font(AppFont.headline)
-                .foregroundStyle(scheme == .dark ? Theme.accentHover : Theme.accent)
+                .foregroundStyle(Theme.accentAdaptive(scheme))
                 .frame(maxWidth: .infinity, minHeight: 44)
                 .padding(.horizontal, Space.s4)
                 .background(Theme.accentSoft, in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
@@ -62,7 +62,7 @@ struct GhostButtonStyle: ButtonStyle {
         var body: some View {
             configuration.label
                 .font(AppFont.headline)
-                .foregroundStyle(scheme == .dark ? Theme.accentHover : Theme.accent)
+                .foregroundStyle(Theme.accentAdaptive(scheme))
                 .frame(minHeight: 44)
                 .padding(.horizontal, Space.s4)
                 .background(

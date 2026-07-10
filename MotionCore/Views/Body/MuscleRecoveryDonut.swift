@@ -15,8 +15,7 @@ import SwiftUI
 // MARK: - recoveryTint
 
 /// Theme-Token-Erholungsfarbe: grün (≥85 %), amber (≥50 %), rot (<50 %).
-/// Liegt in dieser Datei zur Wahrung des Datei-Scopes; idealerweise neben
-/// `recoveryColor` in MuscleRecoveryUI.swift.
+/// Modulweit sichtbar — genutzt von Donut, Detail-View, RecoveryList und Summary-Rings.
 func recoveryTint(_ p: Double) -> Color {
     if p >= 85 { return Theme.success }
     if p >= 50 { return Theme.warning }

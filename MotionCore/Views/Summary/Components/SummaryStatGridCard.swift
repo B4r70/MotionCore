@@ -93,7 +93,7 @@ private struct SparkStatCard: View {
                     Text(formattedDelta(t))
                         .font(AppFont.caption)
                         .monospacedDigit()
-                        .foregroundStyle(deltaColor(t))
+                        .foregroundStyle(t.trend.trendColor)
                 }
             }
 
@@ -127,14 +127,6 @@ private struct SparkStatCard: View {
         }
     }
 
-    private func deltaColor(_ trend: TrendComparison) -> Color {
-        switch trend.trend {
-        case .up:      return Theme.success
-        case .down:    return Theme.danger
-        case .stable:  return Theme.textSecondary
-        case .unknown: return Theme.textSecondary
-        }
-    }
 }
 
 // MARK: - Preview

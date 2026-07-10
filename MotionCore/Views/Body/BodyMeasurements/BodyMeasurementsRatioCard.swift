@@ -83,20 +83,13 @@ private struct RatioDeltaPill: View {
             let sign = delta >= 0 ? "+" : ""
             Text("\(sign)\(String(format: "%.2f", delta))")
                 .font(AppFont.caption.weight(.semibold))
-                .foregroundStyle(pillColor)
+                .foregroundStyle(trend.direction.trendColor)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
                 .background(Theme.surfaceSunken, in: Capsule())
         }
     }
 
-    private var pillColor: Color {
-        switch trend.direction {
-        case .up:               return Theme.success
-        case .down:             return Theme.danger
-        case .stable, .unknown: return Theme.textSecondary
-        }
-    }
 }
 
 // MARK: - Preview

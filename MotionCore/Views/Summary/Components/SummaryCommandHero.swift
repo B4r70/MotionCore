@@ -31,7 +31,7 @@ struct SummaryCommandHero: View {
 
     // Akzent-Füllung des Tagesform-Rings: in Dark accentHover (Kontrast der
     // Ring-Füllung gegen den surfaceSunken-Track, DESIGN.md §11).
-    private var ringTint: Color { colorScheme == .dark ? Theme.accentHover : Theme.accent }
+    private var ringTint: Color { Theme.accentAdaptive(colorScheme) }
 
     // MARK: Body
 

@@ -191,8 +191,8 @@ struct TemplateSetCard<Trailing: View>: View {
                                 .font(.caption.bold())
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(rirColor(for: firstWork.targetRIR).opacity(0.2))
-                                .foregroundStyle(rirColor(for: firstWork.targetRIR))
+                                .background(rirColor(firstWork.targetRIR).opacity(0.2))
+                                .foregroundStyle(rirColor(firstWork.targetRIR))
                                 .clipShape(Capsule())
                         }
                     }
@@ -261,16 +261,6 @@ struct TemplateSetCard<Trailing: View>: View {
         }
     }
 
-    private func rirColor(for rir: Int) -> Color {
-        // RIR-Effort-Skala: niedrig=hart→danger, mittel→warning/series[3], hoch=leicht→success
-        switch rir {
-        case 0: return Theme.danger
-        case 1: return Theme.warning
-        case 2: return Theme.series[3]
-        case 3: return Theme.success
-        default: return Theme.success
-        }
-    }
 }
 
 // Convenience init für normalen Gebrauch ohne trailing
