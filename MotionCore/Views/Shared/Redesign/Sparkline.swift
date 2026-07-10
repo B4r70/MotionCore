@@ -16,6 +16,8 @@ import SwiftUI
 
 /// Minimalistische Trend-Linie, einfarbig (kein Verlauf). Optionale weiche
 /// Flächentönung unter der Linie. Löst `MCSparkline` ab.
+/// Die Größe bestimmt der Aufrufer per `.frame(...)` — die Komponente pinnt
+/// keine eigene Breite/Höhe (füllt den angebotenen Raum).
 struct Sparkline: View {
     let data: [Double]
     var color: Color = Theme.accent
@@ -57,7 +59,6 @@ struct Sparkline: View {
                     ctx.fill(fillPath, with: .color(color.opacity(0.12)))
                 }
             }
-            .frame(width: 70, height: 24)
         }
     }
 }

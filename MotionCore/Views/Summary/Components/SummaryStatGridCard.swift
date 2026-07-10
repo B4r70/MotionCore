@@ -110,9 +110,6 @@ private struct SparkStatCard: View {
                 .font(AppFont.caption)
                 .foregroundStyle(Theme.textSecondary)
                 .lineLimit(1)
-
-            // Sparkline-Slot (leer bis 7-Tage-Series verfügbar — Logik außerhalb AP 2)
-            Sparkline(data: [], color: tint)
         }
         .card(padding: Space.s3)
     }
