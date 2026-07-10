@@ -225,3 +225,21 @@ Do not add generic notes from unrelated projects.
 - Root Cause: Predicate deckt nur den „Running"-State ab, nicht den „Idle"-State. Button ist in 3 von 4 States enabled.
 - Rule: **Disabled-Prädikate positiv formulieren (wann DARF getappt werden), nicht negativ (wann nicht).** `canComplete = isPaused || isFinished` ist klarer und sicherer als das Gegenteil aufzuzählen.
 - Applies To: `ActiveTimeSetContent.swift`
+
+### Stale-Branch-Integration — erst Patch-Identität prüfen (`git cherry`)
+
+- Added: 2026-07-10
+- Trigger: alten/„offenen" Branch integrieren oder aufräumen wollen
+- Symptom: Branch sieht nach wertvoller unmergter Arbeit aus (Feature/Fixes), obwohl der Inhalt längst in `main` ist — Merge würde nur überholte Alt-Reste einschleppen
+- Root Cause: In diesem Repo wird stacked gearbeitet — Arbeit wird auf dem neueren `main` **re-implementiert** statt alte Branches zu mergen. Datei-Existenz allein beweist nichts.
+- Rule: Vor Integration/Löschung **`git cherry -v main <branch>`** (`-` = schon in main, `+` = fehlt wirklich); leerer `git cherry-pick` = Inhalt bereits drin. Bei echten „+"-Commits trotzdem Hunk-für-Hunk gegen `main` gegenchecken. **Nach Cross-File-Refactors immer Residue-Grep** über entfernte Symbolnamen (fing einen übersehenen `private var rirColor` in FormViewSection).
+- Applies To: git-Workflow, Branch-Cleanup, Refactorings
+
+### Farb-Mappings zentral, keine per-View-Kopien
+
+- Added: 2026-07-10
+- Trigger: `switch`-Ausdruck der einen Wert (RIR, Rep-Range, Trend, Recovery, Scheme) auf eine `Color` abbildet
+- Symptom: derselbe Wert zeigt je Screen eine andere Farbe; Palette-Änderung muss an N Stellen nachgezogen werden; rohe `Color.red/.blue` neben `Theme.*`
+- Root Cause: jede View schreibt ihr eigenes `private var xColor`/`func xColor(_:)` — divergiert mit der Zeit
+- Rule: Farb-Mappings **einmal zentral** ablegen und überall wiederverwenden: `rirColor(_:)`, `repRangeColor(_:)`, `TrendDirection.trendColor` in `Utils/Themes/TypesUI.swift`; scheme-adaptiver Akzent `Theme.accentAdaptive(_:)` in `Theme.swift`. Kanonische RIR-Rampe: 0,1→danger, 2→warning, 3+→success. Immer `Theme.*`-Tokens, nie System-`Color.red/.blue`.
+- Applies To: `Utils/Themes/TypesUI.swift`, `Views/Shared/Redesign/Theme.swift`, alle Farb-Pills/Chips/Ringe
