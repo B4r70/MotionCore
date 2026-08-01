@@ -5,6 +5,7 @@
 // Datei . . . . : LiveActivityCtrl.swift                                           /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 22.05.2026                                                       /
+// Geändert am . : 01.08.2026                                                       /
 // Beschreibung  : Kapselt das Live-Activity-Management für aktive Trainings.       /
 //                 Subscribed auf SetManager.setCompleted für debounced Sync.       /
 // ---------------------------------------------------------------------------------/
@@ -32,6 +33,7 @@ final class LiveActivityCtrl {
 
     @ObservationIgnored private var cancellables = Set<AnyCancellable>()
     @ObservationIgnored private var syncDebounceTask: Task<Void, Never>?
+    @ObservationIgnored private var isStartingActivity = false
 
     @ObservationIgnored private var session: StrengthSession?
     private weak var sessionManager: ActiveSessionManager?
@@ -71,10 +73,19 @@ final class LiveActivityCtrl {
     func start() {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
 
+        // Re-Entrancy-Guard: ensureSingleActivity hat Suspension-Points — ohne Guard
+        // erzeugen zwei schnelle start()-Aufrufe zwei Activities (Insel fällt dann
+        // auf die Minimal-Darstellung ohne Timer zurück)
+        guard !isStartingActivity else { return }
+        isStartingActivity = true
+
         Task { @MainActor [weak self] in
             guard let self else { return }
+            defer { self.isStartingActivity = false }
+
             let attached = await self.ensureSingleActivity()
             if attached { return }
+            guard self.currentActivity == nil else { return }
 
             guard let session = self.session,
                   let sessionManager = self.sessionManager else { return }
@@ -141,16 +152,14 @@ final class LiveActivityCtrl {
     // MARK: - Reattach nach App-Start
 
     func reattachIfNeeded() {
-        guard currentActivity == nil, let session else { return }
-        let mySessionID = session.sessionUUID.uuidString
+        guard currentActivity == nil, session != nil else { return }
 
+        // ensureSingleActivity statt reinem first(where:)-Match: räumt dabei auch
+        // Duplikate und verwaiste Activities anderer Sessions auf, die sonst
+        // dauerhaft eingefroren in der Dynamic Island stehen bleiben
         Task { @MainActor [weak self] in
             guard let self else { return }
-            let activities = Activity<WorkoutActivityAttributes>.activities
-            if let existing = activities.first(where: { $0.attributes.sessionID == mySessionID }) {
-                self.currentActivity = existing
-                self.update()
-            }
+            _ = await self.ensureSingleActivity()
         }
     }
 

@@ -5,7 +5,7 @@
 // Datei . . . . : MotionCoreWidgetsLiveActivity.swift                              /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 02.01.2026                                                       /
-// Geändert am . : 14.03.2026                                                       /
+// Geändert am . : 01.08.2026                                                       /
 // Beschreibung  : Live Activity UI für Dynamic Island und Sperrbildschirm          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
@@ -18,6 +18,8 @@
 // - Erweiterte Ansicht: Angepasste Farben passend zur kompakten Ansicht            /
 // - Fix: Text(timerInterval:countsDown:) mit festen Ankern statt                   /
 //   Text(date, style: .timer) – kompatibel mit iOS 18.4+ Beta                      /
+// - Fix: Expanded Leading nutzt belowIfTooWide – lange Übungsnamen wurden          /
+//   von der Eckrundung der Dynamic Island abgeschnitten                            /
 // ---------------------------------------------------------------------------------/
 //
 import ActivityKit
@@ -41,8 +43,8 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                         Text(context.state.currentExercise ?? "Training")
                             .font(.caption.bold())
                             .foregroundStyle(.primary)
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.9)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
 
                         if let set = context.state.currentSet {
                             Text(set)
@@ -50,6 +52,9 @@ struct MotionCoreWidgetsLiveActivity: Widget {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    // Lange Übungsnamen unter den Sensor-Cutout verschieben statt
+                    // in die Eckrundung der Insel zu laufen (Clipping am linken Rand)
+                    .dynamicIsland(verticalPlacement: .belowIfTooWide)
                 }
 
                 DynamicIslandExpandedRegion(.trailing) {
