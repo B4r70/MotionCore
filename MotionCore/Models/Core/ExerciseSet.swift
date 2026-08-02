@@ -67,6 +67,31 @@ final class ExerciseSet {
     /// True für zeitbasierte Sätze (z. B. Rudern 5 Min) — schließt Volumen-Berechnung aus
     var isTimeBased: Bool { trackingMode == .time }
 
+    // MARK: - Pace-Erfassung (nur Time-Sätze)
+
+    /// True = nach Abschluss der Übung erscheint das Pace-Sheet (Config pro Übung)
+    var paceTrackingEnabled: Bool = false
+
+    /// Persistierter Rohwert der Pace-Einheit — Default min/500m (Ruderergometer)
+    var paceUnitRaw: String = "minPer500m"
+
+    /// Erfasster Ist-Pace: Sekunden pro Einheit (min/500m, min/km) bzw. km/h. 0 = nicht erfasst.
+    var paceValue: Double = 0
+
+    /// Typisierte Pace-Einheit
+    var paceUnit: SetPaceUnit {
+        get { SetPaceUnit(rawValue: paceUnitRaw) ?? .minPer500m }
+        set { paceUnitRaw = newValue.rawValue }
+    }
+
+    /// True wenn ein Pace-Wert erfasst wurde
+    var hasPaceRecorded: Bool { paceValue > 0 }
+
+    /// Formatierter Pace für die Anzeige (nil wenn nicht erfasst)
+    var formattedPace: String? {
+        hasPaceRecorded ? paceUnit.format(paceValue) : nil
+    }
+
     // MARK: - Set-Status
 
     var setKindRaw: String = "work"              // Satztyp (work/warmup/drop/amrap)
@@ -195,6 +220,9 @@ final class ExerciseSet {
         restSeconds: Int = 90,
         setKind: SetKind = .work,
         trackingMode: SetTrackingMode = .weight,
+        paceTrackingEnabled: Bool = false,
+        paceUnitRaw: String = SetPaceUnit.minPer500m.rawValue,
+        paceValue: Double = 0,
         isCompleted: Bool = false,
         rpe: Int = 0,
         notes: String = "",
@@ -221,6 +249,9 @@ final class ExerciseSet {
         self.restSeconds = restSeconds
         self.setKindRaw = setKind.rawValue
         self.trackingModeRaw = trackingMode.rawValue
+        self.paceTrackingEnabled = paceTrackingEnabled
+        self.paceUnitRaw = paceUnitRaw
+        self.paceValue = paceValue
         self.isCompleted = isCompleted
         self.rpe = rpe
         self.notes = notes
@@ -258,6 +289,9 @@ extension ExerciseSet {
             restSeconds: restSeconds,
             setKind: setKind,
             trackingMode: trackingMode,  // Tracking-Modus für Plan-Bearbeitung erhalten
+            paceTrackingEnabled: paceTrackingEnabled,
+            paceUnitRaw: paceUnitRaw,
+            paceValue: paceValue,
             isCompleted: isCompleted,
             rpe: rpe,
             notes: notes,
@@ -315,6 +349,9 @@ extension ExerciseSet {
             restSeconds: restSeconds,
             setKind: setKind,
             trackingMode: trackingMode,  // Tracking-Modus aus Template übernehmen
+            paceTrackingEnabled: paceTrackingEnabled,  // Pace-Config aus Template übernehmen
+            paceUnitRaw: paceUnitRaw,
+            paceValue: 0,                // Ist-Pace wird pro Session neu erfasst
             isCompleted: false,          // sinnvoll: neue Sets sind erstmal nicht abgeschlossen
             rpe: 0,                      // neutral starten
             notes: notes,                // optional: kannst du auch "" setzen

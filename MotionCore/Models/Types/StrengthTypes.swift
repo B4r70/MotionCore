@@ -29,6 +29,57 @@ enum SetTrackingMode: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Pace-Einheit für zeitbasierte Sätze
+
+enum SetPaceUnit: String, Codable, CaseIterable, Identifiable {
+    case minPer500m = "minPer500m"  // Ruderergometer: mm:ss pro 500 m
+    case minPerKm   = "minPerKm"    // Laufband/Laufen: mm:ss pro km
+    case kmh        = "kmh"         // Cross-Trainer/Rad: km/h
+
+    var id: String { rawValue }
+
+    /// Deutsches Anzeigelabel
+    var description: String {
+        switch self {
+        case .minPer500m: return "min / 500 m"
+        case .minPerKm:   return "min / km"
+        case .kmh:        return "km/h"
+        }
+    }
+
+    /// True für Einheiten, deren Wert als Sekunden gespeichert wird (mm:ss-Eingabe)
+    var isTimePerDistance: Bool {
+        self != .kmh
+    }
+
+    /// Sinnvoller Startwert für die Eingabe, wenn noch kein Pace erfasst wurde
+    var defaultValue: Double {
+        switch self {
+        case .minPer500m: return 150   // 2:30 / 500 m
+        case .minPerKm:   return 360   // 6:00 / km
+        case .kmh:        return 8.0
+        }
+    }
+
+    /// Formatiert einen gespeicherten Pace-Wert (Sekunden bzw. km/h) für die Anzeige
+    func format(_ value: Double) -> String {
+        guard value > 0 else { return "–" }
+        switch self {
+        case .minPer500m:
+            return "\(Self.formatSeconds(value)) /500 m"
+        case .minPerKm:
+            return "\(Self.formatSeconds(value)) /km"
+        case .kmh:
+            return String(format: "%.1f km/h", value)
+        }
+    }
+
+    private static func formatSeconds(_ value: Double) -> String {
+        let total = Int(value.rounded())
+        return String(format: "%d:%02d", total / 60, total % 60)
+    }
+}
+
 // MARK: - Subjektive Qualitätsbewertung pro Übung
 
 enum ExerciseQualityRating: String, Codable, CaseIterable, Identifiable {

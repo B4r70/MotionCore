@@ -126,6 +126,10 @@ struct SupabaseExerciseSetDTO: Encodable {
     let rpeRecorded: Bool
     /// Tracking-Modus des Satzes ("weight" oder "time") — immer gesetzt, UPSERT-idempotent
     let trackingMode: String
+    /// Pace-Erfassung (Time-Sätze): Config-Flag, Einheit und Ist-Wert — immer gesetzt, UPSERT-idempotent
+    let paceTrackingEnabled: Bool
+    let paceUnit: String
+    let paceValue: Double
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -155,6 +159,9 @@ struct SupabaseExerciseSetDTO: Encodable {
         case isLastSetOfExercise    = "is_last_set_of_exercise"
         case rpeRecorded            = "rpe_recorded"
         case trackingMode           = "tracking_mode"
+        case paceTrackingEnabled    = "pace_tracking_enabled"
+        case paceUnit               = "pace_unit"
+        case paceValue              = "pace_value"
     }
 }
 

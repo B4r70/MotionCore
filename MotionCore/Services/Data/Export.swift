@@ -270,6 +270,10 @@ struct ExerciseSetExportItem: Codable {
     let isWarmup: Bool? // Alt: wird zu setKind gemappt
     // Tracking-Modus: nil = "weight" (rückwärtskompatibel), "time" = zeitbasiert
     let trackingMode: String?
+    // Pace-Erfassung: alle nil = Feature nicht genutzt (rückwärtskompatibel)
+    let paceTrackingEnabled: Bool?
+    let paceUnit: String?
+    let paceValue: Double?
 }
 
 // MARK: Mapper
@@ -301,7 +305,11 @@ extension ExerciseSet {
             exerciseId: nil,
             isWarmup: nil,
             // Weight ist der Standard — kompakter Export (nil = .weight)
-            trackingMode: trackingMode == .time ? trackingMode.rawValue : nil
+            trackingMode: trackingMode == .time ? trackingMode.rawValue : nil,
+            // Pace nur exportieren wenn genutzt — kompakter Export
+            paceTrackingEnabled: paceTrackingEnabled ? true : nil,
+            paceUnit: (paceTrackingEnabled || paceValue > 0) ? paceUnitRaw : nil,
+            paceValue: paceValue > 0 ? paceValue : nil
         )
     }
 
@@ -323,7 +331,7 @@ extension ExerciseSet {
         // Tracking-Modus: nil im Export bedeutet .weight (Rückwärtskompatibilität)
         let resolvedTrackingMode = e.trackingMode.flatMap { SetTrackingMode(rawValue: $0) } ?? .weight
 
-        return ExerciseSet(
+        let set = ExerciseSet(
             exerciseName: e.exerciseName,
             exerciseNameSnapshot: e.exerciseNameSnapshot ?? e.exerciseName,
             exerciseUUIDSnapshot: resolvedUUID,
@@ -346,6 +354,13 @@ extension ExerciseSet {
             targetRIR: e.targetRIR ?? 2,
             groupId: e.groupId ?? ""
         )
+
+        // Pace-Felder: nil in alten Exporten → Defaults (Feature nicht genutzt)
+        set.paceTrackingEnabled = e.paceTrackingEnabled ?? false
+        if let unit = e.paceUnit { set.paceUnitRaw = unit }
+        set.paceValue = e.paceValue ?? 0
+
+        return set
     }
 }
 

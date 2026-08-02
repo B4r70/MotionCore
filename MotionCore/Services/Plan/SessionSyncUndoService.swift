@@ -60,7 +60,9 @@ struct SessionSyncUndoService {
                     groupId: set.groupId,
                     supersetGroupId: set.supersetGroupId,
                     trackingMode: set.trackingMode,
-                    duration: set.duration
+                    duration: set.duration,
+                    paceTrackingEnabled: set.paceTrackingEnabled,
+                    paceUnitRaw: set.paceUnitRaw
                 )
             }
 
@@ -126,6 +128,8 @@ struct SessionSyncUndoService {
                 restSeconds: snapshot.restSeconds,
                 setKind: snapshot.setKind,
                 trackingMode: snapshot.trackingMode,
+                paceTrackingEnabled: snapshot.paceTrackingEnabled ?? false,
+                paceUnitRaw: snapshot.paceUnitRaw ?? SetPaceUnit.minPer500m.rawValue,
                 isCompleted: false,
                 targetRepsMin: snapshot.targetRepsMin,
                 targetRepsMax: snapshot.targetRepsMax,

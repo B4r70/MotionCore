@@ -60,6 +60,7 @@ struct ActiveWorkoutView: View {
     @State private var showCancelHealthAlert = false
     @State private var rirSheetSet: ExerciseSet? = nil
     @State private var rirRetroSet: ExerciseSet? = nil
+    @State private var paceEntrySet: ExerciseSet? = nil
 
     /// Merkt sich ob der Übungs-Countdown vor einer Session-Pause lief,
     /// damit er beim Resume nur dann fortgesetzt wird, wenn er nicht manuell pausiert war.
@@ -256,6 +257,9 @@ struct ActiveWorkoutView: View {
             .onReceive(setManager.rirSheetShouldShow) { set in
                 rirSheetSet = set
             }
+            .onReceive(setManager.paceSheetShouldShow) { set in
+                paceEntrySet = set
+            }
             .onReceive(setManager.prDetected) { set, name, oneRM in
                 prSetIDs.insert(set.persistentModelID)
                 prBannerExercise = name
@@ -397,6 +401,17 @@ struct ActiveWorkoutView: View {
                     if rir == 4 { set.rpe = 6 } else { set.rpe = 10 - rir }
                     set.rpeRecorded = true
                     Task { @MainActor in try? context.save() }
+                },
+                onSkip: {}
+            )
+        }
+        .sheet(item: $paceEntrySet) { set in
+            PaceEntrySheet(
+                exerciseName: set.exerciseNameSnapshot.isEmpty ? set.exerciseName : set.exerciseNameSnapshot,
+                unit: set.paceUnit,
+                initialValue: set.paceValue,
+                onSave: { value in
+                    applyPace(value, toExerciseGroup: set.groupKey, unitRaw: set.paceUnitRaw)
                 },
                 onSkip: {}
             )
@@ -618,6 +633,19 @@ struct ActiveWorkoutView: View {
         exerciseNav.handleDeleted(groupKey: groupKey)
         exerciseToDelete = nil
         showDeleteAlert = false
+    }
+
+    /// Schreibt den erfassten Pace auf alle abgeschlossenen Time-Sätze der Übung.
+    /// Ein Wert pro Übung — das Sheet erscheint einmal nach dem letzten Satz.
+    private func applyPace(_ value: Double, toExerciseGroup groupKey: String, unitRaw: String) {
+        let timeSets = session.safeExerciseSets.filter {
+            $0.groupKey == groupKey && $0.isTimeBased && $0.isCompleted
+        }
+        for set in timeSets {
+            set.paceValue = value
+            set.paceUnitRaw = unitRaw
+        }
+        Task { @MainActor in try? context.save() }
     }
 
     private func rateExercise(groupKey: String, rating: ExerciseQualityRating) {

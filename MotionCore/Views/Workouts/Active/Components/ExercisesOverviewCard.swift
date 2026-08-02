@@ -507,8 +507,11 @@ private struct ExerciseOverviewExpandedDetail: View {
     }
 
     private func formatSetValue(_ set: ExerciseSet) -> String {
-        // Zeitbasierte Sätze: Dauer in mm:ss statt Gewicht × Wiederholungen
+        // Zeitbasierte Sätze: Dauer in mm:ss statt Gewicht × Wiederholungen (+ Pace falls erfasst)
         if set.isTimeBased {
+            if let pace = set.formattedPace {
+                return "\(formatDuration(set.duration)) · \(pace)"
+            }
             return formatDuration(set.duration)
         }
         let weightStr: String

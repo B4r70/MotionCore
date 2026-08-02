@@ -484,10 +484,18 @@ struct StrengthDetailView: View {
 
                         Spacer()
 
-                        // Gewicht × Reps (Weight) oder Ist-Zeit (Time)
+                        // Gewicht × Reps (Weight) oder Ist-Zeit + Pace (Time)
                         if set.isTimeBased {
-                            Text(formatSetDuration(set.duration))
-                                .font(.subheadline.bold())
+                            HStack(spacing: 4) {
+                                Text(formatSetDuration(set.duration))
+                                    .font(.subheadline.bold())
+
+                                if let pace = set.formattedPace {
+                                    Text("· \(pace)")
+                                        .font(.caption)
+                                        .foregroundStyle(Theme.textSecondary)
+                                }
+                            }
                         } else {
                             HStack(spacing: 4) {
                                 if set.weight > 0 {

@@ -93,6 +93,8 @@ struct SetConfigurationSheet: View {
     @State private var trackingMode: SetTrackingMode = .weight
     @State private var durationSeconds: Int = 300
     @State private var paceNote: String = ""
+    @State private var capturePace: Bool = false
+    @State private var paceUnit: SetPaceUnit = .minPer500m
 
     @State private var incrementTimer: Timer?
 
@@ -114,6 +116,8 @@ struct SetConfigurationSheet: View {
             _trackingMode = State(initialValue: .weight)
             _durationSeconds = State(initialValue: 300)
             _paceNote = State(initialValue: "")
+            _capturePace = State(initialValue: false)
+            _paceUnit = State(initialValue: .minPer500m)
             return
         }
 
@@ -148,6 +152,10 @@ struct SetConfigurationSheet: View {
 
         // Pace-Notiz aus erstem zeitbasierten Work-Set
         _paceNote = State(initialValue: firstTimeWork?.notes ?? "")
+
+        // Pace-Erfassung (Toggle + Einheit) aus erstem zeitbasierten Work-Set
+        _capturePace = State(initialValue: firstTimeWork?.paceTrackingEnabled ?? false)
+        _paceUnit = State(initialValue: firstTimeWork?.paceUnit ?? .minPer500m)
     }
 
     // MARK: - Body
@@ -475,6 +483,36 @@ struct SetConfigurationSheet: View {
                                 .stroke(Theme.line, lineWidth: 1)
                         )
                 }
+
+                Divider()
+
+                // Pace-Erfassung: Sheet nach Übungsabschluss (pro Übung konfigurierbar)
+                Toggle(isOn: $capturePace) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Pace nach der Übung erfassen")
+                            .font(.headline)
+                            .foregroundStyle(Theme.textPrimary)
+                        Text("Nach dem letzten Satz erscheint ein Sheet zur Pace-Eingabe")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecondary)
+                    }
+                }
+                .tint(Theme.accent)
+
+                if capturePace {
+                    HStack {
+                        Text("Einheit")
+                            .foregroundStyle(Theme.textSecondary)
+                        Spacer()
+                        Picker("", selection: $paceUnit) {
+                            ForEach(SetPaceUnit.allCases) { unit in
+                                Text(unit.description).tag(unit)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(width: 230)
+                    }
+                }
             }
 
             Divider()
@@ -653,6 +691,8 @@ struct SetConfigurationSheet: View {
                 set.restSeconds = restSeconds
                 set.trackingMode = .time
                 set.notes = paceNote
+                set.paceTrackingEnabled = capturePace
+                set.paceUnit = paceUnit
                 sets.append(set)
                 setNumber += 1
             }

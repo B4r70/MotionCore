@@ -65,7 +65,9 @@ struct SessionPlanSyncCalcEngine {
                         groupId: set.groupId,
                         supersetGroupId: set.supersetGroupId,
                         trackingMode: set.trackingMode,
-                        duration: set.duration
+                        duration: set.duration,
+                        paceTrackingEnabled: set.paceTrackingEnabled,
+                        paceUnitRaw: set.paceUnitRaw
                     )
                 }
 
