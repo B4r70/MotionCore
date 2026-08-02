@@ -55,7 +55,7 @@ struct PaceEntrySheet: View {
                 speedPickerRow
             }
 
-            // Speichern
+            // Speichern — 0:00 nicht erlaubt (0 = Sentinel für „nicht erfasst")
             Button {
                 haptic.impactOccurred()
                 onSave(currentValue)
@@ -64,6 +64,7 @@ struct PaceEntrySheet: View {
                 Label("Speichern", systemImage: "checkmark")
             }
             .buttonStyle(.mcPrimary)
+            .disabled(currentValue <= 0)
 
             // Skip-Link (analog RIRInputSheet)
             Button("Ohne Pace fortfahren") {
@@ -145,8 +146,9 @@ struct PaceEntrySheet: View {
     private func bootstrapFromInitialValue() {
         let value = initialValue > 0 ? initialValue : unit.defaultValue
         if unit.isTimePerDistance {
-            let total = Int(value.rounded())
-            minutes = min(total / 60, 20)
+            // Auf Wheel-Bereich clampen (max 20:59), sonst zeigt der Picker inkonsistente Werte
+            let total = min(Int(value.rounded()), 20 * 60 + 59)
+            minutes = total / 60
             seconds = total % 60
         } else {
             // Auf 0.5er-Raster runden, damit der Wheel-Tag matcht

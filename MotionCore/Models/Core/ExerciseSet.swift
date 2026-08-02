@@ -291,7 +291,7 @@ extension ExerciseSet {
             trackingMode: trackingMode,  // Tracking-Modus für Plan-Bearbeitung erhalten
             paceTrackingEnabled: paceTrackingEnabled,
             paceUnitRaw: paceUnitRaw,
-            paceValue: paceValue,
+            paceValue: 0,                // Ist-Pace gehört zur Session, nie ins Plan-Template
             isCompleted: isCompleted,
             rpe: rpe,
             notes: notes,
