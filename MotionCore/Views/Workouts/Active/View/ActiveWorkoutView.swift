@@ -410,8 +410,8 @@ struct ActiveWorkoutView: View {
                 exerciseName: set.exerciseNameSnapshot.isEmpty ? set.exerciseName : set.exerciseNameSnapshot,
                 unit: set.paceUnit,
                 initialValue: set.paceValue,
-                onSave: { value in
-                    applyPace(value, toExerciseGroup: set.groupKey, unitRaw: set.paceUnitRaw)
+                onSave: { value, unit in
+                    applyPace(value, toExerciseGroup: set.groupKey, unitRaw: unit.rawValue)
                 },
                 onSkip: {}
             )

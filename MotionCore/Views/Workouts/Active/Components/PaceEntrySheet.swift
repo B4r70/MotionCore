@@ -18,14 +18,19 @@ import UIKit
 
 /// Erscheint nach dem letzten Time-Satz einer Übung mit aktivierter Pace-Erfassung.
 /// Eingabe je nach Einheit: mm:ss-Wheels (min/500m, min/km) oder km/h-Wheel.
+/// Mit `allowsUnitChange` auch zum Nachtragen für Sessions ohne Pace-Config nutzbar.
 struct PaceEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
 
     let exerciseName: String
     let unit: SetPaceUnit
     let initialValue: Double        // 0 = noch kein Pace erfasst
-    let onSave: (Double) -> Void
+    var allowsUnitChange: Bool = false  // true = Einheiten-Picker anzeigen (Nachtrag-Modus)
+    let onSave: (Double, SetPaceUnit) -> Void
     let onSkip: () -> Void
+
+    // Aktive Einheit (im Nachtrag-Modus umschaltbar)
+    @State private var selectedUnit: SetPaceUnit = .minPer500m
 
     // mm:ss-Eingabe (isTimePerDistance)
     @State private var minutes: Int = 2
@@ -35,6 +40,37 @@ struct PaceEntrySheet: View {
     @State private var speedKmh: Double = 8.0
 
     private let haptic = UIImpactFeedbackGenerator(style: .light)
+
+    // MARK: - Init (Wheel-States direkt initialisieren, kein onAppear-Umspringen)
+
+    init(
+        exerciseName: String,
+        unit: SetPaceUnit,
+        initialValue: Double,
+        allowsUnitChange: Bool = false,
+        onSave: @escaping (Double, SetPaceUnit) -> Void,
+        onSkip: @escaping () -> Void
+    ) {
+        self.exerciseName = exerciseName
+        self.unit = unit
+        self.initialValue = initialValue
+        self.allowsUnitChange = allowsUnitChange
+        self.onSave = onSave
+        self.onSkip = onSkip
+
+        _selectedUnit = State(initialValue: unit)
+
+        let value = initialValue > 0 ? initialValue : unit.defaultValue
+        if unit.isTimePerDistance {
+            // Auf Wheel-Bereich clampen (max 20:59), sonst zeigt der Picker inkonsistente Werte
+            let total = min(Int(value.rounded()), 20 * 60 + 59)
+            _minutes = State(initialValue: total / 60)
+            _seconds = State(initialValue: total % 60)
+        } else {
+            // Auf 0.5er-Raster runden, damit der Wheel-Tag matcht
+            _speedKmh = State(initialValue: min(max((value * 2).rounded() / 2, 1.0), 40.0))
+        }
+    }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -48,8 +84,18 @@ struct PaceEntrySheet: View {
                     .foregroundStyle(Theme.textSecondary)
             }
 
+            // Einheiten-Wahl nur im Nachtrag-Modus (im Workout kommt die Einheit aus der Config)
+            if allowsUnitChange {
+                Picker("Einheit", selection: $selectedUnit) {
+                    ForEach(SetPaceUnit.allCases) { u in
+                        Text(u.description).tag(u)
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
+
             // Einheiten-abhängige Eingabe
-            if unit.isTimePerDistance {
+            if selectedUnit.isTimePerDistance {
                 timePickerRow
             } else {
                 speedPickerRow
@@ -58,7 +104,7 @@ struct PaceEntrySheet: View {
             // Speichern — 0:00 nicht erlaubt (0 = Sentinel für „nicht erfasst")
             Button {
                 haptic.impactOccurred()
-                onSave(currentValue)
+                onSave(currentValue, selectedUnit)
                 dismiss()
             } label: {
                 Label("Speichern", systemImage: "checkmark")
@@ -78,7 +124,10 @@ struct PaceEntrySheet: View {
         .padding(.vertical, 24)
         .presentationDetents([.fraction(0.5)])
         .presentationDragIndicator(.visible)
-        .onAppear { bootstrapFromInitialValue() }
+        .onChange(of: selectedUnit) { _, newUnit in
+            // Einheiten-Wechsel: vorhandenen Wert nur für die Original-Einheit übernehmen
+            applyValue(initialValue > 0 && newUnit == unit ? initialValue : newUnit.defaultValue, for: newUnit)
+        }
     }
 
     // MARK: - Eingabe-Rows
@@ -106,7 +155,7 @@ struct PaceEntrySheet: View {
             .pickerStyle(.wheel)
             .frame(width: 70)
 
-            Text(unit == .minPer500m ? "/500 m" : "/km")
+            Text(selectedUnit == .minPer500m ? "/500 m" : "/km")
                 .font(AppFont.callout)
                 .foregroundStyle(Theme.textSecondary)
                 .padding(.leading, 8)
@@ -136,15 +185,14 @@ struct PaceEntrySheet: View {
 
     /// Aktueller Eingabewert im Speicherformat (Sekunden bzw. km/h)
     private var currentValue: Double {
-        if unit.isTimePerDistance {
+        if selectedUnit.isTimePerDistance {
             return Double(minutes * 60 + seconds)
         }
         return speedKmh
     }
 
-    /// Startwert aus vorhandenem Pace bzw. Einheiten-Default ableiten
-    private func bootstrapFromInitialValue() {
-        let value = initialValue > 0 ? initialValue : unit.defaultValue
+    /// Überträgt einen Pace-Wert in die Wheel-States der jeweiligen Einheit
+    private func applyValue(_ value: Double, for unit: SetPaceUnit) {
         if unit.isTimePerDistance {
             // Auf Wheel-Bereich clampen (max 20:59), sonst zeigt der Picker inkonsistente Werte
             let total = min(Int(value.rounded()), 20 * 60 + 59)
@@ -164,17 +212,18 @@ struct PaceEntrySheet: View {
         exerciseName: "Ruderergometer",
         unit: .minPer500m,
         initialValue: 0,
-        onSave: { _ in },
+        onSave: { _, _ in },
         onSkip: { }
     )
 }
 
-#Preview("Pace km/h") {
+#Preview("Pace km/h — Nachtrag") {
     PaceEntrySheet(
         exerciseName: "Cross-Trainer",
         unit: .kmh,
         initialValue: 8.5,
-        onSave: { _ in },
+        allowsUnitChange: true,
+        onSave: { _, _ in },
         onSkip: { }
     )
 }

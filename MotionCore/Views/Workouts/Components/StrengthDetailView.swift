@@ -28,6 +28,8 @@ struct StrengthDetailView: View {
     @State private var rollbackCandidate: ExerciseProgressionState? = nil
     /// Kontext für Session→Plan-Sync-Sheet (Option A) — nil = Sheet geschlossen
     @State private var syncContext: SessionPlanSyncContext? = nil
+    /// Pace nachtragen/bearbeiten — erster Time-Satz repräsentiert die Übungsgruppe
+    @State private var paceEditSet: ExerciseSet? = nil
 
     var body: some View {
         ZStack {
@@ -104,6 +106,18 @@ struct StrengthDetailView: View {
                 ExerciseFormView(mode: .edit, exercise: exercise, showDeleteButton: false)
                     .environmentObject(appSettings)
             }
+        }
+        .sheet(item: $paceEditSet) { set in
+            PaceEntrySheet(
+                exerciseName: set.exerciseNameSnapshot.isEmpty ? set.exerciseName : set.exerciseNameSnapshot,
+                unit: set.paceUnit,
+                initialValue: set.paceValue,
+                allowsUnitChange: true,  // Nachtrag: Alt-Sessions haben keine Einheiten-Config
+                onSave: { value, unit in
+                    applyRetroPace(value, unitRaw: unit.rawValue, toExerciseGroup: set.groupKey)
+                },
+                onSkip: {}
+            )
         }
         .confirmationDialog(
             "Arbeitsgewicht zurücksetzen?",
@@ -436,6 +450,18 @@ struct StrengthDetailView: View {
                     }
                 }
 
+                // Pace nachtragen/bearbeiten (nur für zeitbasierte Übungen)
+                if let firstTimeSet = sets.first(where: { $0.isTimeBased }) {
+                    Button {
+                        paceEditSet = firstTimeSet
+                    } label: {
+                        Image(systemName: "speedometer")
+                            .font(.title3)
+                            .foregroundStyle(Theme.accent)
+                    }
+                    .accessibilityLabel("Pace eintragen")
+                }
+
                 // Rollback-Button (nur wenn vorheriges Arbeitsgewicht bekannt)
                 if let groupKey = sets.first?.groupKey,
                    let state = progressionState(for: groupKey),
@@ -536,6 +562,22 @@ struct StrengthDetailView: View {
     private func exerciseVolume(_ sets: [ExerciseSet]) -> Double {
         // Time-Sätze tragen kein Volumen bei (weight=0, reps=0)
         sets.filter { !$0.isTimeBased }.reduce(0) { $0 + ($1.weight * Double($1.reps)) }
+    }
+
+    /// Schreibt einen nachgetragenen Pace auf alle Time-Sätze der Übungsgruppe dieser Session.
+    private func applyRetroPace(_ value: Double, unitRaw: String, toExerciseGroup groupKey: String) {
+        let timeSets = session.safeExerciseSets.filter {
+            $0.groupKey == groupKey && $0.isTimeBased
+        }
+        for set in timeSets {
+            set.paceValue = value
+            set.paceUnitRaw = unitRaw
+        }
+        // Bereits gesyncte Session für Supabase-Resync markieren (Pattern aus FormView)
+        if session.syncedToSupabase {
+            session.needsSupabaseResync = true
+        }
+        try? context.save()
     }
 
     private func rpeColor(_ rpe: Int) -> Color {
