@@ -280,6 +280,7 @@ struct SetEditSheet: View {
             weight: set.weight, weightPerSide: set.weightPerSide, reps: set.reps,
             duration: set.duration, distance: set.distance, restSeconds: set.restSeconds,
             setKind: .work, trackingMode: set.trackingMode,
+            paceTrackingEnabled: set.paceTrackingEnabled, paceUnitRaw: set.paceUnitRaw,
             isCompleted: false, rpe: 0, notes: "",
             targetRepsMin: set.targetRepsMin, targetRepsMax: set.targetRepsMax,
             targetRIR: set.targetRIR, groupId: set.groupId, sortOrder: set.sortOrder

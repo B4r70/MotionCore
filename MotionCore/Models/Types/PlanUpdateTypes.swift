@@ -34,6 +34,9 @@ struct ExerciseSetSnapshot: Codable {
     var supersetGroupId: String?
     var trackingMode: SetTrackingMode = .weight
     var duration: Int = 0
+    // Pace-Config (optional: alte persistierte Undo-Snapshots ohne diese Keys bleiben dekodierbar)
+    var paceTrackingEnabled: Bool? = nil
+    var paceUnitRaw: String? = nil
 }
 
 // MARK: - Plan-Update Änderungstyp

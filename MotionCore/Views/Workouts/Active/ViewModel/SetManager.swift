@@ -39,6 +39,7 @@ final class SetManager {
     @ObservationIgnored let exerciseKeyChanged = PassthroughSubject<String, Never>()   // Superset-Rotation
     @ObservationIgnored let restShouldStart = PassthroughSubject<Int, Never>()         // seconds
     @ObservationIgnored let rirSheetShouldShow = PassthroughSubject<ExerciseSet, Never>()
+    @ObservationIgnored let paceSheetShouldShow = PassthroughSubject<ExerciseSet, Never>()
     @ObservationIgnored let prDetected = PassthroughSubject<(ExerciseSet, String, Double), Never>()
 
     // MARK: - Private
@@ -164,6 +165,12 @@ final class SetManager {
             }
         }
 
+        // Pace-Sheet nach dem letzten Time-Satz der Übung — VOR den Early-Returns,
+        // damit es auch am Trainingsende und in Supersets feuert (sonst geht der Wert verloren)
+        if set.isTimeBased && set.paceTrackingEnabled && isExerciseComplete(for: set.groupKey) {
+            paceSheetShouldShow.send(set)
+        }
+
         // Superset-Rotation hat Vorrang vor normalem Rest-Timer-Handling
         if let groupId = set.supersetGroupId {
             handleSupersetRotation(completedSet: set, supersetGroupId: groupId)
@@ -244,6 +251,15 @@ final class SetManager {
                 exerciseKeyChanged.send(key)
             }
         }
+    }
+
+    // MARK: - Pace-Erfassung Helpers
+
+    /// True wenn alle Sätze der Übungsgruppe abgeschlossen sind (Übung fertig)
+    private func isExerciseComplete(for groupKey: String) -> Bool {
+        guard let session else { return false }
+        let groupSets = session.safeExerciseSets.filter { $0.groupKey == groupKey }
+        return !groupSets.isEmpty && groupSets.allSatisfy { $0.isCompleted }
     }
 
     // MARK: - Smart-Progression Helpers

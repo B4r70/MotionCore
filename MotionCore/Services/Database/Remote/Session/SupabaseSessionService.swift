@@ -87,7 +87,10 @@ final class SupabaseSessionService {
                 notes: set.notes,
                 isLastSetOfExercise: set.isLastSetOfExercise,
                 rpeRecorded: set.rpeRecorded,
-                trackingMode: set.trackingModeRaw
+                trackingMode: set.trackingModeRaw,
+                paceTrackingEnabled: set.paceTrackingEnabled,
+                paceUnit: set.paceUnitRaw,
+                paceValue: set.paceValue
             )
         }
 
