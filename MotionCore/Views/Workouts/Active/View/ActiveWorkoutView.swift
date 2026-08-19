@@ -954,6 +954,7 @@ struct ActiveWorkoutView: View {
                         exerciseName: selectedExerciseName,
                         exerciseGroupKey: exerciseNav.selectedExerciseKey,
                         existingRating: exerciseNav.selectedExerciseKey.flatMap { cachedExerciseRatings[$0] },
+                        isFinalExercise: session.allSetsCompleted,
                         onRate: { rating in
                             if let key = exerciseNav.selectedExerciseKey {
                                 rateExercise(groupKey: key, rating: rating)
@@ -989,6 +990,7 @@ struct ActiveWorkoutView: View {
                 exerciseName: selectedExerciseName,
                 exerciseGroupKey: exerciseNav.selectedExerciseKey,
                 existingRating: exerciseNav.selectedExerciseKey.flatMap { cachedExerciseRatings[$0] },
+                isFinalExercise: session.allSetsCompleted,
                 onRate: { rating in
                     if let key = exerciseNav.selectedExerciseKey {
                         rateExercise(groupKey: key, rating: rating)

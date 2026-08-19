@@ -23,16 +23,41 @@ struct RIRInputSheet: View {
     let onSelectRIR: (Int) -> Void   // 0..4, 4 = "4+"
     let onSkip: () -> Void
 
+    // Eingefroren beim Öffnen: ob zu diesem Zeitpunkt ein Rest-Timer lief.
+    // Bewusst kein Live-Prädikat auf restTimerManager.isResting — RestTimerManager.stop()
+    // setzt isResting bei Ablauf auf false, ein Live-Wert würde die RIR-Buttons mitten in
+    // der Auswahl nach oben springen lassen. .sheet(item:) erzeugt pro Präsentation eine
+    // frische View-Identity, daher gibt es keinen Reuse-Pfad mit veraltetem Wert.
+    @State private var showsRestTimer: Bool
+
     private let haptic = UIImpactFeedbackGenerator(style: .light)
+
+    init(
+        restTimerManager: RestTimerManager,
+        targetSeconds: Int,
+        onAdjustRest: @escaping (Int) -> Void,
+        onSelectRIR: @escaping (Int) -> Void,
+        onSkip: @escaping () -> Void
+    ) {
+        self.restTimerManager = restTimerManager
+        self.targetSeconds = targetSeconds
+        self.onAdjustRest = onAdjustRest
+        self.onSelectRIR = onSelectRIR
+        self.onSkip = onSkip
+        self._showsRestTimer = State(initialValue: restTimerManager.isResting)
+    }
 
     var body: some View {
         VStack(spacing: 20) {
-            // Kompakter Rest-Timer oben
-            CompactRestTimerView(
-                restTimerManager: restTimerManager,
-                targetSeconds: targetSeconds,
-                onAdjust: onAdjustRest
-            )
+            // Kompakter Rest-Timer oben — nur wenn beim Öffnen tatsächlich einer lief
+            // (sonst zeigt CompactRestTimerView einen vollen Theme.danger-Ring mit "0s")
+            if showsRestTimer {
+                CompactRestTimerView(
+                    restTimerManager: restTimerManager,
+                    targetSeconds: targetSeconds,
+                    onAdjust: onAdjustRest
+                )
+            }
 
             // RIR-Abfrage
             VStack(spacing: 10) {
@@ -73,7 +98,7 @@ struct RIRInputSheet: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 24)
-        .presentationDetents([.fraction(0.45)])
+        .presentationDetents([.fraction(showsRestTimer ? 0.45 : 0.3)])
         .presentationDragIndicator(.visible)
     }
 }

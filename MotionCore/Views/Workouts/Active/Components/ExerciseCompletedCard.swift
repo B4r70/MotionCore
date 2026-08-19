@@ -16,6 +16,7 @@ struct ExerciseCompletedCard: View {
     let exerciseName: String?
     let exerciseGroupKey: String?
     let existingRating: ExerciseQualityRating?
+    let isFinalExercise: Bool
     let onRate: (ExerciseQualityRating) -> Void
     let onNextExercise: () -> Void
 
@@ -32,7 +33,7 @@ struct ExerciseCompletedCard: View {
                     .multilineTextAlignment(.center)
             }
 
-            Text("Wähle die nächste Übung aus der Liste unten.")
+            Text(isFinalExercise ? "Alle Übungen abgeschlossen." : "Wähle die nächste Übung aus der Liste unten.")
                 .font(AppFont.body)
                 .foregroundStyle(Theme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -59,7 +60,7 @@ struct ExerciseCompletedCard: View {
             } label: {
                 HStack {
                     Image(systemName: "arrow.right.circle.fill")
-                    Text("Nächste Übung")
+                    Text(isFinalExercise ? "Weiter zum Abschluss" : "Nächste Übung")
                 }
             }
             .buttonStyle(.mcPrimary)
