@@ -171,23 +171,17 @@ final class SetManager {
             paceSheetShouldShow.send(set)
         }
 
-        // Superset-Rotation hat Vorrang vor normalem Rest-Timer-Handling
+        // Superset-Rotation hat Vorrang vor normalem Rest-Timer-Handling.
+        // Zweiter Zweig: Rest-Timer nur für Weight-Sätze und nicht am Trainingsende —
+        // die Timer-Unterdrückung bleibt exakt an allSetsCompleted gebunden.
         if let groupId = set.supersetGroupId {
             handleSupersetRotation(completedSet: set, supersetGroupId: groupId)
-            return
-        }
-
-        // Letzter Satz des gesamten Trainings → kein Timer, kein RIR-Sheet
-        if session.allSetsCompleted {
-            return
-        }
-
-        // Rest-Timer nur für Weight-Sätze — Time-Sätze haben implizite Pause
-        if !set.isTimeBased {
+        } else if !session.allSetsCompleted && !set.isTimeBased {
             restShouldStart.send(set.restSeconds)
         }
 
-        // RIR-Sheet beim letzten Work-Set
+        // RIR-Sheet beim letzten Work-Set — VOR keinem Early-Return mehr, analog zum
+        // Pace-Sheet oben, damit es auch am Trainingsende und in Supersets feuert.
         if set.isLastSetOfExercise {
             rirSheetShouldShow.send(set)
         }

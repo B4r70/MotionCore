@@ -947,7 +947,7 @@ struct ActiveWorkoutView: View {
                 }
             )
 
-            if isSelectedExerciseComplete, !session.allSetsCompleted {
+            if isSelectedExerciseComplete {
                 VStack(spacing: 20) {
                     restTimer
                     ExerciseCompletedCard(
@@ -984,7 +984,7 @@ struct ActiveWorkoutView: View {
                 selectedSetForEdit: $selectedSetForEdit,
                 onComplete: { set in setManager.completeSet(set) }
             )
-        } else if isSelectedExerciseComplete, !session.allSetsCompleted {
+        } else if isSelectedExerciseComplete {
             ExerciseCompletedCard(
                 exerciseName: selectedExerciseName,
                 exerciseGroupKey: exerciseNav.selectedExerciseKey,
