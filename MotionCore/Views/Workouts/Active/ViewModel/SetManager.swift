@@ -180,8 +180,11 @@ final class SetManager {
             restShouldStart.send(set.restSeconds)
         }
 
-        // RIR-Sheet beim letzten Work-Set — VOR keinem Early-Return mehr, analog zum
-        // Pace-Sheet oben, damit es auch am Trainingsende und in Supersets feuert.
+        // RIR-Sheet beim letzten Work-Set — von keinem Early-Return mehr übersprungen
+        // (analog Pace-Sheet oben), feuert daher auch am Trainingsende und in Supersets.
+        // Position NACH der Rest-Timer-Kette ist zwingend: RIRInputSheet friert beim
+        // Öffnen restTimerManager.isResting ein — wird der Trigger nach oben gezogen,
+        // fehlt der Timer-Ring im Sheet für den Normalfall.
         if set.isLastSetOfExercise {
             rirSheetShouldShow.send(set)
         }
