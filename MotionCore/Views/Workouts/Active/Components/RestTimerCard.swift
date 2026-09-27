@@ -25,6 +25,13 @@ struct RestTimerCard: View {
     // Superset: Übungsnamen der nächsten Runde (nil = kein Superset)
     let supersetNextRoundNames: [String]?
 
+    // Plan-Gewicht des nächsten Satzes (Gesamtgewicht beider Seiten, 0 = Körpergewicht/unbekannt)
+    let nextPlanWeight: Double
+    // Ob der nächste Satz eine unilaterale Übung ist (Gewicht wird pro Seite angezeigt)
+    let nextIsUnilateral: Bool
+    // Zuletzt verwendetes Gewicht aus gegateter Last-Session-Referenz (nil = keine Referenz)
+    let nextLastUsedWeight: Double?
+
     var body: some View {
         VStack(spacing: Space.s6) {
             Text("Pause")
@@ -103,6 +110,11 @@ struct RestTimerCard: View {
                 Text("Nächster: Satz \(setNumber) von \(totalSets)")
                     .font(AppFont.callout)
                     .foregroundStyle(Theme.textSecondary)
+                if let weightLine = formattedWeightLine {
+                    Text(weightLine)
+                        .font(AppFont.caption)
+                        .foregroundStyle(Theme.textTertiary)
+                }
             }
         } else {
             Text("Nächster Satz bereit in \(remainingSeconds) Sekunden")
@@ -151,6 +163,30 @@ struct RestTimerCard: View {
         return Theme.accent
     }
 
+    // Plan-Gewicht (+ Letztes-Mal-Referenz, falls vorhanden) für die nächste Übung.
+    // Beide Zweige laufen über denselben weightText-Helper, damit Plan- und
+    // Zuletzt-Wert nie asymmetrisch formatiert werden (unilaterale Halbierung).
+    private var formattedWeightLine: String? {
+        guard nextPlanWeight > 0 else { return nil }
+        let planText = weightText(nextPlanWeight)
+        guard let last = nextLastUsedWeight, last > 0 else {
+            return "Plan: \(planText)"
+        }
+        return "Plan: \(planText) · Letztes Mal: \(weightText(last))"
+    }
+
+    private func weightText(_ total: Double) -> String {
+        nextIsUnilateral ? "2× \(formatKg(total / 2)) kg" : "\(formatKg(total)) kg"
+    }
+
+    // Ganzzahliges Gewicht ohne Nachkommastelle, sonst 1 Nachkommastelle — analog ActiveSetCard.formatWeight.
+    private func formatKg(_ value: Double) -> String {
+        if value.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", value)
+        }
+        return String(format: "%.1f", value)
+    }
+
     private func formatRestTime(_ seconds: Int) -> String {
         if seconds < 60 { return "\(seconds)s" }
         let mins = seconds / 60
@@ -169,19 +205,45 @@ struct RestTimerCard: View {
                 remainingSeconds: 90, targetSeconds: 90,
                 onSkip: {}, onAdjust: { _ in },
                 nextExerciseName: "Bankdrücken", nextSetNumber: 3, totalSetsForExercise: 4,
-                supersetNextRoundNames: nil
+                supersetNextRoundNames: nil,
+                nextPlanWeight: 80, nextIsUnilateral: false, nextLastUsedWeight: 82.5
             )
             RestTimerCard(
                 remainingSeconds: 25, targetSeconds: 60,
                 onSkip: {}, onAdjust: { _ in },
                 nextExerciseName: nil, nextSetNumber: nil, totalSetsForExercise: nil,
-                supersetNextRoundNames: ["Crunches", "Beinheben", "Russian Twist"]
+                supersetNextRoundNames: ["Crunches", "Beinheben", "Russian Twist"],
+                nextPlanWeight: 0, nextIsUnilateral: false, nextLastUsedWeight: nil
             )
             RestTimerCard(
                 remainingSeconds: 5, targetSeconds: 90,
                 onSkip: {}, onAdjust: { _ in },
                 nextExerciseName: nil, nextSetNumber: nil, totalSetsForExercise: nil,
-                supersetNextRoundNames: nil
+                supersetNextRoundNames: nil,
+                nextPlanWeight: 0, nextIsUnilateral: false, nextLastUsedWeight: nil
+            )
+        }
+        .padding()
+    }
+}
+
+#Preview("Rest Timer — Gewichtszeile") {
+    ZStack {
+        Theme.surfaceApp.ignoresSafeArea()
+        VStack(spacing: 20) {
+            RestTimerCard(
+                remainingSeconds: 45, targetSeconds: 90,
+                onSkip: {}, onAdjust: { _ in },
+                nextExerciseName: "Bulgarian Split Squat", nextSetNumber: 2, totalSetsForExercise: 3,
+                supersetNextRoundNames: nil,
+                nextPlanWeight: 40, nextIsUnilateral: true, nextLastUsedWeight: 42
+            )
+            RestTimerCard(
+                remainingSeconds: 60, targetSeconds: 90,
+                onSkip: {}, onAdjust: { _ in },
+                nextExerciseName: "Klimmzüge", nextSetNumber: 1, totalSetsForExercise: 3,
+                supersetNextRoundNames: nil,
+                nextPlanWeight: 0, nextIsUnilateral: false, nextLastUsedWeight: nil
             )
         }
         .padding()

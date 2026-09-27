@@ -937,6 +937,7 @@ struct ActiveWorkoutView: View {
                 supersetNextRoundNames: completedSet.supersetGroupId != nil
                     ? setManager.supersetNextRoundNames(for: completedSet)
                     : nil,
+                lastSessionReference: setManager.cachedCurrentSet.flatMap { setManager.lastSessionReference(for: $0) },
                 onSkip: {
                     restTimerManager.skip()
                     hapticGenerator.impactOccurred()

@@ -1,132 +1,151 @@
-# Readiness-Score Bugfix v1.1
+# RestTimer zeigt Gewicht der nächsten Übung
 
-**Complexity:** Large
+**Complexity:** Medium
 
-> Bezug: `Documentation/Concepts/MotionCore_Readiness_Bugfix_Concept.md` (Claude-Code-Instruction mit STOPP-Gates) und `MotionCore_Readiness_Correcture_Concept.md` (Ursachenanalyse, 5 Befunde).
-> **Implementierungsreihenfolge laut Instruction: B → C → A → D → E** (nach Hebel/Risiko).
-> Profil: Cardio-Medikation = Ja → Gewichtung HRV 25 / Schlaf 40 / Ruhepuls 15 / Aktivität 15, Baseline-Fenster 42 Tage.
-> **Grundregel: Ein Commit pro Phase. Nach JEDER Phase Build verifizieren (grün/rot). Bei rot stoppen.**
+> Quelle: `Documentation/Concepts/MotionCore_RestTimer_Concept_2026-09-10.md` (v1.0, Status „Bereit für motioncore-developer").
+> Dieser Plan übernimmt AP 1–3 des Konzepts und korrigiert vier Punkte, die gegen den Code-Stand geprüft wurden (siehe „Abweichungen vom Konzept").
 
 ## Summary
 
-Der Readiness-Score überschreitet produktiv nie ~50 Punkte und zeigt dauerhaft "Etwas müde heute". Ursache ist ein Bündel von 4 Code-Befunden plus 1 Verifikationsfrage. Ziel: Score realistisch um ~55–60 zentrieren, "normal" als Erwartungswert-Label, Tageszeit-Drift eliminieren, Baseline-Duplikate bereinigen. Wert: Der Kern-Indikator der App wird wieder aussagekräftig und steuert Trainingsempfehlungen korrekt.
+Während der Pause zeigt die `RestTimerCard` unter „Nächster: Satz X von Y" eine zusätzliche, dezente Zeile mit dem Plan-Gewicht des nächsten Satzes und — sofern eine gegatete Last-Session-Referenz existiert — dem zuletzt verwendeten Gewicht. Reines UI-Wiring auf bestehenden Feldern und einem bereits gefüllten Cache: kein Modell-Change, keine Migration, keine CalcEngine-Änderung.
+
+**Warum Medium und nicht Small:** Nur ~40 additive Zeilen über 3 Dateien, aber der Plan braucht Scope-, Risiko- und Open-Questions-Abschnitte für die gefundenen Konzept-Abweichungen (unilaterale Gewichts-Semantik, Formatierungs-Inkonsistenz zur `ActiveSetCard`). Im Compact-Format hätten diese Informationen keinen Platz und würden verloren gehen.
 
 ## Scope
 
 **Included**
-- Phase B: Z-Score-Mapping rezentrieren `(z+2.0)/4.0` → `(z+1.5)/3.0` inkl. aller 4 inversen Rückrechnungs-Stellen.
-- Phase C: Label-Grenzen verschieben (NUR `ReadinessLabel.from(score:)`).
-- Phase A: HRV/Ruhepuls auf konsistentes Messfenster 00:00–10:00 Ortszeit (Messwert UND Baseline) + retroaktive Baseline-Neukalibrierung.
-- Phase D: Baseline-Duplikate deterministisch bereinigen (fetchOrCreate + Einmal-Migration).
-- Phase E: Schlaf-Verifikation (KEIN Code, kein Developer-Schritt).
+- Neue Anzeige-Zeile im `nextExerciseName`-Zweig von `RestTimerCard.nextInfo`.
+- Durchreichen von Plan-Gewicht, Unilateral-Flag und Last-Session-Referenz über `RestTimerCardContainer` bis `ActiveWorkoutView.heroCard`.
+- Erweiterung aller bestehenden Preview-Instanzen + ein neuer Preview-Block für die neuen Fälle.
 
 **Explicitly excluded**
-- Modifier-Schwellen (0.85/0.92/1.00/1.05) — bleiben unverändert (siehe Phase C Constraint).
-- Optionaler `+0.05`-Optimismus-Anker — erst nach Daten-Check (Phase F), NICHT jetzt.
-- `sleepDuration(forNightEnding:)`-Aggregation — laut Concept korrekt, kein Fix.
-- `higherIsBetter`-Lesart von `activityYesterday` — separates Thema.
-- 459-Rows-Aufblähung von `session_readiness` (`computeLive` persistiert?) — separates Konzept, nur notiert.
-- Phase F (Gesamt-SQL-Verifikation nach 5–7 Tagen) — nicht Teil der Implementierung.
+- **Superset-Zweig (`supersetNextRoundNames`) bleibt unverändert** — mehrere Übungen als „Nächstes" brauchen eine eigene Konzeption (Konzept §3 + §7).
+- **Abschnitt 7 des Konzepts ist nicht Teil dieses Tasks:** weder der geteilte `WeightDisplayFormatter`/`AppFormatter` (die „2× X kg"-Logik bleibt bewusst dupliziert, Refactor = eigenes Ticket) noch die Superset-Gewichtsanzeige.
+- Keine Wiederholungen in der Zeile (nur Gewicht, Konzept §3).
+- Bodyweight-Übungen bekommen **keine** „Körpergewicht"-Zeile — die Zeile entfällt komplett (Konzept §3).
+- Kein Eingriff in `SetManager`, `LastSessionReferenceCalcEngine`, `RestTimerManager` oder das Gating der Referenz.
 
 ## Affected Files
 
-- `MotionCore/Services/Calculation/ReadinessCalcEngine.swift` — Phase B: `normalizedScore` + `valueDescription`. Modifier-Switch NICHT anfassen.
-- `MotionCore/Services/SessionReadinessService.swift` — Phase B: `scoreToApproximateValue`. Phase A: `.max(by:)`-Ersatz in `captureReadiness` + `computeLive`.
-- `MotionCore/Services/ViewModels/ReadinessViewModel.swift` — Phase B: `desc` + `sleepDescription`. Modifier-Switch NICHT anfassen.
-- `MotionCore/Services/Calculation/ReadinessTypes.swift` — Phase C: NUR `ReadinessLabel.from(score:)`.
-- `MotionCore/Services/Health/HealthKitManager.swift` — Phase A: neue Fenster-Methode + zwei Wrapper.
-- `MotionCore/Services/Health/HealthBaselineUpdateService.swift` — Phase A: HRV/RHR-Baseline auf Fenster-Logik. Phase D: `fetchOrCreate` Dedup + Migrations-Methode.
-- `MotionCore/App/MotionCoreApp.swift` — Phase A+D: Flag-guarded Einmal-Migration im `.task`.
+- `MotionCore/Views/Workouts/Active/Components/RestTimerCard.swift` — 3 neue Properties, bedingte Text-Zeile in `nextInfo`, 2 private Helper, Previews.
+- `MotionCore/Views/Workouts/Active/Components/RestTimerCardContainer.swift` — neue Property `lastSessionReference`, erweiterter `RestTimerCard`-Aufruf.
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift` — `heroCard` (Z. 932–948): neuer Parameter am `RestTimerCardContainer`-Aufruf.
 
-**Single-Sourcing bestätigt:**
-- `ReadinessLabel.from(score:)` ist die EINZIGE Label-Schwellen-Quelle. `ReadinessCalcEngine`, `ReadinessViewModel.label`, `ReadinessCard` delegieren alle dorthin → Phase C = 1-Stellen-Änderung.
+## Abweichungen vom Konzept (gegen Code verifiziert)
+
+1. **`nextPlanWeightPerSide` entfällt — stattdessen `ExerciseSet.effectiveWeight`.**
+   Verifiziert (`ExerciseSet.swift:166-168`): `effectiveWeight` existiert bereits und liefert `weightPerSide > 0 ? weightPerSide * 2 : weight` — also immer das Gesamtgewicht beider Seiten. `weight` ist bei unilateralen Sätzen das **Gesamtgewicht**, `weightPerSide` ein abgeleiteter Spiegelwert, der 0 sein kann, wenn der Satz nie über `SetEditSheet` bearbeitet wurde.
+   Folge im Konzept-Vorschlag: Der Plan-Zweig hätte bei `weightPerSide == 0` den Gesamtwert gezeigt (`Plan: 80 kg`), der Zuletzt-Zweig aber immer halbiert (`Zuletzt: 2× 41,25 kg`) — asymmetrisch und irreführend.
+   Korrektur: `nextPlanWeight` wird mit `currentSet?.effectiveWeight ?? 0` gefüllt, beide Zweige nutzen **denselben** Formatierungs-Helper. Die Asymmetrie ist damit konstruktiv unmöglich, und es sind 3 statt 4 neue Properties.
+
+2. **Unilateral-Erkennung zweiquellig.** `ActiveSetCard` prüft `set.isUnilateralSnapshot || (exercise?.isUnilateral ?? false)`. Der Konzept-Vorschlag prüft nur den Snapshot — ein Satz mit leerem/falschem Snapshot, aber unilateraler `exercise`-Relation würde in der `ActiveSetCard` „2×" zeigen und in der `RestTimerCard` nicht. Container übernimmt die zweiquellige Prüfung.
+
+3. **Zahlformat + Label an `ActiveSetCard` angeglichen (User-Entscheidung).** Konzept §2 zeigt `Plan: 80.0 kg · Zuletzt: 82.5 kg`; stattdessen wird das getrimmte Zahlformat der `ActiveSetCard.formatWeight` (`80 kg` / `82,5 kg`) **und** deren Wortlaut `„Letztes Mal: …"` übernommen: `Plan: 80 kg · Letztes Mal: 82,5 kg`.
+
+4. **Previews: alle 3 bestehenden Instanzen sind betroffen.** Das Konzept spricht nur von „ergänzen". Da die neuen Properties `let` ohne Default sind, müssen alle drei bestehenden `RestTimerCard(...)`-Aufrufe im Preview-Block nachgezogen werden; die neuen Fälle kommen in einen **zweiten** `#Preview`-Block (der bestehende VStack würde sonst über die Preview-Höhe hinauslaufen).
+
+**Keine weiteren Call-Sites gefunden:** `RestTimerCardContainer` wird ausschließlich in `ActiveWorkoutView.heroCard` (Z. 932) verwendet, `RestTimerCard` nur im Container + 3 Preview-Instanzen in der eigenen Datei. Vor AP 1 einmal `rg "RestTimerCard(Container)?\("` laufen lassen; zusätzlich sind die neuen `let`-Properties ohne Default selbst das Sicherheitsnetz (jede übersehene Call-Site = Compile-Fehler).
 
 ## Risks
 
-- **Inverse-Mapping-Inkonsistenz (Phase B, load-bearing):** `scoreToApproximateValue` rechnet `n*4-2` invers zu `(z+2)/4`. Beide Richtungen synchron auf `(z+1.5)/3` / `n*3-1.5` umstellen — sonst driftet `refineWithUserInput` bei jedem Round-Trip nach oben.
-- **Mess-↔Baseline-Fenster-Mismatch (Phase A):** Messwert und Baseline MÜSSEN dieselbe Fenster-Methode nutzen, sonst systematischer Bias.
-- **Baseline gegen alte Baseline nach Umstellung (Phase A):** Retroaktive Neuberechnung (flag-guarded) beim App-Start löst das sofort.
-- **CloudKit-Race bei Dedup (Phase D):** Tie-Break über kleinste `id` (UUID-String) für geräteübergreifende Konvergenz.
-- **Regression Trainings-Modifier (Phase C):** Modifier-Switches in Engine + ViewModel NICHT anfassen.
+- **Ad-hoc-Sessions ohne Plan zeigen nie „Zuletzt".** `SetManager.refreshLastSessionReference` steigt früh aus, wenn `session.sourceTrainingPlan` nil oder ohne passende Template-Sätze ist → `cachedLastSessionReferences[groupKey] = [:]`. Graceful (nur `Plan: …`), aber bewusst so und beim Testen nicht als Bug fehldeuten.
+- **Cache-Wärme ist gegeben, aber nicht neu zu bauen.** `lastSessionReference(for:)` ist ein reiner Dictionary-Lookup in `cachedLastSessionReferences`. Der Cache wird in `onAppear` für **alle** groupKeys gefüllt, bei `exerciseListRefreshID` erneut für alle und bei `selectedExerciseKey`-Wechsel für den neuen Key. Damit ist auch der erste Satz der **nächsten** Übung abgedeckt. In `heroCard` darf deshalb ausschließlich der Lookup stehen — `heroCard` wird durch `@StateObject restTimerManager` sekündlich neu ausgewertet; jede Berechnung über Sessions/Fetches an dieser Stelle wäre ein Performance-Bug.
+- **Zeitbasierter nächster Satz:** hat `weight == 0` und fällt automatisch durch den `> 0`-Guard (keine Zeile). **Keinen zusätzlichen `isTimeBased`-Check einbauen** — das würde die Invariante duplizieren.
+- **Superset-Regression:** Die neue Zeile liegt ausschließlich im `else if let exerciseName …`-Zweig. Der Superset-Zweig wird nicht angefasst; nach der Änderung visuell gegenprüfen, dass dort nichts erscheint.
+- **Keine Daten-/CloudKit-Risiken:** keine neuen Felder, kein `AppSchema`-Eingriff, kein `ExerciseSetSnapshot`-Sync nötig, kein neuer Shared-Type.
+- **Datei-Größe:** `RestTimerCard.swift` 189 → ca. 230 Zeilen, klar unter dem 400-Zeilen-Ziel.
 
 ## Implementation Steps
 
-### Phase B — Mapping rezentrieren (Befund 1) — Commit 1
+Alle drei APs hängen linear voneinander ab (Compile-Kette) → ein gemeinsames STOPP-Gate am Ende, ein Commit.
 
-- [x] **B.1** `ReadinessCalcEngine.normalizedScore`: `(z + 2.0) / 4.0` → `(z + 1.5) / 3.0` und `(-z + 2.0) / 4.0` → `(-z + 1.5) / 3.0`
-- [x] **B.2** `ReadinessCalcEngine.valueDescription`: inverse Rückrechnung `n*4-2` / `2-n*4` → `n*3-1.5` / `1.5-n*3`
-- [x] **B.3** `SessionReadinessService.scoreToApproximateValue`: `n * 4.0 - 2.0` / `2.0 - n * 4.0` → `n * 3.0 - 1.5` / `1.5 - n * 3.0`. Kommentar anpassen.
-- [x] **B.4** `ReadinessViewModel.desc`: `(norm * 4.0 - 2.0)` / `(2.0 - norm * 4.0)` → `(norm * 3.0 - 1.5)` / `(1.5 - norm * 3.0)`
-- [x] **B.5** `ReadinessViewModel.sleepDescription`: `normalized * 4.0 - 2.0` → `normalized * 3.0 - 1.5`
-- [x] **B.6 NICHT ändern:** Modifier-Switch `ReadinessCalcEngine`. Optimismus-Anker `+0.05` NICHT einbauen.
-- [x] **STOPP-Gate B:** Build grün ✓. z=+1 → norm=(1+1.5)/3=0.833 → score=**83** ✓ (vorher 75). Commit: fd18073
+### AP 1 — `RestTimerCard.swift`
 
-### Phase C — Label-Grenzen verschieben (Befund 3) — Commit 2
+- [x] **1a — Properties.** Nach `let supersetNextRoundNames: [String]?` drei Properties ergänzen, mit deutschen Kommentaren:
+      `let nextPlanWeight: Double` (Gesamtgewicht beider Seiten, 0 = Körpergewicht/unbekannt),
+      `let nextIsUnilateral: Bool`,
+      `let nextLastUsedWeight: Double?` (nil = keine gegatete Referenz; Gating liegt im `SetManager`).
+- [x] **1b — Anzeige.** In `nextInfo` im Zweig `else if let exerciseName …` **innerhalb** des bestehenden `VStack(spacing: Space.s1)`, direkt nach der „Nächster: Satz X von Y"-`Text`, einfügen:
+      `if let weightLine = formattedWeightLine { Text(weightLine).font(AppFont.caption).foregroundStyle(Theme.textTertiary) }`.
+      Kein zusätzlicher Spacer/Padding — bei nil entsteht durch das `if` im VStack kein Leerraum-Artefakt.
+- [x] **1c — Helper.** Im MARK-Block „Berechnete Properties" (vor `formatRestTime`) ergänzen:
+      `formattedWeightLine: String?` → `guard nextPlanWeight > 0 else { return nil }`; Plan-Text über `weightText(nextPlanWeight)`; ohne Referenz (`nextLastUsedWeight == nil` oder `<= 0`) `"Plan: \(planText)"`, sonst `"Plan: \(planText) · Letztes Mal: \(weightText(last))"`.
+      `weightText(_ total: Double) -> String` → `nextIsUnilateral ? "2× \(formatKg(total / 2)) kg" : "\(formatKg(total)) kg"`. **Beide Zweige müssen durch diesen einen Helper laufen** (siehe Abweichung 1).
+      `formatKg(_ value: Double) -> String` → ganze Zahl ohne Nachkommastelle (`%.0f`), sonst `%.1f` — identische Semantik wie `ActiveSetCard.formatWeight`.
+- [x] **1d — Previews.** Alle 3 bestehenden `RestTimerCard(...)`-Aufrufe im Block „Rest Timer Card" um die neuen Argumente erweitern (Bankdrücken-Karte: `nextPlanWeight: 80, nextIsUnilateral: false, nextLastUsedWeight: 82.5`; Superset- und Fallback-Karte: `0 / false / nil`).
+      Zweiten Block `#Preview("Rest Timer — Gewichtszeile")` mit zwei Karten anlegen: unilateral (`nextPlanWeight: 40, nextIsUnilateral: true, nextLastUsedWeight: 42` → „Plan: 2× 20 kg · Letztes Mal: 2× 21 kg") und Bodyweight (`nextPlanWeight: 0` bei gesetztem `nextExerciseName` → keine Zeile).
 
-- [x] **C.1** `ReadinessTypes.swift`, `ReadinessLabel.from(score:)`: `0..<30` → `0..<25` (veryLow), `30..<50` → `25..<42` (low), `50..<70` → `42..<65` (normal), `70..<85` → `65..<82` (good), excellent ab 82.
-- [x] **C.2 CONSTRAINT:** Modifier-Schwellen in `ReadinessCalcEngine` (0/30/50/85 → 0.85/0.92/1.00/1.05) und `ReadinessViewModel.modifier` BEWUSST UNVERÄNDERT. Label-Grenzen = kosmetisch; Modifier-Grenzen = funktional — getrennt halten.
-- [x] **STOPP-Gate C:** Build grün ✓. NUR `ReadinessTypes.swift` geändert ✓. Beide Modifier-Switches unverändert ✓. Score 45 → 42..<65 → `.normal` ✓. Commit: bf7c40b
+### AP 2 — `RestTimerCardContainer.swift`
 
-### Phase A — HRV/Ruhepuls konsistentes Messfenster (Befund 2) — Commit 3
+- [x] **2a — Property.** `let lastSessionReference: LastSessionReferenceCalcEngine.Reference?` **nach** `supersetNextRoundNames` und **vor** `onSkip` deklarieren (Memberwise-Init-Reihenfolge = Reihenfolge der Call-Site in AP 3).
+- [x] **2b — Weiterreichen.** `RestTimerCard`-Aufruf um die drei Argumente ergänzen (Reihenfolge wie in AP 1a deklariert):
+      `nextPlanWeight: currentSet?.effectiveWeight ?? 0`,
+      `nextIsUnilateral: (currentSet?.isUnilateralSnapshot ?? false) || (currentSet?.exercise?.isUnilateral ?? false)`,
+      `nextLastUsedWeight: lastSessionReference?.weight`.
+      Kurzkommentar an `nextPlanWeight`, dass `effectiveWeight` bewusst statt `weight`/`weightPerSide` genutzt wird (Gesamtwert, symmetrisch zur Zuletzt-Zeile).
 
-- [x] **A.1** `HealthKitManager`: neue Methode `windowedDailyMean(type:unit:forDate:startHour:endHour:)` — Mittelwert aller Samples 00:00–10:00 Ortszeit.
-- [x] **A.2** Zwei Wrapper: `windowedHRV(forDate:)` (SDNN, ms) und `windowedRestingHR(forDate:)` (bpm).
-- [x] **A.3** `SessionReadinessService.captureReadiness` UND `computeLive`: `.max(by:)`-Aufrufe für `hrv` und `restHR` durch Fenster-Wrapper ersetzen (beide Stellen).
-- [x] **A.4 KRITISCH** `HealthBaselineUpdateService`: HRV/RHR-Baseline-Berechnung auf dieselbe Fenster-Logik umstellen (Tagesmittel 00:00–10:00 pro Tag im 42-Tage-Fenster) via `updateWindowedMetric`.
-- [x] **A.5** `MotionCoreApp`: Flag-guarded Einmal-Migration (`UserDefaults` "readinessWindowMigrationV1Done") — `forceUpdate` aufrufen für retroaktive HRV/RHR-Baseline-Neukalibrierung. Zusammen mit D-Migration unter EINEM Flag.
-- [x] **STOPP-Gate A:** Build grün ✓. Strukturell: festes 00:00–10:00-Fenster gibt denselben Tagesmittelwert unabhängig von der Tageszeit zurück (kein Drift durch .max(by:) auf partielle Buckets mehr). Commit: c535e5a
+### AP 3 — `ActiveWorkoutView.swift`
 
-### Phase D — Baseline-Duplikate bereinigen (Befund 5) — Commit 4
+- [x] **3a — Call-Site.** Im `heroCard` (Z. 932–948) nach `supersetNextRoundNames:` und vor `onSkip:` ergänzen:
+      `lastSessionReference: setManager.cachedCurrentSet.flatMap { setManager.lastSessionReference(for: $0) },`.
+      Bewusst hier und nicht im Container berechnet: der Container hat keinen `SetManager` und soll keine Business-Logik bekommen; der Aufruf ist ein O(1)-Cache-Lookup.
+- [x] **3b — Build.** `Cmd+B` — der Build ist zugleich die Vollständigkeitsprüfung für übersehene Call-Sites (neue `let` ohne Default).
 
-- [x] **D.1** `HealthBaselineUpdateService.fetchOrCreate`: bei mehreren Treffern pro `metricTypeRaw` die Row mit kleinster `id` (UUID-String) behalten, alle anderen per `context.delete()` entfernen.
-- [x] **D.2** `consolidateDuplicateBaselines()`: alle `HealthMetricType.allCases` durchgehen, Duplikate bereinigen, `context.save()`. Flag-guarded zusammen mit A.5 in `MotionCoreApp`.
-- [x] **STOPP-Gate D:** Build grün ✓. SQL-Verifikation nach nächstem Sync ausstehend (erfordert Gerät + Supabase-Stream).
+### STOPP-Gate
 
-### Phase E — Schlaf-Baseline verifizieren (Befund 4) — MANUELL (kein Code-Schritt)
+- [x] Code entspricht AP 1–3 inkl. der vier dokumentierten Abweichungen.
+- [ ] Akzeptanzkriterien (unten) manuell durchgetestet. (offen — Simulator-Test durch Quality Gate / User)
+- [x] Keine Abweichung von den Annahmen aus Konzept §3 ohne Rücksprache.
 
-> Reine manuelle Verifikation. Kein Commit, keine Änderung.
+## Akzeptanzkriterien (Konzept Abschnitt 6, Label an ActiveSetCard angeglichen)
 
-- [ ] **E.1** Für eine bekannte Nacht den `sleepDuration(forNightEnding:)`-Wert in der App ausgeben (Debug-Log).
-- [ ] **E.2** Mit Apple-Health-Detailansicht derselben Nacht vergleichen (reine asleep-Dauer, NICHT Bettzeit).
-- [ ] **E.3** Bei echter Diskrepanz (>30 min): neuen Befund dokumentieren. Sonst Befund 4 schließen.
-- [ ] **STOPP-Gate E:** Vergleichswert App vs. Apple Health melden. Entscheidung Bug ja/nein.
+- [ ] Pause nach bilateralem Satz mit Plan-Gewicht > 0 → Zeile zeigt `Plan: X kg`
+- [ ] Pause nach unilateralem Satz → Zeile zeigt `Plan: 2× X kg`
+- [ ] Existiert eine gegatete Last-Session-Referenz für den nächsten Satz → Zeile zeigt zusätzlich `· Letztes Mal: …`
+- [ ] Bodyweight-Übung (Gewicht 0) → Zeile wird komplett ausgeblendet, kein Leerraum-Artefakt
+- [ ] Superset-Pause (nächste Runde) → unverändertes Verhalten, keine Regression
+- [ ] Build ohne Warnings, Datei-Größe von `RestTimerCard.swift` bleibt unter 400 Zeilen
 
 ## Manual Verification
 
-- [ ] Xcode build nach JEDER Phase grün — bei rot stoppen
-- [ ] Phase B: `refineWithUserInput`-Round-Trip driftet nicht (Score nach Energie/Stress-Input bleibt plausibel)
-- [ ] Phase B: `BodyReadinessFactorsCard` Previews rendern
-- [ ] Phase C: Score 45 zeigt "Normale Tagesform" statt "Etwas müde heute"
-- [ ] Phase A: Simulator/Gerät — Score morgens ≈ Score nachmittags (±3 overall)
-- [ ] Phase A: HRV/RHR-Baseline-mean nach Migration plausibel (Debug-Section)
-- [ ] Phase D: genau 4 Baselines in Debug-Section; Supabase-SQL = 0 Duplikat-Zeilen nach Stream
+- [ ] Xcode-Build (`Cmd+B`) grün, keine neuen Warnings.
+- [ ] Preview „Rest Timer Card" (3 Karten) rendert unverändert, Bankdrücken-Karte zeigt zusätzlich `Plan: 80 kg · Letztes Mal: 82,5 kg`.
+- [ ] Preview „Rest Timer — Gewichtszeile": unilateral zeigt `Plan: 2× 20 kg · Letztes Mal: 2× 21 kg`, Bodyweight-Karte zeigt keine Zeile.
+- [ ] Simulator, Training aus einem Plan mit Historie: Satz abschließen → Pausenkarte zeigt Plan-Gewicht des nächsten Satzes; Wert stimmt mit der `ActiveSetCard` nach Pausenende überein (Zahl **und** Format).
+- [ ] Übergang **zwischen** zwei Übungen: letzter Satz Übung A abschließen → Pausenkarte zeigt Gewicht des ersten Satzes von Übung B (Cache für den neuen groupKey ist warm).
+- [ ] Unilaterale Übung (z. B. Bulgarian Split Squat): „2× …" in Plan- und Zuletzt-Teil, beide Werte halbiert und konsistent zur `ActiveSetCard`-Zeile „Letztes Mal".
+- [ ] Bodyweight-Übung (Klimmzüge, Gewicht 0): keine Zeile, Kartenhöhe/Abstände unverändert.
+- [ ] Superset-Pause (nächste Runde): weiterhin nur „Nächste Runde" + Übungsnamen, keine Gewichtszeile.
+- [ ] Zeitbasierte Übung als nächster Satz: keine Gewichtszeile, kein Layout-Sprung.
+- [ ] Freies Training ohne `sourceTrainingPlan`: `Plan: X kg` erscheint, `Zuletzt:` fehlt — erwartetes Verhalten.
 
 ## Open Questions
 
-- **Migrations-Flag:** `UserDefaults` (gerätelokal, kein Sync) — kein appweiter Sync des Flags gewünscht?
-- **Gate-A-Toleranz:** ±3 Punkte ist Plausibilitäts-, keine statistisch harte Grenze (n=2 reiner Vormittag) — akzeptabel?
+Geklärt (User-Entscheidung 2026-09-10): Zahlformat + Label folgen `ActiveSetCard` — `Plan: 80 kg · Letztes Mal: 82,5 kg` statt Konzept-Vorschlag `Plan: 80.0 kg · Zuletzt: 82.5 kg`.
 
----
+## Relevante Pfade
 
-## Fortschritt
+- `MotionCore/Views/Workouts/Active/Components/RestTimerCard.swift`
+- `MotionCore/Views/Workouts/Active/Components/RestTimerCardContainer.swift`
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift`
+- `MotionCore/Views/Workouts/Active/ViewModel/SetManager.swift`
+- `MotionCore/Services/Calculation/LastSessionReferenceCalcEngine.swift`
+- `MotionCore/Models/Core/ExerciseSet.swift` (Beleg: `effectiveWeight` existiert bereits, Z. 166-168)
+- `MotionCore/Views/Workouts/Components/SetEditSheet.swift` (Beleg für „`weight` = Gesamtgewicht")
 
-**2026-06-13**
+**Umsetzungsmodus:** Single Pass, ein Commit, ein STOPP-Gate am Ende (AP 1–3 sind eine Compile-Kette).
+**Hauptrisiken:** unilaterale Gewichts-Semantik (durch `effectiveWeight` entschärft), stumme Nil-Referenz bei Sessions ohne `sourceTrainingPlan`, versehentliches Rechnen statt Cache-Lookup im sekündlich neu ausgewerteten `heroCard`.
+**Offene Frage geklärt:** Zahlformat + Label folgen `ActiveSetCard` (`Letztes Mal:`).
 
-**Abgeschlossene Schritte:** B.1–B.6, C.1–C.2, A.1–A.5, D.1–D.2 (Phase E ist Manuell, kein Code)
+## Progress (2026-09-10, Developer Agent)
 
-**Commits:**
-- `fd18073` fix(readiness): recenter z-score mapping to ±1.5σ for better score spread (Phase B)
-- `bf7c40b` fix(readiness): shift label boundaries to center 'normal' around expected value (Phase C)
-- `5385886` fix(readiness): use fixed 00-10h window for HRV/RHR to remove time-of-day drift (Phase A)
-- `684587d` fix(readiness): deduplicate baseline rows deterministically via smallest UUID (Phase D)
+**Erledigt:** AP 1 (a–d), AP 2 (a–b), AP 3 (a–b) vollständig umgesetzt, wie im Plan spezifiziert (inkl. aller 4 dokumentierten Abweichungen vom Konzept). Vorab-Suche nach weiteren Call-Sites bestätigt: keine außer den 3 Previews in `RestTimerCard.swift` und `ActiveWorkoutView.heroCard`.
 
 **Geänderte Dateien:**
-- `MotionCore/Services/Calculation/ReadinessCalcEngine.swift` — B.1, B.2
-- `MotionCore/Services/SessionReadinessService.swift` — B.3, A.3
-- `MotionCore/Services/ViewModels/ReadinessViewModel.swift` — B.4, B.5
-- `MotionCore/Services/Calculation/ReadinessTypes.swift` — C.1
-- `MotionCore/Services/Health/HealthKitManager.swift` — A.1, A.2
-- `MotionCore/Services/Health/HealthBaselineUpdateService.swift` — A.4, D.1, D.2
-- `MotionCore/App/MotionCoreApp.swift` — A.5, D (Migration-Flag)
+- `MotionCore/Views/Workouts/Active/Components/RestTimerCard.swift` (189 → 251 Zeilen, unter 400-Zeilen-Ziel)
+- `MotionCore/Views/Workouts/Active/Components/RestTimerCardContainer.swift`
+- `MotionCore/Views/Workouts/Active/View/ActiveWorkoutView.swift`
 
-**Offen:** Phase E (manuelle Verifikation), Supabase-SQL nach nächstem Stream (Gate D)
+**Build:** `xcodebuild -scheme "MotionCore iOS" -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -configuration Debug` → `** BUILD SUCCEEDED **`. Keine neuen Warnings; die 8 vorhandenen Warnings in `LiveActivityCtrl.swift` (`#IsolatedConformances`) sind vorbestehend und unabhängig von dieser Änderung.
+
+**Offen:** Manuelle Simulator-Verifikation (Akzeptanzkriterien + Manual Verification-Checklisten) — nicht Teil des Developer-Scopes, folgt im Quality Gate.

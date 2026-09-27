@@ -23,6 +23,7 @@ struct RestTimerCardContainer: View {
     let currentSet: ExerciseSet?
     let setsForCurrentExercise: Int
     let supersetNextRoundNames: [String]?
+    let lastSessionReference: LastSessionReferenceCalcEngine.Reference?
     let onSkip: () -> Void
     let onAdjust: (Int) -> Void
 
@@ -35,7 +36,12 @@ struct RestTimerCardContainer: View {
             nextExerciseName: currentSet?.exerciseName,
             nextSetNumber: currentSet?.setNumber,
             totalSetsForExercise: setsForCurrentExercise,
-            supersetNextRoundNames: supersetNextRoundNames
+            supersetNextRoundNames: supersetNextRoundNames,
+            // effectiveWeight statt weight/weightPerSide: liefert immer das Gesamtgewicht
+            // beider Seiten, symmetrisch zur Zuletzt-Referenz (siehe RestTimerCard.weightText)
+            nextPlanWeight: currentSet?.effectiveWeight ?? 0,
+            nextIsUnilateral: (currentSet?.isUnilateralSnapshot ?? false) || (currentSet?.exercise?.isUnilateral ?? false),
+            nextLastUsedWeight: lastSessionReference?.weight
         )
     }
 }
