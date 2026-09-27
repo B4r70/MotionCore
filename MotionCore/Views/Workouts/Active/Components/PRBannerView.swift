@@ -16,6 +16,8 @@ struct PRBannerView: View {
     let exerciseName: String
     let oneRM: Double
 
+    @Environment(\.colorScheme) private var scheme
+
     var body: some View {
         HStack(spacing: Space.s3) {
             // Runder Icon-Chip (Ø 38, amber-soft)
@@ -40,14 +42,15 @@ struct PRBannerView: View {
             Badge(text: "Rekord", style: .solid, color: Theme.warning)
         }
         .padding(Space.s4)
-        .background(
-            Theme.warning.opacity(0.10),
-            in: RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
-        )
+        .background(Theme.warning.opacity(0.06))
+        .background(Theme.surfaceCard)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.lg, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
                 .stroke(Theme.warning.opacity(0.35), lineWidth: 1)
         )
+        .shadow(color: scheme == .dark ? .clear : Color(hex: "#16202B").opacity(0.04),
+                radius: 2, y: 1)
         .padding(.horizontal, Space.s4)
         .padding(.top, Space.s2)
     }

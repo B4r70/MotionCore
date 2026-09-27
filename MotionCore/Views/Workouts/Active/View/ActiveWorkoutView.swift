@@ -137,23 +137,17 @@ struct ActiveWorkoutView: View {
                     planTitle: session.sourceTrainingPlan?.title,
                     watchConnectionState: phoneSession.isWatchTrackingActive ? .activeTracking : .hidden
                 )
+
+                // PR-Banner inline (kein Overlay mehr, kein Overlap mit dem Header)
+                if let exercise = prBannerExercise {
+                    PRBannerView(exerciseName: exercise, oneRM: prBannerOneRM)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+
                 ScrollView {
                     scrollContent
                 }
                 .scrollIndicators(.hidden)
-            }
-
-            // PR-Banner Overlay
-            if prBannerExercise != nil {
-                VStack {
-                    if let exercise = prBannerExercise {
-                        PRBannerView(exerciseName: exercise, oneRM: prBannerOneRM)
-                    }
-                    Spacer()
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
-                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: prBannerExercise)
-                .zIndex(100)
             }
 
             VStack(spacing: 0) {
@@ -262,10 +256,12 @@ struct ActiveWorkoutView: View {
             }
             .onReceive(setManager.prDetected) { set, name, oneRM in
                 prSetIDs.insert(set.persistentModelID)
-                prBannerExercise = name
                 prBannerOneRM = oneRM
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                    prBannerExercise = name
+                }
                 Task {
-                    try? await Task.sleep(for: .seconds(3))
+                    try? await Task.sleep(for: .seconds(5))
                     withAnimation(.easeOut) { prBannerExercise = nil }
                 }
             }
