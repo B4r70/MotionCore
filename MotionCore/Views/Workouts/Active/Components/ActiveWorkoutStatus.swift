@@ -100,6 +100,8 @@ struct ActiveWorkoutStatus: View {
                     .font(metricFont)
                     .monospacedDigit()
                     .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
             if let eyebrowText = timerEyebrow {
                 Text(eyebrowText)
@@ -122,6 +124,8 @@ struct ActiveWorkoutStatus: View {
                 .font(metricFont)
                 .monospacedDigit()
                 .foregroundStyle(Theme.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
             eyebrow("Volumen")
         }
         .frame(maxWidth: .infinity)
@@ -134,6 +138,8 @@ struct ActiveWorkoutStatus: View {
                 .font(metricFont)
                 .monospacedDigit()
                 .foregroundStyle(Theme.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
             eyebrow("Sätze")
             if !hrVisible && !kcalVisible {
                 watchBadge
@@ -152,6 +158,8 @@ struct ActiveWorkoutStatus: View {
                     .font(metricFont)
                     .monospacedDigit()
                     .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
             eyebrow("BPM")
             if !kcalVisible {
@@ -172,6 +180,8 @@ struct ActiveWorkoutStatus: View {
                     .font(metricFont)
                     .monospacedDigit()
                     .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
             eyebrow("KCAL")
             watchBadge
@@ -224,6 +234,7 @@ struct ActiveWorkoutStatus: View {
             .font(AppFont.eyebrow)
             .textCase(.uppercase)
             .tracking(0.6)
+            .lineLimit(1)
             .foregroundStyle(Theme.textTertiary)
     }
 
@@ -272,9 +283,11 @@ struct ActiveWorkoutStatus: View {
 }
 
 #Preview("Mit Plan + Live — iPhone SE Breite (320pt)") {
+    // .frame(width:) statt .previewLayout(.fixed(...)) — Letzteres ist die alte
+    // PreviewProvider-API und wird vom #Preview-Macro nicht zuverlässig ausgewertet.
     ActiveWorkoutStatus(
         isPaused: false,
-        formattedElapsedTime: "24:18",
+        formattedElapsedTime: "1:05:23",
         completedSets: 6,
         totalSets: 14,
         progress: 6.0 / 14.0,
@@ -284,8 +297,8 @@ struct ActiveWorkoutStatus: View {
         planTitle: "Push Day A",
         watchConnectionState: .activeTracking
     )
+    .frame(width: 320)
     .background(Theme.surfaceApp)
-    .previewLayout(.fixed(width: 320, height: 130))
 }
 
 #Preview("Nur HR (Kcal noch 0)") {
