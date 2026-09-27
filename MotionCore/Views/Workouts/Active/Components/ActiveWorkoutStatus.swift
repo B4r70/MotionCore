@@ -5,7 +5,7 @@
 // Datei . . . . : ActiveWorkoutStatus.swift                                        /
 // Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 05.01.2026                                                       /
-// Beschreibung  : Status-Header (Timer/Volumen/Saetze + Balken + Live-Chips)       /
+// Beschreibung  : Status-Header (Timer/Volumen/Saetze/Puls/Kcal + Balken)          /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/
@@ -22,8 +22,10 @@ enum WatchConnectionState {
 
 // MARK: - ActiveWorkoutStatus (Calm 2026 · §4.1)
 
-/// Status-Header: drei Spalten (Timer · Volumen · Sätze), einfarbiger Fortschritts-
-/// balken und Live-Health-Chip-Zeile (HR · Kalorien · Watch-LIVE).
+/// Status-Header: Timer · Volumen · Sätze · Puls · Kcal in einer Metrik-Zeile,
+/// darunter der einfarbige Fortschrittsbalken. Puls/Kcal blenden dynamisch ein,
+/// sobald Live-Health-Daten vorliegen; Watch-Status hängt an der jeweils letzten
+/// sichtbaren Spalte rechts.
 struct ActiveWorkoutStatus: View {
     let isPaused: Bool
     let formattedElapsedTime: String
@@ -41,15 +43,19 @@ struct ActiveWorkoutStatus: View {
     // Große Zahlen: SF Pro Rounded Bold 22, tabular (§2).
     private let metricFont = Font.system(size: 22, weight: .bold, design: .rounded)
 
-    private var showLiveChips: Bool {
-        currentHR > 0 || activeCalories > 0 || watchConnectionState != .hidden
+    private var hrVisible: Bool { currentHR > 0 }
+    private var kcalVisible: Bool { activeCalories > 0 }
+
+    /// Sätze wandert bei aktiver Watch (HR + Kcal sichtbar) als zweite Zeile in die
+    /// Timer-Spalte, damit Volumen/HR/Kcal genug Breite behalten (Gate-Entscheidung: Option A).
+    private var mergeTimerAndSets: Bool {
+        hrVisible && kcalVisible
     }
 
     var body: some View {
         VStack(spacing: Space.s3) {
             metricRow
             progressBar
-            if showLiveChips { liveChipsRow }
         }
         .padding(.top, Space.s1)
         .padding(.horizontal, Space.s5)
@@ -57,55 +63,155 @@ struct ActiveWorkoutStatus: View {
         .background(Theme.surfaceApp)
     }
 
-    // MARK: - Metrik-Zeile (3 Spalten)
+    // MARK: - Metrik-Zeile (Timer · Volumen · Sätze · Puls · Kcal)
 
     private var metricRow: some View {
         HStack(alignment: .top) {
-            // Timer (links)
-            VStack(alignment: .leading, spacing: Space.s1) {
-                HStack(spacing: Space.s1) {
-                    Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
-                        .foregroundStyle(isPaused ? Theme.warning : Theme.accent)
-                    Text(formattedElapsedTime)
-                        .font(metricFont)
-                        .monospacedDigit()
-                        .foregroundStyle(Theme.textPrimary)
-                }
-                if let eyebrow = timerEyebrow {
-                    Text(eyebrow)
-                        .font(AppFont.eyebrow)
-                        .textCase(.uppercase)
-                        .tracking(0.6)
-                        .foregroundStyle(isPaused ? Theme.warning : Theme.textTertiary)
-                        .lineLimit(1)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            timerColumn
 
-            // Volumen (Mitte) — nur > 0
             if sessionVolume > 0 {
-                VStack(spacing: Space.s1) {
-                    Text(formattedVolume)
-                        .font(metricFont)
-                        .monospacedDigit()
-                        .foregroundStyle(Theme.textPrimary)
-                    eyebrow("Volumen")
-                }
-                .frame(maxWidth: .infinity)
-                .transition(.scale.combined(with: .opacity))
+                volumeColumn
             }
 
-            // Sätze (rechts)
-            VStack(spacing: Space.s1) {
-                Text("\(completedSets)/\(totalSets)")
+            if !mergeTimerAndSets {
+                setsColumn
+            }
+
+            if hrVisible {
+                hrColumn
+            }
+
+            if kcalVisible {
+                kcalColumn
+            }
+        }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.24), value: sessionVolume > 0)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.24), value: hrVisible)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.24), value: kcalVisible)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.24), value: mergeTimerAndSets)
+    }
+
+    private var timerColumn: some View {
+        VStack(alignment: .leading, spacing: Space.s1) {
+            HStack(spacing: Space.s1) {
+                Image(systemName: isPaused ? "pause.circle.fill" : "clock.fill")
+                    .foregroundStyle(isPaused ? Theme.warning : Theme.accent)
+                Text(formattedElapsedTime)
                     .font(metricFont)
                     .monospacedDigit()
                     .foregroundStyle(Theme.textPrimary)
-                eyebrow("Sätze")
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            if let eyebrowText = timerEyebrow {
+                Text(eyebrowText)
+                    .font(AppFont.eyebrow)
+                    .textCase(.uppercase)
+                    .tracking(0.6)
+                    .foregroundStyle(isPaused ? Theme.warning : Theme.textTertiary)
+                    .lineLimit(1)
+            }
+            if mergeTimerAndSets {
+                eyebrow("\(completedSets)/\(totalSets) Sätze")
+            }
         }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.24), value: sessionVolume > 0)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var volumeColumn: some View {
+        VStack(spacing: Space.s1) {
+            Text(formattedVolume)
+                .font(metricFont)
+                .monospacedDigit()
+                .foregroundStyle(Theme.textPrimary)
+            eyebrow("Volumen")
+        }
+        .frame(maxWidth: .infinity)
+        .transition(.scale.combined(with: .opacity))
+    }
+
+    private var setsColumn: some View {
+        VStack(spacing: Space.s1) {
+            Text("\(completedSets)/\(totalSets)")
+                .font(metricFont)
+                .monospacedDigit()
+                .foregroundStyle(Theme.textPrimary)
+            eyebrow("Sätze")
+            if !hrVisible && !kcalVisible {
+                watchBadge
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
+    }
+
+    private var hrColumn: some View {
+        VStack(spacing: Space.s1) {
+            HStack(spacing: Space.s1) {
+                Image(systemName: "heart.fill")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Theme.danger)
+                Text("\(Int(currentHR))")
+                    .font(metricFont)
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textPrimary)
+            }
+            eyebrow("BPM")
+            if !kcalVisible {
+                watchBadge
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .transition(.scale.combined(with: .opacity))
+    }
+
+    private var kcalColumn: some View {
+        VStack(spacing: Space.s1) {
+            HStack(spacing: Space.s1) {
+                Image(systemName: "flame.fill")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Theme.warning)
+                Text("\(Int(activeCalories))")
+                    .font(metricFont)
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textPrimary)
+            }
+            eyebrow("KCAL")
+            watchBadge
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .transition(.scale.combined(with: .opacity))
+    }
+
+    // MARK: - Watch-Badge (Anker: jeweils letzte sichtbare Spalte rechts)
+
+    @ViewBuilder
+    private var watchBadge: some View {
+        if watchConnectionState != .hidden {
+            HStack(spacing: Space.s1) {
+                Image(systemName: "applewatch")
+                    .font(.system(size: 10))
+                Text(watchStatusText)
+                    .font(AppFont.eyebrow)
+                    .textCase(.uppercase)
+                    .tracking(0.6)
+            }
+            .foregroundStyle(watchStatusColor)
+        }
+    }
+
+    private var watchStatusText: String {
+        switch watchConnectionState {
+        case .hidden: return ""
+        case .activeTracking: return "Live"
+        case .connected, .disconnected: return "Watch"
+        }
+    }
+
+    private var watchStatusColor: Color {
+        switch watchConnectionState {
+        case .hidden: return .clear
+        case .activeTracking: return Theme.success
+        case .connected: return Theme.accent
+        case .disconnected: return Theme.textTertiary
+        }
     }
 
     private var timerEyebrow: String? {
@@ -136,72 +242,6 @@ struct ActiveWorkoutStatus: View {
         .frame(height: 6)
     }
 
-    // MARK: - Live-Health-Chips
-
-    private var liveChipsRow: some View {
-        HStack(spacing: Space.s2) {
-            if currentHR > 0 {
-                metricPill(icon: "heart.fill", iconColor: Theme.danger,
-                           value: "\(Int(currentHR))", unit: "bpm")
-            }
-            if activeCalories > 0 {
-                metricPill(icon: "flame.fill", iconColor: Theme.warning,
-                           value: "\(Int(activeCalories))", unit: "kcal")
-            }
-            Spacer()
-            watchLivePill
-        }
-    }
-
-    private func metricPill(icon: String, iconColor: Color, value: String, unit: String) -> some View {
-        HStack(spacing: Space.s1) {
-            Image(systemName: icon)
-                .font(AppFont.caption)
-                .foregroundStyle(iconColor)
-            Text(value)
-                .font(AppFont.callout)
-                .fontWeight(.semibold)
-                .monospacedDigit()
-                .foregroundStyle(Theme.textPrimary)
-            Text(unit)
-                .font(AppFont.caption)
-                .foregroundStyle(Theme.textTertiary)
-        }
-        .padding(.horizontal, Space.s3)
-        .frame(height: 30)
-        .background(Capsule().fill(Theme.surfaceCard))
-        .overlay(Capsule().stroke(Theme.line, lineWidth: 1))
-    }
-
-    @ViewBuilder
-    private var watchLivePill: some View {
-        switch watchConnectionState {
-        case .hidden:
-            EmptyView()
-        case .activeTracking:
-            watchPill(text: "Live", color: Theme.success)
-        case .connected:
-            watchPill(text: "Watch", color: Theme.accent)
-        case .disconnected:
-            watchPill(text: "Watch", color: Theme.textTertiary)
-        }
-    }
-
-    private func watchPill(text: String, color: Color) -> some View {
-        HStack(spacing: Space.s1) {
-            Image(systemName: "applewatch")
-                .font(AppFont.caption)
-            Text(text)
-                .font(AppFont.eyebrow)
-                .textCase(.uppercase)
-                .tracking(0.6)
-        }
-        .foregroundStyle(color)
-        .padding(.horizontal, Space.s3)
-        .frame(height: 30)
-        .background(Capsule().fill(color.opacity(0.12)))
-    }
-
     // MARK: - Formatierung
 
     private var formattedVolume: String {
@@ -227,6 +267,39 @@ struct ActiveWorkoutStatus: View {
         activeCalories: 214,
         planTitle: "Push Day A",
         watchConnectionState: .activeTracking
+    )
+    .background(Theme.surfaceApp)
+}
+
+#Preview("Mit Plan + Live — iPhone SE Breite (320pt)") {
+    ActiveWorkoutStatus(
+        isPaused: false,
+        formattedElapsedTime: "24:18",
+        completedSets: 6,
+        totalSets: 14,
+        progress: 6.0 / 14.0,
+        sessionVolume: 4300,
+        currentHR: 138,
+        activeCalories: 214,
+        planTitle: "Push Day A",
+        watchConnectionState: .activeTracking
+    )
+    .background(Theme.surfaceApp)
+    .previewLayout(.fixed(width: 320, height: 130))
+}
+
+#Preview("Nur HR (Kcal noch 0)") {
+    ActiveWorkoutStatus(
+        isPaused: false,
+        formattedElapsedTime: "02:10",
+        completedSets: 1,
+        totalSets: 14,
+        progress: 1.0 / 14.0,
+        sessionVolume: 0,
+        currentHR: 96,
+        activeCalories: 0,
+        planTitle: "Push Day A",
+        watchConnectionState: .connected
     )
     .background(Theme.surfaceApp)
 }
