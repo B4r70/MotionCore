@@ -523,8 +523,10 @@ private struct ExerciseOverviewExpandedDetail: View {
         } else {
             weightStr = String(format: "%.1f", set.weight)
         }
-        let repsLabel = set.isUnilateralSnapshot ? "Wdh./S." : "Wdh."
-        return "\(weightStr) kg × \(set.reps) \(repsLabel)"
+        if set.isUnilateralSnapshot {
+            return "\(weightStr) kg · \(set.reps) Wdh./S."
+        }
+        return "\(weightStr) kg × \(set.reps) Wdh."
     }
 
     /// Formatiert Sekunden als „m:ss Min" (z. B. 300 → „5:00 Min", 75 → „1:15 Min")
