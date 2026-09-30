@@ -525,14 +525,20 @@ struct StrengthDetailView: View {
                         } else {
                             HStack(spacing: 4) {
                                 if set.weight > 0 {
-                                    Text(String(format: "%.1f kg", set.weight))
-                                        .font(.subheadline.bold())
+                                    if set.isUnilateralSnapshot {
+                                        let perSide = set.weightPerSide > 0 ? set.weightPerSide : set.weight / 2
+                                        Text("2× \(String(format: "%.1f", perSide)) kg")
+                                            .font(.subheadline.bold())
+                                    } else {
+                                        Text(String(format: "%.1f kg", set.weight))
+                                            .font(.subheadline.bold())
+                                    }
 
                                     Text("×")
                                         .foregroundStyle(Theme.textSecondary)
                                 }
 
-                                Text("\(set.reps) Wdh.")
+                                Text("\(set.reps) \(set.isUnilateralSnapshot ? "Wdh./S." : "Wdh.")")
                                     .font(.subheadline.bold())
                             }
                         }

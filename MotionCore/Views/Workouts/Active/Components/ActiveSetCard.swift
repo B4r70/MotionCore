@@ -246,7 +246,7 @@ struct ActiveSetCard: View {
 
                 HStack(spacing: Space.s6) {
                     VStack(spacing: Space.s1) {
-                        Text(set.weight > 0 ? String(format: "%.2f", set.weight) : "0.00")
+                        Text(formattedBigWeight)
                             .font(.system(size: 36, weight: .bold, design: .rounded))
                             .monospacedDigit()
                             .foregroundStyle(set.weight > 0 ? Theme.textPrimary : Theme.textSecondary)
@@ -267,7 +267,7 @@ struct ActiveSetCard: View {
                             .monospacedDigit()
                             .foregroundStyle(Theme.textPrimary)
 
-                        Text("Wdh.")
+                        Text(isUnilateral ? "Wdh./Seite" : "Wdh.")
                             .font(AppFont.callout)
                             .foregroundStyle(Theme.textSecondary)
                     }
@@ -276,7 +276,7 @@ struct ActiveSetCard: View {
 
                 // Dezente Referenz-Zeile: Werte aus letzter Session (nur wenn >= 2 Saetze abwichen)
                 if let ref = lastSessionReference {
-                    Text("Letztes Mal: \(ref.reps) Wdh. × \(formattedLastWeight(ref))")
+                    Text("Letztes Mal: \(ref.reps) \(isUnilateral ? "Wdh./S." : "Wdh.") × \(formattedLastWeight(ref))")
                         .font(AppFont.callout)
                         .foregroundStyle(Theme.textTertiary)
                 }
@@ -334,12 +334,21 @@ struct ActiveSetCard: View {
         return !instructions.isEmpty || !description.isEmpty
     }
 
-    /// Formatiert das Gewicht der historischen Referenz.
-    /// Bei Koerpergewichts-Uebungen (weight == 0): "Koerpergewicht".
-    /// Bei unilateralen Uebungen: "2× X,X kg" (halbes Gewicht pro Seite).
+    private var isUnilateral: Bool {
+        self.set.isUnilateralSnapshot || (exercise?.isUnilateral ?? false)
+    }
+
+    private var formattedBigWeight: String {
+        guard self.set.weight > 0 else { return "0.00" }
+        if isUnilateral {
+            let perSide = self.set.weightPerSide > 0 ? self.set.weightPerSide : self.set.weight / 2
+            return "2× \(String(format: "%.2f", perSide))"
+        }
+        return String(format: "%.2f", self.set.weight)
+    }
+
     private func formattedLastWeight(_ ref: LastSessionReferenceCalcEngine.Reference) -> String {
         guard ref.weight > 0 else { return "Körpergewicht" }
-        let isUnilateral = set.isUnilateralSnapshot || (exercise?.isUnilateral ?? false)
         if isUnilateral {
             let perSide = ref.weight / 2
             return "2× \(formatWeight(perSide)) kg"

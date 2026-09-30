@@ -515,12 +515,16 @@ private struct ExerciseOverviewExpandedDetail: View {
             return formatDuration(set.duration)
         }
         let weightStr: String
-        if set.weight == set.weight.rounded() {
+        if set.isUnilateralSnapshot, set.weight > 0 {
+            let perSide = set.weightPerSide > 0 ? set.weightPerSide : set.weight / 2
+            weightStr = "2× \(perSide == perSide.rounded() ? String(format: "%.0f", perSide) : String(format: "%.1f", perSide))"
+        } else if set.weight == set.weight.rounded() {
             weightStr = String(format: "%.0f", set.weight)
         } else {
             weightStr = String(format: "%.1f", set.weight)
         }
-        return "\(weightStr) kg × \(set.reps) Wdh."
+        let repsLabel = set.isUnilateralSnapshot ? "Wdh./S." : "Wdh."
+        return "\(weightStr) kg × \(set.reps) \(repsLabel)"
     }
 
     /// Formatiert Sekunden als „m:ss Min" (z. B. 300 → „5:00 Min", 75 → „1:15 Min")
