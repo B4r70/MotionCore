@@ -311,6 +311,9 @@ struct ActiveWorkoutView: View {
             .onChange(of: session.safeExerciseSets.count) { _, _ in
                 let groupKeys = Set(session.safeExerciseSets.map { $0.groupKey })
                 for key in groupKeys { setManager.cleanupLastSetFlag(for: key) }
+                setManager.rebuildGroupedCaches()
+                setManager.refreshSetCaches()
+                setManager.recomputeSessionVolume()
                 Task { @MainActor in try? context.save() }
                 if let retroSet = setManager.retroRIRCandidate(for: exerciseNav.selectedExerciseKey) {
                     rirRetroSet = retroSet
