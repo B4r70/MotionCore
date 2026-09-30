@@ -30,8 +30,11 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     @Published private(set) var activeCalories: Double = 0
     @Published private(set) var isActive: Bool = false
 
-    /// True wenn eine HKWorkoutSession existiert (running oder paused)
-    var hasLiveSession: Bool { workoutSession != nil }
+    /// True wenn eine HKWorkoutSession aktiv läuft oder pausiert ist (nicht stopped/ended)
+    var hasLiveSession: Bool {
+        guard let session = workoutSession else { return false }
+        return session.state == .running || session.state == .paused
+    }
 
     // MARK: - Private Properties
 
@@ -263,6 +266,9 @@ extension WatchWorkoutManager: HKWorkoutSessionDelegate {
 
     func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
         print("WatchWorkoutManager: Session-Fehler: \(error.localizedDescription)")
+        DispatchQueue.main.async { [weak self] in
+            self?.cleanup()
+        }
     }
 }
 

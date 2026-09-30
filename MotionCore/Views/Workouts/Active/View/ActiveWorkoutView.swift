@@ -685,6 +685,7 @@ struct ActiveWorkoutView: View {
     }
 
     private func finishWorkout() {
+        guard postWorkoutEditSession == nil else { return }
         let finalSeconds = sessionManager.endSession()
 
         for set in session.safeExerciseSets.filter({ !$0.isCompleted }) {
@@ -758,6 +759,7 @@ struct ActiveWorkoutView: View {
     }
 
     private func syncAndDismiss() {
+        dismiss()
         Task {
             await readinessTask?.value
             let success = await SupabaseSessionService.shared.upload(session, readiness: currentSessionReadiness)
@@ -767,7 +769,6 @@ struct ActiveWorkoutView: View {
                     try? context.save()
                 }
             }
-            dismiss()
         }
     }
 

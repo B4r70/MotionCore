@@ -164,12 +164,19 @@ struct MotionCoreApp: App {
         guard let restoreInfo = activeSessionManager.getRestorationInfo() else { return }
         pendingRestoreInfo = restoreInfo
 
-        if activeSessionManager.isPaused {
+        // ponytail: stale Session (>12h) immer mit Alert, egal ob pausiert oder nicht
+        let isStale: Bool
+        if let started = activeSessionManager.sessionStartedAt {
+            isStale = Date().timeIntervalSince(started) > 12 * 3600
+        } else {
+            isStale = false
+        }
+
+        if activeSessionManager.isPaused || isStale {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 showSessionRestoreAlert = true
             }
         } else {
-            // ponytail: laufende Session still restoren, Alert nur bei pausierter
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 restoreSession()
             }
