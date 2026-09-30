@@ -759,10 +759,12 @@ struct ActiveWorkoutView: View {
     }
 
     private func syncAndDismiss() {
+        // @State wird nach dismiss() invalidiert — Readiness vorher capturen
+        let readiness = currentSessionReadiness
         dismiss()
         Task {
             await readinessTask?.value
-            let success = await SupabaseSessionService.shared.upload(session, readiness: currentSessionReadiness)
+            let success = await SupabaseSessionService.shared.upload(session, readiness: readiness)
             if success {
                 await MainActor.run {
                     session.syncedToSupabase = true
