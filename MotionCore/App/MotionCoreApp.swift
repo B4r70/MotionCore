@@ -161,10 +161,17 @@ struct MotionCoreApp: App {
     }
 
     private func checkForActiveSession() {
-        if let restoreInfo = activeSessionManager.getRestorationInfo() {
-            pendingRestoreInfo = restoreInfo
+        guard let restoreInfo = activeSessionManager.getRestorationInfo() else { return }
+        pendingRestoreInfo = restoreInfo
+
+        if activeSessionManager.isPaused {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 showSessionRestoreAlert = true
+            }
+        } else {
+            // ponytail: laufende Session still restoren, Alert nur bei pausierter
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                restoreSession()
             }
         }
     }
