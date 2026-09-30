@@ -58,6 +58,7 @@ struct ActiveWorkoutView: View {
     @ObservedObject private var phoneSession = PhoneSessionManager.shared
 
     @State private var showCancelHealthAlert = false
+    @State private var postWorkoutEditSession: StrengthSession?
     @State private var rirSheetSet: ExerciseSet? = nil
     @State private var rirRetroSet: ExerciseSet? = nil
     @State private var paceEntrySet: ExerciseSet? = nil
@@ -440,6 +441,12 @@ struct ActiveWorkoutView: View {
             }
             .environmentObject(appSettings)
         }
+        .sheet(item: $postWorkoutEditSession) { editSession in
+            StrengthEditView(session: editSession)
+        }
+        .onChange(of: postWorkoutEditSession) { old, new in
+            if old != nil, new == nil { syncAndDismiss() }
+        }
     }
 
     // MARK: - Bottom Action Bar
@@ -738,20 +745,25 @@ struct ActiveWorkoutView: View {
             WatchComplicationService.updateComplications(allSessions: allSessions)
             WidgetSnapshotPublisher.publish(allSessions: allSessions)
 
-            Task {
-                await readinessTask?.value
-                let success = await SupabaseSessionService.shared.upload(session, readiness: currentSessionReadiness)
-                if success {
-                    await MainActor.run {
-                        session.syncedToSupabase = true
-                        try? context.save()
-                    }
-                }
-            }
-
             liveActivity.end()
             SessionResumeStore.clear()
             PhoneSessionManager.shared.sendIdleState()
+
+            // ponytail: Edit-Sheet vor Sync — User erfasst Belastung/Notizen, dann erst Upload
+            postWorkoutEditSession = session
+        }
+    }
+
+    private func syncAndDismiss() {
+        Task {
+            await readinessTask?.value
+            let success = await SupabaseSessionService.shared.upload(session, readiness: currentSessionReadiness)
+            if success {
+                await MainActor.run {
+                    session.syncedToSupabase = true
+                    try? context.save()
+                }
+            }
             dismiss()
         }
     }
