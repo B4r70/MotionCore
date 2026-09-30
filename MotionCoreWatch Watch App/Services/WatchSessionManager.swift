@@ -311,6 +311,16 @@ extension WatchSessionManager {
         // Health-Tracking starten (F1: Auth automatisch beim ersten Start)
         if message[WatchWorkoutLifecycleKey.startHealthTracking] != nil {
             isTearingDown = false
+
+            // Idempotenz: laufende Session wiederverwenden statt verwerfen + neu starten
+            // (deckt BT-Reconnect ab — Phone-Relaunch setzt isWatchTrackingActive zurück,
+            //  onWatchBecameReachable sendet erneut startHealthTracking)
+            if let existing = workoutManager, existing.hasLiveSession {
+                startHeartbeatTimer()
+                sendHeartbeatUpdate()
+                return
+            }
+
             if let existing = workoutManager {
                 workoutManager = nil
                 stopHeartbeatTimer()
@@ -320,14 +330,12 @@ extension WatchSessionManager {
             self.workoutManager = manager
 
             Task {
-                // Erst Auth anfordern — wenn verweigert, trotzdem weiter (Fallback ohne HR)
                 let authorized = await manager.requestAuthorization()
                 if !authorized {
                     print("WatchSessionManager: HealthKit-Auth verweigert — Workout ohne HR-Tracking")
                 }
                 do {
                     try await manager.startWorkout()
-                    // Initialen Snapshot nach Workout-Start senden (2s Wartezeit für ersten HR-Wert)
                     try? await Task.sleep(for: .seconds(2))
                     await MainActor.run { self.sendHeartbeatUpdate() }
                 } catch {

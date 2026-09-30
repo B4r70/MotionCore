@@ -30,6 +30,9 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     @Published private(set) var activeCalories: Double = 0
     @Published private(set) var isActive: Bool = false
 
+    /// True wenn eine HKWorkoutSession existiert (running oder paused)
+    var hasLiveSession: Bool { workoutSession != nil }
+
     // MARK: - Private Properties
 
     private let healthStore = HKHealthStore()
