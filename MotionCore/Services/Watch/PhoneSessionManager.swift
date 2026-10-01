@@ -54,6 +54,19 @@ final class PhoneSessionManager: NSObject, ObservableObject {
     @Published var isWatchTrackingActive: Bool = false
     @Published var lastExerciseSnapshot: ExerciseSnapshotData?
 
+    // MARK: - Workout gespeichert (Watch → iPhone)
+
+    /// Meldet (sessionUUID, HKWorkout-UUID), sobald die Watch das Workout in Health gespeichert hat.
+    /// Kommt die Meldung vor dem Setzen des Handlers (Kaltstart), wird sie zwischengespeichert.
+    var onWorkoutSaved: ((UUID, UUID) -> Void)? {
+        didSet {
+            guard let onWorkoutSaved else { return }
+            pendingSaved.forEach(onWorkoutSaved)
+            pendingSaved.removeAll()
+        }
+    }
+    private var pendingSaved: [(UUID, UUID)] = []
+
     // MARK: - Init
 
     private override init() {
@@ -132,9 +145,13 @@ final class PhoneSessionManager: NSObject, ObservableObject {
     // MARK: - Health Tracking Lifecycle
 
     /// Startet das Health-Tracking auf der Watch.
-    func sendStartHealthTracking() {
-        updateDesiredHealthState(.active)
-        sendLifecycleMessage([WatchWorkoutLifecycleKey.startHealthTracking: true])
+    /// `sessionUUID` + `planName` gehen als HKMetadataKeyExternalUUID / WorkoutBrandName ans HKWorkout.
+    /// Zusätzlich im applicationContext, damit der Self-Healing-Start der Watch sie auch kennt.
+    func sendStartHealthTracking(sessionUUID: UUID, planName: String?) {
+        var metadata: [String: Any] = [WatchWorkoutLifecycleKey.sessionUUID: sessionUUID.uuidString]
+        if let planName, !planName.isEmpty { metadata[WatchWorkoutLifecycleKey.planName] = planName }
+        updateDesiredHealthState(.active, metadata: metadata)
+        sendLifecycleMessage([WatchWorkoutLifecycleKey.startHealthTracking: true].merging(metadata) { $1 })
         DispatchQueue.main.async {
             self.isWatchTrackingActive = true
         }
@@ -286,11 +303,11 @@ final class PhoneSessionManager: NSObject, ObservableObject {
     /// Der applicationContext ist persistent — die Watch liest ihn bei jedem Wake für Reconciliation.
     /// WICHTIG: Nur bei echten Zustands-Transitionen aufrufen — NICHT in sendIdleState(),
     /// um .finished/.discarded nicht zu überschreiben.
-    func updateDesiredHealthState(_ state: WatchDesiredHealthState) {
+    func updateDesiredHealthState(_ state: WatchDesiredHealthState, metadata: [String: Any] = [:]) {
         guard WCSession.default.activationState == .activated else { return }
         do {
             try WCSession.default.updateApplicationContext(
-                [WatchDesiredHealthStateKey.desiredHealthState: state.rawValue]
+                metadata.merging([WatchDesiredHealthStateKey.desiredHealthState: state.rawValue]) { $1 }
             )
         } catch {
             print("PhoneSessionManager: updateApplicationContext fehlgeschlagen: \(error.localizedDescription)")
@@ -335,6 +352,23 @@ extension PhoneSessionManager: WCSessionDelegate {
         guard session.isReachable else { return }
         DispatchQueue.main.async { [weak self] in
             self?.onWatchBecameReachable?()
+        }
+    }
+
+    /// Empfängt die garantiert zugestellte Rückmeldung der HKWorkout-UUID (transferUserInfo)
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+        guard userInfo[WatchWorkoutSavedKey.workoutSaved] != nil,
+              let sessionRaw = userInfo[WatchWorkoutLifecycleKey.sessionUUID] as? String,
+              let hkRaw = userInfo[WatchWorkoutSavedKey.healthKitWorkoutUUID] as? String,
+              let sessionUUID = UUID(uuidString: sessionRaw),
+              let hkUUID = UUID(uuidString: hkRaw) else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            if let handler = self.onWorkoutSaved {
+                handler(sessionUUID, hkUUID)
+            } else {
+                self.pendingSaved.append((sessionUUID, hkUUID))
+            }
         }
     }
 
