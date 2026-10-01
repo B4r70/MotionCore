@@ -149,19 +149,20 @@ struct ActiveWorkoutView: View {
                     scrollContent
                 }
                 .scrollIndicators(.hidden)
-            }
-
-            VStack(spacing: 0) {
-                Spacer()
-                if isSupersetSelectionMode {
-                    supersetActionBar
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                // Safe-Area-Inset statt Overlay: Scroll-Inhalt endet exakt über der Leiste
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    VStack(spacing: 0) {
+                        if isSupersetSelectionMode {
+                            supersetActionBar
+                                .padding(.horizontal)
+                                .padding(.bottom, 8)
+                                .transition(.move(edge: .bottom).combined(with: .opacity))
+                        }
+                        bottomActionBar
+                    }
+                    .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isSupersetSelectionMode)
                 }
-                bottomActionBar
             }
-            .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isSupersetSelectionMode)
         }
         .navigationTitle(session.planName ?? "Training")
         .navigationBarTitleDisplayMode(.inline)
@@ -937,7 +938,7 @@ struct ActiveWorkoutView: View {
         .animation(.easeInOut, value: restTimerManager.isResting)
         .padding(.horizontal)
         .padding(.top, 16)
-        .padding(.bottom, 100)
+        .padding(.bottom, Space.s4)
     }
 
     @ViewBuilder
