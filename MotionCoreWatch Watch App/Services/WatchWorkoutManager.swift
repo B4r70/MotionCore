@@ -43,7 +43,7 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     private var workoutBuilder: HKLiveWorkoutBuilder?
 
     /// StrengthSession.sessionUUID des laufenden Workouts (für die Rückmeldung nach finishWorkout)
-    private var sessionUUID: String?
+    private(set) var sessionUUID: String?
 
     // Gecachte HK-Typen und Einheiten — vermeiden wiederholte Allokation in didCollectDataOf
     private let hrType   = HKQuantityType(.heartRate)
@@ -109,26 +109,35 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
         workoutSession = session
         workoutBuilder = builder
 
+        // Vor beginCollection setzen — kein Race mit cleanup() bei schnellem Stop
+        self.sessionUUID = sessionUUID
+
         // Session und Builder starten
         let startDate = Date()
         session.startActivity(with: startDate)
         try await builder.beginCollection(at: startDate)
 
-        self.sessionUUID = sessionUUID
-        var metadata: [String: Any] = [:]
-        if let sessionUUID { metadata[HKMetadataKeyExternalUUID] = sessionUUID }
-        if let planName, !planName.isEmpty { metadata[HKMetadataKeyWorkoutBrandName] = planName }
-        if !metadata.isEmpty {
-            // Metadata-Fehler dürfen das Workout nicht verhindern
-            do { try await builder.addMetadata(metadata) }
-            catch { print("WatchWorkoutManager: addMetadata fehlgeschlagen: \(error.localizedDescription)") }
-        }
+        await applyMetadata(sessionUUID: sessionUUID, planName: planName)
 
         await MainActor.run {
             self.exerciseStartDate = startDate
             self.caloriesAtExerciseStart = 0
             self.isActive = true
         }
+    }
+
+    /// Schreibt ExternalUUID + Titel in den Builder. Auch nachträglich nutzbar, wenn die Session
+    /// schon lief, bevor UUID/Titel bekannt waren (Self-Healing vor Eintreffen des Contexts).
+    func applyMetadata(sessionUUID: String?, planName: String?) async {
+        guard let builder = workoutBuilder else { return }
+        self.sessionUUID = sessionUUID
+        var metadata: [String: Any] = [:]
+        if let sessionUUID { metadata[HKMetadataKeyExternalUUID] = sessionUUID }
+        if let planName, !planName.isEmpty { metadata[HKMetadataKeyWorkoutBrandName] = planName }
+        guard !metadata.isEmpty else { return }
+        // Metadata-Fehler dürfen das Workout nicht verhindern
+        do { try await builder.addMetadata(metadata) }
+        catch { print("WatchWorkoutManager: addMetadata fehlgeschlagen: \(error.localizedDescription)") }
     }
 
     /// Pausiert das laufende Workout.
@@ -158,6 +167,8 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
                     WatchWorkoutLifecycleKey.sessionUUID: sessionUUID,
                     WatchWorkoutSavedKey.healthKitWorkoutUUID: workout.uuid.uuidString
                 ])
+            } else {
+                print("WatchWorkoutManager: HKWorkout-UUID nicht gemeldet (workout=\(workout != nil), sessionUUID=\(sessionUUID ?? "nil"), WCSession aktiviert=\(WCSession.default.activationState == .activated))")
             }
         } catch {
             print("WatchWorkoutManager: Fehler beim Beenden des Workouts: \(error.localizedDescription)")

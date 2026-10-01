@@ -93,6 +93,13 @@ final class WatchSessionManager: NSObject, ObservableObject {
         }
     }
 
+    /// Nach Stop/Discard leeren — sonst würde ein späterer Start ohne Metadata die UUID des Vorgängers erben.
+    /// Der WatchWorkoutManager hält seine eigene Kopie für die Rückmeldung nach finishWorkout().
+    private func clearWorkoutMetadata() {
+        desiredSessionUUID = nil
+        desiredPlanName = nil
+    }
+
     /// Bereits verarbeitete Command-IDs (String = UUID.uuidString).
     /// Begrenzt auf ~20 Einträge — älteste werden verdrängt wenn voll.
     private var processedCommandIDs: [String] = []
@@ -333,6 +340,11 @@ extension WatchSessionManager {
             // (deckt BT-Reconnect ab — Phone-Relaunch setzt isWatchTrackingActive zurück,
             //  onWatchBecameReachable sendet erneut startHealthTracking)
             if let existing = workoutManager, existing.hasLiveSession {
+                // Session lief evtl. ohne UUID/Titel (Self-Healing vor Context) — nachtragen
+                if let uuid = desiredSessionUUID, existing.sessionUUID != uuid {
+                    let planName = desiredPlanName
+                    Task { await existing.applyMetadata(sessionUUID: uuid, planName: planName) }
+                }
                 startHeartbeatTimer()
                 sendHeartbeatUpdate()
                 return
@@ -365,6 +377,7 @@ extension WatchSessionManager {
         // Health-Tracking beenden und in Apple Health speichern
         if message[WatchWorkoutLifecycleKey.stopHealthTracking] != nil {
             isTearingDown = true
+            clearWorkoutMetadata()
             guard let manager = workoutManager else { return }
             stopHeartbeatTimer()
             Task {
@@ -376,6 +389,7 @@ extension WatchSessionManager {
         // Health-Tracking verwerfen (kein Apple-Health-Eintrag)
         if message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil {
             isTearingDown = true
+            clearWorkoutMetadata()
             let manager = workoutManager
             workoutManager = nil
             stopHeartbeatTimer()
@@ -472,6 +486,7 @@ extension WatchSessionManager {
 
             case .discarded:
                 // iPhone hat Verwerfen angewiesen — Session verwerfen (kein Health-Eintrag)
+                clearWorkoutMetadata()
                 workoutManager = nil
                 stopHeartbeatTimer()
                 isTearingDown = false
@@ -480,6 +495,7 @@ extension WatchSessionManager {
             case .finished:
                 // iPhone hat Beenden angewiesen — Session speichern (Stop-Kommando war gedroppt)
                 // NICHT verwerfen — der User wollte das Workout in Apple Health haben.
+                clearWorkoutMetadata()
                 workoutManager = nil
                 stopHeartbeatTimer()
                 Task { await manager.endWorkout() }

@@ -357,11 +357,14 @@ extension PhoneSessionManager: WCSessionDelegate {
 
     /// Empfängt die garantiert zugestellte Rückmeldung der HKWorkout-UUID (transferUserInfo)
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
-        guard userInfo[WatchWorkoutSavedKey.workoutSaved] != nil,
-              let sessionRaw = userInfo[WatchWorkoutLifecycleKey.sessionUUID] as? String,
+        guard userInfo[WatchWorkoutSavedKey.workoutSaved] != nil else { return }
+        guard let sessionRaw = userInfo[WatchWorkoutLifecycleKey.sessionUUID] as? String,
               let hkRaw = userInfo[WatchWorkoutSavedKey.healthKitWorkoutUUID] as? String,
               let sessionUUID = UUID(uuidString: sessionRaw),
-              let hkUUID = UUID(uuidString: hkRaw) else { return }
+              let hkUUID = UUID(uuidString: hkRaw) else {
+            print("PhoneSessionManager: workoutSaved mit ungültigen UUIDs verworfen: \(userInfo)")
+            return
+        }
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if let handler = self.onWorkoutSaved {
