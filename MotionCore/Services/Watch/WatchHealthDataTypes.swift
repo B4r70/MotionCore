@@ -50,6 +50,18 @@ enum WatchWorkoutLifecycleKey {
     static let requestSnapshot       = "requestHealthSnapshot"
     /// Eindeutige ID jedes Lifecycle-Commands — ermöglicht Deduplizierung auf der Watch
     static let lifecycleCommandID    = "lifecycleCommandID"
+    /// StrengthSession.sessionUUID (String) — wird als HKMetadataKeyExternalUUID am HKWorkout gesetzt
+    static let sessionUUID           = "sessionUUID"
+    /// Plan-Titel — wird als HKMetadataKeyWorkoutBrandName (Titel in Apple Fitness) gesetzt
+    static let planName              = "planName"
+}
+
+// MARK: - Workout Saved Keys (Watch → iPhone, nach finishWorkout)
+
+/// Keys für die Rückmeldung der gespeicherten HKWorkout-UUID (via transferUserInfo)
+enum WatchWorkoutSavedKey {
+    static let workoutSaved          = "workoutSaved"
+    static let healthKitWorkoutUUID  = "healthKitWorkoutUUID"
 }
 
 // MARK: - Heartbeat Keys

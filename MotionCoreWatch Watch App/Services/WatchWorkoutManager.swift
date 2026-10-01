@@ -42,6 +42,9 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     private var workoutSession: HKWorkoutSession?
     private var workoutBuilder: HKLiveWorkoutBuilder?
 
+    /// StrengthSession.sessionUUID des laufenden Workouts (für die Rückmeldung nach finishWorkout)
+    private(set) var sessionUUID: String?
+
     // Gecachte HK-Typen und Einheiten — vermeiden wiederholte Allokation in didCollectDataOf
     private let hrType   = HKQuantityType(.heartRate)
     private let calType  = HKQuantityType(.activeEnergyBurned)
@@ -89,7 +92,9 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     // MARK: - Workout Lifecycle
 
     /// Startet eine neue HKWorkoutSession für traditionelles Krafttraining.
-    func startWorkout() async throws {
+    /// `sessionUUID` landet als HKMetadataKeyExternalUUID, `planName` als HKMetadataKeyWorkoutBrandName
+    /// (Titel in Apple Fitness). Beide optional — ohne Plan bleibt Apples Standard-Titel.
+    func startWorkout(sessionUUID: String?, planName: String?) async throws {
         let config = HKWorkoutConfiguration()
         config.activityType = .traditionalStrengthTraining
         config.locationType = .indoor
@@ -104,16 +109,35 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
         workoutSession = session
         workoutBuilder = builder
 
+        // Vor beginCollection setzen — kein Race mit cleanup() bei schnellem Stop
+        self.sessionUUID = sessionUUID
+
         // Session und Builder starten
         let startDate = Date()
         session.startActivity(with: startDate)
         try await builder.beginCollection(at: startDate)
+
+        await applyMetadata(sessionUUID: sessionUUID, planName: planName)
 
         await MainActor.run {
             self.exerciseStartDate = startDate
             self.caloriesAtExerciseStart = 0
             self.isActive = true
         }
+    }
+
+    /// Schreibt ExternalUUID + Titel in den Builder. Auch nachträglich nutzbar, wenn die Session
+    /// schon lief, bevor UUID/Titel bekannt waren (Self-Healing vor Eintreffen des Contexts).
+    func applyMetadata(sessionUUID: String?, planName: String?) async {
+        guard let builder = workoutBuilder else { return }
+        self.sessionUUID = sessionUUID
+        var metadata: [String: Any] = [:]
+        if let sessionUUID { metadata[HKMetadataKeyExternalUUID] = sessionUUID }
+        if let planName, !planName.isEmpty { metadata[HKMetadataKeyWorkoutBrandName] = planName }
+        guard !metadata.isEmpty else { return }
+        // Metadata-Fehler dürfen das Workout nicht verhindern
+        do { try await builder.addMetadata(metadata) }
+        catch { print("WatchWorkoutManager: addMetadata fehlgeschlagen: \(error.localizedDescription)") }
     }
 
     /// Pausiert das laufende Workout.
@@ -135,7 +159,17 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
 
         do {
             try await builder.endCollection(at: endDate)
-            try await builder.finishWorkout()
+            let workout = try await builder.finishWorkout()
+            // Rückrichtung HKWorkout → StrengthSession: UUID garantiert ans iPhone melden
+            if let workout, let sessionUUID, WCSession.default.activationState == .activated {
+                _ = WCSession.default.transferUserInfo([
+                    WatchWorkoutSavedKey.workoutSaved: true,
+                    WatchWorkoutLifecycleKey.sessionUUID: sessionUUID,
+                    WatchWorkoutSavedKey.healthKitWorkoutUUID: workout.uuid.uuidString
+                ])
+            } else {
+                print("WatchWorkoutManager: HKWorkout-UUID nicht gemeldet (workout=\(workout != nil), sessionUUID=\(sessionUUID ?? "nil"), WCSession aktiviert=\(WCSession.default.activationState == .activated))")
+            }
         } catch {
             print("WatchWorkoutManager: Fehler beim Beenden des Workouts: \(error.localizedDescription)")
         }
@@ -237,6 +271,7 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     private func cleanup() {
         workoutSession = nil
         workoutBuilder = nil
+        sessionUUID = nil
         heartRateSamplesForExercise = []
         minHRForExercise = .infinity
         exerciseStartDate = nil

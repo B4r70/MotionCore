@@ -80,6 +80,26 @@ final class WatchSessionManager: NSObject, ObservableObject {
     /// Startwert .active: bewahrt das legitime Self-Healing beim Relaunch.
     private var lastDesiredHealthState: WatchDesiredHealthState = .active
 
+    /// Metadata für das nächste/laufende HKWorkout (ExternalUUID + Titel). Kommt mit startHealthTracking
+    /// und via applicationContext — Letzteres deckt Self-Healing nach App-Kill ab.
+    private var desiredSessionUUID: String?
+    private var desiredPlanName: String?
+
+    /// Übernimmt sessionUUID/planName aus Message oder applicationContext (nur wenn vorhanden).
+    private func updateWorkoutMetadata(from dict: [String: Any]) {
+        if let uuid = dict[WatchWorkoutLifecycleKey.sessionUUID] as? String {
+            desiredSessionUUID = uuid
+            desiredPlanName = dict[WatchWorkoutLifecycleKey.planName] as? String
+        }
+    }
+
+    /// Nach Stop/Discard leeren — sonst würde ein späterer Start ohne Metadata die UUID des Vorgängers erben.
+    /// Der WatchWorkoutManager hält seine eigene Kopie für die Rückmeldung nach finishWorkout().
+    private func clearWorkoutMetadata() {
+        desiredSessionUUID = nil
+        desiredPlanName = nil
+    }
+
     /// Bereits verarbeitete Command-IDs (String = UUID.uuidString).
     /// Begrenzt auf ~20 Einträge — älteste werden verdrängt wenn voll.
     private var processedCommandIDs: [String] = []
@@ -128,6 +148,8 @@ extension WatchSessionManager: WCSessionDelegate {
            let state = WatchDesiredHealthState(rawValue: raw) {
             DispatchQueue.main.async { self.lastDesiredHealthState = state }
         }
+        let receivedContext = WCSession.default.receivedApplicationContext
+        DispatchQueue.main.async { self.updateWorkoutMetadata(from: receivedContext) }
         // Reconcile nach Aktivierung — schließt Fenster bei App-Relaunch mit laufender Session
         DispatchQueue.main.async { self.reconcileHealthStateIfNeeded() }
     }
@@ -209,7 +231,7 @@ extension WatchSessionManager: WCSessionDelegate {
                         return
                     }
                     do {
-                        try await manager.startWorkout()
+                        try await manager.startWorkout(sessionUUID: self.desiredSessionUUID, planName: self.desiredPlanName)
                         // Heartbeat erst starten wenn Workout läuft und erste Werte vorliegen
                         try? await Task.sleep(for: .seconds(2))
                         await MainActor.run {
@@ -276,6 +298,7 @@ extension WatchSessionManager: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            self.updateWorkoutMetadata(from: applicationContext)
             // Desired-State aktualisieren
             if let raw = applicationContext[WatchDesiredHealthStateKey.desiredHealthState] as? String,
                let state = WatchDesiredHealthState(rawValue: raw) {
@@ -311,11 +334,17 @@ extension WatchSessionManager {
         // Health-Tracking starten (F1: Auth automatisch beim ersten Start)
         if message[WatchWorkoutLifecycleKey.startHealthTracking] != nil {
             isTearingDown = false
+            updateWorkoutMetadata(from: message)
 
             // Idempotenz: laufende Session wiederverwenden statt verwerfen + neu starten
             // (deckt BT-Reconnect ab — Phone-Relaunch setzt isWatchTrackingActive zurück,
             //  onWatchBecameReachable sendet erneut startHealthTracking)
             if let existing = workoutManager, existing.hasLiveSession {
+                // Session lief evtl. ohne UUID/Titel (Self-Healing vor Context) — nachtragen
+                if let uuid = desiredSessionUUID, existing.sessionUUID != uuid {
+                    let planName = desiredPlanName
+                    Task { await existing.applyMetadata(sessionUUID: uuid, planName: planName) }
+                }
                 startHeartbeatTimer()
                 sendHeartbeatUpdate()
                 return
@@ -335,7 +364,7 @@ extension WatchSessionManager {
                     print("WatchSessionManager: HealthKit-Auth verweigert — Workout ohne HR-Tracking")
                 }
                 do {
-                    try await manager.startWorkout()
+                    try await manager.startWorkout(sessionUUID: self.desiredSessionUUID, planName: self.desiredPlanName)
                     try? await Task.sleep(for: .seconds(2))
                     await MainActor.run { self.sendHeartbeatUpdate() }
                 } catch {
@@ -348,6 +377,7 @@ extension WatchSessionManager {
         // Health-Tracking beenden und in Apple Health speichern
         if message[WatchWorkoutLifecycleKey.stopHealthTracking] != nil {
             isTearingDown = true
+            clearWorkoutMetadata()
             guard let manager = workoutManager else { return }
             stopHeartbeatTimer()
             Task {
@@ -359,6 +389,7 @@ extension WatchSessionManager {
         // Health-Tracking verwerfen (kein Apple-Health-Eintrag)
         if message[WatchWorkoutLifecycleKey.discardHealthTracking] != nil {
             isTearingDown = true
+            clearWorkoutMetadata()
             let manager = workoutManager
             workoutManager = nil
             stopHeartbeatTimer()
@@ -455,6 +486,7 @@ extension WatchSessionManager {
 
             case .discarded:
                 // iPhone hat Verwerfen angewiesen — Session verwerfen (kein Health-Eintrag)
+                clearWorkoutMetadata()
                 workoutManager = nil
                 stopHeartbeatTimer()
                 isTearingDown = false
@@ -463,6 +495,7 @@ extension WatchSessionManager {
             case .finished:
                 // iPhone hat Beenden angewiesen — Session speichern (Stop-Kommando war gedroppt)
                 // NICHT verwerfen — der User wollte das Workout in Apple Health haben.
+                clearWorkoutMetadata()
                 workoutManager = nil
                 stopHeartbeatTimer()
                 Task { await manager.endWorkout() }

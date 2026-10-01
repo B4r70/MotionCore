@@ -193,7 +193,7 @@ struct ActiveWorkoutView: View {
             // Sofortiger State-Push wenn Watch-App während laufendem Training geöffnet wird
             PhoneSessionManager.shared.onWatchBecameReachable = {
                 if !PhoneSessionManager.shared.isWatchTrackingActive {
-                    PhoneSessionManager.shared.sendStartHealthTracking()
+                    PhoneSessionManager.shared.sendStartHealthTracking(sessionUUID: session.sessionUUID, planName: session.planName)
                     PhoneSessionManager.shared.sendHeartbeatEnabled(true)
                 }
                 watchBridge.sendState()
@@ -225,7 +225,7 @@ struct ActiveWorkoutView: View {
             // Session-Fragmentierung bei Re-Appear der View während laufendem Workout).
             if !PhoneSessionManager.shared.isWatchTrackingActive {
                 PhoneSessionManager.shared.resetHealthData()
-                PhoneSessionManager.shared.sendStartHealthTracking()
+                PhoneSessionManager.shared.sendStartHealthTracking(sessionUUID: session.sessionUUID, planName: session.planName)
                 PhoneSessionManager.shared.sendHeartbeatEnabled(true)
             }
         }

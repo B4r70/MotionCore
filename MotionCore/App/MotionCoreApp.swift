@@ -109,6 +109,19 @@ struct MotionCoreApp: App {
                 .onAppear { checkForActiveSession() }
                 .task {
                     let context = sharedModelContainer.mainContext
+                    // 0. Rückrichtung HKWorkout → Session: UUID der gespeicherten HKWorkout eintragen
+                    PhoneSessionManager.shared.onWorkoutSaved = { sessionUUID, hkUUID in
+                        let descriptor = FetchDescriptor<StrengthSession>(predicate: #Predicate { $0.sessionUUID == sessionUUID })
+                        guard let session = try? context.fetch(descriptor).first else {
+                            print("MotionCoreApp: workoutSaved — keine StrengthSession für \(sessionUUID)")
+                            return
+                        }
+                        session.healthKitWorkoutUUID = hkUUID
+                        // UUID kam nach dem Supabase-Upload → Resync, sonst bleibt healthkit_workout_uuid remote NULL
+                        if session.syncedToSupabase { session.needsSupabaseResync = true }
+                        do { try context.save() }
+                        catch { print("MotionCoreApp: healthKitWorkoutUUID speichern fehlgeschlagen: \(error.localizedDescription)") }
+                    }
                     // 1. Bundle-Seeder zuerst (apiID-basiert, 1324 Übungen)
                     await BundledExerciseSeeder.seedIfNeeded(context: context)
                     // 2. Handgepflegte Übungen nur ergänzen wenn noch nicht vorhanden (Name-basiert)
