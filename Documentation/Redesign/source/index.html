@@ -1,0 +1,128 @@
+<!-- Source reference (not a DS card). See README.md §9. -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MotionCore — ActiveWorkoutView</title>
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  /* Neutralises a stale Figma-plugin helper still present in the on-disk DS
+     bundle (excluded from source; gone after the next recompile). No-op here. */
+  window.figma = window.figma || { variables:{ getLocalVariableCollectionsAsync:async()=>[], createVariableCollection:()=>({modes:[{modeId:'m'}]}), getLocalVariablesAsync:async()=>[], createVariable:()=>({setValueForMode(){}}) }, loadFontAsync:async()=>{}, getLocalTextStylesAsync:async()=>[], createTextStyle:()=>({}), getLocalEffectStylesAsync:async()=>[], createEffectStyle:()=>({}), notify(){}, closePlugin(){} };
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--surface-app) 30%), var(--surface-app);
+    font-family: var(--font-sans);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 28px;
+  }
+  .phone {
+    position: relative; width: 390px; height: 844px;
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--surface-app) 20%), var(--surface-app);
+    border-radius: 52px; overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 0 0 12px #0c1626, 0 0 0 14px #243246, var(--shadow-pop);
+  }
+  .notch { position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+    width: 122px; height: 34px; background: #0c1626; border-radius: 20px; z-index: 40; }
+  .status { height: 52px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 28px 6px; z-index: 30; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .status .ic { display: flex; gap: 6px; align-items: center; }
+  .status [data-lucide] { width: 16px; height: 16px; }
+
+  /* nav: back · title · finish */
+  .navbar { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 2px 16px 8px; z-index: 20; }
+  .navbtn { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: var(--surface-card); box-shadow: var(--shadow-sm); color: var(--text-secondary); cursor: pointer; border: none; }
+  .navbtn [data-lucide] { width: 19px; height: 19px; }
+  .navtitle { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; color: var(--text-primary); }
+  .finish { width: auto; padding: 0 14px; border-radius: var(--r-pill); height: 36px; gap: 6px;
+    background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: 13px; }
+  .finish [data-lucide] { width: 16px; height: 16px; }
+
+  .scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+  .scroll::-webkit-scrollbar { width: 0; }
+  .stack { display: flex; flex-direction: column; gap: 14px; padding: 4px 0 26px; }
+
+  /* vollbild rest overlay */
+  .rest-scrim { position: absolute; inset: 0; z-index: 45; background: rgba(20,35,59,0.40);
+    backdrop-filter: blur(3px); display: flex; align-items: center; padding: 0 20px;
+    opacity: 0; pointer-events: none; transition: opacity var(--dur-base) var(--ease-standard); }
+  .rest-scrim.open { opacity: 1; pointer-events: auto; }
+  .rest-scrim > div { width: 100%; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel" src="active-workout.jsx"></script>
+<script type="text/babel" src="../app/tweaks-panel.jsx"></script>
+<script type="text/babel">
+  const DS = window.MotionCoreDesignSystem_2f47a0;
+  const { Button } = DS;
+  const I = window.MC_awIcon;
+  const { useTweaks, TweaksPanel, TweakSection, TweakRadio, TweakToggle, TweakColor } = window;
+
+  const ACCENTS = {
+    '#2C6BCB': ['#21539E','#2C6BCB','#3A7CDC','#D7E4F8','rgba(44,107,203,0.08)'],   // Tiefblau (default)
+    '#0F9488': ['#0B6B62','#0F9488','#14A89A','#CDEDE9','rgba(15,148,136,0.07)'],   // Teal
+    '#6E8B4E': ['#566E3C','#6E8B4E','#7E9D5C','#E6ECDA','rgba(110,139,78,0.08)'],   // Salbei
+  };
+
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accent": "#2C6BCB",
+    "restStyle": "inline",
+    "showLast": true
+  }/*EDITMODE-END*/;
+
+  function App() {
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+    React.useEffect(() => { lucide.createIcons(); });
+    React.useEffect(() => {
+      const r = document.documentElement.style;
+      const a = ACCENTS[t.accent] || ACCENTS['#2C6BCB'];
+      r.setProperty('--teal-700', a[0]); r.setProperty('--teal-600', a[1]);
+      r.setProperty('--teal-500', a[2]); r.setProperty('--teal-100', a[3]);
+      r.setProperty('--readiness-soft', a[4]);
+    }, [t.accent]);
+
+    return (
+      <div className="phone">
+        <div className="notch"></div>
+        <div className="status">
+          <span>9:41</span>
+          <span className="ic">{I('signal')}{I('wifi')}{I('battery-full')}</span>
+        </div>
+
+        <window.MC_ActiveWorkoutScreen restStyle={t.restStyle} showLast={t.showLast} />
+
+        <TweaksPanel>
+          <TweakSection label="Pausen-Timer" />
+          <TweakRadio label="Stil" value={t.restStyle} options={['kompakt','inline','vollbild']}
+            onChange={v => setTweak('restStyle', v)} />
+          <TweakSection label="Satz-Karte" />
+          <TweakToggle label="„Letztes Mal" value={t.showLast} onChange={v => setTweak('showLast', v)} />
+          <TweakSection label="Akzent" />
+          <TweakColor label="Akzentfarbe" value={t.accent} options={['#2C6BCB','#0F9488','#6E8B4E']}
+            onChange={v => setTweak('accent', v)} />
+        </TweaksPanel>
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  setTimeout(() => lucide.createIcons(), 300);
+  setTimeout(() => lucide.createIcons(), 900);
+</script>
+</body>
+</html>

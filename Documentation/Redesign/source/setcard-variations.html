@@ -1,0 +1,72 @@
+<!-- @dsCard group="App" viewport="900x620" name="Satz-Karte — 2 Varianten" subtitle="Stacked vs. Target-led — Layout der aktiven Satz-Karte" -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MotionCore — Satz-Karte Varianten</title>
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--surface-app); font-family: var(--font-sans);
+    min-width: max-content; min-height: 100vh; padding: 44px 48px 56px; }
+  .head { margin-bottom: 28px; }
+  .head h1 { margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-primary); }
+  .head p { margin: 6px 0 0; font-size: 14px; color: var(--text-secondary); max-width: 600px; }
+  .row { display: flex; align-items: flex-start; gap: 40px; }
+  .col { flex: none; width: 360px; }
+  .label { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; padding-left: 2px; }
+  .label .k { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: .4px; text-transform: uppercase; }
+  .label .d { font-size: 13px; color: var(--text-secondary); }
+  .pane { padding: 18px; border-radius: var(--r-xl); background: linear-gradient(180deg,#FFF 0%, var(--surface-app) 120%);
+    box-shadow: inset 0 0 0 1px var(--line); }
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>Satz-Karte — zwei Layouts</h1>
+  <p>Die zentrale Karte des ActiveWorkoutView in zwei Richtungen. Gleicher Inhalt, anderer Fokus. Im Prototyp per Tweak / hier zum Vergleich.</p>
+</div>
+<div class="row" id="row"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel" src="active-workout.jsx"></script>
+<script type="text/babel">
+  // default accent = Tiefblau, to match the screen
+  const r = document.documentElement.style;
+  r.setProperty('--teal-700','#21539E'); r.setProperty('--teal-600','#2C6BCB');
+  r.setProperty('--teal-500','#3A7CDC'); r.setProperty('--teal-100','#D7E4F8');
+  r.setProperty('--readiness-soft','rgba(44,107,203,0.08)');
+
+  const SET = { ex:'Bankdrücken', icon:'dumbbell', set:3, of:4, kg:'82,5', reps:8, lastKg:'80', lastReps:8 };
+  const noop = () => {};
+
+  function Compare() {
+    return (
+      <>
+        <div className="col">
+          <div className="label"><span className="k">A · Stacked</span><span className="d">Gewicht | Wdh., Referenz darunter</span></div>
+          <div className="pane">
+            <window.MC_AW_SetCard s={SET} showLast={true} variant="stacked" onAdjust={noop} onComplete={noop} />
+          </div>
+        </div>
+        <div className="col">
+          <div className="label"><span className="k">B · Target-led</span><span className="d">Jetzt vs. Letztes Mal direkt nebeneinander</span></div>
+          <div className="pane">
+            <window.MC_AW_SetCard s={SET} showLast={true} variant="target" onAdjust={noop} onComplete={noop} />
+          </div>
+        </div>
+      </>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('row')).render(<Compare />);
+  setTimeout(() => lucide.createIcons(), 300);
+  setTimeout(() => lucide.createIcons(), 800);
+</script>
+</body>
+</html>

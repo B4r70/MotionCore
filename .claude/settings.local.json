@@ -1,4 +1,7 @@
 {
+  "env": {
+    "LEAN_CTX_ALLOWLIST_WARN_ONLY": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(git:*)",
@@ -7,8 +10,6 @@
       "Bash(rm -rf /Users/bartosz/Developments/MotionCore/.claude/agents/archive)"
     ]
   },
-  "spinnerTipsEnabled": true,
-  "enabledPlugins": {
-    "supabase@claude-plugins-official": false
-  }
+  "enabledPlugins": {},
+  "spinnerTipsEnabled": true
 }

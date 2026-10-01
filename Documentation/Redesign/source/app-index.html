@@ -1,0 +1,282 @@
+<!-- Source reference (not a DS card). See README.md §9. -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MotionCore — App UI Kit</title>
+<link rel="stylesheet" href="../../styles.css">
+<script>
+  /* Neutralises a stale Figma-plugin helper still present in the on-disk DS
+     bundle (excluded from source; gone after the next recompile). No-op here. */
+  window.figma = window.figma || { variables:{ getLocalVariableCollectionsAsync:async()=>[], createVariableCollection:()=>({modes:[{modeId:'m'}]}), getLocalVariablesAsync:async()=>[], createVariable:()=>({setValueForMode(){}}) }, loadFontAsync:async()=>{}, getLocalTextStylesAsync:async()=>[], createTextStyle:()=>({}), getLocalEffectStylesAsync:async()=>[], createEffectStyle:()=>({}), notify(){}, closePlugin(){} };
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background:
+      linear-gradient(180deg, #FFFFFF 0%, var(--surface-app) 30%),
+      var(--surface-app);
+    font-family: var(--font-sans);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 28px;
+  }
+
+  /* iPhone frame */
+  .phone {
+    position: relative;
+    width: 390px; height: 844px;
+    background:
+      linear-gradient(180deg, #FFFFFF 0%, var(--surface-app) 22%),
+      var(--surface-app);
+    border-radius: 52px;
+    box-shadow: 0 0 0 12px #0c1626, 0 0 0 14px #243246, var(--shadow-pop);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .notch {
+    position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+    width: 122px; height: 34px; background: #0c1626; border-radius: 20px; z-index: 40;
+  }
+
+  /* Status bar */
+  .status {
+    height: 52px; flex-shrink: 0; display: flex; align-items: flex-end;
+    justify-content: space-between; padding: 0 28px 6px; z-index: 30;
+    font-size: 14px; font-weight: 600; color: var(--text-primary);
+  }
+  .status .icons { display: flex; gap: 6px; align-items: center; }
+  .status [data-lucide] { width: 16px; height: 16px; }
+
+  /* Nav header */
+  .navbar {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 20px 8px; z-index: 20;
+  }
+  .brand { display: flex; align-items: center; gap: 9px; }
+  .brand img { width: 26px; height: 26px; border-radius: 7px; }
+  .brand b { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-primary); }
+  .gear { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; background: var(--surface-card); box-shadow: var(--shadow-sm); color: var(--text-secondary); cursor: pointer; }
+  .gear [data-lucide] { width: 19px; height: 19px; }
+
+  /* Scroll area */
+  .scroll { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+  .scroll::-webkit-scrollbar { width: 0; }
+
+  /* FAB */
+  .fab {
+    position: absolute; right: 20px; bottom: 104px; z-index: 35;
+    width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+    background: var(--teal-600); color: #fff; box-shadow: var(--shadow-lift);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--dur-fast) var(--ease-standard);
+  }
+  .fab:active { transform: scale(0.92); }
+  .fab [data-lucide] { width: 26px; height: 26px; }
+
+  /* Tab bar dock */
+  .dock { position: absolute; left: 0; right: 0; bottom: 0; z-index: 30; }
+
+  /* Sheet */
+  .sheet-scrim {
+    position: absolute; inset: 0; z-index: 50; background: rgba(20,35,59,0.34);
+    backdrop-filter: blur(2px); display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: opacity var(--dur-base) var(--ease-standard);
+  }
+  .sheet-scrim.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    width: 100%; background: var(--surface-card); border-radius: 26px 26px 0 0;
+    padding: 14px 20px 30px; transform: translateY(100%);
+    transition: transform var(--dur-base) var(--ease-out);
+    box-shadow: 0 -8px 40px rgba(20,35,59,0.18);
+  }
+  .sheet-scrim.open .sheet { transform: translateY(0); }
+  .grabber { width: 38px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 14px; }
+  .opt { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: var(--r-md);
+    cursor: pointer; transition: background var(--dur-fast); }
+  .opt:hover { background: var(--surface-sunken); }
+  .opt .ic { width: 44px; height: 44px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; }
+  .opt [data-lucide] { width: 22px; height: 22px; }
+
+  /* Active-workout full-screen overlay (below status bar) */
+  .aw-overlay {
+    position: absolute; top: 52px; left: 0; right: 0; bottom: 0; z-index: 42;
+    background: var(--surface-app); opacity: 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .aw-overlay { animation: aw-in var(--dur-base) var(--ease-out); }
+  }
+  @keyframes aw-in {
+    from { transform: translateY(14px); }
+    to   { transform: none; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel" src="../active-workout/active-workout.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+  const DS = window.MotionCoreDesignSystem_2f47a0;
+  const { TabBar } = DS;
+  const I = window.MC_icon;
+  const { useTweaks, TweaksPanel, TweakSection, TweakRadio, TweakColor } = window;
+
+  // accent → [press, base, hover, soft, readiness-soft(rgba)]
+  const ACCENTS = {
+    '#0F9488': ['#0B6B62','#0F9488','#14A89A','#CDEDE9','rgba(15,148,136,0.07)'],   // Teal (default)
+    '#2C6BCB': ['#21539E','#2C6BCB','#3A7CDC','#D7E4F8','rgba(44,107,203,0.07)'],   // Tiefblau
+    '#6E8B4E': ['#566E3C','#6E8B4E','#7E9D5C','#E6ECDA','rgba(110,139,78,0.08)'],   // Salbei
+    '#7A6FD0': ['#5F55B0','#7A6FD0','#8C82DC','#E4E1F6','rgba(122,111,208,0.08)'], // Pflaume
+  };
+  const RADII = { 'klein':['8px','12px','16px'], 'mittel':['14px','20px','26px'], 'groß':['18px','26px','32px'] };
+  const GAPS  = { 'luftig':'16px', 'normal':'12px', 'kompakt':'9px' };
+  const CARDS = {
+    'flach':    '0 0 0 1px var(--line)',
+    'schatten': '0 4px 16px rgba(22,32,43,0.08), 0 0 0 1px rgba(217,224,231,0.55)',
+  };
+
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accent": "#2C6BCB",
+    "radius": "mittel",
+    "density": "luftig",
+    "cards": "schatten",
+    "chart": "gefüllt"
+  }/*EDITMODE-END*/;
+
+  const SUBTITLE = { summary:'Übersicht', workouts:'Workouts', stats:'Statistik', body:'Body', training:'Training' };
+
+  function StartSheet({ open, onClose, onStrength }) {
+    const opts = [
+      { ic:'dumbbell', tone:'signal', t:'Krafttraining', s:'Aus Trainingsplan starten', start:true },
+      { ic:'heart-pulse', tone:'alert', t:'Cardio', s:'Crosstrainer · Ergometer' },
+      { ic:'bike', tone:'sage', t:'Outdoor', s:'E-Bike · Laufen · Wandern' },
+    ];
+    const bg = { signal:'var(--readiness-soft)', sage:'var(--recovery-soft)', alert:'var(--streak-soft)' };
+    const fg = { signal:'var(--teal-600)', sage:'var(--green-700)', alert:'var(--amber-600)' };
+    return (
+      <div className={'sheet-scrim' + (open ? ' open' : '')} onClick={onClose}>
+        <div className="sheet" onClick={e => e.stopPropagation()}>
+          <div className="grabber"></div>
+          <div style={{ fontSize:'var(--fs-headline)', fontWeight:700, color:'var(--text-primary)', padding:'0 6px 6px' }}>Workout starten</div>
+          {opts.map((o,i) => (
+            <div className="opt" key={i} onClick={() => { onClose(); if (o.start) onStrength(); }}>
+              <span className="ic" style={{ background:bg[o.tone], color:fg[o.tone] }}>{I(o.ic)}</span>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:'var(--fs-subhead)', fontWeight:600, color:'var(--text-primary)' }}>{o.t}</div>
+                <div style={{ fontSize:'var(--fs-caption)', color:'var(--text-secondary)' }}>{o.s}</div>
+              </div>
+              <span style={{ color:'var(--text-tertiary)' }}>{I('chevron-right')}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  function App() {
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+    const [tab, setTab] = React.useState('summary');
+    const [filter, setFilter] = React.useState('Alle');
+    const [tf, setTf] = React.useState('Woche');
+    const [sheet, setSheet] = React.useState(false);
+    const [workout, setWorkout] = React.useState(false);
+    const scrollRef = React.useRef(null);
+
+    React.useEffect(() => { lucide.createIcons(); });
+    React.useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [tab]);
+
+    // apply tweaks as CSS-variable overrides on :root
+    React.useEffect(() => {
+      const r = document.documentElement.style;
+      const a = ACCENTS[t.accent] || ACCENTS['#0F9488'];
+      r.setProperty('--teal-700', a[0]); r.setProperty('--teal-600', a[1]);
+      r.setProperty('--teal-500', a[2]); r.setProperty('--teal-100', a[3]);
+      r.setProperty('--readiness-soft', a[4]);
+      const rad = RADII[t.radius] || RADII.mittel;
+      r.setProperty('--r-md', rad[0]); r.setProperty('--r-lg', rad[1]); r.setProperty('--r-xl', rad[2]);
+      r.setProperty('--mc-gap', GAPS[t.density] || GAPS.luftig);
+      r.setProperty('--shadow-card', CARDS[t.cards] || CARDS.flach);
+    }, [t.accent, t.radius, t.density, t.cards]);
+
+    const open = () => setSheet(true);
+    let screen;
+    if (tab === 'summary') screen = <window.MC_SummaryScreen onStart={open} chart={t.chart} />;
+    else if (tab === 'workouts') screen = <window.MC_WorkoutsScreen filter={filter} setFilter={setFilter} onStart={open} />;
+    else if (tab === 'stats') screen = <window.MC_StatsScreen tf={tf} setTf={setTf} chart={t.chart} />;
+    else if (tab === 'body') screen = <window.MC_BodyScreen />;
+    else screen = <window.MC_TrainingScreen onStart={open} />;
+
+    return (
+      <div className="phone">
+        <div className="notch"></div>
+        <div className="status">
+          <span>9:41</span>
+          <span className="icons">{I('signal')}{I('wifi')}{I('battery-full')}</span>
+        </div>
+        <div className="navbar">
+          <div className="brand">
+            <img src="../../assets/motioncore-appicon.png" alt="" />
+            <b>MotionCore</b>
+            <span style={{ fontSize:13, color:'var(--text-tertiary)', fontWeight:500 }}>{SUBTITLE[tab]}</span>
+          </div>
+          <div className="gear">{I('settings')}</div>
+        </div>
+        <div className="scroll" ref={scrollRef}>{screen}</div>
+
+        {tab === 'workouts' && (
+          <button className="fab" onClick={open}>{I('plus')}</button>
+        )}
+
+        <div className="dock">
+          <TabBar active={tab} onChange={setTab} items={[
+            { id:'summary', label:'Übersicht', icon:I('layout-grid') },
+            { id:'workouts', label:'Workouts', icon:I('activity') },
+            { id:'stats', label:'Statistik', icon:I('bar-chart-3') },
+            { id:'body', label:'Body', icon:I('person-standing') },
+            { id:'training', label:'Training', icon:I('layers') },
+          ]} />
+        </div>
+
+        <StartSheet open={sheet} onClose={() => setSheet(false)} onStrength={() => setWorkout(true)} />
+
+        {workout && (
+          <div className="aw-overlay">
+            <window.MC_ActiveWorkoutScreen onClose={() => setWorkout(false)} restStyle="inline" showLast={true} />
+          </div>
+        )}
+
+        <TweaksPanel>
+          <TweakSection label="Akzent" />
+          <TweakColor label="Akzentfarbe" value={t.accent}
+            options={['#0F9488','#2C6BCB','#6E8B4E','#7A6FD0']}
+            onChange={v => setTweak('accent', v)} />
+          <TweakSection label="Form" />
+          <TweakRadio label="Radius" value={t.radius} options={['klein','mittel','groß']}
+            onChange={v => setTweak('radius', v)} />
+          <TweakRadio label="Karten" value={t.cards} options={['flach','schatten']}
+            onChange={v => setTweak('cards', v)} />
+          <TweakSection label="Layout" />
+          <TweakRadio label="Dichte" value={t.density} options={['luftig','normal','kompakt']}
+            onChange={v => setTweak('density', v)} />
+          <TweakRadio label="Charts" value={t.chart} options={['minimal','gefüllt']}
+            onChange={v => setTweak('chart', v)} />
+        </TweaksPanel>
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  setTimeout(() => lucide.createIcons(), 400);
+</script>
+</body>
+</html>

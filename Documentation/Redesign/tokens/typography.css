@@ -1,0 +1,49 @@
+/* ───────────────────────────────────────────────────────────
+   MotionCore · Typography
+   Redesign 2026 (Calm) — Hanken Grotesk for everything: a quiet,
+   humanist grotesque with excellent legibility and clean tabular
+   numerals. Big metric numbers use the same family at bold weight.
+   Numbers are always tabular (font-variant-numeric: tabular-nums).
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Families ── */
+  --font-sans:    'Hanken Grotesk', -apple-system, BlinkMacSystemFont,
+                  system-ui, 'Segoe UI', sans-serif;
+  --font-rounded: 'Hanken Grotesk', -apple-system, system-ui, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── Type scale (px) ──
+     hero metric numbers · titles · body · captions               */
+  --fs-hero:      48px;   /* big metric — rounded, bold, tabular   */
+  --fs-metric:    32px;   /* stat-tile number                      */
+  --fs-title:     22px;   /* screen / large title — bold           */
+  --fs-headline:  17px;   /* card headline — semibold              */
+  --fs-subhead:   15px;   /* subheadline                           */
+  --fs-body:      15px;   /* body text                             */
+  --fs-callout:   13px;   /* dense rows                            */
+  --fs-caption:   12px;   /* caption / secondary                   */
+  --fs-micro:     10px;   /* uppercase eyebrow labels              */
+
+  /* ── Weights ── */
+  --fw-regular:   400; /* @kind other */
+  --fw-medium:    500; /* @kind other */
+  --fw-semibold:  600; /* @kind other */
+  --fw-bold:      700; /* @kind other */
+
+  /* ── Line heights ── */
+  --lh-tight:     1.05; /* @kind other */
+  --lh-snug:      1.25; /* @kind other */
+  --lh-normal:    1.45; /* @kind other */
+
+  /* ── Letter spacing ── */
+  --ls-tight:     -0.5px; /* large titles                          */
+  --ls-snug:      -0.2px; /* headlines                             */
+  --ls-eyebrow:    0.6px; /* uppercase micro labels                */
+
+  /* ── Semantic roles ── */
+  --type-hero-family:   var(--font-rounded);
+  --type-hero-weight:   var(--fw-bold);
+  --type-body-family:   var(--font-sans);
+  --type-eyebrow-transform: uppercase;
+}

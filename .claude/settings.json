@@ -1,7 +1,6 @@
 {
   "enabledPlugins": {
     "context7@claude-plugins-official": false,
-    "supabase@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true
   }
 }

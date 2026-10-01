@@ -3,9 +3,9 @@
 // ---------------------------------------------------------------------------------/
 // Abschnitt . . : Views / Body                                                     /
 // Datei . . . . : BodyAvoidCard.swift                                              /
-// Autor . . . . : Bartosz Stryjewski                                               //
+// Autor . . . . : Bartosz Stryjewski                                               /
 // Erstellt am . : 25.04.2026                                                       /
-// Beschreibung  : Warnhinweis für Muskelgruppen die heute gemieden werden sollten   /
+// Beschreibung  : Warnhinweis für Muskelgruppen die heute gemieden werden sollten  /
 // ---------------------------------------------------------------------------------/
 // (C) Copyright by Bartosz Stryjewski                                              /
 // ---------------------------------------------------------------------------------/

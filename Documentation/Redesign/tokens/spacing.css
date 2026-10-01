@@ -1,0 +1,42 @@
+/* ───────────────────────────────────────────────────────────
+   MotionCore · Spacing, Radii, Shadows
+   8pt grid. Continuous rounding. Soft, low-contrast shadows —
+   the redesign is calm, so elevation is whisper-quiet.
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Spacing (8pt grid) ── */
+  --sp-1:   4px;
+  --sp-2:   8px;
+  --sp-3:   12px;
+  --sp-4:   16px;
+  --sp-5:   20px;
+  --sp-6:   24px;
+  --sp-8:   32px;
+  --sp-10:  40px;
+  --sp-12:  48px;
+
+  /* ── Radii (continuous-feel) ── */
+  --r-xs:    6px;
+  --r-sm:    10px;
+  --r-md:    14px;   /* inner tiles            */
+  --r-lg:    20px;   /* cards                  */
+  --r-xl:    26px;   /* hero / sheets          */
+  --r-pill:  9999px;
+
+  /* ── Shadows — quiet, cool-tinted (kept minimal: cards lead with a hairline) ── */
+  --shadow-sm:   0 1px 2px rgba(22,32,43,0.05);
+  --shadow-card: 0 1px 2px rgba(22,32,43,0.04), 0 0 0 1px var(--line);
+  --shadow-lift: 0 6px 20px rgba(22,32,43,0.09);
+  --shadow-pop:  0 16px 40px rgba(22,32,43,0.13);
+
+  /* ── Focus ring ── */
+  --ring: 0 0 0 3px rgba(15,148,136,0.24);
+
+  /* ── Motion ── */
+  --ease-standard: cubic-bezier(0.4, 0.0, 0.2, 1); /* @kind other */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --dur-fast:      140ms; /* @kind other */
+  --dur-base:      240ms; /* @kind other */
+  --dur-slow:      360ms; /* @kind other */
+}

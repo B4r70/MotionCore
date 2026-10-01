@@ -1,0 +1,12 @@
+/* ───────────────────────────────────────────────────────────
+   MotionCore · Webfonts
+   Redesign 2026 (Calm) — Hanken Grotesk (Google Fonts) is the
+   single UI + numeral typeface. It carries weights 400–800 and
+   true tabular figures, replacing the SF Pro / Nunito stack.
+
+   NOTE (substitution): the original native app used Apple SF Pro.
+   Hanken Grotesk is the chosen cross-platform redesign face; swap
+   the @import if you have a licensed brand font you'd prefer.
+   ─────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');

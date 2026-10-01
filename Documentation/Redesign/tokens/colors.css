@@ -1,0 +1,192 @@
+/* ───────────────────────────────────────────────────────────
+   MotionCore · Colors
+   Redesign 2026 (Calm) — light, restrained, clinical-quiet.
+   Deep blue (#2C6BCB) is the single moderate lead accent; each
+   metric gets one quiet hue from the data-series. Red is reserved
+   for true errors. Dark Mode via [data-theme="dark"] (App-Umschalter:
+   System / Hell / Dunkel).
+
+   User palette (Light):
+     background #F4F6F8 · primary #FFFFFF · secondary #E9EDF1
+     text/primary #16202B · text/secondary #5A6877 · border #D9E0E7
+     accent #2C6BCB · accent-soft #D7E4F8
+     success #1F9E6E · warning #C7902F · error #CF5656
+     series 1–5: #3A8FC9 #0F9488 #7A6FD0 #C7902F #CB6685
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Brand seed (current) ── */
+  --mc-blue:    #2C6BCB;   /* lead accent · primary action · Tagesform */
+  --mc-green:   #1F9E6E;   /* recovery · body · "erholt" */
+  --mc-amber:   #C7902F;   /* streak · records (calm, replaces red) */
+  --mc-sky:     #3A8FC9;   /* neutral data · volume */
+  --mc-red:     #CF5656;   /* error only */
+
+  /* ── Accent scale (deep blue / readiness) ── */
+  --accent-700: #21539E;   /* pressed */
+  --accent-600: #2C6BCB;   /* base */
+  --accent-500: #3A7CDC;   /* hover-lift */
+  --accent-200: #ABC7EF;
+  --accent-100: #D7E4F8;   /* accent-soft */
+  --accent-050: #EBF1FB;
+
+  /* ── Teal scale (retained: series-2) ── */
+  --teal-600:   #0F9488;
+  --teal-200:   #9FD8D2;
+  --teal-100:   #CDEDE9;
+
+  /* ── Green scale (recovery / body) ── */
+  --green-700:  #157A56;
+  --green-600:  #1F9E6E;   /* base */
+  --green-200:  #BFE5D4;
+  --green-100:  #E1F4EC;
+
+  /* ── Amber scale (streak / records) ── */
+  --amber-700:  #9A6E22;
+  --amber-600:  #C7902F;   /* base */
+  --amber-100:  #F5E9D2;
+
+  /* ── Sky scale (neutral data / volume) ── */
+  --sky-600:    #3A8FC9;   /* base */
+  --sky-500:    #5BA3D4;
+  --sky-200:    #BBD8EC;
+  --sky-100:    #E1EEF7;
+
+  /* ── Red scale (errors only) ── */
+  --red-700:    #A83F3F;
+  --red-600:    #CF5656;
+  --red-100:    #F6DEDE;
+
+  /* ── Data series (charts) ── */
+  --series-1:   #3A8FC9;   /* blue   */
+  --series-2:   #0F9488;   /* teal   */
+  --series-3:   #7A6FD0;   /* violet */
+  --series-4:   #C7902F;   /* amber  */
+  --series-5:   #CB6685;   /* rose   */
+  --chart-grid: #E9EDF1;   /* faint gridline */
+
+  /* ── Ink / neutrals (cool slate) ── */
+  --ink-900:    #16202B;   /* primary text */
+  --ink-700:    #2D3A47;
+  --ink-600:    #5A6877;   /* secondary text */
+  --ink-400:    #8A95A2;   /* tertiary text */
+  --ink-300:    #C2CAD2;   /* disabled */
+  --line:       #D9E0E7;   /* hairline border (default) */
+  --line-soft:  #E9EDF1;
+
+  /* ── Surfaces ── */
+  --surface-app:     #F4F6F8;   /* page background */
+  --surface-card:    #FFFFFF;   /* solid card (primary) */
+  --surface-sunken:  #E9EDF1;   /* inset / track / secondary */
+  --surface-frost:   rgba(255,255,255,0.78);
+
+  /* ─────────────────────────────────────────────────────────
+     SEMANTIC ALIASES — use these in product code, not raw scales
+     ───────────────────────────────────────────────────────── */
+
+  /* Text */
+  --text-primary:    var(--ink-900);
+  --text-secondary:  var(--ink-600);
+  --text-tertiary:   var(--ink-400);
+  --text-on-signal:  #FFFFFF;
+  --text-link:       var(--accent-600);
+
+  /* Borders */
+  --border-hairline: var(--line);
+  --border-strong:   var(--ink-300);
+
+  /* Primary action (deep blue) */
+  --accent:          var(--accent-600);
+  --accent-hover:    var(--accent-500);
+  --accent-press:    var(--accent-700);
+  --accent-soft:     var(--accent-100);
+
+  /* Domain semantics — mirror the app's metric language */
+  --readiness:       var(--accent-600);  /* TAGESFORM */
+  --readiness-soft:  rgba(44,107,203,0.08);
+  --recovery:        var(--green-600);   /* ERHOLUNG  */
+  --recovery-soft:   rgba(31,158,110,0.09);
+  --streak:          var(--amber-600);   /* STREAK / records */
+  --streak-soft:     rgba(199,144,47,0.10);
+  --info:            var(--sky-600);     /* neutral data / volume */
+  --info-soft:       rgba(58,143,201,0.10);
+
+  /* Feedback */
+  --success:         var(--green-600);
+  --warning:         var(--amber-600);
+  --danger:          var(--red-600);
+  --danger-soft:     var(--red-100);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DARK MODE — overrides for the semantic + surface tokens.
+   Mirrors the Asset-Catalog "Dark appearance" of Theme.
+   Accent surface stays brand (#2C6BCB) to keep white-on-accent
+   contrast; accent-as-foreground (links) is lifted.
+   ───────────────────────────────────────────────────────────── */
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --surface-app:     #0E141C;
+  --surface-card:    #171F29;
+  --surface-sunken:  #222C37;
+  --surface-frost:   rgba(23,31,41,0.72);
+
+  /* Ink / text */
+  --ink-900:    #E8EDF2;   /* primary text */
+  --ink-600:    #9BA8B6;   /* secondary text */
+  --ink-400:    #7C8997;   /* tertiary text */
+  --ink-300:    #3A4654;   /* disabled */
+  --line:       #2A343F;   /* hairline */
+  --line-soft:  #222C36;
+
+  /* Accent (surface stays brand; soft becomes a dark tinted fill) */
+  --accent:          #2C6BCB;
+  --accent-hover:    #3A7CDC;
+  --accent-press:    #21539E;
+  --accent-soft:     #1C2E48;
+  --text-link:       #5BA8DC;   /* lifted foreground accent */
+  --text-on-signal:  #FFFFFF;
+
+  /* Domain semantics */
+  --readiness:       #2C6BCB;
+  --readiness-soft:  rgba(58,124,220,0.16);
+  --recovery:        #2FB587;
+  --recovery-soft:   rgba(47,181,135,0.14);
+  --streak:          #E0A93C;
+  --streak-soft:     rgba(224,169,60,0.16);
+  --info:            #5BA8DC;
+  --info-soft:       rgba(91,168,220,0.16);
+
+  /* Feedback */
+  --success:         #2FB587;
+  --warning:         #E0A93C;
+  --danger:          #E06B6B;
+  --danger-soft:     rgba(224,107,107,0.18);
+
+  /* Data series (lifted for dark backgrounds) */
+  --series-1:   #5BA8DC;
+  --series-2:   #1FB3A4;
+  --series-3:   #968CE0;
+  --series-4:   #E0A93C;
+  --series-5:   #D982A0;
+  --chart-grid: #222C37;
+}
+
+/* Optional: dem System folgen, wenn kein expliziter Toggle gesetzt ist */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --surface-app: #0E141C; --surface-card: #171F29; --surface-sunken: #222C37;
+    --surface-frost: rgba(23,31,41,0.72);
+    --ink-900: #E8EDF2; --ink-600: #9BA8B6; --ink-400: #7C8997; --ink-300: #3A4654;
+    --line: #2A343F; --line-soft: #222C36;
+    --accent: #2C6BCB; --accent-hover: #3A7CDC; --accent-press: #21539E; --accent-soft: #1C2E48;
+    --text-link: #5BA8DC;
+    --readiness: #2C6BCB; --readiness-soft: rgba(58,124,220,0.16);
+    --recovery: #2FB587; --recovery-soft: rgba(47,181,135,0.14);
+    --streak: #E0A93C; --streak-soft: rgba(224,169,60,0.16);
+    --info: #5BA8DC; --info-soft: rgba(91,168,220,0.16);
+    --success: #2FB587; --warning: #E0A93C; --danger: #E06B6B; --danger-soft: rgba(224,107,107,0.18);
+    --series-1: #5BA8DC; --series-2: #1FB3A4; --series-3: #968CE0; --series-4: #E0A93C; --series-5: #D982A0;
+    --chart-grid: #222C37;
+  }
+}
