@@ -35,6 +35,7 @@ enum SetPaceUnit: String, Codable, CaseIterable, Identifiable {
     case minPer500m = "minPer500m"  // Ruderergometer: mm:ss pro 500 m
     case minPerKm   = "minPerKm"    // Laufband/Laufen: mm:ss pro km
     case kmh        = "kmh"         // Cross-Trainer/Rad: km/h
+    case distanceKm = "distanceKm"  // Cross-Trainer/Ergometer: zurückgelegte Strecke in km
 
     var id: String { rawValue }
 
@@ -44,12 +45,13 @@ enum SetPaceUnit: String, Codable, CaseIterable, Identifiable {
         case .minPer500m: return "min / 500 m"
         case .minPerKm:   return "min / km"
         case .kmh:        return "km/h"
+        case .distanceKm: return "Strecke (km)"
         }
     }
 
     /// True für Einheiten, deren Wert als Sekunden gespeichert wird (mm:ss-Eingabe)
     var isTimePerDistance: Bool {
-        self != .kmh
+        self == .minPer500m || self == .minPerKm
     }
 
     /// Sinnvoller Startwert für die Eingabe, wenn noch kein Pace erfasst wurde
@@ -58,10 +60,11 @@ enum SetPaceUnit: String, Codable, CaseIterable, Identifiable {
         case .minPer500m: return 150   // 2:30 / 500 m
         case .minPerKm:   return 360   // 6:00 / km
         case .kmh:        return 8.0
+        case .distanceKm: return 3.0
         }
     }
 
-    /// Formatiert einen gespeicherten Pace-Wert (Sekunden bzw. km/h) für die Anzeige
+    /// Formatiert einen gespeicherten Pace-Wert (Sekunden, km/h bzw. km) für die Anzeige
     func format(_ value: Double) -> String {
         guard value > 0 else { return "–" }
         switch self {
@@ -71,6 +74,8 @@ enum SetPaceUnit: String, Codable, CaseIterable, Identifiable {
             return "\(Self.formatSeconds(value)) /km"
         case .kmh:
             return String(format: "%.1f km/h", value)
+        case .distanceKm:
+            return String(format: "%.1f km", value)
         }
     }
 

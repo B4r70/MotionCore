@@ -39,6 +39,10 @@ struct PaceEntrySheet: View {
     // km/h-Eingabe (in 0.5er-Schritten, intern als Double)
     @State private var speedKmh: Double = 8.0
 
+    // Strecke-Eingabe (distanceKm): ganze km + Zehntel
+    @State private var distanceKm: Int = 3
+    @State private var distanceTenths: Int = 0
+
     private let haptic = UIImpactFeedbackGenerator(style: .light)
 
     // MARK: - Init (Wheel-States direkt initialisieren, kein onAppear-Umspringen)
@@ -66,10 +70,19 @@ struct PaceEntrySheet: View {
             let total = min(Int(value.rounded()), 20 * 60 + 59)
             _minutes = State(initialValue: total / 60)
             _seconds = State(initialValue: total % 60)
+        } else if unit == .distanceKm {
+            let tenths = Self.clampedTenths(value)
+            _distanceKm = State(initialValue: tenths / 10)
+            _distanceTenths = State(initialValue: tenths % 10)
         } else {
             // Auf 0.5er-Raster runden, damit der Wheel-Tag matcht
             _speedKmh = State(initialValue: min(max((value * 2).rounded() / 2, 1.0), 40.0))
         }
+    }
+
+    /// Strecke in Zehntel-km, auf den Wheel-Bereich (0.1–30.0 km) geclampt
+    private static func clampedTenths(_ km: Double) -> Int {
+        min(max(Int((km * 10).rounded()), 1), 300)
     }
 
     var body: some View {
@@ -97,6 +110,8 @@ struct PaceEntrySheet: View {
             // Einheiten-abhängige Eingabe
             if selectedUnit.isTimePerDistance {
                 timePickerRow
+            } else if selectedUnit == .distanceKm {
+                distancePickerRow
             } else {
                 speedPickerRow
             }
@@ -181,12 +196,46 @@ struct PaceEntrySheet: View {
         .frame(height: 130)
     }
 
+    /// Doppel-Wheel für Strecke: ganze km (0–30) + Zehntel (0–9)
+    private var distancePickerRow: some View {
+        HStack(spacing: 0) {
+            Picker("Kilometer", selection: $distanceKm) {
+                ForEach(0...30, id: \.self) { k in
+                    Text("\(k)").tag(k)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(width: 70)
+
+            Text(",")
+                .font(.title2.bold())
+                .foregroundStyle(Theme.textPrimary)
+
+            Picker("Zehntel", selection: $distanceTenths) {
+                ForEach(0...9, id: \.self) { t in
+                    Text("\(t)").tag(t)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(width: 70)
+
+            Text("km")
+                .font(AppFont.callout)
+                .foregroundStyle(Theme.textSecondary)
+                .padding(.leading, 8)
+        }
+        .frame(height: 130)
+    }
+
     // MARK: - Werte-Mapping
 
-    /// Aktueller Eingabewert im Speicherformat (Sekunden bzw. km/h)
+    /// Aktueller Eingabewert im Speicherformat (Sekunden, km/h bzw. km)
     private var currentValue: Double {
         if selectedUnit.isTimePerDistance {
             return Double(minutes * 60 + seconds)
+        }
+        if selectedUnit == .distanceKm {
+            return Double(distanceKm * 10 + distanceTenths) / 10
         }
         return speedKmh
     }
@@ -198,6 +247,10 @@ struct PaceEntrySheet: View {
             let total = min(Int(value.rounded()), 20 * 60 + 59)
             minutes = total / 60
             seconds = total % 60
+        } else if unit == .distanceKm {
+            let tenths = Self.clampedTenths(value)
+            distanceKm = tenths / 10
+            distanceTenths = tenths % 10
         } else {
             // Auf 0.5er-Raster runden, damit der Wheel-Tag matcht
             speedKmh = min(max((value * 2).rounded() / 2, 1.0), 40.0)
@@ -211,6 +264,16 @@ struct PaceEntrySheet: View {
     PaceEntrySheet(
         exerciseName: "Ruderergometer",
         unit: .minPer500m,
+        initialValue: 0,
+        onSave: { _, _ in },
+        onSkip: { }
+    )
+}
+
+#Preview("Strecke km") {
+    PaceEntrySheet(
+        exerciseName: "Fahrradergometer",
+        unit: .distanceKm,
         initialValue: 0,
         onSave: { _, _ in },
         onSkip: { }
