@@ -44,9 +44,15 @@ struct SummaryMuscleHeatmapCard: View {
             }
 
             // SVG Heatmap mit vollem CSS-Heatmap-Farbspektrum
-            MuscleHeatmapMiniSVGView(svgStylesCSS: analysis.svgStylesCSS(for: colorScheme))
-                .frame(height: 180)
-                .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+            // Breite hart klemmen: Die WKWebView nimmt nach dem async loadHTMLString sonst
+            // zeitweise volle Gerätebreite an → das umschließende vertikale ScrollView der
+            // SummaryView wird horizontal verschiebbar (siehe MuscleHeatmapMiniView).
+            GeometryReader { geo in
+                MuscleHeatmapMiniSVGView(svgStylesCSS: analysis.svgStylesCSS(for: colorScheme))
+                    .frame(width: geo.size.width, height: 180)
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+            }
+            .frame(height: 180)
 
             // Top-Muskelgruppen-Tags (max. 3)
             let topRegions = Array(analysis.topRegions.prefix(3))
@@ -58,6 +64,7 @@ struct SummaryMuscleHeatmapCard: View {
                         }
                     }
                 }
+                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
             }
         }
         .card()
