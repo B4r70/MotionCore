@@ -78,9 +78,13 @@ struct SummaryView: View {
                     heatmapSection
                 }
                 .scrollViewContentPadding()
+                // Inhaltsbreite hart auf die ScrollView-Breite klemmen: kein Kind (z. B. WKWebView,
+                // Charts) kann den Inhalt verbreitern → Seite lässt sich nicht seitlich verschieben.
+                .containerRelativeFrame(.horizontal)
                 .animation(.easeInOut(duration: 0.3), value: showCalendar)
             }
             .scrollIndicators(.hidden)
+            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
 
             if viewModel.totalWorkouts == 0 {
                 EmptyState()

@@ -35,6 +35,13 @@ class AppSettings: ObservableObject {
         }
     }
 
+    // Anzeigedefaults: Tab-Bar beim Runterscrollen minimieren
+    @Published var minimizeTabBarOnScroll: Bool {
+        didSet {
+            UserDefaults.standard.set(minimizeTabBarOnScroll, forKey: "display.minimizeTabBarOnScroll")
+        }
+    }
+
     // MARK: Workoutdefaults in AppSettings
     // Workoutdefaults: Trainingsgerät aus Enumeration
     @Published var defaultDevice: CardioDevice {
@@ -319,6 +326,9 @@ class AppSettings: ObservableObject {
 
         // Display: Übungsvideos anzeigen (Default: true)
         showExerciseVideos = defaults.object(forKey: "display.showExerciseVideos") as? Bool ?? true
+
+        // Display: Tab-Bar beim Scrollen minimieren (Default: true)
+        minimizeTabBarOnScroll = defaults.object(forKey: "display.minimizeTabBarOnScroll") as? Bool ?? true
 
         // Workout: Device
         let deviceRaw = defaults.integer(forKey: "workout.defaultDevice")

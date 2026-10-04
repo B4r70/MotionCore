@@ -39,6 +39,8 @@ struct SummaryChipRow: View {
             }
             .padding(.horizontal)
         }
+        // Kein horizontales Wippen, solange alle Chips auf den Screen passen
+        .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
     }
 
     // MARK: - Chips (neutrale AP-1 Chip)

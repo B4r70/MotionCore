@@ -36,6 +36,21 @@ struct DisplaySettingsView: View {
                 Text("Erscheinungsbild")
             }
 
+            // MARK: Tab-Bar
+            Section {
+                Toggle(isOn: $appSettings.minimizeTabBarOnScroll) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Tab-Bar beim Scrollen minimieren")
+                            .font(.body)
+                        Text("Die Tab-Bar schrumpft beim Runterscrollen und kommt beim Hochscrollen zurück.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("Navigation")
+            }
+
             // MARK: Übungsvideos
             Section {
                 Toggle(isOn: $appSettings.showExerciseVideos) {

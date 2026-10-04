@@ -217,6 +217,8 @@ struct BaseView: View {
         .tint(Theme.accent)
         // Calm 2026: gefrostete TabBar (SwiftUI-nativ, kein Appearance-Proxy).
         .frostedTabBar()
+        // Scroll-to-hide: native iOS-26-Minimierung (Schwellwert/Bounce macht das System), per Setting abschaltbar.
+        .tabBarMinimizeBehavior(appSettings.minimizeTabBarOnScroll ? .onScrollDown : .never)
         // MARK: - Sheets
 
         // Workout-Typ Auswahl
