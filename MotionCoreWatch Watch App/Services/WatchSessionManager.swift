@@ -501,8 +501,12 @@ extension WatchSessionManager {
                 Task { await manager.endWorkout() }
 
             case .active:
-                // Alles korrekt — Session läuft wie gewünscht
-                break
+                // Session läuft wie gewünscht. Self-Healing-Start kann vor dem applicationContext
+                // passiert sein (ohne UUID/Titel) — Metadata nachtragen, sobald sie da ist.
+                if let uuid = desiredSessionUUID, manager.hasLiveSession, manager.sessionUUID != uuid {
+                    let planName = desiredPlanName
+                    Task { await manager.applyMetadata(sessionUUID: uuid, planName: planName) }
+                }
 
             case .idle:
                 // Sollte mit laufender Session nicht auftreten — konservativ nichts tun,

@@ -95,6 +95,9 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     /// `sessionUUID` landet als HKMetadataKeyExternalUUID, `planName` als HKMetadataKeyWorkoutBrandName
     /// (Titel in Apple Fitness). Beide optional — ohne Plan bleibt Apples Standard-Titel.
     func startWorkout(sessionUUID: String?, planName: String?) async throws {
+        // Diagnose: ohne planName kein Titel in Apple Fitness (gewollt bei Ad-hoc, sonst Race beim Self-Healing)
+        print("WatchWorkoutManager: startWorkout sessionUUID=\(sessionUUID ?? "nil") planName=\(planName ?? "nil")")
+
         let config = HKWorkoutConfiguration()
         config.activityType = .traditionalStrengthTraining
         config.locationType = .indoor
