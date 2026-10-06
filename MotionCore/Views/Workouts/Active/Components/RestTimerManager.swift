@@ -38,7 +38,7 @@ class RestTimerManager: ObservableObject {
     @Published private(set) var restEndDate: Date?
     @Published private(set) var restStartDate: Date?
 
-    /// Gesamtdauer der aktuellen Pause – Nenner für den Fortschrittsring.
+    /// Geplante Dauer der aktuellen Pause – Nenner für den Fortschrittsring (bleibt bei ±15s unverändert).
     /// Kommt aus dem tatsächlich gestarteten Timer, nicht aus einem (evtl. veralteten) Satz.
     @Published private(set) var totalSeconds: Int = 0
 
@@ -96,8 +96,7 @@ class RestTimerManager: ObservableObject {
 
         restEndDate = adjustedEnd
         remainingSeconds = clampedRemaining
-        // Ring darf bei +15s nicht über 100% hinauslaufen
-        totalSeconds = max(totalSeconds, clampedRemaining)
+        // totalSeconds bleibt die geplante Dauer – bei Verlängerung zeigt die View den Overflow
 
         // Timer neu starten mit neuem Enddatum
         startTimerLoop(endDate: adjustedEnd)

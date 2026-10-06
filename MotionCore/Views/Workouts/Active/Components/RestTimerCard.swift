@@ -156,10 +156,11 @@ struct RestTimerCard: View {
         return min(1.0, Double(remainingSeconds) / Double(targetSeconds))
     }
 
-    // ≤10s rot, ≤30s amber, sonst Akzent (kein Gradient)
+    // ≤10s rot, ≤30s amber, verlängert (> geplant) grün, sonst Akzent (kein Gradient)
     private var ringColor: Color {
         if remainingSeconds <= 10 { return Theme.danger }
         if remainingSeconds <= 30 { return Theme.warning }
+        if targetSeconds > 0, remainingSeconds > targetSeconds { return Theme.success }
         return Theme.accent
     }
 

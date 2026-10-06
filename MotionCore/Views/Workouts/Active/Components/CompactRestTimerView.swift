@@ -21,7 +21,7 @@ struct CompactRestTimerView: View {
     // Fortschritt: 0 = voll, 1 = leer (Ring leert sich mit der Zeit)
     private var progress: Double {
         guard targetSeconds > 0 else { return 0 }
-        return 1.0 - Double(restTimerManager.remainingSeconds) / Double(targetSeconds)
+        return max(0, 1.0 - Double(restTimerManager.remainingSeconds) / Double(targetSeconds))
     }
 
     // Einfarbiger Ring mit Schwellen (≤10s danger, ≤30s warning, sonst accent)
@@ -29,6 +29,7 @@ struct CompactRestTimerView: View {
         let r = restTimerManager.remainingSeconds
         if r <= 10 { return Theme.danger }
         if r <= 30 { return Theme.warning }
+        if targetSeconds > 0, r > targetSeconds { return Theme.success }
         return Theme.accent
     }
 
