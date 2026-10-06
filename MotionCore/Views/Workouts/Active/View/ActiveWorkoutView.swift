@@ -393,7 +393,7 @@ struct ActiveWorkoutView: View {
         .sheet(item: $rirSheetSet) { set in
             RIRInputSheet(
                 restTimerManager: restTimerManager,
-                targetSeconds: set.restSeconds,
+                targetSeconds: restTimerManager.totalSeconds,
                 onAdjustRest: { delta in
                     restTimerManager.adjust(delta: delta)
                     liveActivity.syncDebounced(saveResume: saveResumeState)
@@ -883,7 +883,7 @@ struct ActiveWorkoutView: View {
         }
 
         if state.isResting, let end = state.restEndDate, end > Date() {
-            restTimerManager.restore(endDate: end)
+            restTimerManager.restore(endDate: end, startDate: state.restStartDate)
         }
         return true
     }

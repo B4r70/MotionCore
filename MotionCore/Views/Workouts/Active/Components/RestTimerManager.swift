@@ -38,6 +38,10 @@ class RestTimerManager: ObservableObject {
     @Published private(set) var restEndDate: Date?
     @Published private(set) var restStartDate: Date?
 
+    /// Gesamtdauer der aktuellen Pause – Nenner für den Fortschrittsring.
+    /// Kommt aus dem tatsächlich gestarteten Timer, nicht aus einem (evtl. veralteten) Satz.
+    @Published private(set) var totalSeconds: Int = 0
+
     // MARK: - Callback
 
     /// Wird aufgerufen wenn der Timer abläuft (für Haptic Feedback etc.)
@@ -57,6 +61,7 @@ class RestTimerManager: ObservableObject {
         restStartDate = Date()
         restEndDate = end
         remainingSeconds = seconds
+        totalSeconds = seconds
         // isResting wird ZULETZT gesetzt, damit restEndDate bereits steht
         // wenn onChange(of: isResting) in der View feuert und den
         // finalen Live-Activity-State zusammenbaut.
@@ -70,6 +75,7 @@ class RestTimerManager: ObservableObject {
         timer?.invalidate()
         timer = nil
         remainingSeconds = 0
+        totalSeconds = 0
         restStartDate = nil
         restEndDate = nil
         isResting = false
@@ -90,18 +96,22 @@ class RestTimerManager: ObservableObject {
 
         restEndDate = adjustedEnd
         remainingSeconds = clampedRemaining
+        // Ring darf bei +15s nicht über 100% hinauslaufen
+        totalSeconds = max(totalSeconds, clampedRemaining)
 
         // Timer neu starten mit neuem Enddatum
         startTimerLoop(endDate: adjustedEnd)
     }
 
     /// Stellt den Timer nach App-Start oder Hintergrund-Rückkehr wieder her
-    func restore(endDate: Date) {
+    func restore(endDate: Date, startDate: Date? = nil) {
         let remaining = max(0, Int(endDate.timeIntervalSinceNow.rounded()))
 
         if remaining > 0 {
+            restStartDate = startDate
             restEndDate = endDate
             remainingSeconds = remaining
+            totalSeconds = max(remaining, startDate.map { Int(endDate.timeIntervalSince($0).rounded()) } ?? 0)
             isResting = true
             startTimerLoop(endDate: endDate)
         } else {
