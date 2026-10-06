@@ -38,7 +38,6 @@ struct ActiveWorkoutView: View {
     // MARK: - UI-State (bleibt in View)
 
     @State private var showFinishAlert = false
-    @State private var showCancelAlert = false
     @State private var selectedSetForEdit: ExerciseSet?
     @State private var exerciseToDelete: String?
     @State private var showDeleteAlert = false
@@ -57,7 +56,6 @@ struct ActiveWorkoutView: View {
     @StateObject private var exerciseCountdownManager = ExerciseCountdownManager()
     @ObservedObject private var phoneSession = PhoneSessionManager.shared
 
-    @State private var showCancelHealthAlert = false
     @State private var postWorkoutEditSession: StrengthSession?
     @State private var rirSheetSet: ExerciseSet? = nil
     @State private var rirRetroSet: ExerciseSet? = nil
@@ -171,11 +169,7 @@ struct ActiveWorkoutView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
-                    if sessionManager.isPaused {
-                        handlePausedExit()
-                    } else {
-                        showCancelAlert = true
-                    }
+                    handlePauseAndExit()
                 } label: {
                     Image(systemName: "xmark")
                         .foregroundStyle(.secondary)
@@ -346,35 +340,11 @@ struct ActiveWorkoutView: View {
     // body enthält nur reactiveView + Alerts + Sheets (drei separate Typ-Check-Ausdrücke).
     var body: some View {
         reactiveView
-        .alert("Training läuft noch", isPresented: $showCancelAlert) {
-            Button("Pausieren") { handlePauseAndExit() }
-            Button("Verwerfen", role: .destructive) { cancelWorkout() }
-            Button("Abbrechen", role: .cancel) {}
-        } message: {
-            Text("Möchtest du das Training pausieren oder verwerfen?")
-        }
         .alert("Training beenden?", isPresented: $showFinishAlert) {
             Button("Weiter trainieren", role: .cancel) {}
             Button("Beenden", role: .none) { finishWorkout() }
         } message: {
             Text("Du hast \(session.completedSets) von \(session.totalSets) Sätzen abgeschlossen.")
-        }
-        .alert("Training verwerfen", isPresented: $showCancelHealthAlert) {
-            Button("Health-Daten behalten") {
-                PhoneSessionManager.shared.sendHeartbeatEnabled(false)
-                PhoneSessionManager.shared.sendStopHealthTracking()
-                PhoneSessionManager.shared.resetHealthData()
-                cancelWorkout()
-            }
-            Button("Alles verwerfen", role: .destructive) {
-                PhoneSessionManager.shared.sendHeartbeatEnabled(false)
-                PhoneSessionManager.shared.sendDiscardHealthTracking()
-                PhoneSessionManager.shared.resetHealthData()
-                cancelWorkout()
-            }
-            Button("Abbrechen", role: .cancel) {}
-        } message: {
-            Text("Möchtest du die Health-Daten (HR, Kalorien) in Apple Health behalten oder ebenfalls verwerfen?")
         }
         .alert("Übung löschen?", isPresented: $showDeleteAlert) {
             Button("Löschen", role: .destructive) { confirmDelete() }
@@ -773,26 +743,6 @@ struct ActiveWorkoutView: View {
                 }
             }
         }
-    }
-
-    private func cancelWorkout() {
-        guard !PhoneSessionManager.shared.isWatchTrackingActive else {
-            showCancelHealthAlert = true
-            return
-        }
-
-        sessionManager.discardSession()
-        context.delete(session)
-        try? context.save()
-
-        liveActivity.end()
-        SessionResumeStore.clear()
-        PhoneSessionManager.shared.sendIdleState()
-        dismiss()
-    }
-
-    private func handlePausedExit() {
-        dismiss()
     }
 
     private func handlePauseAndExit() {
