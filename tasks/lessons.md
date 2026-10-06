@@ -243,3 +243,21 @@ Do not add generic notes from unrelated projects.
 - Root Cause: jede View schreibt ihr eigenes `private var xColor`/`func xColor(_:)` — divergiert mit der Zeit
 - Rule: Farb-Mappings **einmal zentral** ablegen und überall wiederverwenden: `rirColor(_:)`, `repRangeColor(_:)`, `TrendDirection.trendColor` in `Utils/Themes/TypesUI.swift`; scheme-adaptiver Akzent `Theme.accentAdaptive(_:)` in `Theme.swift`. Kanonische RIR-Rampe: 0,1→danger, 2→warning, 3+→success. Immer `Theme.*`-Tokens, nie System-`Color.red/.blue`.
 - Applies To: `Utils/Themes/TypesUI.swift`, `Views/Shared/Redesign/Theme.swift`, alle Farb-Pills/Chips/Ringe
+
+### Ring-/Fortschrittswerte aus dem Timer-Start einfrieren, nicht aus Model-Caches ableiten
+
+- Added: 2026-10-06
+- Trigger: Fortschritts-Nenner (Ring, Balken) wird aus einem Model-/Cache-Wert berechnet, der zusätzlich zum Timer-Start existiert (`completedSet.restSeconds` vs. `restTimerManager.start(seconds:)`)
+- Symptom: Rest-Timer-Ring mal korrekt, mal ab ¼–½ gestartet, mal komplett leer (`restSeconds == 0`) — nicht reproduzierbar, auch ohne Warmup
+- Root Cause: Zwei Quellen für dieselbe Dauer. Cache (`cachedLastCompletedSet`) wird erst nach dem ersten Render refreshed und `last { isCompleted }` ist nicht der zeitlich letzte Satz
+- Rule: **Der Besitzer der Zeit (Manager) hält die Gesamtdauer (`totalSeconds`) beim Start; die View liest nur davon.** ±-Anpassungen ändern die Soll-Dauer nicht — Verlängerung wird als Overflow (Farbe) dargestellt, nicht durch Anheben des Nenners.
+- Applies To: `RestTimerManager`, `RestTimerCard`, `CompactRestTimerView`, ggf. `ExerciseCountdownManager`
+
+### SwiftData-Relationships: nie `.first`/`.last` ohne sortierten Zugriffspunkt
+
+- Added: 2026-10-06
+- Trigger: `.first`/`.last`/`.firstIndex` auf `session.safeExerciseSets` (oder anderen `[T]?`-Relationships)
+- Symptom: „letzter/erster Satz" liefert nicht-deterministisch den falschen Satz
+- Root Cause: SwiftData-Relationships garantieren keine Reihenfolge; `ExerciseSet` hat zudem keinen Abschluss-Zeitstempel → „zuletzt abgeschlossen" ist nicht aus Sortierung ableitbar
+- Rule: **`StrengthSession.orderedExerciseSets` (sortOrder, setNumber) nutzen; SetManager greift nur über `orderedSets` zu.** „Zuletzt abgeschlossen" explizit beim Abschluss festhalten (`completeSet` setzt `cachedLastCompletedSet`), nicht aus der Liste raten.
+- Applies To: `SetManager`, `StrengthSession`, neue Set-Logik
