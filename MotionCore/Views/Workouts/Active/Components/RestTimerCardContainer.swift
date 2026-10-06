@@ -30,7 +30,7 @@ struct RestTimerCardContainer: View {
     var body: some View {
         RestTimerCard(
             remainingSeconds: restTimerManager.remainingSeconds,
-            targetSeconds: completedSet.restSeconds,
+            targetSeconds: restTimerManager.totalSeconds,
             onSkip: onSkip,
             onAdjust: onAdjust,
             nextExerciseName: currentSet?.exerciseName,

@@ -79,17 +79,26 @@ final class SetManager {
         cachedGroupedSets = session.groupedSets
     }
 
+    /// Einziger Zugriffspunkt auf die Session-Sätze — immer sortiert (siehe StrengthSession.orderedExerciseSets).
+    private var orderedSets: [ExerciseSet] { session?.orderedExerciseSets ?? [] }
+
     func refreshSetCaches() {
         guard let session else { return }
-        let safeSets = session.safeExerciseSets
+        let sets = orderedSets
         let selectedKey = selectedKeyProvider?()
 
-        // lastCompletedSet: letzter abgeschlossener Satz
-        cachedLastCompletedSet = safeSets.last { $0.isCompleted }
+        // lastCompletedSet: zuletzt abgeschlossener Satz. completeSet() setzt ihn explizit
+        // (Sätze haben keinen Zeitstempel) — er bleibt, solange er abgeschlossen und Teil der
+        // Session ist; sonst Fallback auf den letzten abgeschlossenen Satz in Planreihenfolge.
+        if let last = cachedLastCompletedSet, last.isCompleted, sets.contains(where: { $0.id == last.id }) {
+            // beibehalten
+        } else {
+            cachedLastCompletedSet = sets.last { $0.isCompleted }
+        }
 
         // currentSet: nächster offener Satz (nach selectedExerciseKey oder global)
         if let key = selectedKey {
-            cachedCurrentSet = safeSets
+            cachedCurrentSet = sets
                 .filter { $0.groupKey == key }
                 .sorted { $0.setNumber < $1.setNumber }
                 .first { !$0.isCompleted }
@@ -111,9 +120,9 @@ final class SetManager {
     }
 
     func recomputeSessionVolume() {
-        guard let session else { return }
+        guard session != nil else { return }
         // Zeitbasierte Sätze (weight=0, reps=0) aus Volumen-Berechnung ausschließen
-        cachedSessionVolume = session.safeExerciseSets
+        cachedSessionVolume = orderedSets
             .filter { $0.isCompleted && !$0.isTimeBased }
             .reduce(0.0) { $0 + ($1.weight * Double($1.reps)) }
     }
@@ -128,6 +137,7 @@ final class SetManager {
         withAnimation(.easeInOut) {
             set.isCompleted = true
         }
+        cachedLastCompletedSet = set
 
         // Cache sofort aktualisieren
         cachedGroupedSets = session.groupedSets
@@ -194,7 +204,7 @@ final class SetManager {
 
     /// Steuert die Rotation innerhalb eines Supersets.
     func handleSupersetRotation(completedSet: ExerciseSet, supersetGroupId: String) {
-        guard let session else { return }
+        guard session != nil else { return }
 
         // Alle Übungs-Keys in der Superset-Gruppe, sortiert nach sortOrder
         let supersetKeys: [String] = cachedGroupedSets
@@ -208,7 +218,7 @@ final class SetManager {
 
         // Nächste Übung in der aktuellen Runde
         let nextInRound = Array(supersetKeys.dropFirst(currentIndex + 1)).first { key in
-            session.safeExerciseSets.contains { $0.groupKey == key && !$0.isCompleted }
+            orderedSets.contains { $0.groupKey == key && !$0.isCompleted }
         }
 
         if let nextKey = nextInRound {
@@ -219,14 +229,14 @@ final class SetManager {
 
         // Runde ist komplett — prüfen ob weitere Runden im Superset existieren
         let anyOpenInGroup = supersetKeys.contains { key in
-            session.safeExerciseSets.contains { $0.groupKey == key && !$0.isCompleted }
+            orderedSets.contains { $0.groupKey == key && !$0.isCompleted }
         }
 
         if anyOpenInGroup {
             // Weitere Runden vorhanden → Rest-Timer + zur ersten offenen Übung der Gruppe
             restShouldStart.send(completedSet.restSeconds)
             if let firstOpenKey = supersetKeys.first(where: { key in
-                session.safeExerciseSets.contains { $0.groupKey == key && !$0.isCompleted }
+                orderedSets.contains { $0.groupKey == key && !$0.isCompleted }
             }) {
                 exerciseKeyChanged.send(firstOpenKey)
             }
@@ -254,8 +264,8 @@ final class SetManager {
 
     /// True wenn alle Sätze der Übungsgruppe abgeschlossen sind (Übung fertig)
     private func isExerciseComplete(for groupKey: String) -> Bool {
-        guard let session else { return false }
-        let groupSets = session.safeExerciseSets.filter { $0.groupKey == groupKey }
+        guard session != nil else { return false }
+        let groupSets = orderedSets.filter { $0.groupKey == groupKey }
         return !groupSets.isEmpty && groupSets.allSatisfy { $0.isCompleted }
     }
 
@@ -264,8 +274,8 @@ final class SetManager {
     func isLastWorkSet(of set: ExerciseSet) -> Bool {
         // Zeitbasierte Sätze brauchen kein RIR-Flag — Guard verhindert ungewolltes Sheet
         guard !set.isTimeBased else { return false }
-        guard set.setKind == .work, let session else { return false }
-        let workSets = session.safeExerciseSets.filter {
+        guard set.setKind == .work, session != nil else { return false }
+        let workSets = orderedSets.filter {
             $0.groupKey == set.groupKey && $0.setKind == .work
         }
         return workSets.allSatisfy { $0.isCompleted }
@@ -279,8 +289,8 @@ final class SetManager {
     }
 
     func retroRIRCandidate(for selectedKey: String?) -> ExerciseSet? {
-        guard let currentKey = selectedKey, let session else { return nil }
-        let workSets = session.safeExerciseSets
+        guard let currentKey = selectedKey, session != nil else { return nil }
+        let workSets = orderedSets
             .filter { $0.groupKey == currentKey && $0.setKind == .work && $0.isCompleted }
             .sorted { $0.setNumber < $1.setNumber }
         guard let lastSet = workSets.last,
@@ -304,7 +314,7 @@ final class SetManager {
             return
         }
 
-        let lastSets = lastCompletedSession(for: groupKey)?.safeExerciseSets.filter {
+        let lastSets = lastCompletedSession(for: groupKey)?.orderedExerciseSets.filter {
             $0.groupKey == groupKey
         } ?? []
 
@@ -335,7 +345,7 @@ final class SetManager {
     // MARK: - Hilfsmethoden
 
     func resolveExercise(for groupKey: String) -> Exercise? {
-        session?.safeExerciseSets.first(where: { $0.groupKey == groupKey })?.exercise
+        orderedSets.first(where: { $0.groupKey == groupKey })?.exercise
     }
 
     func lastCompletedSession(for groupKey: String) -> StrengthSession? {
@@ -354,7 +364,7 @@ final class SetManager {
     }
 
     func supersetDisplayContext(for set: ExerciseSet) -> SupersetDisplayContext? {
-        guard let groupId = set.supersetGroupId, let session else { return nil }
+        guard let groupId = set.supersetGroupId, session != nil else { return nil }
 
         let groups = cachedGroupedSets
             .filter { $0.first?.supersetGroupId == groupId }
@@ -371,13 +381,13 @@ final class SetManager {
         let currentIndex = keys.firstIndex(of: set.groupKey) ?? 0
 
         let firstKey = keys.first ?? ""
-        let completedRounds = session.safeExerciseSets
+        let completedRounds = orderedSets
             .filter { $0.groupKey == firstKey && $0.isCompleted }
             .count
         let currentRound = completedRounds + 1
 
         let totalRounds = keys.map { key in
-            session.safeExerciseSets.filter { $0.groupKey == key }.count
+            orderedSets.filter { $0.groupKey == key }.count
         }.max() ?? 1
 
         return SupersetDisplayContext(
