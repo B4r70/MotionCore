@@ -245,20 +245,21 @@ final class StrengthSession {
 
     // Nächster unerledigter Satz
     var nextUncompletedSet: ExerciseSet? {
-        safeExerciseSets
-            .sorted {
-                // Primär nach sortOrder
-                if $0.sortOrder != $1.sortOrder {
-                    return $0.sortOrder < $1.sortOrder
-                }
-                // Sekundär nach setNumber
-                return $0.setNumber < $1.setNumber
-            }
-            .first { !$0.isCompleted }
+        orderedExerciseSets.first { !$0.isCompleted }
     }
 }
 extension StrengthSession {
     var safeExerciseSets: [ExerciseSet] { exerciseSets ?? [] }
+
+    /// Sätze in deterministischer Reihenfolge (sortOrder, dann setNumber).
+    /// SwiftData-Relationships garantieren keine Reihenfolge — wo `.first`/`.last`
+    /// oder eine implizite Reihenfolge gebraucht wird, diesen Zugriff nutzen.
+    var orderedExerciseSets: [ExerciseSet] {
+        safeExerciseSets.sorted {
+            if $0.sortOrder != $1.sortOrder { return $0.sortOrder < $1.sortOrder }
+            return $0.setNumber < $1.setNumber
+        }
+    }
 
     func ensureExerciseSets() {
         if exerciseSets == nil { exerciseSets = [] }
