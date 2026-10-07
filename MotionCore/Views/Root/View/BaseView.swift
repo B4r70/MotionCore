@@ -465,10 +465,10 @@ struct BaseView: View {
                 newStrengthSession = nil
                 showActiveWorkout = true
             } else {
-                activeSessionManager.discardSession()
+                SessionTerminationService.discardRuntimeState(sessionID: sessionID, manager: activeSessionManager)
             }
         } catch {
-            activeSessionManager.discardSession()
+            SessionTerminationService.discardRuntimeState(sessionID: sessionID, manager: activeSessionManager)
         }
     }
 
