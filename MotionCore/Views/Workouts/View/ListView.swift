@@ -352,8 +352,7 @@ struct ListView: View {
 
     private func deleteStrengthSession(_ session: StrengthSession) {
         withAnimation {
-            modelContext.delete(session)
-            try? modelContext.save()
+            SessionTerminationService.delete(session, context: modelContext)
         }
     }
 

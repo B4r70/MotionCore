@@ -727,8 +727,7 @@ struct StrengthDetailView: View {
     }
 
     private func deleteSession() {
-        context.delete(session)
-        try? context.save()
+        SessionTerminationService.delete(session, context: context)
         dismiss()
     }
 

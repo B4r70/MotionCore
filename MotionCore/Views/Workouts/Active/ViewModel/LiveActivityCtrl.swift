@@ -149,6 +149,15 @@ final class LiveActivityCtrl {
         currentActivity = nil
     }
 
+    /// Beendet alle Activities einer Session — unabhängig von einer konfigurierten Instanz
+    /// (Löschen aus der ListView, Resume-Alert). Activity.activities ist global abfragbar.
+    nonisolated static func endActivity(forSessionID id: String) async {
+        for activity in Activity<WorkoutActivityAttributes>.activities
+        where activity.attributes.sessionID == id {
+            await activity.end(nil, dismissalPolicy: .immediate)
+        }
+    }
+
     // MARK: - Reattach nach App-Start
 
     func reattachIfNeeded() {

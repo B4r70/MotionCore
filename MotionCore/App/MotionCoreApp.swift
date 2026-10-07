@@ -109,6 +109,8 @@ struct MotionCoreApp: App {
                 .onAppear { checkForActiveSession() }
                 .task {
                     let context = sharedModelContainer.mainContext
+                    // Sicherheitsnetz: verwaiste Live Activities (Session gelöscht) beenden
+                    await SessionTerminationService.endOrphanedLiveActivities(context: context)
                     // 0. Rückrichtung HKWorkout → Session: UUID der gespeicherten HKWorkout eintragen
                     PhoneSessionManager.shared.onWorkoutSaved = { sessionUUID, hkUUID in
                         let descriptor = FetchDescriptor<StrengthSession>(predicate: #Predicate { $0.sessionUUID == sessionUUID })
@@ -150,7 +152,11 @@ struct MotionCoreApp: App {
                 .alert("Aktive Session gefunden", isPresented: $showSessionRestoreAlert) {
                     Button("Fortsetzen") { restoreSession() }
                     Button("Verwerfen", role: .cancel) {
-                        activeSessionManager.discardSession()
+                        if let info = pendingRestoreInfo {
+                            SessionTerminationService.discardRuntimeState(sessionID: info.sessionID, manager: activeSessionManager)
+                        } else {
+                            activeSessionManager.discardSession()
+                        }
                         pendingRestoreInfo = nil
                     }
                 } message: {
