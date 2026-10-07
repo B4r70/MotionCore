@@ -125,22 +125,23 @@ final class SupabaseSessionService {
         do {
             try await client.upsert(endpoint: "strength_sessions", body: dto)
 
-            try await client.deleteWhere(
-                endpoint: "exercise_sets",
-                filter: "session_id=eq.\(sessionUUIDString)"
-            )
-
+            // Erst upserten, dann nur veraltete Zeilen löschen: ein Abbruch dazwischen
+            // darf keine bereits hochgeladenen Sets vernichten (früher: delete-all → insert).
+            // Leere Liste → nichts löschen, sonst räumt ein ungeladener Relationship-Stand den Server leer.
             if !setDTOs.isEmpty {
                 try await client.upsert(endpoint: "exercise_sets", body: setDTOs)
+                try await client.deleteWhere(
+                    endpoint: "exercise_sets",
+                    filter: "session_id=eq.\(sessionUUIDString)&id=not.in.(\(setDTOs.map { $0.id.uuidString }.joined(separator: ",")))"
+                )
             }
-
-            try await client.deleteWhere(
-                endpoint: "exercise_ratings",
-                filter: "session_id=eq.\(sessionUUIDString)"
-            )
 
             if !ratingDTOs.isEmpty {
                 try await client.upsert(endpoint: "exercise_ratings", body: ratingDTOs)
+                try await client.deleteWhere(
+                    endpoint: "exercise_ratings",
+                    filter: "session_id=eq.\(sessionUUIDString)&id=not.in.(\(ratingDTOs.map { $0.id.uuidString }.joined(separator: ",")))"
+                )
             }
         } catch {
             print("⚠️ Supabase Upload fehlgeschlagen (StrengthSession): \(error.localizedDescription)")
