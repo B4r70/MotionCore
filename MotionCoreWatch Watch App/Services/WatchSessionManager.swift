@@ -338,8 +338,9 @@ extension WatchSessionManager {
 
             // Idempotenz: laufende Session wiederverwenden statt verwerfen + neu starten
             // (deckt BT-Reconnect ab — Phone-Relaunch setzt isWatchTrackingActive zurück,
-            //  onWatchBecameReachable sendet erneut startHealthTracking)
-            if let existing = workoutManager, existing.hasLiveSession {
+            //  onWatchBecameReachable sendet erneut startHealthTracking).
+            // Auch ein noch startender Manager (Self-Healing) zählt — ersetzen würde zwei Sessions parallel starten.
+            if let existing = workoutManager, existing.isLiveOrStarting {
                 // Session lief evtl. ohne UUID/Titel (Self-Healing vor Context) — nachtragen
                 if let uuid = desiredSessionUUID, existing.sessionUUID != uuid {
                     let planName = desiredPlanName
