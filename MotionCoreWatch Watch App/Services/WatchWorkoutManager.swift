@@ -36,6 +36,13 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
         return session.state == .running || session.state == .paused
     }
 
+    /// True ab Erzeugung bis `startWorkout` fertig (oder gescheitert) ist. Ein startender Manager hat noch keine
+    /// Session (`hasLiveSession == false`) — darf aber nicht ersetzt werden, sonst starten zwei Sessions parallel.
+    private(set) var isStarting = true
+
+    /// Läuft bereits eine Session oder ist der Start noch unterwegs
+    var isLiveOrStarting: Bool { isStarting || hasLiveSession }
+
     // MARK: - Private Properties
 
     private let healthStore = HKHealthStore()
@@ -97,6 +104,7 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
     func startWorkout(sessionUUID: String?, planName: String?) async throws {
         // Diagnose: ohne planName kein Titel in Apple Fitness (gewollt bei Ad-hoc, sonst Race beim Self-Healing)
         print("WatchWorkoutManager: startWorkout sessionUUID=\(sessionUUID ?? "nil") planName=\(planName ?? "nil")")
+        defer { Task { @MainActor in self.isStarting = false } }
 
         let config = HKWorkoutConfiguration()
         config.activityType = .traditionalStrengthTraining
@@ -272,6 +280,7 @@ final class WatchWorkoutManager: NSObject, ObservableObject {
 
     /// Setzt alle internen Zustände zurück.
     private func cleanup() {
+        isStarting = false
         workoutSession = nil
         workoutBuilder = nil
         sessionUUID = nil

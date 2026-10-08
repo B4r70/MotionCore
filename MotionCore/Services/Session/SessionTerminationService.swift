@@ -35,9 +35,14 @@ enum SessionTerminationService {
 
     /// Räumt ActiveSessionManager-State und Live Activity ab. Der SwiftData-Datensatz bleibt.
     /// State wird nur verworfen, wenn er zur übergebenen Session gehört.
+    /// Die Watch wird nur dann informiert — sonst würde das Löschen einer fremden Session
+    /// ein anderes, laufendes Workout auf der Watch abbrechen.
     static func discardRuntimeState(sessionID: String, manager: ActiveSessionManager = .shared) {
         if manager.getActiveSessionID() == sessionID {
             manager.discardSession()
+            // Ohne Discard läuft die (ggf. pausierte) HKWorkoutSession auf der Watch weiter
+            PhoneSessionManager.shared.sendDiscardHealthTracking()
+            PhoneSessionManager.shared.sendIdleState()
         }
         Task { await LiveActivityCtrl.endActivity(forSessionID: sessionID) }
     }
